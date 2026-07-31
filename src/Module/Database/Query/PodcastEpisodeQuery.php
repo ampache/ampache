@@ -73,6 +73,7 @@ final class PodcastEpisodeQuery implements QueryInterface
         'title',
         'total_count',
         'total_skip',
+        'update_time',
         'user_flag_rating',
         'user_flag',
         'userflag',
@@ -222,6 +223,7 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'state':
             case 'time':
             case 'total_count':
+            case 'update_time':
                 $sql = sprintf('`podcast_episode`.`%s`', $field);
                 break;
             case 'rating':

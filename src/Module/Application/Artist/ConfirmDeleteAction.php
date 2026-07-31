@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Artist\Deletion\ArtistDeleterInterface;
 use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
@@ -49,6 +50,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private ArtistDeleterInterface $artistDeleter,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -70,20 +72,31 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
+        // An artist has no parent object, so leaving its own page can only fall back to the artist browser.
+        $webPath     = $this->configContainer->getWebPath('/client');
+        $burlParam   = (string) ($request->getQueryParams()['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'artist',
+            $artist_id,
+            '',
+            sprintf('%s/browse.php?action=artist', $webPath)
+        );
+
         $this->ui->showHeader();
         try {
             $this->artistDeleter->remove($artist);
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Artist has been deleted'),
-                $this->configContainer->getWebPath('/client')
+                $continueUrl
             );
         } catch (ArtistDeletionException) {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
                 sprintf(T_("Couldn't delete this %s"), T_('Artist')),
-                $this->configContainer->getWebPath('/client')
+                $continueUrl
             );
         }
 

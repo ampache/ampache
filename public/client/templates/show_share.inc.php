@@ -54,16 +54,10 @@ if ($artType === 'song') {
         $artId   = (int) $song->album;
     }
 }
-// Shares are public (NO_SESSION). image.php only serves art without a session
-// when public_images is on, or auth/required-session are off. Otherwise it returns
-// 403, so only link the real artwork when it will actually load; fall back to the
-// public site logo so the hero and og:image are never a broken/forbidden image.
-$artIsPublic = make_bool(AmpConfig::get('public_images'))
-    || !make_bool(AmpConfig::get('use_auth'))
-    || !make_bool(AmpConfig::get('require_session'));
-
+// Shares are public (NO_SESSION), so only link the real artwork when image.php will actually serve it without a
+// session; otherwise fall back to the site logo so the hero and og:image are never a broken/forbidden image.
 $artUrl = '';
-if ($artIsPublic && Art::has_db($artId, $artType)) {
+if (Art::isPublic() && Art::has_db($artId, $artType)) {
     $artUrl = Art::url($artId, $artType, null) ?? '';
 }
 if ($artUrl === '') {

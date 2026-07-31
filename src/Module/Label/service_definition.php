@@ -33,4 +33,6 @@ use function DI\autowire;
 return [
     LabelListUpdaterInterface::class => autowire(LabelListUpdater::class),
     LabelDeleterInterface::class => autowire(LabelDeleter::class),
+    LabelNameFilterInterface::class => autowire(LabelNameFilter::class),
+    LabelGarbageCollectorInterface::class => autowire(LabelGarbageCollector::class),
 ];

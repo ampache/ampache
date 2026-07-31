@@ -33,6 +33,7 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\User;
 use Override;
 
@@ -90,7 +91,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
             }
 
             foreach (explode(',', $this->smartlist) as $list_id) {
-                $smartlist = new Search((int) $list_id);
+                $smartlist = new Smartlist((int) $list_id);
                 if ($smartlist->isNew() === false) {
                     $list_array[] = [$smartlist, 'search'];
                 }
@@ -108,7 +109,9 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
                 $count = 0;
                 foreach ($list_array as $item) {
                     if ($item[0]->isNew() === false) {
-                        echo '<tr id="playlist_' . $item[0]->id . '" class="libitem_menu">';
+                        // $item[1] is `playlist` or `search`; labelling a smartlist as a playlist sent
+                        // the context menu after whichever playlist happened to share that id
+                        echo '<tr id="' . $item[1] . '_' . $item[0]->id . '" class="libitem_menu" data-object-type="' . $item[1] . '" data-object-id="' . $item[0]->id . '">';
                         echo '<td style="height: 50px;">' . $item[0]->get_f_link() . '</td>';
                         echo '<td style="height: auto;">';
                         echo '<span style="margin-right: 10px;">';

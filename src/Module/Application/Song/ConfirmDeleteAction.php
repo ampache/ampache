@@ -31,6 +31,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
@@ -48,6 +49,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private SongDeleterInterface $songDeleter,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(
@@ -66,19 +68,32 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
+        $webPath   = $this->configContainer->getWebPath('/client');
+        $parentUrl = ($song->album > 0)
+            ? sprintf('%s/albums.php?action=show&album=%d', $webPath, $song->album)
+            : '';
+        $burlParam   = (string) ($request->getQueryParams()['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'song_id',
+            $song_id,
+            $parentUrl,
+            $webPath
+        );
+
         $this->ui->showHeader();
         if ($this->songDeleter->delete($song)) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Song has been deleted'),
-                $this->configContainer->getWebPath('/client')
+                $continueUrl
             );
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
                 sprintf(T_("Couldn't delete this %s"), T_('Song')),
-                $this->configContainer->getWebPath('/client')
+                $continueUrl
             );
         }
 

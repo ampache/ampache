@@ -39,6 +39,7 @@ use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
@@ -137,7 +138,7 @@ class Xml8_Data
 
             // Build the Art URL, include session
             $art_url = Art::url($album_disk->id, 'album_disk', $auth);
-            $string .= "\t<disk>" . $album_disk->disk . "</disk>\n\t<disksubtitle><![CDATA[" . $album_disk->disksubtitle . "]]></disksubtitle>\n\t<time>" . $album_disk->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album_disk->song_count . "</songcount>\n\t<type>" . $album_disk->release_type . "</type>\n" . self::_genre_string($album_disk->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album_disk->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album_disk->mbid . "]]></mbid>\n\t<mbid_group><![CDATA[" . $album_disk->mbid_group . "]]></mbid_group>\n</album_disk>\n";
+            $string .= "\t<disk>" . $album_disk->disk . "</disk>\n\t<disksubtitle><![CDATA[" . $album_disk->disksubtitle . "]]></disksubtitle>\n\t<time>" . $album_disk->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album_disk->song_count . "</songcount>\n\t<type>" . $album_disk->release_type . "</type>\n" . self::_genre_string($album_disk->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album_disk->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album_disk->mbid . "]]></mbid>\n\t<mbid_group><![CDATA[" . $album_disk->mbid_group . "]]></mbid_group>\n\t<catalog>" . $album_disk->getCatalogId() . "</catalog>\n</album_disk>\n";
         }
 
         return Api::output_xml($string, $full_xml);
@@ -201,7 +202,7 @@ class Xml8_Data
 
             // Build the Art URL, include session
             $art_url = Art::url($album->id, 'album', $auth);
-            $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $album->disk_count . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::_genre_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n\t<mbid_group><![CDATA[" . $album->mbid_group . "]]></mbid_group>\n</album>\n";
+            $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $album->disk_count . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::_genre_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n\t<mbid_group><![CDATA[" . $album->mbid_group . "]]></mbid_group>\n\t<catalog>" . $album->getCatalogId() . "</catalog>\n</album>\n";
         }
 
         return Api::output_xml($string, $full_xml);
@@ -353,6 +354,80 @@ class Xml8_Data
         }
 
         return Api::output_xml($string, $full_xml);
+    }
+
+    /**
+     * collection_items
+     *
+     * One collection's contents, in curated order.
+     *
+     * Every entry names its own position and type, so a client renders the list in the order it arrives.
+     *
+     * The type builders return XML as one blob per call, which cannot be split back apart into the curated
+     * order, so this renders a member at a time. That is one call per distinct member, where the JSON side
+     * manages one per type -- the memo below is what keeps a repeated member from paying twice.
+     */
+    public static function collection_items(Collection $collection, User $user, string $auth): string
+    {
+        $ordered = $collection->get_ordered_items();
+
+        self::$count = self::$count ?: count($ordered);
+        $ordered     = Api::filter_objects($ordered, self::$count, self::$offset, self::$limit);
+
+        // `contents` rather than `items`, which the collection row already uses for the member count
+        $string = self::collection_row($collection) . "	<contents>
+";
+
+        $rendered = [];
+        foreach ($ordered as $item) {
+            $objectType = $item['object_type'];
+            $key        = $objectType . '-' . $item['object_id'];
+            if (!array_key_exists($key, $rendered)) {
+                $rendered[$key] = self::collection_group($objectType, [$item['object_id']], $user, $auth);
+            }
+
+            // A member the builder had nothing for drops out rather than leaving an empty `<item>`
+            if ($rendered[$key] === null || $rendered[$key] === '') {
+                continue;
+            }
+
+            $string .= "		<item track=\"" . $item['track'] . "\" track_id=\"" . $item['track_id'] . "\" object_type=\"" . $objectType . "\">
+" . $rendered[$key] . "		</item>
+";
+        }
+
+        $string .= "	</contents>
+</collection>
+";
+
+        return Api::output_xml($string);
+    }
+
+    /**
+     * collections
+     *
+     * A list of collections, without their contents.
+     *
+     * @param list<int> $objects
+     */
+    public static function collections(array $objects, User $user, string $auth): string
+    {
+        unset($auth);
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+
+        $string = '';
+        foreach ($objects as $collectionId) {
+            $collection = new Collection((int) $collectionId);
+            if ($collection->isNew() || !$collection->isVisible($user)) {
+                continue;
+            }
+
+            $string .= self::collection_row($collection) . "</collection>
+";
+        }
+
+        return Api::output_xml($string);
     }
 
     /**
@@ -1161,7 +1236,7 @@ class Xml8_Data
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
             $art_url     = Art::url($episode->podcast, 'podcast', $auth);
-            $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<podcast id=\"$episode->podcast\">\n\t\t\t<name><![CDATA[" . $episode->getPodcastName() . "]]></name></podcast>\n\t\t<description><![CDATA[" . $episode->get_description() . "]]></description>\n\t\t<category><![CDATA[" . $episode->getCategory() . "]]></category>\n\t\t<author><![CDATA[" . $episode->getAuthor() . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->getAuthor() . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->getWebsite() . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->getPubDate()->format(DATE_ATOM) . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->getState()->toDescription() . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->get_f_time(true) . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->getFileName() . "]]></filename>\n\t\t<mime><![CDATA[" . ((isset($episode->mime)) ? $episode->mime : '') . "]]></mime>\n\t\t<time>" . $episode->time . "</time>\n\t\t<size>" . $episode->size . "</size>\n\t<bitrate>" . $episode->bitrate . "</bitrate>\n\t<stream_bitrate>" . $episode->bitrate . "</stream_bitrate>\n\t<rate>" . $episode->rate . "</rate>\n\t<mode><![CDATA[" . $episode->mode . "]]></mode>\n\t<channels>" . $episode->channels . "</channels>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t\t<catalog>" . $episode->catalog . "</catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($episode->has_art() ? 1 : 0) . "</has_art>\n\t\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t\t\t<rating>" . $user_rating . "</rating>\n\t\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t\t<playcount>" . $episode->total_count . "</playcount>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
+            $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<podcast id=\"$episode->podcast\">\n\t\t\t<name><![CDATA[" . $episode->getPodcastName() . "]]></name></podcast>\n\t\t<description><![CDATA[" . $episode->get_description() . "]]></description>\n\t\t<category><![CDATA[" . $episode->getCategory() . "]]></category>\n\t\t<author><![CDATA[" . $episode->getAuthor() . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->getAuthor() . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->getWebsite() . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->getPubDate()->format(DATE_ATOM) . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->getState()->toDescription() . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->get_f_time(true) . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->getFileName() . "]]></filename>\n\t\t<mime><![CDATA[" . ((isset($episode->mime)) ? $episode->mime : '') . "]]></mime>\n\t\t<time>" . $episode->time . "</time>\n\t\t<size>" . $episode->size . "</size>\n\t<bitrate>" . $episode->bitrate . "</bitrate>\n\t<stream_bitrate>" . $episode->bitrate . "</stream_bitrate>\n\t<rate>" . $episode->rate . "</rate>\n\t<mode><![CDATA[" . $episode->mode . "]]></mode>\n\t<channels>" . $episode->channels . "</channels>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t\t<catalog>" . $episode->catalog . "</catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($episode->has_art() ? 1 : 0) . "</has_art>\n\t\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t\t\t<rating>" . $user_rating . "</rating>\n\t\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t\t<playcount>" . $episode->total_count . "</playcount>\n\t\t<last_played><![CDATA[" . (($episode->last_played) ? date(DATE_ATOM, $episode->last_played) : '') . "]]></last_played>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
         }
 
         return Api::output_xml($string, $full_xml);
@@ -1195,7 +1270,7 @@ class Xml8_Data
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($podcast->getId(), 'podcast');
             $art_url     = Art::url($podcast->getId(), 'podcast', $auth);
-            $string .= "<podcast id=\"$podcast_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->get_description() . "]]></description>\n\t<language><![CDATA[" . scrub_out($podcast->getLanguage()) . "]]></language>\n\t<copyright><![CDATA[" . scrub_out($podcast->getCopyright()) . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->getFeedUrl() . "]]></feed_url>\n\t<generator><![CDATA[" . scrub_out($podcast->getGenerator()) . "]]></generator>\n\t<website><![CDATA[" . scrub_out($podcast->getWebsite()) . "]]></website>\n\t<build_date><![CDATA[" . $podcast->getLastBuildDate()->format(DATE_ATOM) . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->getLastSyncDate()->format(DATE_ATOM) . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($podcast->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n";
+            $string .= "<podcast id=\"$podcast_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->get_description() . "]]></description>\n\t<language><![CDATA[" . scrub_out($podcast->getLanguage()) . "]]></language>\n\t<copyright><![CDATA[" . scrub_out($podcast->getCopyright()) . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->getFeedUrl() . "]]></feed_url>\n\t<generator><![CDATA[" . scrub_out($podcast->getGenerator()) . "]]></generator>\n\t<website><![CDATA[" . scrub_out($podcast->getWebsite()) . "]]></website>\n\t<build_date><![CDATA[" . $podcast->getLastBuildDate()->format(DATE_ATOM) . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->getLastSyncDate()->format(DATE_ATOM) . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($podcast->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<catalog>" . $podcast->getCatalogId() . "</catalog>\n";
             if ($episodes) {
                 $results = $podcast->getEpisodeIds();
                 if (!empty($results)) {
@@ -1576,7 +1651,7 @@ class Xml8_Data
                     : $song_artist;
                 $string .= "\t<albumartist id=\"" . $song->albumartist . "\"><name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</albumartist>\n";
             }
-            $string .= "\t<disk><![CDATA[" . $song->disk . "]]></disk>\n\t<disksubtitle><![CDATA[" . $song->disksubtitle . "]]></disksubtitle>\n\t<track>" . $song->track . "</track>\n" . $tag_string . "\t<filename><![CDATA[" . $song->file . "]]></filename>\n\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n\t<time>" . $song->time . "</time>\n\t<year>" . $song->year . "</year>\n\t<format>" . $songType . "</format>\n\t<stream_format>" . $song->type . "</stream_format>\n\t<bitrate>" . $songBitrate . "</bitrate>\n\t<stream_bitrate>" . $song->bitrate . "</stream_bitrate>\n\t<rate>" . $song->rate . "</rate>\n\t<mode><![CDATA[" . $song->mode . "]]></mode>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<stream_mime><![CDATA[" . $song->mime . "]]></stream_mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($song->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $song->total_count . "</playcount>\n\t<catalog>" . $song->getCatalogId() . "</catalog>\n\t<composer><![CDATA[" . $song->composer . "]]></composer>\n\t<channels>" . $song->channels . "</channels>\n\t<comment><![CDATA[" . $song->comment . "]]></comment>\n\t<license><![CDATA[" . $licenseLink . "]]></license>\n\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n\t<language>" . $song->language . "</language>\n\t<lyrics><![CDATA[" . (($song->lyrics) ? html_entity_decode($song->lyrics) : null) . "]]></lyrics>\n\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n\t<r128_album_gain>" . $song->r128_album_gain . "</r128_album_gain>\n\t<r128_track_gain>" . $song->r128_track_gain . "</r128_track_gain>\n";
+            $string .= "\t<disk><![CDATA[" . $song->disk . "]]></disk>\n\t<disksubtitle><![CDATA[" . $song->disksubtitle . "]]></disksubtitle>\n\t<track>" . $song->track . "</track>\n" . $tag_string . "\t<filename><![CDATA[" . $song->file . "]]></filename>\n\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n\t<time>" . $song->time . "</time>\n\t<year>" . $song->year . "</year>\n\t<format>" . $songType . "</format>\n\t<stream_format>" . $song->type . "</stream_format>\n\t<bitrate>" . $songBitrate . "</bitrate>\n\t<stream_bitrate>" . $song->bitrate . "</stream_bitrate>\n\t<rate>" . $song->rate . "</rate>\n\t<mode><![CDATA[" . $song->mode . "]]></mode>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<stream_mime><![CDATA[" . $song->mime . "]]></stream_mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($song->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $song->total_count . "</playcount>\n\t<last_played><![CDATA[" . (($song->last_played) ? date(DATE_ATOM, $song->last_played) : '') . "]]></last_played>\n\t<catalog>" . $song->getCatalogId() . "</catalog>\n\t<composer><![CDATA[" . $song->composer . "]]></composer>\n\t<channels>" . $song->channels . "</channels>\n\t<comment><![CDATA[" . $song->comment . "]]></comment>\n\t<license><![CDATA[" . $licenseLink . "]]></license>\n\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n\t<language>" . $song->language . "</language>\n\t<lyrics><![CDATA[" . (($song->lyrics) ? html_entity_decode($song->lyrics) : null) . "]]></lyrics>\n\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n\t<r128_album_gain>" . $song->r128_album_gain . "</r128_album_gain>\n\t<r128_track_gain>" . $song->r128_track_gain . "</r128_track_gain>\n";
 
             /** @var Metadata $metadata */
             foreach ($song->getMetadata() as $metadata) {
@@ -1592,6 +1667,41 @@ class Xml8_Data
         }
 
         return Api::output_xml($string, $full_xml);
+    }
+
+    /**
+     * sonic_matches
+     *
+     * Songs that sound like a query song, each carrying its similarity score.
+     *
+     * The score shares the OpenSubsonic `sonicMatch` scale so a client sees the same number from either API: 1.0 is
+     * the same recording, 0.0 the most different, and -1 when the analysis backend gives no comparable score.
+     *
+     * @param list<array{'id': int, 'similarity': float}> $matches
+     */
+    public static function sonic_matches(array $matches, User $user, string $auth): string
+    {
+        $similarity = [];
+        foreach ($matches as $match) {
+            $similarity[(int) $match['id']] = (float) $match['similarity'];
+        }
+
+        // songs() skips its own windowing when asked for a fragment, so the window is applied to the id list here
+        // instead; without it the xml form would ignore an offset the json form honours.
+        self::$count = self::$count ?: count($similarity);
+        $windowed    = Api::filter_objects(array_keys($similarity), self::$count, self::$offset, self::$limit);
+
+        // Each match wraps the shared song builder rather than patching its output, so the song body stays whatever
+        // `songs()` says it is and only the score is added around it.
+        $string = '';
+        foreach ($windowed as $song_id) {
+            $score = $similarity[$song_id] ?? -1;
+            $string .= "<sonic_match similarity=\"" . $score . "\">\n";
+            $string .= self::songs([$song_id], $user, $auth, false);
+            $string .= "</sonic_match>\n";
+        }
+
+        return Api::output_xml($string);
     }
 
     /**
@@ -1705,7 +1815,7 @@ class Xml8_Data
             $flag        = new Userflag($video->id, 'video');
             $art_url     = Art::url($video->id, 'video', $auth);
 
-            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::_genre_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($video->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $video->total_count . "</playcount>\n</video>\n";
+            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::_genre_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($video->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $video->total_count . "</playcount>\n\t<last_played><![CDATA[" . (($video->last_played) ? date(DATE_ATOM, $video->last_played) : '') . "]]></last_played>\n\t<catalog>" . $video->getCatalogId() . "</catalog>\n</video>\n";
         }
 
         return Api::output_xml($string, $full_xml);
@@ -1740,6 +1850,51 @@ class Xml8_Data
         }
 
         return $string;
+    }
+
+    /**
+     * Render one type group through that type's own builder. Null when the type has no builder.
+     *
+     * @param list<int> $ids
+     */
+    private static function collection_group(string $objectType, array $ids, User $user, string $auth): ?string
+    {
+        // `false` asks each builder for the fragment rather than a whole document, so rows nest in the group.
+        return match ($objectType) {
+            'album' => self::albums($ids, [], $user, $auth, false),
+            'album_disk' => self::album_disks($ids, [], $user, $auth, false),
+            'artist' => self::artists($ids, [], $user, $auth, false),
+            'genre' => self::genres($ids, $user),
+            'label' => self::labels($ids, $user),
+            'live_stream' => self::live_streams($ids, $user, false),
+            'playlist' => self::playlists($ids, $user, $auth),
+            'podcast' => self::podcasts($ids, $user, $auth),
+            'podcast_episode' => self::podcast_episodes($ids, $user, $auth, false),
+            'song' => self::songs($ids, $user, $auth, false),
+            'video' => self::videos($ids, $user, $auth, false),
+            default => null,
+        };
+    }
+
+    /**
+     * The opening tag and scalar fields of a collection, left unclosed so contents can be nested inside it.
+     */
+    private static function collection_row(Collection $collection): string
+    {
+        return "<collection id=\"" . $collection->getId() . "\">
+"
+            . "	<name><![CDATA[" . $collection->get_fullname() . "]]></name>
+"
+            . "	<owner><![CDATA[" . $collection->username . "]]></owner>
+"
+            . "	<type>" . $collection->type . "</type>
+"
+            . "	<object_type>" . ($collection->object_type ?? '') . "</object_type>
+"
+            . "	<items>" . $collection->get_item_count() . "</items>
+"
+            . "	<has_art>" . ((int) $collection->has_art()) . "</has_art>
+";
     }
 
     /**

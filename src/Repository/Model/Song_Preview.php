@@ -114,6 +114,11 @@ class Song_Preview extends database_object implements Media, displayable_item, c
             return false;
         }
 
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
         $idlist = '(' . implode(',', $song_ids) . ')';
         if ($idlist == '()') {
             return false;

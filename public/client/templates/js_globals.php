@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Preference;
 
 global $dic;
@@ -94,5 +95,5 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
     var jsPlayNext = "<?php echo addslashes(T_('Play next')); ?>";
     var jsPlayLast = "<?php echo addslashes(T_('Play last')); ?>";
     var jsAddTmpPlaylist = "<?php echo addslashes(T_('Add to Temporary Playlist')); ?>";
-    var jsAddPlaylist = "<?php echo addslashes(T_('Add to playlist')); ?>";
+    var jsAddPlaylist = "<?php echo addslashes(Ui::get_add_to_list_label()); ?>";
 </script>

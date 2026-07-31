@@ -65,6 +65,7 @@ final readonly class LastFmQuery implements LastFmQueryInterface
             throw new LastFmQueryFailedException();
         }
 
+        // last.fm reports errors with a parseable body, so the payload elements callers expect are missing
         if ((string) $result['status'] !== 'ok') {
             throw new LastFmQueryFailedException(trim((string) $result->error));
         }

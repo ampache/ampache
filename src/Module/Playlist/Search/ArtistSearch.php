@@ -460,7 +460,7 @@ final readonly class ArtistSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'other_user':
-                    $other_userid = $input;
+                    $other_userid = (int) $input;
                     if ($operator_sql == 'userflag') {
                         $where[] = sprintf("`favorite_artist_%s`.`user` = %s AND `favorite_artist_%s`.`object_type` = 'artist'", $other_userid, $other_userid, $other_userid);
                         // flag once per user

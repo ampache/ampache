@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Catalog\GarbageCollector;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Label\LabelGarbageCollectorInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
@@ -35,17 +36,18 @@ use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Repository\Model\Video;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 
 /**
@@ -67,6 +69,10 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         private ArtCleanupInterface $artCleanup,
         private ArtistRepositoryInterface $artistRepository,
         private FolderRepositoryInterface $folderRepository,
+        private VideoRepositoryInterface $videoRepository,
+        private PlaylistRepositoryInterface $playlistRepository,
+        private SearchRepositoryInterface $searchRepository,
+        private LabelGarbageCollectorInterface $labelGarbageCollector,
     ) {}
 
     public function collect(): void
@@ -74,18 +80,23 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         Song::garbage_collection();
         $this->artistRepository->collectGarbage();
         $this->albumRepository->collectGarbage();
-        Video::garbage_collection();
+        $this->videoRepository->collectGarbage();
         $this->bookmarkRepository->collectGarbage();
         $this->wantedRepository->collectGarbage();
         $this->artCleanup->collectGarbage();
         Stats::garbage_collection();
         Rating::garbage_collection();
         Userflag::garbage_collection();
+        // placeholder labels go first so the sweep below picks up the associations they leave behind
+        $this->labelGarbageCollector->collect();
         $this->labelRepository->collectGarbage();
         Recommendation::garbage_collection();
         $this->userActivityRepository->collectGarbage();
         $this->userRepository->collectGarbage();
-        Playlist::garbage_collection();
+        // dead playlist entries, plus collaborator rows that outlived their list and would otherwise
+        // be inherited by a later list handed the freed id
+        $this->playlistRepository->collectGarbage();
+        $this->searchRepository->collectGarbage();
         $this->shoutRepository->collectGarbage();
         Tag::garbage_collection();
         Catalog::clear_catalog_cache();

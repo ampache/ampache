@@ -32,11 +32,10 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -50,6 +49,7 @@ final readonly class InstallPluginAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
+        private PluginManagerInterface $pluginManager,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -79,8 +79,9 @@ final readonly class InstallPluginAction implements ApplicationActionInterface
             return null;
         }
 
-        $plugin = new Plugin($plugin_name);
-        if ($plugin->_plugin === null || !$plugin->install()) {
+        // Existence is confirmed above, so a false result here is an install failure; the manager also runs the
+        // post-install preference rebuild that must never be skipped
+        if (!$this->pluginManager->installPlugin($plugin_name)) {
             $this->logger->error(
                 sprintf('Error: Plugin Install Failed, %s', $plugin_name),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -96,11 +97,6 @@ final readonly class InstallPluginAction implements ApplicationActionInterface
 
             return null;
         }
-
-        Preference::clear_from_session();
-
-        // Don't trust the plugin to this stuff
-        User::rebuild_all_preferences();
 
         /* Show Confirmation */
         $url   = sprintf('%s/modules.php?action=show_plugins', $this->configContainer->getWebPath('/admin'));

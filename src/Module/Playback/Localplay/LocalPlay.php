@@ -219,7 +219,7 @@ class LocalPlay
             ? $this->_player->get()
             : false;
 
-        if (!is_array($data) || $data === []) {
+        if (!is_array($data)) {
             debug_event(self::class, 'Error Unable to get song info, check ' . $this->type . ' controller', 1);
 
             return [];

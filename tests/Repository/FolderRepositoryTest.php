@@ -24,6 +24,8 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\LibraryItemEnum;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -76,6 +78,45 @@ class FolderRepositoryTest extends TestCase
         );
     }
 
+    public function testGetChildrenDropsRowsWithAnUnknownObjectType(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(static::stringContains('`folder_id` = ?'), [666])
+            ->willReturn($result);
+
+        $result->expects(static::exactly(3))
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(
+                ['object_id' => '21', 'object_type' => 'song'],
+                ['object_id' => '33', 'object_type' => 'not-a-type'],
+                false
+            );
+
+        static::assertSame(
+            [['object_type' => LibraryItemEnum::SONG, 'object_id' => 21]],
+            $this->subject->getChildren(666)
+        );
+    }
+
+    public function testGetChildrenQueriesTheRootWhenNoIdIsGiven(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(static::stringContains('`folder_id` IS NULL'))
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getChildren(null));
+    }
+
     public function testGetItemCountReturnsCount(): void
     {
         $result = $this->createMock(PDOStatement::class);
@@ -104,6 +145,87 @@ class FolderRepositoryTest extends TestCase
             ->willReturn(false);
 
         static::assertSame(0, $this->subject->getItemCount());
+    }
+
+    public function testGetMediasNarrowsToASingleTypeWhenAsked(): void
+    {
+        $folder = new Folder();
+
+        $folder->id        = 666;
+        $folder->path_name = '/some/path';
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::stringContains('`folder_map`.`object_type` = ?'),
+                ['song', 666, '/some/path/%']
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getMedias($folder, 'song'));
+    }
+
+    public function testGetNameByIdReturnsNullWhenThereIsNoSuchFolder(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->willReturn(false);
+
+        static::assertNull($this->subject->getNameById(666));
+    }
+
+    public function testGetNameByIdReturnsTheName(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `folder`.`name` AS `f_name` FROM `folder` WHERE `id` = ?;', [666])
+            ->willReturn('some-name');
+
+        static::assertSame('some-name', $this->subject->getNameById(666));
+    }
+
+    public function testGetObjectsListsTopLevelFoldersForTheRoot(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(static::stringContains('`parent` IS NULL'))
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(
+                ['object_id' => '21', 'object_type' => 'folder'],
+                false
+            );
+
+        static::assertSame(
+            [['object_type' => LibraryItemEnum::FOLDER, 'object_id' => 21]],
+            $this->subject->getObjects(null)
+        );
+    }
+
+    public function testHasChildrenReportsWhetherRowsExist(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;', [666])
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('rowCount')
+            ->willReturn(2);
+
+        static::assertTrue($this->subject->hasChildren(666));
     }
 
     public function testLookupByPathNameReturnsIdWhenFound(): void
@@ -159,6 +281,67 @@ class FolderRepositoryTest extends TestCase
             ->willReturn(false);
 
         static::assertSame(0, $this->subject->lookup('Music', 3));
+    }
+
+    public function testMigrateObjectMovesTheMapRows(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `folder_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;',
+                [33, 21, 'song']
+            );
+
+        $this->subject->migrateObject('song', 21, 33);
+    }
+
+    public function testPersistInsertsANewFolderAndReturnsTheId(): void
+    {
+        $folder = new Folder();
+
+        $folder->name          = 'some-name';
+        $folder->catalog       = 2;
+        $folder->user          = 42;
+        $folder->addition_time = 1000;
+        $folder->update_time   = 1234;
+        $folder->path          = '1,2';
+        $folder->path_name     = '/some/path';
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::stringContains('INSERT INTO `folder`'),
+                ['some-name', 2, null, 42, 1000, 1234, '1,2', '/some/path']
+            );
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(666);
+
+        static::assertSame(666, $this->subject->persist($folder));
+    }
+
+    public function testPersistUpdatesAnExistingFolderAndReturnsNull(): void
+    {
+        $folder = new Folder();
+
+        $folder->id          = 666;
+        $folder->name        = 'some-name';
+        $folder->catalog     = 2;
+        $folder->parent      = 21;
+        $folder->update_time = 1234;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `folder` SET `name` = ?, `catalog` = ?, `parent` = ?, `update_time` = ? WHERE `id` = ?',
+                ['some-name', 2, 21, 1234, 666]
+            );
+
+        $this->connection->expects(static::never())
+            ->method('getLastInsertedId');
+
+        static::assertNull($this->subject->persist($folder));
     }
 
     public function testUpdateUtimeUsesProvidedTime(): void

@@ -359,5 +359,7 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
                 };
             });
         </script>
+        <?php
+        echo Ui::material_symbol_sprite(); ?>
     </body>
 </html>

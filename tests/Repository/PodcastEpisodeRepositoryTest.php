@@ -366,6 +366,33 @@ class PodcastEpisodeRepositoryTest extends TestCase
         );
     }
 
+    public function testSetFileStoresThePath(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `podcast_episode` SET `file` = ? WHERE `id` = ?', ['/some/path.mp3', 666]);
+
+        $this->subject->setFile(666, '/some/path.mp3');
+    }
+
+    public function testSetPlayedFlagsTheEpisode(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `podcast_episode` SET `played` = 1 WHERE `id` = ?', [666]);
+
+        $this->subject->setPlayed(666);
+    }
+
+    public function testSetUpdateTimeStampsTheEpisode(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `podcast_episode` SET `update_time` = ? WHERE `id` = ?;', [1234, 666]);
+
+        $this->subject->setUpdateTime(666, 1234);
+    }
+
     public function testUpdateStateUpdates(): void
     {
         $episode = $this->createMock(Podcast_Episode::class);
@@ -385,6 +412,27 @@ class PodcastEpisodeRepositoryTest extends TestCase
             );
 
         $this->subject->updateState($episode, $state);
+    }
+
+    public function testUpdateWritesTheEditableProperties(): void
+    {
+        $episode = new Podcast_Episode();
+
+        $episode->id          = 666;
+        $episode->title       = 'some-title';
+        $episode->website     = 'https://some-site';
+        $episode->description = 'some-description';
+        $episode->author      = 'some-author';
+        $episode->category    = 'some-category';
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?',
+                ['some-title', 'https://some-site', 'some-description', 'some-author', 'some-category', 666]
+            );
+
+        $this->subject->update($episode);
     }
 
     protected function setUp(): void

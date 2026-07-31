@@ -31,12 +31,13 @@ use Ampache\Module\Util\Ui;
 /** @var array<string, array{description: string, type: string}> $fields */
 
 Ui::show_box_top(T_('Add Localplay Instance'), 'box box_localplay_add_instance'); ?>
-<form method="post" action="<?php echo AmpConfig::get_web_path('/client'); ?>/localplay.php?action=add_instance">
+<form method="post" action="<?php echo AmpConfig::get_web_path('/client'); ?>/localplay.php?action=add_instance" autocomplete="off">
 <table class="tabledata">
-<?php foreach ($fields as $key => $field) { ?>
+<?php foreach ($fields as $key => $field) {
+    $autocomplete = ($field['type'] === 'password') ? 'new-password' : 'off'; ?>
 <tr>
     <td><?php echo $field['description']; ?></td>
-    <td><input type="<?php echo $field["type"]; ?>" name="<?php echo $key; ?>" /></td>
+    <td><input type="<?php echo $field["type"]; ?>" name="<?php echo $key; ?>" autocomplete="<?php echo $autocomplete; ?>" /></td>
 </tr>
 <?php } ?>
 </table>

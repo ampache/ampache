@@ -152,7 +152,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                                 <span class="cel_item_add">
                                     <?php echo Ajax::button('?action=basket&type=song&id=' . $item->id, 'new_window', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $item->id); ?>
                                     <a id="<?php echo 'add_to_playlist_' . $count . '_' . $item->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $item->id; ?>')">
-                                        <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+                                        <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
                                     </a>
                                 </span>
                             </td>
@@ -227,7 +227,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
     foreach ($userflags as $userflag) {
         $item = new Song($userflag);
         if ($item->isNew() === false) {
-            echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
+            echo '<tr id="song_' . $userflag . '" class="libitem_menu" data-object-type="song" data-object-id="' . $userflag . '">';
             if (!$this->gridview) {
                 echo '<td class="grid_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
                 echo '<span style="margin-right: 10px;">';

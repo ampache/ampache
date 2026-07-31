@@ -26,6 +26,7 @@ namespace Ampache\Module\System\Update\Migration\V7;
 
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
 /**
@@ -47,7 +48,7 @@ final class Migration700020 extends AbstractMigration
         $this->updateDatabase('ALTER TABLE `user_preference` CHANGE COLUMN `name` `name` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL;');
 
         // Ensure valid prefs are set
-        User::rebuild_all_preferences();
+        Preference::rebuild_all_preferences();
 
         // delete duplicates before setting the unique key
         $sql        = "SELECT `user`, `name` FROM `user_preference` GROUP BY `user`, `name` HAVING COUNT(CONCAT(`user`, `name`)) > 1;";

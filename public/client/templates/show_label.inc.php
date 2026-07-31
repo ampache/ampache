@@ -136,6 +136,7 @@ if (AmpConfig::get('external_links_discogs')) {
     <div id="tabs_container">
         <ul id="tabs">
             <li class="tab_active"><a href="#artists"><?php echo T_('Artists'); ?></a></li>
+            <li><a id="albums_link" href="#albums"><?php echo T_('Albums'); ?></a></li>
             <li><a id="songs_link" href="#songs"><?php echo T_('Songs'); ?></a></li>
         </ul>
     </div>
@@ -144,6 +145,12 @@ if (AmpConfig::get('external_links_discogs')) {
 <?php $browse->show_objects($object_ids, true);
 $browse->set_use_alpha(false, false);
 $browse->store(); ?>
+        </div>
+<?php echo Ajax::observe('albums_link', 'click', Ajax::action('?page=index&action=albums&label=' . $label->id, 'albums')); ?>
+        <div id="albums" class="tab_content">
+        <?php Ui::show_box_top(T_('Albums'), 'info-box');
+echo T_('Loading...');
+Ui::show_box_bottom(); ?>
         </div>
 <?php echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs')); ?>
         <div id="songs" class="tab_content">

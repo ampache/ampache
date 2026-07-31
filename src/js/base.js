@@ -58,9 +58,19 @@ $(document).ready(function(){
     if (jsAmpConfigLibitemContextmenu) {
         function libitem_action(item, action)
         {
-            var iinfo = item.attr('id').split('_', 2);
-            var object_type = iinfo[0];
-            var object_id = iinfo[1];
+            // A .libitem_menu element states what it is through data-object-type/data-object-id.
+            var object_type = item.attr('data-object-type');
+            var object_id = item.attr('data-object-id');
+
+            if (!object_type || !object_id) {
+                var matched = /^(.+)_(\d+)$/.exec(item.attr('id') || '');
+                if (matched === null) {
+                    return;
+                }
+
+                object_type = matched[1];
+                object_id = matched[2];
+            }
 
             if (typeof action !== 'undefined' && action !== '') {
                 ajaxPut(jsAjaxUrl + action + '&object_type=' + object_type + '&object_id=' + object_id);
@@ -246,6 +256,18 @@ export function navigateToUrl(url) {
 
 export function NavigateTo(url) {
     navigateToUrl(url);
+}
+
+export function appendDeleteBurl(link) {
+    if (!/\/(song|albums|artists|video|labels|podcast_episode|podcast)\.php\?[^#]*\baction=delete\b/.test(link) || /[?&]burl=/.test(link)) {
+        return link;
+    }
+    var origin = getCurrentPage();
+    if (!origin) {
+        return link;
+    }
+
+    return link + "&burl=" + encodeURIComponent(origin);
 }
 
 export function getCurrentPage() {

@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,6 +41,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(
@@ -50,18 +52,26 @@ final readonly class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $songId = (int) ($request->getQueryParams()['song_id'] ?? 0);
+        $queryParams = $request->getQueryParams();
+        $songId      = (int) ($queryParams['song_id'] ?? 0);
+        $burlParam   = (string) ($queryParams['burl'] ?? '');
+        $webPath     = $this->configContainer->getWebPath('/client');
 
         $this->ui->showHeader();
-        $this->ui->showConfirmation(
+        $this->ui->showConfirmationWithReturn(
             T_('Are You Sure?'),
             T_('The Song will be deleted'),
             sprintf(
-                '%s/song.php?action=confirm_delete&song_id=%d',
-                $this->configContainer->getWebPath('/client'),
+                '%s/song.php?action=confirm_delete&song_id=%d&burl=%s',
+                $webPath,
+                $songId,
+                rawurlencode($burlParam)
+            ),
+            $this->deletionUrlResolver->resolveBurl($burlParam) ?: sprintf(
+                '%s/song.php?action=show_song&song_id=%d',
+                $webPath,
                 $songId
             ),
-            1,
             'delete_song'
         );
 

@@ -32,6 +32,7 @@ use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
@@ -49,6 +50,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
         private AlbumDeleterInterface $albumDeleter,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -69,6 +71,20 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
+        // The album artist has to be read while the row is still there; the deleter takes the album with it,
+        $webPath   = $this->configContainer->getWebPath('/client');
+        $parentUrl = ($album->album_artist !== null && $album->album_artist > 0)
+            ? sprintf('%s/artists.php?action=show&artist=%d', $webPath, $album->album_artist)
+            : '';
+        $burlParam   = (string) ($request->getQueryParams()['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'album',
+            $album_id,
+            $parentUrl,
+            sprintf('%s/browse.php?action=album', $webPath)
+        );
+
         $this->ui->showHeader();
         try {
             $this->albumDeleter->delete($album);
@@ -76,14 +92,14 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Album has been deleted'),
-                $this->configContainer->getWebPath('/client')
+                $continueUrl
             );
         } catch (AlbumDeletionException) {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
                 sprintf(T_("Couldn't delete this %s"), T_('Album')),
-                $this->configContainer->getWebPath('/client')
+                $continueUrl
             );
         }
 

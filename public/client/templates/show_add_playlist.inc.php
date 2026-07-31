@@ -26,28 +26,32 @@ declare(strict_types=1);
 // show_add_playlist.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-Ui::show_box_top(T_('Create Playlist')); ?>
-<form name="songs" method="post" action="<?php echo AmpConfig::get_web_path('/client'); ?>/playlist.php">
+Ui::show_box_top(T_('Create Playlist'), 'box box_add_playlist'); ?>
+<form name="playlist" method="post" action="<?php echo AmpConfig::get_web_path('/client'); ?>/playlist.php?action=create">
     <table class="tabledata">
         <tr>
-            <td><?php echo T_('Name'); ?>:</td>
-            <td><input type="text" name="playlist_name" /></td>
+            <td><?php echo T_('Name'); ?></td>
+            <td><input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name'] ?? ''); ?>" autofocus />
+                <?php echo AmpError::display('name'); ?>
+            </td>
         </tr>
         <tr>
-            <td><?php echo T_('Type'); ?>:</td>
+            <td><?php echo T_('Type'); ?></td>
             <td>
                 <select name="type">
-                    <option value="private"><?php echo T_("Private"); ?></option>
-                    <option value="public"><?php echo T_("Public"); ?></option>
+                    <option value="private"<?php echo (($_REQUEST['type'] ?? 'private') === 'private') ? ' selected="selected"' : ''; ?>><?php echo T_('Private'); ?></option>
+                    <option value="public"<?php echo (($_REQUEST['type'] ?? '') === 'public') ? ' selected="selected"' : ''; ?>><?php echo T_('Public'); ?></option>
                 </select>
             </td>
         </tr>
     </table>
     <div class="formValidation">
+        <?php echo Core::form_register('add_playlist'); ?>
         <input class="button" type="submit" value="<?php echo T_('Create'); ?>" />
-        <input type="hidden" name="action" value="Create" />
     </div>
 </form>
 <?php Ui::show_box_bottom(); ?>

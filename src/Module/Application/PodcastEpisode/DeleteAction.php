@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,6 +41,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -48,18 +50,26 @@ final readonly class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $episode_id = (int) ($request->getQueryParams()['podcast_episode_id'] ?? 0);
+        $queryParams = $request->getQueryParams();
+        $episode_id  = (int) ($queryParams['podcast_episode_id'] ?? 0);
+        $burlParam   = (string) ($queryParams['burl'] ?? '');
+        $webPath     = $this->configContainer->getWebPath('/client');
 
         $this->ui->showHeader();
-        $this->ui->showConfirmation(
+        $this->ui->showConfirmationWithReturn(
             T_('Are You Sure?'),
             T_('The Podcast Episode will be deleted'),
             sprintf(
-                '%s/podcast_episode.php?action=confirm_delete&podcast_episode_id=%d',
-                $this->configContainer->getWebPath('/client'),
+                '%s/podcast_episode.php?action=confirm_delete&podcast_episode_id=%d&burl=%s',
+                $webPath,
+                $episode_id,
+                rawurlencode($burlParam)
+            ),
+            $this->deletionUrlResolver->resolveBurl($burlParam) ?: sprintf(
+                '%s/podcast_episode.php?action=show&podcast_episode=%d',
+                $webPath,
                 $episode_id
             ),
-            1,
             'delete_podcast_episode'
         );
 

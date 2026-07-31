@@ -50,9 +50,12 @@ if ($blink) {
 <?php Ui::show_box_top($boxtitle, 'box box_graph'); ?>
 <div class="stats_graph">
 <?php
+// embed as <object> not <img> so the svg keeps its scripting context and its legend stays draggable in place;
 foreach ($gtypes as $gtype) {
     $graph_link = $web_path . "/graph.php?type=" . $gtype . "&start_date=" . $start_date . "&end_date=" . $end_date . "&zoom=" . $zoom . "&user_id=" . $user_id . "&object_type=" . $object_type . "&object_id=" . $object_id; ?>
-    <a href="<?php echo $graph_link; ?>&width=1400&height=690" target="_blank" title="<?php echo T_('Show large'); ?>"><img src="<?php echo $graph_link; ?>" /></a>
+    <object type="image/svg+xml" data="<?php echo $graph_link; ?>" width="700" height="260"></object>
+    <br />
+    <a href="<?php echo $graph_link; ?>&width=1400&height=690" target="_blank"><?php echo Ui::get_material_symbol('open_in_new', T_('Link')); ?> <?php echo T_('Link'); ?></a>
         <br /><br />
     <?php
 } ?>
@@ -102,6 +105,7 @@ foreach ($date_formats as $dtype => $dname) {
     <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
     <input type="hidden" name="action" value="<?php echo scrub_out(Core::get_request('action')); ?>" />
     <input type="hidden" name="type" value="<?php echo $type ?? ''; ?>" />
+    <input type="hidden" name="rendered_zoom" value="<?php echo $zoom; ?>" />
 </form>
 <script>
     $('#start_date').datetimepicker({
@@ -109,7 +113,7 @@ foreach ($date_formats as $dtype => $dname) {
         theme: 'dark'
     });
     $('#end_date').datetimepicker({
-        format:'Y-m-d H:i',
+        format: 'Y-m-d H:i',
         theme: 'dark'
     });
 </script>

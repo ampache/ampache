@@ -32,12 +32,13 @@ use Ampache\Module\Util\Ui;
 /** @var array<string, array{description: string, type: string}> $fields */
 
 Ui::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance'); ?>
-<form method="post" action="<?php echo AmpConfig::get_web_path('/client'); ?>/localplay.php?action=update_instance&instance=<?php echo (int) scrub_in((string) filter_input(INPUT_GET, 'instance', FILTER_SANITIZE_SPECIAL_CHARS)); ?>">
+<form method="post" action="<?php echo AmpConfig::get_web_path('/client'); ?>/localplay.php?action=update_instance&instance=<?php echo (int) scrub_in((string) filter_input(INPUT_GET, 'instance', FILTER_SANITIZE_SPECIAL_CHARS)); ?>" autocomplete="off">
 <table class="tabledata">
-<?php foreach ($fields as $key => $field) { ?>
+<?php foreach ($fields as $key => $field) {
+    $autocomplete = ($field['type'] === 'password') ? 'new-password' : 'off'; ?>
 <tr>
     <td><?php echo $field['description']; ?></td>
-    <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out($instance[$key]); ?>" /></td>
+    <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out($instance[$key]); ?>" autocomplete="<?php echo $autocomplete; ?>" /></td>
 </tr>
 <?php } ?>
 </table>

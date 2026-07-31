@@ -28,6 +28,7 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Override;
 
@@ -82,7 +83,7 @@ final class AdminAddUserCommand extends Command
             );
             echo "\n";
 
-            User::fix_preferences(-1);
+            Preference::fix_user_preferences(-1);
         } else {
             $interactor->error(
                 T_('User creation failed'),

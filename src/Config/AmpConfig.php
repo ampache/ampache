@@ -94,15 +94,15 @@ class AmpConfig
      *
      * pull the timer and check using the time of the song for %complete skips
      */
-    public static function get_skip_timer(int $previous_time): ?int
+    public static function get_skip_timer(int $previous_time): int
     {
         $timekeeper = self::get('skip_timer');
         $skip_time  = 20;
         if ((int) $timekeeper > 1) {
-            $skip_time = $timekeeper;
+            $skip_time = (int) $timekeeper;
         }
         if ($timekeeper < 1 && $timekeeper > 0) {
-            $skip_time = (int) ($previous_time * $timekeeper);
+            $skip_time = (int) ($previous_time * (float) $timekeeper);
         }
 
         return $skip_time;

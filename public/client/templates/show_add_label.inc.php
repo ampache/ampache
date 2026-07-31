@@ -122,11 +122,12 @@ Ui::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
 <tr>
     <td><?php echo T_('Status'); ?></td>
     <td>
+        <?php // a fresh form has no `active` key, and a new label is active by default like the column?>
         <select name="active">
-            <option value="1" <?php if (array_key_exists('active', $_REQUEST) && (int) $_REQUEST['active'] === 1) {
+            <option value="1" <?php if (!array_key_exists('active', $_REQUEST) || (int) $_REQUEST['active'] === 1) {
                 echo "selected";
             } ?>><?php echo T_('Active'); ?></option>
-            <option value="0" <?php if (empty($_REQUEST['active']) || (int) $_REQUEST['active'] === 0) {
+            <option value="0" <?php if (array_key_exists('active', $_REQUEST) && (int) $_REQUEST['active'] === 0) {
                 echo "selected";
             } ?>><?php echo T_('Inactive'); ?></option>
         </select>

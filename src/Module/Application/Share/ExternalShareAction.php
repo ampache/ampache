@@ -73,7 +73,12 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $plugin = new Plugin(Core::get_get('plugin'));
+        $pluginName = Core::get_get('plugin');
+        if ($pluginName === '') {
+            throw new AccessDeniedException('Access Denied - Unknown external share plugin');
+        }
+
+        $plugin = new Plugin($pluginName);
         if (!$plugin->_plugin instanceof PluginExternalShareInterface) {
             throw new AccessDeniedException('Access Denied - Unknown external share plugin');
         }

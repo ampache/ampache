@@ -28,6 +28,8 @@ namespace Ampache\Repository;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\SongDataFieldEnum;
+use Ampache\Repository\Model\SongFieldEnum;
 use Ampache\Repository\Model\Tag;
 use Iterator;
 use Traversable;
@@ -42,6 +44,12 @@ interface SongRepositoryInterface
     public function collectGarbageForSongs(array $songIds): void;
 
     public function delete(int $songId): bool;
+
+    /**
+     * The uploader of the song: an id, null when it was not user-uploaded, false when there is no
+     * such song
+     */
+    public function findOwnerId(int $songId): int|false|null;
 
     /**
      * gets the songs (including songs where they are the album artist) for this artist
@@ -141,4 +149,14 @@ interface SongRepositoryInterface
         Artist $artist,
         int $count = 50,
     ): array;
+
+    /**
+     * Writes a single `song_data` column, returning false when the write failed
+     */
+    public function setDataField(int $songId, SongDataFieldEnum $field, string $value): bool;
+
+    /**
+     * Writes a single `song` column, returning false when the write failed
+     */
+    public function setField(int $songId, SongFieldEnum $field, int|string|null $value): bool;
 }

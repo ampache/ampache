@@ -32,7 +32,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
@@ -66,12 +66,12 @@ class SmartlistMethodTest extends MockeryTestCase
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
-        $smartlist  = $this->mock(Search::class);
+        $smartlist  = $this->mock(Smartlist::class);
 
         $result = 'error-result';
 
-        $this->modelFactory->shouldReceive('createSearch')
-            ->with(42, 'song', $user)
+        $this->modelFactory->shouldReceive('createSmartlist')
+            ->with(42, $user)
             ->once()
             ->andReturn($smartlist);
 
@@ -128,12 +128,12 @@ class SmartlistMethodTest extends MockeryTestCase
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
-        $smartlist  = $this->mock(Search::class);
+        $smartlist  = $this->mock(Smartlist::class);
 
         $result = 'some-result';
 
-        $this->modelFactory->shouldReceive('createSearch')
-            ->with(42, 'song', $user)
+        $this->modelFactory->shouldReceive('createSmartlist')
+            ->with(42, $user)
             ->once()
             ->andReturn($smartlist);
 
@@ -198,10 +198,10 @@ class SmartlistMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
-        $smartlist  = $this->mock(Search::class);
+        $smartlist  = $this->mock(Smartlist::class);
 
-        $this->modelFactory->shouldReceive('createSearch')
-            ->with(42, 'song', $user)
+        $this->modelFactory->shouldReceive('createSmartlist')
+            ->with(42, $user)
             ->once()
             ->andReturn($smartlist);
 

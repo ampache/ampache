@@ -578,7 +578,7 @@ final class SongSearch implements SearchInterface
                     $looking      = str_replace('other_user_', '', $rule[0]);
                     $column       = ($looking == 'other_user') ? 'id' : $looking;
                     $my_type      = ($looking == 'other_user') ? 'song' : $looking;
-                    $other_userid = $input;
+                    $other_userid = (int) $input;
                     if ($operator_sql == 'userflag') {
                         $where[] = "`favorite_" . $my_type . "_" . $other_userid . sprintf('`.`user` = %s AND `favorite_', $other_userid) . $my_type . "_" . $other_userid . "`.`object_type` = '" . $my_type . "'";
                         // flag once per user

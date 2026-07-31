@@ -37,6 +37,7 @@ enum ObjectTypeEnum: string
     case ARTIST          = 'artist';
     case BOOKMARK        = 'bookmark';
     case BROADCAST       = 'broadcast';
+    case COLLECTION      = 'collection';
     case FOLDER          = 'folder';
     case GENRE           = 'genre';
     case LABEL           = 'label';
@@ -47,6 +48,10 @@ enum ObjectTypeEnum: string
     case PRIVATE_MESSAGE = 'private_message';
     case SEARCH          = 'search';
     case SHARE           = 'share';
+
+    // The API's name for a saved search. `search` is the value stored in every `object_type` column,
+    // so both spellings arrive here and both mean the same saved list.
+    case SMARTLIST       = 'smartlist';
     case SONG            = 'song';
     case SONG_ARTIST     = 'song_artist';
     case SONG_PREVIEW    = 'song_preview';

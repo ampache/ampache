@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,6 +47,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,18 +63,26 @@ final readonly class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $podcastId = (int) ($request->getQueryParams()['podcast_id']);
+        $queryParams = $request->getQueryParams();
+        $podcastId   = (int) ($queryParams['podcast_id']);
+        $burlParam   = (string) ($queryParams['burl'] ?? '');
+        $webPath     = $this->configContainer->getWebPath('/client');
 
         $this->ui->showHeader();
-        $this->ui->showConfirmation(
+        $this->ui->showConfirmationWithReturn(
             T_('Are You Sure?'),
             T_('The Podcast will be removed from the database'),
             sprintf(
-                '%s/podcast.php?action=confirm_delete&podcast_id=%d',
-                $this->configContainer->getWebPath('/client'),
+                '%s/podcast.php?action=confirm_delete&podcast_id=%d&burl=%s',
+                $webPath,
+                $podcastId,
+                rawurlencode($burlParam)
+            ),
+            $this->deletionUrlResolver->resolveBurl($burlParam) ?: sprintf(
+                '%s/podcast.php?action=show&podcast=%d',
+                $webPath,
                 $podcastId
             ),
-            1,
             'delete_podcast'
         );
         $this->ui->showQueryStats();

@@ -120,7 +120,7 @@ foreach ($object_ids as $artist_id) {
             $show_direct_play = $show_playlist_add;
         }
     } ?>
-        <tr id="artist_<?php echo $libitem->id; ?>" class="libitem_menu">
+        <tr id="artist_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="artist" data-object-id="<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php

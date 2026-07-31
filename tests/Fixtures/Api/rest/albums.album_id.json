@@ -38,5 +38,6 @@
     "rating": null,
     "averagerating": null,
     "mbid": null,
-    "mbid_group": null
+    "mbid_group": null,
+    "catalog": "32"
 }

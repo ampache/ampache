@@ -146,7 +146,7 @@ foreach ($data as $row) {
                 <span class="cel_item_add">
                     <?php echo Ajax::button('?action=basket&type=' . $row['object_type'] . '&id=' . $media->getId(), 'new_window', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $media->getId()); ?>
                     <a id="<?php echo 'add_to_playlist_' . $count . '_' . $media->getId(); ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $media->getId(); ?>')">
-                        <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+                        <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
                     </a>
                 </span>
                 </td>

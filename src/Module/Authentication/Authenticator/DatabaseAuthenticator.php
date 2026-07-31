@@ -25,11 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authentication\Authenticator;
 
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\User;
 
 final class DatabaseAuthenticator implements AuthenticatorInterface
 {
+    public function __construct(
+        private readonly SymmetricEncrypterInterface $symmetricEncrypter,
+        private readonly DatabaseConnectionInterface $databaseConnection,
+    ) {}
+
     /**
      * @return array{
      *     success: bool,
@@ -41,10 +48,12 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
     public function auth(string $username, string $password): array
     {
         if (strlen($password) && strlen($username)) {
-            $sql        = 'SELECT `password` FROM `user` WHERE `username` = ?';
-            $db_results = Dba::read($sql, [$username]);
+            $row = $this->databaseConnection->fetchRow(
+                'SELECT `password` FROM `user` WHERE `username` = ?',
+                [$username]
+            );
 
-            if ($row = Dba::fetch_assoc($db_results)) {
+            if (is_array($row) && $row !== []) {
                 // Use SHA2 now... cooking with fire.
                 // For backwards compatibility we hash a couple of different
                 // variations of the password. Increases collision chances, but
@@ -74,12 +83,25 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
                 }
             }
 
-            // subsonic password fallback for auth with apikey
-            $sub_sql = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
-            $results = Dba::read($sub_sql, [$username]);
-            $row     = Dba::fetch_assoc($results);
-            $api_key = $row['apikey'] ?? '';
-            if ($password == $api_key) {
+            // Subsonic sends the credential as a plaintext `p=` password when the client does not do token auth, so the
+            // dedicated Subsonic secret and the legacy api key are both accepted here as well.
+            $row = $this->databaseConnection->fetchRow(
+                'SELECT `apikey`, `subsonic_secret` FROM `user` WHERE `username` = ?',
+                [$username]
+            );
+            if (!is_array($row)) {
+                $row = [];
+            }
+
+            $secret = (empty($row['subsonic_secret']))
+                ? null
+                : $this->symmetricEncrypter->decrypt((string) $row['subsonic_secret']);
+
+            $api_key = (string) ($row['apikey'] ?? '');
+            if (
+                ($secret !== null && hash_equals($secret, $password))
+                || ($api_key !== '' && hash_equals($api_key, $password))
+            ) {
                 return [
                     'success' => true,
                     'type' => 'mysql',

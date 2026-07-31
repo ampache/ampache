@@ -29,7 +29,6 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -94,7 +93,6 @@ final class PlaylistCreateMethod implements MethodInterface
             return $response;
         }
 
-        Catalog::count_table('playlist');
 
         $response->getBody()->write(
             $output->playlists($apiVersion, [$objectId], $user, $input['auth'], false, false)

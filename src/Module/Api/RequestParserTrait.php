@@ -33,15 +33,63 @@ use Psr\Http\Message\ServerRequestInterface;
  * Shared request-body parsing for the API application entry points.
  *
  * Parameters for a write request may be supplied in the query string, a form-encoded body, or a JSON body.
- * PSR-7 populates getParsedBody() from form/multipart bodies only, so application/json is decoded here from
- * the raw body. GET (and other bodyless methods) return nothing.
+ * php only fills $_POST (and with it getParsedBody()) for POST, so the REST verbs read their form body from
+ * the raw stream instead. GET (and other bodyless methods) return nothing.
  */
 trait RequestParserTrait
 {
     /**
+     * Read the plain fields out of a multipart body. Uploads do not belong on these routes, so parts carrying
+     * a filename are skipped rather than handled.
+     *
+     * @return array<array-key, mixed>
+     */
+    private function parseMultipartBody(string $body, string $contentType): array
+    {
+        if (!preg_match('/boundary=(?:"([^"]+)"|([^;,\s]+))/i', $contentType, $matches)) {
+            return [];
+        }
+
+        $boundary = ($matches[1] !== '') ? $matches[1] : $matches[2];
+
+        $result = [];
+        foreach (explode('--' . $boundary, $body) as $part) {
+            $segments = explode("\r\n\r\n", ltrim($part, "\r\n"), 2);
+            if (
+                count($segments) !== 2
+                || stripos($segments[0], 'filename=') !== false
+                || !preg_match('/name=(?:"([^"]*)"|([^;\r\n]+))/i', $segments[0], $nameMatch)
+            ) {
+                continue;
+            }
+
+            $name  = trim(($nameMatch[1] !== '') ? $nameMatch[1] : ($nameMatch[2] ?? ''));
+            $value = rtrim($segments[1], "\r\n");
+            if ($name === '') {
+                continue;
+            }
+
+            if (!str_ends_with($name, '[]')) {
+                $result[$name] = $value;
+
+                continue;
+            }
+
+            $key = substr($name, 0, -2);
+            if (!isset($result[$key]) || !is_array($result[$key])) {
+                $result[$key] = [];
+            }
+
+            $result[$key][] = $value;
+        }
+
+        return $result;
+    }
+
+    /**
      * Extract request parameters carried in the body (form-encoded or application/json).
      *
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      */
     private function parseRequestBody(ServerRequestInterface $request): array
     {
@@ -49,12 +97,28 @@ trait RequestParserTrait
             return [];
         }
 
-        if (str_contains($request->getHeaderLine('Content-Type'), 'application/json')) {
+        $contentType = $request->getHeaderLine('Content-Type');
+        if (str_contains($contentType, 'application/json')) {
             $decoded = json_decode((string) $request->getBody(), true);
 
             return is_array($decoded) ? $decoded : [];
         }
 
-        return (array) $request->getParsedBody();
+        $parsed = (array) $request->getParsedBody();
+        if ($parsed !== []) {
+            return $parsed;
+        }
+
+        if (str_contains($contentType, 'application/x-www-form-urlencoded')) {
+            parse_str((string) $request->getBody(), $result);
+
+            return $result;
+        }
+
+        if (str_contains($contentType, 'multipart/form-data')) {
+            return $this->parseMultipartBody((string) $request->getBody(), $contentType);
+        }
+
+        return [];
     }
 }

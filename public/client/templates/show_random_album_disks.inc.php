@@ -48,7 +48,7 @@ if (!empty($albumDisks)) {
         $albumDisk = new AlbumDisk($album_disk_id);
         $show_play = true; ?>
     <div class="random_album">
-        <div id="album_<?php echo $album_disk_id; ?>" class="art_album libitem_menu">
+        <div id="album_disk_<?php echo $album_disk_id; ?>" class="art_album libitem_menu" data-object-type="album_disk" data-object-id="<?php echo $album_disk_id; ?>">
             <?php $size = ['width' => 100, 'height' => 100];
         if (Ui::is_grid_view('album')) {
             $size      = ['width' => 150, 'height' => 150];

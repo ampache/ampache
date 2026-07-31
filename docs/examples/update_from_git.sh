@@ -54,7 +54,7 @@ if [ "$OLD_HASH" != "$NEW_HASH" ]; then
   ### You don't always need to do this but some people might want to keep composer packages updated here
   ### You might want the dev packages as well so you can remove '--no-dev' to install those
   ### If the git version of php doesn't match yours, fall back to composer update to get the correct packages
-  #composer install --no-dev --prefer-source --no-interaction || composer update --no-dev --prefer-source --no-interaction
+  #composer install --no-dev --prefer-dist --no-interaction || composer update --no-dev --prefer-dist --no-interaction
 
   ### NPM is now required to handle all the javascript packages
   npm install || exit 1

@@ -136,7 +136,6 @@ final class PlaylistGenerateMethod implements MethodInterface
 
     /**
      * @param array<string, mixed> $input
-     *
      * @return array<string, mixed>
      */
     private function buildRules(string $mode, array $input): array

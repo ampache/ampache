@@ -67,6 +67,7 @@ final class AlbumQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
+        'addition_time',
         'album_artist_album_sort',
         'album_artist_title',
         'album_artist',
@@ -353,6 +354,7 @@ final class AlbumQuery implements QueryInterface
             case 'year':
                 $sql = sprintf('`album`.`year` %s, `album`.`addition_time`', $order);
                 break;
+            case 'addition_time':
             case 'barcode':
             case 'catalog_number':
             case 'catalog':

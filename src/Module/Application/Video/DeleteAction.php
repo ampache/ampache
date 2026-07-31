@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,6 +44,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
         private LoggerInterface $logger,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -51,7 +53,9 @@ final readonly class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $videoId = (int) ($request->getQueryParams()['video_id'] ?? 0);
+        $queryParams = $request->getQueryParams();
+        $videoId     = (int) ($queryParams['video_id'] ?? 0);
+        $burlParam   = (string) ($queryParams['burl'] ?? '');
 
         $this->ui->showHeader();
         if ($videoId < 1) {
@@ -61,15 +65,22 @@ final readonly class DeleteAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->showConfirmation(
+            $webPath = $this->configContainer->getWebPath('/client');
+
+            $this->ui->showConfirmationWithReturn(
                 T_('Are You Sure?'),
                 T_('The Video will be deleted'),
                 sprintf(
-                    '%s/video.php?action=confirm_delete&video_id=%d',
-                    $this->configContainer->getWebPath('/client'),
+                    '%s/video.php?action=confirm_delete&video_id=%d&burl=%s',
+                    $webPath,
+                    $videoId,
+                    rawurlencode($burlParam)
+                ),
+                $this->deletionUrlResolver->resolveBurl($burlParam) ?: sprintf(
+                    '%s/video.php?action=show_video&video_id=%d',
+                    $webPath,
                     $videoId
                 ),
-                1,
                 'delete_video'
             );
         }

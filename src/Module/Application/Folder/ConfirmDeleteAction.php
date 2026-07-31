@@ -78,7 +78,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
-            T_('The Folder has been deleted'),
+            sprintf(T_('%s has been deleted'), T_('Folder')),
             sprintf(
                 '%s/folders.php?action=show&folder_id=%s',
                 $this->configContainer->getWebPath('/client'),

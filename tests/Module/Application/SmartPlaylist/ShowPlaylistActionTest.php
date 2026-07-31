@@ -29,7 +29,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Smartlist;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -47,12 +47,12 @@ class ShowPlaylistActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $search     = $this->mock(Search::class);
+        $search     = $this->mock(Smartlist::class);
 
         $playlistId = 666;
         $objectIds  = [1, 2, 3];
 
-        $this->modelFactory->shouldReceive('createSearch')
+        $this->modelFactory->shouldReceive('createSmartlist')
             ->with($playlistId)
             ->once()
             ->andReturn($search);

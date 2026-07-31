@@ -51,7 +51,9 @@ final readonly class TagAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
 
         $this->ui->showHeader();
         // FIXME: This whole thing is ugly, even though it works.

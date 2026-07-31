@@ -31,7 +31,7 @@ use Ampache\Module\Api\Method\Exception\AccessFailedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
@@ -82,10 +82,10 @@ class SmartlistDeleteMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
-        $smartlist  = $this->mock(Search::class);
+        $smartlist  = $this->mock(Smartlist::class);
 
-        $this->modelFactory->shouldReceive('createSearch')
-            ->with($objectId, 'song', $user)
+        $this->modelFactory->shouldReceive('createSmartlist')
+            ->with($objectId, $user)
             ->once()
             ->andReturn($smartlist);
 
@@ -113,12 +113,12 @@ class SmartlistDeleteMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
-        $smartlist  = $this->mock(Search::class);
+        $smartlist  = $this->mock(Smartlist::class);
 
         $objectId = 666;
 
-        $this->modelFactory->shouldReceive('createSearch')
-            ->with($objectId, 'song', $user)
+        $this->modelFactory->shouldReceive('createSmartlist')
+            ->with($objectId, $user)
             ->once()
             ->andReturn($smartlist);
 

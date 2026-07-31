@@ -66,17 +66,35 @@ final readonly class UpdateAction implements ApplicationActionInterface
             }
 
             set_time_limit(300);
-            AutoUpdate::update_files();
-            AutoUpdate::update_dependencies($this->configContainer);
+            $success = AutoUpdate::update_files();
+            if ($success) {
+                $success = AutoUpdate::update_dependencies($this->configContainer);
+            }
+
             Preference::translate_db();
             Preference::set_defaults();
 
+            // a failed update has already printed the command output, so stay on the page rather than redirect
+            if (!$success) {
+                return $this->responseFactory->createResponse();
+            }
+
+            $target = $this->getReturnPath($request);
+
+            // the commands flush their output as they run, so a Location header would be dropped
+            if (headers_sent()) {
+                echo '<script>window.location.href = ' . (string) json_encode(
+                    $target,
+                    JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+                ) . ';</script>';
+                echo '<p><a href="' . scrub_out($target) . '">' . T_('Continue') . '</a></p>';
+
+                return $this->responseFactory->createResponse();
+            }
+
             return $this->responseFactory
                 ->createResponse(RFC7231::FOUND)
-                ->withHeader(
-                    'Location',
-                    $this->configContainer->getWebPath('/client')
-                );
+                ->withHeader('Location', $target);
         } elseif ($this->updater->hasPendingUpdates()) {
             try {
                 $this->updater->update();
@@ -100,5 +118,29 @@ final readonly class UpdateAction implements ApplicationActionInterface
             ->withBody(
                 $this->streamFactory->createStream($result)
             );
+    }
+
+    /**
+     * Return to the page the update was started from, falling back to the web root.
+     */
+    private function getReturnPath(ServerRequestInterface $request): string
+    {
+        $fallback = $this->configContainer->getWebPath('/client');
+        $referer  = $request->getHeaderLine('Referer');
+        if ($referer === '') {
+            return $fallback;
+        }
+
+        $parts = parse_url($referer);
+        if (
+            $parts === false
+            || !isset($parts['path'])
+            || (isset($parts['host']) && $parts['host'] !== $request->getUri()->getHost())
+            || str_contains($parts['path'], 'update.php')
+        ) {
+            return $fallback;
+        }
+
+        return $parts['path'] . (isset($parts['query']) ? '?' . $parts['query'] : '');
     }
 }

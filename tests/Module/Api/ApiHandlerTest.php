@@ -184,6 +184,15 @@ class ApiHandlerTest extends TestCase
         );
     }
 
+    public function testNormalizeActionKeepsAnEmptyActionEmpty(): void
+    {
+        // the rest applications rely on this to skip the http-verb suffix so the handler can fall back to a ping
+        static::assertSame(
+            '',
+            $this->subject->normalizeAction('', 'song', true)
+        );
+    }
+
     public function testNormalizeActionLeavesShareUnchangedForNonShareableTypes(): void
     {
         static::assertSame(

@@ -1396,11 +1396,17 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- update_info rows are applied by the installer, not dumped here.
--- InstallationHelper::install_insert_db() sets `db_version` from Versions::MAXIMUM_UPDATABLE_VERSION
--- (so a fresh install is stamped at the current migration version and does not replay migrations),
--- and installed plugins set their own `Plugin_*` version rows via Plugin::set_plugin_version().
+-- Dumping data for table `update_info`
 --
+-- `db_version` is the migration version THIS FILE was dumped at, not the current one. The installer reads it and runs
+-- every later migration, so the dump may lag the code and only has to be refreshed at release (`bin/cli
+-- admin:exportSchema`). Never raise it by hand: a value above what the schema below actually contains makes the
+-- updater see nothing pending and skip those migrations forever.
+-- Installed plugins set their own `Plugin_*` version rows via Plugin::set_plugin_version().
+--
+
+INSERT INTO `update_info` (`key`, `value`) VALUES
+('db_version', '800024');
 
 -- --------------------------------------------------------
 

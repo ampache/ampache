@@ -83,6 +83,7 @@ final class ConfigurationKeyEnum
     public const string CATALOG_CHECK_DUPLICATE               = 'catalog_check_duplicate';
     public const string CATALOG_DISABLE                       = 'catalog_disable';
     public const string CATALOG_FILTER                        = 'catalog_filter';
+    public const string CATALOG_IGNORE_PATTERN                = 'catalog_ignore_pattern';
     public const string COMMON_ABBR                           = 'common_abbr';
     public const string COMPOSER_BINARY_PATH                  = 'composer_binary_path';
     public const string COMPOSER_NO_DEV                       = 'composer_no_dev';
@@ -129,6 +130,7 @@ final class ConfigurationKeyEnum
     public const string HOME_RECENTLY_PLAYED                  = 'home_recently_played';
     public const string HTTPQ_ACTIVE                          = 'httpq_active';
     public const string LABEL                                 = 'label';
+    public const string LABEL_IGNORE_PATTERN                  = 'label_ignore_pattern';
     public const string LANG                                  = 'lang';
     public const string LASTFM_CHALLENGE                      = 'lastfm_challenge';
     public const string LASTFM_GRANT_LINK                     = 'lastfm_grant_link';
@@ -195,9 +197,11 @@ final class ConfigurationKeyEnum
     public const string REGISTRATION_MANDATORY_FIELDS         = 'registration_mandatory_fields';
     public const string REQUIRE_SESSION                       = 'require_session';
     public const string RESIZE_IMAGES                         = 'resize_images';
+    public const string SECRET_KEY                            = 'secret_key';
     public const string SESSION_NAME                          = 'session_name';
     public const string SHARE                                 = 'share';
     public const string SHARE_EXPIRE                          = 'share_expire';
+    public const string SHOW_COLLECTION                       = 'show_collection';
     public const string SHOW_DONATE                           = 'show_donate';
     public const string SHOW_FOLDER                           = 'show_folder';
     public const string SHOW_LICENSE                          = 'show_license';

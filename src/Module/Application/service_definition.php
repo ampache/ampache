@@ -90,6 +90,7 @@ use Ampache\Module\Application\Admin\User\DeleteApiKeyAction;
 use Ampache\Module\Application\Admin\User\DeleteAvatarAction;
 use Ampache\Module\Application\Admin\User\DeleteRssTokenAction;
 use Ampache\Module\Application\Admin\User\DeleteStreamTokenAction;
+use Ampache\Module\Application\Admin\User\DeleteSubsonicSecretAction;
 use Ampache\Module\Application\Admin\User\DisableAction;
 use Ampache\Module\Application\Admin\User\EnableAction;
 use Ampache\Module\Application\Admin\User\GenerateApiKeyAction;
@@ -99,6 +100,7 @@ use Ampache\Module\Application\Admin\User\ShowDeleteApiKeyAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteAvatarAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteRssTokenAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteStreamTokenAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteSubsonicSecretAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateApiKeyAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateRssTokenAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateStreamTokenAction;
@@ -409,10 +411,19 @@ return [
     UpdatePlaylistAction::class => autowire(UpdatePlaylistAction::class),
     DeletePlaylistAction::class => autowire(DeletePlaylistAction::class),
     Playlist\ShowAction::class => autowire(Playlist\ShowAction::class),
+    Collection\ShowAction::class => autowire(Collection\ShowAction::class),
+    Collection\AddObjectAction::class => autowire(Collection\AddObjectAction::class),
+    Collection\RemoveObjectAction::class => autowire(Collection\RemoveObjectAction::class),
+    Collection\DeleteCollectionAction::class => autowire(Collection\DeleteCollectionAction::class),
+    Collection\SetTrackNumbersAction::class => autowire(Collection\SetTrackNumbersAction::class),
+    Collection\ShowCreateAction::class => autowire(Collection\ShowCreateAction::class),
+    Collection\CreateAction::class => autowire(Collection\CreateAction::class),
     SortTrackAction::class => autowire(SortTrackAction::class),
     RemoveDuplicatesAction::class => autowire(RemoveDuplicatesAction::class),
     AddSongAction::class => autowire(AddSongAction::class),
     Playlist\SetTrackNumbersAction::class => autowire(Playlist\SetTrackNumbersAction::class),
+    Playlist\ShowCreateAction::class => autowire(Playlist\ShowCreateAction::class),
+    Playlist\CreateAction::class => autowire(Playlist\CreateAction::class),
     ImportPlaylistAction::class => autowire(ImportPlaylistAction::class),
     ShowImportPlaylistAction::class => autowire(ShowImportPlaylistAction::class),
     Playlist\DeletePlaylistAction::class => autowire(Playlist\DeletePlaylistAction::class),
@@ -441,6 +452,7 @@ return [
     SongAction::class => autowire(SongAction::class),
     PlaylistAction::class => autowire(PlaylistAction::class),
     SmartPlaylistAction::class => autowire(SmartPlaylistAction::class),
+    Browse\CollectionAction::class => autowire(Browse\CollectionAction::class),
     PodcastEpisodeAction::class => autowire(PodcastEpisodeAction::class),
     CatalogAction::class => autowire(CatalogAction::class),
     PrivateMessageAction::class => autowire(PrivateMessageAction::class),
@@ -548,6 +560,8 @@ return [
     ShowGenerateApiKeyAction::class => autowire(ShowGenerateApiKeyAction::class),
     DeleteApiKeyAction::class => autowire(DeleteApiKeyAction::class),
     ShowDeleteApiKeyAction::class => autowire(ShowDeleteApiKeyAction::class),
+    DeleteSubsonicSecretAction::class => autowire(DeleteSubsonicSecretAction::class),
+    ShowDeleteSubsonicSecretAction::class => autowire(ShowDeleteSubsonicSecretAction::class),
     DeleteAvatarAction::class => autowire(DeleteAvatarAction::class),
     ShowDeleteAvatarAction::class => autowire(ShowDeleteAvatarAction::class),
     Admin\User\ShowDeleteAction::class => autowire(Admin\User\ShowDeleteAction::class),

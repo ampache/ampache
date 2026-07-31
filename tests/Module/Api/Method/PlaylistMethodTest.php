@@ -33,7 +33,7 @@ use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
@@ -70,12 +70,12 @@ class PlaylistMethodTest extends MockeryTestCase
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
-        $search     = $this->mock(Search::class);
+        $search     = $this->mock(Smartlist::class);
 
         $result = 'some-result';
 
-        $this->modelFactory->shouldReceive('createSearch')
-            ->with(42, 'song', $user)
+        $this->modelFactory->shouldReceive('createSmartlist')
+            ->with(42, $user)
             ->once()
             ->andReturn($search);
 

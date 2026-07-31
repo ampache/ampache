@@ -113,7 +113,6 @@ class Horde_Browser
      * @param string|null $cType The content-type description of the file.
      * @param bool $inline True if inline, false if attachment.
      * @param string|null $cLength The content-length of this file.
-     *
      * @return string[]
      */
     public function getDownloadHeaders(

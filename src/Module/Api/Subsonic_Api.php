@@ -68,6 +68,7 @@ use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
@@ -1122,7 +1123,7 @@ class Subsonic_Api
                 return new Song($int_id - self::OLD_SUBID_SONG);
             }
             if ($int_id >= self::OLD_SUBID_SMARTPL && $int_id < self::OLD_SUBID_VIDEO) {
-                return new Search($int_id - self::OLD_SUBID_SMARTPL);
+                return new Smartlist($int_id - self::OLD_SUBID_SMARTPL);
             }
             if ($int_id >= self::OLD_SUBID_VIDEO && $int_id < self::OLD_SUBID_PODCAST) {
                 return new Video($int_id - self::OLD_SUBID_VIDEO);
@@ -1171,7 +1172,7 @@ class Subsonic_Api
             case self::SUBID_SHARE:
                 return new Share($ampache_id);
             case self::SUBID_SMARTPL:
-                return new Search($ampache_id);
+                return new Smartlist($ampache_id);
             case self::SUBID_SONG:
                 return new Song($ampache_id);
             case self::SUBID_USER:
@@ -3043,11 +3044,13 @@ class Subsonic_Api
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
                 Stream::insert_now_playing((int) $media->id, $user->id, $media->time, (string) $user->username, $type, $time);
-                // submission is true: go to scrobble plugins (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
-                if ($submission && get_class($media) == Song::class && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
-                    // stream has finished
+                // submission is true: stream finished. Record the play locally
+                // (set_played is dedup-guarded) and notify scrobble plugins.
+                if ($submission && $media->id && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
                     debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
-                    User::save_mediaplay($user, $media);
+                    if ($media->set_played($user->id, $client, [], $time) && get_class($media) == Song::class) {
+                        User::save_mediaplay($user, $media);
+                    }
                 }
                 // Submission is false and not a repeat. let repeats go through to saveplayqueue
                 if ((!$submission) && $media->id && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {

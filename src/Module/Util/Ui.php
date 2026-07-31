@@ -206,6 +206,21 @@ class Ui implements UiInterface
     }
 
     /**
+     * The label for the control that opens the add-to-list dialog.
+     * @param bool $short for a control with no room for the full label, such as a multi-select action bar
+     */
+    public static function get_add_to_list_label(bool $short = false): string
+    {
+        if (!AmpConfig::get('show_collection')) {
+            return T_('Add to playlist');
+        }
+
+        return ($short)
+            ? T_('Add to list')
+            : T_('Add to playlist / collection');
+    }
+
+    /**
      * get_icon
      *
      * Returns an <img> or <svg> tag for the specified icon
@@ -804,7 +819,7 @@ class Ui implements UiInterface
             $formats = Stream::get_available_encode_formats($kind);
             echo '<select name="' . $name . '">' . "\n";
             $is_selected = (in_array($value, [null, '', '0'], true)) ? ' selected="selected"' : '';
-            echo '<option value=""' . $is_selected . '>' . T_('None (stream source format)') . "</option>\n";
+            echo '<option value=""' . $is_selected . '>' . T_('None') . "</option>\n";
             foreach ($formats as $format) {
                 $is_selected = ((string) $value === $format) ? ' selected="selected"' : '';
                 echo '<option value="' . $format . '"' . $is_selected . '>' . $format . "</option>\n";
@@ -814,37 +829,22 @@ class Ui implements UiInterface
             return;
         }
 
-        // Per-format bitrate overrides render one input per format the server can actually encode,
-        // so the list follows the configured `encode_args_<format>` keys without a migration.
-        if ($type === 'bitrate_map') {
-            $overrides = Stream::get_format_bitrate_map();
-            $formats   = array_merge(
-                Stream::get_available_encode_formats('audio'),
-                Stream::get_available_encode_formats('video')
-            );
-            if ($formats === []) {
-                echo T_('No transcode output formats are configured');
-
-                return;
-            }
-
-            $default = (int) AmpConfig::get('transcode_bitrate', 128000);
-            echo '<table class="tabledata">' . "\n";
-            foreach ($formats as $format) {
-                $current = $overrides[$format] ?? 0;
-                echo '<tr><td>' . $format . '</td><td><input type="number" name="' . $name . '[' . $format . ']" value="' . (($current > 0) ? $current : '') . '" min="0" step="1000" placeholder="' . $default . '" /> ' . T_('bps') . "</td></tr>\n";
-            }
-            echo "</table>\n";
-
-            return;
-        }
-
         switch ($name) {
+            case 'transcode_bitrate_webplayer':
+            case 'transcode_bitrate_api':
+                // A player override left empty falls back to the default rate, shown here as the placeholder
+                echo '<input type="number" name="' . $name . '" value="' . (((int) $value > 0) ? (int) $value : '') . '" min="0" step="1000" placeholder="' . (int) AmpConfig::get('transcode_bitrate', 128000) . '" /> ' . T_('bps');
+                break;
             case 'transcode_bitrate':
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1000" /> ' . T_('bps') . ' (' . T_('0 = use the source file rate') . ')';
+                break;
             case 'max_bit_rate':
             case 'min_bit_rate':
                 // Bitrate preferences are stored in bits per second (bps)
                 echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1000" /> ' . T_('bps');
+                break;
+            case 'rate_limit':
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1024" /> ' . T_('KB/s') . ' (0 = ' . T_('Unlimited') . ')';
                 break;
             case 'access_control':
             case 'access_list':
@@ -935,6 +935,7 @@ class Ui implements UiInterface
             case 'share':
             case 'show_album_artist':
             case 'show_artist':
+            case 'show_collection':
             case 'show_donate':
             case 'show_header_login':
             case 'show_folder':

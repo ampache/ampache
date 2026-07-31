@@ -52,6 +52,11 @@ $web_path = AmpConfig::get_web_path('/client'); ?>
 } ?>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
+    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+    <a id="<?php echo 'add_to_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'label', '<?php echo $libitem->id; ?>')">
+        <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+    </a>
+    <?php }
     if (AmpConfig::get('sociable')) { ?>
     <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?>

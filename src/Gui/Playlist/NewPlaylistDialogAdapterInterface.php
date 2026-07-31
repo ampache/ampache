@@ -29,11 +29,36 @@ interface NewPlaylistDialogAdapterInterface
 {
     public function getAjaxUri(): string;
 
+    public function getCollectionHeading(): string;
+
+    /**
+     * The collections this user may curate that will accept what is being added
+     *
+     * @return list<\Ampache\Repository\Model\Collection>
+     */
+    public function getCollections(): array;
+
+    /**
+     * Whether the collection half of the dialog is offered at all
+     */
+    public function getCollectionsEnabled(): bool;
+
+    public function getNewCollectionTitle(): string;
+
     public function getNewPlaylistTitle(): string;
+
+    public function getObjectGroups(): string;
 
     public function getObjectIds(): string;
 
     public function getObjectType(): string;
 
+    public function getPlaylistHeading(): string;
+
     public function getPlaylists(): array;
+
+    /**
+     * Whether the playlist half is offered; a genre, for instance, only belongs in a collection
+     */
+    public function getPlaylistsEnabled(): bool;
 }

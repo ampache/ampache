@@ -37,6 +37,7 @@
             "rating": null,
             "averagerating": null,
             "playcount": 0,
+            "last_played": null,
             "played": ""
         },
         {
@@ -74,6 +75,7 @@
             "rating": null,
             "averagerating": null,
             "playcount": 0,
+            "last_played": null,
             "played": ""
         }
     ]

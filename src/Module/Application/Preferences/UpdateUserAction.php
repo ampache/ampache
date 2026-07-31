@@ -34,9 +34,11 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -48,6 +50,8 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
+        private SymmetricEncrypterInterface $symmetricEncrypter,
+        private UserRepositoryInterface $userRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -99,12 +103,20 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
             AmpError::add('city', T_("Please fill in your city"));
         }
 
+        // The Subsonic password is stored reversibly encrypted rather than sha256 hashed, so it never goes through
+        // User::update() with the login password and is applied separately once the rest of the form has been accepted.
+        $subsonicPassword = (string) ($_POST['subsonic_password1'] ?? '');
+        if ($subsonicPassword !== '' && $subsonicPassword !== (string) ($_POST['subsonic_password2'] ?? '')) {
+            AmpError::add('subsonic_password', T_("Passwords do not match"));
+        }
+
         $this->ui->showHeader();
         /** @see User::update() */
         if (!$user->update($_POST)) {
             AmpError::add('general', T_('Update failed'));
         } else {
             $user->upload_avatar();
+            $this->updateSubsonicSecret($user, $subsonicPassword);
             display_notification(T_('User updated successfully'));
         }
 
@@ -124,5 +136,25 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
+    }
+
+    /**
+     * Encrypts and stores a newly chosen Subsonic password. An empty value leaves the existing secret alone; clearing
+     * it is a separate, confirmed admin action so a blank field can never silently revoke Subsonic access.
+     */
+    private function updateSubsonicSecret(User $user, string $subsonicPassword): void
+    {
+        if ($subsonicPassword === '') {
+            return;
+        }
+
+        $secret = $this->symmetricEncrypter->encrypt($subsonicPassword);
+        if ($secret === null) {
+            display_notification(T_('Could not store the Subsonic password. Check that secret_key is set in your Ampache config'));
+
+            return;
+        }
+
+        $this->userRepository->updateSubsonicSecret($user->getId(), $secret);
     }
 }

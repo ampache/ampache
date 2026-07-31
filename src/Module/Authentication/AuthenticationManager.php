@@ -27,7 +27,8 @@ namespace Ampache\Module\Authentication;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authentication\Authenticator\AuthenticatorInterface;
-use Ampache\Module\System\Dba;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\System\Session;
 
 final class AuthenticationManager implements AuthenticationManagerInterface
@@ -36,6 +37,8 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         private readonly ConfigContainerInterface $configContainer,
         /** @var AuthenticatorInterface[] $authenticatorList */
         private array $authenticatorList,
+        private readonly SymmetricEncrypterInterface $symmetricEncrypter,
+        private readonly DatabaseConnectionInterface $databaseConnection,
     ) {}
 
     /**
@@ -136,20 +139,36 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         string $token,
         string $salt,
     ): array {
-        // subsonic token auth with apikey
-        if (strlen($token) && strlen($salt) && strlen($username)) {
-            $sql        = 'SELECT `apikey`, `username` FROM `user` WHERE `username` = ?';
-            $db_results = Dba::read($sql, [$username]);
-            $row        = Dba::fetch_assoc($db_results);
-            if (isset($row['apikey'])) {
-                $hash_token = hash('md5', ($row['apikey'] . $salt));
-                if ($token === $hash_token && $row['username'] === $username) {
-                    return [
-                        'success' => true,
-                        'type' => 'api',
-                        'username' => $username
-                    ];
-                }
+        if ($token === '' || $salt === '' || $username === '') {
+            return [];
+        }
+
+        $row = $this->databaseConnection->fetchRow(
+            'SELECT `apikey`, `subsonic_secret`, `username` FROM `user` WHERE `username` = ?',
+            [$username]
+        );
+        if (!is_array($row) || ($row['username'] ?? null) !== $username) {
+            return [];
+        }
+
+        // The dedicated Subsonic password is preferred; the api key remains accepted so clients configured before the
+        // secret existed keep working. Both are reversible values, which is what md5(secret . salt) requires.
+        $candidates = [];
+        if (!empty($row['subsonic_secret'])) {
+            $candidates[] = $this->symmetricEncrypter->decrypt((string) $row['subsonic_secret']);
+        }
+
+        if (!empty($row['apikey'])) {
+            $candidates[] = (string) $row['apikey'];
+        }
+
+        foreach ($candidates as $candidate) {
+            if ($candidate !== null && hash_equals(hash('md5', $candidate . $salt), $token)) {
+                return [
+                    'success' => true,
+                    'type' => 'api',
+                    'username' => $username
+                ];
             }
         }
 

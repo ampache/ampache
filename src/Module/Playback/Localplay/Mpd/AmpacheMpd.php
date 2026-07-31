@@ -310,13 +310,14 @@ class AmpacheMpd extends localplay_controller
      */
     public function get_instance(?string $instance = ''): array
     {
-        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
-        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
-        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
+        $instance = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
+        if ($instance <= 0) {
+            return [];
+        }
 
-        $row = Dba::fetch_assoc($db_results);
+        $row = Dba::fetch_assoc(Dba::query("SELECT * FROM `localplay_mpd` WHERE `id` = ?", [$instance]));
         // the active preference can point at an instance that has since been deleted; fall back to any available one
-        if (!$row && $instance > 0) {
+        if (!$row) {
             $row = Dba::fetch_assoc(Dba::query("SELECT * FROM `localplay_mpd`"));
         }
 
@@ -535,19 +536,15 @@ class AmpacheMpd extends localplay_controller
      */
     public function skip(int $track_id): bool
     {
-        if (
-            !$this->_mpd
-            || !$this->_mpd->SkipTo($track_id)
-        ) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
-        sleep(2);
-        $this->stop();
-        sleep(2);
-        $this->play();
-
-        return true;
+        // SkipTo sends `play <pos>`, which already starts the track. Stopping and starting again around it made the
+        // player drop its buffer and fetch the whole song a second time -- a remote player has no cache to resume
+        // from, so every restart is a fresh download of the whole stream and another registered play. The position
+        // is returned rather than a status, so only a null (no command sent) counts as a failure here.
+        return $this->_mpd->SkipTo($track_id) !== null;
     }
 
     /**

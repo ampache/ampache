@@ -72,6 +72,7 @@ $t_playlist        = T_('Playlist');
 $t_playlists       = T_('Playlists');
 $t_smartPlaylists  = T_('Smart Playlists');
 $t_smartlists      = T_('Smartlists');
+$t_collections     = T_('Collections');
 $t_democratic      = T_('Democratic');
 $t_random          = T_('Random');
 $t_localplay       = T_('Localplay');

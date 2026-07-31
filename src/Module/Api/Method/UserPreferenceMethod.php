@@ -70,7 +70,7 @@ final class UserPreferenceMethod implements MethodInterface
         int $apiVersion,
     ): ResponseInterface {
         // fix preferences that are missing for user
-        User::fix_preferences($user->getId());
+        Preference::fix_user_preferences($user->getId());
 
         $prefName   = (string) ($input['filter'] ?? '');
         $preference = Preference::get($prefName, $user->getId());

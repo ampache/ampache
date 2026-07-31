@@ -143,4 +143,32 @@ final readonly class ShareRepository implements ShareRepositoryInterface
             [$date->getTimestamp(), $share->getId()]
         );
     }
+
+    /**
+     * Writes the editable properties of an existing share
+     *
+     * Users below MANAGER are scoped to their own shares by the statement itself
+     *
+     * @throws DatabaseException
+     */
+    public function update(Share $share, User $user): void
+    {
+        $sql = 'UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ?';
+
+        $params = [
+            $share->max_counter,
+            $share->expire_days,
+            ($share->allow_stream) ? 1 : 0,
+            ($share->allow_download) ? 1 : 0,
+            $share->description,
+            $share->getId(),
+        ];
+
+        if (!$user->has_access(AccessLevelEnum::MANAGER)) {
+            $sql .= ' AND `user` = ?';
+            $params[] = $user->getId();
+        }
+
+        $this->connection->query($sql, $params);
+    }
 }

@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -51,6 +52,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private UiInterface $ui,
         private PodcastRepositoryInterface $podcastRepository,
         private PodcastDeleterInterface $podcastDeleter,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -66,7 +68,8 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $podcastId = (int) ($request->getQueryParams()['podcast_id'] ?? 0);
+        $queryParams = $request->getQueryParams();
+        $podcastId   = (int) ($queryParams['podcast_id'] ?? 0);
 
         $podcast = $this->podcastRepository->findById($podcastId);
 
@@ -74,16 +77,24 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             throw new ObjectNotFoundException($podcastId);
         }
 
+        // A podcast has no parent object, so leaving its own page can only fall back to the podcast browser.
+        $webPath     = $this->configContainer->getWebPath('/client');
+        $burlParam   = (string) ($queryParams['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'podcast',
+            $podcastId,
+            '',
+            sprintf('%s/browse.php?action=podcast', $webPath)
+        );
+
         $this->podcastDeleter->delete($podcast);
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Podcast has been deleted'),
-            sprintf(
-                '%s/browse.php?action=podcast',
-                $this->configContainer->getWebPath('/client')
-            )
+            $continueUrl
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -35,6 +35,7 @@ use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
@@ -66,10 +67,12 @@ final class BrowseMethod implements MethodInterface
      *
      * Return children of a parent object in a folder traversal/browse style
      * If you don't send any parameters you'll get a catalog list (the 'root' path)
-     * Catalog ID is required on 'artist', 'album', 'podcast' so you can filter the browse correctly
+     * Catalog ID is optional on 'album_artist', 'artist', 'album', 'album_disk', 'podcast' from api version 8;
+     * send it to restrict the children to a single catalog, omit it to get them from every catalog you can see.
+     * Api version 6 still requires it on those types.
      *
      * filter  = (string) object_id //optional
-     * type    = (string) 'root', 'catalog', 'artist', 'album', 'podcast' //optional
+     * type    = (string) 'root', 'catalog', 'album_artist', 'artist', 'album', 'album_disk', 'podcast' //optional
      * catalog = (integer) catalog ID you are browsing //optional
      * add     = $browse->set_api_filter(date) //optional
      * update  = $browse->set_api_filter(date) //optional
@@ -195,22 +198,30 @@ final class BrowseMethod implements MethodInterface
             $browse->set_filter('gather_type', $gatherType);
             $browse->set_filter('catalog', $catalog->id);
         } else {
-            foreach (['filter', 'catalog'] as $parameter) {
-                if (!array_key_exists($parameter, $input)) {
-                    throw new RequestParamMissingException(
-                        sprintf('Bad Request: %s', $parameter)
-                    );
-                }
+            if (!array_key_exists('filter', $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', 'filter')
+                );
             }
 
-            $catalog = ($catalogId !== null)
-                ? Catalog::create_from_id($catalogId)
-                : null;
-            if ($catalog === null) {
-                throw new ResultEmptyException(
-                    (string) $catalogId,
-                    'catalog'
+            // The catalog narrows the children rather than addressing the parent, so api 8 treats it as an
+            // optional filter and browses every catalog the user can see when it is absent. Api 6 is served
+            // by Ampache7 as well and requires it, so that version keeps the parameter mandatory.
+            if ($apiVersion < 8 && !array_key_exists('catalog', $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', 'catalog')
                 );
+            }
+
+            $catalog = null;
+            if ($catalogId !== null) {
+                $catalog = Catalog::create_from_id($catalogId);
+                if ($catalog === null) {
+                    throw new ResultEmptyException(
+                        (string) $catalogId,
+                        'catalog'
+                    );
+                }
             }
 
             $className = ObjectTypeToClassNameMapper::map((string) $objectType);
@@ -218,7 +229,7 @@ final class BrowseMethod implements MethodInterface
                 return $this->writeTypeError($response, $output, $apiVersion, (string) $objectType);
             }
 
-            /** @var Album|Artist|Podcast $item */
+            /** @var Album|AlbumDisk|Artist|Podcast $item */
             $item = new $className($objectId);
             if ($item->isNew()) {
                 throw new ResultEmptyException(
@@ -237,7 +248,9 @@ final class BrowseMethod implements MethodInterface
                 $browse->set_filter($filterType, $item->getId());
             }
 
-            $browse->set_filter('catalog', $catalog->id);
+            if ($catalog !== null) {
+                $browse->set_filter('catalog', $catalog->id);
+            }
         }
 
         $browse->set_api_filter('add', $input['add'] ?? '');

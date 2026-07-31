@@ -43,6 +43,28 @@ use Ampache\Repository\Model\Video;
 class Stream
 {
     /**
+     * Players that get a `transcode_bitrate_<player>` preference of their own, matching the players that
+     * already have an `encode_player_<player>_target` format override. Anything else uses the default rate.
+     *
+     * @var list<string>
+     */
+    public const array BITRATE_OVERRIDE_PLAYERS = ['webplayer', 'api'];
+
+    /**
+     * The highest bitrate each lossy target can actually encode, in bps. A rate above the ceiling is meaningless to
+     * the encoder and libmp3lame simply refuses it, so a lossless source rate has to be clamped before it reaches a
+     * lossy target. Lossless outputs are absent because their rate follows the sample format rather than a setting.
+     *
+     * @var array<string, int>
+     */
+    public const array FORMAT_MAX_BITRATE = [
+        'mp3' => 320000,
+        'ogg' => 500000,
+        'opus' => 512000,
+        'm4a' => 512000,
+    ];
+
+    /**
      * Output formats that must never be served from or written to the transcode cache.
      * Their loudness normalisation is applied per-source at stream time, so a cached copy
      * (keyed only by object + target extension) would be wrong for every other request.
@@ -125,16 +147,16 @@ class Stream
     /**
      * get_allowed_bitrate
      *
-     * Work out the bitrate this user is allowed for the given output format. Passing null (or a
-     * format with no override) falls back to the user's default `transcode_bitrate`.
+     * Work out the bitrate this user is allowed for the given player, after the site-wide dynamic downsampling
+     * constraints. Passing null, or a player with no override of its own, uses the default `transcode_bitrate`.
      */
-    public static function get_allowed_bitrate(?string $format = null): int
+    public static function get_allowed_bitrate(?string $player = null): int
     {
         // All bitrate values (transcode_bitrate, max_bit_rate, min_bit_rate) are stored and
         // handled in bits per second (bps). max_bit_rate/min_bit_rate are per-user preferences.
         $max_bitrate   = (int) AmpConfig::get('max_bit_rate', 0);
         $min_bitrate   = (int) AmpConfig::get('min_bit_rate', 8000);
-        $user_bit_rate = self::get_format_bitrate($format);
+        $user_bit_rate = self::get_player_bitrate($player);
 
         // If the user's crazy, that's no skin off our back
         if ($user_bit_rate < $min_bitrate) {
@@ -196,6 +218,21 @@ class Stream
     }
 
     /**
+     * get_base_format
+     *
+     * The container behind a transcode target. The ReplayGain and car profiles are the same encoder with extra
+     * loudness filters, so `mp3_rg` still produces an mp3 and must be named, typed and measured as one.
+     */
+    public static function get_base_format(?string $format): string
+    {
+        if (in_array($format, [null, '', '0'], true)) {
+            return '';
+        }
+
+        return (string) preg_replace('/_(rg|car)$/', '', $format);
+    }
+
+    /**
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      */
@@ -236,51 +273,13 @@ class Stream
     }
 
     /**
-     * get_format_bitrate
+     * get_format_max_bitrate
      *
-     * Return the bitrate (bps) this user wants for a given transcode output format, falling back to
-     * their default `transcode_bitrate` when the format has no override.
+     * The ceiling a transcode target can encode at, or 0 when the format has no meaningful limit.
      */
-    public static function get_format_bitrate(?string $format = null): int
+    public static function get_format_max_bitrate(?string $format): int
     {
-        $default = (int) AmpConfig::get('transcode_bitrate', 128000);
-        if ($format === null || $format === '') {
-            return $default;
-        }
-
-        return self::get_format_bitrate_map()[$format] ?? $default;
-    }
-
-    /**
-     * get_format_bitrate_map
-     *
-     * Parse the `transcode_bitrate_formats` preference (`mp3=192000,opus=96000`) into a map of
-     * output format to bitrate in bps. Malformed or non-positive entries are ignored.
-     *
-     * @return array<string, int>
-     */
-    public static function get_format_bitrate_map(): array
-    {
-        $raw = trim((string) AmpConfig::get('transcode_bitrate_formats', ''));
-        if ($raw === '') {
-            return [];
-        }
-
-        $map = [];
-        foreach (explode(',', $raw) as $pair) {
-            if (!str_contains($pair, '=')) {
-                continue;
-            }
-
-            [$format, $bitrate] = explode('=', $pair, 2);
-            $format             = trim($format);
-            $bitrate            = (int) trim($bitrate);
-            if ($format !== '' && $bitrate > 0) {
-                $map[$format] = $bitrate;
-            }
-        }
-
-        return $map;
+        return self::FORMAT_MAX_BITRATE[self::get_base_format($format)] ?? 0;
     }
 
     /**
@@ -364,15 +363,23 @@ class Stream
         Podcast_Episode|Video|Song $media,
         array $transcode_settings,
         array $options,
+        ?string $player = null,
     ): int {
         // don't ignore user bitrates
-        $bit_rate = self::get_allowed_bitrate($transcode_settings['format'] ?? null);
+        $bit_rate = self::get_allowed_bitrate($player);
         if (!array_key_exists('bitrate', $options)) {
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
         } elseif ($bit_rate > ((int) $options['bitrate']) || $bit_rate === 0) {
             // use the file bitrate if lower than the gathered
             $bit_rate = $options['bitrate'];
+        }
+
+        // No limit set means stream at whatever the file already carries. Left at zero it reads as an unknown rate
+        // everywhere downstream, so the transcoder gets no target and the content-length guess is dropped entirely.
+        if ($bit_rate <= 0 && isset($media->bitrate) && $media->bitrate > 0) {
+            $bit_rate = self::validate_bitrate((int) $media->bitrate);
+            debug_event(self::class, 'No bitrate limit configured, using the source rate ' . $bit_rate, 5);
         }
 
         debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
@@ -389,6 +396,15 @@ class Stream
             $bit_rate = self::validate_bitrate((int) $media->bitrate);
         }
 
+        // Whatever the rate came from, the target format has to be able to carry it. Without this a lossless source
+        // rate reaches a lossy encoder unchanged, which is how a flac at ~1000 kbps ends up asking mp3 for 1000 kbps.
+        $target_format = $transcode_settings['format'] ?? null;
+        $format_max    = self::get_format_max_bitrate($target_format);
+        if ($format_max > 0 && $bit_rate > $format_max) {
+            debug_event(self::class, 'Clamping bitrate to the ' . $target_format . ' maximum of ' . $format_max, 5);
+            $bit_rate = $format_max;
+        }
+
         return (int) $bit_rate;
     }
 
@@ -400,7 +416,10 @@ class Stream
      *     media: library_item,
      *     client: User,
      *     agent: string,
-     *     expire: int
+     *     expire: int,
+     *     position_ms: ?int,
+     *     playback_rate: ?float,
+     *     state: ?string
      * }>
      */
     public static function get_now_playing(int $user_id = 0): array
@@ -444,7 +463,10 @@ class Stream
                     'media' => $media,
                     'client' => $client,
                     'agent' => $row['agent'],
-                    'expire' => (int) $row['expire']
+                    'expire' => (int) $row['expire'],
+                    'position_ms' => (isset($row['position_ms'])) ? (int) $row['position_ms'] : null,
+                    'playback_rate' => (isset($row['playback_rate'])) ? (float) $row['playback_rate'] : null,
+                    'state' => (isset($row['state'])) ? (string) $row['state'] : null,
                 ];
             }
         }
@@ -466,6 +488,25 @@ class Stream
         }
 
         return '';
+    }
+
+    /**
+     * get_player_bitrate
+     *
+     * Return the bitrate (bps) this user wants for a given player, falling back to their default rate whenever
+     * that player carries no override of its own; an override stored as 0 counts as unset. Only the web player
+     * and the API can be overridden, so every other caller takes `transcode_bitrate` as it stands.
+     */
+    public static function get_player_bitrate(?string $player = null): int
+    {
+        if ($player !== null && in_array($player, self::BITRATE_OVERRIDE_PLAYERS, true)) {
+            $override = (int) AmpConfig::get('transcode_bitrate_' . $player, 0);
+            if ($override > 0) {
+                return $override;
+            }
+        }
+
+        return (int) AmpConfig::get('transcode_bitrate', 128000);
     }
 
     /**
@@ -537,6 +578,36 @@ class Stream
         }
 
         return $types;
+    }
+
+    /**
+     * get_transcode_bitrate
+     *
+     * The rate a transcode will actually be encoded at. A rate asked for by name takes precedence over the user's
+     * allowance, but the target format's ceiling applies either way, so callers that only want to describe the
+     * stream (a content length, say) resolve the same number the encoder is handed.
+     *
+     * @param array{format?: string, command?: string} $transcode_settings
+     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
+     */
+    public static function get_transcode_bitrate(
+        Podcast_Episode|Video|Song $media,
+        array $transcode_settings,
+        array $options = [],
+        ?string $player = null,
+    ): int {
+        $bit_rate = isset($options['bitrate'])
+            ? (int) $options['bitrate']
+            : self::get_max_bitrate($media, $transcode_settings, $options, $player);
+
+        // A named rate never reaches get_max_bitrate, so its ceiling check has to be repeated here.
+        $format_max = self::get_format_max_bitrate($transcode_settings['format'] ?? null);
+        if ($format_max > 0 && $bit_rate > $format_max) {
+            debug_event(self::class, 'Clamping requested bitrate to the format maximum of ' . $format_max, 5);
+            $bit_rate = $format_max;
+        }
+
+        return $bit_rate;
     }
 
     /**
@@ -677,14 +748,17 @@ class Stream
         string $sid,
         string $type,
         ?int $previous = null,
+        ?int $position_ms = null,
+        ?float $playback_rate = null,
+        ?string $state = null,
     ): void {
         if (!$previous) {
             $previous = time();
         }
 
-        // Ensure that this client only has a single row
-        $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) VALUES (?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$sid, $object_id, strtolower($type), $uid, time() + $length, $previous]);
+        // Ensure that this client only has a single row; the last three are null unless `reportPlayback` sent them
+        $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`, `position_ms`, `playback_rate`, `state`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, [$sid, $object_id, strtolower($type), $uid, time() + $length, $previous, $position_ms, $playback_rate, $state]);
     }
 
     /**
@@ -771,6 +845,47 @@ class Stream
     }
 
     /**
+     * skip_transcode
+     * True when a transcode would hand back the source format at (or above) the rate it already has, which can only
+     * lose quality, so the original file is the better stream. Rates are bps and 0 means "not requested"; an unknown
+     * source rate or a different output format never skips because that conversion is the point of the transcode.
+     */
+    public static function skip_transcode(
+        ?string $output_format,
+        string $source_format,
+        int $source_rate,
+        int $requested_rate = 0,
+        int $max_rate = 0,
+        ?string $player = null,
+    ): bool {
+        if ($output_format !== $source_format || $source_rate <= 0) {
+            return false;
+        }
+
+        $target_rate = ($requested_rate > 0)
+            ? $requested_rate
+            : self::get_allowed_bitrate($player);
+
+        // With no limit configured the target is the source rate, so there is nothing to downsample towards and
+        // re-encoding the file into its own format would only cost quality.
+        if ($target_rate <= 0) {
+            $target_rate = $source_rate;
+        }
+
+        if ($max_rate > 0 && $max_rate < $target_rate) {
+            $target_rate = $max_rate;
+        }
+
+        if ($target_rate < $source_rate) {
+            return false;
+        }
+
+        debug_event(self::class, 'Not transcoding ' . $source_format . ' to itself; target ' . $target_rate . ' is not below the source bitrate ' . $source_rate, 4);
+
+        return true;
+    }
+
+    /**
      * start_transcode
      *
      * This is a rather complex function that starts the transcoding or
@@ -788,6 +903,7 @@ class Stream
         Podcast_Episode|Video|Song $media,
         array $transcode_settings,
         array|string $options = [],
+        ?string $player = null,
     ): array {
         $out_file = false;
         if (is_string($options)) {
@@ -803,9 +919,7 @@ class Stream
         }
 
         $song_file = self::_scrub_arg($media->file);
-        $bit_rate  = isset($options['bitrate'])
-            ? (int) $options['bitrate']
-            : self::get_max_bitrate($media, $transcode_settings, $options);
+        $bit_rate  = self::get_transcode_bitrate($media, $transcode_settings, $options, $player);
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
         // Both %BITRATE% and %MAXBITRATE% are substituted as plain bps values

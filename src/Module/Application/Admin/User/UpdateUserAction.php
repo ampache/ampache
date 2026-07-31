@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
@@ -50,6 +51,7 @@ final class UpdateUserAction extends AbstractUserAction
         private readonly ConfigContainerInterface $configContainer,
         private readonly UserRepositoryInterface $userRepository,
         private readonly RequestParserInterface $requestParser,
+        private readonly SymmetricEncrypterInterface $symmetricEncrypter,
     ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -78,6 +80,8 @@ final class UpdateUserAction extends AbstractUserAction
         $catalog_filter_group = (int) ($body['catalog_filter_group'] ?? 0);
         $pass1                = Core::get_post('password_1');
         $pass2                = Core::get_post('password_2');
+        $subsonicPass1        = Core::get_post('subsonic_password_1');
+        $subsonicPass2        = Core::get_post('subsonic_password_2');
         $state                = scrub_in(htmlspecialchars($body['state'] ?? '', ENT_NOQUOTES));
         $city                 = scrub_in(htmlspecialchars($body['city'] ?? '', ENT_NOQUOTES));
         $fullname_public      = isset($_POST['fullname_public']);
@@ -101,6 +105,10 @@ final class UpdateUserAction extends AbstractUserAction
 
         if ($pass1 !== $pass2 && ($pass1 !== '' && $pass1 !== '0')) {
             AmpError::add('password', T_("Your Passwords don't match"));
+        }
+
+        if ($subsonicPass1 !== $subsonicPass2 && $subsonicPass1 !== '') {
+            AmpError::add('subsonic_password', T_("Passwords do not match"));
         }
 
         // Check the mail for correct address formation.
@@ -157,6 +165,16 @@ final class UpdateUserAction extends AbstractUserAction
 
         if ($pass1 === $pass2 && strlen($pass1)) {
             $client->update_password($pass1);
+        }
+
+        // Stored reversibly encrypted rather than hashed, because Subsonic token auth has to recompute md5(secret+salt)
+        if ($subsonicPass1 === $subsonicPass2 && strlen($subsonicPass1)) {
+            $secret = $this->symmetricEncrypter->encrypt($subsonicPass1);
+            if ($secret === null) {
+                AmpError::add('subsonic_password', T_('Could not store the Subsonic password. Check that secret_key is set in your Ampache config'));
+            } else {
+                $this->userRepository->updateSubsonicSecret($client->getId(), $secret);
+            }
         }
 
         if ($state != $client->state) {

@@ -47,8 +47,9 @@ final readonly class GetAdvancedAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $objectIds  = [];
-        $objectType = LibraryItemEnum::from($_REQUEST['type'] ?? 'song');
+        $objectIds = [];
+        // The form posts an empty type when nothing is selected.
+        $objectType = LibraryItemEnum::tryFrom((string) ($_REQUEST['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
         $user = Core::get_global('user');
         if ($user instanceof User) {

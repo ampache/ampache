@@ -43,6 +43,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
@@ -1965,7 +1966,7 @@ class Catalog_local extends Catalog
         };
 
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
-        if ($tableName !== 'podcast_episode' && AmpConfig::get('memory_cache', false)) {
+        if ($tableName !== 'podcast_episode' && database_object::isCacheEnabled()) {
             $media_ids  = [];
             $db_results = Dba::read($sql, [$this->getId()]);
             $className  = ObjectTypeToClassNameMapper::map($tableName);

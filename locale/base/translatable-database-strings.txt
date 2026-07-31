@@ -245,7 +245,7 @@ msgid "Limit direct play to maximum media count"
 msgstr ""
 
 #: Ampache preference description
-msgid "Custom metadata - Define field list"
+msgid "Custom metadata - Additional fields to disable"
 msgstr ""
 
 #: Ampache preference description
@@ -329,10 +329,6 @@ msgid "Show Videos of the Moment"
 msgstr ""
 
 #: Ampache preference description
-msgid "Show Now Playing"
-msgstr ""
-
-#: Ampache preference description
 msgid "Show Recently Played"
 msgstr ""
 
@@ -354,10 +350,6 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Library item context menu"
-msgstr ""
-
-#: Ampache preference description
-msgid "Localplay Type"
 msgstr ""
 
 #: Ampache preference description
@@ -425,7 +417,7 @@ msgid "Popular Threshold"
 msgstr ""
 
 #: Ampache preference description
-msgid "Rate Limit"
+msgid "Download Rate Limit"
 msgstr ""
 
 #: Ampache preference description
@@ -442,6 +434,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Show 'Artists' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Collections' link in the main sidebar"
 msgstr ""
 
 #: Ampache preference description
@@ -601,11 +597,15 @@ msgid "Top menu"
 msgstr ""
 
 #: Ampache preference description
-msgid "Per-format transcode bitrate overrides in bps (falls back to Transcode Bitrate)"
+msgid "Transcode bitrate - API (overrides default)"
 msgstr ""
 
 #: Ampache preference description
-msgid "Transcode Bitrate"
+msgid "Transcode bitrate - Web Player (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - Default"
 msgstr ""
 
 #: Ampache preference description

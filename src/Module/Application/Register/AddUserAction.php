@@ -143,7 +143,7 @@ final class AddUserAction implements ApplicationActionInterface
         }
 
         if ($this->userRepository->idByUsername($username) > 0) {
-            AmpError::add('duplicate_user', T_('That Username already exists'));
+            AmpError::add('duplicate_user', T_('That name already exists'));
         }
 
         // If we've hit an error anywhere up there break!
