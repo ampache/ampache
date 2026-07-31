@@ -91,10 +91,26 @@ function multiSelectRefresh($scope) {
     $all.prop("indeterminate", count > 0 && count < $items.length);
 }
 
+// The ids and types come back out of the row attributes, so they are encoded on the way into a url: a value can
+// only ever be a value and never add a parameter or a fragment of its own.
 function multiSelectFill(template, replacements) {
     return Object.keys(replacements).reduce(function (url, key) {
-        return url.split("{" + key + "}").join(replacements[key]);
+        return url.split("{" + key + "}").join(encodeURIComponent(replacements[key]));
     }, template);
+}
+
+// The url template is document text as well, so a navigation is resolved against this page first and only taken
+// when it lands back on this server. Anything else, a javascript: uri above all, is dropped instead of followed.
+function multiSelectSafeUrl(url) {
+    try {
+        var resolved = new URL(url, window.location.href);
+
+        return (resolved.origin === window.location.origin && (resolved.protocol === "http:" || resolved.protocol === "https:"))
+            ? resolved.href
+            : null;
+    } catch (error) {
+        return null;
+    }
 }
 
 // A track_ids template addresses playlist rows directly, so the type is irrelevant and one request covers the
@@ -218,8 +234,11 @@ $(document).on("click", "a[data-multiselect-action]", function (event) {
     // A zip arrives as one response for one type, so it leaves through an ordinary navigation, not an ajaxPut.
     if (action === "link") {
         var group = multiSelectGroupByType(selection)[0];
+        var target = multiSelectSafeUrl(multiSelectFill(template, {type: group.type, ids: group.ids.join(",")}));
 
-        window.location = multiSelectFill(template, {type: group.type, ids: group.ids.join(",")});
+        if (target !== null) {
+            window.location.assign(target);
+        }
 
         return;
     }
