@@ -114,6 +114,8 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
         $('.playing_artist').html(nowPlayingHeld.artist);
         if (nowPlayingHeld.art) {
             $('.playing_art').attr('src', nowPlayingHeld.art).show();
+        } else {
+            clearNowPlayingArt();
         }
         if (nowPlayingHeld.actions) {
             $('.playing_actions').html(nowPlayingHeld.actions);
@@ -121,10 +123,19 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
         }
     }
 
+    function clearNowPlayingArt()
+    {
+        $('.playing_art').removeAttr('src').hide();
+    }
+
     function scheduleNowPlayingRetry()
     {
         if (nowPlayingAttempts >= nowPlayingMaxAttempts) {
             nowPlayingPending = false;
+            // Giving up on a track we never resolved would otherwise leave the previous song's cover on screen
+            if (nowPlayingHeld === null) {
+                clearNowPlayingArt();
+            }
 
             return;
         }
@@ -380,10 +391,10 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                     $('.playing_lyrics').html(lyricsobj);
                     <?php }
                     }
-                    if ($isRandom || $isDemocratic) { ?>
+                        if ($isRandom || $isDemocratic) { ?>
                     applyNowPlayingHold();
                     <?php }
-                    }
+                        }
 if (AmpConfig::get('song_page_title') && $isShare === false) {
     echo "var mediaTitle = obj.title;\n";
     echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
