@@ -121,6 +121,9 @@ if (AmpConfig::get('ratings')) {
     Userflag::build_cache('album', $object_ids);
 }
 /* Foreach through the albums */
+// One TAL view reused for all rows
+$albumRowView = $talFactory->createTalView()->setTemplate('album_row.xhtml');
+
 foreach ($object_ids as $album_id) {
     $libitem = new Album($album_id);
     if ($libitem->isNew()) {
@@ -131,7 +134,9 @@ foreach ($object_ids as $album_id) {
         $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
     } ?>
         <tr id="album_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="album" data-object-id="<?php echo $libitem->id; ?>">
-            <?php $content = $talFactory->createTalView()
+            <?php
+            // Reassign EVERY key each row. Prev row's value sticks otherwise.
+            $content = $albumRowView
             ->setContext('USER_IS_REGISTERED', User::is_registered())
             ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
             ->setContext('ALBUM', $guiFactory->createAlbumViewAdapter($gatekeeper, $browse, $libitem))
@@ -145,7 +150,6 @@ foreach ($object_ids as $album_id) {
             ->setContext('CLASS_ARTIST', $cel_artist)
             ->setContext('CLASS_TAGS', $cel_tags)
             ->setContext('CLASS_COUNTER', $cel_counter)
-            ->setTemplate('album_row.xhtml')
             ->render();
 
     echo $content; ?>
