@@ -100,6 +100,9 @@ $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
 /* Foreach through the objects e.g. folder-12 song-125 podcast_episode-233 */
+// One TAL view reused for all rows
+$folderRowView = $talFactory->createTalView()->setTemplate('folder_row.xhtml');
+
 foreach ($object_ids as $object) {
     // A bare id is a folder: that is what a collection pinned to folders hands over, having no types to send
     if (preg_match('/^[0-9]+$/', (string) $object)) {
@@ -138,7 +141,9 @@ foreach ($object_ids as $object) {
         $show_temp_add = $access25 && $libitem->playable && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
     } ?>
             <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu" data-object-type="<?php echo $object_type; ?>" data-object-id="<?php echo $libitem->getId(); ?>">
-    <?php $content = $talFactory->createTalView()
+    <?php
+            // Reassign EVERY key each row. Prev row's value sticks otherwise.
+            $content = $folderRowView
             ->setContext('USER_IS_REGISTERED', User::is_registered())
             ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
             ->setContext('FOLDER', $guiFactory->createFolderViewAdapter($gatekeeper, $folder, $libitem, $object_type))
@@ -148,7 +153,6 @@ foreach ($object_ids as $object) {
             ->setContext('CLASS_COVER', $cel_cover)
             ->setContext('CLASS_FOLDER', $cel_folder)
             ->setContext('CLASS_COUNTER', $cel_counter)
-            ->setTemplate('folder_row.xhtml')
             ->render();
     echo $content; ?>
             </tr>

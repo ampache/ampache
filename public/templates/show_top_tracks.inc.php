@@ -95,6 +95,9 @@ $talFactory = $dic->get(TalFactoryInterface::class);
 $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
+// One TAL view reused for all rows
+$songRowView = $talFactory->createTalView()->setTemplate('song_row.xhtml');
+
 foreach ($object_ids as $song_id) {
     $libitem = new Song($song_id);
     if ($libitem->isNew()) {
@@ -103,11 +106,12 @@ foreach ($object_ids as $song_id) {
             <tr id="song_<?php echo $libitem->id; ?>">
                 <?php
         if ($libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-            $content = $talFactory->createTalView()
+            // Reassign EVERY key each row. Prev row's value sticks otherwise.
+            // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
+            $content = $songRowView
                 ->setContext('USER_IS_REGISTERED', User::is_registered())
                 ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
                 ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
-                ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
                 ->setContext('ARGUMENT_PARAM', '')
                 ->setContext('IS_TABLE_VIEW', $is_table)
                 ->setContext('IS_ALBUM_GROUP', $is_group)
@@ -118,7 +122,6 @@ foreach ($object_ids as $song_id) {
                 ->setContext('IS_HIDE_ALBUM', $hide_album)
                 ->setContext('IS_HIDE_YEAR', $hide_year)
                 ->setContext('IS_HIDE_DRAG', (empty($argument) || $hide_drag))
-                ->setTemplate('song_row.xhtml')
                 ->render();
 
             echo $content;
