@@ -107,11 +107,11 @@ foreach ($object_ids as $song_id) {
                 <?php
         if ($libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             // Reassign EVERY key each row. Prev row's value sticks otherwise.
+            // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
             $content = $songRowView
                 ->setContext('USER_IS_REGISTERED', User::is_registered())
                 ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
                 ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
-                ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
                 ->setContext('ARGUMENT_PARAM', '')
                 ->setContext('IS_TABLE_VIEW', $is_table)
                 ->setContext('IS_ALBUM_GROUP', $is_group)

@@ -136,11 +136,11 @@ foreach ($object_ids as $album_id) {
         <tr id="album_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="album" data-object-id="<?php echo $libitem->id; ?>">
             <?php
             // Reassign EVERY key each row. Prev row's value sticks otherwise.
+            // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
             $content = $albumRowView
             ->setContext('USER_IS_REGISTERED', User::is_registered())
             ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
             ->setContext('ALBUM', $guiFactory->createAlbumViewAdapter($gatekeeper, $browse, $libitem))
-            ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
             ->setContext('IS_TABLE_VIEW', $is_table)
             ->setContext('IS_HIDE_GENRE', $hide_genres)
             ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)

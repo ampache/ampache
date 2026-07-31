@@ -105,10 +105,10 @@ foreach ($object_ids as $playlist_id) {
         <tr id="playlist_row_<?php echo $libitem->id; ?>">
             <?php
              // Reassign EVERY key each row. Prev row's value sticks otherwise.
+             // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
             $content = $playlistRowView
                            ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
                            ->setContext('PLAYLIST', $guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
-                           ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
                            ->setContext('IS_SHOW_ART', $show_art)
                            ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
                            ->setContext('CLASS_COVER', $cel_cover)
