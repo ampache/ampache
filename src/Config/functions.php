@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
@@ -875,12 +874,10 @@ function display_notification(string $message, int $timeout = 5000): void
 
 /**
  * show_now_playing
- * This shows the Now Playing templates and does some garbage collection
- * this should really be somewhere else
+ * This shows the Now Playing templates and expires the rows it is about to read
  */
 function show_now_playing(): void
 {
-    Session::garbage_collection();
     Stream::garbage_collection();
 
     $web_path = AmpConfig::get_web_path('/client');

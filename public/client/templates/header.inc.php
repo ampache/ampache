@@ -62,9 +62,9 @@ $logo_url          = ($current_user instanceof User && $current_user_id && Prefe
 $is_session   = (User::is_registered() && ($current_user_id ?? 0) > 0);
 $allow_upload = $access25 && Upload::can_upload($current_user);
 
-$count_temp_playlist = ($current_user instanceof User && !empty($current_user->playlist))
-    ? count($current_user->playlist->get_items())
-    : 0;
+// Only ever asked as a yes/no here, so it never counts a play queue it isn't going to show
+$has_temp_playlist = ($current_user instanceof User && !empty($current_user->playlist))
+    && $current_user->playlist->has_items();
 // strings for the main page and templates
 $t_artists   = T_('Artists');
 $t_albums    = T_('Albums');
@@ -182,7 +182,7 @@ $isCollapsed  = (
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 
-            <div id="content" class="content-<?php echo ($ui_fixed) ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (!$count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild';
+            <div id="content" class="content-<?php echo ($ui_fixed) ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (!$has_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild';
 echo ($isCollapsed) ? ' content-left-wild' : ''; ?>">
 
                 <?php if ($access100) {

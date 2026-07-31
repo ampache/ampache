@@ -37,10 +37,8 @@ use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */
@@ -202,9 +200,7 @@ if ($browse->is_show_header()) {
             <?php if ($show_ratings) {
                 ++$thcount; ?>
             <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=rating' . $argument_param, T_('Rating'), 'song_sort_rating'); ?></th>
-                <?php Rating::build_cache('song', $object_ids);
-                Userflag::build_cache('song', $object_ids);
-            } ?>
+            <?php } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
 
             <?php if (isset($argument) && $argument && !$hide_drag) {
@@ -220,7 +216,10 @@ $talFactory = $dic->get(TalFactoryInterface::class);
 $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
-Song::build_cache($object_ids);
+// repeating a browse's prefetch would also overwrite the threshold-adjusted play counts it cached
+if (empty($browse_cached)) {
+    Song::build_cache($object_ids);
+}
 
 foreach ($object_ids as $song_id) {
     $libitem = new Song($song_id);

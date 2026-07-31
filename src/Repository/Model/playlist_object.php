@@ -89,91 +89,18 @@ abstract class playlist_object extends database_object implements
      */
     public function gather_art(int $limit): array
     {
-        $web_path = AmpConfig::get_web_path('/client');
+        [$images, $tiles] = $this->_collect_covers($limit);
 
-        $medias = $this->get_art_items();
-        $count  = 0;
-        $images = [];
-        $tiles  = [];
-        $seen   = [];
-        $hashes = [];
-        $title  = T_('Playlist Items');
-        $mosaic = make_bool(AmpConfig::get(ConfigurationKeyEnum::PLAYLIST_ART_MOSAIC, true));
-        // Shuffle so the covers picked aren't just the first few, but seed it from the playlist and its
-        // contents so the same playlist keeps producing the same art. Re-running an art gather would
-        // otherwise hand the user a different mosaic every time for a playlist that never changed.
-        $seed    = crc32($this->id . ':' . implode(',', array_column($medias, 'object_id')));
-        $medias  = (new Randomizer(new Mt19937($seed)))->shuffleArray($medias);
-        foreach ($medias as $media) {
-            // Only the mosaic is capped, so the caller still gets the full list of covers to choose from
-            // when it falls back to picking one.
-            if ($count >= $limit) {
-                break;
-            }
-
-            if (InterfaceImplementationChecker::is_library_item($media['object_type']->value)) {
-                if (!Art::has_db($media['object_id'], $media['object_type']->value)) {
-                    $className = ObjectTypeToClassNameMapper::map($media['object_type']->value);
-                    /** @var container_item $libitem */
-                    $libitem = new $className($media['object_id']);
-                    $parent  = $libitem->get_parent();
-                    if ($parent !== null) {
-                        $media = $parent;
-                    }
-                }
-
-                // Skip covers we've already taken so a single-album playlist doesn't repeat one tile.
-                $key = $media['object_type']->value . '-' . $media['object_id'];
-                if (isset($seen[$key])) {
-                    continue;
-                }
-
-                $art = new Art($media['object_id'], $media['object_type']->value);
-                if ($art->has_db_info()) {
-                    // Several songs off one album each carry their own copy of the album cover, so the same
-                    // picture arrives under different ids; hash the bytes to keep one tile per cover.
-                    $hash = ($art->raw === null || $art->raw === '') ? '' : md5($art->raw);
-                    if ($hash !== '' && isset($hashes[$hash])) {
-                        continue;
-                    }
-
-                    $hashes[$hash] = true;
-                    $seen[$key]    = true;
-                    $link          = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
-                    // The row id matters as well as the link: `url` is relative, so anything reading these
-                    // back (the art picker, image.php) can't fetch it and would show the cover as invalid.
-                    $images[]   = [
-                        'db' => $art->id,
-                        'url' => $link,
-                        'mime' => $art->raw_mime,
-                        'title' => $title
-                    ];
-                    if (
-                        $mosaic
-                        && count($tiles) < PlaylistArtBuilderInterface::MAX_TILES
-                        && $art->raw !== null
-                        && $art->raw !== ''
-                    ) {
-                        $tiles[] = $art->raw;
-                    }
-
-                    ++$count;
-                }
-            }
-        }
-
-        if ($mosaic && count($tiles) >= PlaylistArtBuilderInterface::MIN_TILES) {
-            $stitched = $this->getPlaylistArtBuilder()->build($tiles);
-            if ($stitched !== null) {
-                // First choice for whoever is gathering art automatically, but the individual covers stay
-                // in the list: the art picker can't offer a mosaic (raw bytes can't survive the session)
-                // and would have nothing to show if this were the only result.
-                array_unshift($images, [
-                    'raw' => $stitched,
-                    'mime' => 'image/png',
-                    'title' => $title,
-                ]);
-            }
+        if (
+            make_bool(AmpConfig::get(ConfigurationKeyEnum::PLAYLIST_ART_MOSAIC, true))
+            && count($tiles) >= PlaylistArtBuilderInterface::MIN_TILES
+        ) {
+            // Offered as a reference rather than as bytes: half a megabyte of image can't sit in the session
+            array_unshift($images, [
+                'mosaic' => ['object_id' => $this->id, 'limit' => $limit],
+                'mime' => 'image/png',
+                'title' => T_('Playlist Items'),
+            ]);
         }
 
         return $images;
@@ -322,6 +249,23 @@ abstract class playlist_object extends database_object implements
         }
 
         return $this->get_items();
+    }
+
+    /**
+     * get_mosaic_art
+     * Stitch this list's own covers into one image, or null when there aren't enough of them to fill a grid
+     */
+    public function get_mosaic_art(int $limit): ?string
+    {
+        if (!make_bool(AmpConfig::get(ConfigurationKeyEnum::PLAYLIST_ART_MOSAIC, true))) {
+            return null;
+        }
+
+        [, $tiles] = $this->_collect_covers($limit);
+
+        return (count($tiles) >= PlaylistArtBuilderInterface::MIN_TILES)
+            ? $this->getPlaylistArtBuilder()->build($tiles)
+            : null;
     }
 
     /**
@@ -548,6 +492,87 @@ abstract class playlist_object extends database_object implements
                 ? SearchRepositoryInterface::class
                 : PlaylistRepositoryInterface::class
         );
+    }
+
+    /**
+     * Pick one cover per distinct image, returning both the art results and the tiles a mosaic is built from
+     *
+     * @return array{0: list<array{db: ?int, url: string, mime: string, title: string}>, 1: list<string>}
+     */
+    private function _collect_covers(int $limit): array
+    {
+        $web_path = AmpConfig::get_web_path();
+
+        $medias = $this->get_art_items();
+        $count  = 0;
+        $images = [];
+        $tiles  = [];
+        $seen   = [];
+        $hashes = [];
+        $title  = T_('Playlist Items');
+        // Shuffle so the covers picked aren't just the first few, but seed it from the playlist and its
+        // contents so the same playlist keeps producing the same art. Re-running an art gather would
+        // otherwise hand the user a different mosaic every time for a playlist that never changed.
+        $seed    = crc32($this->id . ':' . implode(',', array_column($medias, 'object_id')));
+        $medias  = (new Randomizer(new Mt19937($seed)))->shuffleArray($medias);
+        foreach ($medias as $media) {
+            // Only the mosaic is capped, so the caller still gets the full list of covers to choose from
+            // when it falls back to picking one.
+            if ($count >= $limit) {
+                break;
+            }
+
+            if (InterfaceImplementationChecker::is_library_item($media['object_type']->value)) {
+                if (!Art::has_db($media['object_id'], $media['object_type']->value)) {
+                    $className = ObjectTypeToClassNameMapper::map($media['object_type']->value);
+                    /** @var container_item $libitem */
+                    $libitem = new $className($media['object_id']);
+                    $parent  = $libitem->get_parent();
+                    if ($parent !== null) {
+                        $media = $parent;
+                    }
+                }
+
+                // Skip covers we've already taken so a single-album playlist doesn't repeat one tile.
+                $key = $media['object_type']->value . '-' . $media['object_id'];
+                if (isset($seen[$key])) {
+                    continue;
+                }
+
+                $art = new Art($media['object_id'], $media['object_type']->value);
+                if ($art->has_db_info()) {
+                    // Several songs off one album each carry their own copy of the album cover, so the same
+                    // picture arrives under different ids; hash the bytes to keep one tile per cover.
+                    $hash = ($art->raw === null || $art->raw === '') ? '' : md5($art->raw);
+                    if ($hash !== '' && isset($hashes[$hash])) {
+                        continue;
+                    }
+
+                    $hashes[$hash] = true;
+                    $seen[$key]    = true;
+                    $link          = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
+                    // The row id matters as well as the link: `url` is relative, so anything reading these
+                    // back (the art picker, image.php) can't fetch it and would show the cover as invalid.
+                    $images[]   = [
+                        'db' => $art->id,
+                        'url' => $link,
+                        'mime' => $art->raw_mime,
+                        'title' => $title
+                    ];
+                    if (
+                        count($tiles) < PlaylistArtBuilderInterface::MAX_TILES
+                        && $art->raw !== null
+                        && $art->raw !== ''
+                    ) {
+                        $tiles[] = $art->raw;
+                    }
+
+                    ++$count;
+                }
+            }
+        }
+
+        return [$images, $tiles];
     }
 
     /**

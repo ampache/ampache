@@ -1332,6 +1332,47 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_all_song_ids
+     *
+     * Returns an array of ids of enabled songs across every catalog (or the ones supplied)
+     * @param int[]|null $catalogs
+     * @return int[]
+     */
+    public static function get_all_song_ids(int $size = 0, int $offset = 0, ?array $catalogs = null): array
+    {
+        // the catalog join mirrors the server song count in update_counts(), so a total and a page agree
+        $sql = (AmpConfig::get('catalog_disable'))
+            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`enabled` = '1' AND `catalog`.`enabled` = '1' "
+            : "SELECT `song`.`id` FROM `song` WHERE `song`.`enabled` = '1' ";
+        if (is_array($catalogs) && count($catalogs)) {
+            $sql .= sprintf('AND `song`.`catalog` IN (%s) ', implode(',', $catalogs));
+        }
+
+        $sql_limit = "";
+        if ($offset > 0 && $size > 0) {
+            $sql_limit = sprintf('LIMIT %d, %d', $offset, $size);
+        } elseif ($size > 0) {
+            $sql_limit = 'LIMIT ' . $size;
+        } elseif ($offset > 0) {
+            // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html
+            $sql_limit = sprintf('LIMIT %d, 18446744073709551615', $offset);
+        }
+
+        // the id tiebreaker keeps the order total, so a paging client can't see a row twice or skip one
+        $sql .= 'ORDER BY `song`.`album`, `song`.`id` ' . $sql_limit;
+        //debug_event(self::class, 'get_all_song_ids ' . $sql, 5);
+
+        $db_results = Dba::read($sql);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * get_artist_arrays
      *
      * Get each array of [id, f_name, name, album_count, song_count, catalog_id, has_art] for artists in an array of catalog id's

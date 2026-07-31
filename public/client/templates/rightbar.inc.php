@@ -124,16 +124,18 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
     require_once Ui::find_template('show_localplay_control.inc.php');
 } ?>
 <ul id="rb_current_playlist" class="striped-rows">
-
-<?php $objects = [];
+<?php
+$objects      = [];
+$basket_count = 0;
 // FIXME :: this is kludgy
 if (!defined('NO_SONGS') && Core::get_global('user') instanceof User && Core::get_global('user')->playlist) {
-    $objects = Core::get_global('user')->playlist->get_items();
+    // A play queue can hold far more than this list ever shows, so it is counted and read separately
+    $basket_count = Core::get_global('user')->playlist->count_items();
+    $objects      = Core::get_global('user')->playlist->get_items(100);
 }
 // Limit the number of objects we show here
-if (count($objects) > 100) {
-    $truncated = (count($objects) - 100);
-    $objects   = array_slice($objects, 0, 100, true);
+if ($basket_count > 100) {
+    $truncated = ($basket_count - 100);
 }
 
 global $dic;
@@ -176,7 +178,7 @@ if (count($objects)) {
     $(document).ready(function() {
         // necessary evils for time being
         jsAmpConfigPlayType = "<?php echo AmpConfig::get('play_type'); ?>";
-        jsBasketCount = <?php echo (Core::get_global('user') instanceof User && Core::get_global('user')->playlist) ? count(Core::get_global('user')->playlist->get_items()) : 0; ?>;
+        jsBasketCount = <?php echo $basket_count; ?>;
         RightbarInit();
     });
 </script>
