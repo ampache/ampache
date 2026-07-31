@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-07-29 19:26+1000\n"
+"POT-Creation-Date: 2026-07-31 12:06+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -122,12 +122,6 @@ msgstr ""
 msgid "Show/Hide Player"
 msgstr ""
 
-msgid "Home"
-msgstr ""
-
-msgid "Play"
-msgstr ""
-
 msgid "Artists"
 msgstr ""
 
@@ -135,15 +129,6 @@ msgid "Albums"
 msgstr ""
 
 msgid "Playlists"
-msgstr ""
-
-msgid "Genres"
-msgstr ""
-
-msgid "Favorites"
-msgstr ""
-
-msgid "Upload"
 msgstr ""
 
 msgid "Now Playing"
@@ -198,6 +183,12 @@ msgid "Download a copy of the new version"
 msgstr ""
 
 msgid "Installation"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Upload"
 msgstr ""
 
 msgid "Localplay"
@@ -290,6 +281,9 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
+msgid "Play"
+msgstr ""
+
 msgid "Play next"
 msgstr ""
 
@@ -297,9 +291,6 @@ msgid "Play last"
 msgstr ""
 
 msgid "Add to Temporary Playlist"
-msgstr ""
-
-msgid "Add to playlist"
 msgstr ""
 
 msgid "Prev"
@@ -342,6 +333,9 @@ msgid "Log out"
 msgstr ""
 
 msgid "Add to New Playlist"
+msgstr ""
+
+msgid "Add to New Collection"
 msgstr ""
 
 msgid "Batch download"
@@ -592,6 +586,24 @@ msgstr ""
 msgid "Music"
 msgstr ""
 
+msgid "Create Collection"
+msgstr ""
+
+msgid "Private"
+msgstr ""
+
+msgid "Public"
+msgstr ""
+
+msgid "Object Type"
+msgstr ""
+
+msgid "Mixed"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
 msgid "Add Catalog Filter"
 msgstr ""
 
@@ -688,15 +700,6 @@ msgid "Codec"
 msgstr ""
 
 msgid "Create Playlist"
-msgstr ""
-
-msgid "Private"
-msgstr ""
-
-msgid "Public"
-msgstr ""
-
-msgid "Create"
 msgstr ""
 
 msgid "Subscribe to Podcast"
@@ -1017,6 +1020,9 @@ msgstr ""
 msgid "Songs"
 msgstr ""
 
+msgid "Genres"
+msgstr ""
+
 msgid "Rating"
 msgstr ""
 
@@ -1193,16 +1199,31 @@ msgstr ""
 msgid "Owner"
 msgstr ""
 
-msgid "Mixed"
+msgid "Collection Edit"
 msgstr ""
 
-msgid "Collection Edit"
+msgid "Save the current order of this collection?"
 msgstr ""
 
 msgid "Do you really want to delete this Collection?"
 msgstr ""
 
 msgid "This Collection is empty"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
+msgid "Reorder"
+msgstr ""
+
+msgid "Remove from collection"
+msgstr ""
+
+msgid "Remove {count} selected items from this collection?"
 msgstr ""
 
 #. HINT: Number of items in a playlist
@@ -1342,9 +1363,6 @@ msgstr ""
 msgid "Votes"
 msgstr ""
 
-msgid "Title"
-msgstr ""
-
 msgid "Remove Vote"
 msgstr ""
 
@@ -1427,9 +1445,6 @@ msgid "Settings for Catalog: %s"
 msgstr ""
 
 msgid "Save Catalog Settings"
-msgstr ""
-
-msgid "Object Type"
 msgstr ""
 
 msgid "Collaborate"
@@ -1609,6 +1624,9 @@ msgid "Save as Smart Playlist"
 msgstr ""
 
 msgid "Save as Playlist"
+msgstr ""
+
+msgid "Favorites"
 msgstr ""
 
 msgid "Art Search"
@@ -2276,9 +2294,6 @@ msgstr ""
 msgid "Duration"
 msgstr ""
 
-msgid "Reorder"
-msgstr ""
-
 msgid "Remove from playlist"
 msgstr ""
 
@@ -2782,6 +2797,12 @@ msgid ""
 "then your web_path is not set correctly."
 msgstr ""
 
+msgid "Smartlists"
+msgstr ""
+
+msgid "Radio"
+msgstr ""
+
 msgid "Update from tags complete"
 msgstr ""
 
@@ -2955,16 +2976,10 @@ msgstr ""
 msgid "Expand/Collapse"
 msgstr ""
 
-msgid "Radio"
-msgstr ""
-
 msgid "Uploads"
 msgstr ""
 
 msgid "Smart Playlists"
-msgstr ""
-
-msgid "Smartlists"
 msgstr ""
 
 msgid "Collections"
@@ -3017,6 +3032,9 @@ msgid ""
 "required dependencies"
 msgstr ""
 
+msgid "Added to collection"
+msgstr ""
+
 #, php-format
 msgid ""
 "No Catalog configured yet. To start streaming your media, you now need to "
@@ -3062,6 +3080,9 @@ msgid "View License"
 msgstr ""
 
 msgid "Folder Edit"
+msgstr ""
+
+msgid "Collection Name"
 msgstr ""
 
 msgid "Song Edit"
@@ -3230,7 +3251,7 @@ msgstr ""
 msgid "A filter name is required"
 msgstr ""
 
-msgid "That filter name already exists"
+msgid "That name already exists"
 msgstr ""
 
 msgid "The new filter was not created"
@@ -3346,9 +3367,6 @@ msgstr ""
 msgid "A Username is required"
 msgstr ""
 
-msgid "That Username already exists"
-msgstr ""
-
 msgid "You entered an invalid e-mail address"
 msgstr ""
 
@@ -3426,6 +3444,9 @@ msgstr ""
 msgid "%s IP History"
 msgstr ""
 
+msgid "That Username already exists"
+msgstr ""
+
 msgid "Passwords do not match"
 msgstr ""
 
@@ -3477,6 +3498,9 @@ msgstr ""
 msgid "Artist information updated using MusicBrainz"
 msgstr ""
 
+msgid "Missing mandatory parameter"
+msgstr ""
+
 msgid "Art file failed size check"
 msgstr ""
 
@@ -3501,6 +3525,18 @@ msgid "This collection does not accept items of that type"
 msgstr ""
 
 msgid "Object added to collection"
+msgstr ""
+
+msgid "Name is required"
+msgstr ""
+
+msgid "Not a valid item type"
+msgstr ""
+
+msgid "Failed to create collection"
+msgstr ""
+
+msgid "Collection created"
 msgstr ""
 
 msgid "Object removed from collection"
@@ -3550,6 +3586,9 @@ msgstr ""
 
 #, php-format
 msgid "%s - Now Playing"
+msgstr ""
+
+msgid "Playlist created"
 msgstr ""
 
 #. HINT: Number of songs
@@ -4312,9 +4351,6 @@ msgid "Reset preferences for some-user to default values"
 msgstr ""
 
 msgid "Running in Test Mode. Use -e|--execute to update"
-msgstr ""
-
-msgid "Missing mandatory parameter"
 msgstr ""
 
 msgid "No changes have been made"
@@ -5209,6 +5245,15 @@ msgstr ""
 msgid "Play date"
 msgstr ""
 
+msgid "Add to playlist"
+msgstr ""
+
+msgid "Add to list"
+msgstr ""
+
+msgid "Add to playlist / collection"
+msgstr ""
+
 msgid "On"
 msgstr ""
 
@@ -5670,6 +5715,9 @@ msgstr[1] ""
 msgid "Playlist Items"
 msgstr ""
 
+msgid "Collection Items"
+msgstr ""
+
 msgid "Current Playlist"
 msgstr ""
 
@@ -5710,9 +5758,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Catalog Verified"
-msgstr ""
-
-msgid "Name is required"
 msgstr ""
 
 msgid "Codec is required (e.g. MP3, OGG...)"
