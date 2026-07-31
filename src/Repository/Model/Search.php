@@ -1460,6 +1460,11 @@ class Search extends playlist_object
     {
         $sql = "DELETE FROM `search` WHERE `id` = ?";
         Dba::write($sql, [$this->id]);
+
+        // the map keys a saved search by its prefixed id; a later search reusing this id inherits them
+        $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?";
+        Dba::write($sql, ['smart_' . $this->id]);
+
         Catalog::count_table('search');
 
         return true;

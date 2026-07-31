@@ -325,13 +325,13 @@ class AutoUpdate
      */
     public static function show_ampache_message(): void
     {
-        //if (self::is_develop()) {
-        //    echo '<div id="autoupdate">';
-        //    echo '<span>' . T_("WARNING") . '</span>';
-        //    echo ' (Ampache Develop is about to go through a major change!)<br />';
-        //    echo '<a href="https://ampache.org/docs/old-information/ampache5-changes' . '" target="_blank">' . T_('View changes') . '</a><br /> ';
-        //    echo '</div>';
-        //}
+        if (self::_is_develop()) {
+            echo '<div id="autoupdate">';
+            echo '<span>' . T_("WARNING") . '</span>';
+            echo ' (Ampache Develop is about to go through a major change!)<br />';
+            echo '<a href="https://github.com/ampache/ampache/pull/4387" target="_blank">' . T_('View changes') . '</a><br /> ';
+            echo '</div>';
+        }
     }
 
     protected static function _set_lastcheck(int $time): void
@@ -401,10 +401,14 @@ class AutoUpdate
     }
 
     /**
-     * Update local git repository.
+     * Update local git repository. Returns false when git was unavailable or exited with an error.
      */
-    public static function update_files(?bool $api = false): void
+    public static function update_files(?bool $api = false): bool
     {
+        if (!self::_can_execute((bool) $api)) {
+            return false;
+        }
+
         $cmd        = 'git pull https://github.com/ampache/ampache.git';
         $git_branch = self::is_force_git_branch();
         if ($git_branch !== '') {
@@ -415,13 +419,17 @@ class AutoUpdate
         if (!$api) {
             echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
         }
-        ob_flush();
+        self::_flush_output();
         chdir(__DIR__ . '/../../../');
-        exec($cmd);
+        $success = self::_run_command($cmd, (bool) $api);
         if (!$api) {
-            echo T_('Done') . '<br />';
+            echo(($success) ? T_('Done') : T_('Update failed. Please check the logs for further information.')) . '<br />';
         }
-        ob_flush();
+        self::_flush_output();
+
+        if (!$success) {
+            return false;
+        }
 
         $commit = self::get_current_commit();
         if (!empty($commit)) {
@@ -431,28 +439,38 @@ class AutoUpdate
             Preference::update_all('autoupdate_lastversion_new', 0);
             AmpConfig::set('autoupdate_lastversion_new', false, true);
         }
+
+        return true;
     }
 
     /**
-     * Update project dependencies.
+     * Update project dependencies. Returns false when a command was unavailable or exited with an error.
      */
     public static function update_dependencies(
         ConfigContainerInterface $config,
         bool $api = false
-    ): void {
+    ): bool {
+        if (!self::_can_execute($api)) {
+            return false;
+        }
+
+        chdir(__DIR__ . '/../../../');
+
         $cmdComposer = sprintf(
             '%s install %s',
             $config->getComposerBinaryPath(),
             $config->getComposerParameters()
         );
 
+        // npm must install the dev packages because the postinstall (npm-run-all, copyfiles) and build (vite)
+        // scripts that produce every shipped asset live there, and a webserver may inherit NODE_ENV=production
         $cmdNpm = sprintf(
-            '%s install',
+            '%s install --include=dev --loglevel info',
             $config->getNpmBinaryPath()
         );
 
         $cmdNpmBuild = sprintf(
-            '%s run build',
+            '%s run build --loglevel info',
             $config->getNpmBinaryPath()
         );
 
@@ -462,23 +480,216 @@ class AutoUpdate
             echo T_('Updating npm build with `' . $cmdNpmBuild . '` ...') . '<br />';
         }
 
+        // node_modules, vendor and the generated asset directories are written by these commands, so a checkout
+        // owned by a different user than the webserver fails halfway through and leaves a broken install behind
+        $unwritable = self::_unwritable_dependency_paths();
+        if (!empty($unwritable)) {
+            $message = sprintf(
+                /* HINT: comma separated list of filesystem paths */
+                T_('Unable to update dependencies: the web server user cannot write to %s'),
+                implode(', ', $unwritable)
+            );
+            debug_event(self::class, $message, 1);
+            if (!$api) {
+                echo scrub_out($message) . '<br />';
+            }
+
+            return false;
+        }
+
         // set NPM paths to allow AutoUpdate to work with the webserver
         if ((strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')) {
-            $cmdNpm      = 'export PATH=$PATH:./node_modules/.bin/ &&' . $cmdNpm . ' --loglevel info 2>&1';
-            $cmdNpmBuild = 'export PATH=$PATH:./node_modules/.bin/ &&' . $cmdNpmBuild . ' --loglevel info 2>&1';
+            $cmdNpm      = 'export PATH=$PATH:./node_modules/.bin/ && ' . $cmdNpm;
+            $cmdNpmBuild = 'export PATH=$PATH:./node_modules/.bin/ && ' . $cmdNpmBuild;
         }
 
-        ob_flush();
-        chdir(__DIR__ . '/../../../');
-        echo(exec($cmdComposer) . '<br />');
-        echo(exec($cmdNpm) . '<br />');
-        echo(exec($cmdNpmBuild) . '<br />');
+        self::_redirect_npm_home();
+
+        $restored = self::_reset_dirty_vendor_checkouts();
+        if (!empty($restored)) {
+            $message = sprintf(
+                'Restored: %s',
+                implode(', ', $restored)
+            );
+            debug_event(self::class, $message, 3);
+            if (!$api) {
+                echo scrub_out($message) . '<br />';
+            }
+        }
+
+        self::_flush_output();
+
+        $success = self::_run_command($cmdComposer, $api);
+        $success = self::_run_command($cmdNpm, $api) && $success;
+        $success = self::_run_command($cmdNpmBuild, $api) && $success;
+
         if (!$api) {
-            echo T_('Done') . '<br />';
+            echo(($success) ? T_('Done') : T_('Update failed. Please check the logs for further information.')) . '<br />';
         }
 
-        ob_flush();
+        self::_flush_output();
 
         sleep(5);
+
+        return $success;
+    }
+
+    /**
+     * Check that shell commands can be run at all. Hosts regularly blacklist exec() in disable_functions, where
+     * calling it would abort the request with a fatal error after the sources have already been pulled.
+     */
+    private static function _can_execute(bool $api): bool
+    {
+        if (function_exists('exec')) {
+            return true;
+        }
+
+        $message = T_('Unable to run the update: the PHP exec() function is disabled on this server');
+        debug_event(self::class, $message, 1);
+        if (!$api) {
+            echo scrub_out($message) . '<br />';
+        }
+
+        return false;
+    }
+
+    /**
+     * Send anything buffered so far to the browser so a long running update reports progress as it happens.
+     */
+    private static function _flush_output(): void
+    {
+        if (ob_get_level() > 0) {
+            ob_flush();
+        }
+
+        flush();
+    }
+
+    /**
+     * npm refuses to run when it cannot create its cache directory, which is what happens under a web server user
+     * whose home directory isn't writable, so point it at a directory we know can be written instead.
+     */
+    private static function _redirect_npm_home(): void
+    {
+        $home = (string) getenv('HOME');
+        if (!empty($home) && is_writable($home)) {
+            return;
+        }
+
+        $cache = rtrim(sys_get_temp_dir(), '/\\') . DIRECTORY_SEPARATOR . 'ampache-npm';
+        if (!is_dir($cache) && !mkdir($cache, 0755, true) && !is_dir($cache)) {
+            debug_event(self::class, 'Unable to create an npm cache directory at ' . $cache, 1);
+
+            return;
+        }
+
+        putenv('HOME=' . $cache);
+        putenv('npm_config_cache=' . $cache);
+    }
+
+    /**
+     * Restore vendor git checkouts that were dirtied by install time code generation.
+     *
+     * Composer refuses to remove or update a package installed from source when its working tree has local
+     * modifications, and packages writing into their own directory during install (phpstan/extension-installer
+     * regenerates src/GeneratedConfig.php) leave that state behind. Installs made before the switch to
+     * --prefer-dist still hold those checkouts, so a --no-dev run would abort partway through removing the dev
+     * packages and leave vendor in a broken state.
+     *
+     * @return string[] the packages that were restored
+     */
+    private static function _reset_dirty_vendor_checkouts(): array
+    {
+        $vendor = realpath(__DIR__ . '/../../../vendor');
+        if ($vendor === false) {
+            return [];
+        }
+
+        $restored = [];
+        foreach (glob($vendor . '/*/*/.git', GLOB_ONLYDIR) ?: [] as $gitDir) {
+            $path   = dirname($gitDir);
+            $output = [];
+            $status = 0;
+
+            // composer only inspects tracked files here, so untracked leftovers are not worth touching
+            exec(sprintf('git -C %s status --porcelain --untracked-files=no 2>&1', escapeshellarg($path)), $output, $status);
+            if ($status !== 0 || empty($output)) {
+                continue;
+            }
+
+            $discard = [];
+            exec(sprintf('git -C %s checkout -- . 2>&1', escapeshellarg($path)), $discard, $status);
+            if ($status !== 0) {
+                debug_event(self::class, 'Unable to restore the modified dependency sources at ' . $path, 1);
+
+                continue;
+            }
+
+            $restored[] = str_replace(DIRECTORY_SEPARATOR, '/', substr($path, strlen($vendor) + 1));
+        }
+
+        return $restored;
+    }
+
+    /**
+     * Run an update command, echoing its output, and report whether it exited cleanly.
+     */
+    private static function _run_command(string $command, bool $api): bool
+    {
+        $output = [];
+        $status = 0;
+        exec($command . ' 2>&1', $output, $status);
+
+        if ($status !== 0) {
+            debug_event(self::class, sprintf('Command exited with status %d: %s', $status, $command), 1);
+            foreach ($output as $line) {
+                debug_event(self::class, $line, 1);
+            }
+        }
+
+        if (!$api) {
+            // the tail carries the reason a command stopped, which is all an admin has to work from in the browser
+            foreach (array_slice($output, -30) as $line) {
+                echo scrub_out($line) . '<br />';
+            }
+        }
+
+        return $status === 0;
+    }
+
+    /**
+     * Collect the paths the dependency install has to write to that the current user cannot write.
+     *
+     * @return string[]
+     */
+    private static function _unwritable_dependency_paths(): array
+    {
+        $root       = realpath(__DIR__ . '/../../../') ?: __DIR__ . '/../../../';
+        $unwritable = [];
+        foreach ([$root, $root . '/node_modules', $root . '/vendor'] as $path) {
+            // a missing directory is created by the command itself, so the parent is what has to be writable
+            $target = (is_dir($path)) ? $path : dirname($path);
+            if (!self::_is_writable_directory($target)) {
+                $unwritable[] = $path;
+            }
+        }
+
+        return $unwritable;
+    }
+
+    /**
+     * Test a directory by writing to it. is_writable() reports the permission bits, which disagree with reality
+     * on anything using ACLs or a remote filesystem, and a false alarm here would block an update that works.
+     */
+    private static function _is_writable_directory(string $path): bool
+    {
+        $probe = rtrim($path, '/\\') . DIRECTORY_SEPARATOR . '.ampache-update-write-test';
+        if (!@touch($probe)) {
+            return false;
+        }
+
+        @unlink($probe);
+
+        return true;
     }
 }

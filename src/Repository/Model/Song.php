@@ -414,6 +414,12 @@ class Song extends database_object implements
         Album::update_album_count($album_id);
 
         if ($user_upload) {
+            foreach (array_unique($artists) as $mapped_artist_id) {
+                if ($mapped_artist_id > 0) {
+                    Catalog::update_map((int) $catalog, 'artist', (int) $mapped_artist_id);
+                }
+            }
+
             self::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', $song_id, time());
         }
 

@@ -83,9 +83,17 @@ final class UpdateAction implements ApplicationActionInterface
             }
 
             set_time_limit(300);
-            AutoUpdate::update_files();
-            AutoUpdate::update_dependencies($this->configContainer);
+            $success = AutoUpdate::update_files();
+            if ($success) {
+                $success = AutoUpdate::update_dependencies($this->configContainer);
+            }
             Preference::translate_db();
+
+            // a failed update has already printed the command output; redirecting away would discard the only
+            // explanation the admin gets, so stay on the page and let them read why it stopped
+            if (!$success) {
+                return $this->responseFactory->createResponse();
+            }
 
             return $this->responseFactory
                 ->createResponse(StatusCode\RFC\RFC7231::FOUND)
