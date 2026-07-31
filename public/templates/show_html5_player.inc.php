@@ -77,6 +77,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
     // has to be asked for. It can only change when the track does, so it is resolved once per track and held
     // until the next one starts rather than polled on a timer.
     var nowPlayingObjectId = null;
+    var nowPlayingSeenId = null;
     var nowPlayingHeld = null;
     var nowPlayingPending = false;
     var nowPlayingActive = false;
@@ -93,7 +94,13 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
         nowPlayingActive = true;
         nowPlayingAttempts++;
         $.getJSON(jsAjaxUrl + '?page=player&action=now_playing', function (data) {
+            if (window.jpDebug && window.console && window.console.log) {
+                window.console.log('now_playing attempt ' + nowPlayingAttempts + ', holding ' + nowPlayingObjectId, data);
+            }
             if (!data || !data.found || !data.object_id || data.object_id === nowPlayingObjectId) {
+                if (data && data.object_id) {
+                    nowPlayingSeenId = data.object_id;
+                }
                 scheduleNowPlayingRetry();
 
                 return;
@@ -131,11 +138,25 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
         $('.playing_art').removeAttr('src').hide();
     }
 
+    // jPlayer builds the playlist markup by concatenation, so a value the item doesn't carry lands in the dom as
+    // the text "undefined" and reads back as a non-empty string that the browser then fetches as a relative url.
+    function jpItemAttr(item, name)
+    {
+        var value = (item) ? item.attr(name) : '';
+
+        return (value === undefined || value === 'undefined' || value === 'null' || value === 'NaN') ? '' : value;
+    }
+
     function scheduleNowPlayingRetry()
     {
         cancelNowPlayingRetry();
         if (nowPlayingAttempts >= nowPlayingMaxAttempts) {
             nowPlayingPending = false;
+            // The row kept being rejected because it belongs to the track that just finished, so retiring it as the
+            // baseline stops the next track from accepting it and settling permanently one song behind.
+            if (nowPlayingSeenId !== null) {
+                nowPlayingObjectId = nowPlayingSeenId;
+            }
 
             return;
         }
@@ -158,13 +179,14 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
     {
         cancelNowPlayingRetry();
         nowPlayingHeld = null;
+        nowPlayingSeenId = null;
         nowPlayingPending = true;
         nowPlayingAttempts = 0;
         clearNowPlayingArt();
     }
 
-    // now_playing is only written once the stream request reaches the server, and the player fires `play` before it
-    // even asks for the url, so the lookup waits for media data to arrive or it always reads the previous track.
+    // now_playing is only written once the stream request reaches the server, well after `play` fires, so the first
+    // read of a track is expected to be stale and the retries are what actually resolve it.
     function refreshNowPlaying()
     {
         if (!nowPlayingPending || nowPlayingActive) {
@@ -269,6 +291,9 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
         }
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
+            <?php if ($isRandom || $isDemocratic) { ?>
+            refreshNowPlaying();
+            <?php } ?>
             // Splice the shared audio graph (EQ + ReplayGain) in as soon as playback starts so the equalizer is active.
             if (typeof ensureAudioGraph === 'function' && ensureAudioGraph() && audioContext && audioContext.state === 'suspended') {
                 audioContext.resume();
@@ -299,11 +324,11 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                         }
                         <?php } ?>
                         <?php if ($iframed && AmpConfig::get('browser_notify')) { ?>
-                        NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
+                        NotifyOfNewSong(obj.title, obj.artist, jpItemAttr(currentjpitem, "data-poster"));
                         <?php } ?>
                         if ("mediaSession" in navigator) {
-                            // Random/democratic placeholders carry no poster, and an undefined src is fetched as a url
-                            var mediaPoster = currentjpitem.attr("data-poster") || '';
+                            // Random/democratic placeholders carry no poster, and an empty artwork list beats a bad src
+                            var mediaPoster = jpItemAttr(currentjpitem, "data-poster");
                             var mediaArtwork = (mediaPoster === '')
                                 ? []
                                 : [
@@ -325,7 +350,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                                 title: obj.title,
                                 artist: obj.artist,
                                 artwork: mediaArtwork,
-                                album: currentjpitem.attr("data-album_name") || '',
+                                album: jpItemAttr(currentjpitem, "data-album_name"),
                             });
                             navigator.mediaSession.playbackState = "playing";
                         }
@@ -377,7 +402,8 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                             if (AmpConfig::get('sociable')) {
                                 echo "if (currenttype === 'song') { ajaxPut(jsAjaxUrl + '?page=' + currenttype + '&action=shouts&object_type=' + currenttype + '&object_id=' + currentjpitem.attr('data-media_id'), 'shouts_data'); }";
                             }
-                            echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + actiontype + '&object_id=' + currentjpitem.attr('data-media_id'));";
+                            // random/democratic placeholders have no type or id of their own, so the buttons are left for the resolved song
+                            echo "if (typeof actiontype !== 'undefined') { ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + actiontype + '&object_id=' + currentjpitem.attr('data-media_id')); }";
                             echo "var titleobj = (typeof actiontype !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/' + currenttype + '.php?action=show_' + currenttype + '&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>' : obj.title;";
                             echo "var artistobj = (currentjpitem.attr('data-artist_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/artists.php?action=show&artist=' + currentjpitem.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
                             echo "var lyricsobj = (typeof actiontype !== 'undefined' && currenttype === 'song') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/' + currenttype + '.php?action=show_lyrics&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\">" . addslashes(T_('Show Lyrics')) . "</a>' : '';";
