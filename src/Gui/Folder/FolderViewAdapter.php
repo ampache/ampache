@@ -297,6 +297,14 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
         return $this->object->getId();
     }
 
+    /**
+     * The type of the row, which is not always `folder`: this browse also lists the media a folder holds
+     */
+    public function getObjectType(): string
+    {
+        return $this->object_type;
+    }
+
     public function getPlayedTimes(): ?int
     {
         return (property_exists($this->object, 'total_count') && (!property_exists($this->object, 'playable') || $this->object->playable))

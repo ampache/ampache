@@ -1468,6 +1468,63 @@ class Json8_Data
     }
 
     /**
+     * folders_array
+     *
+     * A folder as a standalone object, for a caller listing folders rather than walking into one. The nested
+     * `items` of the `folders` method are deliberately absent: a member of a list is a reference, not a tree.
+     *
+     * @param array<int|string> $objects Folder id's to include
+     * @return array<int, array{
+     *     "id": string,
+     *     "name": null|string,
+     *     "parent": null|int,
+     *     "path": null|string,
+     *     "catalog": int,
+     *     "items": int,
+     *     "playable": bool,
+     *     "art": null|string,
+     *     "has_art": bool,
+     *     "flag": bool,
+     *     "rating": null|int,
+     *     "averagerating": null|float
+     * }>
+     */
+    public static function folders_array(array $objects, User $user, string $auth): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+
+        $JSON = [];
+        foreach ($objects as $folder_id) {
+            $folder = new Folder((int) $folder_id);
+            if ($folder->isNew()) {
+                continue;
+            }
+
+            $rating      = new Rating($folder->getId(), 'folder');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag($folder->getId(), 'folder');
+
+            $JSON[] = [
+                "id" => (string) $folder->getId(),
+                "name" => $folder->get_fullname(),
+                "parent" => $folder->parent,
+                "path" => $folder->path_name,
+                "catalog" => $folder->catalog,
+                "items" => (int) $folder->object_count,
+                "playable" => $folder->playable,
+                "art" => Art::url($folder->getId(), 'folder', $auth),
+                "has_art" => $folder->has_art(),
+                "flag" => (bool) $flag->get_flag($user->getId()),
+                "rating" => $user_rating,
+                "averagerating" => $rating->get_average_rating(),
+            ];
+        }
+
+        return $JSON;
+    }
+
+    /**
      * genres_string
      *
      * This returns genres to the user, in a pretty JSON document with the information
@@ -3528,6 +3585,7 @@ class Json8_Data
             'album' => self::albums_array($ids, [], $user, $auth),
             'album_disk' => self::album_disks_array($ids, [], $user, $auth),
             'artist' => self::artists_array($ids, [], $user, $auth),
+            'folder' => self::folders_array($ids, $user, $auth),
             'genre' => self::genres_array($ids),
             'label' => self::labels_array($ids),
             'live_stream' => self::live_streams_array($ids),

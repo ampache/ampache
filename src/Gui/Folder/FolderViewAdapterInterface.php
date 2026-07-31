@@ -79,6 +79,8 @@ interface FolderViewAdapterInterface
 
     public function getId(): int;
 
+    public function getObjectType(): string;
+
     public function getPlayedTimes(): ?int;
 
     public function getPostShoutIcon(): string;

@@ -45,6 +45,7 @@ class Collection extends playlist_object
         'album',
         'album_disk',
         'artist',
+        'folder',
         'genre',
         'label',
         'live_stream',
