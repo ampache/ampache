@@ -560,34 +560,13 @@ class Browse extends Query
         $type            = $this->get_type();
         $limit_threshold = $this->get_threshold();
 
+        $build_cache = false;
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
         } elseif ($type !== 'song_preview' && $type !== 'folder') {
             /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
             $this->save_objects($object_ids);
-
-            // build cache for new browses
-            switch ($type) {
-                case 'song':
-                    Song::build_cache($this->_squashList($object_ids), $limit_threshold);
-                    break;
-                case 'album':
-                    Album::build_cache($this->_squashList($object_ids));
-                    break;
-                case 'artist':
-                    Artist::build_cache($this->_squashList($object_ids), true, $limit_threshold);
-                    break;
-                case 'playlist':
-                    Playlist::build_cache($this->_squashList($object_ids));
-                    break;
-                case 'tag':
-                case 'tag_hidden':
-                    Tag::build_cache($this->_squashList($object_ids));
-                    break;
-                case 'video':
-                    Video::build_cache($this->_squashList($object_ids));
-                    break;
-            }
+            $build_cache = true;
         }
 
         // Limit is based on the user's preferences if this is not a
@@ -614,6 +593,31 @@ class Browse extends Query
                 echo '<div class="error browse-too-large">' . scrub_out(sprintf(nT_('This view has %d item and is too large to show all at once (limit %d). Enable paging or narrow your filters.', 'This view has %d items and is too large to show all at once (limit %d). Enable paging or narrow your filters.', $count), $count, $limit)) . '</div>';
 
                 return;
+            }
+        }
+
+        if ($build_cache) {
+            /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
+            switch ($type) {
+                case 'song':
+                    Song::build_cache($this->_squashList($object_ids), $limit_threshold);
+                    break;
+                case 'album':
+                    Album::build_cache($this->_squashList($object_ids));
+                    break;
+                case 'artist':
+                    Artist::build_cache($this->_squashList($object_ids), true, $limit_threshold);
+                    break;
+                case 'playlist':
+                    Playlist::build_cache($this->_squashList($object_ids));
+                    break;
+                case 'tag':
+                case 'tag_hidden':
+                    Tag::build_cache($this->_squashList($object_ids));
+                    break;
+                case 'video':
+                    Video::build_cache($this->_squashList($object_ids));
+                    break;
             }
         }
 
