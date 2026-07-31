@@ -297,19 +297,13 @@ class Upnp_Api
             case 'songs':
                 // Get songs list
                 if ($pathcount == 1) {
-                    $catalogs = Catalog::get_catalogs();
-                    foreach ($catalogs as $catalog_id) {
-                        $catalog = Catalog::create_from_id($catalog_id);
-                        if ($catalog === null) {
-                            break;
-                        }
-                        $songs              = $catalog->get_songs();
-                        [$maxCount, $songs] = self::_slice($songs, $start, $count);
-                        foreach ($songs as $song) {
-                            if ($song->isNew() === false) {
-                                $song->fill_ext_info();
-                                $mediaItems[] = self::_itemSong($song, $parent);
-                            }
+                    $song_ids = Catalog::get_all_song_ids($count, $start);
+                    $maxCount = $counts['song'];
+                    foreach ($song_ids as $song_id) {
+                        $song = new Song($song_id);
+                        if ($song->isNew() === false) {
+                            $song->fill_ext_info();
+                            $mediaItems[] = self::_itemSong($song, $parent);
                         }
                     }
                 }

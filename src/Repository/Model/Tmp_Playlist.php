@@ -49,6 +49,7 @@ class Tmp_Playlist extends database_object
     public ?string $object_type = null;
     public ?string $session     = null;
     public ?string $type        = null;
+    private ?int $_row_playlist = null;
 
     /**
      * Constructor
@@ -169,11 +170,11 @@ class Tmp_Playlist extends database_object
      */
     public static function session_clean(string $sessid, string $plist_id): void
     {
-        $sql = "DELETE FROM `tmp_playlist` WHERE `session` = ? AND `id` != ?";
+        $sql = "DELETE FROM `tmp_playlist_data` WHERE `tmp_playlist` IN (SELECT `id` FROM `tmp_playlist` WHERE `session` = ? AND `id` != ?)";
         Dba::write($sql, [$sessid, $plist_id]);
 
-        /* Remove associated tracks */
-        self::prune_tracks();
+        $sql = "DELETE FROM `tmp_playlist` WHERE `session` = ? AND `id` != ?";
+        Dba::write($sql, [$sessid, $plist_id]);
     }
 
     /**
@@ -218,8 +219,9 @@ class Tmp_Playlist extends database_object
      */
     public function count_items(): int
     {
-        $sql        = "SELECT COUNT(`id`) FROM `tmp_playlist_data` WHERE `tmp_playlist` = ?;";
-        $db_results = Dba::read($sql, [$this->id]);
+        [$filter, $params] = $this->_row_filter();
+
+        $db_results = Dba::read("SELECT COUNT(`tmp_playlist_data`.`id`) FROM `tmp_playlist_data` " . $filter, $params);
         $row        = Dba::fetch_row($db_results);
 
         return (int) ($row[0] ?? 0);
@@ -248,21 +250,16 @@ class Tmp_Playlist extends database_object
      *     track: int
      * }>
      */
-    public function get_items(): array
+    public function get_items(int $limit = 0): array
     {
-        $session_name = AmpConfig::get('session_name', 'ampache');
-        $sql          = "SELECT `tmp_playlist_data`.`object_type`, `tmp_playlist_data`.`id`, `tmp_playlist_data`.`object_id` FROM `tmp_playlist_data` ";
-        if (isset($_COOKIE[$session_name])) {
-            // Select all objects for this session
-            $params = [$_COOKIE[$session_name]];
-            $sql .= "LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id` = `tmp_playlist_data`.`tmp_playlist` WHERE `tmp_playlist`.`session` = ? ORDER BY `id`;";
-            $db_results = Dba::read($sql, $params);
-        } else {
-            // try to guess
-            $params = [$this->id];
-            $sql .= "WHERE `tmp_playlist` = ? ORDER BY `id`;";
-            $db_results = Dba::read($sql, $params);
+        [$filter, $params] = $this->_row_filter();
+
+        $sql = "SELECT `tmp_playlist_data`.`object_type`, `tmp_playlist_data`.`id`, `tmp_playlist_data`.`object_id` FROM `tmp_playlist_data` " . $filter . "ORDER BY `id`";
+        if ($limit > 0) {
+            $sql .= " LIMIT " . $limit;
         }
+
+        $db_results = Dba::read($sql, $params);
         //debug_event(self::class, 'get_items ' . $sql . ' ' . print_r($params, true), 5);
 
         // Define the array
@@ -302,9 +299,46 @@ class Tmp_Playlist extends database_object
         return $this->id;
     }
 
+    /**
+     * has_items
+     * Whether this tmp playlist holds anything at all, for the callers that only need to know that
+     */
+    public function has_items(): bool
+    {
+        [$filter, $params] = $this->_row_filter();
+
+        $db_results = Dba::read("SELECT 1 FROM `tmp_playlist_data` " . $filter . "LIMIT 1", $params);
+
+        return Dba::fetch_row($db_results) !== [];
+    }
+
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    /**
+     * The rows this playlist covers, as a where for `tmp_playlist_data`
+     *
+     * The session is resolved to a playlist id rather than joined: `tmp_playlist` is the key the rows are
+     * already ordered by, and reaching it through a join costs a sort of the whole queue before a LIMIT cuts it
+     * @return array{0: string, 1: array<int, int|string>}
+     */
+    private function _row_filter(): array
+    {
+        if ($this->_row_playlist === null) {
+            $this->_row_playlist = $this->id;
+            $session_name        = AmpConfig::get('session_name', 'ampache');
+            if (isset($_COOKIE[$session_name])) {
+                $db_results = Dba::read("SELECT `id` FROM `tmp_playlist` WHERE `session` = ?", [(string) $_COOKIE[$session_name]]);
+                $row        = Dba::fetch_row($db_results);
+                if ($row !== []) {
+                    $this->_row_playlist = (int) $row[0];
+                }
+            }
+        }
+
+        return ["WHERE `tmp_playlist_data`.`tmp_playlist` = ? ", [$this->_row_playlist]];
     }
 
     /**
