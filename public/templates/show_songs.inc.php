@@ -282,6 +282,9 @@ foreach ($object_ids as $song_id) {
             <?php if (!$hide_album) { ?>
                 <th class="<?php echo $cel_album; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'song_sort_album' . $browse->id); ?></th>
             <?php } ?>
+            <?php if (!$hide_year) { ?>
+            <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'song_sort_year'); ?></th>
+            <?php } ?>
             <?php if (!$hide_genres) { ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
             <?php } ?>
