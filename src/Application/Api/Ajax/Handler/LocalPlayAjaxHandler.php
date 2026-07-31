@@ -207,7 +207,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 // Scrub her in
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->connect();
-                $localplay->repeat(make_bool($_REQUEST['value']));
+                $localplay->repeat(make_bool($_REQUEST['value'] ?? false));
 
                 ob_start();
                 $objects = $localplay->get();
@@ -227,7 +227,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 // Scrub her in
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->connect();
-                $localplay->random(make_bool($_REQUEST['value']));
+                $localplay->random(make_bool($_REQUEST['value'] ?? false));
 
                 ob_start();
                 $objects = $localplay->get();

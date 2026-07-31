@@ -33,6 +33,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\User;
 
 /**
@@ -88,21 +89,46 @@ final readonly class CollectionAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // The interface sends a genre as `tag`, after its table; a collection stores it as `genre`
-                $itemType = Collection::denormalizeType($this->requestParser->getFromRequest('item_type'));
-                $added    = 0;
-                foreach (explode(',', $this->requestParser->getFromRequest('item_id')) as $itemId) {
-                    $objectId = (int) $itemId;
+                $itemType   = Collection::denormalizeType($this->requestParser->getFromRequest('item_type'));
+                $requestIds = $this->requestParser->getFromRequest('item_id');
+
+                /** @var list<array{id: int, type: string}> $pending */
+                $pending = [];
+                if ($itemType === '' && $requestIds === '') {
+                    foreach ($user->playlist?->get_items() ?? [] as $item) {
+                        $pending[] = ['id' => (int) $item['object_id'], 'type' => $item['object_type']->value];
+                    }
+                } elseif ($itemType === 'search') {
+                    // A smartlist is not a storable type, so it adds the songs it resolves to instead
+                    foreach (explode(',', $requestIds) as $itemId) {
+                        $smartlist = new Smartlist((int) $itemId);
+                        if ($smartlist->isNew()) {
+                            continue;
+                        }
+
+                        foreach ($smartlist->get_medias('song') as $media) {
+                            $pending[] = ['id' => (int) $media['object_id'], 'type' => 'song'];
+                        }
+                    }
+                } else {
+                    foreach (explode(',', $requestIds) as $itemId) {
+                        $pending[] = ['id' => (int) $itemId, 'type' => $itemType];
+                    }
+                }
+
+                $added = 0;
+                foreach ($pending as $item) {
                     // A pinned collection refuses anything but its own type, and an id that is not in its own
                     // table would leave the collection holding a dangling member
                     if (
-                        $objectId < 1
-                        || !$collection->acceptsType($itemType)
-                        || !$this->collectionRepository->objectExists($itemType, $objectId)
+                        $item['id'] < 1
+                        || !$collection->acceptsType($item['type'])
+                        || !$this->collectionRepository->objectExists($item['type'], $item['id'])
                     ) {
                         continue;
                     }
 
-                    if ($collection->add_item($objectId, $itemType)) {
+                    if ($collection->add_item($item['id'], $item['type'])) {
                         ++$added;
                     }
                 }

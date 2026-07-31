@@ -102,6 +102,7 @@ input[type=submit]:focus:active {
     border: 2px solid #ffc763;
 }
 
+.playlistdialogstyle.ui-dialog,
 .playlistdialogstyle.ui-dialog .ui-dialog-content,
 .sharedialogstyle.ui-dialog .ui-dialog-content,
 .playlistdialogstyle.ui-widget-content a,

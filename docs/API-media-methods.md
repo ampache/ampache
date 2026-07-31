@@ -1,8 +1,4 @@
----
-title: "Media Methods"
-metaTitle: "Media Methods"
-description: "API documentation"
----
+# API Media Methods
 
 It can be confusing about what Ampache does and what you need to do as an API client.
 

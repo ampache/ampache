@@ -419,29 +419,29 @@ class Art extends database_object
         $media_info = [];
         switch ($type) {
             case 'song':
-                $media_info['mb_trackid'] = $options['mb_trackid'];
-                $media_info['title']      = $options['title'];
-                $media_info['artist']     = $options['artist'];
-                $media_info['album']      = $options['album'];
+                $media_info['mb_trackid'] = $options['mb_trackid'] ?? null;
+                $media_info['title']      = $options['title'] ?? null;
+                $media_info['artist']     = $options['artist'] ?? null;
+                $media_info['album']      = $options['album'] ?? null;
                 $gtypes[]                 = 'song';
                 break;
             case 'album':
-                $media_info['mb_albumid']       = $options['mb_albumid'];
-                $media_info['mb_albumid_group'] = $options['mb_albumid_group'];
-                $media_info['artist']           = $options['artist'];
-                $media_info['title']            = $options['album'];
+                $media_info['mb_albumid']       = $options['mb_albumid'] ?? null;
+                $media_info['mb_albumid_group'] = $options['mb_albumid_group'] ?? null;
+                $media_info['artist']           = $options['artist'] ?? null;
+                $media_info['title']            = $options['album'] ?? null;
                 $gtypes[]                       = 'music';
                 $gtypes[]                       = 'album';
                 break;
             case 'artist':
-                $media_info['mb_artistid'] = $options['mb_artistid'];
-                $media_info['title']       = $options['artist'];
+                $media_info['mb_artistid'] = $options['mb_artistid'] ?? null;
+                $media_info['title']       = $options['artist'] ?? null;
                 $gtypes[]                  = 'music';
                 $gtypes[]                  = 'artist';
                 break;
             case 'label':
-                $media_info['mb_artistid'] = $options['mb_labelid'];
-                $media_info['title']       = $options['label'];
+                $media_info['mb_artistid'] = $options['mb_labelid'] ?? null;
+                $media_info['title']       = $options['label'] ?? null;
                 $gtypes[]                  = 'music';
                 $gtypes[]                  = 'label';
                 break;

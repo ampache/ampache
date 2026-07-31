@@ -154,6 +154,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The address bar now shows the page you are on (`/browse.php?action=album`) instead of a stale path with the real page in the fragment (`/index.php#browse.php?action=album`), so links can be read, shared and bookmarked
   * Existing `#` bookmarks still work and upgrade themselves to the real url on load
   * Clicking the page you are already on no longer re-fetches it
+* The optional top menu (`topmenu`) carries the same entries as the light sidebar, adding `Albums`, `Smartlists`, `Radio` and `Log out` alongside the existing links; `Smartlists` follows `sidebar_hide_search` and `Radio` only appears when `live_stream` is on
 * `direct_play_limit`: any existing "unlimited" (`0`) value is reset to a default cap of `500` tracks
 * `playable_item` interface split into `displayable_item` and `container_item` as part of a large interface cleanup
 * API version 8 has been added to the list of API versions
@@ -204,6 +205,14 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* Pages that stopped part way through and returned a blank or half-written page, because an uncaught error is logged and swallowed rather than shown
+  * The embedded web player (`web_player_embedded.php`) and the video page, when opened without a `playlist_id`; the player template was handed an undefined `$playlist` and now gets an empty one
+  * Generating a video preview image read `$time` before it was set, because a `Video` built from an id that is not in the database leaves its typed properties unset
+  * `random.php?action=get_advanced` with an empty `type`, which threw on `LibraryItemEnum::from('')`; an empty or unknown type falls back to `song`
+  * `albums.php?action=show_missing`, which trusted a MusicBrainz release-group lookup to carry `title`, `first-release-date` and `releases`; an unknown or incomplete response is now read defensively
+  * A missing artist page with no musicbrainz id, which passed `null` into `Ui::show_box_top()`
+  * Selecting cover art once the session's candidate list had expired; the choice is checked and you are returned to the previous page instead
+  * `share.php?action=external_share` with no `plugin` named, which built a plugin from an empty name; the request is refused up front instead
 * Right click (`libitem_contextmenu`) actions on a browse row
   * The menu worked out what it was acting on by cutting the row id at the first underscore, so it read `podcast_episode_5` as podcast #episode and a collection row as collection #row; rows now state their identity with `data-object-type` and `data-object-id`
   * Album disk rows, in both the browse and "Albums of the Moment", were labelled as albums, so the menu (and the inline refresh after an edit) went after the album that happened to share that id
@@ -221,6 +230,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * `playlist_create` on API3 recorded the server playlist count before inserting the row, so the stored total was one short until the next playlist create or delete corrected it
 * Deleting a label left its `label_asso` rows behind, so a later label created with the freed id inherited that label's artists; the clean up now sweeps associations whose label is gone
 * Url shortener plugins (`bitly`, `yourls`) were never applied to share links, because `PluginTypeEnum::URL_SHORTENER` looked for a `shorten()` method and plugins implement `shortener()`
+* Plugins
+  * The Discogs plugin never returned album or artist art. Art gathering sends the name of the thing it wants as `title`, and the plugin only searched when it was handed `albumartist` and `album`, or `artist`
+  * Asking Discogs for album art offered the artist's image instead, because the check that skips the artist lookup for an album request tested the values of the request rather than what was being gathered
 * The catalog files and catalog size graphs only drew the time buckets that gained a file, so a library added in a single scan was one point no matter how wide the date range was; they now carry the running total across every bucket in the range
 * The running total those graphs start from ignored the catalog and object filters, so a graph for one catalog counted every earlier file on the server
 * `stats.php?action=graph` rendered graphs without checking `statistical_graphs` first, so it ignored the setting and was a fatal error whenever the charting library was absent
@@ -249,6 +261,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * An active-instance preference pointing at a deleted instance falls back to an available one instead of failing to connect
   * The control panel updates the reported volume, playback state and track after every command, not just mute/repeat/random
   * Playlist items resolve the song from its stream url even when `stream_beautiful_url` is off, so they show the real title/artist/album instead of the raw play url
+  * An empty controller playlist was reported as a controller error, because no songs and no answer were treated the same way
+  * The repeat and random toggles failed when their request arrived without a `value`
+  * The add and edit instance forms turn browser autocompletion off, so a saved site login is no longer offered for a controller's host, port and password fields
+* A lyrics plugin that cannot reach its service no longer holds the page open until PHP gives up; `LrcLib` connect and request timeouts are capped, and a plugin that throws is logged and skipped so the next one is still tried
+* Ajax actions returning an HTML fragment (`get_share_links`, `show_broadcasts`) kept the XML ajax headers, including `Content-Disposition: attachment; filename=ajax.xml`, so a browser could offer the fragment as a download instead of rendering it
 * Light sidebar can scroll to reach its bottom entries on short screens
 * AJAX actions returned a server error instead of updating the page
   * Setting a favorite
@@ -287,6 +304,10 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The update is refused before the sources are pulled when `exec()` is disabled or the checkout, `node_modules` or `vendor` cannot be written
   * Dependencies were installed with `--prefer-source`, which checks out every package as a git working tree; `--prefer-dist` is used instead
   * A package that rewrites one of its own tracked files during install (`phpstan/extension-installer` and its `src/GeneratedConfig.php`) left that checkout dirty, and composer refuses to remove a modified source install, so a `composer_no_dev` update aborted while stripping the dev packages and left `vendor` incomplete. Dirty vendor checkouts are restored before the install runs
+* Aggregated counts fetched from the database are php ints, not strings, so returning one from a `string` typed method raised a `TypeError`
+  * The Wrapped page (`show_wrapped`) failed on `Stats::get_object_data()`, so the songs played and minutes played figures were blank
+  * `scrobble` failed on `Song::can_scrobble()` whenever it did match a song, so a scrobble from a client that sends names rather than an id was never recorded
+* A browse `cond` string whose condition had no comma (`cond=hidden` rather than `cond=hidden,1`) raised an `Undefined array key 1` runtime error on every request; a valueless condition now applies the filter with no argument, exactly as the trailing-comma form already did
 
 ## Ampache 7.10.0
 

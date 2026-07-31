@@ -55,7 +55,6 @@ final class LiveStreamQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = [
         'catalog',
-        'catalog',
         'codec',
         'genre',
         'id',

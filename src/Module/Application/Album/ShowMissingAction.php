@@ -82,12 +82,17 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
         );
 
         // you might not send an artist name
-        $options = (isset($artist))
-            ? ['artist' => $artist->get_fullname(), 'album_name' => $walbum->name, 'keyword' => $artist->get_fullname() . " " . $walbum->name]
-            : ['album_name' => $walbum->name, 'keyword' => $walbum->name];
+        $options = [
+            'mb_albumid_group' => (string) $walbum->mbid,
+            'album' => (string) $walbum->name,
+            'keyword' => (string) $walbum->name,
+        ];
+        if (isset($artist)) {
+            $options['artist']  = $artist->get_fullname();
+            $options['keyword'] = $artist->get_fullname() . ' ' . $walbum->name;
+        }
 
-        // Attempt to find the art.
-        $art    = $this->modelFactory->createArt((int) $walbum->mbid);
+        $art    = $this->modelFactory->createArt(0);
         $images = $this->artCollector->collect(
             $art,
             $options,

@@ -118,6 +118,8 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 );
                 $results = ob_get_contents();
                 ob_end_clean();
+                header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset', 'UTF-8'));
+                header_remove('Content-Disposition');
                 echo $results;
 
                 return;

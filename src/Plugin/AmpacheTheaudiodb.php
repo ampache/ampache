@@ -190,13 +190,17 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
             if (in_array('album', $gather_types)) {
                 debug_event('theaudiodb.plugin', 'Getting album metadata from TheAudioDb...', 5);
                 $release = null;
-                if ($media_info['mb_albumid_group']) {
-                    $album = $this->get_album($media_info['mb_albumid_group']);
+                if (!empty($media_info['mb_albumid_group'])) {
+                    $album = $this->get_album((string) $media_info['mb_albumid_group']);
                     if ($album && $album->album !== null) {
                         $release = $album->album[0];
                     }
                 } else {
-                    $albums = $this->search_album($media_info['artist'], $media_info['title']);
+                    // art gathering names these `artist`/`title`; the external metadata api sends `albumartist`/`album`
+                    $albums = $this->search_album(
+                        (string) ($media_info['albumartist'] ?? $media_info['artist'] ?? ''),
+                        (string) ($media_info['album'] ?? $media_info['title'] ?? '')
+                    );
                     if ($albums && $albums->album !== null) {
                         $release = $albums->album[0];
                     }
@@ -209,11 +213,11 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
             } elseif (in_array('artist', $gather_types)) {
                 debug_event('theaudiodb.plugin', 'Getting artist metadata from TheAudioDb...', 5);
                 $release = null;
-                if ($media_info['mb_artistid']) {
-                    $artist  = $this->get_artist($media_info['mb_artistid']);
+                if (!empty($media_info['mb_artistid'])) {
+                    $artist  = $this->get_artist((string) $media_info['mb_artistid']);
                     $release = $artist->artists[0] ?? $release;
                 } else {
-                    $artists = $this->search_artists($media_info['title']);
+                    $artists = $this->search_artists((string) ($media_info['artist'] ?? $media_info['title'] ?? ''));
                     $release = $artists->artists[0] ?? $release;
                 }
 
@@ -223,8 +227,8 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                     $results['summary']    = $release->strBiographyEN ?? null;
                     $results['yearformed'] = (is_numeric($release->intFormedYear ?? null)) ? (int) $release->intFormedYear : null;
                 }
-            } elseif ($media_info['mb_trackid']) {
-                $track = $this->get_track($media_info['mb_trackid']);
+            } elseif (!empty($media_info['mb_trackid'])) {
+                $track = $this->get_track((string) $media_info['mb_trackid']);
                 if ($track !== null) {
                     $track                       = $track->track[0] ?? null;
                     $results['mb_artistid']      = $track->strMusicBrainzArtistID ?? null;

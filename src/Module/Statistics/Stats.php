@@ -558,7 +558,7 @@ class Stats
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
-        return $results['data'] ?? '';
+        return (string) ($results['data'] ?? '');
     }
 
     /**

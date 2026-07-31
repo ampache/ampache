@@ -36,7 +36,9 @@ use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Broadcast;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Live_Stream;
@@ -66,7 +68,22 @@ $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->getFullname(), 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
-            <?php } ?>
+            <?php }
+    $rb_user = Core::get_global('user');
+    if (AmpConfig::get('show_collection') && $rb_user instanceof User) { ?>
+                <li>
+                    <?php echo Ajax::text('?page=collection&action=append_item', T_('Add to New Collection'), 'rb_create_collection'); ?>
+                </li>
+                <?php foreach ($dic->get(CollectionRepositoryInterface::class)->getByUser($rb_user) as $collectionId) {
+                    $rb_collection = new Collection($collectionId);
+                    if ($rb_collection->isNew() || !$rb_collection->has_collaborate($rb_user)) {
+                        continue;
+                    } ?>
+                <li>
+                    <?php echo Ajax::text('?page=collection&action=append_item&collection_id=' . $rb_collection->getId(), $rb_collection->get_fullname() ?? '', 'rb_append_collection_' . $rb_collection->getId()); ?>
+                </li>
+                <?php }
+                } ?>
             </ul>
         </li>
 <?php }
