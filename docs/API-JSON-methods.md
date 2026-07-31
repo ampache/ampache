@@ -6280,13 +6280,15 @@ Each `localplay_songs` entry ([LocalplaySongObject](#localplay_songs)):
 <!-- GENERATED:SHARED-REFS:BEGIN -->
 Objects referenced by the field tables above (as `see <name> fields`) that no single method response documents on its own — the shared reference shapes and a few payloads carried inside another response.
 
-### CollectionGroupObject
+### CollectionItemObject
 
-One group of collection members. `object_type` names the type and the property of the same name carries that type's own objects, e.g. `{"object_type": "album", "album": [...]}`.
+One member of a collection, at the position it was curated into. `object_type` names the type and the property of the same name carries that type's own object, e.g. `{"track": 1, "track_id": 7, "object_type": "album", "album": {...}}`. `track_id` is the id of the membership row rather than of the object, and is the only stable way to tell two members apart when the same object appears more than once.
 
-| Field       | Type   | Nullable | Optional | Notes |
-|-------------|--------|:--------:|:--------:|-------|
-| object_type | string |    NO    |    NO    |       |
+| Field       | Type    | Nullable | Optional | Notes |
+|-------------|---------|:--------:|:--------:|-------|
+| track       | integer |    NO    |    NO    |       |
+| track_id    | integer |    NO    |    NO    |       |
+| object_type | string  |    NO    |    NO    |       |
 
 ### FolderBrowseItem
 

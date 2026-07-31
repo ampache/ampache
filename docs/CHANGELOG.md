@@ -209,6 +209,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `albums.php?action=show_missing`, which trusted a MusicBrainz release-group lookup to carry `title`, `first-release-date` and `releases`; an unknown or incomplete response is now read defensively
   * A missing artist page with no musicbrainz id, which passed `null` into `Ui::show_box_top()`
   * Selecting cover art once the session's candidate list had expired; the choice is checked and you are returned to the previous page instead
+  * `share.php?action=external_share` with no `plugin` named, which built a plugin from an empty name; the request is refused up front instead
 * Right click (`libitem_contextmenu`) actions on a browse row
   * The menu worked out what it was acting on by cutting the row id at the first underscore, so it read `podcast_episode_5` as podcast #episode and a collection row as collection #row; rows now state their identity with `data-object-type` and `data-object-id`
   * Album disk rows, in both the browse and "Albums of the Moment", were labelled as albums, so the menu (and the inline refresh after an edit) went after the album that happened to share that id
@@ -254,6 +255,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * An active-instance preference pointing at a deleted instance falls back to an available one instead of failing to connect
   * The control panel updates the reported volume, playback state and track after every command, not just mute/repeat/random
   * Playlist items resolve the song from its stream url even when `stream_beautiful_url` is off, so they show the real title/artist/album instead of the raw play url
+  * An empty controller playlist was reported as a controller error, because no songs and no answer were treated the same way
+  * The repeat and random toggles failed when their request arrived without a `value`
+  * The add and edit instance forms turn browser autocompletion off, so a saved site login is no longer offered for a controller's host, port and password fields
+* A lyrics plugin that cannot reach its service no longer holds the page open until PHP gives up; `LrcLib` connect and request timeouts are capped, and a plugin that throws is logged and skipped so the next one is still tried
+* Ajax actions returning an HTML fragment (`get_share_links`, `show_broadcasts`) kept the XML ajax headers, including `Content-Disposition: attachment; filename=ajax.xml`, so a browser could offer the fragment as a download instead of rendering it
 * Light sidebar can scroll to reach its bottom entries on short screens
 * AJAX actions returned a server error instead of updating the page
   * Setting a favorite

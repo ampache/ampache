@@ -109,7 +109,7 @@ PING_ALWAYS = {
 
 
 def build_collection_items_schema(collection: dict) -> dict:
-    """CollectionItemsResponse = the collection's own fields plus its members, grouped by type.
+    """CollectionItemsResponse = the collection's own fields plus its members, in curated order.
 
     Composed from the generated CollectionObject rather than declared alongside it, so the two cannot
     drift and the method-reference table lists real fields instead of a bare `allOf`.
@@ -118,7 +118,7 @@ def build_collection_items_schema(collection: dict) -> dict:
         "type": "object",
         "properties": {
             **collection.get("properties", {}),
-            "contents": {"type": "array", "items": {"$ref": "#/components/schemas/CollectionGroupObject"}},
+            "contents": {"type": "array", "items": {"$ref": "#/components/schemas/CollectionItemObject"}},
         },
         "required": [*collection.get("required", []), "contents"],
         "additionalProperties": True,
@@ -810,18 +810,25 @@ MANUAL_SCHEMAS: dict[str, dict] = {
         "required": ["sonic_match"],
         "additionalProperties": True,
     },
-    # collection_items has no *_array() builder either: it groups the members by object_type and hands each
-    # group to that type's own builder, so the payload key changes with the group and cannot be enumerated
-    # without pinning the type set (the same reason object_type is left an open string everywhere else).
-    "CollectionGroupObject": {
+    # collection_items has no *_array() builder either: each member is rendered by its own type's builder and
+    # nested under a property named for that type, so the payload key changes per entry and cannot be
+    # enumerated without pinning the type set (the same reason object_type is left an open string elsewhere).
+    "CollectionItemObject": {
         "type": "object",
         "description": (
-            "One group of collection members. `object_type` names the type and the property of the same "
-            "name carries that type's own objects, e.g. `{\"object_type\": \"album\", \"album\": [...]}`."
+            "One member of a collection, at the position it was curated into. `object_type` names the type "
+            "and the property of the same name carries that type's own object, e.g. "
+            "`{\"track\": 1, \"track_id\": 7, \"object_type\": \"album\", \"album\": {...}}`. `track_id` is "
+            "the id of the membership row rather than of the object, and is the only stable way to tell two "
+            "members apart when the same object appears more than once."
         ),
-        "properties": {"object_type": {"type": "string", "description": _OBJECT_TYPE_DESCRIPTION}},
-        "required": ["object_type"],
-        "additionalProperties": {"type": "array", "items": {"type": "object"}},
+        "properties": {
+            "track": {"type": "integer", "description": "1-based position in the collection"},
+            "track_id": {"type": "integer", "description": "id of the membership row, not of the object"},
+            "object_type": {"type": "string", "description": _OBJECT_TYPE_DESCRIPTION},
+        },
+        "required": ["track", "track_id", "object_type"],
+        "additionalProperties": {"type": "object"},
     },
     "IndexReferenceObject": {
         "type": "object",
