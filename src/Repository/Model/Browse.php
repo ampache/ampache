@@ -622,6 +622,9 @@ class Browse extends Query
             }
         }
 
+        // Row templates are also included directly, so they repeat this prefetch unless told it is already done
+        $browse_cached = $build_cache;
+
         // Load any additional object we need for this
         $extra_objects = $this->get_supplemental_objects();
         $browse        = $this;
