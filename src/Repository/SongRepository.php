@@ -27,12 +27,15 @@ namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\SongDataFieldEnum;
+use Ampache\Repository\Model\SongFieldEnum;
 use Ampache\Repository\Model\Tag;
 use Generator;
 
@@ -77,6 +80,26 @@ final readonly class SongRepository implements SongRepositoryInterface
         );
 
         return $deleted !== null;
+    }
+
+    /**
+     * The uploader of the song
+     *
+     * Three distinct states: an id, `null` when the song exists but was not user-uploaded, and `false`
+     * when there is no such song. The caller only downgrades an access level for a real row, so it has
+     * to be able to tell the last two apart.
+     */
+    public function findOwnerId(int $songId): int|false|null
+    {
+        $row = $this->connection->fetchRow('SELECT `user_upload` FROM `song` WHERE `id` = ?', [$songId]);
+
+        if (!is_array($row) || !array_key_exists('user_upload', $row)) {
+            return false;
+        }
+
+        return ($row['user_upload'] === null)
+            ? null
+            : (int) $row['user_upload'];
     }
 
     /**
@@ -341,5 +364,42 @@ final readonly class SongRepository implements SongRepositoryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * Writes a single `song_data` column
+     */
+    public function setDataField(int $songId, SongDataFieldEnum $field, string $value): bool
+    {
+        try {
+            $this->connection->query(
+                sprintf('UPDATE `song_data` SET `%s` = ? WHERE `song_id` = ?', $field->value),
+                [$value, $songId]
+            );
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Writes a single `song` column
+     *
+     * Returns false when the write failed, matching what the model's callers already expect. Callers own
+     * the authorization and the blank-value guard; this only performs the statement.
+     */
+    public function setField(int $songId, SongFieldEnum $field, int|string|null $value): bool
+    {
+        try {
+            $this->connection->query(
+                sprintf('UPDATE `song` SET `%s` = ? WHERE `id` = ?', $field->value),
+                [$value, $songId]
+            );
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
     }
 }

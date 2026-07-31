@@ -48,8 +48,8 @@ class SongTest extends MockeryTestCase
     }
 
     /**
-     * `time` used to be compared as a string, so update_from_tags died on the first song whose length changed
-     * (_clean_string_field_value(): Argument #1 ($value) must be of type ?string, int given)
+     * `time` used to be compared as a string, so update_from_tags died on the first song whose length changed with
+     * _clean_string_field_value(): Argument #1 ($value) must be of type ?string, int given
      */
     public function testCompareSongInformationReportsNumericFieldChange(): void
     {

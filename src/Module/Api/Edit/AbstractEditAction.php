@@ -28,18 +28,17 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -47,78 +46,78 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractEditAction implements ApplicationActionInterface
 {
     private ConfigContainerInterface $configContainer;
+    private LibraryItemLoaderInterface $libraryItemLoader;
     private LoggerInterface $logger;
+    private ShareRepositoryInterface $shareRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
+        LibraryItemLoaderInterface $libraryItemLoader,
         LoggerInterface $logger,
+        ShareRepositoryInterface $shareRepository,
     ) {
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
+        $this->configContainer   = $configContainer;
+        $this->libraryItemLoader = $libraryItemLoader;
+        $this->logger            = $logger;
+        $this->shareRepository   = $shareRepository;
     }
 
     public function run(
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
+        $body   = (array) $request->getParsedBody();
+        $query  = $request->getQueryParams();
+        $action = $this->readString($body, 'action') ?: $this->readString($query, 'action');
+
         $this->logger->debug(
-            'Called for action: {' . Core::get_request('action') . '}',
+            'Called for action: {' . $action . '}',
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        // Post first
-        $object_type = (string) ($_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
-        $object_id   = (int) Core::get_get('id');
-        if (empty($object_type)) {
-            $object_type = $source_object_type = (string) filter_input(
-                INPUT_GET,
-                'object_type',
-                FILTER_SANITIZE_SPECIAL_CHARS
-            );
+        // the posted `type` wins and carries a row suffix (`song_row`) that the item type itself does not; the
+        // stripped value is looked up as a LibraryItemEnum while the suffixed one still names a template file
+        $source_object_type = $this->readType($body, 'type') ?: $this->readType($query, 'type');
+        if ($source_object_type === '') {
+            $source_object_type = $this->readType($query, 'object_type');
+            $object_type        = $source_object_type;
         } else {
-            $source_object_type = $object_type;
-            $object_type        = implode('_', explode('_', $object_type, -1));
+            $object_type = implode('_', explode('_', $source_object_type, -1));
         }
+
+        $object_id = (int) $this->readString($query, 'id');
+
         // source Browse
-        $browse_id = (int) Core::get_get('browse_id');
+        $browse_id = (int) $this->readString($query, 'browse_id');
         $browse    = ($browse_id > 0)
             ? new Browse($browse_id)
             : null;
 
-        if (!InterfaceImplementationChecker::is_library_item($object_type) && !in_array($object_type, ['share', 'tag', 'tag_hidden', 'broadcast'])) {
+        $libitem = $this->loadItem($object_type, $object_id);
+        if ($libitem === null) {
             $this->logger->warning(
-                sprintf('Type `%s` is not based on an item library.', $object_type),
+                sprintf('Type `%s` with id `%d` is not an editable library item.', $object_type, $object_id),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return null;
         }
 
-        $className = ObjectTypeToClassNameMapper::map($object_type);
-        $this->logger->warning(
-            $className,
-            [LegacyLogger::CONTEXT_TYPE => self::class]
-        );
-        $this->logger->warning(
-            (string) $object_id,
-            [LegacyLogger::CONTEXT_TYPE => self::class]
-        );
-        /** @var library_item $libitem */
-        $libitem = new $className($object_id);
         if ($libitem instanceof Song) {
             $libitem->fill_ext_info();
         }
 
+        $user  = $gatekeeper->getUser();
         $level = AccessLevelEnum::CONTENT_MANAGER;
-        if (Core::get_global('user') instanceof User && $libitem->get_user_owner() == Core::get_global('user')->id) {
+        if ($user !== null && $libitem->get_user_owner() == $user->getId()) {
             $level = AccessLevelEnum::USER;
         }
-        if (Core::get_request('action') == 'show_edit_playlist') {
+        if ($action === 'show_edit_playlist') {
             $level = AccessLevelEnum::USER;
         }
 
         // Make sure they got them rights
-        if (!Access::check(AccessTypeEnum::INTERFACE, $level) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if (!$gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, $level) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;
         }
 
@@ -129,8 +128,48 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        library_item $libitem,
+        library_item|Share $libitem,
         int $object_id,
         ?Browse $browse = null,
     ): ?ResponseInterface;
+
+    /**
+     * Resolves a posted object type and id to a real item, or null when the type is not editable or the row is gone.
+     *
+     * `share` is the one editable type that is not a `library_item`, so it has to come from its own repository.
+     */
+    private function loadItem(string $objectType, int $objectId): library_item|Share|null
+    {
+        if ($objectType === 'share') {
+            return $this->shareRepository->findById($objectId);
+        }
+
+        $itemType = LibraryItemEnum::tryFrom($objectType);
+
+        return ($itemType instanceof LibraryItemEnum)
+            ? $this->libraryItemLoader->load($itemType, $objectId)
+            : null;
+    }
+
+    /**
+     * Reads a request value that is only ever a scalar, so an array-valued parameter cannot reach a string sink.
+     *
+     * @param array<array-key, mixed> $source
+     */
+    private function readString(array $source, string $key): string
+    {
+        $value = $source[$key] ?? '';
+
+        return (is_string($value)) ? $value : '';
+    }
+
+    /**
+     * Reads an object type, narrowed to the characters a type name and its template file are allowed to contain.
+     *
+     * @param array<array-key, mixed> $source
+     */
+    private function readType(array $source, string $key): string
+    {
+        return strtolower((string) preg_replace('/[^A-Za-z0-9_]/', '', $this->readString($source, $key)));
+    }
 }

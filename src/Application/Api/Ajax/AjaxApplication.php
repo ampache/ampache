@@ -28,6 +28,7 @@ namespace Ampache\Application\Api\Ajax;
 use Ampache\Application\Api\Ajax\Handler\AjaxHandlerInterface;
 use Ampache\Application\Api\Ajax\Handler\BrowseAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\CatalogAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\CollectionAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\DefaultAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\IndexAjaxHandler;
@@ -53,6 +54,7 @@ final readonly class AjaxApplication implements ApplicationInterface
     private const array HANDLER_LIST = [
         'browse' => BrowseAjaxHandler::class,
         'catalog' => CatalogAjaxHandler::class,
+        'collection' => CollectionAjaxHandler::class,
         'democratic' => DemocraticPlaybackAjaxHandler::class,
         'index' => IndexAjaxHandler::class,
         'localplay' => LocalPlayAjaxHandler::class,

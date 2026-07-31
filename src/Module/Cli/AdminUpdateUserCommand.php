@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Override;
@@ -35,6 +36,7 @@ final class AdminUpdateUserCommand extends Command
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
         private readonly UserKeyGeneratorInterface $userKeyGenerator,
+        private readonly SymmetricEncrypterInterface $symmetricEncrypter,
     ) {
         parent::__construct('admin:updateUser', T_('Update User'));
 
@@ -42,6 +44,7 @@ final class AdminUpdateUserCommand extends Command
             ->option('-a|--apikey', T_('Generate new API key'), 'boolval', false)
             ->option('-s|--streamtoken', T_('Generate new Stream token'), 'boolval', false)
             ->option('-r|--rsstoken', T_('Generate new RSS token'), 'boolval', false)
+            ->option('-p|--subsonic', T_('Set the Subsonic password'), 'strval', '')
             ->option('-l|--level', T_('Access Level'), 'intval', -1)
             ->argument('[username]', T_('Username'))
             ->usage('<bold>  admin:updateUser some-user --apikey</end> <comment> ## ' . T_('Update API key for user with the name `some-user`') . '</end><eol/>');
@@ -58,6 +61,7 @@ final class AdminUpdateUserCommand extends Command
         $apiKey      = $this->values()['apikey'] === true;
         $streamToken = $this->values()['streamtoken'] === true;
         $rssToken    = $this->values()['rsstoken'] === true;
+        $subsonic    = (string) $this->values()['subsonic'];
         $accessLevel = $this->values()['level'];
         $user        = ($username)
             ? $this->userRepository->findByUsername($username)
@@ -119,6 +123,23 @@ final class AdminUpdateUserCommand extends Command
                     $user->rsstoken ?? ''
                 ),
             );
+        }
+
+        if ($subsonic !== '') {
+            $secret = $this->symmetricEncrypter->encrypt($subsonic);
+            if ($secret === null) {
+                $interactor->error(
+                    T_('Could not store the Subsonic password. Check that secret_key is set in your Ampache config'),
+                    true
+                );
+            } else {
+                $this->userRepository->updateSubsonicSecret($user->getId(), $secret);
+
+                $interactor->ok(
+                    T_('Subsonic Password'),
+                    true
+                );
+            }
         }
 
         if (

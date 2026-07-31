@@ -54,7 +54,9 @@ final readonly class WrappedAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied');
         }
 
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
 
         $userId = (int) $this->requestParser->getFromRequest('user_id');
 

@@ -98,9 +98,11 @@ final class SystemUpdateMethod implements MethodInterface
         $hasUpdate = AutoUpdate::is_update_available(true);
 
         if ($hasUpdate) {
-            // run the update
-            AutoUpdate::update_files(true);
-            AutoUpdate::update_dependencies($this->configContainer, true);
+            // run the update; dependencies are pointless when the sources they belong to never arrived
+            if (AutoUpdate::update_files(true)) {
+                AutoUpdate::update_dependencies($this->configContainer, true);
+            }
+
             Preference::translate_db();
 
             // check that the update completed or failed.

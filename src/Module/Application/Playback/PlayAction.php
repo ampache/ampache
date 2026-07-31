@@ -64,6 +64,12 @@ final readonly class PlayAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'play';
 
+    /** Read size for an unthrottled download; a throttled one uses its own per-slice size instead. */
+    private const int DOWNLOAD_BUFFER_SIZE = 65536;
+
+    /** How many reads a rate limited second is split into. More slices means smoother pacing and more syscalls. */
+    private const int THROTTLE_SLICES_PER_SECOND = 10;
+
     public function __construct(
         private RequestParserInterface $requestParser,
         private Horde_Browser $browser,
@@ -531,11 +537,20 @@ final readonly class PlayAction implements ApplicationActionInterface
         if ($random === 1) {
             $last_id   = (int) User::get_user_data($user_id, 'random_song', 0)['random_song'];
             $last_time = (int) User::get_user_data($user_id, 'random_time', 0)['random_time'];
-            if ($last_id > 0 && $last_time >= $time) {
+            $repeat    = false;
+            if ($last_id > 0) {
+                $last_play = Stats::get_last_play($user_id);
+                $started   = ($last_play['object_type'] === 'song' && (int) $last_play['object_id'] === $last_id)
+                    ? (int) $last_play['date']
+                    : $last_time;
+                $repeat = (($time - $started) < AmpConfig::get_skip_timer((new Song($last_id))->time));
+            }
+
+            if ($repeat) {
                 // continue the current object
                 $object_id = $last_id;
                 $this->logger->debug(
-                    'Called random again too quickly sending last song id: {' . $object_id . '}',
+                    'Called random again inside the skip timer, sending last song id: {' . $object_id . '}',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             } else {
@@ -567,9 +582,10 @@ final readonly class PlayAction implements ApplicationActionInterface
                     return null;
                 }
 
-                // Save this for a short time in case there are issues loading the url
-                User::set_user_data($user_id, 'random_song', $object_id);
-                User::set_user_data($user_id, 'random_time', ($time + (min(10, ($media->time)))));
+                if ($object_id !== $last_id) {
+                    User::set_user_data($user_id, 'random_song', $object_id);
+                    User::set_user_data($user_id, 'random_time', $time);
+                }
 
                 // play the song instead of going through all the crap
                 header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
@@ -685,7 +701,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             if (
                 $transcode_cfg != 'never'
                 && $transcode_to
-                && ($bitrate === 0 || $bitrate === Stream::get_format_bitrate($transcode_to))
+                && ($bitrate === 0 || $bitrate === Stream::get_player_bitrate($player))
                 && $has_cache
             ) {
                 $this->logger->debug(
@@ -815,14 +831,6 @@ final readonly class PlayAction implements ApplicationActionInterface
                 'Downloading raw file...',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-            // STUPID IE
-            $media_name = str_replace(['?', '/', '\\'], "_", $streamConfiguration['file_name']);
-            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, (string) Core::get_filesize($stream_file));
-
-            foreach ($headers as $headerName => $value) {
-                header(sprintf('%s: %s', $headerName, $value));
-            }
-
             $filepointer = fopen(Core::conv_lc_file($stream_file), 'rb');
             if (!is_resource($filepointer)) {
                 $this->logger->error(
@@ -831,6 +839,41 @@ final readonly class PlayAction implements ApplicationActionInterface
                 );
 
                 return null;
+            }
+
+            // A rate limited download runs long enough to be worth resuming, so honour a byte range instead of
+            // restarting from zero and re-sending everything the client already holds.
+            $file_size    = Core::get_filesize($stream_file);
+            $start        = 0;
+            $end          = 0;
+            $range_values = sscanf(Core::get_server('HTTP_RANGE'), "bytes=%d-%d", $start, $end);
+            $stream_size  = $file_size;
+            if ($range_values > 0 && ($start > 0 || $end > 0)) {
+                $end = ($range_values >= 2)
+                    ? (int) min($end, $file_size - 1)
+                    : $file_size - 1;
+
+                $stream_size = ($end - (int) $start) + 1;
+                if ($stream_size <= 0 || $start > $file_size - 1) {
+                    fclose($filepointer);
+                    header('HTTP/1.1 416 Range Not Satisfiable');
+                    header('Content-Range: bytes */' . $file_size);
+
+                    return null;
+                }
+
+                fseek($filepointer, (int) $start);
+                header('HTTP/1.1 206 Partial Content');
+                header('Content-Range: bytes ' . $start . '-' . $end . '/' . $file_size);
+            }
+
+            // STUPID IE
+            $media_name = str_replace(['?', '/', '\\'], "_", $streamConfiguration['file_name']);
+            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, (string) $stream_size);
+            header('Accept-Ranges: bytes');
+
+            foreach ($headers as $headerName => $value) {
+                header(sprintf('%s: %s', $headerName, $value));
             }
 
             if (Core::get_server('REQUEST_METHOD') !== 'HEAD') {
@@ -847,14 +890,35 @@ final readonly class PlayAction implements ApplicationActionInterface
 
             // Check to see if we should be throttling because we can get away with it
             $rate_limit = (AmpConfig::get('rate_limit', 0)) ? (int) (round(AmpConfig::get('rate_limit') * 1024)) : 0;
-            if ($rate_limit > 0) {
-                while (!feof($filepointer)) {
-                    echo fread($filepointer, $rate_limit);
-                    flush();
-                    sleep(1);
+
+            // Read a fraction of the allowance at a time rather than a whole second's worth, so the client sees a
+            // steady trickle instead of a burst followed by an idle second it has to buffer around.
+            $read_size = ($rate_limit > 0)
+                ? (int) max(1024, intdiv($rate_limit, self::THROTTLE_SLICES_PER_SECOND))
+                : self::DOWNLOAD_BUFFER_SIZE;
+
+            // The range, if one was asked for, is what bounds this loop; feof alone would run past the end of it.
+            $started = microtime(true);
+            $sent    = 0;
+            while ($sent < $stream_size && !feof($filepointer) && connection_status() === 0) {
+                $buffer = fread($filepointer, (int) max(1, min($read_size, $stream_size - $sent)));
+                if ($buffer === false || $buffer === '') {
+                    break;
                 }
-            } else {
-                fpassthru($filepointer);
+
+                echo $buffer;
+                $sent += strlen($buffer);
+                flush();
+
+                // Pace against the elapsed clock instead of sleeping a fixed slice each pass. A sleep that overruns
+                // is otherwise lost for good, and the transfer settles well under the rate that was asked for; this
+                // way an overrun just means the next pass is already behind schedule and does not wait at all.
+                if ($rate_limit > 0) {
+                    $ahead = ($sent / $rate_limit) - (microtime(true) - $started);
+                    if ($ahead > 0) {
+                        usleep((int) ($ahead * 1000000));
+                    }
+                }
             }
 
             fclose($filepointer);
@@ -881,6 +945,9 @@ final readonly class PlayAction implements ApplicationActionInterface
             );
         }
 
+        // the format a transcode would actually output; get_transcode_format() falls back to the source format
+        $output_format = $transcode_to;
+
         // transcode_to should only have an effect if the media is the wrong format
         $transcode_to = ($transcode_cfg == 'never' || $transcode_to == $streamConfiguration['file_type'])
             ? null
@@ -893,6 +960,16 @@ final readonly class PlayAction implements ApplicationActionInterface
             );
         }
 
+        // re-encoding the source format at (or above) its own rate only costs quality and cpu, so send the original
+        $skip_transcode = Stream::skip_transcode(
+            $output_format,
+            $streamConfiguration['file_type'],
+            (isset($media->bitrate)) ? (int) $media->bitrate : 0,
+            $bitrate,
+            $maxbitrate,
+            $player
+        );
+
         // If custom play action or already cached, do not try to transcode
         if (!$cpaction && !$original && !$cache_file) {
             $valid_types = $media->get_stream_types($player);
@@ -903,7 +980,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                         'Transcoding due to explicit request for ' . $transcode_to,
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
-                } elseif ($transcode_cfg == 'always') {
+                } elseif ($transcode_cfg == 'always' && !$skip_transcode) {
                     $transcode = true;
                     $this->logger->debug(
                         'Transcoding due to always',
@@ -996,7 +1073,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             // Build the transcode settings only after $troptions is fully populated, otherwise args never reach the command.
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
 
-            $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
+            $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions, $player);
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->get_parent_fullname() . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } elseif ($cpaction && $media instanceof Song) {
@@ -1014,33 +1091,37 @@ final readonly class PlayAction implements ApplicationActionInterface
             } else {
                 // Content-length guessing if required by the player.
                 // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
+                // The fourth argument is the media type, not the codec. Passing the codec sends get_transcode_format()
+                // looking up `encode_<codec>_target` keys that don't exist, so it resolves a different output format
+                // than Song::get_transcode_settings() did for the transcoder that is actually running.
                 $transcode_settings = Stream::get_transcode_settings_for_media(
                     $streamConfiguration['file_type'],
                     $transcode_to,
                     $player,
-                    $streamConfiguration['file_type'],
+                    $type,
                     $troptions
                 );
-                $transcode_to = $transcode_settings['format'] ?? $format;
 
-                // At this point, the bitrate has already been decided inside Stream::start_transcode
-                // so we just try to emulate that logic here
-                $stream_rate = 0;
-                if (isset($troptions['bitrate'])) {
-                    // note that the bitrate transcode option is stored as metric bits i.e. kilobits*1000 instead of kilobits*1024
-                    $stream_rate = $troptions['bitrate'] / 1024;
-                } elseif ($transcode_settings !== []) {
-                    // get_max_bitrate() returns bps; scale to match the /1024 used by the bitrate branch above
-                    $stream_rate = Stream::get_max_bitrate($media, $transcode_settings, $troptions) / 1024;
-                }
+                // Ask the same resolver start_transcode uses instead of re-deriving a rate here, so the length we
+                // advertise cannot drift from the rate the encoder was actually handed. Rates are metric bits
+                // (kilobits*1000), so the /1024 keeps them in step with the size maths below.
+                $stream_rate = Stream::get_transcode_bitrate($media, $transcode_settings, $troptions, $player) / 1024;
 
-                // We always guess MP3 content length even when not required, since that codec calculates properly
-                if ($this->requestParser->getFromRequest('content_length') === 'required' || $transcode_to == 'mp3') {
+                // Only guess a length when the client says it needs one. The estimate is duration x bitrate, which
+                // no encoder lands on exactly (mp3 ran 0.1% over here, opus 3.2%), and a body longer than the
+                // advertised length is truncated to it in transit, so an unasked-for guess can cost real audio.
+                if ($this->requestParser->getFromRequest('content_length') === 'required') {
                     if ($media->time > 0 && $stream_rate > 0) {
                         $stream_size = (int) (($media->time * $stream_rate * 1024) / 8);
                     } else {
+                        // Name the value that failed. Either one alone leaves the response with no Content-Length,
+                        // and a duration of zero points at the catalog while a rate of zero points at the config.
                         $this->logger->debug(
-                            'Bad media duration / stream bitrate. Content-length calculation skipped.',
+                            sprintf(
+                                'Bad media duration (%d) / stream bitrate (%d). Content-length calculation skipped.',
+                                $media->time,
+                                (int) $stream_rate
+                            ),
                             [LegacyLogger::CONTEXT_TYPE => self::class]
                         );
                         $stream_size = 0;

@@ -32,10 +32,12 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\PlaylistObjectRepositoryInterface;
+use Ampache\Repository\PlaylistRepositoryInterface;
+use Ampache\Repository\SearchRepositoryInterface;
 use Random\Engine\Mt19937;
 use Random\Randomizer;
 
@@ -89,11 +91,12 @@ abstract class playlist_object extends database_object implements
     {
         $web_path = AmpConfig::get_web_path();
 
-        $medias = $this->get_medias();
+        $medias = $this->get_art_items();
         $count  = 0;
         $images = [];
         $tiles  = [];
         $seen   = [];
+        $hashes = [];
         $title  = T_('Playlist Items');
         $mosaic = make_bool(AmpConfig::get(ConfigurationKeyEnum::PLAYLIST_ART_MOSAIC, true));
         // Shuffle so the covers picked aren't just the first few, but seed it from the playlist and its
@@ -127,8 +130,16 @@ abstract class playlist_object extends database_object implements
 
                 $art = new Art($media['object_id'], $media['object_type']->value);
                 if ($art->has_db_info()) {
-                    $seen[$key] = true;
-                    $link       = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
+                    // Several songs off one album each carry their own copy of the album cover, so the same
+                    // picture arrives under different ids; hash the bytes to keep one tile per cover.
+                    $hash = ($art->raw === null || $art->raw === '') ? '' : md5($art->raw);
+                    if ($hash !== '' && isset($hashes[$hash])) {
+                        continue;
+                    }
+
+                    $hashes[$hash] = true;
+                    $seen[$key]    = true;
+                    $link          = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
                     // The row id matters as well as the link: `url` is relative, so anything reading these
                     // back (the art picker, image.php) can't fetch it and would show the cover as invalid.
                     $images[]   = [
@@ -414,7 +425,18 @@ abstract class playlist_object extends database_object implements
         return $this->getId() === 0;
     }
 
-    abstract public function set_last(int $count, string $column): void;
+    /**
+     * set_last
+     * Stores one of the cached totals.
+     */
+    public function set_last(int $count, string $column): void
+    {
+        match ($column) {
+            'last_count' => $this->getPlaylistObjectRepository()->setLastCount($this, $count),
+            'last_duration' => $this->getPlaylistObjectRepository()->setLastDuration($this, $count),
+            default => null,
+        };
+    }
 
     /**
      * update
@@ -437,46 +459,45 @@ abstract class playlist_object extends database_object implements
             return 0;
         }
 
-        if (isset($data['name']) && $data['name'] != $this->name) {
-            $this->update_item('name', $data['name']);
+        if (!$this->canWrite()) {
+            return $this->id;
         }
 
-        if (isset($data['playlist_type']) && $data['playlist_type'] != $this->type) {
-            $this->update_item('type', $data['playlist_type']);
+        if (isset($data['name'])) {
+            $this->name = (string) $data['name'];
+        }
+
+        if (isset($data['playlist_type'])) {
+            $this->type = (string) $data['playlist_type'];
         }
 
         if (isset($data['playlist_user']) && $data['playlist_user'] != $this->user) {
             $this->user     = (int) $data['playlist_user'];
             $this->username = User::get_username($this->user);
-            $this->update_item('user', $data['playlist_user']);
-            $this->update_item('username', $this->username);
         }
 
         if ($this instanceof Search) {
-            $random = $data['random'] ?? $this->random;
-            if ($random != $this->random) {
-                $this->update_item('random', $random);
+            // set_rules() has already applied random/limit onto the object, so they are written back
+            // unconditionally — comparing them against themselves would never fire
+            if (array_key_exists('random', $data)) {
+                $this->random = (int) $data['random'];
             }
 
-            $limit = $data['limit'] ?? $this->limit;
-            if ($limit != $this->limit) {
-                $this->update_item('limit', $limit);
+            if (array_key_exists('limit', $data)) {
+                $this->limit = (int) $data['limit'];
             }
 
             if (!empty($data['operator'])) {
-                $this->update_item('logic_operator', $data['operator']);
+                $this->logic_operator = (string) $data['operator'];
             }
-
-            $this->update_item('rules', json_encode($this->rules) ?: null);
         }
+
+        $this->getPlaylistObjectRepository()->persist($this);
 
         $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
         $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
         if ($collaborate != $this->collaborate) {
-            $playlist_id = ($this instanceof Search)
-                ? 'smart_' . $this->id
-                : $this->id;
-            $this->_update_collaborate($new_list, $playlist_id);
+            $this->_update_collaborate($new_list);
         }
 
         if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
@@ -491,35 +512,59 @@ abstract class playlist_object extends database_object implements
     }
 
     /**
-     * update_item
-     * This is the generic update function, it does the escaping and error checking
+     * Whether the current user may write to this list at all
+     *
+     * Checked once per save rather than once per column, so an edit either applies whole or not at all.
      */
-    abstract public function update_item(string $field, int|string $value): bool;
+    protected function canWrite(): bool
+    {
+        return (
+            Core::get_global('user')?->getId() == $this->user
+            || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        );
+    }
+
+    /**
+     * The items art is gathered from. A playlist has only what it plays; a collection holds its members.
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    protected function get_art_items(): array
+    {
+        return $this->get_medias();
+    }
+
+    /**
+     * The repository for whichever of the two tables this item lives in
+     *
+     * @deprecated inject dependency
+     */
+    protected function getPlaylistObjectRepository(): PlaylistObjectRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(
+            ($this instanceof Search)
+                ? SearchRepositoryInterface::class
+                : PlaylistRepositoryInterface::class
+        );
+    }
 
     /**
      * _update_collaborate
-     * This updates playlist collaborators, it calls the generic update_item function
+     * This updates playlist collaborators, both the column and the map
      * @param string[] $new_list
      */
-    private function _update_collaborate(array $new_list, int|string $playlist_id): void
+    private function _update_collaborate(array $new_list): void
     {
         /** @var int[] $ids */
         $ids = array_filter(
             array_map('intval', $new_list)
         );
 
-        $collaborate = implode(',', $ids);
-        if ($this->update_item('collaborate', $collaborate)) {
-            $sql = (empty($collaborate))
-                ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
-                : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
-            Dba::write($sql, [$playlist_id]);
+        $this->collaborate = implode(',', $ids);
 
-            foreach ($new_list as $user_id) {
-                $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
-                Dba::write($sql, [$playlist_id, $user_id]);
-            }
-        }
+        $this->getPlaylistObjectRepository()->updateCollaborators($this, $ids);
     }
 
     private function getPlaylistArtBuilder(): PlaylistArtBuilderInterface

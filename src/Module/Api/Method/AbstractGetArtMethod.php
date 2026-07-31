@@ -204,7 +204,7 @@ abstract class AbstractGetArtMethod implements MethodInterface
 
         if ($type === 'search' || $type === 'smartlist') {
             $objectId  = (int) str_replace('smart_', '', (string) $objectId);
-            $smartlist = $this->modelFactory->createSearch($objectId, 'song', $user);
+            $smartlist = $this->modelFactory->createSmartlist($objectId, $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
 

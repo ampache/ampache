@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumFieldEnum;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -38,6 +40,18 @@ class AlbumRepositoryTest extends TestCase
 
     private DatabaseConnectionInterface&MockObject $connection;
     private AlbumRepository $subject;
+
+    public function testAddAlbumMapInsertsIgnoringDuplicates(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);',
+                [666, 'album', 42]
+            );
+
+        $this->subject->addAlbumMap(666, 'album', 42);
+    }
 
     public function testCollectGarbageDeletes(): void
     {
@@ -58,6 +72,32 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->collectGarbage();
     }
 
+    public function testCreateReturnsTheNewId(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `version`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                ['some-album', 'The', 1999, null, null, null, null, 42, null, null, null, null, 7, 123456]
+            );
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(666);
+
+        static::assertSame(666, $this->subject->create($this->createProperties(), 123456));
+    }
+
+    public function testCreateReturnsZeroWhenTheInsertFailed(): void
+    {
+        // the caller reads 0 as "no album" and carries on, so the exception must not escape
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        static::assertSame(0, $this->subject->create($this->createProperties(), 123456));
+    }
+
     public function testDeleteDeletes(): void
     {
         $album = $this->createMock(Album::class);
@@ -76,6 +116,27 @@ class AlbumRepositoryTest extends TestCase
             );
 
         $this->subject->delete($album);
+    }
+
+    public function testFindByPropertiesMatchesUnsetPropertiesAgainstNull(): void
+    {
+        // an unset property has to be matched as NULL, or a partially tagged release collides with a fully tagged one
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? AND `album`.`prefix` = ? AND `album`.`mbid` IS NULL AND `album`.`mbid_group` IS NULL AND `album`.`album_artist` = ? AND `album`.`release_type` IS NULL AND `album`.`release_status` IS NULL AND `album`.`original_year` IS NULL AND `album`.`barcode` IS NULL AND `album`.`catalog_number` IS NULL AND `album`.`version` IS NULL AND `album`.`catalog` = ?;",
+                ['some-album', 'some-album', 1999, 'The', 42, 7]
+            )
+            ->willReturn('666');
+
+        static::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+    }
+
+    public function testFindByPropertiesReturnsNullWhenNothingMatched(): void
+    {
+        $this->connection->method('fetchOne')->willReturn(false);
+
+        static::assertNull($this->subject->findByProperties($this->createProperties()));
     }
 
     public function testGetAlbumArtistIdReturnsAlbumArtistId(): void
@@ -237,6 +298,130 @@ class AlbumRepositoryTest extends TestCase
         );
     }
 
+    public function testIsOrphanMatchesTheUntranslatedPlaceholderToo(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                "SELECT `id` FROM `album` WHERE `id` = ? AND (`name` = 'Unknown (Orphaned)' OR `name` = ?);",
+                [666, T_('Unknown (Orphaned)')]
+            )
+            ->willReturn('666');
+
+        static::assertTrue($this->subject->isOrphan(666));
+    }
+
+    public function testIsOrphanReturnsFalseWhenNothingMatched(): void
+    {
+        $this->connection->method('fetchOne')->willReturn(false);
+
+        static::assertFalse($this->subject->isOrphan(666));
+    }
+
+    public function testRemoveAlbumMapDeletes(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `album_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;',
+                [666, 'song', 42]
+            );
+
+        $this->subject->removeAlbumMap(666, 'song', 42);
+    }
+
+    public function testRemoveUnusedAlbumMapKeepsTheRowWhileTheArtistMapBacksIt(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `artist_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_id` = ? AND `object_type` = ?;',
+                [42, 666, 'album']
+            )
+            ->willReturn('42');
+
+        $this->connection->expects(static::never())->method('query');
+
+        static::assertFalse($this->subject->removeUnusedAlbumMap(666, 'album', 42));
+    }
+
+    public function testRemoveUnusedAlbumMapLooksThroughTheSongsForATrackArtist(): void
+    {
+        // a `song` mapping survives while any track on the album still credits the artist, hence the subquery
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `artist_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_id` IN (SELECT `id` FROM `song` WHERE `album` = ?) AND `object_type` = ?;',
+                [42, 666, 'song']
+            )
+            ->willReturn(false);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `album_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;',
+                [666, 'song', 42]
+            );
+
+        static::assertTrue($this->subject->removeUnusedAlbumMap(666, 'song', 42));
+    }
+
+    public function testSetFieldReturnsFalseWhenTheWriteFailed(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        static::assertFalse($this->subject->setField(666, AlbumFieldEnum::NAME, 'some-name'));
+    }
+
+    public function testSetFieldWritesNullWithoutASpecialStatement(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `album` SET `original_year` = ? WHERE `id` = ?', [null, 666]);
+
+        static::assertTrue($this->subject->setField(666, AlbumFieldEnum::ORIGINAL_YEAR, null));
+    }
+
+    public function testSetFieldWritesTheColumnFromTheEnum(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `album` SET `catalog_number` = ? WHERE `id` = ?', ['some-number', 666]);
+
+        static::assertTrue($this->subject->setField(666, AlbumFieldEnum::CATALOG_NUMBER, 'some-number'));
+    }
+
+    public function testUpdateAllCountsRunsTheWholeSweepEvenWhenOneStatementFails(): void
+    {
+        // a maintenance statement that dies must not take the rest of the sweep with it, as `Dba::write()` did not
+        $this->connection->expects(static::exactly(14))
+            ->method('query')
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        $this->subject->updateAllCounts();
+    }
+
+    public function testUpdateCountsBindsTheAlbumIntoEveryStatement(): void
+    {
+        $bound = [];
+
+        $this->connection->expects(static::exactly(13))
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params) use (&$bound): PDOStatement {
+                $bound[] = $params;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateCounts(666);
+
+        foreach ($bound as $params) {
+            static::assertSame([666], array_unique($params));
+        }
+    }
+
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
@@ -244,5 +429,27 @@ class AlbumRepositoryTest extends TestCase
         $this->subject = new AlbumRepository(
             $this->connection
         );
+    }
+
+    /**
+     * @return array{name: string, prefix: ?string, year: int, mbid: ?string, mbid_group: ?string, release_type: ?string, release_status: ?string, album_artist: ?int, original_year: ?string, barcode: ?string, catalog_number: ?string, version: ?string, catalog: int}
+     */
+    private function createProperties(): array
+    {
+        return [
+            'name' => 'some-album',
+            'prefix' => 'The',
+            'year' => 1999,
+            'mbid' => null,
+            'mbid_group' => null,
+            'release_type' => null,
+            'release_status' => null,
+            'album_artist' => 42,
+            'original_year' => null,
+            'barcode' => null,
+            'catalog_number' => null,
+            'version' => null,
+            'catalog' => 7,
+        ];
     }
 }

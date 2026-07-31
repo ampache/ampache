@@ -354,6 +354,21 @@ class Dba
     }
 
     /**
+     * has_column
+     *
+     * Whether a column exists on a table of the current database.
+     */
+    public static function has_column(string $table, string $column): bool
+    {
+        $db_results = self::read(
+            'SELECT `COLUMN_NAME` FROM `information_schema`.`COLUMNS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = ? AND `COLUMN_NAME` = ?;',
+            [$table, $column]
+        );
+
+        return self::fetch_assoc($db_results) !== [];
+    }
+
+    /**
      * insert_id
      */
     public static function insert_id(): false|string

@@ -5624,10 +5624,19 @@
         ],
         "parameters": [
           {
+            "name": "artist",
+            "in": "query",
+            "description": "The artist name. Required unless the artist `id` is provided (see the `topSongsByArtistId` extension).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "id",
             "in": "query",
-            "description": "The artist name.",
-            "required": true,
+            "description": "The artist ID. Requires OpenSubsonic extension `topSongsByArtistId`. Takes precedence over `artist` when both are provided.",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -5675,8 +5684,12 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "artist": {
+                    "description": "The artist name. Required unless the artist `id` is provided (see the `topSongsByArtistId` extension).",
+                    "type": "string"
+                  },
                   "id": {
-                    "description": "The artist name.",
+                    "description": "The artist ID. Requires OpenSubsonic extension `topSongsByArtistId`. Takes precedence over `artist` when both are provided.",
                     "type": "string"
                   },
                   "count": {
@@ -5685,10 +5698,7 @@
                     "default": 50,
                     "minimum": 0
                   }
-                },
-                "required": [
-                  "id"
-                ]
+                }
               }
             }
           }

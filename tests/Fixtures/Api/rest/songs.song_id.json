@@ -53,6 +53,7 @@
     "rating": null,
     "averagerating": null,
     "playcount": 1,
+    "last_played": null,
     "catalog": "2",
     "composer": null,
     "channels": 2,

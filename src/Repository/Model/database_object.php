@@ -49,14 +49,7 @@ abstract class database_object
      */
     public static function add_to_cache(string $index, int|string $object_id, array $data): bool
     {
-        /**
-         * Lazy load the cache setting to avoid some magic auto_init logic
-         */
-        if (self::$_enabled === null) {
-            self::$_enabled = (bool) AmpConfig::get('memory_cache', false);
-        }
-
-        if (!self::$_enabled) {
+        if (!self::isCacheEnabled()) {
             return false;
         }
 
@@ -110,6 +103,23 @@ abstract class database_object
             && array_key_exists((string) $object_id, self::$object_cache[$index])
             && !empty(self::$object_cache[$index][$object_id])
         );
+    }
+
+    /**
+     * Whether the in-request object cache is on
+     *
+     * Public because every `build_cache()` has to ask before doing its batch query: with the cache off
+     * the rows it fetches are thrown away and the per-object queries run anyway, so the prefetch is a
+     * net loss rather than a no-op.
+     */
+    public static function isCacheEnabled(): bool
+    {
+        // lazy loaded to avoid some magic auto_init logic
+        if (self::$_enabled === null) {
+            self::$_enabled = (bool) AmpConfig::get('memory_cache', true);
+        }
+
+        return self::$_enabled;
     }
 
     /**

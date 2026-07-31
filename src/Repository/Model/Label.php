@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Label\LabelNameFilterInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
@@ -42,8 +42,11 @@ class Label extends database_object implements
 {
     protected const string DB_TABLENAME = 'label';
 
-    public bool $active;
+    public bool $active     = true;
     public ?string $address = null;
+
+    /** @var int[] $albums */
+    public array $albums = [];
 
     /** @var int[] $artists */
     public array $artists = [];
@@ -59,6 +62,7 @@ class Label extends database_object implements
     public ?string $summary    = null;
     public ?int $user          = null;
     public ?string $website    = null;
+    private ?int $album_count  = null;
     private ?int $artist_count = null;
     private ?string $f_link    = null;
 
@@ -81,7 +85,7 @@ class Label extends database_object implements
         $this->country       = $info['country'] ?? null;
         $this->email         = $info['email'] ?? null;
         $this->website       = $info['website'] ?? null;
-        $this->active        = (bool) ($info['active'] ?? false);
+        $this->active        = (bool) ($info['active'] ?? true);
         $this->user          = isset($info['user']) ? (int) $info['user'] : null;
         $this->creation_date = isset($info['creation_date']) ? (int) $info['creation_date'] : null;
     }
@@ -95,27 +99,21 @@ class Label extends database_object implements
             return null;
         }
 
-        $name          = $data['name'];
-        $mbid          = $data['mbid'];
-        $category      = $data['category'];
-        $summary       = $data['summary'];
-        $address       = $data['address'];
-        $country       = $data['country'];
-        $email         = $data['email'];
-        $website       = $data['website'];
-        $user          = $data['user'] ?? Core::get_global('user')?->getId();
-        $active        = $data['active'];
-        $creation_date = $data['creation_date'] ?? time();
+        // the add form only posts the fields it renders, so every key is optional here
+        $label                = new Label();
+        $label->name          = $data['name'];
+        $label->mbid          = $data['mbid'] ?? null;
+        $label->category      = $data['category'] ?? null;
+        $label->summary       = $data['summary'] ?? null;
+        $label->address       = $data['address'] ?? null;
+        $label->country       = $data['country'] ?? null;
+        $label->email         = $data['email'] ?? null;
+        $label->website       = $data['website'] ?? null;
+        $label->user          = $data['user'] ?? Core::get_global('user')?->getId();
+        $label->active        = (bool) ($data['active'] ?? true);
+        $label->creation_date = $data['creation_date'] ?? time();
 
-        $sql = "INSERT INTO `label` (`name`, `mbid`, `category`, `summary`, `address`, `country`, `email`, `website`, `user`, `active`, `creation_date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$name, $mbid, $category, $summary, $address, $country, $email, $website, $user, $active, $creation_date]);
-
-        $label_id = Dba::insert_id();
-        if (!$label_id) {
-            return null;
-        }
-
-        return (int) $label_id;
+        return self::getLabelRepository()->persist($label);
     }
 
     /**
@@ -154,6 +152,11 @@ class Label extends database_object implements
      */
     public static function helper(string $name): ?int
     {
+        // tags carry placeholders like `[no label]` for releases that never had a publisher
+        if (self::getLabelNameFilter()->isIgnored($name)) {
+            return null;
+        }
+
         $label_data = [
             'name' => $name,
             'mbid' => null,
@@ -177,11 +180,20 @@ class Label extends database_object implements
     public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         if ($object_type == 'artist') {
-            $sql    = "UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?";
-            $params = [$new_object_id, $old_object_id];
-
-            Dba::write($sql, $params);
+            self::getLabelRepository()->migrateArtist($old_object_id, $new_object_id);
+        } elseif ($object_type == 'album') {
+            self::getLabelRepository()->migrateAlbum($old_object_id, $new_object_id);
         }
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getLabelNameFilter(): LabelNameFilterInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelNameFilterInterface::class);
     }
 
     /**
@@ -206,6 +218,31 @@ class Label extends database_object implements
     }
 
     /**
+     * get_album_count
+     */
+    public function get_album_count(): int
+    {
+        if ($this->album_count === null) {
+            $this->album_count = count($this->get_albums());
+        }
+
+        return $this->album_count;
+    }
+
+    /**
+     * get_albums
+     * @return int[]
+     */
+    public function get_albums(): array
+    {
+        if (empty($this->albums)) {
+            $this->albums = self::getLabelRepository()->getAlbums($this);
+        }
+
+        return $this->albums;
+    }
+
+    /**
      * get_artist_count
      */
     public function get_artist_count(): int
@@ -224,14 +261,7 @@ class Label extends database_object implements
     public function get_artists(): array
     {
         if (empty($this->artists)) {
-            $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
-            $db_results = Dba::read($sql, [$this->id]);
-            $results    = [];
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = (int) $row['artist'];
-            }
-
-            $this->artists = $results;
+            $this->artists = self::getLabelRepository()->getArtists($this);
         }
 
         return $this->artists;
@@ -385,22 +415,21 @@ class Label extends database_object implements
             return null;
         }
 
-        $name     = $data['name'] ?? $this->name;
-        $mbid     = $data['mbid'] ?? null;
-        $category = $data['category'] ?? null;
-        $summary  = $data['summary'] ?? null;
-        $address  = $data['address'] ?? null;
-        $country  = $data['country'] ?? null;
-        $email    = $data['email'] ?? null;
-        $website  = (isset($data['website']))
+        $this->name     = $data['name'] ?? $this->name;
+        $this->mbid     = $data['mbid'] ?? null;
+        $this->category = strtolower((string) ($data['category'] ?? null));
+        $this->summary  = $data['summary'] ?? null;
+        $this->address  = $data['address'] ?? null;
+        $this->country  = $data['country'] ?? null;
+        $this->email    = $data['email'] ?? null;
+        $this->website  = (isset($data['website']))
             ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
             : null;
-        $active = (isset($data['active']))
+        $this->active = (isset($data['active']))
             ? (bool) $data['active']
             : $this->active;
 
-        $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";
-        Dba::write($sql, [$name, $mbid, strtolower((string) $category), $summary, $address, $country, $email, $website, $active, $this->id]);
+        self::getLabelRepository()->persist($this);
 
         return $this->id;
     }

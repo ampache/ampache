@@ -36,6 +36,8 @@ use Ampache\Module\Authentication\Oidc\OidcAuthenticationService;
 use Ampache\Module\Authentication\Oidc\OidcAuthenticationServiceInterface;
 use Ampache\Module\Authentication\Oidc\OidcClientFactory;
 use Ampache\Module\Authentication\Oidc\OidcClientFactoryInterface;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 
 use function DI\autowire;
 use function DI\factory;
@@ -54,6 +56,8 @@ return [
             'http' => $dic->get(HttpAuthenticator::class),
             'ldap' => $dic->get(LdapAuthenticator::class),
             'oidc' => $dic->get(OidcAuthenticator::class),
-        ]
+        ],
+        $dic->get(SymmetricEncrypterInterface::class),
+        $dic->get(DatabaseConnectionInterface::class)
     )),
 ];

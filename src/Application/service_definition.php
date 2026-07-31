@@ -28,6 +28,7 @@ namespace Ampache\Application;
 use Ampache\Application\Api\Ajax\AjaxApplication;
 use Ampache\Application\Api\Ajax\Handler\BrowseAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\CatalogAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\CollectionAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\DefaultAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\IndexAjaxHandler;
@@ -69,6 +70,7 @@ return [
     IndexAjaxHandler::class => autowire(IndexAjaxHandler::class),
     LocalPlayAjaxHandler::class => autowire(LocalPlayAjaxHandler::class),
     PlayerAjaxHandler::class => autowire(PlayerAjaxHandler::class),
+    CollectionAjaxHandler::class => autowire(CollectionAjaxHandler::class),
     PlaylistAjaxHandler::class => autowire(PlaylistAjaxHandler::class),
     PodcastAjaxHandler::class => autowire(PodcastAjaxHandler::class),
     RandomAjaxHandler::class => autowire(RandomAjaxHandler::class),

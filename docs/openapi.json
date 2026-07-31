@@ -441,6 +441,9 @@
           "mbid_group": {
             "type": "string",
             "nullable": true
+          },
+          "catalog": {
+            "type": "string"
           }
         },
         "required": [
@@ -461,7 +464,8 @@
           "rating",
           "averagerating",
           "mbid",
-          "mbid_group"
+          "mbid_group",
+          "catalog"
         ],
         "additionalProperties": true
       },
@@ -585,6 +589,10 @@
           "playcount": {
             "type": "integer"
           },
+          "last_played": {
+            "type": "string",
+            "nullable": true
+          },
           "catalog": {
             "type": "string"
           },
@@ -679,6 +687,7 @@
           "rating",
           "averagerating",
           "playcount",
+          "last_played",
           "catalog",
           "composer",
           "channels",
@@ -1211,6 +1220,10 @@
           "playcount": {
             "type": "integer"
           },
+          "last_played": {
+            "type": "string",
+            "nullable": true
+          },
           "played": {
             "type": "string"
           }
@@ -1247,6 +1260,7 @@
           "rating",
           "averagerating",
           "playcount",
+          "last_played",
           "played"
         ],
         "additionalProperties": true
@@ -1306,6 +1320,9 @@
             "type": "number",
             "nullable": true
           },
+          "catalog": {
+            "type": "string"
+          },
           "podcast_episode": {
             "type": "array",
             "items": {
@@ -1330,6 +1347,7 @@
           "flag",
           "rating",
           "averagerating",
+          "catalog",
           "podcast_episode"
         ],
         "additionalProperties": true
@@ -1387,6 +1405,13 @@
           },
           "playcount": {
             "type": "integer"
+          },
+          "last_played": {
+            "type": "string",
+            "nullable": true
+          },
+          "catalog": {
+            "type": "string"
           }
         },
         "required": [
@@ -1403,7 +1428,9 @@
           "flag",
           "rating",
           "averagerating",
-          "playcount"
+          "playcount",
+          "last_played",
+          "catalog"
         ],
         "additionalProperties": true
       },
@@ -3810,6 +3837,9 @@
           "mbid_group": {
             "type": "string",
             "nullable": true
+          },
+          "catalog": {
+            "type": "string"
           }
         },
         "required": [
@@ -3832,7 +3862,8 @@
           "rating",
           "averagerating",
           "mbid",
-          "mbid_group"
+          "mbid_group",
+          "catalog"
         ],
         "additionalProperties": true
       },
@@ -4903,6 +4934,250 @@
           "basename"
         ],
         "additionalProperties": true
+      },
+      "SonicMatchObject": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SongObject"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "similarity": {
+                "type": "number",
+                "description": "0.0-1.0 where 1.0 is the same recording, matching the OpenSubsonic `sonicMatch` scale. -1 when the analysis backend gives no comparable score.",
+                "minimum": -1,
+                "maximum": 1
+              }
+            },
+            "required": [
+              "similarity"
+            ]
+          }
+        ]
+      },
+      "SonicMatchResponse": {
+        "type": "object",
+        "properties": {
+          "sonic_match": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SonicMatchObject"
+            }
+          }
+        },
+        "required": [
+          "sonic_match"
+        ],
+        "additionalProperties": true
+      },
+      "CollectionObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "object_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "items": {
+            "type": "integer"
+          },
+          "has_art": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "owner",
+          "type",
+          "object_type",
+          "items",
+          "has_art"
+        ],
+        "additionalProperties": true
+      },
+      "CollectionsResponse": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CollectionObject"
+            }
+          }
+        },
+        "required": [
+          "collection"
+        ],
+        "additionalProperties": true
+      },
+      "CollectionItemObject": {
+        "type": "object",
+        "description": "One member of a collection, at the position it was curated into. `object_type` names the type and the property of the same name carries that type's own object, e.g. `{\"track\": 1, \"track_id\": 7, \"object_type\": \"album\", \"album\": {...}}`. `track_id` is the id of the membership row rather than of the object, and is the only stable way to tell two members apart when the same object appears more than once.",
+        "properties": {
+          "track": {
+            "type": "integer",
+            "description": "1-based position in the collection"
+          },
+          "track_id": {
+            "type": "integer",
+            "description": "id of the membership row, not of the object"
+          },
+          "object_type": {
+            "type": "string",
+            "description": "The kind of object referenced, as a bare string. The set is intentionally open so a new media type is not a breaking change; values seen today include `song`, `album`, `artist`, `playlist`, `podcast`, `podcast_episode` and `video`."
+          }
+        },
+        "required": [
+          "track",
+          "track_id",
+          "object_type"
+        ],
+        "additionalProperties": {
+          "type": "object"
+        }
+      },
+      "CollectionItemsResponse": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "owner": {
+                "type": "string",
+                "nullable": true
+              },
+              "type": {
+                "type": "string",
+                "nullable": true
+              },
+              "object_type": {
+                "type": "string",
+                "nullable": true
+              },
+              "items": {
+                "type": "integer"
+              },
+              "has_art": {
+                "type": "boolean"
+              },
+              "contents": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CollectionItemObject"
+                }
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "owner",
+              "type",
+              "object_type",
+              "items",
+              "has_art",
+              "contents"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "collection"
+        ],
+        "additionalProperties": true
+      },
+      "CollectionCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "public",
+              "private"
+            ],
+            "type": "string"
+          },
+          "object_type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": true
+      },
+      "CollectionEditRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "public",
+              "private"
+            ],
+            "type": "string"
+          },
+          "object_type": {
+            "type": "string"
+          },
+          "collaborate": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "CollectionRemoveRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object_type": {
+            "type": "string",
+            "description": "Type of the object"
+          }
+        },
+        "additionalProperties": true
+      },
+      "CollectionAddRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object_type": {
+            "type": "string",
+            "description": "Type of the object"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": true
       }
     },
     "responses": {
@@ -5259,6 +5534,15 @@
           "type": "string"
         }
       },
+      "FolderId": {
+        "in": "path",
+        "name": "folder_id",
+        "required": true,
+        "description": "Unique identifier of the folder. Use -1 for the virtual root folder.",
+        "schema": {
+          "type": "string"
+        }
+      },
       "GenreId": {
         "in": "path",
         "name": "genre_id",
@@ -5484,6 +5768,7 @@
   "x-rpc-mappings": {
     "GET /album-disks/{album_disk_id}": "action=album_disk&filter={album_disk_id}",
     "GET /album-disks/{album_disk_id}/art": "action=get_art&filter={album_disk_id}&type=album_disk",
+    "GET /album-disks/{album_disk_id}/browse": "action=browse&filter={album_disk_id}&type=album_disk",
     "POST /album-disks/{album_disk_id}/flag": "action=flag&filter={album_disk_id}&type=album_disk",
     "POST /album-disks/{album_disk_id}/rate": "action=rate&filter={album_disk_id}&type=album_disk",
     "GET /album-disks/{album_disk_id}/songs": "action=album_disk_songs&filter={album_disk_id}&type=album_disk",
@@ -5492,6 +5777,7 @@
     "GET /albums": "action=albums",
     "GET /albums/{album_id}": "action=album&filter={album_id}",
     "GET /albums/{album_id}/art": "action=get_art&filter={album_id}&type=album",
+    "GET /albums/{album_id}/browse": "action=browse&filter={album_id}&type=album",
     "GET /albums/{album_id}/disks": "action=album_disks&filter={album_id}&type=album",
     "GET /albums/{album_id}/fetch-metadata": "action=get_external_metadata&filter={album_id}&type=album",
     "POST /albums/{album_id}/flag": "action=flag&filter={album_id}&type=album",
@@ -5506,6 +5792,7 @@
     "GET /artists/{artist_id}": "action=artist&filter={artist_id}",
     "GET /artists/{artist_id}/albums": "action=artist_albums&filter={artist_id}",
     "GET /artists/{artist_id}/art": "action=get_art&filter={artist_id}&type=artist",
+    "GET /artists/{artist_id}/browse": "action=browse&filter={artist_id}&type=artist",
     "POST /artists/{artist_id}/fetch-info": "action=update_artist_info&filter={artist_id}&type=artist",
     "GET /artists/{artist_id}/fetch-metadata": "action=get_external_metadata&filter={artist_id}&type=artist",
     "POST /artists/{artist_id}/flag": "action=flag&filter={artist_id}&type=artist",
@@ -5541,8 +5828,8 @@
     "GET /catalogs/{catalog_id}/browse/podcasts/{podcast_id}": "action=browse&filter={podcast_id}&type=podcast&catalog={catalog_id}",
     "POST /democratic/{object_id}": "action=democratic&filter={object_id}",
     "POST /democratic/{object_id}/localplay": "action=localplay&filter={object_id}&type=democratic",
-    "GET /folder": "action=folder",
     "GET /folders": "action=folders",
+    "GET /folders/{folder_id}": "action=folders&filter={folder_id}",
     "GET /genres": "action=genres",
     "GET /genres/{genre_id}": "action=genre&filter={genre_id}",
     "GET /genres/{genre_id}/albums": "action=genre_albums&filter={genre_id}",
@@ -5629,6 +5916,7 @@
     "PATCH /podcasts/{podcast_id}": "action=podcast_edit&filter={podcast_id}",
     "DELETE /podcasts/{podcast_id}": "action=podcast_delete&filter={podcast_id}",
     "GET /podcasts/{podcast_id}/art": "action=get_art&filter={podcast_id}&type=podcast",
+    "GET /podcasts/{podcast_id}/browse": "action=browse&filter={podcast_id}&type=podcast",
     "POST /podcasts/{podcast_id}/flag": "action=flag&filter={podcast_id}",
     "GET /podcasts/{podcast_id}/podcast-episodes": "action=podcast_episodes&filter={podcast_id}",
     "POST /podcasts/{podcast_id}/rate": "action=rate&filter={podcast_id}",
@@ -5679,6 +5967,7 @@
     "POST /songs/{song_id}/record-play": "action=record_play&filter={song_id}",
     "POST /songs/{song_id}/share": "action=share_create&filter={song_id}",
     "GET /songs/{song_id}/similar": "action=get_similar&filter={song_id}&type=song",
+    "GET /songs/{song_id}/sonic-match": "action=sonic_match&filter={song_id}",
     "GET /songs/{song_id}/stream": "action=stream&filter={song_id}&type=song",
     "GET /songs/{song_id}/tags": "action=song_tags&filter={song_id}",
     "POST /songs/{song_id}/update-tags": "action=update_from_tags&filter={song_id}&type=song",
@@ -5713,7 +6002,15 @@
     "POST /videos/{video_id}/share": "action=share_create&filter={video_id}&type=video",
     "GET /videos/deleted": "action=deleted_videos",
     "GET /videos/search": "action=search&type=video",
-    "GET /videos/stats": "action=stats&type=video"
+    "GET /videos/stats": "action=stats&type=video",
+    "GET /collections": "action=collections",
+    "PUT /collections": "action=collection_create",
+    "GET /collections/{collection_id}": "action=collection&filter={collection_id}",
+    "PATCH /collections/{collection_id}": "action=collection_edit&filter={collection_id}",
+    "DELETE /collections/{collection_id}": "action=collection_delete&filter={collection_id}",
+    "GET /collections/{collection_id}/items": "action=collection_items&filter={collection_id}",
+    "PUT /collections/{collection_id}/items": "action=collection_add&filter={collection_id}",
+    "DELETE /collections/{collection_id}/items": "action=collection_remove&filter={collection_id}"
   },
   "paths": {
     "/album-disks/{album_disk_id}": {
@@ -5840,6 +6137,76 @@
         },
         "operationId": "getArtAlbumDisks",
         "description": "Get an art image."
+      }
+    },
+    "/album-disks/{album_disk_id}/browse": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AlbumDiskId"
+          },
+          {
+            "in": "query",
+            "name": "catalog",
+            "required": false,
+            "description": "Restrict the children to a single catalog. Omit it to browse every catalog you can see.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AddFilter"
+          },
+          {
+            "$ref": "#/components/parameters/UpdateFilter"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cond"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse songs of an album disk",
+        "tags": [
+          "Albums",
+          "Browsing, Indexes and Lists"
+        ],
+        "description": "Return children of a parent object in a folder traversal/browse style. The catalog is an optional filter from API version 8; omit it to browse the children in every catalog you can see.",
+        "operationId": "browseAlbumDisks"
       }
     },
     "/album-disks/{album_disk_id}/flag": {
@@ -6323,7 +6690,8 @@
                           "rating": null,
                           "averagerating": null,
                           "mbid": "6e1d48f7-717c-416e-af35-5d2454a13af2",
-                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a"
+                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a",
+                          "catalog": "4"
                         }
                       ]
                     }
@@ -6427,7 +6795,8 @@
                       "rating": 4,
                       "averagerating": 3.67,
                       "mbid": null,
-                      "mbid_group": null
+                      "mbid_group": null,
+                      "catalog": "1"
                     }
                   }
                 }
@@ -6529,6 +6898,76 @@
         ],
         "operationId": "getArtAlbums",
         "description": "Get an art image."
+      }
+    },
+    "/albums/{album_id}/browse": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AlbumId"
+          },
+          {
+            "in": "query",
+            "name": "catalog",
+            "required": false,
+            "description": "Restrict the children to a single catalog. Omit it to browse every catalog you can see.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AddFilter"
+          },
+          {
+            "$ref": "#/components/parameters/UpdateFilter"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cond"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse songs of an album",
+        "tags": [
+          "Albums",
+          "Browsing, Indexes and Lists"
+        ],
+        "description": "Return children of a parent object in a folder traversal/browse style. The catalog is an optional filter from API version 8; omit it to browse the children in every catalog you can see.",
+        "operationId": "browseAlbums"
       }
     },
     "/albums/{album_id}/disks": {
@@ -7517,7 +7956,8 @@
                           "rating": null,
                           "averagerating": null,
                           "mbid": "6e1d48f7-717c-416e-af35-5d2454a13af2",
-                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a"
+                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a",
+                          "catalog": "4"
                         }
                       ]
                     }
@@ -7657,7 +8097,8 @@
                           "rating": null,
                           "averagerating": null,
                           "mbid": "6e1d48f7-717c-416e-af35-5d2454a13af2",
-                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a"
+                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a",
+                          "catalog": "4"
                         },
                         {
                           "id": "12",
@@ -7752,7 +8193,8 @@
                           "rating": null,
                           "averagerating": null,
                           "mbid": null,
-                          "mbid_group": null
+                          "mbid_group": null,
+                          "catalog": "1"
                         }
                       ]
                     }
@@ -8164,7 +8606,8 @@
                           "rating": 2,
                           "averagerating": null,
                           "mbid": null,
-                          "mbid_group": null
+                          "mbid_group": null,
+                          "catalog": "1"
                         }
                       ]
                     }
@@ -8269,6 +8712,76 @@
         ],
         "operationId": "getArtArtists",
         "description": "Get an art image."
+      }
+    },
+    "/artists/{artist_id}/browse": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ArtistId"
+          },
+          {
+            "in": "query",
+            "name": "catalog",
+            "required": false,
+            "description": "Restrict the children to a single catalog. Omit it to browse every catalog you can see.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AddFilter"
+          },
+          {
+            "$ref": "#/components/parameters/UpdateFilter"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cond"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse albums of an artist",
+        "tags": [
+          "Artists",
+          "Browsing, Indexes and Lists"
+        ],
+        "description": "Return children of a parent object in a folder traversal/browse style. The catalog is an optional filter from API version 8; omit it to browse the children in every catalog you can see.",
+        "operationId": "browseArtists"
       }
     },
     "/artists/{artist_id}/fetch-info": {
@@ -10152,8 +10665,10 @@
               "enum": [
                 "root",
                 "catalog",
+                "album_artist",
                 "artist",
                 "album",
+                "album_disk",
                 "podcast"
               ],
               "type": "string"
@@ -10514,271 +11029,11 @@
         "description": "Return children of a parent object in a folder traversal/browse style. If you don't send any parameters you'll get a catalog list (the 'root' path)"
       }
     },
-    "/folder": {
-      "get": {
-        "parameters": [
-          {
-            "description": "Parent folder object ID. Use -1 for the virtual root folder.",
-            "in": "query",
-            "name": "filter",
-            "required": false,
-            "schema": {
-              "default": -1,
-              "type": "integer"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/AddFilter"
-          },
-          {
-            "$ref": "#/components/parameters/UpdateFilter"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Cond"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FolderBrowseNode"
-                },
-                "examples": {
-                  "success": {
-                    "value": {
-                      "id": "-1",
-                      "title": "Home",
-                      "parent": null,
-                      "path": "/",
-                      "catalog": 0,
-                      "items": [
-                        {
-                          "id": "1",
-                          "object_type": "folder",
-                          "title": "music",
-                          "parent": -1,
-                          "path": "/mnt/files-music/ampache-test/music",
-                          "art": "https://music.com.au/image.php?object_id=1&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "3",
-                          "object_type": "folder",
-                          "title": "Malkuth (Demo1996)",
-                          "parent": -1,
-                          "path": "malkuth (demo1996)",
-                          "art": "https://music.com.au/image.php?object_id=3&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "5",
-                          "object_type": "folder",
-                          "title": "Хикки Найди Свою Тян (Single)",
-                          "parent": -1,
-                          "path": "Хикки Найди Свою Тян (single)",
-                          "art": "https://music.com.au/image.php?object_id=5&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "7",
-                          "object_type": "folder",
-                          "title": "Creeping Lawler 2",
-                          "parent": -1,
-                          "path": "creeping lawler 2",
-                          "art": "https://music.com.au/image.php?object_id=7&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "9",
-                          "object_type": "folder",
-                          "title": "Inominavel (live.v.01)",
-                          "parent": -1,
-                          "path": "inominavel (live.v.01)",
-                          "art": "https://music.com.au/image.php?object_id=9&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "11",
-                          "object_type": "folder",
-                          "title": "Nofi Devices LP",
-                          "parent": -1,
-                          "path": "nofi devices lp",
-                          "art": "https://music.com.au/image.php?object_id=11&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "13",
-                          "object_type": "folder",
-                          "title": "Buried In Nausea",
-                          "parent": -1,
-                          "path": "buried in nausea",
-                          "art": "https://music.com.au/image.php?object_id=13&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "15",
-                          "object_type": "folder",
-                          "title": "Synthetic_-_Colorsmoke_EP-20k217-2007(1)",
-                          "parent": -1,
-                          "path": "synthetic_-_colorsmoke_ep-20k217-2007(1)",
-                          "art": "https://music.com.au/image.php?object_id=15&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "16",
-                          "object_type": "folder",
-                          "title": "Synthetic_-_Colorsmoke_EP-20k217-2007",
-                          "parent": -1,
-                          "path": "synthetic_-_colorsmoke_ep-20k217-2007",
-                          "art": "https://music.com.au/image.php?object_id=16&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "18",
-                          "object_type": "folder",
-                          "title": "Sensorisk Deprivation",
-                          "parent": -1,
-                          "path": "sensorisk deprivation",
-                          "art": "https://music.com.au/image.php?object_id=18&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "19",
-                          "object_type": "folder",
-                          "title": "video",
-                          "parent": -1,
-                          "path": "/mnt/files-music/ampache-test/video",
-                          "art": "https://music.com.au/image.php?object_id=19&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "20",
-                          "object_type": "folder",
-                          "title": "podcast",
-                          "parent": -1,
-                          "path": "/mnt/files-music/ampache-test/podcast",
-                          "art": "https://music.com.au/image.php?object_id=20&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "25",
-                          "object_type": "folder",
-                          "title": "upload",
-                          "parent": -1,
-                          "path": "/mnt/files-music/ampache-test/upload",
-                          "art": "https://music.com.au/image.php?object_id=25&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "27",
-                          "object_type": "folder",
-                          "title": "Comfort Fit",
-                          "parent": -1,
-                          "path": "comfort fit",
-                          "art": "https://music.com.au/image.php?object_id=27&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        },
-                        {
-                          "id": "28",
-                          "object_type": "folder",
-                          "title": "Forget And Remember",
-                          "parent": -1,
-                          "path": "forget and remember",
-                          "art": "https://music.com.au/image.php?object_id=28&object_type=folder&name=art.jpg",
-                          "has_art": false,
-                          "play_url": "",
-                          "rating": null,
-                          "averagerating": null
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Children of a parent folder resolved by object ID."
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequestErrorResponse"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedErrorResponse"
-          },
-          "403": {
-            "$ref": "#/components/responses/ForbiddenErrorResponse"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundErrorResponse"
-          },
-          "500": {
-            "$ref": "#/components/responses/InternalServerErrorResponse"
-          }
-        },
-        "summary": "Get folder children by folder ID",
-        "tags": [
-          "Browsing, Indexes and Lists"
-        ],
-        "operationId": "folder",
-        "description": "Return children of a parent folder object by ID **Ampache 8.0.0+**"
-      }
-    },
     "/folders": {
       "get": {
         "parameters": [
           {
-            "description": "Folder path filter. Use '/' for root traversal.",
+            "description": "Folder path filter, or folder object ID. Use '/' or -1 for the virtual root folder.",
             "in": "query",
             "name": "filter",
             "required": false,
@@ -10900,12 +11155,125 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Get folder children by folder path",
+        "summary": "Get folder children by folder path or ID",
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "folders",
+        "operationId": "foldersFoldersGet",
         "description": "Return children of a parent object in a folder traversal style **Ampache 8.0.0+**"
+      }
+    },
+    "/folders/{folder_id}": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/FolderId"
+          },
+          {
+            "$ref": "#/components/parameters/AddFilter"
+          },
+          {
+            "$ref": "#/components/parameters/UpdateFilter"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cond"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderBrowseResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "total_count": 3,
+                      "md5": "abc123def456ghi789jkl012mno345pqr",
+                      "folder": {
+                        "id": "1",
+                        "title": "Music",
+                        "parent": 0,
+                        "path": "/music",
+                        "catalog": 1,
+                        "items": [
+                          {
+                            "id": "2",
+                            "object_type": "folder",
+                            "title": "Rock",
+                            "parent": 1,
+                            "path": "/music/rock",
+                            "art": "https://develop.ampache.dev/rest/8/json/art?id=2&object_type=folder&auth=token123",
+                            "has_art": false,
+                            "play_url": "",
+                            "rating": 0,
+                            "averagerating": null
+                          },
+                          {
+                            "id": "12345",
+                            "object_type": "song",
+                            "title": "Example Song.mp3",
+                            "parent": 1,
+                            "path": "/music",
+                            "art": "https://develop.ampache.dev/rest/8/json/art?id=12345&object_type=song&auth=token123",
+                            "has_art": true,
+                            "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=song-12345&auth=token123",
+                            "rating": 3,
+                            "averagerating": 4
+                          },
+                          {
+                            "id": "54321",
+                            "object_type": "video",
+                            "title": "Example Video.mp4",
+                            "parent": 1,
+                            "path": "/music",
+                            "art": "https://develop.ampache.dev/rest/8/json/art?id=54321&object_type=video&auth=token123",
+                            "has_art": true,
+                            "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=video-54321&auth=token123",
+                            "rating": 5,
+                            "averagerating": 4
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Children of a parent folder resolved by object ID."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Get folder children by folder ID",
+        "tags": [
+          "Browsing, Indexes and Lists"
+        ],
+        "operationId": "foldersFoldersGet",
+        "description": "Return children of a parent folder object by ID **Ampache 8.0.0+**"
       }
     },
     "/catalogs": {
@@ -13186,7 +13554,8 @@
                           "rating": 2,
                           "averagerating": null,
                           "mbid": null,
-                          "mbid_group": null
+                          "mbid_group": null,
+                          "catalog": "1"
                         }
                       ]
                     }
@@ -21983,6 +22352,7 @@
                       "rating": null,
                       "averagerating": null,
                       "playcount": 0,
+                      "last_played": "2026-07-27T08:19:12+00:00",
                       "played": ""
                     }
                   }
@@ -78663,6 +79033,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         },
                         {
@@ -78682,6 +79053,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         }
                       ]
@@ -78763,6 +79135,7 @@
                       "flag": false,
                       "rating": null,
                       "averagerating": null,
+                      "catalog": "3",
                       "podcast_episode": []
                     }
                   }
@@ -78842,6 +79215,7 @@
                       "flag": false,
                       "rating": null,
                       "averagerating": null,
+                      "catalog": "3",
                       "podcast_episode": []
                     }
                   }
@@ -78917,6 +79291,7 @@
                       "flag": false,
                       "rating": null,
                       "averagerating": null,
+                      "catalog": "3",
                       "podcast_episode": []
                     }
                   }
@@ -79029,6 +79404,7 @@
                       "flag": false,
                       "rating": null,
                       "averagerating": null,
+                      "catalog": "3",
                       "podcast_episode": []
                     }
                   }
@@ -79147,6 +79523,76 @@
         ],
         "operationId": "getArtPodcasts",
         "description": "Get an art image."
+      }
+    },
+    "/podcasts/{podcast_id}/browse": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PodcastId"
+          },
+          {
+            "in": "query",
+            "name": "catalog",
+            "required": false,
+            "description": "Restrict the children to a single catalog. Omit it to browse every catalog you can see.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AddFilter"
+          },
+          {
+            "$ref": "#/components/parameters/UpdateFilter"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cond"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse episodes of a podcast",
+        "tags": [
+          "Podcasts",
+          "Browsing, Indexes and Lists"
+        ],
+        "description": "Return children of a parent object in a folder traversal/browse style. The catalog is an optional filter from API version 8; omit it to browse the children in every catalog you can see.",
+        "operationId": "browsePodcasts"
       }
     },
     "/podcasts/{podcast_id}/flag": {
@@ -79741,6 +80187,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         },
                         {
@@ -79760,6 +80207,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         }
                       ]
@@ -79872,6 +80320,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         },
                         {
@@ -79891,6 +80340,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         }
                       ]
@@ -85408,7 +85858,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           },
                           {
                             "id": "10",
@@ -85450,7 +85901,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           },
                           {
                             "id": "21",
@@ -85497,7 +85949,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": "6e1d48f7-717c-416e-af35-5d2454a13af2",
-                            "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a"
+                            "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a",
+                            "catalog": "4"
                           },
                           {
                             "id": "8",
@@ -85548,7 +86001,8 @@
                             "rating": 2,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           }
                         ],
                         "artist": [
@@ -85931,6 +86385,7 @@
                             "flag": false,
                             "rating": null,
                             "averagerating": null,
+                            "catalog": "3",
                             "podcast_episode": []
                           }
                         ],
@@ -86405,7 +86860,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           },
                           {
                             "id": "10",
@@ -86447,7 +86903,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           },
                           {
                             "id": "21",
@@ -86494,7 +86951,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": "6e1d48f7-717c-416e-af35-5d2454a13af2",
-                            "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a"
+                            "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a",
+                            "catalog": "4"
                           },
                           {
                             "id": "8",
@@ -86545,7 +87003,8 @@
                             "rating": 2,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           }
                         ],
                         "artist": [
@@ -86929,6 +87388,7 @@
                             "flag": false,
                             "rating": null,
                             "averagerating": null,
+                            "catalog": "3",
                             "podcast_episode": []
                           }
                         ],
@@ -92434,6 +92894,7 @@
                       "rating": 5,
                       "averagerating": null,
                       "playcount": 0,
+                      "last_played": "2026-07-27T08:19:12+00:00",
                       "catalog": "1",
                       "composer": null,
                       "channels": 2,
@@ -93750,6 +94211,54 @@
         ],
         "operationId": "getSimilarSongs",
         "description": "Return similar artist id's or similar song ids compared to the input filter"
+      }
+    },
+    "/songs/{song_id}/sonic-match": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SongId"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Songs that sound like this one, most similar first, each with its similarity score",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SonicMatchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Songs that sound like this song",
+        "tags": [
+          "Song"
+        ],
+        "operationId": "sonicMatchSongs",
+        "description": "Similarity is derived from analysing the audio, which Ampache does not do itself, so this needs a sonic-analysis plugin (see the AudioMuse plugin). With none enabled the request is refused with 403 rather than answered with an empty list. `similarity` runs 0.0-1.0 where 1.0 is the same recording, matching the OpenSubsonic `sonicMatch` scale, and is -1 when the backend gives no comparable score."
       }
     },
     "/songs/{song_id}/stream": {
@@ -97054,7 +97563,9 @@
                       "flag": false,
                       "rating": null,
                       "averagerating": null,
-                      "playcount": 0
+                      "playcount": 0,
+                      "last_played": "2026-07-27T08:19:12+00:00",
+                      "catalog": "2"
                     }
                   }
                 }
@@ -98260,6 +98771,532 @@
         ],
         "operationId": "statsVideos",
         "description": "Get some items based on some simple search types and filters. (Random by default) This method **HAD** partial backwards compatibility with older api versions but it has now been removed Pass -1 limit to get all results. (0 will fall back to the `popular_threshold` value)"
+      }
+    },
+    "/collections": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionsResponse"
+                }
+              }
+            },
+            "description": "Collections list"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "List collections",
+        "tags": [
+          "Collections"
+        ],
+        "description": "A collection is a hand-curated list of objects of any type: the static counterpart to a search, and the non-media counterpart to a playlist. This returns every collection you own plus every public one, optionally narrowed to the collections pinned to a single object_type.",
+        "operationId": "collections"
+      },
+      "put": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "public",
+                "private"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "object_type",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionsResponse"
+                }
+              }
+            },
+            "description": "The collection that was created"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Create a collection",
+        "tags": [
+          "Collections"
+        ],
+        "description": "Creates an empty collection. Leave object_type out for a mixed collection, or set it to pin the collection to a single type so anything else is refused when it is added.",
+        "requestBody": {
+          "required": false,
+          "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionCreateRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionCreateRequest"
+              }
+            }
+          }
+        },
+        "operationId": "collectionCreate"
+      }
+    },
+    "/collections/{collection_id}": {
+      "delete": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Deletion confirmation"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Delete a collection",
+        "tags": [
+          "Collections"
+        ],
+        "description": "Deletes the collection and its membership rows. The objects it referenced are untouched. Owner or admin only: a collaborator may curate the contents but not destroy the list.",
+        "operationId": "collectionDelete"
+      },
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionsResponse"
+                }
+              }
+            },
+            "description": "A single collection"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Get a collection",
+        "tags": [
+          "Collections"
+        ],
+        "description": "One collection's own details, without its contents.",
+        "operationId": "collection"
+      },
+      "patch": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "public",
+                "private"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "object_type",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "collaborate",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionsResponse"
+                }
+              }
+            },
+            "description": "The collection that was edited"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Edit a collection",
+        "tags": [
+          "Collections"
+        ],
+        "description": "Only the fields you send are changed. Send an empty object_type to un-pin a collection back to mixed; pinning is refused while the collection still holds a different type.",
+        "requestBody": {
+          "required": false,
+          "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionEditRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionEditRequest"
+              }
+            }
+          }
+        },
+        "operationId": "collectionEdit"
+      }
+    },
+    "/collections/{collection_id}/items": {
+      "delete": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "object_type",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Type of the object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Removal confirmation"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Remove an object from a collection",
+        "tags": [
+          "Collections"
+        ],
+        "description": "Removes one member. The object itself is untouched, and removing something that was never a member is not an error.",
+        "requestBody": {
+          "required": false,
+          "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionRemoveRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionRemoveRequest"
+              }
+            }
+          }
+        },
+        "operationId": "collectionRemoveItems"
+      },
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionItemsResponse"
+                }
+              }
+            },
+            "description": "The collection and its contents"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Get the contents of a collection",
+        "tags": [
+          "Collections"
+        ],
+        "description": "The collection's members, grouped by object_type under `contents`. A collection is heterogeneous by design, so a flat list would leave the client guessing what each id is. The scalar `items` stays the member count.",
+        "operationId": "collectionItems"
+      },
+      "put": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "object_type",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Type of the object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Confirmation the object was added"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Add an object to a collection",
+        "tags": [
+          "Collections"
+        ],
+        "description": "Adding the same object twice is a no-op rather than a duplicate. A pinned collection refuses anything but its own type, and an object that does not exist is refused rather than stored as a dangling id.",
+        "requestBody": {
+          "required": false,
+          "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionAddRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionAddRequest"
+              }
+            }
+          }
+        },
+        "operationId": "collectionAddItems"
       }
     }
   }

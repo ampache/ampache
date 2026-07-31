@@ -28,9 +28,10 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\BroadcastRepositoryInterface;
 
 class Broadcast extends database_object implements library_item, displayable_item, container_item
 {
@@ -77,11 +78,11 @@ class Broadcast extends database_object implements library_item, displayable_ite
     public static function create(string $name, string $description = ''): int
     {
         if (!empty($name)) {
-            $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
-            $params = [Core::get_global('user')?->getId(), $name, $description];
-            Dba::write($sql, $params);
-
-            return (int) Dba::insert_id();
+            return self::getBroadcastRepository()->create(
+                (int) Core::get_global('user')?->getId(),
+                $name,
+                $description
+            );
         }
 
         return 0;
@@ -92,14 +93,7 @@ class Broadcast extends database_object implements library_item, displayable_ite
      */
     public static function get_broadcast(string $key): ?Broadcast
     {
-        $sql        = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
-        $db_results = Dba::read($sql, [$key]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return new Broadcast($results['id']);
-        }
-
-        return null;
+        return self::getBroadcastRepository()->findByKey($key);
     }
 
     /**
@@ -119,15 +113,7 @@ class Broadcast extends database_object implements library_item, displayable_ite
      */
     public static function get_broadcasts(int $user_id): array
     {
-        $sql        = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
-        $db_results = Dba::read($sql, [$user_id]);
-
-        $broadcasts = [];
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $broadcasts[] = (int) $results['id'];
-        }
-
-        return $broadcasts;
+        return self::getBroadcastRepository()->getIdsByUser($user_id);
     }
 
     /**
@@ -148,13 +134,27 @@ class Broadcast extends database_object implements library_item, displayable_ite
     }
 
     /**
+     * @deprecated inject dependency
+     */
+    private static function getBroadcastRepository(): BroadcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BroadcastRepositoryInterface::class);
+    }
+
+    /**
      * Delete the broadcast.
      */
     public function delete(): bool
     {
-        $sql = "DELETE FROM `broadcast` WHERE `id` = ?";
+        try {
+            $this->getBroadcastRepository()->delete($this);
+        } catch (DatabaseException) {
+            return false;
+        }
 
-        return (Dba::write($sql, [$this->id]) !== null);
+        return true;
     }
 
     /**
@@ -344,13 +344,11 @@ class Broadcast extends database_object implements library_item, displayable_ite
             Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
 
-        $name        = $data['title'] ?? $this->name;
-        $description = $data['description'] ?? '';
-        $private     = (!empty($data['private'] && (int) $data['private'] === 1)) ? 1 : 0;
+        $this->name        = $data['name'] ?? $this->name;
+        $this->description = $data['description'] ?? '';
+        $this->is_private  = (!empty($data['private']) && (int) $data['private'] === 1);
 
-        $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?";
-        $params = [$name, $description, $private, $this->id];
-        Dba::write($sql, $params);
+        $this->getBroadcastRepository()->update($this);
 
         return $this->id;
     }
@@ -360,8 +358,8 @@ class Broadcast extends database_object implements library_item, displayable_ite
      */
     public function update_listeners(int $listeners): void
     {
-        $sql = "UPDATE `broadcast` SET `listeners` = ? WHERE `id` = ?";
-        Dba::write($sql, [$listeners, $this->id]);
+        $this->getBroadcastRepository()->updateListeners($this, $listeners);
+
         $this->listeners = $listeners;
     }
 
@@ -370,8 +368,8 @@ class Broadcast extends database_object implements library_item, displayable_ite
      */
     public function update_song(int $song_id): void
     {
-        $sql = "UPDATE `broadcast` SET `song` = ? WHERE `id` = ?";
-        Dba::write($sql, [$song_id, $this->id]);
+        $this->getBroadcastRepository()->updateSong($this, $song_id);
+
         $this->song          = $song_id;
         $this->song_position = 0;
     }
@@ -381,8 +379,7 @@ class Broadcast extends database_object implements library_item, displayable_ite
      */
     public function update_state(int $started, string $key = ''): void
     {
-        $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
-        Dba::write($sql, [$started, $key, $this->id]);
+        $this->getBroadcastRepository()->updateState($this, $started, $key);
 
         $this->started = $started;
     }

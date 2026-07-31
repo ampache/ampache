@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
 use Ampache\Module\System\Core;
@@ -168,7 +169,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $key = 'playlist_row_' . $playlist->id;
                         break;
                     case 'smartplaylist':
-                        $playlist = $this->modelFactory->createSearch((int) Core::get_request('id'));
+                        $playlist = $this->modelFactory->createSmartlist((int) Core::get_request('id'));
                         if (!$playlist->has_access()) {
                             return;
                         }
@@ -253,6 +254,9 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $value = ($value == 'true');
                         $browse->set_grid_view($value);
                         break;
+                    case 'use_select':
+                        $browse->set_use_select($value == 'true');
+                        break;
                     case 'limit':
                         $value = (int) $value;
                         if ($value > 0) {
@@ -290,6 +294,8 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
                 if ($object_type !== null && $object_id > 0) {
+                    header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset', 'UTF-8'));
+                    header_remove('Content-Disposition');
                     echo $this->shareUiLinkRenderer->render($object_type, $object_id);
 
                     return;

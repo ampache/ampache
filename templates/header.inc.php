@@ -66,14 +66,9 @@ $count_temp_playlist = ($current_user instanceof User && !empty($current_user->p
     ? count($current_user->playlist->get_items())
     : 0;
 // strings for the main page and templates
-$t_home      = T_('Home');
-$t_play      = T_('Play');
 $t_artists   = T_('Artists');
 $t_albums    = T_('Albums');
 $t_playlists = T_('Playlists');
-$t_genres    = T_('Genres');
-$t_favorites = T_('Favorites');
-$t_upload    = T_('Upload');
 $albumString = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
@@ -152,51 +147,9 @@ if ($is_session) {
                 <?php echo ($ui_fixed) ? '<div id="ajax-loading">' . T_('Loading') . ' . . .</div>' : ''; ?>
             </div><!-- End header -->
 
-<?php if (AmpConfig::get('topmenu')) { ?>
-            <div id="topmenu_container" class="topmenu_container-<?php echo ($ui_fixed) ? 'fixed' : 'float'; ?>">
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/index.php">
-                        <?php echo Ui::get_image('topmenu-home', $t_home); ?>
-                        <span><?php echo $t_home; ?></span>
-                    </a>
-                </div>
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=album_artist">
-                        <?php echo Ui::get_image('topmenu-artist', $t_artists); ?>
-                        <span><?php echo $t_artists; ?></span>
-                    </a>
-                </div>
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=playlist">
-                        <?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?>
-                        <span><?php echo $t_playlists; ?></span>
-                    </a>
-                </div>
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist">
-                        <?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?>
-                        <span><?php echo $t_genres; ?></span>
-                    </a>
-                </div>
-
-                <?php if (AmpConfig::get('ratings') && $access25) { ?>
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/stats.php?action=userflag_<?php echo $albumString; ?>">
-                        <?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?>
-                        <span><?php echo $t_favorites; ?></span>
-                    </a>
-                </div>
-                <?php } ?>
-                <?php if ($allow_upload) { ?>
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/upload.php">
-                        <?php echo Ui::get_image('topmenu-upload', $t_upload); ?>
-                        <span><?php echo $t_upload; ?></span>
-                    </a>
-                </div>
-                <?php } ?>
-            </div>
-<?php }
+<?php if (AmpConfig::get('topmenu')) {
+    require_once Ui::find_template('show_topmenu.inc.php');
+}
 $sidebarLight = AmpConfig::get('sidebar_light');
 $hideSwitcher = AmpConfig::get('sidebar_hide_switcher', false);
 $isCollapsed  = (
@@ -248,7 +201,6 @@ echo ($isCollapsed) ? ' content-left-wild' : ''; ?>">
                             || AutoUpdate::is_update_available()
                         ) {
                             AutoUpdate::show_new_version();
-                            echo '<br />';
                         }
                     }
 

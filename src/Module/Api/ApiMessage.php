@@ -52,7 +52,6 @@ final class ApiMessage
      * Check the user has the required access level, echoing an error if not
      *
      * @param 6|8 $apiVersion
-     *
      * @return bool false if the access check failed and the error has been written
      */
     public static function checkAccess(
@@ -75,7 +74,6 @@ final class ApiMessage
      * @param array<string, mixed> $input
      * @param string[] $parameters
      * @param 6|8 $apiVersion
-     *
      * @return bool false if a parameter is missing and the error has been written
      */
     public static function checkParameter(
@@ -151,7 +149,6 @@ final class ApiMessage
      * MethodInterface are handed the version directly and must not need this.
      *
      * @param array<string, mixed> $input
-     *
      * @return 6|8
      */
     public static function resolveVersion(array $input): int

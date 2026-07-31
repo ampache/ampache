@@ -61,6 +61,17 @@ use Ampache\Repository\Model\Userflag;
     <?php Art::display('podcast', $libitem->getId(), (string) $libitem->get_fullname(), ['width' => 128, 'height' => 128], $libitem->get_link()); ?>
 </td>
 <td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+<?php
+    echo Ajax::button('?action=basket&type=podcast&id=' . $libitem->getId(), 'new_window', T_('Add to Temporary Playlist'), 'add_podcast_' . $libitem->getId());
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+        <a id="<?php echo 'add_to_playlist_podcast_' . $libitem->getId(); ?>" onclick="showPlaylistDialog(event, 'podcast', '<?php echo $libitem->getId(); ?>')">
+            <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+        </a>
+    <?php } ?>
+    </span>
+</td>
 <td class="cel_siteurl"><?php echo "<a target=\"_blank\" href=\"" . $libitem->getWebsite() . "\">" . $libitem->getWebsite() . "</a>"; ?></td>
 <td class="cel_episodes"><?php echo $libitem->getEpisodeCount(); ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>

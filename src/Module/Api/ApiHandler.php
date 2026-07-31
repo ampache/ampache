@@ -120,7 +120,18 @@ final class ApiHandler implements ApiHandlerInterface
         define('API', true);
 
         $input  = $request->getQueryParams();
-        $action = $input['action'];
+        $action = (string) ($input['action'] ?? '');
+        if ($action === '') {
+            // hitting the server without an action (e.g. opening the url in a browser) is treated as
+            // a ping rather than failing with a missing handler error
+            $this->logger->debug(
+                'Empty action parameter; using ping instead',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            $action          = PingMethod::ACTION;
+            $input['action'] = $action;
+        }
         if ($action == 'bad_request') {
             $this->logger->warning(
                 'Bad API request, check your HTTP Method is correct for your action',
@@ -715,6 +726,7 @@ final class ApiHandler implements ApiHandlerInterface
                 'disks' => 'disk',
                 'bookmarks' => 'bookmark',
                 'catalogs' => 'catalog',
+                'collections' => 'collection',
                 'genres' => 'genre',
                 'labels' => 'label',
                 'live_streams' => 'live_stream',
@@ -752,6 +764,10 @@ final class ApiHandler implements ApiHandlerInterface
 
             if ($type === 'song' && $action === 'lyrics') {
                 $action = 'get_lyrics';
+            }
+            // `collections/{id}/items` is the contents sub-resource; the verb suffix makes it add or remove
+            if ($type === 'collection' && $action === 'items') {
+                $action = 'collection_items';
             }
             if ($type === 'podcast' && $action === 'podcast_episode') {
                 $action = 'podcast_episodes';
@@ -813,6 +829,7 @@ final class ApiHandler implements ApiHandlerInterface
             'artists' => 'artist',
             'bookmarks' => 'bookmark',
             'catalogs' => 'catalog',
+            'collections' => 'collection',
             'genres', 'tags' => 'genre',
             'labels' => 'label',
             'live_streams' => 'live_stream',

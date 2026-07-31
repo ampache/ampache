@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Video;
@@ -43,6 +44,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -60,20 +62,31 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
+        // A video has no parent object, so leaving its own page can only fall back to the video browser.
+        $webPath     = $this->configContainer->getWebPath();
+        $burlParam   = (string) ($request->getQueryParams()['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'video_id',
+            $video->id,
+            '',
+            sprintf('%s/browse.php?action=video', $webPath)
+        );
+
         $this->ui->showHeader();
 
         if ($video->remove()) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Video has been deleted'),
-                $this->configContainer->getWebPath()
+                $continueUrl
             );
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
                 sprintf(T_("Couldn't delete this %s"), T_('Video')),
-                $this->configContainer->getWebPath()
+                $continueUrl
             );
         }
 

@@ -52,7 +52,6 @@ final readonly class MissingArtistFromMusicBrainzRetriever implements MissingArt
      * Get missing artist data.
      *
      * @param string $musicBrainzId mbid of the artist
-     *
      * @return null|MissingArtistResult
      */
     public function retrieve(string $musicBrainzId): ?array

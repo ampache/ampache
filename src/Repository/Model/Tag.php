@@ -26,9 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Repository\TagRepositoryInterface;
 
 /**
  * Tag Class
@@ -118,9 +117,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             return null;
         }
 
-        $sql = "REPLACE INTO `tag` SET `name` = ?";
-        Dba::write($sql, [$value]);
-        $insert_id = (int) Dba::insert_id();
+        $insert_id = self::getTagRepository()->create($value);
 
         parent::add_to_cache('tag_name', $value, [$insert_id]);
 
@@ -153,12 +150,12 @@ class Tag extends database_object implements library_item, displayable_item, con
             $merges[] = ['id' => $parent->id, 'name' => $parent->name];
         }
 
+        $tagRepository = self::getTagRepository();
+        // only the four types with a counter column on `tag` get counted; the map itself accepts any library item
+        $countType = TagCountTypeEnum::tryFrom($type);
         $insert_id = 0;
         foreach ($merges as $tag) {
-            $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) VALUES (?, ?, ?, ?)";
-            Dba::write($sql, [$tag['id'], 0, $type, $item_id]);
-
-            $insert_id = (int) Dba::insert_id();
+            $insert_id = $tagRepository->addMap((int) $tag['id'], $type, $item_id, 0);
             parent::add_to_cache(
                 'tag_map_' . $type,
                 $insert_id,
@@ -170,19 +167,8 @@ class Tag extends database_object implements library_item, displayable_item, con
                 ]
             );
 
-            switch ($type) {
-                case 'album':
-                    Dba::write("UPDATE `tag` SET `album` = `album` + 1 WHERE `id` = ?", [$tag['id']]);
-                    break;
-                case 'artist':
-                    Dba::write("UPDATE `tag` SET `artist` = `artist` + 1 WHERE `id` = ?", [$tag['id']]);
-                    break;
-                case 'song':
-                    Dba::write("UPDATE `tag` SET `song` = `song` + 1 WHERE `id` = ?", [$tag['id']]);
-                    break;
-                case 'video':
-                    Dba::write("UPDATE `tag` SET `video` = `video` + 1 WHERE `id` = ?", [$tag['id']]);
-                    break;
+            if ($countType instanceof TagCountTypeEnum) {
+                $tagRepository->incrementCount((int) $tag['id'], $countType);
             }
         }
 
@@ -201,11 +187,12 @@ class Tag extends database_object implements library_item, displayable_item, con
             return false;
         }
 
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = 'SELECT * FROM `tag` WHERE `id` IN ' . $idlist;
-        $db_results = Dba::read($sql);
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
 
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach (self::getTagRepository()->getRowsByIds($ids) as $row) {
             parent::add_to_cache('tag', (int) $row['id'], $row);
         }
 
@@ -230,10 +217,7 @@ class Tag extends database_object implements library_item, displayable_item, con
         $tags    = [];
         $tag_map = [];
 
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = sprintf('SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type`=\'%s\' AND `tag_map`.`object_id` IN %s', $type, $idlist);
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach (self::getTagRepository()->getMapRows($type, $ids) as $row) {
             $tags[$row['object_id']][$row['tag_id']] = [
                 'user' => $row['user'],
                 'id' => $row['tag_id'],
@@ -318,30 +302,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public static function garbage_collection(): void
     {
-        // Remove maps for objects that no longer exist
-        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL;");
-        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL;");
-        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL;");
-        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `video` ON `video`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='video' AND `video`.`id` IS NULL;");
-        // Hidden tags are not associated with an object anymore
-        Dba::write("DELETE FROM `tag_map` WHERE `tag_id` IN (SELECT `id` FROM `tag` WHERE `is_hidden` = 1)");
-
-        // Now nuke the empty tags (Keep hidden tags)
-        Dba::write("DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`id` IS NULL AND `is_hidden` = 0 AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`);");
-
-        // delete duplicates
-        Dba::write("DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND `a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`;");
-
-        // recount all the (currently) valid object types
-        Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'album' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`album` = `tag_count`.`tag_count` WHERE `tag`.`album` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
-        Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'artist' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`artist` = `tag_count`.`tag_count` WHERE `tag`.`artist` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
-        Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'song' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`song` = `tag_count`.`tag_count` WHERE `tag`.`song` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
-        Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'video' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`video` = `tag_count`.`tag_count` WHERE `tag`.`video` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
-        // reset tags without an object in tag_map
-        Dba::write("UPDATE `tag` SET `tag`.`artist` = 0 WHERE `tag`.`artist` != 0 AND `tag`.`id` NOT IN (SELECT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = 'artist');");
-        Dba::write("UPDATE `tag` SET `tag`.`album` = 0 WHERE `tag`.`album` != 0 AND `tag`.`id` NOT IN (SELECT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = 'album');");
-        Dba::write("UPDATE `tag` SET `tag`.`song` = 0 WHERE `tag`.`song` != 0 AND `tag`.`id` NOT IN (SELECT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = 'song');");
-        Dba::write("UPDATE `tag` SET `tag`.`video` = 0 WHERE `tag`.`video` != 0 AND `tag`.`id` NOT IN (SELECT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = 'video');");
+        self::getTagRepository()->collectGarbage();
     }
 
     /**
@@ -384,15 +345,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public static function get_merged_count(): int
     {
-        $results    = 0;
-        $sql        = "SELECT COUNT(DISTINCT `tag_id`) AS `tag_count` FROM `tag_merge`;";
-        $db_results = Dba::read($sql);
-
-        if ($row = Dba::fetch_assoc($db_results)) {
-            $results = (int) $row['tag_count'];
-        }
-
-        return $results;
+        return self::getTagRepository()->getMergedCount();
     }
 
     /**
@@ -406,25 +359,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             return [];
         }
 
-        $params = [$type];
-        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ?";
-        if ($object_id !== null) {
-            $sql .= " AND `tag_map`.`object_id` = ?";
-            $params[] = $object_id;
-        }
-
-        $db_results = Dba::read($sql, $params);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
-                'id' => (int) $row['id'],
-                'name' => $row['name'],
-                'is_hidden' => (int) $row['is_hidden'],
-                'user' => (int) $row['user'],
-            ];
-        }
-
-        return $results;
+        return self::getTagRepository()->getObjectTags($type, $object_id);
     }
 
     /**
@@ -438,31 +373,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             return [];
         }
 
-        $limit_sql = "";
-        if ($count) {
-            $limit_sql = " LIMIT ";
-            if ($offset) {
-                $limit_sql .= $offset . ', ';
-            }
-
-            $limit_sql .= $count;
-        }
-
-        $sql = "SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = ? ";
-        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
-            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
-        }
-
-        $sql .= $limit_sql;
-        $db_results = Dba::read($sql, [$type]);
-
-        $results = [];
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['tag_id'];
-        }
-
-        return $results;
+        return self::getTagRepository()->getTagIds($type, (int) $count, (int) $offset);
     }
 
     /**
@@ -476,38 +387,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             return [];
         }
 
-        $tag_sql   = ($tag_id === 0) ? "" : "`tag_map`.`tag_id` = ? AND";
-        $sql_param = ($tag_sql === "") ? [$type] : [$tag_id, $type];
-        $limit_sql = "";
-        if ($count) {
-            $limit_sql = " LIMIT ";
-            if ($offset) {
-                $limit_sql .= $offset . ', ';
-            }
-
-            $limit_sql .= $count;
-        }
-
-        $sql = sprintf('SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` WHERE %s `tag_map`.`object_type` = ?', $tag_sql);
-        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
-            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
-        }
-
-        $catalog_sql = Catalog::get_catalog_id_filter($type, '`tag_map`.`object_id`', $catalog_id);
-        if ($catalog_sql !== '') {
-            $sql .= " AND " . $catalog_sql;
-        }
-
-        $sql .= $limit_sql;
-        $db_results = Dba::read($sql, $sql_param);
-
-        $results = [];
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['object_id'];
-        }
-
-        return $results;
+        return self::getTagRepository()->getTagObjects($type, $tag_id, $count, $offset, $catalog_id);
     }
 
     /**
@@ -524,52 +404,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             return parent::get_from_cache('tags_list', $cacheType);
         }
 
-        $results = [];
-        if ($type == 'tag_hidden') {
-            $sql = "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, 0 AS `count` FROM `tag` WHERE (`tag`.`is_hidden` = 1 OR (`tag`.`album` = 0 AND `tag`.`artist` = 0 AND `tag`.`song` = 0 AND `tag`.`video` = 0)) ";
-        } else {
-            $type_select = (empty($type) || $type == 'all_hidden')
-                ? ', (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count`'
-                : sprintf(', `tag`.`%s` AS `count`', scrub_in($type));
-            $type_where = match ($type) {
-                'album', 'song', 'video', 'artist' => " AND `tag`.`" . scrub_in($type) . "` != 0 ",
-                default => " ",
-            };
-
-            $hidden_where = ($type == 'all_hidden')
-                ? '`tag`.`is_hidden` IN (0,1)'
-                : '`tag`.`is_hidden` = 0';
-
-            $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
-                ? sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`is_hidden`%s FROM `tag` WHERE %s%sAND %s ', $type_select, $hidden_where, $type_where, Catalog::get_user_filter('tag', Core::get_global('user')->id))
-                : sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`is_hidden`%s FROM `tag` WHERE %s%s', $type_select, $hidden_where, $type_where);
-
-            $sql .= (empty($type) || $type == 'all_hidden')
-                ? "GROUP BY `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`artist`, `tag`.`album`, `tag`.`song` "
-                : "GROUP BY `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `count` ";
-        }
-
-        $order = ($order == 'count')
-            ? "`" . $order . "` DESC"
-            : "`" . $order . "`";
-
-        $sql .= "ORDER BY " . $order;
-
-        if ($limit > 0) {
-            $sql .= ' LIMIT ' . $limit;
-        }
-
-        //debug_event(self::class, 'get_tags ' . $sql, 5);
-
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = [
-                'id' => $row['id'],
-                'name' => $row['name'],
-                'is_hidden' => $row['is_hidden'],
-                'count' => $row['count'] ?? 0
-            ];
-        }
+        $results = self::getTagRepository()->getTags($type, (int) $limit, (string) $order);
 
         parent::add_to_cache('tags_list', $cacheType, $results);
 
@@ -587,25 +422,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             return [];
         }
 
-        $limit_text = ($limit == 0)
-            ? ''
-            : 'LIMIT ' . $limit;
-        $sql = (in_array($type, ['artist', 'album', 'song', 'video']))
-            ? 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`' . $type . '` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `' . $type . '` DESC ' . $limit_text
-            : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `count` DESC ' . $limit_text;
-
-        $db_results = Dba::read($sql, [$type, $object_id]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
-                'id' => (int) $row['id'],
-                'name' => $row['name'],
-                'is_hidden' => $row['is_hidden'],
-                'count' => (int) $row['count']
-            ];
-        }
-
-        return $results;
+        return self::getTagRepository()->getTopTags($type, $object_id, (int) $limit);
     }
 
     /**
@@ -613,9 +430,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
-        $sql = "UPDATE IGNORE `tag_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+        self::getTagRepository()->migrateMaps($object_type, $old_object_id, $new_object_id);
     }
 
     /**
@@ -628,22 +443,13 @@ class Tag extends database_object implements library_item, displayable_item, con
             return false;
         }
 
-        $sql = "DELETE FROM `tag_map` WHERE `object_type` = ? AND `object_id` = ?";
-        Dba::write($sql, [$object_type, $object_id]);
+        $tagRepository = self::getTagRepository();
+        $tagRepository->removeAllMaps($object_type, $object_id);
 
-        switch ($object_type) {
-            case 'album':
-                Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'album' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`album` = `tag_count`.`tag_count` WHERE `tag`.`album` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
-                break;
-            case 'artist':
-                Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'artist' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`artist` = `tag_count`.`tag_count` WHERE `tag`.`artist` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
-                break;
-            case 'song':
-                Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'song' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`song` = `tag_count`.`tag_count` WHERE `tag`.`song` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
-                break;
-            case 'video':
-                Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'video' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`video` = `tag_count`.`tag_count` WHERE `tag`.`video` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
-                break;
+        // only the four counted types have a column to put back in step; the rest never had one to begin with
+        $countType = TagCountTypeEnum::tryFrom($object_type);
+        if ($countType instanceof TagCountTypeEnum) {
+            $tagRepository->recountType($countType);
         }
 
         return true;
@@ -659,14 +465,11 @@ class Tag extends database_object implements library_item, displayable_item, con
             return (int) (parent::get_from_cache('tag_name', $value))[0];
         }
 
-        $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
-        $db_results = Dba::read($sql, [$value]);
-        $results    = Dba::fetch_assoc($db_results);
+        $tag_id = self::getTagRepository()->findIdByName($value);
+        if ($tag_id !== null) {
+            parent::add_to_cache('tag_name', $value, [$tag_id]);
 
-        if (array_key_exists('id', $results)) {
-            parent::add_to_cache('tag_name', $value, [$results['id']]);
-
-            return (int) $results['id'];
+            return $tag_id;
         }
 
         return 0;
@@ -684,11 +487,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             return false;
         }
 
-        $sql        = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
-        $db_results = Dba::read($sql, [$tag_id, 0, $object_id, $type]);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return array_key_exists('id', $results);
+        return self::getTagRepository()->mapExists($type, $object_id, $tag_id, 0);
     }
 
     /**
@@ -766,20 +565,23 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
+     * @deprecated inject dependency
+     */
+    private static function getTagRepository(): TagRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TagRepositoryInterface::class);
+    }
+
+    /**
      * delete
      *
      * Delete the tag and all maps
      */
     public function delete(): void
     {
-        $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?";
-        Dba::write($sql, [$this->id]);
-
-        $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?";
-        Dba::write($sql, [$this->id]);
-
-        $sql = "DELETE FROM `tag` WHERE `tag`.`id` = ? ";
-        Dba::write($sql, [$this->id]);
+        self::getTagRepository()->delete($this->id);
 
         // Call the garbage collector to clean everything
         self::garbage_collection();
@@ -892,21 +694,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public function get_merged_tags(): array
     {
-        $sql = "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, 0 AS `count` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name`;";
-
-        $db_results = Dba::read($sql, [$this->id]);
-
-        $results = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = [
-                'id' => $row['id'],
-                'name' => $row['name'],
-                'is_hidden' => $row['is_hidden'],
-                'count' => $row['count']
-            ];
-        }
-
-        return $results;
+        return self::getTagRepository()->getMergedTags($this->id);
     }
 
     /**
@@ -949,15 +737,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public function has_merge(string $name): bool
     {
-        $sql        = "SELECT `tag`.`name` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
-        $db_results = Dba::read($sql, [$this->id]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if ($name == $row['name']) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array($name, self::getTagRepository()->getMergedNames($this->id));
     }
 
     public function isNew(): bool
@@ -974,11 +754,10 @@ class Tag extends database_object implements library_item, displayable_item, con
         if ($this->id != $merge_to) {
             debug_event(self::class, 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
 
-            $sql = "REPLACE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) SELECT " . $merge_to . ",`user`, `object_type`, `object_id` FROM `tag_map` AS `tm` WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (SELECT 1 FROM `tag_map` WHERE `tag_map`.`tag_id` = " . $merge_to . " AND `tag_map`.`object_id` = `tm`.`object_id` AND `tag_map`.`object_type` = `tm`.`object_type` AND `tag_map`.`user` = `tm`.`user`)";
-            Dba::write($sql);
+            $tagRepository = self::getTagRepository();
+            $tagRepository->mergeInto($this->id, $merge_to);
             if ($is_persistent) {
-                $sql = "REPLACE INTO `tag_merge` (`tag_id`, `merged_to`) VALUES (?, ?)";
-                Dba::write($sql, [$this->id, $merge_to]);
+                $tagRepository->persistMerge($this->id, $merge_to);
             }
         }
     }
@@ -993,22 +772,12 @@ class Tag extends database_object implements library_item, displayable_item, con
             return false;
         }
 
-        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
-        Dba::write($sql, [$this->id, $type, $object_id, 0]);
+        $tagRepository = self::getTagRepository();
+        $tagRepository->removeMap($this->id, $type, $object_id, 0);
 
-        switch ($type) {
-            case 'album':
-                Dba::write("UPDATE `tag` SET `album` = `album` - 1 WHERE `id` = ? AND `album` > 0;", [$this->id]);
-                break;
-            case 'artist':
-                Dba::write("UPDATE `tag` SET `artist` = `artist` - 1 WHERE `id` = ? AND `artist` > 0;", [$this->id]);
-                break;
-            case 'song':
-                Dba::write("UPDATE `tag` SET `song` = `song` - 1 WHERE `id` = ? AND `song` > 0;", [$this->id]);
-                break;
-            case 'video':
-                Dba::write("UPDATE `tag` SET `video` = `video` - 1 WHERE `id` = ? AND `video` > 0;", [$this->id]);
-                break;
+        $countType = TagCountTypeEnum::tryFrom($type);
+        if ($countType instanceof TagCountTypeEnum) {
+            $tagRepository->decrementCount($this->id, $countType);
         }
 
         return true;
@@ -1020,8 +789,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public function remove_merges(): void
     {
-        $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?;";
-        Dba::write($sql, [$this->id]);
+        self::getTagRepository()->removeMerges($this->id);
     }
 
     /**
@@ -1041,16 +809,12 @@ class Tag extends database_object implements library_item, displayable_item, con
 
         if ($name != $this->name) {
             debug_event(self::class, 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
-            $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
-            Dba::write($sql, [$name, $this->id]);
+            self::getTagRepository()->rename($this->id, (string) $name);
         }
 
         if ($is_hidden !== $this->is_hidden) {
             debug_event(self::class, 'Hidden tag {' . $this->id . '} with status {' . $is_hidden . '}...', 5);
-            $sql = ($is_hidden == 1 && $this->is_hidden == 0)
-                ? 'UPDATE `tag` SET `is_hidden` = ?, `artist` = 0, `album` = 0, `song` = 0 WHERE `id` = ?'
-                : 'UPDATE `tag` SET `is_hidden` = ? WHERE `id` = ?';
-            Dba::write($sql, [$is_hidden, $this->id]);
+            self::getTagRepository()->setHidden($this->id, $is_hidden, $is_hidden == 1 && $this->is_hidden == 0);
             // if you had previously hidden this tag then remove the merges too
             if ($is_hidden == 0 && $this->is_hidden == 1) {
                 debug_event(self::class, 'Unhiding tag {' . $this->id . '} removing all previous merges', 5);
@@ -1082,13 +846,12 @@ class Tag extends database_object implements library_item, displayable_item, con
             }
 
             if (!array_key_exists('keep_existing', $data)) {
-                $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ? ";
-                Dba::write($sql, [$this->id]);
+                $tagRepository = self::getTagRepository();
+                $tagRepository->removeMapsForTag($this->id);
                 if (!array_key_exists('merge_persist', $data)) {
                     $this->delete();
                 } else {
-                    $sql = "UPDATE `tag` SET `is_hidden` = 1 WHERE `tag`.`id` = ? ";
-                    Dba::write($sql, [$this->id]);
+                    $tagRepository->setHidden($this->id, 1, false);
                 }
             }
         }

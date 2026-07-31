@@ -61,7 +61,7 @@ if (!empty($status)) {
             <?php echo T_('Random'); ?>
         </li>
         <li>
-            <?php echo Ajax::button('?page=localplay&action=command&command=delete_all', 'close', T_('Clear Playlist'), 'localplay_clear_all'); ?><?php echo T_('Clear Playlist'); ?>
+            <?php echo Ajax::button('?page=localplay&action=command&command=delete_all', 'close', T_('Clear Playlist'), 'localplay_clear_all', '', '', T_('Are you sure?')); ?><?php echo T_('Clear Playlist'); ?>
         </li>
     </ul>
 </div>

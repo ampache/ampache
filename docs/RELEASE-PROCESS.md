@@ -2,15 +2,16 @@
 
 ## Release Naming
 
-* The minimum supported php version (currently 7.4) will always be released as `ampache-x.x.x_all.zip`
-* Additional php versions will be tagged by binary name e.g. `ampache-5.x.x_all_php8.0.zip`, `ampache-5.x.x_all_php8.1.zip`
+* Each supported php version is tagged by binary name, e.g. `ampache-8.x.x_all_php8.5.zip`
+* Ampache8 requires PHP 8.5+, so it is the only build; the structure variants add a suffix, e.g. `ampache-8.x.x_all_php8.5_squashed.zip` and `..._client.zip`
+* The code-only zips (no `vendor/`, no `public/lib/components/`) drop the php version, e.g. `ampache-8.x.x_public.zip`
 
 ## Official Release Process
 
 It's easy to use a program like github desktop to compare between branches.
 **Use Linux**
 
-**note** this process has been automated. I now use the `build_release.sh` script contained at the [ampache-administrator](https://github.com/lachlan-00/ampache-administrator/blob/master/build_release.sh) repo.
+**note** this process has been automated. I now use the `build_release8.sh` script contained at the [ampache-administrator](https://github.com/lachlan-00/ampache-administrator/blob/master/build_release8.sh) repo.
 
 * Export database from a fresh install (phpMyAdmin exports well.)
   * Tables: Structure; **select all tables**
@@ -40,8 +41,7 @@ rm -rf ./composer.lock vendor/* public/lib/components/*
 * Install composer packages for all supported php releases (ONE at a time obviously)
 
 ```shell
-php7.4 /usr/local/bin/composer install
-php8.0 /usr/local/bin/composer install
+php8.5 /usr/local/bin/composer install
 ```
 
 * Install npm packages & build javascript files
@@ -62,23 +62,28 @@ find . -xtype l -exec rm {} \;
 read -p "Enter Ampache Version: " a_version
 ```
 
-* Create a zip package named "ampache-5.x.x_all.zip and add the entire ampache directory tree. (excluding git/development specific files)
+* Create the zip packages from the entire ampache directory tree, excluding git and development specific files
 
-```shell
-rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./public/rest/.htaccess.dist --exclude=./public/play/.htaccess.dist ../ampache-${a_version}_all.zip ./
-rm ../ampache-${a_version}_all_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./public/rest/.htaccess.dist --exclude=./public/play/.htaccess.dist ../ampache-${a_version}_all_php8.0.zip ./
+  The exclude list is long and is maintained in one place only: the `ZIPEXCLUDE` variables in
+  `build_release8.sh`. Read it there rather than copying a list out of here — a stale copy is how a
+  development file reaches every install. Six zips are produced per release, one per structure
+  (`public`, `squashed`, `client`) in both a code-only and an `_all_php8.5` flavour:
 
-rm ../ampache-${a_version}_all_squashed.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./rest/.htaccess.dist --exclude=./play/.htaccess.dist ../ampache-${a_version}_all_squashed.zip ./
-rm ../ampache-${a_version}_all_squashed_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./rest/.htaccess.dist --exclude=./play/.htaccess.dist ../ampache-${a_version}_all_squashed_php8.0.zip ./
+```text
+ampache-${a_version}_public.zip             ampache-${a_version}_all_php8.5.zip
+ampache-${a_version}_squashed.zip           ampache-${a_version}_all_php8.5_squashed.zip
+ampache-${a_version}_client.zip             ampache-${a_version}_all_php8.5_client.zip
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
 
 ```shell
 rm -rf /var/www/html && ln -s /var/www/ampache/public /var/www/html
-rm -rf /var/www/ampache && unzip -o ../ampache-${a_version}_all.zip -d /var/www/ampache/
-rm -rf /var/www/ampache && unzip -o ../ampache-${a_version}_all_php8.0.zip -d /var/www/ampache/
+rm -rf /var/www/ampache && unzip -o ../ampache-${a_version}_all_php8.5.zip -d /var/www/ampache/
 ```
+
+  `docker-release-test8.sh` automates this for all three structures at once, and is the only step that
+  tests a release zip rather than a checkout.
 
 * FIXME This might be where unit testing would be helpful.
 * Draft Release page online and save as draft using your changelog

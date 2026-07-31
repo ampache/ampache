@@ -30,7 +30,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Smartlist;
 use Mockery\MockInterface;
 use Override;
 use Psr\Http\Message\ServerRequestInterface;
@@ -45,7 +45,7 @@ class UpdatePlaylistActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $search     = $this->mock(Search::class);
+        $search     = $this->mock(Smartlist::class);
 
         $playlistId = 666;
 
@@ -61,7 +61,7 @@ class UpdatePlaylistActionTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
-        $this->modelFactory->shouldReceive('createSearch')
+        $this->modelFactory->shouldReceive('createSmartlist')
             ->with($playlistId)
             ->once()
             ->andReturn($search);

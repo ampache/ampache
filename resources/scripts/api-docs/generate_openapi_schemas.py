@@ -70,6 +70,8 @@ TYPES: dict[str, dict[str, str]] = {
     "podcast": {"builder": "podcasts_array", "object": "PodcastObject", "list": "PodcastsResponse", "key": "podcast"},
     "video": {"builder": "videos_array", "object": "VideoObject", "list": "VideosResponse", "key": "video"},
     "catalog": {"builder": "catalogs_array", "object": "CatalogObject", "list": "CatalogsResponse", "key": "catalog"},
+    # collections answer with a bare {collection: [...]} envelope; the contents live on a separate endpoint
+    "collection": {"builder": "collections_array", "object": "CollectionObject", "list": "CollectionsResponse", "key": "collection", "envelope": "bare"},
     "license": {"builder": "licenses_array", "object": "LicenseObject", "list": "LicensesResponse", "key": "license"},
     "share": {"builder": "shares_array", "object": "ShareObject", "list": "SharesResponse", "key": "share"},
     "bookmark": {"builder": "bookmarks_array", "object": "BookmarkObject", "list": "BookmarksResponse", "key": "bookmark"},
@@ -104,6 +106,29 @@ PING_ALWAYS = {
     "version": {"type": "string"},
     "compatible": {"type": "string"},
 }
+
+
+def build_collection_items_schema(collection: dict) -> dict:
+    """CollectionItemsResponse = the collection's own fields plus its members, in curated order.
+
+    Composed from the generated CollectionObject rather than declared alongside it, so the two cannot
+    drift and the method-reference table lists real fields instead of a bare `allOf`.
+    """
+    node = {
+        "type": "object",
+        "properties": {
+            **collection.get("properties", {}),
+            "contents": {"type": "array", "items": {"$ref": "#/components/schemas/CollectionItemObject"}},
+        },
+        "required": [*collection.get("required", []), "contents"],
+        "additionalProperties": True,
+    }
+    return {
+        "type": "object",
+        "properties": {"collection": node},
+        "required": ["collection"],
+        "additionalProperties": True,
+    }
 
 
 def build_ping_schema(handshake: dict) -> dict:
@@ -236,6 +261,10 @@ WIRING: dict[str, str] = {
     # Catalogs
     "catalogs": "CatalogsResponse",
     "catalog": "CatalogObject",
+    # Collections (the single-collection read answers with the same list envelope as the list read)
+    "collections": "CollectionsResponse",
+    "collection": "CollectionsResponse",
+    "collection_items": "CollectionItemsResponse",
     # Licenses
     "licenses": "LicensesResponse",
     "license": "LicenseObject",
@@ -251,9 +280,7 @@ WIRING: dict[str, str] = {
     # Song tags — the REST /songs/{id}/tags endpoint returns a single flat tag
     # object (verified live), not the multi-song SongTagsResponse envelope.
     "song_tags": "SongTagObject",
-    # Folder — /folder returns a single node; only /folders returns the envelope
-    # (verified live: /folder was mis-wired to the response envelope).
-    "folder": "FolderBrowseNode",
+    # Folder — the id and the path form both answer with the same envelope
     "folders": "FolderBrowseResponse",
     # Fixed-shape / activity endpoints
     "list": "ListsResponse",
@@ -394,6 +421,9 @@ WIRING_BY_METHOD: dict[tuple[str, str], str] = {
     ("put", "playlist_create"): "PlaylistObject",
     ("put", "podcast_create"): "PodcastObject",
     ("put", "catalog_create"): "CatalogObject",
+    # both collection writers echo the collection back through the list envelope rather than a bare object
+    ("put", "collection_create"): "CollectionsResponse",
+    ("patch", "collection_edit"): "CollectionsResponse",
     ("post", "register"): "SuccessResponse",
     ("post", "player"): "NowPlayingResponse",
     ("post", "localplay"): "LocalplayResponse",
@@ -406,6 +436,8 @@ SUCCESS_ACTIONS: dict[str, tuple[str, ...]] = {
     "delete": (
         "bookmark_delete",
         "catalog_delete",
+        "collection_delete",
+        "collection_remove",
         "live_stream_delete",
         "playlist_delete",
         "podcast_delete",
@@ -449,6 +481,7 @@ SUCCESS_ACTIONS: dict[str, tuple[str, ...]] = {
         "update_podcast",
     ),
     "put": (
+        "collection_add",
         "preference_create",
         "user_create",
     ),
@@ -744,6 +777,59 @@ def build_list_response(key: str, object_name: str, envelope: str = "standard") 
 # Hand-written schemas for endpoints whose output cannot be derived from a single
 # builder shape (genuinely polymorphic). Merged verbatim into components.schemas.
 MANUAL_SCHEMAS: dict[str, dict] = {
+    # sonic_match has no *_array() builder behind it: Json8_Data::sonic_matches() decorates songs_array()
+    # rows with a per-row score, so the shape is a SongObject plus `similarity` and has to be stated here.
+    "SonicMatchObject": {
+        "allOf": [
+            {"$ref": "#/components/schemas/SongObject"},
+            {
+                "type": "object",
+                "properties": {
+                    "similarity": {
+                        "type": "number",
+                        "description": (
+                            "0.0-1.0 where 1.0 is the same recording, matching the OpenSubsonic "
+                            "`sonicMatch` scale. -1 when the analysis backend gives no comparable score."
+                        ),
+                        "minimum": -1,
+                        "maximum": 1,
+                    }
+                },
+                "required": ["similarity"],
+            },
+        ]
+    },
+    "SonicMatchResponse": {
+        "type": "object",
+        "properties": {
+            "sonic_match": {
+                "type": "array",
+                "items": {"$ref": "#/components/schemas/SonicMatchObject"},
+            }
+        },
+        "required": ["sonic_match"],
+        "additionalProperties": True,
+    },
+    # collection_items has no *_array() builder either: each member is rendered by its own type's builder and
+    # nested under a property named for that type, so the payload key changes per entry and cannot be
+    # enumerated without pinning the type set (the same reason object_type is left an open string elsewhere).
+    "CollectionItemObject": {
+        "type": "object",
+        "description": (
+            "One member of a collection, at the position it was curated into. `object_type` names the type "
+            "and the property of the same name carries that type's own object, e.g. "
+            "`{\"track\": 1, \"track_id\": 7, \"object_type\": \"album\", \"album\": {...}}`. `track_id` is "
+            "the id of the membership row rather than of the object, and is the only stable way to tell two "
+            "members apart when the same object appears more than once."
+        ),
+        "properties": {
+            "track": {"type": "integer", "description": "1-based position in the collection"},
+            "track_id": {"type": "integer", "description": "id of the membership row, not of the object"},
+            "object_type": {"type": "string", "description": _OBJECT_TYPE_DESCRIPTION},
+        },
+        "required": ["track", "track_id", "object_type"],
+        "additionalProperties": {"type": "object"},
+    },
     "IndexReferenceObject": {
         "type": "object",
         "properties": {"id": {"type": "string"}, "type": {"type": "string"}},
@@ -1033,6 +1119,7 @@ def build_schemas(sources: dict[str, dict[str, str]]) -> dict[str, dict]:
 
     schemas["PingResponse"] = build_ping_schema(schemas["HandshakeResponse"])
     schemas.update(MANUAL_SCHEMAS)
+    schemas["CollectionItemsResponse"] = build_collection_items_schema(schemas["CollectionObject"])
     return schemas
 
 

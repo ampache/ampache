@@ -79,9 +79,8 @@ final class SmartlistMethod implements MethodInterface
 
         $objectId = (string) $input['filter'];
 
-        $smartlist = $this->modelFactory->createSearch(
+        $smartlist = $this->modelFactory->createSmartlist(
             (int) str_replace('smart_', '', $objectId),
-            'song',
             $user
         );
 

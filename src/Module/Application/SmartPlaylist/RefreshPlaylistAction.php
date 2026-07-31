@@ -43,7 +43,7 @@ final readonly class RefreshPlaylistAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist = $this->modelFactory->createSearch(
+        $playlist = $this->modelFactory->createSmartlist(
             (int) ($request->getQueryParams()['playlist_id'] ?? 0)
         );
 

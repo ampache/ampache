@@ -32,10 +32,10 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -49,6 +49,7 @@ final readonly class UninstallPluginAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
+        private PluginManagerInterface $pluginManager,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -78,11 +79,8 @@ final readonly class UninstallPluginAction implements ApplicationActionInterface
             return null;
         }
 
-        $plugin = new Plugin($plugin_name);
-        $plugin->uninstall();
-
-        // Don't trust the plugin to do it
-        User::rebuild_all_preferences();
+        // The manager uninstalls and runs the preference rebuild that the plugin cannot be trusted to do itself
+        $this->pluginManager->uninstallPlugin($plugin_name);
 
         /* Show Confirmation */
         $url   = sprintf('%s/modules.php?action=show_plugins', $this->configContainer->getWebPath('/admin'));

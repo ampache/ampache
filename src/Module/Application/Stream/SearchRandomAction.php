@@ -54,7 +54,7 @@ final class SearchRandomAction extends AbstractStreamAction
             return null;
         }
 
-        $search   = $this->modelFactory->createSearch((int) $_REQUEST['search_id']);
+        $search   = $this->modelFactory->createSmartlist((int) $_REQUEST['search_id']);
         $mediaIds = $search->get_random_items();
 
         return $this->stream(

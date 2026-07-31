@@ -156,7 +156,7 @@ final class GetArt5Method implements MethodInterface
                 $art  = $this->modelFactory->createArt($song->album, 'album');
             }
         } elseif ($type == 'search') {
-            $smartlist = $this->modelFactory->createSearch($object_id, 'song', $user);
+            $smartlist = $this->modelFactory->createSmartlist($object_id, $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
             $art       = $this->modelFactory->createArt($item['object_id'], $item['object_type']->value);

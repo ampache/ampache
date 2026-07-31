@@ -69,7 +69,7 @@ $libitem->display_art($size); ?>
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->id);
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <a id="<?php echo 'add_to_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, '<?php echo 'live_stream'; ?>', '<?php echo $libitem->id; ?>')">
-                <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
             </a>
         <?php } ?>
     </span>
@@ -97,6 +97,6 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
         <?php
 }
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-    echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'close', T_('Delete'), 'delete_live_stream_' . $libitem->id);
+    echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'close', T_('Delete'), 'delete_live_stream_' . $libitem->id, '', '', T_('Are you sure?'));
 } ?>
 </td>

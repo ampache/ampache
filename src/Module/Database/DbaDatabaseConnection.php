@@ -58,7 +58,6 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      * Fetches a single whole row and returns it as an associative array
      *
      * @param list<mixed> $params
-     *
      * @return false|array<string, mixed> Will return `false` if row is empty
      * @throws QueryFailedException
      */

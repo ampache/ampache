@@ -305,7 +305,7 @@ final class PodcastEpisodeSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'other_user':
-                    $other_userid = $input;
+                    $other_userid = (int) $input;
                     if ($operator_sql == 'userflag') {
                         $where[] = sprintf("`favorite_podcast_episode_%s`.`user` = %s AND `favorite_podcast_episode_%s`.`object_type` = 'podcast_episode'", $other_userid, $other_userid, $other_userid);
                         // flag once per user

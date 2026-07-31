@@ -28,10 +28,12 @@ namespace Ampache\Repository;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use PDO;
+use PDOStatement;
 
 final readonly class FolderRepository implements FolderRepositoryInterface
 {
@@ -186,6 +188,21 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
+     * Returns the direct children of a folder. Pass null for the virtual root, whose children are
+     * the unparented folder_map rows.
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function getChildren(?int $folderId): array
+    {
+        $result = ($folderId === null)
+            ? $this->connection->query('SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` IS NULL ORDER BY `name`;')
+            : $this->connection->query('SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ? ORDER BY `name`;', [$folderId]);
+
+        return $this->mapObjectRows($result);
+    }
+
+    /**
      * Return the number of entries in the database...
      */
     public function getItemCount(): int
@@ -196,6 +213,69 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
 
         return 0;
+    }
+
+    /**
+     * Returns everything below a folder, optionally narrowed to a single type
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function getMedias(Folder $folder, ?string $filterType = null): array
+    {
+        $result = ($filterType === null)
+            ? $this->connection->query(
+                "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` != 'folder' AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?) ORDER BY `folder_map`.`name`;",
+                [$folder->getId(), $folder->path_name . '/%']
+            )
+            : $this->connection->query(
+                'SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` = ? AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?) ORDER BY `folder_map`.`name`;',
+                [$filterType, $folder->getId(), $folder->path_name . '/%']
+            );
+
+        return $this->mapObjectRows($result);
+    }
+
+    /**
+     * Returns a folder's own name, null when there is no such folder
+     */
+    public function getNameById(int $folderId): ?string
+    {
+        $name = $this->connection->fetchOne(
+            'SELECT `folder`.`name` AS `f_name` FROM `folder` WHERE `id` = ?;',
+            [$folderId]
+        );
+
+        return ($name === false)
+            ? null
+            : (string) $name;
+    }
+
+    /**
+     * Returns the contents of a folder. Pass null for the virtual root, which lists the top-level
+     * folders themselves rather than folder_map rows.
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function getObjects(?int $folderId): array
+    {
+        $result = ($folderId === null)
+            ? $this->connection->query("SELECT `id` AS `object_id`, 'folder' AS `object_type` FROM `folder` WHERE `parent` IS NULL;")
+            : $this->connection->query('SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;', [$folderId]);
+
+        return $this->mapObjectRows($result);
+    }
+
+    /**
+     * Whether the folder has any mapped children
+     */
+    public function hasChildren(int $folderId): bool
+    {
+        $result = $this->connection->query(
+            'SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;',
+            [$folderId]
+        );
+
+        return $result->rowCount() > 0;
     }
 
     public function lookup(string $folderName = '', int $catalogId = 0, ?int $parent_id = null): int
@@ -246,6 +326,59 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
+     * Moves every folder_map row of the given type from one object onto another
+     */
+    public function migrateObject(string $objectType, int $oldObjectId, int $newObjectId): void
+    {
+        $this->connection->query(
+            'UPDATE `folder_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;',
+            [$newObjectId, $oldObjectId, $objectType]
+        );
+    }
+
+    /**
+     * Saves the folder, inserting it when it is new
+     *
+     * An insert writes the whole row; an update touches only the fields the edit form owns, so the
+     * recorded path and creation time survive a rename.
+     *
+     * Returns the id of a newly created folder, null when an existing one was updated
+     */
+    public function persist(Folder $folder): ?int
+    {
+        if (!$folder->isNew()) {
+            $this->connection->query(
+                'UPDATE `folder` SET `name` = ?, `catalog` = ?, `parent` = ?, `update_time` = ? WHERE `id` = ?',
+                [
+                    $folder->name,
+                    $folder->catalog,
+                    $folder->parent,
+                    $folder->update_time,
+                    $folder->getId(),
+                ]
+            );
+
+            return null;
+        }
+
+        $this->connection->query(
+            'INSERT INTO `folder` (`name`, `catalog`, `parent`, `user`, `addition_time`, `update_time`, `path`, `path_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+                $folder->name,
+                $folder->catalog,
+                $folder->parent,
+                $folder->user,
+                $folder->addition_time,
+                $folder->update_time,
+                $folder->path,
+                $folder->path_name,
+            ]
+        );
+
+        return $this->connection->getLastInsertedId() ?: null;
+    }
+
+    /**
      * Update folder counts columns after large actions
      */
     public function update_folder_counts(): void
@@ -279,5 +412,26 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
         $sql = "UPDATE `folder` SET `update_time` = ? WHERE `id` = ?;";
         $this->connection->query($sql, [$time, $folder_id]);
+    }
+
+    /**
+     * Rows whose object_type is not a known library item are dropped rather than surfaced as null
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    private function mapObjectRows(PDOStatement $result): array
+    {
+        $results = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $objectType = LibraryItemEnum::tryFrom((string) $row['object_type']);
+            if ($objectType !== null) {
+                $results[] = [
+                    'object_type' => $objectType,
+                    'object_id' => (int) $row['object_id'],
+                ];
+            }
+        }
+
+        return $results;
     }
 }

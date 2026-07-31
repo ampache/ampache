@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
@@ -51,6 +52,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private PodcastDeleterInterface $podcastDeleter,
         private LoggerInterface $logger,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -59,7 +61,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $episode_id = (int) $this->requestParser->getFromRequest('podcast_id');
+        $episode_id = (int) $this->requestParser->getFromRequest('podcast_episode_id');
         $episode    = $this->modelFactory->createPodcastEpisode($episode_id);
         if (!Catalog::can_remove($episode)) {
             $this->logger->warning(
@@ -69,17 +71,26 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        // The owning podcast has to be read while the episode row is still there; it is both the parent to
+        // fall back to and the page the user most likely came from, so it is captured before the deleter runs.
+        $webPath     = $this->configContainer->getWebPath();
+        $parentUrl   = sprintf('%s/podcast.php?action=show&podcast=%d', $webPath, $episode->podcast);
+        $burlParam   = (string) ($request->getQueryParams()['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'podcast_episode',
+            $episode_id,
+            $parentUrl,
+            $parentUrl
+        );
+
         $this->podcastDeleter->deleteEpisode([$episode]);
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Podcast Episode has been deleted'),
-            sprintf(
-                '%s/podcast.php?action=show&podcast=%s',
-                $this->configContainer->getWebPath(),
-                $episode->podcast
-            )
+            $continueUrl
         );
 
         $this->ui->showQueryStats();

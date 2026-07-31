@@ -50,7 +50,7 @@ final class SelectArtAction extends AbstractArtAction
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check to see if we have the image url still */
-        $image_id    = $_REQUEST['image'];
+        $image_id    = $_REQUEST['image'] ?? null;
         $object_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $item = $this->getItem($gatekeeper);
@@ -61,6 +61,21 @@ final class SelectArtAction extends AbstractArtAction
         $burl = '';
         if (isset($_GET['burl'])) {
             $burl = base64_decode(Core::get_get('burl'));
+        }
+
+        if ($image_id === null || !isset($_SESSION['form']['images'][$image_id])) {
+            $this->ui->showHeader();
+
+            $this->ui->showContinue(
+                T_('There Was a Problem'),
+                T_('Missing mandatory parameter'),
+                $burl
+            );
+
+            $this->ui->showQueryStats();
+            $this->ui->showFooter();
+
+            return null;
         }
 
         // Prevent the script from timing out

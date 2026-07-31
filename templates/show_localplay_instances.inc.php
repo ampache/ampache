@@ -59,7 +59,7 @@ Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances');
     <?php } ?>
     <td>
         <a href="<?php echo AmpConfig::get_web_path(); ?>/localplay.php?action=edit_instance&instance=<?php echo $uid; ?>"><?php echo Ui::get_material_symbol('edit', T_('Edit Instance')); ?></a>
-        <?php echo Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid, 'close', T_('Delete'), 'delete_instance_' . $uid); ?>
+        <?php echo Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid, 'close', T_('Delete'), 'delete_instance_' . $uid, '', '', T_('Are you sure?')); ?>
     </td>
 </tr>
 <?php

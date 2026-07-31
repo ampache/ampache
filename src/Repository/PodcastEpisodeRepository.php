@@ -121,7 +121,6 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
      * Returns all episode-ids for the given podcast
      *
      * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
-     *
      * @return int[]
      */
     public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array
@@ -188,7 +187,6 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
      * Returns all podcast episodes which are eligible for download
      *
      * @param null|positive-int $downloadLimit
-     *
      * @return Generator<Podcast_Episode>
      */
     public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit = null): Generator
@@ -273,6 +271,57 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
         }
 
         return $episodeIds;
+    }
+
+    /**
+     * Stores the path the episode was downloaded to
+     */
+    public function setFile(int $episodeId, string $file): void
+    {
+        $this->connection->query(
+            'UPDATE `podcast_episode` SET `file` = ? WHERE `id` = ?',
+            [$file, $episodeId]
+        );
+    }
+
+    /**
+     * Flags the episode as played
+     */
+    public function setPlayed(int $episodeId): void
+    {
+        $this->connection->query(
+            'UPDATE `podcast_episode` SET `played` = 1 WHERE `id` = ?',
+            [$episodeId]
+        );
+    }
+
+    /**
+     * Stamps the episode as updated
+     */
+    public function setUpdateTime(int $episodeId, int $time): void
+    {
+        $this->connection->query(
+            'UPDATE `podcast_episode` SET `update_time` = ? WHERE `id` = ?;',
+            [$time, $episodeId]
+        );
+    }
+
+    /**
+     * Writes the editable properties of an existing episode
+     */
+    public function update(Podcast_Episode $episode): void
+    {
+        $this->connection->query(
+            'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?',
+            [
+                $episode->title,
+                $episode->website,
+                $episode->description,
+                $episode->author,
+                $episode->category,
+                $episode->getId(),
+            ]
+        );
     }
 
     /**

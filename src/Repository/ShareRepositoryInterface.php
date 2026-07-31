@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
@@ -67,4 +68,13 @@ interface ShareRepositoryInterface
      * Sets the last access-date and raises the counter
      */
     public function registerAccess(Share $share, DateTimeInterface $date): void;
+
+    /**
+     * Writes the editable properties of an existing share
+     *
+     * Users below MANAGER are scoped to their own shares by the statement itself
+     *
+     * @throws DatabaseException
+     */
+    public function update(Share $share, User $user): void;
 }

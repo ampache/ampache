@@ -224,7 +224,7 @@ a.jp-shuffle,
 a.jp-shuffle:hover,
 a.jp-shuffle-off,
 a.jp-shuffle-off:hover {
-    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.png") no-repeat;
+    background: none no-repeat; /* sprite removed */
 }
 
 a.jp-play {
@@ -339,7 +339,18 @@ a.jp-next:hover {
 
 /* The seeking class is added/removed inside jPlayer */
 .jp-seeking-bg {
-    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.seeking.gif");
+    /* Animated diagonal stripes (barber-pole), pure CSS — replaces seeking.gif.
+       Crisp at any DPI, no bitmap. Theme blue tones from the old gif. */
+    background-image: repeating-linear-gradient(
+        -45deg,
+        #5fa9ce 0, #5fa9ce 22px,
+        #4b9ec8 22px, #4b9ec8 44px);
+    background-size: 62px 100%;
+    animation: jp-seeking-stripes 1.4s linear infinite;
+}
+@keyframes jp-seeking-stripes {
+    from { background-position: 0 0; }
+    to   { background-position: 62px 0; }
 }
 
 /* @end */
@@ -717,12 +728,12 @@ a.jp-video-play-icon {
     margin-top: -50px;
     left: 50%;
     top: 50%;
-    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 0 no-repeat;
+    background: none no-repeat; /* sprite removed */
     text-indent: -9999px;
 }
 
 .jp-video-play:hover a.jp-video-play-icon {
-    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 -100px no-repeat;
+    background: none no-repeat; /* sprite removed */
 }
 
 .jp-jplayer audio,
@@ -1460,3 +1471,106 @@ body.webplayer-hidden #visualizer {
 
 /* @end */
 
+
+/*
+ * Crisp SVG transport icons (Bootstrap Icons, MIT — https://icons.getbootstrap.com/).
+ * Transport buttons: recreate the light circular button in CSS and lay a vector glyph
+ * on top (background-image). Volume buttons: bare light-grey glyph, no circle, enlarged
+ * box so the whole icon stays visible (background-size: contain, no clipping).
+ * Sharp at any DPI. background-* use !important to override the sprite.
+ */
+a.jp-play, a.jp-pause, a.jp-stop, a.jp-previous, a.jp-next,
+a.jp-shuffle, a.jp-shuffle-off, a.jp-repeat, a.jp-repeat-off {
+    background-color: #cfcfcf;
+    border-radius: 50%;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 58% !important;
+    transition: background-color .15s ease;
+}
+a.jp-play:hover, a.jp-pause:hover, a.jp-stop:hover, a.jp-previous:hover, a.jp-next:hover,
+a.jp-shuffle:hover, a.jp-shuffle-off:hover, a.jp-repeat:hover, a.jp-repeat-off:hover {
+    background-color: #fff;
+}
+a.jp-shuffle, a.jp-repeat { opacity: .45; }
+
+/* Volume buttons: bare light-grey glyph, no circle, enlarged box (no clipping). */
+a.jp-mute, a.jp-unmute, a.jp-volume-max {
+    width: 22px !important;
+    height: 22px !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: contain !important;
+    overflow: visible !important;
+    transition: opacity .15s ease;
+}
+a.jp-mute:hover, a.jp-unmute:hover, a.jp-volume-max:hover { opacity: .7; }
+
+a.jp-play       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/play.svg") !important; }
+a.jp-pause      { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/pause.svg") !important; }
+a.jp-stop       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/stop.svg") !important; }
+a.jp-previous   { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/previous.svg") !important; }
+a.jp-next       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/next.svg") !important; }
+a.jp-mute       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/volume-min.svg") !important; }
+a.jp-volume-max { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/volume-max.svg") !important; }
+a.jp-unmute     { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/unmute.svg") !important; }
+a.jp-shuffle, a.jp-shuffle-off { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/shuffle.svg") !important; }
+a.jp-repeat, a.jp-repeat-off   { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/repeat.svg") !important; }
+
+
+/*
+ * Sprite removal completion (Bootstrap Icons, MIT — https://icons.getbootstrap.com/).
+ * Covers the controls the first SVG pass left on the PNG sprite: full-screen /
+ * restore-screen buttons, the video play-overlay, and the seek / play / volume
+ * bars (rebuilt as pure-CSS gradients so no bitmap texture is needed).
+ * With this in place jplayer.midnight.black.png and
+ * jplayer.midnight.black.video.play.png can be deleted. background-* use
+ * !important to override the (now removed) sprite rules above.
+ */
+
+/* Full-screen / restore buttons: match the circular transport-button treatment. */
+a.jp-full-screen, a.jp-restore-screen {
+    background-color: #cfcfcf;
+    border-radius: 50%;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 58% !important;
+    transition: background-color .15s ease;
+}
+a.jp-full-screen:hover, a.jp-restore-screen:hover {
+    background-color: #fff;
+    background-position: center !important;
+}
+a.jp-full-screen    { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/fullscreen.svg") !important; }
+a.jp-restore-screen { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/restore-screen.svg") !important; }
+
+/* Video play-overlay: reuse the audio play glyph on a CSS circle (same
+   treatment as the transport buttons), scaled up for the overlay. */
+a.jp-video-play-icon {
+    background-color: #cfcfcf !important;
+    border-radius: 50% !important;
+    background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/play.svg") !important;
+    background-repeat: no-repeat !important;
+    background-position: 56% center !important;
+    background-size: 46% !important;
+    transition: background-color .15s ease;
+}
+.jp-video-play:hover a.jp-video-play-icon { background-color: #fff !important; }
+
+/* Progress + volume bars: rebuilt as gradients (theme blue), no sprite texture. */
+.jp-seek-bar {
+    background: #696969 !important;
+    background-image: none !important;
+}
+.jp-play-bar {
+    background: linear-gradient(to bottom, #34a9f2, #1c9ced) !important;
+}
+.jp-volume-bar {
+    background: #696969 !important;
+    background-image: none !important;
+}
+.jp-volume-bar-value {
+    background: linear-gradient(to bottom, #34a9f2, #1c9ced) !important;
+}
