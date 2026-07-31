@@ -90,7 +90,6 @@ final readonly class ConfigAction implements ApplicationActionInterface
 
         if (!class_exists(Translations::class)) {
             require_once __DIR__ . '/../../../../templates/test_error_page.inc.php';
-
             throw new Exception('load_gettext()');
         }
 

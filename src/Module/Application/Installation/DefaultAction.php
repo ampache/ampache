@@ -137,7 +137,6 @@ final class DefaultAction implements ApplicationActionInterface
         AmpConfig::set('site_charset', $charset, true);
         if (!class_exists(Translations::class)) {
             require_once __DIR__ . '/../../../../templates/test_error_page.inc.php';
-
             throw new Exception('load_gettext()');
         }
 
