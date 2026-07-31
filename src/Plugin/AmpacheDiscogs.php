@@ -96,7 +96,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
             return [];
         }
 
-        $results = [];
+        $results     = [];
         $isAlbum     = in_array('album', $gather_types);
         $isArtist    = in_array('artist', $gather_types);
         $artistName  = (string) ($media_info['artist'] ?? (($isArtist) ? $media_info['title'] ?? '' : ''));
