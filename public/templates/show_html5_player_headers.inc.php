@@ -469,6 +469,19 @@ if ($iframed) { ?>
             return false;
         }
 
+        // Radio and any other directly referenced url the server did not flag; a redirect still needs `remote`.
+        function isCrossOriginSource(src)
+        {
+            if (!src) {
+                return false;
+            }
+            try {
+                return (new URL(src, window.location.href)).origin !== window.location.origin;
+            } catch (e) {
+                return false;
+            }
+        }
+
         // Build the shared Web Audio graph once. Only ONE MediaElementSourceNode
         // may exist per media element, so ReplayGain and the visualizer share it:
         //   mediaSource -> replaygainNode -> destination
@@ -484,6 +497,9 @@ if ($iframed) { ?>
             }
             var mediaElement = $('.jp-jplayer').find('audio').get(0);
             if (!mediaElement || audioContext === null) {
+                return false;
+            }
+            if (isCrossOriginSource(mediaElement.currentSrc)) {
                 return false;
             }
             mediaSource = audioContext.createMediaElementSource(mediaElement);

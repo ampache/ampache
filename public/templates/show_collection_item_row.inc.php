@@ -1,0 +1,144 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// show_collection_item_row.inc.php
+
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\container_item;
+use Ampache\Repository\Model\displayable_item;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Userflag;
+
+/** @var Ampache\Repository\Model\library_item $libitem */
+/** @var Ampache\Repository\Model\Browse|null $browse */
+/** @var Collection|null $collection */
+/** @var int $collection_track */
+/** @var array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int} $object */
+/** @var string $object_type */
+/** @var string $type_label */
+/** @var bool $show_ratings */
+/** @var bool $can_multiselect */
+/** @var bool $show_multiselect */
+/** @var bool $can_remove */
+/** @var string $t_delete */
+/** @var string $t_reorder */
+/** @var string $t_play */
+/** @var string $t_play_next */
+/** @var string $t_play_last */
+/** @var string $t_add_to_temp */
+/** @var string $t_add_to_list */
+/** @var string $t_download */
+
+// Don't show disabled medias to normal users
+if ((!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) && $libitem instanceof displayable_item) {
+    $thumb = ['width' => 80, 'height' => 80]; ?>
+<?php if (!empty($can_multiselect)) { ?>
+<td class="cel_select">
+    <?php if (!empty($show_multiselect)) { ?>
+    <input type="checkbox" class="multiselect-item" title="<?php echo T_('Select'); ?>"
+           data-id="<?php echo $libitem->getId(); ?>"
+           data-type="<?php echo $object_type; ?>"
+           data-track-id="<?php echo $object['track_id']; ?>" />
+    <?php } ?>
+</td>
+<?php } ?>
+<td class="cel_play">
+    <span class="cel_play_content"><?php echo '<b>' . $collection_track . '</b>'; ?></span>
+    <div class="cel_play_hover">
+    <?php
+    // Not every member is playable, so this asks the same question `Collection::get_medias()` does
+    if (AmpConfig::get('directplay') && $libitem instanceof container_item) {
+        echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId(), 'play_circle', $t_play, 'play_collection_' . $object_type . '_' . $libitem->getId());
+        if (Stream_Playlist::check_autoplay_next()) {
+            echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId() . '&playnext=true', 'menu_open', $t_play_next, 'nextplay_' . $object_type . '_' . $libitem->getId());
+        }
+        if (Stream_Playlist::check_autoplay_append()) {
+            echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId() . '&append=true', 'low_priority', $t_play_last, 'addplay_' . $object_type . '_' . $libitem->getId());
+        }
+    } ?>
+    </div>
+</td>
+<td class="cel_cover">
+<div style="max-width: 80px;">
+    <?php $libitem->display_art($thumb); ?>
+</div>
+</td>
+<td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
+<td class="cel_type"><?php echo scrub_out($type_label); ?></td>
+<td class="cel_artist"><?php echo $libitem->get_f_parent_link(); ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+        <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->getId(), 'new_window', $t_add_to_temp, 'collection_add_' . $libitem->getId());
+    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+            <a id="<?php echo 'add_to_playlist_' . $libitem->getId(); ?>" onclick="showPlaylistDialog(event, '<?php echo $object_type; ?>', '<?php echo $libitem->getId(); ?>')">
+                <?php echo Ui::get_material_symbol('playlist_add', $t_add_to_list); ?>
+            </a>
+        <?php } ?>
+    </span>
+</td>
+<td class="cel_time"><?php echo $libitem->get_f_time(); ?></td>
+<?php if ($show_ratings) { ?>
+    <td class="cel_ratings">
+        <div class="rating">
+            <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
+                <?php echo Rating::show($libitem->getId(), $object_type); ?>
+            </span>
+            <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
+                <?php echo Userflag::show($libitem->getId(), $object_type); ?>
+            </span>
+        </div>
+    </td>
+<?php } ?>
+<td class="cel_action">
+    <?php if (AmpConfig::get('download')) { ?>
+    <a class="nohtml" href="<?php echo AmpConfig::get_web_path(); ?>/stream.php?action=download&<?php echo $object_type; ?>_id=<?php echo $libitem->getId(); ?>" rel="nofollow">
+        <?php echo Ui::get_material_symbol('download', $t_download); ?>
+    </a>
+    <?php
+    }
+    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('share')) {
+        echo Share::display_ui($object_type, $libitem->getId(), false);
+    }
+
+    // The member is named by its `collection_map` row, so removing one of two copies removes the right one
+    if (!empty($can_remove) && isset($browse, $collection)) {
+        echo Ajax::button('?page=collection&action=delete_track&collection_id=' . $collection->getId() . '&browse_id=' . $browse->getId() . '&track_id=' . $object['track_id'], 'close', $t_delete, 'track_del_' . $object['track_id']);
+    } ?>
+</td>
+<?php if (!empty($can_remove)) { ?>
+<td class="cel_drag">
+    <?php echo Ui::get_material_symbol('drag_indicator', $t_reorder); ?>
+</td>
+<?php }
+} ?>

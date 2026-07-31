@@ -39,7 +39,7 @@ final class DisableCatalogCommand extends Command
         parent::__construct('run:disableCatalog', T_('Disable a media catalog'));
 
         $this
-            ->argument('<catalogId>', T_('Catalog ID'))
+            ->argument('<catalogId>', T_('Catalog'))
             ->usage('<bold>  run:disableCatalog 3</end> <comment> ## ' . T_('Disable the catalog with ID 3') . '</end><eol/>');
     }
 
@@ -71,7 +71,7 @@ final class DisableCatalogCommand extends Command
         Catalog::update_enabled(false, (int) $catalogId);
 
         $interactor->ok(
-            sprintf(T_('Disabled catalog %s'), $catalogId),
+            sprintf(T_('%s has been disabled'), $catalogId),
             true
         );
     }

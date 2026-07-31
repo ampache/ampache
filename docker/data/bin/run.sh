@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Dev-environment entrypoint for Ampache (develop8).
+# Dev-environment entrypoint for Ampache (develop).
 #
 # The whole repo is bind-mounted at /var/www/html so you edit code live on the
 # host and refresh the browser. This script only prepares the bits that are not

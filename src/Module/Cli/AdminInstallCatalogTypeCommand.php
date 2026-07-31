@@ -37,7 +37,7 @@ final class AdminInstallCatalogTypeCommand extends Command
         parent::__construct('admin:installCatalogType', T_('Install a catalog type'));
 
         $this
-            ->argument('<type>', T_('Catalog type') . " ('local', 'remote', 'subsonic', 'beets', 'beetsremote', 'Seafile', 'dropbox')")
+            ->argument('<type>', T_('Catalog Type') . " ('local', 'remote', 'subsonic', 'beets', 'beetsremote', 'Seafile', 'dropbox')")
             ->usage('<bold>  admin:installCatalogType subsonic</end> <comment> ## ' . T_('Enable the subsonic catalog type') . '</end><eol/>');
     }
 
@@ -51,9 +51,9 @@ final class AdminInstallCatalogTypeCommand extends Command
         $interactor = $this->io();
 
         if ($this->pluginManager->installCatalogType($type)) {
-            $interactor->ok(sprintf(T_('Installed catalog type %s'), $type), true);
+            $interactor->ok(sprintf(T_('%s has been enabled'), $type), true);
         } else {
-            $interactor->error(sprintf(T_('Could not install catalog type %s'), $type), true);
+            $interactor->error(sprintf('%s: %s', T_('Failed to enable the Catalog module'), $type), true);
         }
     }
 

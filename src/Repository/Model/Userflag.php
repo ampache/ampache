@@ -45,6 +45,7 @@ class Userflag extends database_object
         'album_disk',
         'album',
         'artist',
+        'collection',
         'folder',
         'live_stream',
         'playlist',
@@ -412,13 +413,18 @@ class Userflag extends database_object
 
         debug_event(self::class, sprintf('Setting userflag for %s %d to %s (%s)', $this->type, $this->id, $flagged, $date), 4);
 
+        // a playlist, collection, folder, search or live stream can be flagged but carries no weight column
+        $weighted = in_array($this->type, Stats::WEIGHT_TYPES, true);
+
         if (!$flagged) {
             $sql    = "DELETE FROM `user_flag` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
             $params = [$this->id, $this->type, $user_id];
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [false]);
 
             // adjust weight
-            Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
+            if ($weighted) {
+                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
+            }
         } else {
             $sql    = "REPLACE INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
             $params = [$this->id, $this->type, $user_id, $date];
@@ -426,7 +432,9 @@ class Userflag extends database_object
 
             $this->getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, $this->id, $date);
 
-            Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
+            if ($weighted) {
+                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
+            }
         }
 
         Dba::write($sql, $params);

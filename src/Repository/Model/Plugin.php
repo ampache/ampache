@@ -178,7 +178,7 @@ class Plugin
 
         $admin_path = AmpConfig::get_web_path('/admin');
 
-        echo '<div id="autoupdate">';
+        echo '<div id="autoupdate_plugins">';
         echo '<span>' . T_('Update available') . '</span> ' . T_('You have Plugins that need an update!');
         echo '<br />';
         echo '<a class="nohtml" href="' . $web_path . '/update.php?type=sources&action=update_plugins">' . T_('Update Plugins automatically') . '</a> | <a class="nohtml" href="' . $admin_path . '/modules.php?action=show_plugins">' . T_('Manage Plugins') . '</a>';

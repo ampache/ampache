@@ -274,7 +274,6 @@ final class StatsMethod implements MethodInterface
 
     /**
      * @param array<string, mixed> $input
-     *
      * @return array<int|string>
      */
     private function getRandom(string $type, User $user, int $userId, int $limit, array $input): array

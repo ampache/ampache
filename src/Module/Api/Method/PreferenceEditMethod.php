@@ -109,7 +109,7 @@ final class PreferenceEditMethod implements MethodInterface
         }
 
         // fix preferences that are missing for user
-        User::fix_preferences($user->getId());
+        Preference::fix_user_preferences($user->getId());
 
         // allow getting system prefs if you have access
         $userId = ($all || $default)

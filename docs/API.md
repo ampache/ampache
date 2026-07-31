@@ -280,7 +280,6 @@ All Data methods return HTTP 200 responses
 * deleted_songs
 * deleted_videos
 * flag
-* folder **Ampache 8.0.0+**
 * folders **Ampache 8.0.0+**
 * followers
 * following

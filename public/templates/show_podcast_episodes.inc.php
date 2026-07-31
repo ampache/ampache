@@ -88,7 +88,7 @@ foreach ($object_ids as $episode_id) {
     if ($libitem->isNew()) {
         continue;
     } ?>
-        <tr id="podcast_episode_<?php echo $libitem->id; ?>">
+        <tr id="podcast_episode_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="podcast_episode" data-object-id="<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_podcast_episode_row.inc.php'); ?>
         </tr>
         <?php } ?>

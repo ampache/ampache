@@ -107,7 +107,7 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
         // User::update() with the login password and is applied separately once the rest of the form has been accepted.
         $subsonicPassword = (string) ($_POST['subsonic_password1'] ?? '');
         if ($subsonicPassword !== '' && $subsonicPassword !== (string) ($_POST['subsonic_password2'] ?? '')) {
-            AmpError::add('subsonic_password', T_("Subsonic passwords do not match"));
+            AmpError::add('subsonic_password', T_("Passwords do not match"));
         }
 
         $this->ui->showHeader();

@@ -155,7 +155,7 @@ final class PreferenceCreateMethod implements MethodInterface
         );
 
         // fix preferences that are missing for user
-        User::fix_preferences($user->getId());
+        Preference::fix_user_preferences($user->getId());
 
         return $response;
     }

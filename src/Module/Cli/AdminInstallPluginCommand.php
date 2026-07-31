@@ -37,7 +37,7 @@ final class AdminInstallPluginCommand extends Command
         parent::__construct('admin:installPlugin', T_('Install a plugin'));
 
         $this
-            ->argument('<name>', T_('Plugin name'))
+            ->argument('<name>', T_('Name'))
             ->usage('<bold>  admin:installPlugin Last.FM</end> <comment> ## ' . T_('Install the Last.FM plugin') . '</end><eol/>');
     }
 
@@ -51,9 +51,9 @@ final class AdminInstallPluginCommand extends Command
         $interactor = $this->io();
 
         if ($this->pluginManager->installPlugin($name)) {
-            $interactor->ok(sprintf(T_('Installed plugin %s'), $name), true);
+            $interactor->ok(sprintf(T_('%s has been enabled'), $name), true);
         } else {
-            $interactor->error(sprintf(T_('Could not install plugin %s'), $name), true);
+            $interactor->error(sprintf('%s: %s', T_('Unable to install this Plugin'), $name), true);
         }
     }
 

@@ -164,7 +164,6 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
      * Sync all podcast-items within the given catalogs
      *
      * @param iterable<Catalog> $catalogs
-     *
      * @return int Amount of new episodes
      */
     public function syncForCatalogs(

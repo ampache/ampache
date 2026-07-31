@@ -102,6 +102,7 @@ input[type=submit]:focus:active {
     border: 2px solid #ffc763;
 }
 
+.playlistdialogstyle.ui-dialog,
 .playlistdialogstyle.ui-dialog .ui-dialog-content,
 .sharedialogstyle.ui-dialog .ui-dialog-content,
 .playlistdialogstyle.ui-widget-content a,
@@ -521,7 +522,10 @@ span.fatalerror {
 
 .item_art .item_art_play .item_art_play_icon,
 .item_art .item_art_play_150 .item_art_play_icon {
-    background-image: url('../images/videoplay.png');
+    background-image: url('../images/videoplay.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
 .item_art .item_art_actions {
@@ -542,6 +546,22 @@ span.fatalerror {
 
 #information_actions a:hover,
 #information_actions li:hover {
+    color: #fff;
+}
+
+.multiselect-actions {
+    background-color: #262626;
+    color: #ccc;
+}
+
+/* outranks both the striped-row background and the tr:hover gradient, so a selected row always reads as selected */
+table.tabledata tbody tr.selected,
+table.tabledata tbody tr.selected:hover {
+    background-color: rgba(255, 157, 0, 0.28);
+    background-image: none;
+}
+
+.multiselect-actions a:hover {
     color: #fff;
 }
 
@@ -591,7 +611,7 @@ div.jp-playlist {
 }
 
 .jp-no-solution {
-    background: #121112 url("../../../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
+    background: linear-gradient(to bottom, #3b3b3b, #111212);
     border-top: 1px solid #191919;
 }
 

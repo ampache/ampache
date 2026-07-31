@@ -108,7 +108,7 @@ final class UpdateUserAction extends AbstractUserAction
         }
 
         if ($subsonicPass1 !== $subsonicPass2 && $subsonicPass1 !== '') {
-            AmpError::add('subsonic_password', T_("Subsonic passwords do not match"));
+            AmpError::add('subsonic_password', T_("Passwords do not match"));
         }
 
         // Check the mail for correct address formation.

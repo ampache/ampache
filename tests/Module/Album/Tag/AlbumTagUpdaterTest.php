@@ -27,13 +27,18 @@ namespace Ampache\Module\Album\Tag;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class AlbumTagUpdaterTest extends TestCase
 {
+    private ContainerInterface&MockObject $dic;
     private SongRepositoryInterface&MockObject $songRepository;
     private AlbumTagUpdater $subject;
+    private TagRepositoryInterface&MockObject $tagRepository;
 
     public function testUpdateTagsDoesNotTouchSongsWhenNoChildPropagationRequested(): void
     {
@@ -75,6 +80,18 @@ class AlbumTagUpdaterTest extends TestCase
     protected function setUp(): void
     {
         $this->songRepository = $this->createMock(SongRepositoryInterface::class);
+        $this->tagRepository  = $this->createMock(TagRepositoryInterface::class);
+        $this->dic            = $this->createMock(ContainerInterface::class);
+
+        // debug_event() pulls the logger off the same container, so this cannot be a single-service stub
+        $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            TagRepositoryInterface::class => $this->tagRepository,
+            default => $this->createMock(LoggerInterface::class),
+        });
+
+        // `Tag` reaches its repository through the `global $dic` bridge; phpunit.xml sets backupGlobals
+        // so the real container is restored after every test
+        $GLOBALS['dic'] = $this->dic;
 
         $this->subject = new AlbumTagUpdater($this->songRepository);
     }

@@ -46,12 +46,21 @@ use Ampache\Repository\ShoutRepositoryInterface;
  */
 class Browse extends Query
 {
+    /**
+     * Browse types that lay out a multi-select checkbox column. Only these screens offer the option in the
+     * view menu, and only these save a cookie for it.
+     */
+    public const array MULTISELECT_TYPES = [
+        'playlist_media',
+    ];
     private const array BROWSE_TYPES = [
         'album_disk',
         'album',
         'artist',
         'broadcast',
         'catalog',
+        'collection',
+        'collection_items',
         'democratic',
         'folder',
         'follower',
@@ -106,7 +115,7 @@ class Browse extends Query
      * add_supplemental_object
      * Legacy function, need to find a better way to do that
      */
-    public function add_supplemental_object(string $name, Playlist|Search|Folder $object): bool
+    public function add_supplemental_object(string $name, Playlist|Search|Folder|Collection $object): bool
     {
         $_SESSION['browse']['supplemental'][$this->id][$name] = $object;
 
@@ -126,7 +135,7 @@ class Browse extends Query
     /**
      * get_supplemental_objects
      * This returns an object so we can reuse it again.
-     * @return array<string, Playlist|Search|Folder>
+     * @return array<string, Playlist|Search|Folder|Collection>
      */
     public function get_supplemental_objects(): array
     {
@@ -233,6 +242,17 @@ class Browse extends Query
     }
 
     /**
+     * is_use_select
+     *
+     * Whether the checkboxes and the action bar of a multi-select browse are shown. Off unless the user asked
+     * for them in the view menu; batch actions are not something everyone wants in the way of a track list.
+     */
+    public function is_use_select(): bool
+    {
+        return make_bool($this->_state['use_select'] ?? false);
+    }
+
+    /**
      * save_cookie_params
      */
     public function save_cookie_params(string $option, string $value): void
@@ -310,7 +330,7 @@ class Browse extends Query
         foreach ((explode(';', $cond)) as $condition) {
             $filter = (explode(',', $condition));
             if (!empty($filter[0])) {
-                $this->set_filter(strtolower($filter[0]), ($filter[1] ?: null));
+                $this->set_filter(strtolower($filter[0]), (($filter[1] ?? '') ?: null));
             }
         }
     }
@@ -444,6 +464,11 @@ class Browse extends Query
             //    $this->set_grid_view(Core::get_cookie($name) == 'true', false);
             //}
 
+            $name = 'browse_' . $type . '_select';
+            if ((isset($_COOKIE[$name]))) {
+                $this->set_use_select(Core::get_cookie($name) == 'true', false);
+            }
+
             parent::set_type($type, $custom_base, $parameters);
         } else {
             debug_event(self::class, 'set_type invalid type: ' . $type, 5);
@@ -495,6 +520,18 @@ class Browse extends Query
     }
 
     /**
+     * set_use_select
+     */
+    public function set_use_select(bool $use_select, bool $savecookie = true): void
+    {
+        if ($savecookie && in_array($this->get_type(), self::MULTISELECT_TYPES)) {
+            $this->save_cookie_params('select', ($use_select) ? 'true' : 'false');
+        }
+
+        $this->_state['use_select'] = $use_select;
+    }
+
+    /**
      * show_next_link
      */
     public function show_next_link(string $argument_param = ''): void
@@ -523,34 +560,13 @@ class Browse extends Query
         $type            = $this->get_type();
         $limit_threshold = $this->get_threshold();
 
+        $build_cache = false;
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
         } elseif ($type !== 'song_preview' && $type !== 'folder') {
             /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
             $this->save_objects($object_ids);
-
-            // build cache for new browses
-            switch ($type) {
-                case 'song':
-                    Song::build_cache($this->_squashList($object_ids), $limit_threshold);
-                    break;
-                case 'album':
-                    Album::build_cache($this->_squashList($object_ids));
-                    break;
-                case 'artist':
-                    Artist::build_cache($this->_squashList($object_ids), true, $limit_threshold);
-                    break;
-                case 'playlist':
-                    Playlist::build_cache($this->_squashList($object_ids));
-                    break;
-                case 'tag':
-                case 'tag_hidden':
-                    Tag::build_cache($this->_squashList($object_ids));
-                    break;
-                case 'video':
-                    Video::build_cache($this->_squashList($object_ids));
-                    break;
-            }
+            $build_cache = true;
         }
 
         // Limit is based on the user's preferences if this is not a
@@ -577,6 +593,31 @@ class Browse extends Query
                 echo '<div class="error browse-too-large">' . scrub_out(sprintf(nT_('This view has %d item and is too large to show all at once (limit %d). Enable paging or narrow your filters.', 'This view has %d items and is too large to show all at once (limit %d). Enable paging or narrow your filters.', $count), $count, $limit)) . '</div>';
 
                 return;
+            }
+        }
+
+        if ($build_cache) {
+            /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
+            switch ($type) {
+                case 'song':
+                    Song::build_cache($this->_squashList($object_ids), $limit_threshold);
+                    break;
+                case 'album':
+                    Album::build_cache($this->_squashList($object_ids));
+                    break;
+                case 'artist':
+                    Artist::build_cache($this->_squashList($object_ids), true, $limit_threshold);
+                    break;
+                case 'playlist':
+                    Playlist::build_cache($this->_squashList($object_ids));
+                    break;
+                case 'tag':
+                case 'tag_hidden':
+                    Tag::build_cache($this->_squashList($object_ids));
+                    break;
+                case 'video':
+                    Video::build_cache($this->_squashList($object_ids));
+                    break;
             }
         }
 
@@ -649,6 +690,10 @@ class Browse extends Query
             if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
                 $browse->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true', false);
             }
+
+            if (in_array($type, self::MULTISELECT_TYPES) && array_key_exists('browse_' . $type . '_select', $_COOKIE)) {
+                $browse->set_use_select(Core::get_cookie('browse_' . $type . '_select') == 'true', false);
+            }
         }
 
         $box_title = $this->get_title('');
@@ -719,6 +764,16 @@ class Browse extends Query
             case 'folder':
                 $box_title = $this->get_title(T_('Folders'));
                 $box_req   = Ui::find_template('show_folders.inc.php');
+                break;
+            case 'collection':
+                $box_title = $this->get_title(T_('Collections') . $match);
+                $box_req   = Ui::find_template('show_collections.inc.php');
+                break;
+            case 'collection_items':
+                // Rows, not tiles: the members are of mixed types and each one has to show which type it is
+                $browse->set_grid_view(false);
+                $box_title = $this->get_title(T_('Collection Items') . $match);
+                $box_req   = Ui::find_template('show_collection_items.inc.php');
                 break;
             case 'playlist_localplay':
                 $browse->set_grid_view(false);

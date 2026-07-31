@@ -445,7 +445,7 @@ class Json6_Data
      *
      * This takes a name array of objects and return the data in JSON browse object
      *
-     * @param array<int|string>|array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array<int, array{id: int|string, name: string}> $objects Name array from `Catalog::get_name_array()`
      */
     public static function browses(array $objects, string $parent_type, string $child_type, ?int $parent_id = null, ?int $catalog_id = null): string
     {

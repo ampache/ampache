@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 94
+config_version = 95
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -37,7 +37,7 @@ config_version = 94
 ;composer_binary_path = "composer"
 
 ; By default Ampache doesn't install dev packages using the --no-dev parameter
-; disable this setting to install dev packages (e.g. composer install --prefer-source --no-interaction)
+; disable this setting to install dev packages (e.g. composer install --prefer-dist --no-interaction)
 ; DEFAULT: "true"
 composer_no_dev = "true"
 
@@ -689,7 +689,12 @@ album_art_min_height = 30
 ; Disable this option to require a valid user session for viewing images.
 ; When enabled, images can be displayed without checking for an active session,
 ; bypassing `use_auth` and `require_session` settings.
-; If disabled, image links will require a valid session to be accessed.
+; If disabled, image links will require a valid session to be accessed. A session
+; cookie, an `auth` parameter, an `apiKey` or a Subsonic token all satisfy this.
+; Disabling only takes effect when `use_auth` and `require_session` are both on;
+; with either of them off images stay public whatever this is set to.
+; Clients that cannot present a session are not sent image links at all, so the
+; Subsonic albumInfo/artistInfo image urls are empty while this is disabled.
 ; DEFAULT: "true"
 public_images = "true"
 
@@ -891,6 +896,16 @@ wanted_types = "album,official"
 ; Use labels to browse artists per label membership.
 ; DEFAULT: "false"
 ;label = "true"
+
+; Label Ignore Pattern
+; Publisher tags often hold placeholder text instead of a real label, and these are neither
+; created during a scan nor kept by the catalog clean up. The value is a regex, matched
+; case-insensitively against the whole name, and replaces the default shown below rather than
+; adding to it. Set it to a pattern that cannot match (for example "(?!)") to keep every name.
+; The last branch of the default drops names holding fewer than two letters or digits, such as
+; "/<" or "/v/", while leaving short real labels like "XL" and "4AD" alone.
+; DEFAULT: "^\[no label\]|^not on label\b|^\[fwd:|^self[\s-]*released?\b|\(self[\s-]*released?\)|^[^\p{L}\p{N}]*[\p{L}\p{N}]?[^\p{L}\p{N}]*$"
+;label_ignore_pattern = "^\[no label\]|^not on label\b"
 
 ; Broadcasts
 ; Allow users to broadcast music.

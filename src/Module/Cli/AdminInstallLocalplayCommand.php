@@ -41,7 +41,7 @@ final class AdminInstallLocalplayCommand extends Command
 
         $this
             ->option('-u|--user', T_('User ID to receive the localplay preferences') . ' (-1 = ' . T_('All') . ')', 'intval', -1)
-            ->argument('<type>', T_('Localplay type') . " ('mpd', 'upnp', 'httpq', ...)")
+            ->argument('<type>', T_('Localplay Type') . " ('mpd', 'upnp', 'httpq', ...)")
             ->usage('<bold>  admin:installLocalplay mpd</end> <comment> ## ' . T_('Enable the mpd localplay controller') . '</end><eol/>');
     }
 
@@ -61,9 +61,9 @@ final class AdminInstallLocalplayCommand extends Command
         }
 
         if ($this->pluginManager->installLocalplay($type, (int) $this->values()['user'])) {
-            $interactor->ok(sprintf(T_('Installed localplay controller %s'), $type), true);
+            $interactor->ok(sprintf(T_('%s has been enabled'), $type), true);
         } else {
-            $interactor->error(sprintf(T_('Could not install localplay controller %s'), $type), true);
+            $interactor->error(sprintf('%s: %s', T_('Failed to enable the Localplay module'), $type), true);
         }
     }
 

@@ -37,7 +37,7 @@ final class AdminUninstallLocalplayCommand extends Command
         parent::__construct('admin:uninstallLocalplay', T_('Uninstall a localplay controller'));
 
         $this
-            ->argument('<type>', T_('Localplay type'))
+            ->argument('<type>', T_('Localplay Type'))
             ->usage('<bold>  admin:uninstallLocalplay mpd</end> <comment> ## ' . T_('Disable the mpd localplay controller') . '</end><eol/>');
     }
 
@@ -51,9 +51,9 @@ final class AdminUninstallLocalplayCommand extends Command
         $interactor = $this->io();
 
         if ($this->pluginManager->uninstallLocalplay($type)) {
-            $interactor->ok(sprintf(T_('Uninstalled localplay controller %s'), $type), true);
+            $interactor->ok(sprintf(T_('%s has been disabled'), $type), true);
         } else {
-            $interactor->error(sprintf(T_('Could not uninstall localplay controller %s'), $type), true);
+            $interactor->error(sprintf('%s: %s', T_('Failed'), $type), true);
         }
     }
 

@@ -90,7 +90,7 @@ final class AddUserAction extends AbstractUserAction
 
         /* make sure the username doesn't already exist */
         if ($this->userRepository->idByUsername($username) > 0) {
-            AmpError::add('username', T_('That Username already exists'));
+            AmpError::add('username', T_('That name already exists'));
         }
 
         // Check the mail for correct address formation and if it already exists

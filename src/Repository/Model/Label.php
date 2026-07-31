@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Label\LabelNameFilterInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -44,6 +45,9 @@ class Label extends database_object implements
     public bool $active     = true;
     public ?string $address = null;
 
+    /** @var int[] $albums */
+    public array $albums = [];
+
     /** @var int[] $artists */
     public array $artists = [];
 
@@ -58,6 +62,7 @@ class Label extends database_object implements
     public ?string $summary    = null;
     public ?int $user          = null;
     public ?string $website    = null;
+    private ?int $album_count  = null;
     private ?int $artist_count = null;
     private ?string $f_link    = null;
 
@@ -147,6 +152,11 @@ class Label extends database_object implements
      */
     public static function helper(string $name): ?int
     {
+        // tags carry placeholders like `[no label]` for releases that never had a publisher
+        if (self::getLabelNameFilter()->isIgnored($name)) {
+            return null;
+        }
+
         $label_data = [
             'name' => $name,
             'mbid' => null,
@@ -171,7 +181,19 @@ class Label extends database_object implements
     {
         if ($object_type == 'artist') {
             self::getLabelRepository()->migrateArtist($old_object_id, $new_object_id);
+        } elseif ($object_type == 'album') {
+            self::getLabelRepository()->migrateAlbum($old_object_id, $new_object_id);
         }
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getLabelNameFilter(): LabelNameFilterInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelNameFilterInterface::class);
     }
 
     /**
@@ -193,6 +215,31 @@ class Label extends database_object implements
         if ($this->has_art() || $force) {
             Art::display('label', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
         }
+    }
+
+    /**
+     * get_album_count
+     */
+    public function get_album_count(): int
+    {
+        if ($this->album_count === null) {
+            $this->album_count = count($this->get_albums());
+        }
+
+        return $this->album_count;
+    }
+
+    /**
+     * get_albums
+     * @return int[]
+     */
+    public function get_albums(): array
+    {
+        if (empty($this->albums)) {
+            $this->albums = self::getLabelRepository()->getAlbums($this);
+        }
+
+        return $this->albums;
     }
 
     /**

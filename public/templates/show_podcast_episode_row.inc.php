@@ -78,10 +78,10 @@ if ($is_mashup) {
 <td class="cel_add">
     <span class="cel_item_add">
 <?php
-    echo Ajax::button('?action=basket&type=podcast_episode&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_' . $libitem->id);
+    echo Ajax::button('?action=basket&type=podcast_episode&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_podcast_episode_' . $libitem->id);
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
-        <a id="<?php echo 'add_to_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $libitem->id; ?>')">
-            <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+        <a id="<?php echo 'add_to_playlist_podcast_episode_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $libitem->id; ?>')">
+            <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
         </a>
     <?php } ?>
     </span>

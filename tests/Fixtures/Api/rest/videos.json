@@ -16,7 +16,9 @@
             "flag": false,
             "rating": null,
             "averagerating": null,
-            "playcount": 1
+            "playcount": 1,
+            "last_played": null,
+            "catalog": "68"
         },
         {
             "id": "1470",
@@ -32,7 +34,9 @@
             "flag": false,
             "rating": null,
             "averagerating": null,
-            "playcount": 0
+            "playcount": 0,
+            "last_played": null,
+            "catalog": "68"
         }
     ]
 }

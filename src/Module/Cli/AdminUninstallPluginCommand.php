@@ -37,7 +37,7 @@ final class AdminUninstallPluginCommand extends Command
         parent::__construct('admin:uninstallPlugin', T_('Uninstall a plugin'));
 
         $this
-            ->argument('<name>', T_('Plugin name'))
+            ->argument('<name>', T_('Name'))
             ->usage('<bold>  admin:uninstallPlugin Last.FM</end> <comment> ## ' . T_('Uninstall the Last.FM plugin') . '</end><eol/>');
     }
 
@@ -51,9 +51,9 @@ final class AdminUninstallPluginCommand extends Command
         $interactor = $this->io();
 
         if ($this->pluginManager->uninstallPlugin($name)) {
-            $interactor->ok(sprintf(T_('Uninstalled plugin %s'), $name), true);
+            $interactor->ok(sprintf(T_('%s has been disabled'), $name), true);
         } else {
-            $interactor->error(sprintf(T_('Could not uninstall plugin %s'), $name), true);
+            $interactor->error(sprintf('%s: %s', T_('Failed'), $name), true);
         }
     }
 

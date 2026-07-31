@@ -55,6 +55,7 @@ use Ampache\Module\System\Update\UpdateHelperInterface;
 use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Browse;
@@ -77,6 +78,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
         private FunctionCheckerInterface $functionChecker,
         private AjaxUriRetrieverInterface $ajaxUriRetriever,
         private PlaylistLoaderInterface $playlistLoader,
+        private CollectionRepositoryInterface $collectionRepository,
         private VideoRepositoryInterface $videoRepository,
         private UpdateInfoRepositoryInterface $updateInfoRepository,
         private UpdateHelperInterface $updateHelper,
@@ -161,13 +163,16 @@ final readonly class GuiFactory implements GuiFactoryInterface
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
         string $object_id,
+        string $object_groups = '',
     ): NewPlaylistDialogAdapterInterface {
         return new NewPlaylistDialogAdapter(
             $this->playlistLoader,
             $this->ajaxUriRetriever,
+            $this->collectionRepository,
             $gatekeeper,
             $object_type,
-            $object_id
+            $object_id,
+            $object_groups
         );
     }
 

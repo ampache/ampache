@@ -260,7 +260,6 @@ class Podcast extends database_object implements
      * Returns the ids of all available episodes
      *
      * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
-     *
      * @return list<int>
      */
     public function getEpisodeIds(
@@ -433,7 +432,7 @@ class Podcast extends database_object implements
         // Feed must be http/https
         if (
             str_starts_with($value, 'http://')
-            || !str_starts_with($value, 'https://')
+            || str_starts_with($value, 'https://')
         ) {
             $this->feed = $value;
         }

@@ -57,7 +57,6 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
      * @template TITemType of library_item
      *
      * @param list<class-string<TITemType>> $allowedItems List of all possible class-/interface-names
-     *
      * @return null|TITemType
      */
     public function load(
@@ -71,6 +70,7 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
             LibraryItemEnum::ART => new Art($objectId),
             LibraryItemEnum::ARTIST => new Artist($objectId),
             LibraryItemEnum::BROADCAST => $this->dic->get(BroadcastRepositoryInterface::class)->findById($objectId),
+            LibraryItemEnum::COLLECTION => new Collection($objectId),
             LibraryItemEnum::DEMOCRATIC => new Democratic($objectId),
             LibraryItemEnum::FOLDER => $this->dic->get(FolderRepositoryInterface::class)->findById($objectId),
             LibraryItemEnum::LABEL => $this->dic->get(LabelRepositoryInterface::class)->findById($objectId),

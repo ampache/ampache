@@ -68,6 +68,7 @@ final class AlbumDiskQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
+        'addition_time',
         'album_artist_album_sort',
         'album_artist_title',
         'album_artist',
@@ -377,12 +378,14 @@ final class AlbumDiskQuery implements QueryInterface
                 $sql   = sprintf('`album_disk`.`%s` %s, `album`.`name`, `album_disk`.`disk`', $field, $order);
                 $order = '';
                 break;
+            case 'addition_time':
             case 'barcode':
             case 'catalog_number':
             case 'release_status':
             case 'release_type':
             case 'subtitle':
             case 'version':
+                // a disk has no times of its own, so these all come from the album it belongs to via the join
                 $sql   = sprintf('`album`.`%s` %s, `album`.`name`, `album_disk`.`disk`', $field, $order);
                 $order = '';
                 break;

@@ -31,7 +31,9 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginGatherArtsInterface;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Psr\Container\ContainerExceptionInterface;
@@ -49,6 +51,7 @@ final readonly class ArtCollector implements ArtCollectorInterface
         private ContainerInterface $dic,
         private LoggerInterface $logger,
         private ConfigContainerInterface $configContainer,
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {}
 
     /**
@@ -115,12 +118,18 @@ final readonly class ArtCollector implements ArtCollectorInterface
             $limit        = ($search_limit === null) ? self::ART_SEARCH_LIMIT : (int) $search_limit;
         }
 
-        if ($type == 'playlist') {
+        // playlists, smartlists and collections all build their art out of what they hold, so none of the
+        // configured providers can say anything useful about them
+        $itemType = LibraryItemEnum::tryFrom($type);
+        $libitem  = ($itemType === null)
+            ? null
+            : $this->libraryItemLoader->load($itemType, $art->object_id);
+
+        if ($libitem instanceof playlist_object) {
             $this->logger->notice(
-                "Method used: playlist",
+                'Method used: ' . $type,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-            $playlist = new Playlist($art->object_id);
 
             // This returns before the configured methods run, so the art it already has would never be
             // offered back. Keep it at the front of the list the way the `db` method would.
@@ -128,12 +137,12 @@ final readonly class ArtCollector implements ArtCollectorInterface
             if ($art->has_db_info() && $art->id) {
                 $results[] = [
                     'db' => $art->id,
-                    'title' => T_('Current Art'),
+                    'title' => T_('Art'),
                     'mime' => $art->raw_mime,
                 ];
             }
 
-            return array_merge($results, $playlist->gather_art($limit));
+            return array_merge($results, $libitem->gather_art($limit));
         }
 
         $user = (Core::get_global('user') instanceof User)

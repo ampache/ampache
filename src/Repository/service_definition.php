@@ -44,6 +44,7 @@ return [
     LicenseRepositoryInterface::class => autowire(LicenseRepository::class),
     LiveStreamRepositoryInterface::class => autowire(LiveStreamRepository::class),
     ShoutRepositoryInterface::class => autowire(ShoutRepository::class),
+    CollectionRepositoryInterface::class => autowire(CollectionRepository::class),
     FolderRepositoryInterface::class => autowire(FolderRepository::class),
     UserRepositoryInterface::class => autowire(UserRepository::class),
     UserActivityRepositoryInterface::class => autowire(UserActivityRepository::class),
@@ -64,5 +65,6 @@ return [
     PodcastEpisodeRepositoryInterface::class => autowire(PodcastEpisodeRepository::class),
     ImageRepositoryInterface::class => autowire(ImageRepository::class),
     AlbumDiskRepositoryInterface::class => autowire(AlbumDiskRepository::class),
+    TagRepositoryInterface::class => autowire(TagRepository::class),
     LibraryItemLoaderInterface::class => autowire(LibraryItemLoader::class),
 ];

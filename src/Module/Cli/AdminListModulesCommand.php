@@ -51,15 +51,15 @@ final class AdminListModulesCommand extends Command
         $interactor->info(T_('Plugins'), true);
         foreach ($this->pluginManager->getPlugins() as $plugin) {
             $state = $plugin['installed']
-                ? sprintf(T_('installed v%d'), $plugin['installedVersion']) . ($plugin['upgradeAvailable'] ? sprintf(' -> v%d', $plugin['availableVersion']) : '')
-                : T_('not installed');
+                ? sprintf('%s: %d', T_('Installed Version'), $plugin['installedVersion']) . ($plugin['upgradeAvailable'] ? sprintf(' -> v%d', $plugin['availableVersion']) : '')
+                : T_('Disabled');
             $interactor->ok(sprintf('  %s (%s)', $plugin['name'], $state), true);
         }
 
         $interactor->info(T_('Catalog Types'), true);
         foreach ($this->pluginManager->getCatalogTypes() as $catalogType) {
             $interactor->ok(
-                sprintf('  %s (%s)', $catalogType['type'], $catalogType['installed'] ? T_('installed') : T_('not installed')),
+                sprintf('  %s (%s)', $catalogType['type'], $catalogType['installed'] ? T_('Enabled') : T_('Disabled')),
                 true
             );
         }
@@ -67,7 +67,7 @@ final class AdminListModulesCommand extends Command
         $interactor->info(T_('Localplay Controllers'), true);
         foreach ($this->pluginManager->getLocalplayTypes() as $localplay) {
             $interactor->ok(
-                sprintf('  %s (%s)', $localplay['type'], $localplay['enabled'] ? T_('installed') : T_('not installed')),
+                sprintf('  %s (%s)', $localplay['type'], $localplay['enabled'] ? T_('Enabled') : T_('Disabled')),
                 true
             );
         }

@@ -47,30 +47,31 @@ class Video extends database_object implements
 {
     protected const string DB_TABLENAME = 'video';
 
-    public ?int $addition_time  = null;
-    public ?string $audio_codec = null;
-    public ?int $bitrate        = null;
-    public int $catalog;
-    public ?int $channels  = null;
-    public ?int $display_x = null;
-    public ?int $display_y = null;
-    public int $enabled;
-    public ?string $file      = null;
-    public ?float $frame_rate = null;
-    public int $id            = 0;
-    public ?string $link      = null;
-    public ?string $mime      = null;
-    public ?string $mode      = null;
-    public bool $played;
-    public ?int $release_date = null;
-    public int $resolution_x;
-    public int $resolution_y;
-    public int $size;
-    public int $time;
-    public ?string $title   = null;
-    public int $total_count = 0;
-    public int $total_skip  = 0;
-    public string $type;
+    public ?int $addition_time           = null;
+    public ?string $audio_codec          = null;
+    public ?int $bitrate                 = null;
+    public int $catalog                  = 0;
+    public ?int $channels                = null;
+    public ?int $display_x               = null;
+    public ?int $display_y               = null;
+    public int $enabled                  = 0;
+    public ?string $file                 = null;
+    public ?float $frame_rate            = null;
+    public int $id                       = 0;
+    public ?int $last_played             = null; // When this was last streamed, as a unix timestamp; null until it has been played.
+    public ?string $link                 = null;
+    public ?string $mime                 = null;
+    public ?string $mode                 = null;
+    public bool $played                  = false;
+    public ?int $release_date            = null;
+    public int $resolution_x             = 0;
+    public int $resolution_y             = 0;
+    public int $size                     = 0;
+    public int $time                     = 0;
+    public ?string $title                = null;
+    public int $total_count              = 0;
+    public int $total_skip               = 0;
+    public string $type                  = '';
     public ?int $update_time             = null;
     public int|float|null $video_bitrate = null;
     public ?string $video_codec          = null;
@@ -121,6 +122,7 @@ class Video extends database_object implements
         $this->frame_rate    = isset($info['frame_rate']) ? (float) $info['frame_rate'] : null;
         $this->video_bitrate = isset($info['video_bitrate']) ? (float) $info['video_bitrate'] : null;
         $this->release_date  = isset($info['release_date']) ? (int) $info['release_date'] : null;
+        $this->last_played   = isset($info['last_played']) ? (int) $info['last_played'] : null;
         $this->total_count   = (int) ($info['total_count'] ?? 0);
         $this->total_skip    = (int) ($info['total_skip'] ?? 0);
 

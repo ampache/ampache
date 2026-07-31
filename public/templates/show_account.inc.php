@@ -96,7 +96,7 @@ $access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMI
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Confirm Subsonic Password'); ?>:</td>
+            <td><?php echo T_('Confirm Password'); ?>:</td>
             <td><input id="subsonic_password2" type="password" name="subsonic_password2" maxlength="64" autocomplete="new-password" /></td>
         </tr>
         <tr>

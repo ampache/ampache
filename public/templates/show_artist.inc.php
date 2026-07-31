@@ -204,6 +204,12 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=artist_random&id=' . $artist->id, 'shuffle', T_('Random All to Temporary Playlist'), 'random_' . $artist->id); ?>
         </li>
+        <li>
+            <a id="<?php echo 'add_to_playlist_' . $artist->id; ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $artist->id; ?>')">
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+                <?php echo Ui::get_add_to_list_label(); ?>
+            </a>
+        </li>
 <?php } ?>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <li>

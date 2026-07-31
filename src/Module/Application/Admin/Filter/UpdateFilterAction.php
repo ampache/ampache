@@ -70,7 +70,7 @@ final class UpdateFilterAction extends AbstractFilterAction
 
         // make sure the filter doesn't already exist
         if ((Catalog::filter_name_exists($filter_name, $filter_id))) {
-            AmpError::add('name', T_('That filter name already exists'));
+            AmpError::add('name', T_('That name already exists'));
         }
 
         // If we've got an error then show add form!

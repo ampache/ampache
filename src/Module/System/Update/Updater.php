@@ -53,7 +53,6 @@ final readonly class Updater implements UpdaterInterface
      *
      * @param bool $migrate Set to `true` if the system should try to create the missing tables
      * @param int $build Current Ampache database build number
-     *
      * @return Generator<string> The names of the missing database tables
      *
      * @throws UpdateFailedException

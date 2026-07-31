@@ -386,7 +386,7 @@ final class InstallationHelper implements InstallationHelperInterface
         }
 
         // Fix the system user preferences
-        User::fix_preferences(-1);
+        Preference::fix_user_preferences(-1);
 
         return true;
     }

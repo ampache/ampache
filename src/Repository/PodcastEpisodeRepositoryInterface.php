@@ -62,7 +62,6 @@ interface PodcastEpisodeRepositoryInterface
      * Returns all episode-ids for the given podcast
      *
      * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
-     *
      * @return list<int>
      */
     public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array;
@@ -80,7 +79,6 @@ interface PodcastEpisodeRepositoryInterface
      * Returns all podcast episodes which are eligible for download
      *
      * @param null|positive-int $downloadLimit
-     *
      * @return Traversable<Podcast_Episode>
      */
     public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit = null): Traversable;

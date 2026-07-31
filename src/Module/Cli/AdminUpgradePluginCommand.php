@@ -37,7 +37,7 @@ final class AdminUpgradePluginCommand extends Command
         parent::__construct('admin:upgradePlugin', T_('Upgrade a plugin'));
 
         $this
-            ->argument('<name>', T_('Plugin name'))
+            ->argument('<name>', T_('Name'))
             ->usage('<bold>  admin:upgradePlugin Last.FM</end> <comment> ## ' . T_('Upgrade the Last.FM plugin') . '</end><eol/>');
     }
 
@@ -51,9 +51,9 @@ final class AdminUpgradePluginCommand extends Command
         $interactor = $this->io();
 
         if ($this->pluginManager->upgradePlugin($name)) {
-            $interactor->ok(sprintf(T_('Upgraded plugin %s'), $name), true);
+            $interactor->ok(sprintf(T_('%1$s has been updated'), $name), true);
         } else {
-            $interactor->error(sprintf(T_('Could not upgrade plugin %s'), $name), true);
+            $interactor->error(sprintf('%s: %s', T_('Update failed'), $name), true);
         }
     }
 

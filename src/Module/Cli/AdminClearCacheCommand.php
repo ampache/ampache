@@ -39,7 +39,7 @@ final class AdminClearCacheCommand extends Command
         parent::__construct('admin:clearCache', T_('Clear a cache. Only `perpetual_api_session` persists; object caches live for one process'));
 
         $this
-            ->argument('[type]', T_('Cache type') . " ('perpetual_api_session', 'song', 'artist', 'album')", 'perpetual_api_session')
+            ->argument('[type]', T_('Type') . " ('perpetual_api_session', 'song', 'artist', 'album')", 'perpetual_api_session')
             ->usage('<bold>  admin:clearCache perpetual_api_session</end> <comment> ## ' . T_('Destroy stored perpetual API sessions') . '</end><eol/>');
     }
 

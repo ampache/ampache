@@ -38,7 +38,6 @@ interface UpdaterInterface
      *
      * @param bool $migrate Set to `true` if the system should try to create the missing tables
      * @param int $build Current Ampache database build number
-     *
      * @return Iterator<string> The names of the missing database tables
      *
      * @throws UpdateFailedException

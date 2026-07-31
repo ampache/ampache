@@ -59,10 +59,13 @@ class LabelRepositoryTest extends TestCase
 
     public function testCollectGarbageDeletes(): void
     {
-        $this->connection->expects(static::exactly(2))
+        // an association row names either an artist or an album, so each side is swept against its own table
+        $this->connection->expects(static::exactly(4))
             ->method('query')
             ->with(...self::withConsecutive(
-                ['DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'],
+                ['DELETE FROM `label_asso` WHERE `label_asso`.`artist` IS NOT NULL AND `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'],
+                ['DELETE FROM `label_asso` WHERE `label_asso`.`album` IS NOT NULL AND `label_asso`.`album` NOT IN (SELECT `album`.`id` FROM `album`)'],
+                ['DELETE FROM `label_asso` WHERE `label_asso`.`label` NOT IN (SELECT `label`.`id` FROM `label`)'],
                 ['DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL'],
             ));
 
@@ -81,6 +84,26 @@ class LabelRepositoryTest extends TestCase
             );
 
         $this->subject->delete($labelId);
+    }
+
+    public function testGetAlbumsReturnsTheAssociatedIds(): void
+    {
+        $label  = $this->createMock(Label::class);
+        $result = $this->createMock(PDOStatement::class);
+
+        $label->method('getId')
+            ->willReturn(666);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `album` FROM `label_asso` WHERE `label` = ? AND `album` IS NOT NULL', [666])
+            ->willReturn($result);
+
+        $result->expects(static::exactly(3))
+            ->method('fetchColumn')
+            ->willReturnOnConsecutiveCalls(1, 2, false);
+
+        static::assertSame([1, 2], $this->subject->getAlbums($label));
     }
 
     public function testGetAllReturnsData(): void
@@ -114,9 +137,10 @@ class LabelRepositoryTest extends TestCase
         $label->method('getId')
             ->willReturn(666);
 
+        // an album row has a null artist, and fetching it would end the loop before the real ids arrive
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `artist` FROM `label_asso` WHERE `label` = ?', [666])
+            ->with('SELECT `artist` FROM `label_asso` WHERE `label` = ? AND `artist` IS NOT NULL', [666])
             ->willReturn($result);
 
         $result->expects(static::exactly(3))
@@ -191,6 +215,24 @@ class LabelRepositoryTest extends TestCase
             0,
             $this->subject->lookup($labelName, $labelId)
         );
+    }
+
+    public function testMigrateAlbumMovesTheAssociationsAndDropsPairingsTheTargetAlreadyHas(): void
+    {
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->with(...self::withConsecutive(
+                [
+                    'DELETE FROM `label_asso` WHERE `album` = ? AND `label` IN (SELECT `label` FROM (SELECT `label` FROM `label_asso` WHERE `album` = ?) AS `existing`)',
+                    [21, 33],
+                ],
+                [
+                    'UPDATE `label_asso` SET `album` = ? WHERE `album` = ?',
+                    [33, 21],
+                ],
+            ));
+
+        $this->subject->migrateAlbum(21, 33);
     }
 
     public function testMigrateArtistMovesTheAssociations(): void

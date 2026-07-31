@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Catalog\GarbageCollector;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Label\LabelGarbageCollectorInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
@@ -71,6 +72,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         private VideoRepositoryInterface $videoRepository,
         private PlaylistRepositoryInterface $playlistRepository,
         private SearchRepositoryInterface $searchRepository,
+        private LabelGarbageCollectorInterface $labelGarbageCollector,
     ) {}
 
     public function collect(): void
@@ -85,6 +87,8 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         Stats::garbage_collection();
         Rating::garbage_collection();
         Userflag::garbage_collection();
+        // placeholder labels go first so the sweep below picks up the associations they leave behind
+        $this->labelGarbageCollector->collect();
         $this->labelRepository->collectGarbage();
         Recommendation::garbage_collection();
         $this->userActivityRepository->collectGarbage();

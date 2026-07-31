@@ -24,6 +24,7 @@ namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -33,6 +34,7 @@ class ArtCollectorTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
     private ContainerInterface&MockObject $dic;
+    private LibraryItemLoaderInterface&MockObject $libraryItemLoader;
     private LoggerInterface&MockObject $logger;
     private ArtCollector $subject;
 
@@ -88,14 +90,16 @@ class ArtCollectorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dic              = $this->createMock(ContainerInterface::class);
-        $this->logger           = $this->createMock(LoggerInterface::class);
-        $this->configContainer  = $this->createMock(ConfigContainerInterface::class);
+        $this->dic               = $this->createMock(ContainerInterface::class);
+        $this->logger            = $this->createMock(LoggerInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->libraryItemLoader = $this->createMock(LibraryItemLoaderInterface::class);
 
         $this->subject = new ArtCollector(
             $this->dic,
             $this->logger,
             $this->configContainer,
+            $this->libraryItemLoader,
         );
     }
 }

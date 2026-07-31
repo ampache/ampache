@@ -72,6 +72,7 @@ global $dic;
 /** @var string $t_videos */
 /** @var string $t_wanted */
 /** @var string $t_folders */
+/** @var string $t_collections */
 $server_allow     = AmpConfig::get('allow_localplay_playback');
 $controller       = AmpConfig::get('localplay_controller');
 $videoRepository  = $dic->get(VideoRepositoryInterface::class);
@@ -80,6 +81,7 @@ $allowVideo       = AmpConfig::get('allow_video') && $videoRepository->getItemCo
 $allowDemocratic  = AmpConfig::get('allow_democratic_playback');
 $showAlbumArtist  = AmpConfig::get('show_album_artist');
 $showFolder       = AmpConfig::get('show_folder') && $folderRepository->getItemCount();
+$showCollection   = (bool) AmpConfig::get('show_collection');
 $showArtist       = AmpConfig::get('show_artist');
 $allowLabel       = AmpConfig::get('label');
 $allowPodcast     = AmpConfig::get('podcast');
@@ -233,6 +235,9 @@ if (
         <ul class="sb3" id="sb_home_playlist" <?php echo ($state_home_playlist == 'collapsed') ? 'style="display: none;"' : ''; ?>>
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo $t_playlists; ?></a></li>
             <li id="sb_home_playlist_smartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo $t_smartPlaylists; ?></a></li>
+        <?php if ($showCollection) { ?>
+            <li id="sb_home_playlist_collection"><a href="<?php echo $web_path; ?>/browse.php?action=collection"><?php echo $t_collections; ?></a></li>
+        <?php } ?>
         <?php if ($allowDemocratic) { ?>
               <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo $t_democratic; ?></a></li>
         <?php } ?>

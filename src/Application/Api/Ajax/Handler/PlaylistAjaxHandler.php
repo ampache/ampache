@@ -58,9 +58,20 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if ($playlist->has_collaborate()) {
-                    $playlist->delete_track((int) ($_REQUEST['track_id'] ?? 0));
-                    // This could have performance issues
-                    $playlist->regenerate_track_numbers();
+                    // A multi-select bar sends every checked row at once, so renumber once at the end instead
+                    // of paying for a full regenerate per track.
+                    $track_ids = array_filter(
+                        array_map('intval', explode(',', (string) ($_REQUEST['track_id'] ?? ''))),
+                        static fn(int $track_id): bool => $track_id > 0
+                    );
+                    foreach ($track_ids as $track_id) {
+                        $playlist->delete_track($track_id);
+                    }
+
+                    if ($track_ids !== []) {
+                        // This could have performance issues
+                        $playlist->regenerate_track_numbers();
+                    }
                 }
 
                 $browse_id  = (int) ($_REQUEST['browse_id'] ?? 0);
@@ -133,7 +144,8 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
                     ob_start();
                     display_notification(T_('Added to playlist'));
-                    $results['reloader'] = ob_get_clean();
+                    $results['reloader']    = ob_get_clean();
+                    $results['playlist_id'] = (string) $playlist->id;
                 } else {
                     debug_event('playlist.ajax', 'No item to add. Aborting...', 5);
                 }

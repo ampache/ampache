@@ -67,6 +67,68 @@ class RequestParserTraitTest extends MockeryTestCase
         );
     }
 
+    public function testMultipartBodyOnPutIsReadFromTheStream(): void
+    {
+        $body = "--abc123\r\nContent-Disposition: form-data; name=\"id\"\r\n\r\n54\r\n"
+            . "--abc123\r\nContent-Disposition: form-data; name=\"object_type\"\r\n\r\nsong\r\n"
+            . "--abc123--\r\n";
+
+        $this->assertSame(
+            ['id' => '54', 'object_type' => 'song'],
+            $this->subject->parseRequestBody(
+                $this->createRequest('PUT', 'multipart/form-data; boundary=abc123', null, $body)
+            )
+        );
+    }
+
+    public function testMultipartFilePartIsSkipped(): void
+    {
+        $body = "--abc123\r\nContent-Disposition: form-data; name=\"art\"; filename=\"cover.jpg\"\r\n\r\nbinary\r\n"
+            . "--abc123\r\nContent-Disposition: form-data; name=\"id\"\r\n\r\n54\r\n"
+            . "--abc123--\r\n";
+
+        $this->assertSame(
+            ['id' => '54'],
+            $this->subject->parseRequestBody(
+                $this->createRequest('PATCH', 'multipart/form-data; boundary=abc123', null, $body)
+            )
+        );
+    }
+
+    public function testMultipartRepeatedFieldBecomesAList(): void
+    {
+        $body = "--abc123\r\nContent-Disposition: form-data; name=\"include[]\"\r\n\r\nsongs\r\n"
+            . "--abc123\r\nContent-Disposition: form-data; name=\"include[]\"\r\n\r\nalbums\r\n"
+            . "--abc123--\r\n";
+
+        $this->assertSame(
+            ['include' => ['songs', 'albums']],
+            $this->subject->parseRequestBody(
+                $this->createRequest('PUT', 'multipart/form-data; boundary="abc123"', null, $body)
+            )
+        );
+    }
+
+    public function testPostStillPrefersTheParsedBody(): void
+    {
+        $this->assertSame(
+            ['action' => 'song'],
+            $this->subject->parseRequestBody(
+                $this->createRequest('POST', 'multipart/form-data; boundary=abc123', ['action' => 'song'], 'ignored')
+            )
+        );
+    }
+
+    public function testUrlencodedBodyOnDeleteIsReadFromTheStream(): void
+    {
+        $this->assertSame(
+            ['filter' => '54', 'object_type' => 'song'],
+            $this->subject->parseRequestBody(
+                $this->createRequest('DELETE', 'application/x-www-form-urlencoded', null, 'filter=54&object_type=song')
+            )
+        );
+    }
+
     protected function setUp(): void
     {
         $this->subject = new class {

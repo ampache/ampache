@@ -62,13 +62,13 @@ final class ShowDebugCommand extends Command
 
         $lastCron = (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::CRON_DATE);
         $interactor->ok(
-            sprintf('  Last cron: %s', ($lastCron > 0) ? date('Y-m-d H:i', $lastCron) : T_('never')),
+            sprintf('  Last cron: %s', ($lastCron > 0) ? date('Y-m-d H:i', $lastCron) : T_('Never')),
             true
         );
 
         if ($this->values()['check-updates'] === true) {
             $interactor->ok(sprintf('  Latest:    %s', AutoUpdate::get_latest_version(true)), true);
-            $interactor->ok(sprintf('  Update:    %s', AutoUpdate::is_update_available(true) ? T_('available') : T_('up to date')), true);
+            $interactor->ok(sprintf('  Update:    %s', AutoUpdate::is_update_available(true) ? T_('Update available') : T_('up to date')), true);
         }
 
         $interactor->info(T_('Environment'), true);

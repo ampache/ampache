@@ -5,6 +5,7 @@
 .php-cs-fixer.cache
 .phpunit.*
 .project
+.claude/
 .fleet/
 .idea/
 .settings/
@@ -44,6 +45,7 @@ resources/images/material-symbols
 storage/
 tmp/
 vendor/
+CLAUDE.md
 composer.phar
 cs_fixer_tmp_*
 error_log
@@ -59,6 +61,7 @@ web.config
 *.phpproj
 *.pyc
 *.save
+crawl-report.json
 *.sln
 *.suo
 *.swp

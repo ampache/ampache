@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\SlideshowInterface;
@@ -348,6 +349,14 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 $results['recently_played'] = ob_get_clean();
                 break;
+            case 'ignore_update':
+                // The ajax entry point has no gatekeeper, so repeat the admin gate update.php's clear action applies
+                if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
+                    AutoUpdate::clear_status();
+                    $results['autoupdate'] = '';
+                }
+
+                break;
             case 'refresh_now_playing':
                 ob_start();
                 show_now_playing();
@@ -512,6 +521,30 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $results['fslider_script'] = ob_get_clean();
+                break;
+            case 'albums':
+                $label_id = (int) ($_REQUEST['label'] ?? 0);
+
+                ob_start();
+                if ($label_id > 0) {
+                    $label = $this->labelRepository->findById($label_id);
+
+                    // the label tag describes the release, so the albums come from `label_asso` rather than a text match
+                    $object_ids = ($label === null)
+                        ? []
+                        : $label->get_albums();
+
+                    $browse = new Browse();
+                    $browse->set_type('album');
+                    $browse->set_simple_browse(false);
+                    $browse->set_use_filters(false);
+                    $browse->show_objects($object_ids, true);
+                    $browse->set_use_alpha(false, false);
+                    $browse->store();
+                }
+
+                $results['albums'] = ob_get_contents();
+                ob_end_clean();
                 break;
             case 'songs':
                 $label_id = (int) ($_REQUEST['label'] ?? 0);
