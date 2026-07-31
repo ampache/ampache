@@ -227,6 +227,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * `playlist_create` on API3 recorded the server playlist count before inserting the row, so the stored total was one short until the next playlist create or delete corrected it
 * Deleting a label left its `label_asso` rows behind, so a later label created with the freed id inherited that label's artists; the clean up now sweeps associations whose label is gone
 * Url shortener plugins (`bitly`, `yourls`) were never applied to share links, because `PluginTypeEnum::URL_SHORTENER` looked for a `shorten()` method and plugins implement `shortener()`
+* Plugins
+  * The Discogs plugin never returned album or artist art. Art gathering sends the name of the thing it wants as `title`, and the plugin only searched when it was handed `albumartist` and `album`, or `artist`
+  * Asking Discogs for album art offered the artist's image instead, because the check that skips the artist lookup for an album request tested the values of the request rather than what was being gathered
 * The catalog files and catalog size graphs only drew the time buckets that gained a file, so a library added in a single scan was one point no matter how wide the date range was; they now carry the running total across every bucket in the range
 * The running total those graphs start from ignored the catalog and object filters, so a graph for one catalog counted every earlier file on the server
 * `stats.php?action=graph` rendered graphs without checking `statistical_graphs` first, so it ignored the setting and was a fatal error whenever the charting library was absent
