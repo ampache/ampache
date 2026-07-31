@@ -27,19 +27,12 @@ namespace Ampache\Module\WebDav;
 
 use Ampache\Config\ConfigContainerInterface;
 
-final class WebDavApplication
+final readonly class WebDavApplication
 {
-    private ConfigContainerInterface $configContainer;
-
-    private WebDavFactoryInterface $webDavFactory;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        WebDavFactoryInterface $webDavFactory
-    ) {
-        $this->configContainer = $configContainer;
-        $this->webDavFactory   = $webDavFactory;
-    }
+        private ConfigContainerInterface $configContainer,
+        private WebDavFactoryInterface $webDavFactory,
+    ) {}
 
     public function run(): void
     {

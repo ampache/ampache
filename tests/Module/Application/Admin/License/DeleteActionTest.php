@@ -36,48 +36,15 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\License;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
-    private MockInterface&UiInterface $ui;
-
     private MockInterface&ConfigContainerInterface $configContainer;
-
     private MockInterface&LicenseRepositoryInterface $licenseRepository;
-
     private DeleteAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui                = $this->mock(UiInterface::class);
-        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
-        $this->licenseRepository = $this->mock(LicenseRepositoryInterface::class);
-
-        $this->subject = new DeleteAction(
-            $this->ui,
-            $this->configContainer,
-            $this->licenseRepository
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run(
-            $request,
-            $gatekeeper
-        );
-    }
+    private MockInterface&UiInterface $ui;
 
     public function testRunDeletesAndReturnsNull(): void
     {
@@ -164,6 +131,38 @@ class DeleteActionTest extends MockeryTestCase
         $this->subject->run(
             $request,
             $gatekeeper
+        );
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run(
+            $request,
+            $gatekeeper
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->licenseRepository = $this->mock(LicenseRepositoryInterface::class);
+
+        $this->subject = new DeleteAction(
+            $this->ui,
+            $this->configContainer,
+            $this->licenseRepository
         );
     }
 }

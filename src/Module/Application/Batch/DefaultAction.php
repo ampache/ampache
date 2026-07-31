@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -35,11 +35,11 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
@@ -50,7 +50,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class DefaultAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'default';
+    public const string REQUEST_KEY = 'default';
 
     public function __construct(
         private RequestParserInterface $requestParser,
@@ -61,14 +61,13 @@ final readonly class DefaultAction implements ApplicationActionInterface
         private SongRepositoryInterface $songRepository,
         private ResponseFactoryInterface $responseFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (
-            !defined('NO_SESSION') &&
-            !$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            !defined('NO_SESSION')
+            && !$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
         ) {
             throw new AccessDeniedException();
         }
@@ -77,7 +76,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         $default_name = 'Unknown';
         $name         = $default_name;
         $action       = $this->requestParser->getFromRequest('action');
-        $flat_path    = (in_array($action, ['browse', 'playlist', 'tmp_playlist']));
+        $flat_path    = (in_array($action, ['browse', 'playlist', 'tmp_playlist'], true));
         $object_type  = ($action === 'browse')
             ? $this->requestParser->getFromRequest('type')
             : $action;
@@ -90,23 +89,53 @@ final readonly class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $object_id = (int)$this->requestParser->getFromRequest('id');
+        // A selection downloads in one request, so the id list is the general case and a single id is a list of one.
+        // Each item contributes its own medias, which is what already made an album zip work, just repeated per id.
+        $object_ids = array_values(
+            array_filter(
+                array_map('intval', explode(',', $this->requestParser->getFromRequest('id')))
+            )
+        );
         $this->logger->debug(
-            'Requested item ' . $object_id,
+            'Requested item ' . implode(', ', $object_ids),
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        $libItem = $this->libraryItemLoader->load(
-            LibraryItemEnum::from($object_type),
-            $object_id,
-        );
+        $itemType = LibraryItemEnum::tryFrom($object_type);
+        $libItems = [];
+        if ($itemType !== null) {
+            foreach ($object_ids as $object_id) {
+                $libItem = $this->libraryItemLoader->load(
+                    $itemType,
+                    $object_id,
+                );
 
-        if ($libItem instanceof playable_item) {
-            if ($libItem instanceof Song) {
-                $libItem->fill_ext_info();
+                if ($libItem instanceof container_item) {
+                    $libItems[] = $libItem;
+                }
             }
-            $name      = (string)$libItem->get_fullname();
-            $media_ids = array_merge($media_ids, $libItem->get_medias());
+        }
+
+        if ($libItems !== []) {
+            foreach ($libItems as $libItem) {
+                if ($libItem instanceof Song) {
+                    $libItem->fill_ext_info();
+                }
+
+                $media_ids = array_merge($media_ids, $libItem->get_medias());
+            }
+
+            // One item keeps its own name so a single download is unchanged; a selection is named for its first item
+            // plus how many more came along, which stays recognisable without the name growing with the selection.
+            // The zip name is stripped of punctuation later, so the suffix has to read correctly as bare words.
+            $name = (string) $libItems[0]->get_fullname();
+            if (count($libItems) > 1) {
+                $name = sprintf(
+                    nT_('%s and %d more item', '%s and %d more items', count($libItems) - 1),
+                    $name,
+                    count($libItems) - 1
+                );
+            }
         } else {
             // Switch on the actions
             switch ($action) {
@@ -117,37 +146,42 @@ final readonly class DefaultAction implements ApplicationActionInterface
                         $media_ids = $user->playlist?->get_items() ?? [];
                         $name      = $user->username . ' - Playlist';
                     }
+
                     break;
                 case 'browse':
-                    $object_id        = (int)$this->requestParser->getFromRequest('browse_id');
+                    $object_id        = (int) $this->requestParser->getFromRequest('browse_id');
                     $browse           = $this->modelFactory->createBrowse($object_id);
                     $browse_media_ids = $browse->get_saved();
                     foreach ($browse_media_ids as $media) {
                         if (is_array($media)) {
                             /** @var array<array{object_type: string, object_id: int}> $media */
-                            $media_id = (int)$media['object_id'];
+                            $media_id = (int) $media['object_id'];
                         } else {
                             /** @var int $media */
                             $media_id = $media;
                         }
+
                         switch ($object_type) {
                             case 'album':
                                 $album = $this->modelFactory->createAlbum($media_id);
                                 if ($album->isNew() === false) {
                                     $media_ids = array_merge($media_ids, $this->songRepository->getByAlbum($album->id));
                                 }
+
                                 break;
                             case 'album_disk':
                                 $albumDisk = $this->modelFactory->createAlbumDisk($media_id);
                                 if ($albumDisk->isNew() === false) {
                                     $media_ids = array_merge($media_ids, $this->songRepository->getByAlbumDisk($albumDisk->id));
                                 }
+
                                 break;
                             case 'song':
                                 $song = $this->modelFactory->createSong($media_id);
                                 if ($song->isNew() === false) {
                                     $media_ids[] = $media_id;
                                 }
+
                                 break;
                             case 'video':
                                 $video = $this->modelFactory->createVideo($media_id);
@@ -157,9 +191,12 @@ final readonly class DefaultAction implements ApplicationActionInterface
                                         'object_id' => $media_id
                                     ];
                                 }
+
                                 break;
                         } // switch on type
-                    } // foreach media_id
+                    }
+
+                    // foreach media_id
                     $name = 'Batch-' . get_datetime(time(), 'short', 'none', 'y-MM-dd');
                     break;
             }
@@ -215,9 +252,10 @@ final readonly class DefaultAction implements ApplicationActionInterface
             }
 
             if (
-                isset($media->enabled) &&
-                $media->enabled &&
-                !empty($media->file)
+                $media instanceof container_item
+                && property_exists($media, 'enabled')
+                && $media->enabled
+                && !empty($media->file)
             ) {
                 $total_size += $media->size ?? 0;
                 $dirname = '';
@@ -226,11 +264,13 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     $className = ObjectTypeToClassNameMapper::map($parent['object_type']->value);
                     /** @var class-string<library_item> $className */
                     $pobj    = new $className($parent['object_id']);
-                    $dirname = (string)$pobj->get_fullname();
+                    $dirname = (string) $pobj->get_fullname();
                 }
-                if (!empty($dirname) && !array_key_exists($dirname, $media_files)) {
+
+                if ($dirname !== '' && $dirname !== '0' && !array_key_exists($dirname, $media_files)) {
                     $media_files[$dirname] = [];
                 }
+
                 $media_files[$dirname][] = Core::conv_lc_file($media->file);
             }
         }

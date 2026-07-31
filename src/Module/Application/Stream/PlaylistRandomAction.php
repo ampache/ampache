@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -34,13 +36,13 @@ use Psr\Log\LoggerInterface;
 
 final class PlaylistRandomAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'playlist_random';
+    public const string REQUEST_KEY = 'playlist_random';
 
     public function __construct(
         private readonly RequestParserInterface $requestParser,
         private readonly ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        private readonly ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($logger, $configContainer);
     }
@@ -51,7 +53,7 @@ final class PlaylistRandomAction extends AbstractStreamAction
             return null;
         }
 
-        $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
+        $playlist_id = (int) $this->requestParser->getFromRequest('playlist_id');
         $playlist    = $this->modelFactory->createPlaylist($playlist_id);
         $mediaIds    = $playlist->get_random_items();
 

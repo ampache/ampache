@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -34,6 +36,12 @@ interface AmpachePluginInterface
     public function install(): bool;
 
     /**
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
+     */
+    public function load(User $user): bool;
+
+    /**
      * uninstall
      * Removes our preferences from the database returning it to its original form
      */
@@ -44,10 +52,4 @@ interface AmpachePluginInterface
      * This is a recommended plugin function
      */
     public function upgrade(): bool;
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool;
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -31,35 +31,24 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Label\Deletion\LabelDeleterInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmDeleteAction implements ApplicationActionInterface
+final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_delete';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private LabelDeleterInterface $labelDeleter;
-
-    private LabelRepositoryInterface $labelRepository;
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LabelDeleterInterface $labelDeleter,
-        LabelRepositoryInterface $labelRepository
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->labelDeleter    = $labelDeleter;
-        $this->labelRepository = $labelRepository;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private LabelDeleterInterface $labelDeleter,
+        private LabelRepositoryInterface $labelRepository,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -76,17 +65,28 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         }
 
         $body    = $request->getQueryParams();
-        $labelId = (int)($body['label_id'] ?? 0);
+        $labelId = (int) ($body['label_id'] ?? 0);
 
         $label = $this->labelRepository->findById($labelId);
         if (
-            $label === null ||
-            !Catalog::can_remove($label)
+            $label === null
+            || !Catalog::can_remove($label)
         ) {
             throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the label `%s`', $labelId)
             );
         }
+
+        // A label has no parent object, so leaving its own page can only fall back to the label browser.
+        $webPath     = $this->configContainer->getWebPath();
+        $burlParam   = (string) ($body['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'label',
+            $labelId,
+            '',
+            sprintf('%s/browse.php?action=label', $webPath)
+        );
 
         $this->labelDeleter->delete($label);
 
@@ -94,7 +94,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('The Label has been deleted'),
-            $this->configContainer->getWebPath()
+            $continueUrl
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

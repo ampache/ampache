@@ -25,20 +25,31 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Random;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Download5Method
+ * Redirects to the download url for a media file.
+ *
+ * Version 5 reports the object id as `id` and always caches the download, so it keeps a method
+ * of its own.
  */
-final class Download5Method
+final class Download5Method implements MethodInterface
 {
-    public const ACTION = 'download';
+    public const string ACTION = 'download';
+
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
     /**
      * download
@@ -59,14 +70,25 @@ final class Download5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws RequestParamMissingException|ResultEmptyException
      */
-    public static function download(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['id', 'type'], self::ACTION)) {
-            http_response_code(400);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        foreach (['id', 'type'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
+
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
         $format    = $input['format'] ?? null; // mp3, flv or raw
@@ -75,30 +97,33 @@ final class Download5Method
         if ($format && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&format=' . $format;
         }
+
         $url = '';
         if ($type == 'song') {
-            $media = new Song($object_id);
+            $media = $this->modelFactory->createSong($object_id);
             $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
+
         if ($type == 'podcast_episode' || $type == 'podcast') {
-            $media = new Podcast_Episode($object_id);
+            $media = $this->modelFactory->createPodcastEpisode($object_id);
             $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
+
         if ($type == 'search' || $type == 'playlist') {
             $song_id = Random::get_single_song($type, $user, $object_id);
-            $media   = new Song($song_id);
+            $media   = $this->modelFactory->createSong($song_id);
             $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
+
         if (!empty($url)) {
             Session::extend($input['auth'], AccessTypeEnum::API->value);
-            header('Location: ' . str_replace(':443/play', '/play', $url));
 
-            return true;
+            return $response
+                ->withStatus(302)
+                ->withHeader('Location', str_replace(':443/play', '/play', $url));
         }
 
         // download not found
-        http_response_code(404);
-
-        return false;
+        throw new ResultEmptyException((string) $object_id, 'id');
     }
 }

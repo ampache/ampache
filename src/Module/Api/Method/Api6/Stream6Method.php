@@ -25,128 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api6;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\System\Session;
-use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Random;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractStreamMethod;
 
 /**
- * Class Stream6Method
- * @package Lib\Api6Methods
+ * Redirects to the stream url for a media file
+ *
+ * Api version 6 reports the object id as `id` and accepts `filter` as an alias.
  */
-final class Stream6Method
+final class Stream6Method extends AbstractStreamMethod
 {
-    public const ACTION = 'stream';
+    protected const string FILTER_ALIAS = 'filter';
 
-    /**
-     * stream
-     * MINIMUM_API_VERSION=400001
-     *
-     * Streams a given media file.
-     * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
-     * Search and Playlist will only stream a random object not the whole thing
-     *
-     * id = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
-     * type = (string) 'song', 'podcast_episode', 'search', 'playlist'
-     * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb) // Song only
-     * format = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
-     * offset = (integer) time offset in seconds
-     * length = (integer) 0,1
-     * stats = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     id?: string,
-     *     type: string,
-     *     bitrate?: int,
-     *     format?: string,
-     *     offset?: int,
-     *     length?: int,
-     *     stats?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function stream(array $input, User $user): bool
-    {
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api6::check_parameter($input, ['id', 'type'], self::ACTION)) {
-            http_response_code(400);
-
-            return false;
-        }
-
-        $object_id = (int) $input['id'];
-        $type      = (string) $input['type'];
-
-        if (
-            $object_id === 0
-            && (
-                $type == 'playlist'
-                || $type == 'search'
-            )
-        ) {
-            // The API can use searches as playlists so check for those too
-            $object_id = (int) str_replace('smart_', '', ($input['id'] ?? '0'));
-            $type      = 'search';
-        }
-
-        $maxBitRate    = (int) ($input['bitrate'] ?? 0);
-        $format        = $input['format'] ?? null; // mp3, flv or raw
-        $transcode_to  = ($format && $format != 'raw');
-        $timeOffset    = $input['offset'] ?? null;
-        $contentLength = (int) ($input['length'] ?? 0); // Force content-length guessing if transcode
-        $recordStats   = (int) ($input['stats'] ?? 1);
-
-        $params = '&client=api';
-        if (AmpConfig::get('api_always_download') || $recordStats == 0) {
-            $params .= '&cache=1';
-        }
-
-        if ($contentLength == 1) {
-            $params .= '&content_length=required';
-        }
-
-        if ($transcode_to && in_array($type, ['song', 'search', 'playlist'])) {
-            $params .= '&format=' . $format;
-        }
-
-        if ($maxBitRate > 0 && in_array($type, ['song', 'search', 'playlist'])) {
-            $params .= '&bitrate=' . $maxBitRate;
-        }
-
-        if ($timeOffset) {
-            $params .= '&frame=' . $timeOffset;
-        }
-
-        $url = '';
-        if ($type == 'song') {
-            $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
-        }
-        if ($type == 'podcast_episode' || $type == 'podcast') {
-            $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
-        }
-        if ($type == 'search' || $type == 'playlist') {
-            $song_id = Random::get_single_song($type, $user, $object_id);
-            $media   = new Song($song_id);
-            $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
-        }
-        if (!empty($url)) {
-            Session::extend($input['auth'], AccessTypeEnum::API->value);
-            header('Location: ' . str_replace(':443/play', '/play', $url));
-
-            return true;
-        }
-
-        // stream not found
-        http_response_code(404);
-
-        return false;
-    }
+    protected const string FILTER_KEY = 'id';
 }

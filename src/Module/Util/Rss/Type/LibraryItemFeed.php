@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Module\Util\Rss\Surrogate\PlayableItemRssItemAdapter;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 use PhpTal\PhpTalInterface;
 
@@ -40,9 +40,8 @@ final readonly class LibraryItemFeed implements FeedTypeInterface
         private ModelFactoryInterface $modelFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
         private ?User $user,
-        private playable_item $libraryItem
-    ) {
-    }
+        private library_item $libraryItem,
+    ) {}
 
     public function configureTemplate(PhpTalInterface $tal): void
     {

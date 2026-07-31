@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,30 +30,37 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
+use Override;
 use WpOrg\Requests\Requests;
 
 class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
 {
-    public string $name = 'YOURLS';
-
+    #[Override]
     public string $categories = 'shortener';
 
+    #[Override]
     public string $description = 'URL shorteners on shared links with YOURLS';
 
-    public string $url = 'http://yourls.org';
-
-    public string $version = '000002';
-
-    public string $min_ampache = '360037';
-
+    #[Override]
     public string $max_ampache = '999999';
 
+    #[Override]
+    public string $min_ampache = '360037';
+
+    #[Override]
+    public string $name = 'YOURLS';
+
+    #[Override]
+    public string $url = 'http://yourls.org';
+
+    #[Override]
+    public string $version = '000002';
+
+    private ?string $yourls_api_key = null;
+
     // These are internal settings used by this class, run this->load to fill them out
-    private $yourls_domain;
-
-    private $yourls_use_idn;
-
-    private $yourls_api_key;
+    private string $yourls_domain;
+    private bool $yourls_use_idn;
 
     /**
      * Constructor
@@ -78,71 +85,6 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
         }
 
         return Preference::insert('yourls_api_key', T_('YOURLS API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('yourls_domain') &&
-            Preference::delete('yourls_use_idn') &&
-            Preference::delete('yourls_api_key')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
-     * shortener
-     */
-    public function shortener(string $url): ?string
-    {
-        if (empty($this->yourls_domain) || empty($this->yourls_api_key)) {
-            debug_event('yourls.plugin', 'YOURLS domain or api key missing', 3);
-
-            return null;
-        }
-
-        $shorturl = '';
-
-        $apiurl = 'http://' . $this->yourls_domain . '/yourls-api.php?signature=' . $this->yourls_api_key . '&action=shorturl&format=simple&url=' . urlencode($url);
-        try {
-            debug_event('yourls.plugin', 'YOURLS api call: ' . $apiurl, 5);
-            $request  = Requests::get($apiurl, [], Core::requests_options());
-            $shorturl = $request->body;
-            if ($this->yourls_use_idn) {
-                // WARNING: idn_to_utf8 requires php-idn module.
-                // WARNING: http_build_url requires php-pecl-http module.
-                $purl = parse_url($shorturl);
-                if (
-                    is_array($purl) &&
-                    array_key_exists('host', $purl)
-                ) {
-                    $purl['host'] = (string)idn_to_utf8($purl['host']);
-                    $shorturl     = http_build_url($purl);
-                }
-            }
-        } catch (Exception $exception) {
-            debug_event('yourls.plugin', 'YOURLS api http exception: ' . $exception->getMessage(), 1);
-
-            return null;
-        }
-
-        if (!$shorturl) {
-            return null;
-        }
-
-        return $shorturl;
     }
 
     /**
@@ -176,8 +118,73 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
             return false;
         }
 
-        $this->yourls_use_idn = ((int)($data['yourls_use_idn']) == 1);
+        $this->yourls_use_idn = ((int) ($data['yourls_use_idn']) === 1);
 
+        return true;
+    }
+
+    /**
+     * shortener
+     */
+    public function shortener(string $url): ?string
+    {
+        if (!isset($this->yourls_domain) || ($this->yourls_domain === '' || $this->yourls_domain === '0') || in_array($this->yourls_api_key, [null, '', '0'], true)) {
+            debug_event('yourls.plugin', 'YOURLS domain or api key missing', 3);
+
+            return null;
+        }
+
+        $shorturl = '';
+
+        $apiurl = 'http://' . $this->yourls_domain . '/yourls-api.php?signature=' . $this->yourls_api_key . '&action=shorturl&format=simple&url=' . urlencode($url);
+        try {
+            debug_event('yourls.plugin', 'YOURLS api call: ' . $apiurl, 5);
+            $request  = Requests::get($apiurl, [], Core::requests_options());
+            $shorturl = $request->body;
+            if ($this->yourls_use_idn) {
+                // WARNING: idn_to_utf8 requires php-idn module.
+                // WARNING: http_build_url requires php-pecl-http module.
+                $purl = parse_url($shorturl);
+                if (
+                    is_array($purl)
+                    && array_key_exists('host', $purl)
+                ) {
+                    $purl['host'] = (string) idn_to_utf8($purl['host']);
+                    $shorturl     = http_build_url($purl);
+                }
+            }
+        } catch (Exception $exception) {
+            debug_event('yourls.plugin', 'YOURLS api http exception: ' . $exception->getMessage(), 1);
+
+            return null;
+        }
+
+        if (!$shorturl) {
+            return null;
+        }
+
+        return $shorturl;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('yourls_domain')
+            && Preference::delete('yourls_use_idn')
+            && Preference::delete('yourls_api_key')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

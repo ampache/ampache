@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -32,16 +34,16 @@ use Traversable;
 interface LicenseRepositoryInterface extends BaseRepositoryInterface
 {
     /**
+     * Searches for the License by name and external link
+     */
+    public function find(string $searchValue): ?int;
+
+    /**
      * Returns a list of licenses accessible by the current user.
      *
      * @return Traversable<int, string>
      */
     public function getList(bool $show_hidden = true): Traversable;
-
-    /**
-     * Searches for the License by name and external link
-     */
-    public function find(string $searchValue): ?int;
 
     /**
      * Persists the item in the database

@@ -28,34 +28,28 @@ namespace Ampache\Gui;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
+use Override;
 use PhpTal\PHPTAL;
 
 class TalFactoryTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var MockInterface|GuiFactoryInterface|null */
-    private MockInterface $guiFactory;
-
+    private MockInterface|ConfigContainerInterface|null $configContainer;
+    private MockInterface|GuiFactoryInterface|null $guiFactory;
     private TalFactory $subject;
-
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
-
-        $this->subject = new TalFactory(
-            $this->configContainer,
-            $this->guiFactory
-        );
-    }
 
     public function testCreatePhpTalReturnsInstance(): void
     {
         $this->assertInstanceOf(
             PHPTAL::class,
             $this->subject->createPhpTal()
+        );
+    }
+
+    public function testCreateTalTranslationSeviceReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            TalTranslationService::class,
+            $this->subject->createTalTranslationService()
         );
     }
 
@@ -67,11 +61,15 @@ class TalFactoryTest extends MockeryTestCase
         );
     }
 
-    public function testCreateTalTranslationSeviceReturnsInstance(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $this->assertInstanceOf(
-            TalTranslationService::class,
-            $this->subject->createTalTranslationService()
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
+
+        $this->subject = new TalFactory(
+            $this->configContainer,
+            $this->guiFactory
         );
     }
 }

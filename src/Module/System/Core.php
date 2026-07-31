@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -38,105 +38,28 @@ use Exception;
 class Core
 {
     /**
-     * get_global
-     * Return a $GLOBAL variable instead of calling directly
-     */
-    public static function get_global(string $variable): ?User
-    {
-        return $GLOBALS[$variable] ?? null;
-    }
-
-    /**
-     * get_request
-     * Return a $REQUEST variable instead of calling directly
-     * @deprecated Use RequestParser
-     */
-    public static function get_request(string $variable): string
-    {
-        if (!array_key_exists($variable, $_REQUEST)) {
-            return '';
-        }
-
-        return scrub_in((string) $_REQUEST[$variable]);
-    }
-
-    /**
-     * get_get
-     * Return a $GET variable instead of calling directly
-     */
-    public static function get_get(string $variable): string
-    {
-        if (!array_key_exists($variable, $_GET)) {
-            return '';
-        }
-
-        return scrub_in((string) $_GET[$variable]);
-    }
-
-    /**
-     * generate a random md5 key using random_int
-     */
-    public static function generate_random_key(): string
-    {
-        return md5(uniqid((string) random_int(0, mt_getrandmax()), true));
-    }
-
-    /**
-     * get_cookie
-     * Return a $COOKIE variable instead of calling directly
-     * @deprecated Not in use
-     */
-    public static function get_cookie(string $variable): string
-    {
-        if (!array_key_exists($variable, $_COOKIE)) {
-            return '';
-        }
-
-        return scrub_in((string) $_COOKIE[$variable]);
-    }
-
-    /**
-     * get_server
-     * Return a $SERVER variable instead of calling directly
-     */
-    public static function get_server(string $variable): string
-    {
-        if (!array_key_exists($variable, $_SERVER)) {
-            return '';
-        }
-
-        return scrub_in((string) $_SERVER[$variable]);
-    }
-
-    /**
-     * get_post
-     * Return a $POST variable instead of calling directly
-     */
-    public static function get_post(string $variable): string
-    {
-        if (!array_key_exists($variable, $_POST)) {
-            return '';
-        }
-
-        return scrub_in((string) $_POST[$variable]);
-    }
-
-    /**
-     * get_user_ip
-     * check for the ip of the request
+     * conv_lc_file
      *
-     * @todo make dynamic and testable
+     * Convert site charset filename to local charset filename for file operations
      */
-    public static function get_user_ip(): string
+    public static function conv_lc_file(string $filename): string
     {
-        // get the x forward if it's valid
-        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
-            return filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
+        if (!function_exists('iconv')) {
+            return $filename;
         }
 
-        return (filter_has_var(INPUT_SERVER, 'REMOTE_ADDR'))
-            ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?: ''
-            : '';
+        $lc_charset = AmpConfig::get('lc_charset');
+        if (!$lc_charset) {
+            return $filename;
+        }
+
+        $lc_filename  = $filename;
+        $site_charset = AmpConfig::get('site_charset', 'UTF-8');
+        if ($lc_charset != $site_charset) {
+            $lc_filename = iconv((string) $site_charset, (string) $lc_charset, $filename);
+        }
+
+        return $lc_filename ?: $filename;
     }
 
     /**
@@ -147,7 +70,7 @@ class Core
     public static function form_register(string $name, string $type = 'post'): string
     {
         // Make ourselves a nice little sid
-        $sid    = md5(uniqid((string)rand(), true));
+        $sid    = self::generate_random_key();
         $window = AmpConfig::get('session_length', 3600);
         $expire = time() + $window;
 
@@ -157,12 +80,10 @@ class Core
             'expire' => $expire
         ];
         if (!isset($_SESSION['forms'][$sid])) {
-            debug_event(self::class, "Form $sid not found in session, failed to register!", 2);
+            debug_event(self::class, sprintf('Form %s not found in session, failed to register!', $sid), 2);
         } else {
-            debug_event(self::class, "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
+            debug_event(self::class, sprintf('Registered %s form %s with SID %s and expiration %s (%s seconds from now)', $type, $name, $sid, $expire, $window), 5);
         }
-
-        // end switch on type
 
         return match ($type) {
             'get' => $sid,
@@ -192,7 +113,177 @@ class Core
             return null;
         }
 
-        return bin2hex((string)$buffer);
+        return bin2hex((string) $buffer);
+    }
+
+    /**
+     * generate a random md5 key using random_int
+     */
+    public static function generate_random_key(): string
+    {
+        return md5(uniqid((string) random_int(0, mt_getrandmax()), true));
+    }
+
+    /**
+     * get_cookie
+     * Return a $COOKIE variable instead of calling directly
+     */
+    public static function get_cookie(string $variable): string
+    {
+        if (!array_key_exists($variable, $_COOKIE)) {
+            return '';
+        }
+
+        return scrub_in((string) $_COOKIE[$variable]);
+    }
+
+    /**
+     * get_filesize
+     * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
+     */
+    public static function get_filesize(?string $filename = null): int
+    {
+        if (!$filename || !file_exists($filename)) {
+            return 0;
+        }
+
+        $size = filesize($filename);
+        if (!$size) {
+            $filepointer = fopen($filename, 'rb');
+            if (!$filepointer) {
+                return 0;
+            }
+
+            $offset = PHP_INT_MAX - 1;
+            $size   = (float) $offset;
+            if (fseek($filepointer, $offset) === 0) {
+                return 0;
+            }
+
+            $chunksize = 8192;
+            while (!feof($filepointer)) {
+                $size += strlen((string) fread($filepointer, $chunksize));
+            }
+        }
+
+        return (int) $size;
+    }
+
+    /**
+     * get_get
+     * Return a $GET variable instead of calling directly
+     */
+    public static function get_get(string $variable): string
+    {
+        if (!array_key_exists($variable, $_GET)) {
+            return '';
+        }
+
+        return scrub_in((string) $_GET[$variable]);
+    }
+
+    /**
+     * get_global
+     * Return a $GLOBAL variable instead of calling directly
+     */
+    public static function get_global(string $variable): ?User
+    {
+        return $GLOBALS[$variable] ?? null;
+    }
+
+    /**
+     * get_post
+     * Return a $POST variable instead of calling directly
+     */
+    public static function get_post(string $variable): string
+    {
+        if (!array_key_exists($variable, $_POST)) {
+            return '';
+        }
+
+        return scrub_in((string) $_POST[$variable]);
+    }
+
+    /**
+     * get_reloadutil
+     */
+    public static function get_reloadutil(): string
+    {
+        $play_type = AmpConfig::get('play_type');
+
+        return ($play_type == "stream" || $play_type == "democratic")
+            ? "reloadUtil"
+            : "reloadDivUtil";
+    }
+
+    /**
+     * get_request
+     * Return a $REQUEST variable instead of calling directly
+     */
+    public static function get_request(string $variable): string
+    {
+        if (!array_key_exists($variable, $_REQUEST)) {
+            return '';
+        }
+
+        return scrub_in((string) $_REQUEST[$variable]);
+    }
+
+    /**
+     * get_server
+     * Return a $SERVER variable instead of calling directly
+     */
+    public static function get_server(string $variable): string
+    {
+        if (!array_key_exists($variable, $_SERVER)) {
+            return '';
+        }
+
+        return scrub_in((string) $_SERVER[$variable]);
+    }
+
+    /**
+     * get_tmp_dir
+     */
+    public static function get_tmp_dir(): string
+    {
+        if (AmpConfig::get('tmp_dir_path')) {
+            return rtrim((string) AmpConfig::get('tmp_dir_path'), DIRECTORY_SEPARATOR);
+        }
+
+        if (function_exists('sys_get_temp_dir')) {
+            $tmp_dir = sys_get_temp_dir();
+        } elseif (str_starts_with(PHP_OS, 'WIN')) {
+            $tmp_dir = $_ENV['TMP'];
+            if (!isset($tmp_dir)) {
+                $tmp_dir = 'C:\Windows\Temp';
+            }
+        } else {
+            $tmp_dir = @$_ENV['TMPDIR'];
+            if (!isset($tmp_dir)) {
+                $tmp_dir = '/tmp';
+            }
+        }
+
+        return $tmp_dir;
+    }
+
+    /**
+     * get_user_ip
+     * check for the ip of the request
+     *
+     * @todo make dynamic and testable
+     */
+    public static function get_user_ip(): string
+    {
+        // get the x forward if it's valid
+        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
+            return filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
+        }
+
+        return (filter_has_var(INPUT_SERVER, 'REMOTE_ADDR'))
+            ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?: ''
+            : '';
     }
 
     /**
@@ -213,7 +304,7 @@ class Core
             return $empty;
         }
 
-        if (empty($image_data)) {
+        if ($image_data === '' || $image_data === '0') {
             debug_event(self::class, "Cannot create image from empty data", 2);
 
             return $empty;
@@ -227,8 +318,8 @@ class Core
         $width  = imagesx($image);
         $height = imagesy($image);
         if (
-            $width > 1 &&
-            $height > 1
+            $width > 1
+            && $height > 1
         ) {
             return [
                 'width' => $width,
@@ -240,6 +331,27 @@ class Core
     }
 
     /**
+     * image_mime
+     * Read the real mime type out of the image data itself. Callers otherwise build one by pasting
+     * a filename extension onto "image/", which produces types that don't exist (`image/jpg`, and
+     * `image/JPG` for an upper case name) and believes a .jpg name over png bytes.
+     * Returns null when the data isn't a recognisable image, so callers can keep their own default.
+     */
+    public static function image_mime(string $image_data): ?string
+    {
+        if ($image_data === '') {
+            return null;
+        }
+
+        $info = @getimagesizefromstring($image_data);
+        if ($info === false || empty($info['mime'])) {
+            return null;
+        }
+
+        return (string) $info['mime'];
+    }
+
+    /**
      * is_readable
      *
      * Replacement function because PHP's is_readable is buggy:
@@ -247,18 +359,21 @@ class Core
      */
     public static function is_readable(string $path): bool
     {
-        if (!$path) {
+        if ($path === '' || $path === '0') {
             return false;
         }
+
         if (filter_var($path, FILTER_VALIDATE_URL)) {
             return true;
         }
+
         if (file_exists($path)) {
             if (is_dir($path)) {
                 $handle = opendir($path);
                 if ($handle === false) {
                     return false;
                 }
+
                 closedir($handle);
 
                 return true;
@@ -268,6 +383,7 @@ class Core
             if ($handle === false) {
                 return false;
             }
+
             fclose($handle);
 
             return true;
@@ -277,84 +393,21 @@ class Core
     }
 
     /**
-     * get_filesize
-     * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
-     */
-    public static function get_filesize(?string $filename): int
-    {
-        if (!$filename || !file_exists($filename)) {
-            return 0;
-        }
-        $size = filesize($filename);
-        if ($size === false) {
-            $filepointer = fopen($filename, 'rb');
-            if (!$filepointer) {
-                return 0;
-            }
-            $offset = PHP_INT_MAX - 1;
-            $size   = (float)$offset;
-            if (!fseek($filepointer, $offset)) {
-                return 0;
-            }
-            $chunksize = 8192;
-            while (!feof($filepointer)) {
-                $size += strlen((string)fread($filepointer, $chunksize));
-            }
-        } elseif ($size < 0) {
-            // Handle overflowed integer...
-            $size = sprintf("%u", $size);
-        }
-
-        return (int)$size;
-    }
-
-    /**
-     * conv_lc_file
-     *
-     * Convert site charset filename to local charset filename for file operations
-     */
-    public static function conv_lc_file(string $filename): string
-    {
-        $lc_filename  = $filename;
-        $site_charset = AmpConfig::get('site_charset', 'UTF-8');
-        $lc_charset   = AmpConfig::get('lc_charset');
-        if ($lc_charset && $lc_charset != $site_charset) {
-            if (function_exists('iconv')) {
-                $lc_filename = iconv($site_charset, $lc_charset, $filename);
-            }
-        }
-
-        return $lc_filename ?: $filename;
-    }
-
-    /**
      * is_session_started
      *
      * Universal function for checking session status.
      */
     public static function is_session_started(): bool
     {
-        if (php_sapi_name() !== 'cli') {
+        if (PHP_SAPI !== 'cli') {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
                 return session_status() === PHP_SESSION_ACTIVE;
             }
 
-            return !(session_id() === '');
+            return session_id() !== '';
         }
 
         return false;
-    }
-
-    /**
-     * get_reloadutil
-     */
-    public static function get_reloadutil(): string
-    {
-        $play_type = AmpConfig::get('play_type');
-
-        return ($play_type == "stream" || $play_type == "democratic" || !AmpConfig::get('ajax_load'))
-            ? "reloadUtil"
-            : "reloadDivUtil";
     }
 
     /**
@@ -364,44 +417,17 @@ class Core
      */
     public static function requests_options(array $options = []): array
     {
-        if (!isset($options['proxy'])) {
-            if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
-                $proxy   = [];
-                $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-                if (AmpConfig::get('proxy_user')) {
-                    $proxy[] = AmpConfig::get('proxy_user');
-                    $proxy[] = AmpConfig::get('proxy_pass');
-                }
-
-                $options['proxy'] = $proxy;
+        if (!isset($options['proxy']) && (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port'))) {
+            $proxy   = [];
+            $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
+            if (AmpConfig::get('proxy_user')) {
+                $proxy[] = AmpConfig::get('proxy_user');
+                $proxy[] = AmpConfig::get('proxy_pass');
             }
+
+            $options['proxy'] = $proxy;
         }
 
         return $options;
-    }
-
-    /**
-     * get_tmp_dir
-     */
-    public static function get_tmp_dir(): string
-    {
-        if (AmpConfig::get('tmp_dir_path')) {
-            return rtrim((string)AmpConfig::get('tmp_dir_path'), DIRECTORY_SEPARATOR);
-        }
-        if (function_exists('sys_get_temp_dir')) {
-            $tmp_dir = sys_get_temp_dir();
-        } elseif (strpos(PHP_OS, 'WIN') === 0) {
-            $tmp_dir = $_ENV['TMP'];
-            if (!isset($tmp_dir)) {
-                $tmp_dir = 'C:\Windows\Temp';
-            }
-        } else {
-            $tmp_dir = @$_ENV['TMPDIR'];
-            if (!isset($tmp_dir)) {
-                $tmp_dir = '/tmp';
-            }
-        }
-
-        return $tmp_dir;
     }
 }

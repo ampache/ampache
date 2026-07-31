@@ -98,6 +98,7 @@ input[type=submit]:focus:active {
     border: 2px solid #1990db;
 }
 
+.playlistdialogstyle.ui-dialog,
 .playlistdialogstyle.ui-dialog .ui-dialog-content,
 .sharedialogstyle.ui-dialog .ui-dialog-content,
 .playlistdialogstyle.ui-widget-content a,
@@ -179,6 +180,17 @@ input[type=submit]:focus:active {
 
 #loginPage #loginbox #remembermefield {
     color: #000;
+}
+
+/* the openid link is presented as a button, see #oidcbutton in default.css */
+#loginPage #oidcbutton {
+    border-color: #1473af;
+}
+
+#loginPage #oidcbutton:hover,
+#loginPage #oidcbutton:focus {
+    background-color: #1473af;
+    color: #fff;
 }
 
 .formValidation input {
@@ -512,7 +524,10 @@ span.fatalerror {
 
 .item_art .item_art_play .item_art_play_icon,
 .item_art .item_art_play_150 .item_art_play_icon {
-    background-image: url('../images/videoplay.png');
+    background-image: url('../images/videoplay.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
 .item_art .item_art_actions {
@@ -533,6 +548,22 @@ span.fatalerror {
 
 #information_actions a:hover,
 #information_actions li:hover {
+    color: #000;
+}
+
+.multiselect-actions {
+    background-color: #e4e4e4;
+    color: #333;
+}
+
+/* outranks both the striped-row background and the tr:hover gradient, so a selected row always reads as selected */
+table.tabledata tbody tr.selected,
+table.tabledata tbody tr.selected:hover {
+    background-color: rgba(25, 144, 219, 0.22);
+    background-image: none;
+}
+
+.multiselect-actions a:hover {
     color: #000;
 }
 
@@ -582,7 +613,7 @@ div.jp-playlist {
 }
 
 .jp-no-solution {
-    background: #121112 url("../../../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
+    background: linear-gradient(to bottom, #3b3b3b, #111212);
     border-top: 1px solid #f8f8f8;
 }
 
@@ -590,8 +621,22 @@ div.jp-playlist {
     background-color: #f8f8f8 !important;
 }
 
+.jp-type-playlist {
+    background-color: #f8f8f8;
+}
+
+#equalizer {
+    background-color: rgba(240, 240, 240, 0.97);
+}
+
+#equalizer .eq-band {
+    color: #333;
+}
+
+.playing_info,
 div.playing_title a,
 div.playing_artist a,
+div.playing_album a,
 div.playing_lyrics a {
     color: #000;
 }
@@ -695,4 +740,19 @@ a.option-list:hover {
 
 #tabs li.tab_active a {
     color: #000;
+}
+
+/* Mobile off-canvas drawers need a solid (opaque) panel background so the
+   dim backdrop behind them doesn't show through. See the off-canvas block in default.css.
+   @see //REBORN_MEDIA and keep in sync with default.css (portrait phones + short landscape phones). */
+@media (max-width: 768px), (orientation: landscape) and (max-height: 540px) {
+    #sidebar,
+    #rightbar {
+        background-color: #fff;
+    }
+
+    /* Loading toast blends into the header (matches #header bg). */
+    #ajax-loading {
+        background-color: #eee;
+    }
 }

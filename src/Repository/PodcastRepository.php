@@ -39,8 +39,18 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
 {
     public function __construct(
         private ModelFactoryInterface $modelFactory,
-        private DatabaseConnectionInterface $connection
-    ) {
+        private DatabaseConnectionInterface $connection,
+    ) {}
+
+    /**
+     * Deletes a podcast
+     */
+    public function delete(Podcast $podcast): void
+    {
+        $this->connection->query(
+            'DELETE FROM `podcast` WHERE `id` = ?',
+            [$podcast->getId()]
+        );
     }
 
     /**
@@ -63,7 +73,7 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
      * Searches for an existing podcast object by the feed url
      */
     public function findByFeedUrl(
-        string $feedUrl
+        string $feedUrl,
     ): ?Podcast {
         $podcastId = $this->connection->fetchOne(
             'SELECT `id` FROM `podcast` WHERE `feed` = ?',
@@ -78,22 +88,16 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
     }
 
     /**
-     * Deletes a podcast
+     * Retrieve a single podcast-item by its id
      */
-    public function delete(Podcast $podcast): void
+    public function findById(int $podcastId): ?Podcast
     {
-        $this->connection->query(
-            'DELETE FROM `podcast` WHERE `id` = ?',
-            [$podcast->getId()]
-        );
-    }
+        $podcast = $this->modelFactory->createPodcast($podcastId);
+        if ($podcast->isNew()) {
+            return null;
+        }
 
-    /**
-     * Returns a new podcast item
-     */
-    public function prototype(): Podcast
-    {
-        return new Podcast();
+        return $podcast;
     }
 
     /**
@@ -153,15 +157,10 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
     }
 
     /**
-     * Retrieve a single podcast-item by its id
+     * Returns a new podcast item
      */
-    public function findById(int $podcastId): ?Podcast
+    public function prototype(): Podcast
     {
-        $podcast = $this->modelFactory->createPodcast($podcastId);
-        if ($podcast->isNew()) {
-            return null;
-        }
-
-        return $podcast;
+        return new Podcast();
     }
 }

@@ -29,20 +29,14 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 
 class GenericActivityTypeHandler implements ActivityTypeHandlerInterface
 {
-    private UserActivityRepositoryInterface $userActivityRepository;
-
-    public function __construct(
-        UserActivityRepositoryInterface $userActivityRepository
-    ) {
-        $this->userActivityRepository = $userActivityRepository;
-    }
+    public function __construct(private readonly UserActivityRepositoryInterface $userActivityRepository) {}
 
     public function registerActivity(
         int $objectId,
         string $objectType,
         string $action,
         int $userId,
-        int $date
+        int $date,
     ): void {
         $this->userActivityRepository->registerGenericEntry(
             $userId,

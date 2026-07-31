@@ -43,41 +43,14 @@ class ImportPodcastsActionTest extends TestCase
 {
     use ConsecutiveParams;
 
-    private ConfigContainerInterface&MockObject $configContainer;
-
-    private UiInterface&MockObject $ui;
-
-    private RequestParserInterface&MockObject $requestParser;
-
     private CatalogLoaderInterface&MockObject $catalogLoader;
-
-    private PodcastOpmlImporterInterface&MockObject $podcastOpmlImporter;
-
-    private ImportPodcastsAction $subject;
-
-    private ServerRequestInterface&MockObject $request;
-
+    private ConfigContainerInterface&MockObject $configContainer;
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
-    protected function setUp(): void
-    {
-        $this->configContainer     = $this->createMock(ConfigContainerInterface::class);
-        $this->ui                  = $this->createMock(UiInterface::class);
-        $this->requestParser       = $this->createMock(RequestParserInterface::class);
-        $this->catalogLoader       = $this->createMock(CatalogLoaderInterface::class);
-        $this->podcastOpmlImporter = $this->createMock(PodcastOpmlImporterInterface::class);
-
-        $this->subject = new ImportPodcastsAction(
-            $this->configContainer,
-            $this->ui,
-            $this->requestParser,
-            $this->catalogLoader,
-            $this->podcastOpmlImporter
-        );
-
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-    }
+    private PodcastOpmlImporterInterface&MockObject $podcastOpmlImporter;
+    private ServerRequestInterface&MockObject $request;
+    private RequestParserInterface&MockObject $requestParser;
+    private ImportPodcastsAction $subject;
+    private UiInterface&MockObject $ui;
 
     public function testRunReturnsNullIfPodcastIsDisabled(): void
     {
@@ -86,7 +59,7 @@ class ImportPodcastsActionTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST)
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }
@@ -151,5 +124,25 @@ class ImportPodcastsActionTest extends TestCase
         static::expectException(AccessDeniedException::class);
 
         $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    protected function setUp(): void
+    {
+        $this->configContainer     = $this->createMock(ConfigContainerInterface::class);
+        $this->ui                  = $this->createMock(UiInterface::class);
+        $this->requestParser       = $this->createMock(RequestParserInterface::class);
+        $this->catalogLoader       = $this->createMock(CatalogLoaderInterface::class);
+        $this->podcastOpmlImporter = $this->createMock(PodcastOpmlImporterInterface::class);
+
+        $this->subject = new ImportPodcastsAction(
+            $this->configContainer,
+            $this->ui,
+            $this->requestParser,
+            $this->catalogLoader,
+            $this->podcastOpmlImporter
+        );
+
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
     }
 }

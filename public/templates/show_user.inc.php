@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_user.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -37,6 +39,7 @@ use Ampache\Module\Util\Upload;
 use Ampache\Plugin\PluginDisplayUserFieldInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
@@ -55,7 +58,7 @@ use Ampache\Repository\Model\Useractivity;
 
 $web_path = AmpConfig::get_web_path();
 
-/** @var User $current_user */
+/** @var User|null $current_user */
 $current_user = Core::get_global('user');
 $is_user      = ($current_user instanceof User && $client->id == $current_user->id);
 $last_seen    = ($client->last_seen) ? get_datetime((int) $client->last_seen) : T_('Never');
@@ -68,8 +71,8 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
     <?php echo $client->get_f_avatar('f_avatar');
     echo "<br /><br />";
     if (
-        $current_user instanceof User &&
-        AmpConfig::get('sociable')
+        $current_user instanceof User
+        && AmpConfig::get('sociable')
     ) {
         echo $userFollowStateRenderer->render(
             $client,
@@ -94,7 +97,7 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
     <dd>
         <?php echo scrub_out($client->get_fullname()); ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode((string)$client->username); ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode((string) $client->username); ?>">
                 <?php echo Ui::get_material_symbol('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>
@@ -118,7 +121,7 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
     <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
     <dt><?php echo T_('Activity'); ?></dt>
     <dd><?php echo $client->get_f_usage(); ?>
-        <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+        <?php if (AmpConfig::get('statistical_graphs')) { ?>
             <a href="<?php echo $web_path; ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?></a>
         <?php } ?>
     </dd>
@@ -152,7 +155,7 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
     </div>
     <div id="tabs_content">
         <div id="recently_played" class="tab_content" style="display: block;">
-        <?php $current_list = Tmp_Playlist::get_from_username((string)$client->username);
+        <?php $current_list = Tmp_Playlist::get_from_username((string) $client->username);
 if ($current_list) {
     $tmp_playlist = new Tmp_Playlist($current_list);
     $object_ids   = $tmp_playlist->get_items();
@@ -166,7 +169,7 @@ if ($current_list) {
                 $object_data['object_type'],
                 $object_data['object_id'],
             );
-            echo $object?->get_f_link(); ?>
+            echo ($object instanceof displayable_item) ? $object->get_f_link() : ''; ?>
             <br />
             <?php
         } ?>

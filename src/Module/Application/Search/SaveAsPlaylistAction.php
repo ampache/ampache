@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -39,29 +39,16 @@ use Ampache\Repository\Model\Playlist;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SaveAsPlaylistAction implements ApplicationActionInterface
+final readonly class SaveAsPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'save_as_playlist';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'save_as_playlist';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-    }
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -70,7 +57,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $browse  = $this->modelFactory->createBrowse((int)$this->requestParser->getFromRequest('browse_id'));
+        $browse  = $this->modelFactory->createBrowse((int) $this->requestParser->getFromRequest('browse_id'));
         $objects = $browse->get_saved();
 
         // Make sure we have a unique name
@@ -82,9 +69,9 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
             ? $this->requestParser->getFromPost('playlist_type')
             : 'public';
 
-        if (!empty($objects)) {
+        if ($objects !== []) {
             // create the playlist
-            $playlist_id = (int)Playlist::create($playlist_name, $playlist_type);
+            $playlist_id = (int) Playlist::create($playlist_name, $playlist_type);
             $playlist    = $this->modelFactory->createPlaylist($playlist_id);
             $playlist->delete_all();
             // different browses could store objects in different ways
@@ -119,6 +106,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
                 )
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

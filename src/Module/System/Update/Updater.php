@@ -37,28 +37,33 @@ use Psr\Container\ContainerInterface;
 /**
  * Provides several utility methods to perform updates
  */
-final class Updater implements UpdaterInterface
+final readonly class Updater implements UpdaterInterface
 {
-    private const MINIMUM_UPDATABLE_VERSION = 350008;
-
-    private UpdateHelperInterface $updateHelper;
-
-    private UpdateInfoRepositoryInterface $updateInfoRepository;
-
-    private ContainerInterface $dic;
-
-    private UpdateRunnerInterface $updateRunner;
+    private const int MINIMUM_UPDATABLE_VERSION = 350008;
 
     public function __construct(
-        UpdateHelperInterface $updateHelper,
-        UpdateInfoRepositoryInterface $updateInfoRepository,
-        ContainerInterface $dic,
-        UpdateRunnerInterface $updateRunner
-    ) {
-        $this->updateHelper         = $updateHelper;
-        $this->updateInfoRepository = $updateInfoRepository;
-        $this->dic                  = $dic;
-        $this->updateRunner         = $updateRunner;
+        private UpdateHelperInterface $updateHelper,
+        private UpdateInfoRepositoryInterface $updateInfoRepository,
+        private ContainerInterface $dic,
+        private UpdateRunnerInterface $updateRunner,
+    ) {}
+
+    /**
+     * Checks for missing database tables
+     *
+     * @param bool $migrate Set to `true` if the system should try to create the missing tables
+     * @param int $build Current Ampache database build number
+     * @return Generator<string> The names of the missing database tables
+     *
+     * @throws UpdateFailedException
+     */
+    public function checkTables(bool $migrate = false, int $build = 0): Generator
+    {
+        yield from $this->updateRunner->runTableCheck(
+            $this->getPendingUpdates(),
+            $migrate,
+            $build
+        );
     }
 
     /**
@@ -89,6 +94,14 @@ final class Updater implements UpdaterInterface
     }
 
     /**
+     * Checks to see if the database db_version is higher than the code db_version
+     */
+    public function hasOverUpdated(): bool
+    {
+        return Versions::MAXIMUM_UPDATABLE_VERSION < (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
+    }
+
+    /**
      * Checks to see if we need to update Ampache at all
      */
     public function hasPendingUpdates(): bool
@@ -99,20 +112,12 @@ final class Updater implements UpdaterInterface
     }
 
     /**
-     * Checks to see if the database db_version is higher than the code db_version
-     */
-    public function hasOverUpdated(): bool
-    {
-        return Versions::MAXIMUM_UPDATABLE_VERSION < (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
-    }
-
-    /**
      * Rollback the database to the required version
      *
      * @throws UpdateFailedException
      */
     public function rollback(
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void {
         if (!$this->hasOverUpdated()) {
             return;
@@ -132,7 +137,7 @@ final class Updater implements UpdaterInterface
      * @throws UpdateException
      */
     public function update(
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void {
         $currentVersion = (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
 
@@ -144,25 +149,6 @@ final class Updater implements UpdaterInterface
         $this->updateRunner->run(
             $this->getPendingUpdates(),
             $interactor
-        );
-    }
-
-    /**
-     * Checks for missing database tables
-     *
-     * @param bool $migrate Set to `true` if the system should try to create the missing tables
-     * @param int $build Current Ampache database build number
-     *
-     * @return Generator<string> The names of the missing database tables
-     *
-     * @throws UpdateFailedException
-     */
-    public function checkTables(bool $migrate = false, int $build = 0): Generator
-    {
-        yield from $this->updateRunner->runTableCheck(
-            $this->getPendingUpdates(),
-            $migrate,
-            $build
         );
     }
 }

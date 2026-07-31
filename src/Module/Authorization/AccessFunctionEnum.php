@@ -30,6 +30,6 @@ namespace Ampache\Module\Authorization;
  */
 enum AccessFunctionEnum: string
 {
-    case FUNCTION_DOWNLOAD       = 'download';
     case FUNCTION_BATCH_DOWNLOAD = 'batch_download';
+    case FUNCTION_DOWNLOAD       = 'download';
 }

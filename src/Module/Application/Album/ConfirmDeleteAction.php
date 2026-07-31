@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,6 +32,7 @@ use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
@@ -39,33 +40,18 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmDeleteAction implements ApplicationActionInterface
+final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_delete';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
-    private AlbumDeleterInterface $albumDeleter;
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        AlbumDeleterInterface $albumDeleter
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->albumDeleter    = $albumDeleter;
-    }
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private AlbumDeleterInterface $albumDeleter,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -76,13 +62,28 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
             return null;
         }
-        $album_id = (int)$this->requestParser->getFromRequest('album_id');
+
+        $album_id = (int) $this->requestParser->getFromRequest('album_id');
         $album    = $this->modelFactory->createAlbum($album_id);
         if (!Catalog::can_remove($album)) {
             throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the album `%d`', $album->id)
             );
         }
+
+        // The album artist has to be read while the row is still there; the deleter takes the album with it,
+        $webPath   = $this->configContainer->getWebPath();
+        $parentUrl = ($album->album_artist !== null && $album->album_artist > 0)
+            ? sprintf('%s/artists.php?action=show&artist=%d', $webPath, $album->album_artist)
+            : '';
+        $burlParam   = (string) ($request->getQueryParams()['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'album',
+            $album_id,
+            $parentUrl,
+            sprintf('%s/browse.php?action=album', $webPath)
+        );
 
         $this->ui->showHeader();
         try {
@@ -91,14 +92,14 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Album has been deleted'),
-                $this->configContainer->getWebPath()
+                $continueUrl
             );
         } catch (AlbumDeletionException) {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
-                sprintf(T_('Couldn\'t delete this %s'), T_('Album')),
-                $this->configContainer->getWebPath()
+                sprintf(T_("Couldn't delete this %s"), T_('Album')),
+                $continueUrl
             );
         }
 

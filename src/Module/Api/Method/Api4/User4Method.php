@@ -36,7 +36,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class User4Method
 {
-    public const ACTION = 'user';
+    public const string ACTION = 'user';
 
     /**
      * user
@@ -61,7 +61,7 @@ final class User4Method
         $check_user = User::get_from_username($username);
         $valid      = ($check_user instanceof User && $check_user->isNew() === false && in_array($check_user->id, self::getUserRepository()->getValid(true)));
         if (!$valid) {
-            Api4::message('error', T_('User_id not found'), '404', $input['api_format']);
+            Api4::message('error', 'User_id not found', '404', $input['api_format']);
 
             return false;
         }

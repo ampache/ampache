@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -39,37 +39,42 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class WrappedAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'wrapped';
+    public const string REQUEST_KEY = 'wrapped';
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private UserRepositoryInterface $userRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_WRAPPED)) {
             throw new AccessDeniedException('Access Denied');
         }
-        session_start();
 
-        $userId = (int)$this->requestParser->getFromRequest('user_id');
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
+        $userId = (int) $this->requestParser->getFromRequest('user_id');
 
         $user = $this->userRepository->findById($userId);
         if ($user === null) {
             throw new ObjectNotFoundException('user_id');
         }
+
         $year = $this->requestParser->getFromRequest('year');
         if ($year === '') {
             $year = 'Y';
         }
+
         $startTime = strtotime(date($year . '-01-01'));
         if ($startTime === false) {
             throw new ObjectNotFoundException('year');
         }
+
         $endTime = strtotime(date($year . '-12-31')) ?: time();
 
         $this->ui->showHeader();

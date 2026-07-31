@@ -45,37 +45,36 @@ final class MetadataManager implements MetadataManagerInterface
      */
     private ?array $disabledMetadataFields = null;
 
-    private MetadataRepositoryInterface $metadataRepository;
-
-    private MetadataFieldRepositoryInterface $metadataFieldRepository;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        MetadataRepositoryInterface $metadataRepository,
-        MetadataFieldRepositoryInterface $metadataFieldRepository,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->metadataRepository      = $metadataRepository;
-        $this->metadataFieldRepository = $metadataFieldRepository;
-        $this->configContainer         = $configContainer;
+        private readonly MetadataRepositoryInterface $metadataRepository,
+        private readonly MetadataFieldRepositoryInterface $metadataFieldRepository,
+        private readonly ConfigContainerInterface $configContainer,
+    ) {}
+
+    /**
+     * Adds a new metadata item
+     */
+    public function addMetadata(
+        MetadataEnabledInterface $item,
+        string $name,
+        string $data,
+    ): void {
+        $metadata = $this->metadataRepository->prototype()
+            ->setField($this->getOrCreateField($name))
+            ->setObjectId($item->getId())
+            ->setType($item->getMetadataItemType())
+            ->setData($data);
+
+        $metadata->save();
     }
 
     /**
-     * Returns the metadata for the given item
-     *
-     * Will return an empty iterator if custom metadata is disabled
-     *
-     * @return Traversable<Metadata>
+     * Cleans up metadata-related database tables
      */
-    public function getMetadata(
-        MetadataEnabledInterface $item
-    ): Traversable {
-        if (!$this->isCustomMetadataEnabled()) {
-            return new ArrayIterator();
-        }
-
-        return $this->metadataRepository->findByObjectIdAndType($item->getId(), $item->getMetadataItemType());
+    public function collectGarbage(): void
+    {
+        $this->metadataRepository->collectGarbage();
+        $this->metadataFieldRepository->collectGarbage();
     }
 
     /**
@@ -116,20 +115,28 @@ final class MetadataManager implements MetadataManagerInterface
     }
 
     /**
-     * Adds a new metadata item
+     * Returns the metadata for the given item
+     *
+     * Will return an empty iterator if custom metadata is disabled
+     *
+     * @return Traversable<Metadata>
      */
-    public function addMetadata(
+    public function getMetadata(
         MetadataEnabledInterface $item,
-        string $name,
-        string $data
-    ): void {
-        $metadata = $this->metadataRepository->prototype()
-            ->setField($this->getOrCreateField($name))
-            ->setObjectId($item->getId())
-            ->setType($item->getMetadataItemType())
-            ->setData($data);
+    ): Traversable {
+        if (!$this->isCustomMetadataEnabled()) {
+            return new ArrayIterator();
+        }
 
-        $metadata->save();
+        return $this->metadataRepository->findByObjectIdAndType($item->getId(), $item->getMetadataItemType());
+    }
+
+    /**
+     * Returns `true` if custom metadata is enabled
+     */
+    public function isCustomMetadataEnabled(): bool
+    {
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
     }
 
     /**
@@ -138,7 +145,7 @@ final class MetadataManager implements MetadataManagerInterface
     public function updateOrAddMetadata(
         MetadataEnabledInterface $item,
         string $name,
-        string $data
+        string $data,
     ): void {
         $field = $this->getOrCreateField($name);
 
@@ -161,22 +168,5 @@ final class MetadataManager implements MetadataManagerInterface
         }
 
         return $field;
-    }
-
-    /**
-     * Returns `true` if custom metadata is enabled
-     */
-    public function isCustomMetadataEnabled(): bool
-    {
-        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
-    }
-
-    /**
-     * Cleans up metadata-related database tables
-     */
-    public function collectGarbage(): void
-    {
-        $this->metadataRepository->collectGarbage();
-        $this->metadataFieldRepository->collectGarbage();
     }
 }

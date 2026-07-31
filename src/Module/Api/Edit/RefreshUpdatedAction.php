@@ -37,12 +37,15 @@ use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -51,7 +54,7 @@ use Psr\Log\LoggerInterface;
 
 final class RefreshUpdatedAction extends AbstractEditAction
 {
-    public const REQUEST_KEY = 'refresh_updated';
+    public const string REQUEST_KEY = 'refresh_updated';
 
     private Browse $browse;
     private GuiFactoryInterface $guiFactory;
@@ -64,13 +67,15 @@ final class RefreshUpdatedAction extends AbstractEditAction
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
+        LibraryItemLoaderInterface $libraryItemLoader,
         LoggerInterface $logger,
+        ShareRepositoryInterface $shareRepository,
         TalFactoryInterface $talFactory,
         GuiFactoryInterface $guiFactory,
         Browse $browse,
         UiInterface $ui,
     ) {
-        parent::__construct($configContainer, $logger);
+        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->talFactory      = $talFactory;
@@ -98,7 +103,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        library_item $libitem,
+        library_item|Share $libitem,
         int $object_id,
         ?Browse $browse = null,
     ): ResponseInterface {

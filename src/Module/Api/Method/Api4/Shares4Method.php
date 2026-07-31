@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class Shares4Method
 {
-    public const ACTION = 'shares';
+    public const string ACTION = 'shares';
 
     /**
      * shares
@@ -65,7 +65,7 @@ final class Shares4Method
     public static function shares(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api4::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: sharing features are not enabled.', '400', $input['api_format']);
 
             return false;
         }

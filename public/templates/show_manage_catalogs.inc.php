@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_manage_catalogs.inc.php
 
 use Ampache\Config\AmpConfig;
 
@@ -49,10 +51,13 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
             <a class="option-list" href="<?php echo $admin_path; ?>/catalog.php?action=clean_all_catalogs"><?php echo T_('Clean All'); ?></a>
         </li>
         <li>
+            <a class="option-list" href="<?php echo $admin_path; ?>/catalog.php?action=scan_all_catalog_folders"><?php echo T_('Scan All Folders'); ?></a>
+        </li>
+        <li>
             <a class="option-list" href="<?php echo $admin_path; ?>/catalog.php?action=full_service"><?php echo T_('Update All'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="javascript:NavigateTo('<?php echo $admin_path; ?>/catalog.php?action=clear_stats');" onclick="return confirm('<?php echo T_('Are you sure?'); ?>');"><?php echo T_('Clear Stats'); ?></a>
+            <a class="option-list" href="javascript:NavigateTo('<?php echo $admin_path; ?>/catalog.php?action=clear_stats');" data-confirm="<?php echo T_('Are you sure?'); ?>"><?php echo T_('Clear Stats'); ?></a>
         </li>
     </ul>
     <form style="padding-left: 250px;" method="post" action="<?php echo $admin_path; ?>/catalog.php?action=update_from">

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_lostpassword_form.inc.php
 
 /* Check and see if their remember me is the same or lower then local
  * if so disable the checkbox

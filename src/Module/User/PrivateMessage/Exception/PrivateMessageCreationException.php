@@ -25,6 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\PrivateMessage\Exception;
 
-final class PrivateMessageCreationException extends \Exception
-{
-}
+use Exception;
+
+final class PrivateMessageCreationException extends Exception {}

@@ -37,25 +37,15 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Exports all podcast subscriptions
  */
-final class ExportPodcastsAction implements ApplicationActionInterface
+final readonly class ExportPodcastsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'export_podcasts';
-
-    private ConfigContainerInterface $configContainer;
-
-    private PodcastExporterInterface $podcastExporter;
-
-    private ResponseFactoryInterface $responseFactory;
+    public const string REQUEST_KEY = 'export_podcasts';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        PodcastExporterInterface $podcastExporter,
-        ResponseFactoryInterface $responseFactory
-    ) {
-        $this->configContainer = $configContainer;
-        $this->podcastExporter = $podcastExporter;
-        $this->responseFactory = $responseFactory;
-    }
+        private ConfigContainerInterface $configContainer,
+        private PodcastExporterInterface $podcastExporter,
+        private ResponseFactoryInterface $responseFactory,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

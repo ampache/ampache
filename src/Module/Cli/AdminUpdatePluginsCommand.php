@@ -27,18 +27,10 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Repository\Model\Plugin;
+use Override;
 
 final class AdminUpdatePluginsCommand extends Command
 {
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct()
     {
         parent::__construct('admin:updatePlugins', T_('Update Plugins automatically'));
@@ -64,7 +56,7 @@ final class AdminUpdatePluginsCommand extends Command
             );
         }
 
-        if ($dryRun === true) {
+        if ($dryRun) {
             $interactor->info(
                 "\n" . T_('Running in Test Mode. Use -e|--execute to update'),
                 true
@@ -86,5 +78,15 @@ final class AdminUpdatePluginsCommand extends Command
                 );
             }
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

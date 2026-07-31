@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,11 +23,13 @@ declare(strict_types=0);
  *
  */
 
+// show_shoutbox.inc.php
+
 use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Shoutbox;
 
-/** @var list<Shoutbox> $shouts */
+/** @var array<Shoutbox> $shouts */
 /** @var ShoutRendererInterface $shoutRenderer */
 
 Ui::show_box_top(T_('Shoutbox')); ?>

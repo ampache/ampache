@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class UserUpdate4Method
 {
-    public const ACTION = 'user_update';
+    public const string ACTION = 'user_update';
 
     /**
      * user_update
@@ -56,7 +56,7 @@ final class UserUpdate4Method
      * state = (string) $state //optional
      * city = (string) $city //optional
      * disable = (integer) 0,1 true to disable, false to enable //optional
-     * maxbitrate = (integer) $maxbitrate //optional
+     * maxbitrate = (integer) $maxbitrate in kbps //optional
      *
      * @param array{
      *     username: string,
@@ -138,7 +138,8 @@ final class UserUpdate4Method
                 $userStateToggler->enable($update_user);
             }
             if ($maxbitrate > 0) {
-                Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+                // maxbitrate has always been kbps here by convention (it was never documented); transcode_bitrate is bps
+                Preference::update('transcode_bitrate', $user_id, $maxbitrate * 1000);
             }
             Api4::message('success', 'successfully updated: ' . $username, null, $input['api_format']);
 

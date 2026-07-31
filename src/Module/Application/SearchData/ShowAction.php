@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -35,31 +35,18 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private RequestParserInterface $requestParser;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
-        $this->modelFactory    = $modelFactory;
-    }
+        private RequestParserInterface $requestParser,
+        private ResponseFactoryInterface $responseFactory,
+        private StreamFactoryInterface $streamFactory,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         $search = $this->modelFactory->createSearch(
             null,
@@ -67,9 +54,9 @@ final class ShowAction implements ApplicationActionInterface
         );
 
         $content = 'var types = ';
-        $content .= $this->arrayToJSON($search->types) . ";\n";
+        $content .= $this->arrayToJSON($search->get_rule_types()) . ";\n";
         $content .= 'var basetypes = ';
-        $content .= $this->arrayToJSON($search->basetypes) . ";\n";
+        $content .= $this->arrayToJSON($search->get_basetypes(true)) . ";\n";
         $content .= sprintf(
             'removeIcon = \'<a href="javascript:void(0)">%s</a>\';',
             Ui::get_material_symbol('hide_source', T_('Remove'))
@@ -86,14 +73,12 @@ final class ShowAction implements ApplicationActionInterface
             );
     }
 
-    /**
-     * @deprecated json_encode should do the trick here
-     */
     private function arrayToJSON($array): string
     {
         if (function_exists('json_encode') && is_string(json_encode($array))) {
             return json_encode($array) ?: '';
         }
+
         $json = '{ ';
         foreach ($array as $key => $value) {
             $json .= '"' . $key . '" : ';
@@ -104,9 +89,11 @@ final class ShowAction implements ApplicationActionInterface
                 // entities in our output
                 $json .= '"' . scrub_out(str_replace(['"', '\\'], '', $value)) . '"';
             }
+
             $json .= ' , ';
         }
-        $json = rtrim((string) $json, ', ');
+
+        $json = rtrim($json, ', ');
 
         return $json . ' }';
     }

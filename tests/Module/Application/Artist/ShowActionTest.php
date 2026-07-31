@@ -35,89 +35,18 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
-
-    /** @var AlbumRepositoryInterface|MockInterface|null */
-    private MockInterface $albumRepository;
-
+    private AlbumRepositoryInterface|MockInterface|null $albumRepository;
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private LoggerInterface|MockInterface|null $logger;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?ShowAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
-        $this->albumRepository = $this->mock(AlbumRepositoryInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->modelFactory,
-            $this->configContainer,
-            $this->ui,
-            $this->logger,
-            $this->albumRepository
-        );
-    }
-
-    public function testRunsShowsErrorIfArtistIsNew(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $artist     = $this->mock(Artist::class);
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn([]);
-
-        $this->modelFactory->shouldReceive('createArtist')
-            ->with(0)
-            ->once()
-            ->andReturn($artist);
-
-        $artist->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnTrue();
-
-        $this->logger->shouldReceive('warning')
-            ->with(
-                'Requested an artist that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => ShowAction::class]
-            )
-            ->once();
-
-        $this->expectOutputString('You have requested an object that does not exist');
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
-    }
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunsOutputsGroupedAlbums(): void
     {
@@ -258,6 +187,69 @@ class ShowActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunsShowsErrorIfArtistIsNew(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $artist     = $this->mock(Artist::class);
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([]);
+
+        $this->modelFactory->shouldReceive('createArtist')
+            ->with(0)
+            ->once()
+            ->andReturn($artist);
+
+        $artist->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
+        $this->logger->shouldReceive('warning')
+            ->with(
+                'Requested an artist that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => ShowAction::class]
+            )
+            ->once();
+
+        $this->expectOutputString('You have requested an object that does not exist');
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->logger          = $this->mock(LoggerInterface::class);
+        $this->albumRepository = $this->mock(AlbumRepositoryInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->modelFactory,
+            $this->configContainer,
+            $this->ui,
+            $this->logger,
+            $this->albumRepository
         );
     }
 }

@@ -25,22 +25,39 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class UserUpdate5Method
+ * Updates an existing user.
+ *
+ * Version 5 knows a smaller set of fields than the later versions, so it keeps a method of its own.
  */
-final class UserUpdate5Method
+final class UserUpdate5Method implements MethodInterface
 {
-    public const ACTION = 'user_update';
+    public const string ACTION = 'user_update';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+        private UserStateTogglerInterface $userStateToggler,
+    ) {}
 
     /**
      * user_update
@@ -57,10 +74,10 @@ final class UserUpdate5Method
      * state = (string) $state //optional
      * city = (string) $city //optional
      * disable = (integer) 0,1 true to disable, false to enable //optional
-     * maxbitrate = (integer) $maxbitrate //optional
+     * maxbitrate = (integer) $maxbitrate in kbps //optional
      *
      * @param array{
-     *     username: string,
+     *     username?: string,
      *     fullname?: string,
      *     password?: string,
      *     email?: string,
@@ -77,15 +94,35 @@ final class UserUpdate5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException|RequestParamMissingException
      */
-    public static function user_update(array $input, User $user): bool
-    {
-        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (
+            !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::ADMIN,
+                $user->id
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
-        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
+
+        if (!array_key_exists('username', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'username')
+            );
         }
+
         $username = $input['username'];
         $password = $input['password'] ?? null;
         $fullname = $input['fullname'] ?? null;
@@ -101,65 +138,80 @@ final class UserUpdate5Method
         // identify the user to modify
         $update_user = User::get_from_username($username);
         if ($update_user === null) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'username', $input['api_format']);
-
-            return false;
+            return $this->writeBadRequest($response, $output, $apiVersion, $username, 'username');
         }
 
         if ($password && $update_user->access == 100) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'system', $input['api_format']);
-
-            return false;
+            return $this->writeBadRequest($response, $output, $apiVersion, $username, 'system');
         }
 
         $user_id = $update_user->getId();
         if ($user_id > 0) {
-            if ($password && !AmpConfig::get('simple_user_mode')) {
+            if ($password && !$this->configContainer->get(ConfigurationKeyEnum::SIMPLE_USER_MODE)) {
                 $update_user->update_password('', $password);
             }
+
             if ($fullname) {
                 $update_user->update_fullname($fullname);
             }
+
             if ($email && Mailer::validate_address($email)) {
                 $update_user->update_email($email);
             }
+
             if ($website) {
                 $update_user->update_website($website);
             }
+
             if ($state) {
                 $update_user->update_state($state);
             }
+
             if ($city) {
                 $update_user->update_city($city);
             }
-            $userStateToggler = self::getUserStateToggler();
+
             if ($disable === 1) {
-                $userStateToggler->disable($update_user);
+                $this->userStateToggler->disable($update_user);
             } elseif ($disable === 0) {
-                $userStateToggler->enable($update_user);
+                $this->userStateToggler->enable($update_user);
             }
+
             if ($maxbitrate > 0) {
-                Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+                // maxbitrate has always been kbps here by convention (it was never documented); transcode_bitrate is bps
+                Preference::update('transcode_bitrate', $user_id, $maxbitrate * 1000);
             }
-            Api5::message('successfully updated: ' . $username, $input['api_format']);
 
-            return true;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success($apiVersion, 'successfully updated: ' . $username)
+                )
+            );
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'system', $input['api_format']);
 
-        return false;
+        return $this->writeBadRequest($response, $output, $apiVersion, $username, 'system');
     }
 
     /**
-     * @deprecated Inject by constructor
+     * @param 5 $apiVersion
      */
-    private static function getUserStateToggler(): UserStateTogglerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserStateTogglerInterface::class);
+    private function writeBadRequest(
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        int $apiVersion,
+        string $value,
+        string $type,
+    ): ResponseInterface {
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    sprintf('Bad Request: %s', $value),
+                    self::ACTION,
+                    $type
+                )
+            )
+        );
     }
 }

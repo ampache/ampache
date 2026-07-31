@@ -27,46 +27,34 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
+use Override;
 
 final class UpdateCatalogFileCommand extends Command
 {
-    private UpdateSingleCatalogFileInterface $updateSingleCatalogFile;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        UpdateSingleCatalogFileInterface $updateSingleCatalogFile
+        private readonly UpdateSingleCatalogFileInterface $updateSingleCatalogFile,
     ) {
         parent::__construct('run:updateCatalogFile', T_('Perform catalog actions for a single file'));
-
-        $this->updateSingleCatalogFile = $updateSingleCatalogFile;
 
         $this
             ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
             ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
             ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
-            ->option('-m|--move', T_('Move file in the database to a new location'), 'strval', null)
-            ->option('-r|--rename', T_('Update file path in the database to a new location'), 'strval', null)
+            ->option('-m|--move', T_('Move file in the database to a new location'), 'strval')
+            ->option('-r|--rename', T_('Update file path in the database to a new location'), 'strval')
             ->argument('<catalogName>', T_('Catalog Name'))
             ->argument('<filePath>', T_('File Path'))
             /* HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album) */
             ->usage(
-                '<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3 -e</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/some-file.mp3') . '</end><eol/>' .
-                '<bold>  run:updateCatalogFile some-catalog /tmp/some-file.flac -r /tmp/new-file.flac</end> <comment> ## ' . sprintf(T_('Rename %s to %s in the catalog `some-catalog`'), '/tmp/some-file.flac', '/tmp/new-file.flac') . '</end><eol/>'
+                '<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3 -e</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/some-file.mp3') . '</end><eol/>'
+                . '<bold>  run:updateCatalogFile some-catalog /tmp/some-file.flac -r /tmp/new-file.flac</end> <comment> ## ' . sprintf(T_('Rename %s to %s in the catalog `some-catalog`'), '/tmp/some-file.flac', '/tmp/new-file.flac') . '</end><eol/>'
             );
     }
 
     public function execute(
         string $catalogName,
-        string $filePath
+        string $filePath,
     ): void {
         $values = $this->values();
 
@@ -74,19 +62,19 @@ final class UpdateCatalogFileCommand extends Command
 
         if (
             (
-                $values['rename'] != null &&
-                $values['move'] != null
-            ) ||
-            (
+                $values['rename'] != null
+                && $values['move'] != null
+            )
+            || (
                 (
-                    $values['rename'] != null ||
-                    $values['move'] != null
-                ) &&
-                (
-                    $values['verify'] ||
-                    $values['add'] ||
-                    $values['cleanup'] ||
-                    $values['art']
+                    $values['rename'] != null
+                    || $values['move'] != null
+                )
+                && (
+                    $values['verify']
+                    || $values['add']
+                    || $values['cleanup']
+                    || $values['art']
                 )
             )
         ) {
@@ -118,5 +106,15 @@ final class UpdateCatalogFileCommand extends Command
             $values['rename'],
             $values['move']
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

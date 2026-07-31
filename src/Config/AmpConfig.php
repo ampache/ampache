@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -72,16 +72,6 @@ class AmpConfig
     }
 
     /**
-     * get_web_path
-     *
-     * This return web_path for the site. This is used to allow creating custom configs and web locations
-     */
-    public static function get_web_path(?string $suffix = ''): string
-    {
-        return self::get('web_path', '') . $suffix;
-    }
-
-    /**
      * get_rating_filter
      * Find out whether you are filtering ratings on your search
      * This function is used in mashup and random queries
@@ -90,13 +80,42 @@ class AmpConfig
     {
         $rating_filter = 0;
         if (self::get('rating_browse_filter')) {
-            $rating_filter = (int)self::get('rating_browse_minimum_stars');
+            $rating_filter = (int) self::get('rating_browse_minimum_stars');
         }
         if ($rating_filter > 0 && $rating_filter <= 5) {
             return $rating_filter;
         }
 
         return 0;
+    }
+
+    /**
+     * get_skip_timer
+     *
+     * pull the timer and check using the time of the song for %complete skips
+     */
+    public static function get_skip_timer(int $previous_time): int
+    {
+        $timekeeper = self::get('skip_timer');
+        $skip_time  = 20;
+        if ((int) $timekeeper > 1) {
+            $skip_time = (int) $timekeeper;
+        }
+        if ($timekeeper < 1 && $timekeeper > 0) {
+            $skip_time = (int) ($previous_time * (float) $timekeeper);
+        }
+
+        return $skip_time;
+    }
+
+    /**
+     * get_web_path
+     *
+     * This return web_path for the site. This is used to allow creating custom configs and web locations
+     */
+    public static function get_web_path(?string $suffix = ''): string
+    {
+        return self::get('web_path', '') . $suffix;
     }
 
     /**
@@ -138,24 +157,5 @@ class AmpConfig
         }
 
         $dic->get(ConfigContainerInterface::class)->updateConfig($array);
-    }
-
-    /**
-     * get_skip_timer
-     *
-     * pull the timer and check using the time of the song for %complete skips
-     */
-    public static function get_skip_timer(int $previous_time): ?int
-    {
-        $timekeeper = self::get('skip_timer');
-        $skip_time  = 20;
-        if ((int)$timekeeper > 1) {
-            $skip_time = $timekeeper;
-        }
-        if ($timekeeper < 1 && $timekeeper > 0) {
-            $skip_time = (int)($previous_time * $timekeeper);
-        }
-
-        return $skip_time;
     }
 }

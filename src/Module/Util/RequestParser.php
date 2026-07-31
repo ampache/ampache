@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -31,22 +31,16 @@ use Psr\Log\LoggerInterface;
 /**
  * Provides utility methods related to frontend request parsing
  */
-final class RequestParser implements RequestParserInterface
+final readonly class RequestParser implements RequestParserInterface
 {
-    private LoggerInterface $logger;
-
-    public function __construct(
-        LoggerInterface $logger
-    ) {
-        $this->logger = $logger;
-    }
+    public function __construct(private LoggerInterface $logger) {}
 
     /**
-     * Return a $_REQUEST variable instead of calling directly
+     * Return a $_POST variable instead of calling directly
      */
-    public function getFromRequest(string $variable): string
+    public function getFromPost(string $variable): string
     {
-        $variable = (string) ($_REQUEST[$variable] ?? '');
+        $variable = (string) ($_POST[$variable] ?? '');
         if ($variable === '') {
             return '';
         }
@@ -55,11 +49,11 @@ final class RequestParser implements RequestParserInterface
     }
 
     /**
-     * Return a $_POST variable instead of calling directly
+     * Return a $_REQUEST variable instead of calling directly
      */
-    public function getFromPost(string $variable): string
+    public function getFromRequest(string $variable): string
     {
-        $variable = (string) ($_POST[$variable] ?? '');
+        $variable = (string) ($_REQUEST[$variable] ?? '');
         if ($variable === '') {
             return '';
         }

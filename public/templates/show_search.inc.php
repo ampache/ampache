@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_search.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -48,7 +50,7 @@ $title  = ob_get_contents();
 $browse = new Browse();
 $browse->set_type('playlist_media');
 $browse->set_use_filters(false);
-$browse->add_supplemental_object('search', $playlist->id);
+$browse->add_supplemental_object('playlist', $playlist);
 $browse->set_static_content(false);
 ob_end_clean();
 Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist'); ?>
@@ -75,6 +77,17 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         <li>
             <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=search&random_id=' . $playlist->id, 'autorenew', T_('Random Play'), 'play_random_' . $playlist->id); ?>
         </li>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+        <li>
+            <?php echo Ajax::button_with_text('?action=basket&type=search&id=' . $playlist->id, 'new_window', T_('Add All to Temporary Playlist'), 'add_' . $playlist->id); ?>
+        </li>
+        <li>
+            <a id="<?php echo 'add_to_playlist_' . $playlist->id; ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $playlist->id; ?>')">
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+                <?php echo Ui::get_add_to_list_label(); ?>
+            </a>
+        </li>
+<?php } ?>
 <?php if ($playlist->has_access()) { ?>
         <li>
             <a id="<?php echo 'edit_playlist_' . $playlist->id; ?>" onclick="showEditDialog('search_row', '<?php echo $playlist->id; ?>', '<?php echo 'edit_playlist_' . $playlist->id; ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', '')">

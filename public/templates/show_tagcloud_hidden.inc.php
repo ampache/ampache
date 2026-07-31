@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_tagcloud_hidden.inc.php
+
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -37,7 +39,7 @@ $ui = $dic->get(UiInterface::class);
 
 /** @var UiInterface $ui */
 /** @var Browse $browse */
-/** @var list<array{id: int, name: string}> $object_ids */
+/** @var array<int, array{id: int, name: string}> $object_ids */
 /** @var string $browse_type */
 
 $ui->show(
@@ -59,7 +61,7 @@ $ui->show(
                     </a>
                 </li>
                 <li>
-                    <a class="tag_hidden_delete" href="<?php echo $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri(); ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Tag?'); ?>');"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
+                    <a class="tag_hidden_delete" href="<?php echo $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri(); ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" data-confirm="<?php echo T_('Do you really want to delete this Tag?'); ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 </li>
             </ul>
         </div>

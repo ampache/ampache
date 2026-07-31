@@ -29,26 +29,14 @@ use Ahc\Cli\Input\Command;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
+use Override;
 
 final class PrintDuplicatesCommand extends Command
 {
-    private ModelFactoryInterface $modelFactory;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        private readonly ModelFactoryInterface $modelFactory,
     ) {
         parent::__construct('print:duplicates', T_('Possible Duplicate'));
-
-        $this->modelFactory = $modelFactory;
 
         $this
             ->option('-t|--type', T_('Object Type'), 'strval', 'album')
@@ -61,7 +49,7 @@ final class PrintDuplicatesCommand extends Command
         $interactor = $this->io();
 
         $type = $values['type'];
-        if (!in_array(strtolower($type), ['album', 'album_disk', 'artist', 'album_artist', 'song', 'song_artist'])) {
+        if (!in_array(strtolower((string) $type), ['album', 'album_disk', 'artist', 'album_artist', 'song', 'song_artist'], true)) {
             $interactor->error(
                 "\n" . T_('Invalid Request') . ': ' . $type,
                 true
@@ -103,7 +91,7 @@ final class PrintDuplicatesCommand extends Command
 
             $allowedKeys = match ($type) {
                 'album', 'album_disk' => ['prefix', 'name', 'mbid', 'year', 'disk_count', 'mbid_group', 'release_type', 'album_artist', 'original_year', 'barcode', 'catalog_number', 'version', 'release_status'],
-                'artist', ['prefix', 'name', 'mbid'],
+                'artist' => ['prefix', 'name', 'mbid'],
                 'song' => ['prefix', 'name', 'mbid', 'f_album_full', 'artist_full_name'],
                 default => null,
             };
@@ -142,5 +130,15 @@ final class PrintDuplicatesCommand extends Command
         }
 
         print_r("\n" . T_('Done') . "\n");
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

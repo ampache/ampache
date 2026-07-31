@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -28,31 +28,45 @@ namespace Ampache\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Collator;
+use Override;
+use Throwable;
 use WpOrg\Requests\Requests;
 
 class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
 {
-    public string $name = 'LrcLib';
+    private const CONNECT_TIMEOUT = 3;
 
+    private const REQUEST_TIMEOUT = 7;
+
+    #[Override]
     public string $categories = 'lyrics';
 
+    #[Override]
     public string $description = 'Get lyrics from an LrcLib compatible server';
 
-    public string $url = 'https://lrclib.net/';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000001';
-
+    #[Override]
     public string $min_ampache = '360022';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'LrcLib';
 
     public string $site_url = 'https://lrclib.net';
 
+    #[Override]
+    public string $url = 'https://lrclib.net/';
+
     public string $user_agent = 'Ampache-LrcLib-Plugin/1.0';
+
+    #[Override]
+    public string $version = '000001';
 
     /**
      * Constructor
@@ -63,39 +77,53 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
     }
 
     /**
-     * @return null|array<int, array{
-     *     id: int,
-     *     name: string,
-     *     trackName: string,
-     *     artistName: string,
-     *     albumName: string,
-     *     duration: float,
-     *     plainLyrics: string|null,
-     *     syncedLyrics: string|null,
-     * }>
+     * get_lyrics
+     * This will look web services for a song lyrics.
+     * @return null|array{'text': string, 'url': string}
      */
-    private function _query_server(string $path_str, string $query_str = ''): ?array
+    public function get_lyrics(Song $song): ?array
     {
-        $url = ($query_str === '' || $query_str === '0')
-            ? $this->site_url . $path_str
-            : $this->site_url . $path_str . '?' . $query_str;
+        debug_event(self::class, 'get_lyrics', 3);
+        $response = $this->_query_server(
+            '/api/search',
+            'track_name=' . urlencode((string) $song->title) . '&artist_name=' . urlencode($song->get_parent_fullname()) . '&album_name=' . urlencode($song->get_album_fullname())
+        );
+        $collator = new Collator('root');
+        $collator->setStrength(Collator::PRIMARY);
+        if (is_array($response)) {
+            foreach ($response as $item) {
+                $checks = [
+                    'duration matches' => !($item['duration'] && $song->time) || abs((int) $item['duration'] - $song->time) < 5,
+                    'song title matches' => $collator->compare($item['trackName'], (string) $song->title) === 0,
+                    'artist matches' => $collator->compare($item['artistName'], $song->get_parent_fullname()) === 0,
+                    'album matches' => $collator->compare($item['albumName'], $song->get_album_fullname()) === 0,
+                    'has plain lyrics' => !empty($item['plainLyrics'])
+                ];
+                $checks_result = array_all(
+                    $checks,
+                    fn(bool $value) => $value
+                );
 
-        $headers = [
-            'Accept' => 'application/json',
-            'User-Agent' => $this->user_agent
-        ];
+                if ($checks_result) {
+                    return [
+                        'text' => nl2br((string) $item['plainLyrics']),
+                        'url' => $this->site_url . '/api/get/' . $item['id']
+                    ];
+                }
 
-        debug_event(self::class, 'Searching for lyrics: ' . $url, 5);
-        $request = Requests::get($url, $headers);
+                $checks_values = [
+                    'durations' => ((int) $item['duration']) . " /vs/ " . $song->time,
+                    'song title' => $item['trackName'] . ' /vs/ ' . $song->title,
+                    'artist' => $item['artistName'] . ' /vs/ ' . $song->get_parent_fullname(),
+                    'album' => $item['albumName'] . ' /vs/ ' . $song->get_album_fullname(),
+                    'has plain lyrics' => !empty($item['plainLyrics'])
+                ];
 
-        // sleep for 0.5s
-        usleep(500000);
+                debug_event(self::class, 'get_lyrics check failed: ' . var_export($checks, true) . '\n' . var_export($checks_values, true), 5);
+            }
+        }
 
-        $response = json_decode($request->body, true);
-
-        return ($request->success && is_array($response))
-            ? $response
-            : null;
+        return null;
     }
 
     /**
@@ -105,24 +133,6 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
     public function install(): bool
     {
         return Preference::insert('lrclib_site_url', T_('LrcLib site URL'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * This is a required plugin function
-     */
-    public function uninstall(): bool
-    {
-        return Preference::delete('lrclib_site_url');
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
     }
 
     /**
@@ -155,52 +165,67 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
     }
 
     /**
-     * get_lyrics
-     * This will look web services for a song lyrics.
-     * @return null|array{'text': string, 'url': string}
+     * uninstall
+     * This is a required plugin function
      */
-    public function get_lyrics(Song $song): ?array
+    public function uninstall(): bool
     {
-        debug_event(self::class, 'get_lyrics', 3);
-        $response = $this->_query_server(
-            '/api/search',
-            'track_name=' . urlencode((string)$song->title) . '&artist_name=' . urlencode($song->get_parent_fullname()) . '&album_name=' . urlencode($song->get_album_fullname())
-        );
-        $collator = new Collator('root');
-        $collator->setStrength(Collator::PRIMARY);
-        if (is_array($response)) {
-            foreach ($response as $item) {
-                $checks = [
-                  'duration matches' => !($item['duration'] && $song->time) || abs((int)$item['duration'] - $song->time) < 5,
-                  'song title matches' => $collator->compare($item['trackName'], (string)$song->title) === 0,
-                  'artist matches' => $collator->compare($item['artistName'], $song->get_parent_fullname()) === 0,
-                  'album matches' => $collator->compare($item['albumName'], $song->get_album_fullname()) === 0,
-                  'has plain lyrics' => !empty($item['plainLyrics'])
-                ];
-                $checks_result = array_all(
-                    $checks,
-                    fn (bool $value) => $value
-                );
+        return Preference::delete('lrclib_site_url');
+    }
 
-                if ($checks_result) {
-                    return [
-                        'text' => nl2br((string)$item['plainLyrics']),
-                        'url' => $this->site_url . '/api/get/' . $item['id']
-                    ];
-                }
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
+    }
 
-                $checks_values = [
-                    'durations' => ((int)$item['duration']) . " /vs/ " . $song->time,
-                    'song title' => $item['trackName'] . ' /vs/ ' . $song->title,
-                    'artist' => $item['artistName'] . ' /vs/ ' . $song->get_parent_fullname(),
-                    'album' => $item['albumName'] . ' /vs/ ' . $song->get_album_fullname(),
-                    'has plain lyrics' => !empty($item['plainLyrics'])
-                ];
+    /**
+     * @return null|array<int, array{
+     *     id: int,
+     *     name: string,
+     *     trackName: string,
+     *     artistName: string,
+     *     albumName: string,
+     *     duration: float,
+     *     plainLyrics: string|null,
+     *     syncedLyrics: string|null,
+     * }>
+     */
+    private function _query_server(string $path_str, string $query_str = ''): ?array
+    {
+        $url = ($query_str === '' || $query_str === '0')
+            ? $this->site_url . $path_str
+            : $this->site_url . $path_str . '?' . $query_str;
 
-                debug_event(self::class, 'get_lyrics check failed: ' . var_export($checks, true) . '\n' . var_export($checks_values, true), 5);
-            }
+        $headers = [
+            'Accept' => 'application/json',
+            'User-Agent' => $this->user_agent
+        ];
+
+        debug_event(self::class, 'Searching for lyrics: ' . $url, 5);
+        $options = Core::requests_options([
+            'timeout' => self::REQUEST_TIMEOUT,
+            'connect_timeout' => self::CONNECT_TIMEOUT,
+        ]);
+
+        try {
+            $request = Requests::get($url, $headers, $options);
+        } catch (Throwable $error) {
+            debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
+
+            return null;
         }
 
-        return null;
+        // sleep for 0.5s
+        usleep(500000);
+
+        $response = json_decode($request->body, true);
+
+        return ($request->success && is_array($response))
+            ? $response
+            : null;
     }
 }

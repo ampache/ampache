@@ -25,20 +25,32 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class LastShouts5Method
+ * Returns the latest posted shouts.
+ *
+ * Version 5 requires the `username`, only ever looks a user up by name and renders an empty list
+ * rather than an empty result, so it keeps a method of its own.
  */
-final class LastShouts5Method
+final class LastShouts5Method implements MethodInterface
 {
-    public const ACTION = 'last_shouts';
+    public const string ACTION = 'last_shouts';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private ShoutRepositoryInterface $shoutRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * last_shouts
@@ -55,45 +67,39 @@ final class LastShouts5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessDeniedException
      */
-    public static function last_shouts(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: sociable'), self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::SOCIABLE)) {
+            throw new AccessDeniedException(
+                'Enable: sociable'
+            );
         }
-        unset($user);
+
         $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = (int) AmpConfig::get('popular_threshold', 10);
+            $limit = (int) ($this->configContainer->get(ConfigurationKeyEnum::POPULAR_THRESHOLD) ?? 10);
         }
 
+        // without a username you get your own shouts
         $username = (!empty($input['username']))
             ? $input['username']
-            : null;
+            : $user->username;
 
-        $results = self::getShoutRepository()->getTop($limit, $username);
+        $results = iterator_to_array($this->shoutRepository->getTop($limit, $username));
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json5_Data::shouts($results);
-                break;
-            default:
-                echo Xml5_Data::shouts($results);
-        }
-
-        return true;
-    }
-
-    /**
-     * @todo inject by constructor
-     */
-    private static function getShoutRepository(): ShoutRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ShoutRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->shouts($apiVersion, $results)
+            )
+        );
     }
 }

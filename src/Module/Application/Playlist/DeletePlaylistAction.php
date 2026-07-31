@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,41 +33,31 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class DeletePlaylistAction implements ApplicationActionInterface
+final readonly class DeletePlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete_playlist';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'delete_playlist';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->modelFactory    = $modelFactory;
-        $this->responseFactory = $responseFactory;
-        $this->configContainer = $configContainer;
-    }
+        private ModelFactoryInterface $modelFactory,
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (check_http_referer()) {
             $playlistId = $request->getQueryParams()['playlist_id'] ?? null;
             if ($playlistId !== null) {
                 // Check rights
-                $playlist = $this->modelFactory->createPlaylist((int)$playlistId);
+                $playlist = $this->modelFactory->createPlaylist((int) $playlistId);
                 if ($playlist->has_access()) {
                     $playlist->delete();
 
                     // Go elsewhere
                     return $this->responseFactory
-                        ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+                        ->createResponse(RFC7231::FOUND)
                         ->withHeader(
                             'Location',
                             sprintf('%s/browse.php?action=playlist', $this->configContainer->getWebPath())

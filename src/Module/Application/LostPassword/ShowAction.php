@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -35,27 +35,22 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $allowLostPassword = $this->configContainer->get(ConfigurationKeyEnum::ALLOW_LOST_PASSWORD);
         if (
-            !Mailer::is_mail_enabled() ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            !Mailer::is_mail_enabled()
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || ($allowLostPassword !== null && !make_bool($allowLostPassword))
         ) {
             throw new AccessDeniedException();
         }

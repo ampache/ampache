@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastEpisodeDelete4Method
 {
-    public const ACTION = 'podcast_episode_delete';
+    public const string ACTION = 'podcast_episode_delete';
 
     /**
      * podcast_episode_delete
@@ -57,7 +57,7 @@ final class PodcastEpisodeDelete4Method
     public static function podcast_episode_delete(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: podcast features are not enabled.', '400', $input['api_format']);
 
             return false;
         }

@@ -1,0 +1,46 @@
+{
+    "total_count": 24,
+    "md5": "286eec1150e58749cf21ff673f9a444d",
+    "podcast": [
+        {
+            "id": "63",
+            "name": "Acquisitions Incorporated: The Series",
+            "description": "Acquisitions Incorporated serves up locally-sourced adventure from convenient franchise locations across Faer&amp;ucirc;n. Their adventures began in 2007 with a podcast of three friends playing D&amp;D, and inexplicably progressed to live games on-stage before thousands of audience members at PAX.",
+            "language": "en-us",
+            "copyright": "Copyright (c) 1998-2020 Penny Arcade, Inc.",
+            "feed_url": "https:\/\/www.penny-arcade.com\/feed\/podcasts-ai",
+            "generator": "",
+            "website": "https:\/\/www.penny-arcade.com\/podcasts",
+            "build_date": "2020-11-08T19:56:00+00:00",
+            "sync_date": "2026-07-07T07:21:41+00:00",
+            "public_url": "https:\/\/music.com.au\/podcast.php?action=show&podcast=63",
+            "art": "https:\/\/music.com.au\/image.php?object_id=63&object_type=podcast&id=1077564&name=art.jpg",
+            "has_art": true,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "catalog": "7",
+            "podcast_episode": []
+        },
+        {
+            "id": "64",
+            "name": "AI: The \"C\" Team",
+            "description": "Acquisitions Incorporated serves up locally-sourced adventure from convenient franchise locations across Faer&ucirc;n. Their adventures began in 2007 with a podcast of three friends playing D&amp;D, and inexplicably progressed to live games on-stage before thousands of audience members at PAX.",
+            "language": "en-us",
+            "copyright": "Copyright (c) 1998-2020 Penny Arcade, Inc.",
+            "feed_url": "http:\/\/www.acq-inc.com\/feed\/cteam_podcast",
+            "generator": "",
+            "website": "https:\/\/www.acq-inc.com\/",
+            "build_date": "2020-12-17T05:16:00+00:00",
+            "sync_date": "2026-07-07T07:21:42+00:00",
+            "public_url": "https:\/\/music.com.au\/podcast.php?action=show&podcast=64",
+            "art": "https:\/\/music.com.au\/image.php?object_id=64&object_type=podcast&id=1082013&name=art.jpg",
+            "has_art": true,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "catalog": "7",
+            "podcast_episode": []
+        }
+    ]
+}

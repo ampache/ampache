@@ -37,48 +37,39 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmDeleteAction implements ApplicationActionInterface
+final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_delete';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private PrivateMessageRepositoryInterface $pmRepository;
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        PrivateMessageRepositoryInterface $pmRepository
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->pmRepository    = $pmRepository;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private PrivateMessageRepositoryInterface $pmRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
         ) {
             throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
         $messageIds = array_map(
-            'intval',
+            intval(...),
             explode(',', $request->getQueryParams()['msgs'] ?? [])
         );
         foreach ($messageIds as $messageId) {
             $message = $this->pmRepository->findById($messageId);
 
             if (
-                $message === null ||
-                $message->getRecipientUserId() !== $gatekeeper->getUserId()
+                $message === null
+                || $message->getRecipientUserId() !== $gatekeeper->getUserId()
             ) {
                 throw new AccessDeniedException(
                     sprintf('Unknown or unauthorized private message `%d`.', $messageId)

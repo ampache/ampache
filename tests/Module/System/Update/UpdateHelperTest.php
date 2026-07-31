@@ -30,18 +30,18 @@ class UpdateHelperTest extends TestCase
 {
     private UpdateHelper $subject;
 
-    protected function setUp(): void
-    {
-        $this->subject = new UpdateHelper();
-    }
-
     public function testFormatVersionReturnsFormattedValue(): void
     {
         $version = '666042';
 
-        static::assertSame(
+        self::assertSame(
             '6.6.6 Build: 042',
             $this->subject->formatVersion($version)
         );
+    }
+
+    protected function setUp(): void
+    {
+        $this->subject = new UpdateHelper();
     }
 }

@@ -28,6 +28,7 @@ namespace Ampache\Module\Util;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
@@ -35,23 +36,21 @@ use Psr\Log\LoggerInterface;
 class ZipHandlerTest extends MockeryTestCase
 {
     private MockInterface&ConfigContainerInterface $configContainer;
-
     private MockInterface&LoggerInterface $logger;
-
     private StreamFactoryInterface&MockObject $streamFactory;
-
     private ZipHandler $subject;
 
-    protected function setUp(): void
+    public function testIsZipableReturnsFalseIfNotSupported(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->streamFactory   = $this->createMock(StreamFactoryInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
+        $type = 'foobar';
 
-        $this->subject = new ZipHandler(
-            $this->configContainer,
-            $this->streamFactory,
-            $this->logger
+        $this->configContainer->shouldReceive('getTypesAllowedForZip')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['snoosnoo']);
+
+        self::assertFalse(
+            $this->subject->isZipable($type)
         );
     }
 
@@ -64,22 +63,22 @@ class ZipHandlerTest extends MockeryTestCase
             ->once()
             ->andReturn([$type]);
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->isZipable($type)
         );
     }
 
-    public function testIsZipableReturnsFalseIfNotSupported(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $type = 'foobar';
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->streamFactory   = $this->createMock(StreamFactoryInterface::class);
+        $this->logger          = $this->mock(LoggerInterface::class);
 
-        $this->configContainer->shouldReceive('getTypesAllowedForZip')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['snoosnoo']);
-
-        static::assertFalse(
-            $this->subject->isZipable($type)
+        $this->subject = new ZipHandler(
+            $this->configContainer,
+            $this->streamFactory,
+            $this->logger
         );
     }
 }

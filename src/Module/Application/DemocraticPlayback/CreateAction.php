@@ -37,35 +37,25 @@ use Ampache\Repository\Model\Democratic;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class CreateAction implements ApplicationActionInterface
+final readonly class CreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'create';
-
-    private ConfigContainerInterface $configContainer;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'create';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory,
-        RequestParserInterface $requestParser
-    ) {
-        $this->configContainer = $configContainer;
-        $this->responseFactory = $responseFactory;
-        $this->requestParser   = $requestParser;
-    }
+        private ConfigContainerInterface $configContainer,
+        private ResponseFactoryInterface $responseFactory,
+        private RequestParserInterface $requestParser,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         /* Make sure they have access to this */
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false ||
-            !$this->requestParser->verifyForm('create_democratic') ||
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false
+            || !$this->requestParser->verifyForm('create_democratic')
+            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
         ) {
             throw new AccessDeniedException();
         }
@@ -76,18 +66,18 @@ final class CreateAction implements ApplicationActionInterface
         if ($democratic->isNew()) {
             // Create the playlist
             Democratic::create([
-                'name' => $_POST['name'],
-                'democratic' => (int)$_POST['democratic'],
-                'cooldown' => (int)$_POST['cooldown'],
-                'level' => (int)$_POST['level'],
-                'make_default' => (int)$_POST['make_default'],
+                'name' => (string) $_POST['name'],
+                'democratic' => (int) $_POST['democratic'],
+                'cooldown' => (int) $_POST['cooldown'],
+                'level' => (int) $_POST['level'],
+                'make_default' => (int) $_POST['make_default'],
             ]);
         } else {
             $democratic->update($_POST);
         }
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(

@@ -32,99 +32,12 @@ use Ampache\Module\Authorization\Exception\InvalidIpRangeException;
 use Ampache\Module\Authorization\Exception\InvalidStartIpException;
 use Ampache\Repository\AccessRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 
 class AccessListManagerTest extends MockeryTestCase
 {
     private MockInterface&AccessRepositoryInterface $accessRepository;
-
     private AccessListManager $subject;
-
-    protected function setUp(): void
-    {
-        $this->accessRepository = $this->mock(AccessRepositoryInterface::class);
-
-        $this->subject = new AccessListManager(
-            $this->accessRepository
-        );
-    }
-
-    public function testUpdateThrowsExceptionOnInvalidStartIp(): void
-    {
-        $this->expectException(InvalidStartIpException::class);
-
-        $this->subject->update(
-            111,
-            '666',
-            '1.2.3.4',
-            'some-name',
-            42,
-            AccessLevelEnum::ADMIN,
-            AccessTypeEnum::STREAM
-        );
-    }
-
-    public function testUpdateThrowsExceptionOnInvalidEndIp(): void
-    {
-        $this->expectException(InvalidEndIpException::class);
-
-        $this->subject->update(
-            111,
-            '1.2.3.4',
-            '666',
-            'some-name',
-            42,
-            AccessLevelEnum::ADMIN,
-            AccessTypeEnum::STREAM
-        );
-    }
-
-    public function testUpdateThrowsExceptionOnInvalidIpRange(): void
-    {
-        $this->expectException(InvalidIpRangeException::class);
-
-        $this->subject->update(
-            111,
-            '::',
-            '1.2.3.4',
-            'some-name',
-            42,
-            AccessLevelEnum::ADMIN,
-            AccessTypeEnum::STREAM
-        );
-    }
-
-    public function testUpdateUpdatesEntry(): void
-    {
-        $accessId = 111;
-        $startIp  = '1.2.3.4';
-        $endIp    = '2.3.4.5';
-        $name     = 'some-name';
-        $userId   = 42;
-        $level    = AccessLevelEnum::USER;
-        $type     = AccessTypeEnum::INTERFACE;
-
-        $this->accessRepository->shouldReceive('update')
-            ->with(
-                $accessId,
-                inet_pton($startIp),
-                inet_pton($endIp),
-                $name,
-                $userId,
-                $level,
-                $type
-            )
-            ->once();
-
-        $this->subject->update(
-            $accessId,
-            $startIp,
-            $endIp,
-            $name,
-            $userId,
-            $level,
-            $type
-        );
-    }
 
     public function testCreateCreatesEntry(): void
     {
@@ -235,6 +148,94 @@ class AccessListManagerTest extends MockeryTestCase
             $level,
             $type,
             $additionalType
+        );
+    }
+
+    public function testUpdateThrowsExceptionOnInvalidEndIp(): void
+    {
+        $this->expectException(InvalidEndIpException::class);
+
+        $this->subject->update(
+            111,
+            '1.2.3.4',
+            '666',
+            'some-name',
+            42,
+            AccessLevelEnum::ADMIN,
+            AccessTypeEnum::STREAM
+        );
+    }
+
+    public function testUpdateThrowsExceptionOnInvalidIpRange(): void
+    {
+        $this->expectException(InvalidIpRangeException::class);
+
+        $this->subject->update(
+            111,
+            '::',
+            '1.2.3.4',
+            'some-name',
+            42,
+            AccessLevelEnum::ADMIN,
+            AccessTypeEnum::STREAM
+        );
+    }
+
+    public function testUpdateThrowsExceptionOnInvalidStartIp(): void
+    {
+        $this->expectException(InvalidStartIpException::class);
+
+        $this->subject->update(
+            111,
+            '666',
+            '1.2.3.4',
+            'some-name',
+            42,
+            AccessLevelEnum::ADMIN,
+            AccessTypeEnum::STREAM
+        );
+    }
+
+    public function testUpdateUpdatesEntry(): void
+    {
+        $accessId = 111;
+        $startIp  = '1.2.3.4';
+        $endIp    = '2.3.4.5';
+        $name     = 'some-name';
+        $userId   = 42;
+        $level    = AccessLevelEnum::USER;
+        $type     = AccessTypeEnum::INTERFACE;
+
+        $this->accessRepository->shouldReceive('update')
+            ->with(
+                $accessId,
+                inet_pton($startIp),
+                inet_pton($endIp),
+                $name,
+                $userId,
+                $level,
+                $type
+            )
+            ->once();
+
+        $this->subject->update(
+            $accessId,
+            $startIp,
+            $endIp,
+            $name,
+            $userId,
+            $level,
+            $type
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->accessRepository = $this->mock(AccessRepositoryInterface::class);
+
+        $this->subject = new AccessListManager(
+            $this->accessRepository
         );
     }
 }

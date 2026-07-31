@@ -2,9 +2,9 @@ name: qa
 
 on:
   push:
-    branches: [ develop, master, patch7 ]
+    branches: [ develop, master, patch8 ]
   pull_request:
-    branches: [ develop, patch7, release7 ]
+    branches: [ develop, patch8, release8 ]
 
 jobs:
   build:
@@ -12,10 +12,9 @@ jobs:
     strategy:
       matrix:
         os: ['ubuntu-latest']
-        php: ['8.2', '8.3', '8.4']
-    continue-on-error: ${{ matrix.php == '8.3' || matrix.php == '8.4' }}
+        php: ['8.5']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -26,7 +25,7 @@ jobs:
         run: composer validate
 
       - name: Install dependencies
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 5
           max_attempts: 3
@@ -37,3 +36,23 @@ jobs:
 
       - name: Run NPM audit (production)
         run: npm audit --production
+
+  api-docs:
+    # docs/openapi.json and the API method references are generated; this fails if they drift from
+    # the code. Kept out of the `qa` job so `composer qa` stays pure php for contributors.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Check the generated API documents are up to date
+        run: composer run-script api:docs:check

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -44,78 +44,46 @@ use DateTimeInterface;
 
 class Podcast_Episode extends database_object implements
     Media,
-    library_item,
+    displayable_item,
+    container_item,
     CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'podcast_episode';
-
-    public int $id = 0;
-
-    public ?string $title = null;
-
-    public ?string $guid = null;
-
-    public int $podcast;
-
-    public ?string $state = null;
-
-    public ?string $file = null;
-
-    public ?string $source = null;
-
-    public int $size;
-
-    public int $time;
-
-    public ?string $website = null;
-
-    public ?string $description = null;
-
-    public ?string $author = null;
-
-    public ?string $category = null;
-
-    public bool $played;
-
-    public bool $enabled;
-
-    public int $pubdate;
+    protected const string DB_TABLENAME = 'podcast_episode';
 
     public int $addition_time;
-
-    public int $update_time;
-
-    public int $total_count = 0;
-
-    public int $total_skip = 0;
-
-    private int $weight = 0;
-
-    public int $catalog;
-
+    public ?string $author = null;
     public int $bitrate;
-
+    public int $catalog;
+    public ?string $category    = null;
+    public ?int $channels       = null;
+    public ?string $description = null;
+    public bool $enabled        = true;
+    public ?string $file        = null;
+    public ?string $guid        = null;
+    public int $id              = 0;
+    public ?int $last_played    = null; // When this was last streamed, as a unix timestamp; null until it has been played.
+    public ?string $mime        = null;
+    public ?string $mode        = null;
+    public bool $played;
+    public int $podcast;
+    public int $pubdate;
     public int $rate;
-
-    public ?string $mode = null;
-
-    public ?int $channels = null;
-
-    public ?string $waveform = null;
-
+    public int $size;
+    public ?string $source = null;
+    public ?string $state  = null;
+    public int $time;
+    public ?string $title   = null;
+    public int $total_count = 0;
+    public int $total_skip  = 0;
     public string $type;
-
-    public ?string $mime = null;
-
-    private ?string $link = null;
-
+    public int $update_time;
+    public ?string $waveform        = null;
+    public ?string $website         = null;
+    private ?bool $has_art          = null;
+    private ?string $link           = null;
     private ?string $link_formatted = null;
-
-    private ?string $podcast_name = null;
-
-    private ?string $podcast_link = null;
-
-    private ?bool $has_art = null;
+    private ?string $podcast_link   = null;
+    private ?string $podcast_name   = null;
 
     /**
      * Constructor
@@ -133,15 +101,40 @@ class Podcast_Episode extends database_object implements
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->addition_time = (int) ($info['addition_time'] ?? 0);
+        $this->author        = $info['author'] ?? null;
+        $this->bitrate       = (int) ($info['bitrate'] ?? 0);
+        $this->catalog       = (int) ($info['catalog'] ?? 0);
+        $this->category      = $info['category'] ?? null;
+        $this->channels      = isset($info['channels']) ? (int) $info['channels'] : null;
+        $this->description   = $info['description'] ?? null;
+        $this->enabled       = (bool) ($info['enabled'] ?? true);
+        $this->file          = $info['file'] ?? null;
+        $this->guid          = $info['guid'] ?? null;
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->mime          = $info['mime'] ?? null;
+        $this->mode          = $info['mode'] ?? null;
+        $this->played        = (bool) ($info['played'] ?? false);
+        $this->podcast       = (int) ($info['podcast'] ?? 0);
+        $this->pubdate       = (int) ($info['pubdate'] ?? 0);
+        $this->rate          = (int) ($info['rate'] ?? 0);
+        $this->size          = (int) ($info['size'] ?? 0);
+        $this->source        = $info['source'] ?? null;
+        $this->state         = $info['state'] ?? null;
+        $this->time          = (int) ($info['time'] ?? 0);
+        $this->title         = $info['title'] ?? null;
+        $this->last_played   = isset($info['last_played']) ? (int) $info['last_played'] : null;
+        $this->total_count   = (int) ($info['total_count'] ?? 0);
+        $this->total_skip    = (int) ($info['total_skip'] ?? 0);
+        $this->type          = $info['type'] ?? '';
+        $this->update_time   = (int) ($info['update_time'] ?? 0);
+        $this->waveform      = $info['waveform'] ?? null;
+        $this->website       = $info['website'] ?? null;
 
-        $this->id = $episode_id;
         if (
-            $this->file !== null &&
-            $this->file !== '' &&
-            $this->file !== '0'
+            $this->file !== null
+            && $this->file !== ''
+            && $this->file !== '0'
         ) {
             $this->type    = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
             $this->mime    = Song::type_to_mime($this->type);
@@ -149,122 +142,109 @@ class Podcast_Episode extends database_object implements
         }
     }
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
     /**
-     * Returns the id of the catalog the item is associated to
+     * update_file
+     * sets the file path
      */
-    public function getCatalogId(): int
+    public static function update_file(string $path, int $id): void
     {
-        return $this->catalog;
-    }
-
-    public function getCategory(): string
-    {
-        return scrub_out($this->category);
-    }
-
-    public function getAuthor(): string
-    {
-        return scrub_out($this->author);
-    }
-
-    public function getWebsite(): string
-    {
-        return scrub_out($this->website);
-    }
-
-    public function getBitrateFormatted(): string
-    {
-        return sprintf('%d-%s', (int) ($this->bitrate / 1024), strtoupper((string)$this->mode));
-    }
-
-    public function getPubDate(): DateTimeInterface
-    {
-        return new DateTime('@' . $this->pubdate);
-    }
-
-    public function getState(): PodcastEpisodeStateEnum
-    {
-        return PodcastEpisodeStateEnum::tryFrom((string) $this->state) ?? PodcastEpisodeStateEnum::PENDING;
-    }
-
-    public function getSizeFormatted(): string
-    {
-        return Ui::format_bytes($this->size);
-    }
-
-    /**
-     * does the item have art?
-     */
-    public function has_art(): bool
-    {
-        if ($this->has_art === null) {
-            $this->has_art = Art::has_db($this->podcast, 'podcast');
+        // a blank path would clear the stored file, so a failed move leaves the old value in place
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) || trim($path) === '') {
+            return;
         }
 
-        return $this->has_art ?? false;
+        self::getPodcastEpisodeRepository()->setFile($id, $path);
     }
 
     /**
-     * Get item keywords for metadata searches.
-     * @return array<string, array{important: bool, label: string, value: string}>
+     * update_utime
+     * sets a new update time
      */
-    public function get_keywords(): array
+    public static function update_utime(int $episode_id, int $time = 0): void
     {
-        return [
-            'podcast' => [
-                'important' => true,
-                'label' => T_('Podcast'),
-                'value' => $this->getPodcastName()
-            ],
-            'title' => [
-                'important' => true,
-                'label' => T_('Title'),
-                'value' => (string)$this->get_fullname()
-            ]
-        ];
-    }
-
-    /**
-     * get_fullname
-     */
-    public function get_fullname(): ?string
-    {
-        return $this->title;
-    }
-
-    /**
-     * Get item link.
-     */
-    public function get_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->link === null) {
-            $web_path = AmpConfig::get_web_path();
-
-            $this->link = $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
+        if (!$time) {
+            $time = time();
         }
 
-        return $this->link ?? '';
+        self::getPodcastEpisodeRepository()->setUpdateTime($episode_id, $time);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
+    }
+
+    /**
+     * Updates the state of an episode
+     */
+    public function change_state(PodcastEpisodeStateEnum $state): void
+    {
+        $this->getPodcastEpisodeRepository()->updateState($this, $state);
+    }
+
+    public function check_play_history(int $user, string $agent, int $date): bool
+    {
+        return Stats::has_played_history('podcast_episode', $this, $user, $agent, $date);
+    }
+
+    /**
+     * display_art
+     * @param array{width: int, height: int} $size
+     */
+    public function display_art(array $size, bool $force = false): void
+    {
+        if (Art::has_db($this->id, 'podcast_episode')) {
+            Art::display('podcast_episode', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
+        } elseif (Art::has_db($this->podcast, 'podcast') || $force) {
+            Art::display('podcast', $this->podcast, (string) $this->get_fullname(), $size, $this->get_link());
+        }
+    }
+
+    /**
+     * get_default_art_kind
+     */
+    public function get_default_art_kind(): string
+    {
+        return 'default';
+    }
+
+    /**
+     * get_description
+     */
+    public function get_description(): string
+    {
+        return scrub_out((string) $this->description);
+    }
+
+    /**
+     * Get item get_f_album_disk_link.
+     */
+    public function get_f_album_disk_link(): string
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_link.
+     */
+    public function get_f_album_link(): string
+    {
+        return '';
     }
 
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(?string $title = null): string
     {
         // don't do anything if it's formatted
         if ($this->link_formatted === null) {
-            $this->link_formatted = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+            $this->link_formatted = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($title ?? $this->get_fullname()) . '</a>';
         }
 
         return $this->link_formatted;
@@ -295,40 +275,60 @@ class Podcast_Episode extends database_object implements
         return $hour . ":" . $min_h . ":" . $sec;
     }
 
-    public function getPodcastName(): string
+    /**
+     * get_fullname
+     */
+    public function get_fullname(): ?string
     {
-        if ($this->podcast_name === null) {
-            $podcast            = $this->getPodcastRepository()->findById($this->podcast);
-            $this->podcast_name = (string)$podcast?->get_fullname();
-        }
-
-        return $this->podcast_name;
-    }
-
-    public function getPodcastLink(): string
-    {
-        if ($this->podcast_link === null) {
-            $podcast            = $this->getPodcastRepository()->findById($this->podcast);
-            $this->podcast_link = (string)$podcast?->get_f_link();
-        }
-
-        return $this->podcast_link;
+        return $this->title;
     }
 
     /**
-     * Get item get_f_album_link.
+     * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
-    public function get_f_album_link(): string
+    public function get_keywords(): array
     {
-        return '';
+        return [
+            'podcast' => [
+                'important' => true,
+                'label' => T_('Podcast'),
+                'value' => $this->getPodcastName()
+            ],
+            'title' => [
+                'important' => true,
+                'label' => T_('Title'),
+                'value' => (string) $this->get_fullname()
+            ]
+        ];
     }
 
     /**
-     * Get item get_f_album_disk_link.
+     * Get item link.
      */
-    public function get_f_album_disk_link(): string
+    public function get_link(): string
     {
-        return '';
+        // don't do anything if it's formatted
+        if ($this->link === null) {
+            $web_path = AmpConfig::get_web_path();
+
+            $this->link = $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
+        }
+
+        return $this->link ?? '';
+    }
+
+    /**
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function get_medias(?string $filter_type = null): array
+    {
+        $medias = [];
+        if ($filter_type === null || $filter_type === 'podcast_episode') {
+            $medias[] = ['object_type' => LibraryItemEnum::PODCAST_EPISODE, 'object_id' => $this->id];
+        }
+
+        return $medias;
     }
 
     /**
@@ -342,213 +342,9 @@ class Podcast_Episode extends database_object implements
         ];
     }
 
-    /**
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
+    public function get_parent_fullname(): string
     {
-        return [];
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
-    }
-
-    /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_medias(?string $filter_type = null): array
-    {
-        $medias = [];
-        if ($filter_type === null || $filter_type === 'podcast_episode') {
-            $medias[] = ['object_type' => LibraryItemEnum::PODCAST_EPISODE, 'object_id' => $this->id];
-        }
-
-        return $medias;
-    }
-
-    public function get_user_owner(): ?int
-    {
-        return null;
-    }
-
-    /**
-     * get_default_art_kind
-     */
-    public function get_default_art_kind(): string
-    {
-        return 'default';
-    }
-
-    /**
-     * get_description
-     */
-    public function get_description(): string
-    {
-        return scrub_out((string) $this->description);
-    }
-
-    public function getSource(): string
-    {
-        return (string) $this->source;
-    }
-
-    public function getFile(): string
-    {
-        return (string) $this->file;
-    }
-
-    public function getPodcastId(): int
-    {
-        return $this->podcast;
-    }
-
-    /**
-     * display_art
-     * @param array{width: int, height: int} $size
-     */
-    public function display_art(array $size, bool $force = false): void
-    {
-        $episode_id = null;
-        $type       = null;
-
-        if (Art::has_db($this->id, 'podcast_episode')) {
-            $episode_id = $this->id;
-            $type       = 'podcast_episode';
-        } elseif (Art::has_db($this->podcast, 'podcast') || $force) {
-            $episode_id = $this->podcast;
-            $type       = 'podcast';
-        }
-
-        if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, (string)$this->get_fullname(), $size, $this->get_link());
-        }
-    }
-
-    /**
-     * update
-     * This takes a key'd array of data and updates the current podcast episode
-     * @param array{
-     *     title?: string,
-     *     website?: string,
-     *     category: ?string,
-     *     description?: ?string,
-     *     author?: ?string,
-     * } $data
-     */
-    public function update(array $data): int
-    {
-        $title   = $data['title'] ?? $this->title;
-        $website = (isset($data['website']))
-            ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
-            : null;
-        $category = $data['category'] ?? null;
-        /** @var string $description */
-        $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
-        /** @var string $author */
-        $author = (isset($data['author'])) ? scrub_in(Dba::check_length((string)$data['author'], 64)) : null;
-
-        $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
-        Dba::write($sql, [$title, $website, $description, $author, $category, $this->id]);
-
-        $this->title       = $title;
-        $this->website     = $website;
-        $this->description = $description;
-        $this->author      = $author;
-        $this->category    = $category;
-
-        return $this->id;
-    }
-
-    /**
-     * set_played
-     * this checks to see if the current object has been played
-     * if not then it sets it to played. In any case it updates stats.
-     * @param array{
-     *     latitude?: float,
-     *     longitude?: float,
-     *     name?: string
-     * } $location
-     */
-    public function set_played(int $user_id, string $agent, array $location, int $date): bool
-    {
-        // ignore duplicates or skip the last track
-        if (!$this->check_play_history($user_id, $agent, $date)) {
-            return false;
-        }
-
-        if (Stats::insert('podcast_episode', $this->id, $user_id, $agent, $location, 'stream', $date)) {
-            Stats::insert('podcast', $this->podcast, $user_id, $agent, $location, 'stream', $date);
-        }
-
-        if (!$this->played) {
-            self::_update_item('played', 1, $this->id);
-        }
-
-        return true;
-    }
-
-    /**
-     * @param int $user
-     * @param string $agent
-     * @param int $date
-     */
-    public function check_play_history($user, $agent, $date): bool
-    {
-        return Stats::has_played_history('podcast_episode', $this, $user, $agent, $date);
-    }
-
-    /**
-     * update_utime
-     * sets a new update time
-     */
-    public static function update_utime(int $episode_id, int $time = 0): void
-    {
-        if (!$time) {
-            $time = time();
-        }
-
-        $sql = "UPDATE `podcast_episode` SET `update_time` = ? WHERE `id` = ?;";
-        Dba::write($sql, [$time, $episode_id]);
-    }
-
-    /**
-     * update_file
-     * sets the file path
-     */
-    public static function update_file(string $path, int $id): void
-    {
-        self::_update_item('file', $path, $id);
-    }
-
-    /**
-     * _update_item
-     * This is a private function that should only be called from within the podcast episode class.
-     * It takes a field, value podcast_episode_id and level. first and foremost it checks the level
-     * against Core::get_global('user') to make sure they are allowed to update this record
-     * it then updates it and sets $this->{$field} to the new value
-     */
-    private static function _update_item(string $field, int|string $value, int $episode_id): void
-    {
-        /* Check them Rights! */
-        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
-            return;
-        }
-
-        /* Can't update to blank */
-        if (trim((string)$value) === '') {
-            return;
-        }
-
-        $sql = sprintf('UPDATE `podcast_episode` SET `%s` = ? WHERE `id` = ?', $field);
-        Dba::write($sql, [$value, $episode_id]);
+        return $this->getAuthor();
     }
 
     /**
@@ -557,6 +353,15 @@ class Podcast_Episode extends database_object implements
     public function get_stream_name(): string
     {
         return $this->getPodcastName() . " - " . $this->get_fullname();
+    }
+
+    /**
+     * Get stream types.
+     * @return list<string>
+     */
+    public function get_stream_types(?string $player = null): array
+    {
+        return Stream::get_stream_types_for_type($this->type, $player);
     }
 
     /**
@@ -569,12 +374,132 @@ class Podcast_Episode extends database_object implements
         return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }
 
+    public function get_user_owner(): ?int
+    {
+        return null;
+    }
+
+    public function getAuthor(): string
+    {
+        return scrub_out($this->author);
+    }
+
+    public function getBitrateFormatted(): string
+    {
+        return sprintf('%d-%s', (int) ($this->bitrate / 1024), strtoupper((string) $this->mode));
+    }
+
+    /**
+     * Returns the id of the catalog the item is associated to
+     */
+    public function getCatalogId(): int
+    {
+        return $this->catalog;
+    }
+
+    public function getCategory(): string
+    {
+        return scrub_out($this->category);
+    }
+
+    public function getFile(): string
+    {
+        return (string) $this->file;
+    }
+
+    /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string
+    {
+        return (isset($this->type))
+            ? sprintf('%s - %s.%s', $this->getPodcastName(), $this->get_fullname(), $this->type)
+            : '';
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::PODCAST_EPISODE;
+    }
+
+    public function getPodcastId(): int
+    {
+        return $this->podcast;
+    }
+
+    public function getPodcastLink(): string
+    {
+        if ($this->podcast_link === null) {
+            $podcast            = $this->getPodcastRepository()->findById($this->podcast);
+            $this->podcast_link = (string) $podcast?->get_f_link();
+        }
+
+        return $this->podcast_link;
+    }
+
+    public function getPodcastName(): string
+    {
+        if ($this->podcast_name === null) {
+            $podcast            = $this->getPodcastRepository()->findById($this->podcast);
+            $this->podcast_name = (string) $podcast?->get_fullname();
+        }
+
+        return $this->podcast_name;
+    }
+
+    public function getPubDate(): DateTimeInterface
+    {
+        return new DateTime('@' . $this->pubdate);
+    }
+
+    public function getSizeFormatted(): string
+    {
+        return Ui::format_bytes($this->size);
+    }
+
+    public function getSource(): string
+    {
+        return (string) $this->source;
+    }
+
+    public function getState(): PodcastEpisodeStateEnum
+    {
+        return PodcastEpisodeStateEnum::tryFrom((string) $this->state) ?? PodcastEpisodeStateEnum::PENDING;
+    }
+
+    public function getWebsite(): string
+    {
+        return scrub_out($this->website);
+    }
+
     /**
      * getYear
      */
     public function getYear(): string
     {
         return date("Y", $this->pubdate) ?: '';
+    }
+
+    /**
+     * does the item have art?
+     */
+    public function has_art(): bool
+    {
+        if ($this->has_art === null) {
+            $this->has_art = Art::has_db($this->podcast, 'podcast');
+        }
+
+        return $this->has_art ?? false;
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
     }
 
     /**
@@ -616,15 +541,6 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
-     * Get stream types.
-     * @return list<string>
-     */
-    public function get_stream_types(?string $player = null): array
-    {
-        return Stream::get_stream_types_for_type($this->type, $player);
-    }
-
-    /**
      * remove
      * Delete the object from disk and/or database where applicable.
      */
@@ -636,31 +552,65 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
-     * Updates the state of an episode
+     * set_played
+     * this checks to see if the current object has been played
+     * if not then it sets it to played. In any case it updates stats.
+     * @param array{
+     *     latitude?: float,
+     *     longitude?: float,
+     *     name?: string
+     * } $location
      */
-    public function change_state(PodcastEpisodeStateEnum $state): void
+    public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {
-        $this->getPodcastEpisodeRepository()->updateState($this, $state);
-    }
+        // ignore duplicates or skip the last track
+        if (!$this->check_play_history($user_id, $agent, $date)) {
+            return false;
+        }
 
-    public function get_parent_fullname(): string
-    {
-        return $this->getAuthor();
+        if (Stats::insert('podcast_episode', $this->id, $user_id, $agent, $location, 'stream', $date)) {
+            Stats::insert('podcast', $this->podcast, $user_id, $agent, $location, 'stream', $date);
+        }
+
+        if (!$this->played && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
+            self::getPodcastEpisodeRepository()->setPlayed($this->id);
+        }
+
+        return true;
     }
 
     /**
-     * Returns the filename of the media-item
+     * update
+     * This takes a key'd array of data and updates the current podcast episode
+     * @param array{
+     *     title?: string,
+     *     website?: string,
+     *     category: ?string,
+     *     description?: ?string,
+     *     author?: ?string,
+     * } $data
      */
-    public function getFileName(): string
+    public function update(array $data): int
     {
-        return (isset($this->type))
-            ? sprintf('%s - %s.%s', $this->getPodcastName(), $this->get_fullname(), $this->type)
-            : '';
-    }
+        $title   = $data['title'] ?? $this->title;
+        $website = (isset($data['website']))
+            ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
+            : null;
+        $category = $data['category'] ?? null;
+        /** @var string $description */
+        $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string) $data['description'], 4096)) : null;
+        /** @var string $author */
+        $author = (isset($data['author'])) ? scrub_in(Dba::check_length((string) $data['author'], 64)) : null;
 
-    public function getMediaType(): LibraryItemEnum
-    {
-        return LibraryItemEnum::PODCAST_EPISODE;
+        $this->title       = $title;
+        $this->website     = $website;
+        $this->description = $description;
+        $this->author      = $author;
+        $this->category    = $category;
+
+        $this->getPodcastEpisodeRepository()->update($this);
+
+        return $this->id;
     }
 
     /**
@@ -681,15 +631,5 @@ class Podcast_Episode extends database_object implements
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastEpisodeRepositoryInterface::class);
     }
 }

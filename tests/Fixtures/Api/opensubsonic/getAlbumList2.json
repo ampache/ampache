@@ -1,0 +1,34 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "type": "ampache",
+        "serverVersion": "8.0.0",
+        "openSubsonic": true,
+        "albumList2": {
+            "album": [
+                {
+                    "id": "al-2",
+                    "name": "CC Affiliates Mixtape #1",
+                    "version": "",
+                    "coverArt": "al-2",
+                    "songCount": 1,
+                    "created": "2026-07-15T06:35:01+00:00",
+                    "duration": 266,
+                    "playCount": 71,
+                    "played": "2026-07-26T19:42:17Z",
+                    "artistId": "ar-2",
+                    "artist": "Various Artists",
+                    "year": 2015,
+                    "userRating": 5,
+                    "artists": [
+                        {
+                            "id": "ar-2",
+                            "name": "Various Artists"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

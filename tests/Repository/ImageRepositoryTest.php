@@ -33,68 +33,22 @@ use PHPUnit\Framework\TestCase;
 class ImageRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface $connection;
-
     private ImageRepository $subject;
 
-    protected function setUp(): void
+    public function testDeleteImageDeletes(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
-
-        $this->subject = new ImageRepository(
-            $this->connection,
-        );
-    }
-
-    public function testGetRawImageReturnsNullIfNotExisting(): void
-    {
-        $objectId   = 666;
-        $objectType = 'some-type';
-        $size       = 'some-size';
-        $mimeType   = 'some-mimetype';
+        $imageId = 666;
 
         $this->connection->expects(static::once())
-            ->method('fetchOne')
+            ->method('query')
             ->with(
-                'SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?',
+                'UPDATE `image` SET `image` = NULL WHERE `id` = ?',
                 [
-                    $objectId,
-                    $objectType,
-                    $size,
-                    $mimeType
+                    $imageId
                 ]
-            )
-            ->willReturn(false);
+            );
 
-        static::assertNull(
-            $this->subject->getRawImage($objectId, $objectType, $size, $mimeType)
-        );
-    }
-
-    public function testGetRawImageReturnsImage(): void
-    {
-        $objectId   = 666;
-        $objectType = 'some-type';
-        $size       = 'some-size';
-        $mimeType   = 'some-mimetype';
-        $result     = 'some-result';
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?',
-                [
-                    $objectId,
-                    $objectType,
-                    $size,
-                    $mimeType
-                ]
-            )
-            ->willReturn($result);
-
-        static::assertSame(
-            $result,
-            $this->subject->getRawImage($objectId, $objectType, $size, $mimeType)
-        );
+        $this->subject->deleteImage($imageId);
     }
 
     public function testFindAllImage(): void
@@ -126,7 +80,7 @@ class ImageRepositoryTest extends TestCase
                 false
             );
 
-        static::assertSame(
+        self::assertSame(
             [[
                 'id' => $rowId,
                 'object_id' => $objectId,
@@ -138,19 +92,64 @@ class ImageRepositoryTest extends TestCase
         );
     }
 
-    public function testDeleteImageDeletes(): void
+    public function testGetRawImageReturnsImage(): void
     {
-        $imageId = 666;
+        $objectId   = 666;
+        $objectType = 'some-type';
+        $size       = 'some-size';
+        $mimeType   = 'some-mimetype';
+        $result     = 'some-result';
 
         $this->connection->expects(static::once())
-            ->method('query')
+            ->method('fetchOne')
             ->with(
-                'UPDATE `image` SET `image` = NULL WHERE `id` = ?',
+                'SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?',
                 [
-                    $imageId
+                    $objectId,
+                    $objectType,
+                    $size,
+                    $mimeType
                 ]
-            );
+            )
+            ->willReturn($result);
 
-        $this->subject->deleteImage($imageId);
+        self::assertSame(
+            $result,
+            $this->subject->getRawImage($objectId, $objectType, $size, $mimeType)
+        );
+    }
+
+    public function testGetRawImageReturnsNullIfNotExisting(): void
+    {
+        $objectId   = 666;
+        $objectType = 'some-type';
+        $size       = 'some-size';
+        $mimeType   = 'some-mimetype';
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?',
+                [
+                    $objectId,
+                    $objectType,
+                    $size,
+                    $mimeType
+                ]
+            )
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->getRawImage($objectId, $objectType, $size, $mimeType)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+
+        $this->subject = new ImageRepository(
+            $this->connection,
+        );
     }
 }

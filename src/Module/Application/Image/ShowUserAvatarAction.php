@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,7 +37,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowUserAvatarAction extends AbstractShowAction
 {
-    public const REQUEST_ACTION = 'show_user_avatar';
+    public const string REQUEST_ACTION = 'show_user_avatar';
 
     public function __construct(
         private UserRepositoryInterface $userRepository,
@@ -47,7 +47,7 @@ final readonly class ShowUserAvatarAction extends AbstractShowAction
         Horde_Browser $horde_browser,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct(
             $requestParser,

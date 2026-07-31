@@ -33,38 +33,13 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class AdminActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|UiInterface */
-    private MockInterface $ui;
-
     private AdminAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui = $this->mock(UiInterface::class);
-
-        $this->subject = new AdminAction(
-            $this->ui
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $this->expectException(AccessDeniedException::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
+    private MockInterface|UiInterface $ui;
 
     public function testRunShowOptions(): void
     {
@@ -116,6 +91,31 @@ class AdminActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->expectException(AccessDeniedException::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui = $this->mock(UiInterface::class);
+
+        $this->subject = new AdminAction(
+            $this->ui
         );
     }
 }

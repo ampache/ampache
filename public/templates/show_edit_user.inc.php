@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_edit_user.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
@@ -94,9 +96,25 @@ $access100  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); 
             <td><input type="password" name="password_2" maxlength="64" value="" autocomplete="new-password" /></td>
         </tr>
         <tr>
+            <td>
+                <?php echo T_('Subsonic Password'); ?>
+                <?php if ($client->subsonic_secret) { ?>
+                    <a href="<?php echo $admin_path; ?>/users.php?action=show_delete_subsonic_secret&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
+                <?php } ?>
+            </td>
+            <td><input type="password" name="subsonic_password_1" maxlength="64" value="" autocomplete="new-password" />
+                <?php echo AmpError::display('subsonic_password'); ?>
+                <span><?php echo ($client->subsonic_secret) ? T_('Currently set') : T_('Not set'); ?></span>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Confirm Password'); ?></td>
+            <td><input type="password" name="subsonic_password_2" maxlength="64" value="" autocomplete="new-password" /></td>
+        </tr>
+        <tr>
             <td><?php echo T_('User Access Level'); ?></td>
             <td>
-                <?php $user_access = 'on_' . (string)$client->access;
+                <?php $user_access = 'on_' . $client->access;
 $on_5                              = '';
 $on_25                             = '';
 $on_50                             = '';

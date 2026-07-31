@@ -36,31 +36,21 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ResetDbCharsetAction implements ApplicationActionInterface
+final readonly class ResetDbCharsetAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'reset_db_charset';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private DatabaseCharsetUpdaterInterface $databaseCharsetUpdater;
+    public const string REQUEST_KEY = 'reset_db_charset';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        DatabaseCharsetUpdaterInterface $databaseCharsetUpdater
-    ) {
-        $this->configContainer        = $configContainer;
-        $this->ui                     = $ui;
-        $this->databaseCharsetUpdater = $databaseCharsetUpdater;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private DatabaseCharsetUpdaterInterface $databaseCharsetUpdater,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            $this->configContainer->isDemoMode() === true
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || $this->configContainer->isDemoMode()
         ) {
             throw new AccessDeniedException();
         }

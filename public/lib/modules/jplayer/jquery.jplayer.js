@@ -42,6 +42,12 @@
     }
 }(this, function ($, undefined) {
 
+    var jpLog = function() {
+        if (window.jpDebug && window.console && window.console.log) {
+            window.console.log.apply(window.console, arguments);
+        }
+    };
+
     // Adapted from jquery.ui.widget.js (1.8.7): $.widget.bridge - Tweaked $.data(this,XYZ) to $(this).data(XYZ) for Zepto
     $.fn.jPlayer = function( options ) {
         var name = "jPlayer";
@@ -1961,11 +1967,11 @@
         },
         _absoluteMediaUrls: function(media) {
             var self = this;
-            console.log(media);
+            jpLog(media);
             $.each(media, function(type, url) {
                 if(url && self.format[type] && url.substr(0, 5) !== "data:") {
-                    console.log("URL: " + url);
-                    console.log("type: " + type);
+                    jpLog("URL: " + url);
+                    jpLog("type: " + type);
                     media[type] = self._qualifyURL(url);
                 }
             });
@@ -1982,7 +1988,7 @@
             }
         },
         setMedia: function(media) {
-            console.log("setMedia");
+            jpLog("setMedia");
             /**
              * media[format] = String: URL of format. Must contain all of the supplied option's video or audio formats.
              * media.poster = String: Video poster URL.
@@ -2007,10 +2013,10 @@
             media = this._absoluteMediaUrls(media);
 
             $.each(this.formats, function(formatPriority, format) {
-                console.log("setMedia: self.formats " + format);
+                jpLog("setMedia: self.formats " + format);
                 var isVideo = self.format[format].media === "video";
                 $.each(self.solutions, function(solutionPriority, solution) {
-                    console.log("setMedia: self.solutions " + solution);
+                    jpLog("setMedia: self.solutions " + solution);
                     if(self[solution].support[format] && self._validString(media[format])) { // Format supported in solution and url given for format.
                         var isHtml = solution === "html";
                         var isAurora = solution === "aurora";
@@ -2092,7 +2098,7 @@
                 this._updateInterface();
                 this._trigger($.jPlayer.event.setmedia);
             } else { // jPlayer cannot support any formats provided in this browser
-                console.log("setMedia: NO_SUPPORT");
+                jpLog("setMedia: NO_SUPPORT");
                 // Send an error event
                 this._error( {
                     type: $.jPlayer.error.NO_SUPPORT,
@@ -3003,12 +3009,10 @@
             }
         },
         _html_load: function() {
-            // This function remains to allow the early HTML5 browsers to work, such as Firefox 3.6
-            // A change in the W3C spec for the media.load() command means that this is no longer necessary.
-            // This command should be removed and actually causes minor undesirable effects on some browsers. Such as loading the whole file and not only the metadata.
+            // The media.load() call this used to make is obsolete under the current W3C spec and made some browsers
+            // download the whole file instead of just metadata. Only the state transition is still needed here.
             if(this.status.waitForLoad) {
                 this.status.waitForLoad = false;
-                this.htmlElement.media.load();
             }
             clearTimeout(this.internal.htmlDlyCmdId);
         },

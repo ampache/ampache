@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_filter_row.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -30,7 +32,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Ui;
 
 $admin_path = AmpConfig::get_web_path('/admin');
-/** @var array $filter */
+/** @var array{id: int, name: string} $filter */
 /** @var int $num_users */
 /** @var int $num_catalogs */
 /** @var string $t_edit */

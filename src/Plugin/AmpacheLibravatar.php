@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -27,22 +27,30 @@ namespace Ampache\Plugin;
 
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {
-    public string $name = 'Libravatar';
-
+    #[Override]
     public string $categories = 'avatar';
 
-    public string $description = 'Users avatar\'s with Libravatar';
+    #[Override]
+    public string $description = "Users avatar's with Libravatar";
 
-    public string $url = 'https://www.libravatar.org';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000001';
-
+    #[Override]
     public string $min_ampache = '360040';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'Libravatar';
+
+    #[Override]
+    public string $url = 'https://www.libravatar.org';
+
+    #[Override]
+    public string $version = '000001';
 
     /**
      * Constructor
@@ -53,42 +61,13 @@ class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInter
     }
 
     /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        return true;
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return true;
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
      * get_avatar_url
      */
     public function get_avatar_url(User $user, ?int $size = 80): string
     {
         $url = "";
         if (
-            $user->email !== null &&
-            $user->email !== '' &&
-            $user->email !== '0'
+            !in_array($user->email, [null, '', '0'], true)
         ) {
             // Federated Servers are not supported here without libravatar.org. Should query DNS server first.
             if (isset($_SERVER['HTTPS']) && Core::get_server('HTTPS') !== 'off') {
@@ -107,6 +86,15 @@ class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInter
     }
 
     /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        return true;
+    }
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
@@ -114,6 +102,24 @@ class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInter
     {
         unset($user);
 
+        return true;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return true;
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

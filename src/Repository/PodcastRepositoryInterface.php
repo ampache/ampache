@@ -31,6 +31,11 @@ use Traversable;
 interface PodcastRepositoryInterface
 {
     /**
+     * Deletes a podcast
+     */
+    public function delete(Podcast $podcast): void;
+
+    /**
      * Retrieve all podcast objects and maintain db-order
      *
      * @return Traversable<Podcast>
@@ -43,14 +48,9 @@ interface PodcastRepositoryInterface
     public function findByFeedUrl(string $feedUrl): ?Podcast;
 
     /**
-     * Deletes a podcast
+     * Retrieve a single podcast-item by its id
      */
-    public function delete(Podcast $podcast): void;
-
-    /**
-     * Returns a new podcast item
-     */
-    public function prototype(): Podcast;
+    public function findById(int $podcastId): ?Podcast;
 
     /**
      * Persists the podcast-item in the database
@@ -62,7 +62,7 @@ interface PodcastRepositoryInterface
     public function persist(Podcast $podcast): ?int;
 
     /**
-     * Retrieve a single podcast-item by its id
+     * Returns a new podcast item
      */
-    public function findById(int $podcastId): ?Podcast;
+    public function prototype(): Podcast;
 }

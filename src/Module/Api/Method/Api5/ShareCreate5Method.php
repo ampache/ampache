@@ -26,10 +26,15 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Share\ShareCreatorInterface;
@@ -41,15 +46,26 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class ShareCreate5Method
+ * Creates a public url that can be used by anyone to stream media.
+ *
+ * Version 5 only shares songs, albums and artists and knows nothing about the wider object list the
+ * later versions accept, so it keeps a method of its own.
  */
-final class ShareCreate5Method
+final class ShareCreate5Method implements MethodInterface
 {
-    public const ACTION = 'share_create';
+    public const string ACTION = 'share_create';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private FunctionCheckerInterface $functionChecker,
+        private PasswordGeneratorInterface $passwordGenerator,
+        private ShareCreatorInterface $shareCreator,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * share_create
@@ -70,84 +86,112 @@ final class ShareCreate5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @param 5 $apiVersion
+     * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function share_create(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('share')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: share'), self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::SHARE)) {
+            throw new AccessDeniedException(
+                'Enable: share'
+            );
         }
-        if (!Api5::check_parameter($input, ['type', 'filter'], self::ACTION)) {
-            return false;
+
+        foreach (['type', 'filter'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
 
-        $object_id   = (string) $input['filter'];
-        $object_type = strtolower((string) $input['type']);
+        $object_id   = $input['filter'];
+        $object_type = $input['type'];
         $description = $input['description'] ?? null;
-        $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
-        // confirm the correct data
-        if (!in_array($object_type, ['song', 'album', 'artist'])) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $object_type), self::ACTION, 'type', $input['api_format']);
+        $expire_days = (isset($input['expires']))
+            ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)
+            : AmpConfig::get('share_expire', 7);
 
-            return false;
+        // the type is matched case insensitively, so resolve the object from the normalized name
+        $item_type = strtolower($object_type);
+
+        // confirm the correct data
+        if (!in_array($item_type, ['song', 'album', 'artist'])) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $this->writeTypeError($output, $apiVersion, $object_type)
+                )
+            );
         }
 
-        $className = ObjectTypeToClassNameMapper::map($object_type);
+        $className = ObjectTypeToClassNameMapper::map($item_type);
         if (!$className || !$object_id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $object_type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $this->writeTypeError($output, $apiVersion, $object_type)
+                )
+            );
         }
 
         /** @var Song|Album|Artist $item */
         $item = new $className((int) $object_id);
         if ($item->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                (string) $object_id
+            );
         }
 
-        // @todo Replace by constructor injection
-        global $dic;
-        $functionChecker   = $dic->get(FunctionCheckerInterface::class);
-        $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
-        $shareCreator      = $dic->get(ShareCreatorInterface::class);
-
-        $share = $shareCreator->create(
+        $share = $this->shareCreator->create(
             $user,
-            LibraryItemEnum::from($object_type),
+            LibraryItemEnum::from($item_type),
             (int) $object_id,
             true,
-            $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
+            $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
             (int) $expire_days,
-            $passwordGenerator->generate_token(),
+            $this->passwordGenerator->generate_token(),
             0,
             $description
         );
         if ($share === null) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'system', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        'Bad Request',
+                        self::ACTION,
+                        'system'
+                    )
+                )
+            );
         }
-
-        $results = [$share];
 
         Catalog::count_table('share');
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json5_Data::shares($results, $user, false);
-                break;
-            default:
-                echo Xml5_Data::shares($results, $user);
-        }
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->shares($apiVersion, [$share], $user, false)
+            )
+        );
+    }
+
+    private function writeTypeError(
+        ApiOutputInterface $output,
+        int $apiVersion,
+        string $objectType,
+    ): string {
+        return $output->error(
+            $apiVersion,
+            ErrorCodeEnum::BAD_REQUEST,
+            sprintf('Bad Request: %s', $objectType),
+            self::ACTION,
+            'type'
+        );
     }
 }

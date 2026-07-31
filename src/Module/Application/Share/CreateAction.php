@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,7 +45,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class CreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'create';
+    public const string REQUEST_KEY = 'create';
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
@@ -56,8 +56,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ShareCreatorInterface $shareCreator,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -68,9 +67,9 @@ final readonly class CreateAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
 
         if (
-            $user === null ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            !$this->requestParser->verifyForm('add_share')
+            $user === null
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || !$this->requestParser->verifyForm('add_share')
         ) {
             throw new AccessDeniedException();
         }
@@ -84,8 +83,8 @@ final readonly class CreateAction implements ApplicationActionInterface
             $user,
             $object_type,
             $object_id,
-            (bool)($_REQUEST['allow_stream'] ?? 0),
-            (bool)($_REQUEST['allow_download'] ?? 0),
+            (bool) ($_REQUEST['allow_stream'] ?? 0),
+            (bool) ($_REQUEST['allow_download'] ?? 0),
             (int) $_REQUEST['expire'],
             $_REQUEST['secret'],
             (int) $_REQUEST['max_counter']
@@ -93,14 +92,14 @@ final readonly class CreateAction implements ApplicationActionInterface
 
         if ($share_id) {
             $share = new Share($share_id);
-            $body  = T_('Share created') . '<br />' .
-                T_('You can now start sharing the following URL:') . '<br />' .
-                '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />' .
-                '<div id="share_qrcode" style="text-align: center"></div>' .
-                '<script>$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
-                '<br /><br />' .
-                T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />' .
-                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url((int)$share->id, (string)$share->secret) . '&embed=true"></iframe>') . '</i><br />';
+            $body  = T_('Share created') . '<br />'
+                . T_('You can now start sharing the following URL:') . '<br />'
+                . '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />'
+                . '<div id="share_qrcode" style="text-align: center"></div>'
+                . '<script>$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>'
+                . '<br /><br />'
+                . T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />'
+                . '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, (string) $share->secret) . '&embed=true"></iframe>') . '</i><br />';
 
             $title = T_('No Problem');
             $this->ui->showConfirmation(
@@ -113,7 +112,7 @@ final readonly class CreateAction implements ApplicationActionInterface
             );
         } else {
             $this->logger->error(
-                'Share failed: ' . (int)($_REQUEST['id'] ?? 0),
+                'Share failed: ' . (int) ($_REQUEST['id'] ?? 0),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
@@ -148,6 +147,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                 );
             }
         }
+
         $this->ui->showFooter();
 
         return null;

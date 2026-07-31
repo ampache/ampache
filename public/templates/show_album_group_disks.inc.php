@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_album_group_disks.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -50,13 +52,13 @@ use Ampache\Repository\Model\Userflag;
 $web_path = AmpConfig::get_web_path();
 
 // Title for this album
-$f_album_name     = (string)$album->get_parent_fullname();
-$simple           = (string)$album->get_fullname(true);
-$f_name           = (string)$album->get_fullname(false, true);
+$f_album_name     = (string) $album->get_parent_fullname();
+$simple           = (string) $album->get_fullname(true);
+$f_name           = (string) $album->get_fullname(false, true);
 $url_f_album_name = rawurlencode($f_album_name);
 $url_f_simple     = rawurlencode($simple);
 $title            = ($album->album_artist > 0)
-    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . ((string)$album->get_f_parent_link())
+    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . ((string) $album->get_f_parent_link())
     : scrub_out($f_name);
 
 $current_user         = Core::get_global('user');
@@ -64,7 +66,7 @@ $access50             = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum
 $access25             = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $show_playlist_add    = $access25;
 $show_direct_play_cfg = AmpConfig::get('directplay');
-$directplay_limit     = AmpConfig::get('direct_play_limit');
+$directplay_limit     = AmpConfig::get('direct_play_limit', 500);
 $hide_array           = (AmpConfig::get('hide_single_artist') && $album->get_artist_count() == 1)
     ? ['cel_artist', 'cel_album', 'cel_year', 'cel_drag']
     : ['cel_album', 'cel_year', 'cel_drag'];
@@ -133,9 +135,9 @@ if (AmpConfig::get('external_links_musicbrainz')) {
 <?php if (AmpConfig::get('show_played_times')) { ?>
     <br />
     <div style="display:inline;">
-        <?php echo T_('Played') . ' ' .
+        <?php echo T_('Played') . ' '
         /* HINT: Number of times an object has been played */
-        sprintf(nT_('%d time', '%d times', $album->total_count), $album->total_count); ?>
+        . sprintf(nT_('%d time', '%d times', $album->total_count), $album->total_count); ?>
     </div>
 <?php } ?>
 <?php
@@ -171,7 +173,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 if ($show_playlist_add) {
     $addtotemp  = T_('Add to Temporary Playlist');
     $randtotemp = T_('Random to Temporary Playlist');
-    $addtoexist = T_('Add to playlist'); ?>
+    $addtoexist = Ui::get_add_to_list_label(); ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album&id=' . $album->id, 'add_circle', $addtotemp, 'play_full_' . $album->id); ?>
         </li>
@@ -192,7 +194,7 @@ if (AmpConfig::get('use_rss')) { ?>
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                ['object_type' => 'album', 'object_id' => (string)$album->id]
+                ['object_type' => 'album', 'object_id' => (string) $album->id]
             ); ?>
         </li>
 <?php }
@@ -222,7 +224,7 @@ if ($access25 && $can_share) { ?>
     </li>
 <?php }
     if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || $access50) {
-        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+        if (AmpConfig::get('statistical_graphs')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));
@@ -231,7 +233,7 @@ if ($access25 && $can_share) { ?>
             </li>
     <?php } ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&album_id=<?php echo $album->id; ?>');" data-confirm="<?php echo T_('Do you really want to update from tags?'); ?>">
                 <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags'));
         echo "&nbsp;" . T_('Update from tags'); ?>
             </a>

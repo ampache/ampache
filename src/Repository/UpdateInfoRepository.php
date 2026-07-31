@@ -33,9 +33,7 @@ use Ampache\Repository\Model\UpdateInfoEnum;
  */
 final readonly class UpdateInfoRepository implements UpdateInfoRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * Returns a single value by its key

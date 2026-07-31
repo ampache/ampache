@@ -25,17 +25,26 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Catalogs5Method
+ * Returns the catalogs this user is allowed to manage.
+ *
+ * Version 5 ignores the `sort` and `cond` parameters that the later versions understand, so it
+ * keeps a method of its own.
  */
-final class Catalogs5Method
+final class Catalogs5Method implements MethodInterface
 {
-    public const ACTION = 'catalogs';
+    public const string ACTION = 'catalogs';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * catalogs
@@ -56,9 +65,16 @@ final class Catalogs5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
      */
-    public static function catalogs(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         // filter for specific catalog types
         $filter = (isset($input['filter']) && in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast']))
             ? $input['filter']
@@ -67,26 +83,22 @@ final class Catalogs5Method
             $filter = 'video';
         }
 
-        $results = $user->get_catalogs((string) $filter);
-        if (empty($results)) {
-            Api5::empty('catalog', $input['api_format']);
-
-            return false;
+        $results = $user->get_catalogs($filter);
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'catalog')
+                )
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::catalogs($results);
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::catalogs($results, $user);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->catalogs($apiVersion, $results, $user)
+            )
+        );
     }
 }

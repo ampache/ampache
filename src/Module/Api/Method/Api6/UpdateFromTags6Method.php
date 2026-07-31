@@ -25,71 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Module\Api\Api6;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractUpdateFromTagsMethod;
 
 /**
- * Class UpdateFromTags6Method
- * @package Lib\Api6Methods
+ * Updates a single album, artist or song from its tag data
+ *
+ * Api version 6 reports the object id as `id` and accepts `filter` as an alias.
  */
-final class UpdateFromTags6Method
+final class UpdateFromTags6Method extends AbstractUpdateFromTagsMethod
 {
-    public const ACTION = 'update_from_tags';
+    protected const string FILTER_ALIAS = 'filter';
 
-    /**
-     * update_from_tags
-     * MINIMUM_API_VERSION=400001
-     *
-     * updates a single album, artist, song from the tag data
-     *
-     * type = (string) 'artist', 'album', 'song'
-     * id = (string) $artist_id, $album_id, $song_id
-     *
-     * @param array{
-     *     filter?: string,
-     *     id?: string,
-     *     type: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function update_from_tags(array $input, User $user): bool
-    {
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api6::check_parameter($input, ['type', 'id'], self::ACTION)) {
-            return false;
-        }
-        unset($user);
-        $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
-
-        // confirm the correct data
-        if (!in_array(strtolower($type), ['artist', 'album', 'song'])) {
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
-        }
-
-        $className = ObjectTypeToClassNameMapper::map($type);
-        /** @var Artist|Album|Song $item */
-        $item = new $className($object_id);
-        if ($item->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
-
-            return false;
-        }
-        // update your object
-        Catalog::update_single_item($type, $object_id, true);
-
-        Api6::message('Updated tags for: ' . $object_id . ' (' . $type . ')', $input['api_format']);
-
-        return true;
-    }
+    protected const string FILTER_KEY = 'id';
 }

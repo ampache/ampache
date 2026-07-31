@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,72 +30,70 @@ final class CatalogStats implements CatalogStatsInterface
     /**
      * @param array<string, int|string> $stats
      */
-    public function __construct(private array $stats)
-    {
-    }
-
-    public function getConnectedCount(): int
-    {
-        return (int)($this->stats['connected'] ?? 0);
-    }
-
-    public function getUserCount(): int
-    {
-        return (int)($this->stats['user'] ?? 0);
-    }
+    public function __construct(private array $stats) {}
 
     public function getAlbumCount(): int
     {
-        return (int)($this->stats['album'] ?? 0);
+        return (int) ($this->stats['album'] ?? 0);
     }
 
     public function getAlbumDiskCount(): int
     {
-        return (int)($this->stats['album_disk'] ?? 0);
+        return (int) ($this->stats['album_disk'] ?? 0);
     }
 
     public function getArtistCount(): int
     {
-        return (int)($this->stats['artist'] ?? 0);
-    }
-
-    public function getSongCount(): int
-    {
-        return (int)($this->stats['song'] ?? 0);
-    }
-
-    public function getPodcastCount(): int
-    {
-        return (int)($this->stats['podcast'] ?? 0);
-    }
-
-    public function getPodcastEpisodeCount(): int
-    {
-        return (int)($this->stats['podcast_episode'] ?? 0);
-    }
-
-    public function getGenreCount(): int
-    {
-        return (int)($this->stats['tags'] ?? 0);
+        return (int) ($this->stats['artist'] ?? 0);
     }
 
     public function getCatalogSize(): string
     {
-        return (string)($this->stats['formatted_size'] ?? '');
+        return (string) ($this->stats['formatted_size'] ?? '');
     }
 
-    public function getPlayTime(): string
+    public function getConnectedCount(): int
     {
-        return (string)($this->stats['time_text'] ?? '');
+        return (int) ($this->stats['connected'] ?? 0);
+    }
+
+    public function getGenreCount(): int
+    {
+        return (int) ($this->stats['tags'] ?? 0);
     }
 
     public function getItemCount(): int
     {
-        return (int)($this->stats['items'] ?? 0);
+        return (int) ($this->stats['items'] ?? 0);
+    }
+
+    public function getPlayTime(): string
+    {
+        return (string) ($this->stats['time_text'] ?? '');
+    }
+
+    public function getPodcastCount(): int
+    {
+        return (int) ($this->stats['podcast'] ?? 0);
+    }
+
+    public function getPodcastEpisodeCount(): int
+    {
+        return (int) ($this->stats['podcast_episode'] ?? 0);
+    }
+
+    public function getSongCount(): int
+    {
+        return (int) ($this->stats['song'] ?? 0);
+    }
+
+    public function getUserCount(): int
+    {
+        return (int) ($this->stats['user'] ?? 0);
     }
 
     public function getVideoCount(): int
     {
-        return (int)($this->stats['video'] ?? 0);
+        return (int) ($this->stats['video'] ?? 0);
     }
 }

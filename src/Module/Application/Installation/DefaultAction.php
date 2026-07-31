@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -34,6 +36,7 @@ use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Preference;
 use Exception;
+use Gettext\Translations;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -42,23 +45,16 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class DefaultAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'default';
-
-    public InstallationHelperInterface $installationHelper;
-
-    private EnvironmentInterface $environment;
+    public const string REQUEST_KEY = 'default';
 
     public function __construct(
-        InstallationHelperInterface $installationHelper,
-        EnvironmentInterface $environment
-    ) {
-        $this->installationHelper = $installationHelper;
-        $this->environment        = $environment;
-    }
+        public InstallationHelperInterface $installationHelper,
+        private readonly EnvironmentInterface $environment,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        set_error_handler('ampache_error_handler');
+        set_error_handler(ampache_error_handler(...));
 
         $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
 
@@ -104,12 +100,12 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         if (array_key_exists('transcode_template', $_REQUEST)) {
-            $mode = (string)$_REQUEST['transcode_template'];
+            $mode = (string) $_REQUEST['transcode_template'];
             $this->installationHelper->install_config_transcode_mode($mode);
         }
 
         if (array_key_exists('usecase', $_REQUEST)) {
-            $case = (string)$_REQUEST['usecase'];
+            $case = (string) $_REQUEST['usecase'];
             if (Dba::check_database()) {
                 $this->installationHelper->install_config_use_case($case);
             }
@@ -125,27 +121,25 @@ final class DefaultAction implements ApplicationActionInterface
         // Charset and gettext setup
         $charset  = $_REQUEST['charset'] ?? 'UTF-8';
         $htmllang = $_REQUEST['htmllang'] ?? null;
-
         if (!$htmllang) {
-            if ($_ENV['LANG']) {
-                $lang = $_ENV['LANG'];
-            } else {
-                $lang = 'en_US';
-            }
-            if (strpos($lang, '.')) {
-                $langtmp  = explode('.', $lang);
+            $lang = $_ENV['LANG'] ?: 'en_US';
+
+            if (strpos((string) $lang, '.')) {
+                $langtmp  = explode('.', (string) $lang);
                 $htmllang = $langtmp[0];
                 $charset  = $langtmp[1];
             } else {
                 $htmllang = $lang;
             }
         }
+
         AmpConfig::set('lang', $htmllang, true);
         AmpConfig::set('site_charset', $charset, true);
-        if (!class_exists('Gettext\Translations')) {
+        if (!class_exists(Translations::class)) {
             require_once __DIR__ . '/../../../../public/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
         }
+
         load_gettext();
 
         header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset', 'UTF-8'));
@@ -168,10 +162,10 @@ final class DefaultAction implements ApplicationActionInterface
         $action = $_REQUEST['action'] ?? '';
         switch ($action) {
             case 'create_db':
-                /** @noinspection PhpMissingBreakStatementInspection */
+                // Intentional break fall-through
                 $new_user = '';
                 $new_pass = '';
-                if (Core::get_post('db_user') == 'create_db_user') {
+                if (Core::get_post('db_user') === 'create_db_user') {
                     $new_user = Core::get_post('db_username');
                     $new_pass = Core::get_post('db_password');
 
@@ -182,11 +176,9 @@ final class DefaultAction implements ApplicationActionInterface
                     }
                 }
 
-                if (!$skip_admin) {
-                    if (!$this->installationHelper->install_insert_db($new_user, $new_pass, array_key_exists('create_db', $_REQUEST), array_key_exists('overwrite_db', $_REQUEST), array_key_exists('create_tables', $_REQUEST))) {
-                        require_once __DIR__ . '/../../../../public/templates/show_install.inc.php';
-                        break;
-                    }
+                if (!$skip_admin && !$this->installationHelper->install_insert_db($new_user, $new_pass, array_key_exists('create_db', $_REQUEST), array_key_exists('overwrite_db', $_REQUEST), array_key_exists('create_tables', $_REQUEST))) {
+                    require_once __DIR__ . '/../../../../public/templates/show_install.inc.php';
+                    break;
                 }
 
                 // Now that it's inserted save the lang preference
@@ -196,7 +188,7 @@ final class DefaultAction implements ApplicationActionInterface
                 require_once __DIR__ . '/../../../../public/templates/show_install_config.inc.php';
                 break;
             case 'create_config':
-                /** @noinspection PhpMissingBreakStatementInspection */
+                // Intentional break fall-through
                 $all  = (isset($_POST['create_all']));
                 $skip = (isset($_POST['skip_config']));
                 if (!$skip) {
@@ -211,9 +203,11 @@ final class DefaultAction implements ApplicationActionInterface
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {
                         $created_config = $this->installationHelper->install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
                     }
+
                     if ($write_htaccess_play || $download_htaccess_play || $all) {
                         $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_play_file, Core::get_post('web_path'), $download_htaccess_play);
                     }
+
                     if ($write || $download || $all) {
                         $created_config = $created_config && $this->installationHelper->install_create_config($download);
                         if ($download && !$created_config) {
@@ -230,9 +224,9 @@ final class DefaultAction implements ApplicationActionInterface
 
                 /* Make sure we've got a valid config file */
                 if (
-                    !$results ||
-                    !check_config_values($results) ||
-                    !$created_config
+                    !$results
+                    || !check_config_values($results)
+                    || !$created_config
                 ) {
                     AmpError::add('general', T_('Configuration files were either not found or unreadable'));
                     require_once Ui::find_template('show_install_config.inc.php');
@@ -245,6 +239,7 @@ final class DefaultAction implements ApplicationActionInterface
                 } else {
                     header("Location: " . $web_path . '/login.php');
                 }
+
                 break;
             case 'create_account':
                 $results = parse_ini_file($configfile) ?: [];
@@ -269,7 +264,7 @@ final class DefaultAction implements ApplicationActionInterface
                 // Show the language options first
                 require_once __DIR__ . '/../../../../public/templates/show_install_lang.inc.php';
                 break;
-        } // end action switch
+        }
 
         return null;
     }

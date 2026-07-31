@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -25,7 +27,7 @@ namespace Ampache\Gui\System;
 
 interface ConfigViewAdapterInterface
 {
-    public function isWaveformEnabled(): bool;
-
     public function isDirectplayEnabled(): bool;
+
+    public function isWaveformEnabled(): bool;
 }

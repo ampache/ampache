@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// sidebar.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -41,7 +43,7 @@ $web_path = AmpConfig::get_web_path();
 
 $admin_path = AmpConfig::get_web_path('/admin');
 
-$is_session    = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
+$is_session    = (User::is_registered() && (Core::get_global('user')->id ?? 0) > 0);
 $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";
@@ -70,6 +72,7 @@ $t_playlist        = T_('Playlist');
 $t_playlists       = T_('Playlists');
 $t_smartPlaylists  = T_('Smart Playlists');
 $t_smartlists      = T_('Smartlists');
+$t_collections     = T_('Collections');
 $t_democratic      = T_('Democratic');
 $t_random          = T_('Random');
 $t_localplay       = T_('Localplay');
@@ -81,6 +84,7 @@ $t_popular         = T_('Popular');
 $t_topRated        = T_('Top Rated');
 $t_favorites       = T_('Favorites');
 $t_wanted          = T_('Wanted');
+$t_folders         = T_('Folders');
 $t_shares          = T_('Shares');
 $t_statistics      = T_('Statistics');
 $t_logout          = T_('Log out'); ?>

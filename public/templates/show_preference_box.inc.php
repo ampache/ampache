@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_preference_box.inc.php
 
 /* I'm cheating a little here, check to see if we want to show the
  * Apply to All button on this page
@@ -67,20 +69,20 @@ foreach ($preferences['prefs'] as $pref) {
         $lastsubcat = $pref['subcategory'];
         $fsubcat    = $lastsubcat;
         if (!empty($fsubcat)) { ?>
-                <tr><td colspan="4"><h4><?php echo ucwords(T_($fsubcat)); ?></h4></td></tr>
+                <tr><td colspan="4"><h4><?php echo T_(ucwords($fsubcat)); ?></h4></td></tr>
                 <?php
         }
     } ?>
         <tr>
             <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
             <td class="cel_value">
-                <?php $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
+                <?php $ui->createPreferenceInput($pref['name'], $pref['value'], $pref['type'] ?? null); ?>
             </td>
             <?php if ($is_admin) {
                 if (!$is_system) { ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
                 <td class="cel_level">
-                    <?php $name = 'on_' . (string)$pref['level'];
+                    <?php $name = 'on_' . $pref['level'];
                     $on_5       = '';
                     $on_25      = '';
                     $on_50      = '';

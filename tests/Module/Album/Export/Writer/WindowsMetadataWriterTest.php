@@ -27,15 +27,11 @@ namespace Ampache\Module\Album\Export\Writer;
 
 use Ampache\MockeryTestCase;
 use org\bovigo\vfs\vfsStream;
+use Override;
 
 class WindowsMetadataWriterTest extends MockeryTestCase
 {
     private ?WindowsMetadataWriter $subject;
-
-    protected function setUp(): void
-    {
-        $this->subject = new WindowsMetadataWriter();
-    }
 
     public function testWriteWritesData(): void
     {
@@ -63,5 +59,11 @@ class WindowsMetadataWriterTest extends MockeryTestCase
             ),
             $file->getContent()
         );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new WindowsMetadataWriter();
     }
 }

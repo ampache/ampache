@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,24 +36,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowHiddenAction implements ApplicationActionInterface
+final readonly class ShowHiddenAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_hidden';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-    private LicenseRepositoryInterface $licenseRepository;
+    public const string REQUEST_KEY = 'show_hidden';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        LicenseRepositoryInterface $licenseRepository
-    ) {
-        $this->ui                = $ui;
-        $this->modelFactory      = $modelFactory;
-        $this->licenseRepository = $licenseRepository;
-    }
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private LicenseRepositoryInterface $licenseRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

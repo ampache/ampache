@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -28,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
+use Ampache\Module\Authentication\Oidc\OidcAuthenticationService;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
@@ -46,47 +49,22 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class DefaultAction implements ApplicationActionInterface
+final readonly class DefaultAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'default';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private AuthenticationManagerInterface $authenticationManager;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private LoggerInterface $logger;
-
-    private NetworkCheckerInterface $networkChecker;
-
-    private UiInterface $ui;
-
-    private UserTrackerInterface $userTracker;
+    public const string REQUEST_KEY = 'default';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        AuthenticationManagerInterface $authenticationManager,
-        ResponseFactoryInterface $responseFactory,
-        LoggerInterface $logger,
-        NetworkCheckerInterface $networkChecker,
-        UiInterface $ui,
-        UserTrackerInterface $userTracker
-    ) {
-        $this->requestParser         = $requestParser;
-        $this->configContainer       = $configContainer;
-        $this->authenticationManager = $authenticationManager;
-        $this->responseFactory       = $responseFactory;
-        $this->logger                = $logger;
-        $this->networkChecker        = $networkChecker;
-        $this->ui                    = $ui;
-        $this->userTracker           = $userTracker;
-    }
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private AuthenticationManagerInterface $authenticationManager,
+        private ResponseFactoryInterface $responseFactory,
+        private LoggerInterface $logger,
+        private NetworkCheckerInterface $networkChecker,
+        private UiInterface $ui,
+        private UserTrackerInterface $userTracker,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -99,17 +77,18 @@ final class DefaultAction implements ApplicationActionInterface
             } elseif (Session::auth_remember()) {
                 $auth = true;
             }
+
             if ($auth) {
                 return $this->responseFactory
-                    ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+                    ->createResponse(RFC7231::FOUND)
                     ->withHeader(
                         'Location',
                         $this->configContainer->getWebPath()
                     );
             } elseif (array_key_exists($name, $_COOKIE)) {
                 // now auth so unset this cookie
-                setcookie($name, '', -1, (string)$this->configContainer->get('cookie_path'));
-                setcookie($name, '', -1);
+                setcookie($name, '', ['expires' => -1, 'path' => (string) $this->configContainer->get('cookie_path')]);
+                setcookie($name, '', ['expires' => -1]);
             }
         }
 
@@ -121,28 +100,26 @@ final class DefaultAction implements ApplicationActionInterface
          * even want them to be able to get to the login
          * page if they aren't in the ACL
          */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
-            if (!$this->networkChecker->check(AccessTypeEnum::INTERFACE, null, AccessLevelEnum::GUEST)) {
-                throw new AccessDeniedException(
-                    sprintf(
-                        'Access denied: %s is not in the Interface Access list',
-                        Core::get_user_ip()
-                    )
-                );
-            }
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL) && !$this->networkChecker->check(AccessTypeEnum::INTERFACE, null, AccessLevelEnum::GUEST)) {
+            throw new AccessDeniedException(
+                sprintf(
+                    'Access denied: %s is not in the Interface Access list',
+                    Core::get_user_ip()
+                )
+            );
         } // access_control is enabled
 
         /* Clean Auth values */
         unset($auth);
 
-        if (empty($this->requestParser->getFromRequest('step'))) {
+        if (in_array($this->requestParser->getFromRequest('step'), ['', '0'], true)) {
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
             if (
-                (isset($_POST['username'])) ||
-                (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) && (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))
+                (isset($_POST['username']))
+                || (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) && (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))
             ) {
                 /* If we are in demo mode let's force auth success */
-                if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+                if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
                     $auth                         = [];
                     $auth['success']              = true;
                     $auth['info']['username']     = 'Admin - DEMO';
@@ -150,16 +127,17 @@ final class DefaultAction implements ApplicationActionInterface
                     $auth['info']['offset_limit'] = 50;
                 } else {
                     if (Core::get_post('username') !== '') {
-                        $username = (string)$_POST['username'];
+                        $username = (string) $_POST['username'];
                         $password = $_POST['password'] ?? '';
                     } else {
                         if (isset($_SERVER['REMOTE_USER'])) {
-                            $username = (string) Core::get_server('REMOTE_USER');
+                            $username = Core::get_server('REMOTE_USER');
                         } elseif (isset($_SERVER['HTTP_REMOTE_USER'])) {
-                            $username = (string) Core::get_server('HTTP_REMOTE_USER');
+                            $username = Core::get_server('HTTP_REMOTE_USER');
                         } else {
                             $username = '';
                         }
+
                         $password = '';
                     }
 
@@ -184,7 +162,7 @@ final class DefaultAction implements ApplicationActionInterface
                     }
                 }
             }
-        } elseif ($this->requestParser->getFromRequest('step') == '2') {
+        } elseif ($this->requestParser->getFromRequest('step') === '2') {
             $auth_mod = $this->requestParser->getFromRequest('auth_mod');
 
             $auth = $this->authenticationManager->postAuth($auth_mod);
@@ -227,7 +205,7 @@ final class DefaultAction implements ApplicationActionInterface
                         sprintf(
                             '%s is already logged in from %s and attempted to login from %s',
                             scrub_out($username),
-                            (string) $session_ip,
+                            $session_ip,
                             $current_ip
                         ),
                         [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -267,14 +245,14 @@ final class DefaultAction implements ApplicationActionInterface
                     );
                     AmpError::add('general', T_('Unable to create a local account'));
                 }
-            } // end if auto_create
+            }
 
             // This allows stealing passwords validated by external means such as LDAP
             if (
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE) &&
-                $auth['success'] &&
-                isset($password) &&
-                $user instanceof User
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE)
+                && $auth['success']
+                && isset($password)
+                && $user instanceof User
             ) {
                 $user->update_password($password);
             }
@@ -306,21 +284,26 @@ final class DefaultAction implements ApplicationActionInterface
             // Update data from this auth if ours are empty or if config asks us to
             $external_auto_update = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::EXTERNAL_AUTO_UPDATE);
 
-            if (($external_auto_update || empty($user->fullname)) && !empty($auth['name'])) {
+            if (($external_auto_update || in_array($user->fullname, [null, '', '0'], true)) && !empty($auth['name'])) {
                 $user->update_fullname($auth['name']);
             }
-            if (($external_auto_update || empty($user->email)) && !empty($auth['email'])) {
+
+            if (($external_auto_update || in_array($user->email, [null, '', '0'], true)) && !empty($auth['email'])) {
                 $user->update_email($auth['email']);
             }
-            if (($external_auto_update || empty($user->website)) && !empty($auth['website'])) {
+
+            if (($external_auto_update || in_array($user->website, [null, '', '0'], true)) && !empty($auth['website'])) {
                 $user->update_website($auth['website']);
             }
-            if (($external_auto_update || empty($user->state)) && !empty($auth['state'])) {
+
+            if (($external_auto_update || in_array($user->state, [null, '', '0'], true)) && !empty($auth['state'])) {
                 $user->update_state($auth['state']);
             }
-            if (($external_auto_update || empty($user->city)) && !empty($auth['city'])) {
+
+            if (($external_auto_update || in_array($user->city, [null, '', '0'], true)) && !empty($auth['city'])) {
                 $user->update_city($auth['city']);
             }
+
             if (($external_auto_update || strpos($user->get_f_avatar('f_avatar'), '/images/blankuser.png')) && !empty($auth['avatar'])) {
                 $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
             }
@@ -330,36 +313,49 @@ final class DefaultAction implements ApplicationActionInterface
 
             // If an admin, check for update
             if (
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&
-                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE)
+                && $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ) {
                 // admins need to know if an update is available
                 AutoUpdate::is_update_available();
             }
 
-            /* Make sure they are actually trying to get to this site and don't try
-             * to redirect them back into an admin section
-             */
             $web_path = $this->configContainer->getWebPath();
-            if (
-                (substr($_POST['referrer'], 0, strlen((string) $web_path)) == $web_path) &&
-                strpos($_POST['referrer'], 'install.php') === false &&
-                strpos($_POST['referrer'], 'login.php') === false &&
-                strpos($_POST['referrer'], 'logout.php') === false &&
-                strpos($_POST['referrer'], 'update.php') === false &&
-                strpos($_POST['referrer'], 'activate.php') === false &&
-                strpos($_POST['referrer'], 'admin') === false
-            ) {
+            $referrer = (string) ($_POST['referrer'] ?? $_SESSION[OidcAuthenticationService::SESSION_REFERRER_KEY] ?? '');
+            unset($_SESSION[OidcAuthenticationService::SESSION_REFERRER_KEY]);
+
+            // Users an admin has locked into the mini player go there whatever they asked for; a deep
+            // link would only be bounced back by the interface anyway.
+            $miniPath = sprintf('%s/m/', $web_path);
+            if (Preference::get_by_user($user->getId(), 'mini_player')) {
                 return $this->responseFactory
-                    ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+                    ->createResponse(RFC7231::FOUND)
                     ->withHeader(
                         'Location',
-                        $_POST['referrer']
+                        $miniPath
+                    );
+            }
+
+            if (
+                $referrer !== ''
+                && str_starts_with($referrer, $web_path)
+                && !str_contains($referrer, 'install.php')
+                && !str_contains($referrer, 'login.php')
+                && !str_contains($referrer, 'logout.php')
+                && !str_contains($referrer, 'update.php')
+                && !str_contains($referrer, 'activate.php')
+                && !str_contains($referrer, 'admin')
+            ) {
+                return $this->responseFactory
+                    ->createResponse(RFC7231::FOUND)
+                    ->withHeader(
+                        'Location',
+                        $referrer
                     );
             } // if we've got a referrer
 
             return $this->responseFactory
-                ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+                ->createResponse(RFC7231::FOUND)
                 ->withHeader(
                     'Location',
                     sprintf('%s/index.php', $this->configContainer->getWebPath())

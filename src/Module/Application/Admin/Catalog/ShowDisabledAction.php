@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -42,14 +42,13 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final readonly class ShowDisabledAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_disabled';
+    public const string REQUEST_KEY = 'show_disabled';
 
     public function __construct(
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private SongRepositoryInterface $songRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -59,7 +58,7 @@ final readonly class ShowDisabledAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 

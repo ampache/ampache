@@ -25,20 +25,30 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class PodcastEpisodes4Method
+ * @package Lib\Api4Methods
  */
-final class PodcastEpisodes4Method
+final class PodcastEpisodes4Method implements MethodInterface
 {
-    public const ACTION = 'podcast_episodes';
+    public const string ACTION = 'podcast_episodes';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private PodcastRepositoryInterface $podcastRepository,
+    ) {}
 
     /**
      * podcast_episodes
@@ -51,68 +61,50 @@ final class PodcastEpisodes4Method
      * limit = (integer) //optional
      *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     offset?: string,
      *     limit?: string,
-     *     cond?: string,
-     *     sort?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function podcast_episodes(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('podcast')) {
-            Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
+            throw new AccessDeniedException(
+                'Enable: podcast'
+            );
         }
-        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $podcast_id = (int) $input['filter'];
-        debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
-        $podcastRepository = self::getPodcastRepository();
-        $podcast           = $podcastRepository->findById($podcast_id);
 
+        $podcastId = (int) ($input['filter'] ?? 0);
+        if ($podcastId === 0) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
+        }
+
+        $podcast = $this->podcastRepository->findById($podcastId);
         if ($podcast === null) {
-            Api4::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException((string) $podcastId);
         }
 
-        $browse = Api::getBrowse($user);
-        $browse->set_type('podcast_episode');
-        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['pubdate', 'DESC']);
-        $browse->set_filter('podcast', $podcast_id);
+        $results = $podcast->getEpisodeIds();
 
-        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        $results = $browse->get_objects();
+        $response->getBody()->write(
+            // version 4 json returns the bare episode list, without the object wrapper
+            $output->podcastEpisodes($apiVersion, $results, $user, $input['auth'], true, false)
+        );
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json4_Data::set_offset($input['offset'] ?? 0);
-                Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::podcast_episodes($results, $user, $input['auth'], false);
-                break;
-            default:
-                Xml4_Data::set_offset($input['offset'] ?? 0);
-                Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::podcast_episodes($results, $user, $input['auth']);
-        }
-
-        return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
+        return $response;
     }
 }

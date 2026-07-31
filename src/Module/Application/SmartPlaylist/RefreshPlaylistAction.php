@@ -32,25 +32,18 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class RefreshPlaylistAction implements ApplicationActionInterface
+final readonly class RefreshPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'refresh_playlist';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'refresh_playlist';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
-    }
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist = $this->modelFactory->createSearch(
+        $playlist = $this->modelFactory->createSmartlist(
             (int) ($request->getQueryParams()['playlist_id'] ?? 0)
         );
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.16.1">
+  <playlists>
+    <playlist id="400000014" name="Album 1*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000014"/>
+    <playlist id="400000013" name="Album 2*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000013"/>
+    <playlist id="400000012" name="Album 3*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000012"/>
+    <playlist id="400000011" name="Album 4*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000011"/>
+    <playlist id="400000010" name="Album 5*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000010"/>
+    <playlist id="400000009" name="Artist 1*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000009"/>
+    <playlist id="400000008" name="Artist 2*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000008"/>
+    <playlist id="400000007" name="Artist 3*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000007"/>
+    <playlist id="400000006" name="Artist 4*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000006"/>
+    <playlist id="400000005" name="Artist 5*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000005"/>
+    <playlist id="400000019" name="Song 1*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000019"/>
+    <playlist id="400000018" name="Song 2*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000018"/>
+    <playlist id="400000017" name="Song 3*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000017"/>
+    <playlist id="400000016" name="Song 4*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="0" duration="0" coverArt="400000016"/>
+    <playlist id="400000015" name="Song 5*" owner="System" public="true" created="1970-01-01T00:00:00+00:00" changed="2026-07-19T05:20:55+00:00" songCount="1" duration="266" coverArt="400000015"/>
+  </playlists>
+</subsonic-response>

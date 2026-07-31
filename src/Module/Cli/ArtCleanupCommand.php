@@ -28,30 +28,15 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Art\ArtCleanupInterface;
+use Override;
 
 final class ArtCleanupCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ArtCleanupInterface $artCleanup;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ArtCleanupInterface $artCleanup
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly ArtCleanupInterface $artCleanup,
     ) {
         parent::__construct('cleanup:art', T_('Remove art which does not fit to the settings'));
-
-        $this->configContainer = $configContainer;
-        $this->artCleanup      = $artCleanup;
 
         $this
             ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
@@ -72,18 +57,18 @@ final class ArtCleanupCommand extends Command
 
         if (!$thumbnails && !$cleanup) {
             $interactor->info(
-                'This file cleans the image table for items that don\'t fit into set dimensions',
+                "This file cleans the image table for items that don't fit into set dimensions",
                 true
             );
 
             $runable = (
                 (
-                    !$this->configContainer->get('album_art_min_width') &&
-                    $this->configContainer->get('album_art_min_height')
-                ) ||
-                (
-                    !$this->configContainer->get('album_art_max_width') &&
-                    !$this->configContainer->get('album_art_max_height')
+                    !$this->configContainer->get('album_art_min_width')
+                    && $this->configContainer->get('album_art_min_height')
+                )
+                || (
+                    !$this->configContainer->get('album_art_max_width')
+                    && !$this->configContainer->get('album_art_max_height')
                 )
             );
 
@@ -121,10 +106,11 @@ final class ArtCleanupCommand extends Command
                 );
             } else {
                 $interactor->warn(
-                    "***" . T_("WARNING") . "*** " . T_('Running in Write Mode. Make sure you\'ve tested first!'),
+                    "***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
                     true
                 );
             }
+
             if ($thumbnails) {
                 $interactor->info(
                     'Delete art thumbnails keeping the original images',
@@ -133,6 +119,7 @@ final class ArtCleanupCommand extends Command
 
                 $this->artCleanup->deleteThumbnails($interactor, $execute);
             }
+
             if ($cleanup) {
                 $interactor->info(
                     'Delete orphaned art files from the local metadata folder and migrate thumbnails to the correct location',
@@ -147,5 +134,15 @@ final class ArtCleanupCommand extends Command
             'Clean Completed',
             true
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

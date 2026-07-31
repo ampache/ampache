@@ -21,13 +21,15 @@
  *
  */
 
+// show_gather_art.inc.php
+
 use Ampache\Module\Util\Ui;
 
 /** @var int $catalog_id */
 
 Ui::show_box_top(T_('Art Search'), 'box box_gather_art');
 echo "<strong>" . T_('Starting Art Search') . ". . .</strong><br />\n";
-echo T_('Searched') . ": <span id=\"count_art_" . (string) $catalog_id . "\">" . T_('None') . "</span><br />";
-echo T_('Reading') . ":<span id=\"read_art_" . (string) $catalog_id . "\"></span><br />";
+echo T_('Searched') . ": <span id=\"count_art_" . $catalog_id . "\">" . T_('None') . "</span><br />";
+echo T_('Reading') . ":<span id=\"read_art_" . $catalog_id . "\"></span><br />";
 echo "<br />\n";
 Ui::show_box_bottom();

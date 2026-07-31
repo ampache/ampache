@@ -26,25 +26,27 @@ declare(strict_types=1);
 namespace Ampache\Module\User\Activity\TypeHandler;
 
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Override;
 
 final class AlbumActivityTypeHandler extends GenericActivityTypeHandler
 {
-    private UserActivityRepositoryInterface $userActivityRepository;
+    private readonly UserActivityRepositoryInterface $userActivityRepository;
 
     public function __construct(
-        UserActivityRepositoryInterface $userActivityRepository
+        UserActivityRepositoryInterface $userActivityRepository,
     ) {
         parent::__construct($userActivityRepository);
 
         $this->userActivityRepository = $userActivityRepository;
     }
 
+    #[Override]
     public function registerActivity(
         int $objectId,
         string $objectType,
         string $action,
         int $userId,
-        int $date
+        int $date,
     ): void {
         $this->userActivityRepository->registerGenericEntry(
             $userId,

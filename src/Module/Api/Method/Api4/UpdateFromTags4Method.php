@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class UpdateFromTags4Method
 {
-    public const ACTION = 'update_from_tags';
+    public const string ACTION = 'update_from_tags';
 
     /**
      * update_from_tags
@@ -67,7 +67,7 @@ final class UpdateFromTags4Method
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album', 'song'])) {
-            Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
             return false;
         }
@@ -75,7 +75,7 @@ final class UpdateFromTags4Method
         /** @var Artist|Album|Song $item */
         $item = new $className($object_id);
         if ($item->isNew()) {
-            Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
+            Api4::message('error', 'The requested item was not found', '404', $input['api_format']);
 
             return false;
         }

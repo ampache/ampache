@@ -34,7 +34,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistEdit4Method
 {
-    public const ACTION = 'playlist_edit';
+    public const string ACTION = 'playlist_edit';
 
     /**
      * playlist_edit
@@ -82,14 +82,14 @@ final class PlaylistEdit4Method
         $playlist  = new Playlist($object_id);
 
         if ($playlist->isNew()) {
-            Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
+            Api4::message('error', 'The requested item was not found', '404', $input['api_format']);
 
             return false;
         }
 
         // don't continue if you didn't actually get a playlist or the access level
         if (!$playlist->has_access($user)) {
-            Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
+            Api4::message('error', 'Access denied to this playlist', '401', $input['api_format']);
 
             return false;
         }
@@ -119,7 +119,7 @@ final class PlaylistEdit4Method
         }
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
-            Api4::message('error', T_('Nothing was changed'), '401', $input['api_format']);
+            Api4::message('error', 'Nothing was changed', '401', $input['api_format']);
 
             return false;
         }

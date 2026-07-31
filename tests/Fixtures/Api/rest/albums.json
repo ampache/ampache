@@ -1,0 +1,123 @@
+{
+    "total_count": 64419,
+    "md5": "8b5299e72f26b88958daf15d8fe06fd2",
+    "album": [
+        {
+            "id": "214923",
+            "name": "TANZNEID (24-bit HD audio)",
+            "prefix": null,
+            "basename": "TANZNEID (24-bit HD audio)",
+            "artist": {
+                "id": "17771",
+                "name": "Electric Callboy",
+                "prefix": null,
+                "basename": "Electric Callboy"
+            },
+            "artists": [
+                {
+                    "id": "17771",
+                    "name": "Electric Callboy",
+                    "prefix": null,
+                    "basename": "Electric Callboy"
+                }
+            ],
+            "songartists": [
+                {
+                    "id": "17771",
+                    "name": "Electric Callboy",
+                    "prefix": null,
+                    "basename": "Electric Callboy"
+                }
+            ],
+            "time": 1333,
+            "year": 2026,
+            "tracks": [],
+            "songcount": 7,
+            "diskcount": 1,
+            "type": null,
+            "genre": [],
+            "art": "https:\/\/music.com.au\/image.php?object_id=214923&object_type=album&name=art.jpg",
+            "has_art": false,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "mbid": null,
+            "mbid_group": null,
+            "catalog": "32"
+        },
+        {
+            "id": "214905",
+            "name": "Limerence",
+            "prefix": null,
+            "basename": "Limerence",
+            "artist": {
+                "id": "43253",
+                "name": "Take the Name",
+                "prefix": null,
+                "basename": "Take the Name"
+            },
+            "artists": [
+                {
+                    "id": "43253",
+                    "name": "Take the Name",
+                    "prefix": null,
+                    "basename": "Take the Name"
+                }
+            ],
+            "songartists": [
+                {
+                    "id": "43253",
+                    "name": "Take the Name",
+                    "prefix": null,
+                    "basename": "Take the Name"
+                },
+                {
+                    "id": "43251",
+                    "name": "Softspoken",
+                    "prefix": null,
+                    "basename": "Softspoken"
+                },
+                {
+                    "id": "43436",
+                    "name": "What Lies Below",
+                    "prefix": null,
+                    "basename": "What Lies Below"
+                },
+                {
+                    "id": "43437",
+                    "name": "Ricky Armellino",
+                    "prefix": null,
+                    "basename": "Ricky Armellino"
+                }
+            ],
+            "time": 2128,
+            "year": 2026,
+            "tracks": [],
+            "songcount": 10,
+            "diskcount": 1,
+            "type": "album",
+            "genre": [
+                {
+                    "id": "4",
+                    "name": "Electronic"
+                },
+                {
+                    "id": "840",
+                    "name": "Metalcore"
+                },
+                {
+                    "id": "156",
+                    "name": "Alternative Metal"
+                }
+            ],
+            "art": "https:\/\/music.com.au\/image.php?object_id=214905&object_type=album&name=art.jpg",
+            "has_art": false,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "mbid": "3e936196-8a88-4501-a9ae-5311c5efc25e",
+            "mbid_group": "5f1e3561-ca6a-4546-8aa5-2f547852edd7",
+            "catalog": "2"
+        }
+    ]
+}

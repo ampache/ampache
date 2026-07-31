@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.16.1" type="ampache" serverVersion="8.0.0" openSubsonic="1">
+  <directory id="ar-3" parent="1" name="Mendes Brothers">
+    <child id="al-2" parent="ar-2" album="CC Affiliates Mixtape #1" title="CC Affiliates Mixtape #1" isDir="true" coverArt="al-2" created="2026-07-15T06:35:01+00:00" duration="266" artistId="ar-2" artist="Various Artists" year="2015" userRating="5" playCount="71" played="2026-07-26T19:42:17Z"/>
+  </directory>
+</subsonic-response>

@@ -34,43 +34,34 @@ use Ampache\Repository\MetadataRepositoryInterface;
  */
 class Metadata
 {
-    /** @var int Database primary key */
-    private int $id = 0;
-
-    /** @var int Id of a library item like song or video */
-    private int $object_id = 0;
+    /** @var string Tag Data */
+    private string $data = '';
 
     /** @var int Id of the linked MetadataField */
     private int $field = 0;
 
-    /** @var string Tag Data */
-    private string $data = '';
+    /** @var int Database primary key */
+    private int $id = 0;
+
+    private ?MetadataField $metadataField = null;
+
+    /** @var int Id of a library item like song or video */
+    private int $object_id = 0;
 
     /** @var string Object type (song, video, ...) */
     private string $type = '';
 
-    private ?MetadataField $metadataField = null;
-
     public function __construct(
         private readonly MetadataRepositoryInterface $metadataRepository,
-        private readonly MetadataFieldRepositoryInterface $metadataFieldRepository
-    ) {
-    }
+        private readonly MetadataFieldRepositoryInterface $metadataFieldRepository,
+    ) {}
 
     /**
-     * Returns `true` if the object is new
+     * Returns the data
      */
-    public function isNew(): bool
+    public function getData(): string
     {
-        return $this->id === 0;
-    }
-
-    /**
-     * Returns the object-id
-     */
-    public function getObjectId(): int
-    {
-        return $this->object_id;
+        return $this->data;
     }
 
     /**
@@ -86,19 +77,64 @@ class Metadata
     }
 
     /**
-     * Returns the data
+     * Returns the id of the metadata-field
      */
-    public function getData(): string
+    public function getFieldId(): int
     {
-        return $this->data;
+        return $this->field;
     }
 
     /**
-     * Sets the object-id
+     * Returns the metadata id
      */
-    public function setObjectId(int $objectId): Metadata
+    public function getId(): int
     {
-        $this->object_id = $objectId;
+        return $this->id;
+    }
+
+    /**
+     * Returns the object-id
+     */
+    public function getObjectId(): int
+    {
+        return $this->object_id;
+    }
+
+    /**
+     * Returns the object-type
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * Returns `true` if the object is new
+     */
+    public function isNew(): bool
+    {
+        return $this->id === 0;
+    }
+
+    /**
+     * Saves the item
+     * @throws DatabaseException
+     */
+    public function save(): void
+    {
+        $result = $this->metadataRepository->persist($this);
+
+        if ($result !== null) {
+            $this->id = $result;
+        }
+    }
+
+    /**
+     * Sets the data
+     */
+    public function setData(string $data): Metadata
+    {
+        $this->data = $data;
 
         return $this;
     }
@@ -115,14 +151,6 @@ class Metadata
     }
 
     /**
-     * Returns the id of the metadata-field
-     */
-    public function getFieldId(): int
-    {
-        return $this->field;
-    }
-
-    /**
      * Sets the id of the metadata-field
      */
     public function setFieldId(int $fieldId): Metadata
@@ -134,21 +162,13 @@ class Metadata
     }
 
     /**
-     * Sets the data
+     * Sets the object-id
      */
-    public function setData(string $data): Metadata
+    public function setObjectId(int $objectId): Metadata
     {
-        $this->data = $data;
+        $this->object_id = $objectId;
 
         return $this;
-    }
-
-    /**
-     * Returns the object-type
-     */
-    public function getType(): string
-    {
-        return $this->type;
     }
 
     /**
@@ -159,26 +179,5 @@ class Metadata
         $this->type = ucfirst($type);
 
         return $this;
-    }
-
-    /**
-     * Returns the metadata id
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * Saves the item
-     * @throws DatabaseException
-     */
-    public function save(): void
-    {
-        $result = $this->metadataRepository->persist($this);
-
-        if ($result !== null) {
-            $this->id = $result;
-        }
     }
 }

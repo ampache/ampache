@@ -28,21 +28,12 @@ namespace Ampache\Module\Authorization;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Mockery\MockInterface;
+use Override;
 
 class GuiGatekeeperTest extends MockeryTestCase
 {
     private MockInterface&PrivilegeCheckerInterface $privilegeChecker;
-
     private GuiGatekeeper $subject;
-
-    protected function setUp(): void
-    {
-        $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
-
-        $this->subject = new GuiGatekeeper(
-            $this->privilegeChecker
-        );
-    }
 
     public function testMayAccessPerformsPrivilegeCheck(): void
     {
@@ -56,6 +47,16 @@ class GuiGatekeeperTest extends MockeryTestCase
 
         $this->assertTrue(
             $this->subject->mayAccess($type, $level)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+
+        $this->subject = new GuiGatekeeper(
+            $this->privilegeChecker
         );
     }
 }

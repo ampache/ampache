@@ -26,19 +26,29 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Playlists5Method
+ * Returns the playlists (and, unless hidden, the smartlists) visible to the user.
+ *
+ * Version 5 sorts by name and ignores the `sort` and `cond` parameters that the later versions
+ * understand, so it keeps a method of its own.
  */
-final class Playlists5Method
+final class Playlists5Method implements MethodInterface
 {
-    public const ACTION = 'playlists';
+    public const string ACTION = 'playlists';
+
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * playlists
@@ -71,15 +81,25 @@ final class Playlists5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
      */
-    public static function playlists(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $hide       = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $show_dupes = (array_key_exists('show_dupes', $input))
             ? make_bool($input['show_dupes'])
             : (bool) Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
 
-        $browse = Api::getBrowse($user);
+        $browse = $this->modelFactory->createBrowse(null, false);
+
+        $browse->set_user_id($user);
+
         if ($hide === false) {
             $browse->set_type('playlist_search');
         } else {
@@ -94,7 +114,10 @@ final class Playlists5Method
 
         $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1)
+            ? 'exact_match'
+            : 'alpha_match';
+
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_filter('playlist_open', $user->getId());
 
@@ -106,25 +129,21 @@ final class Playlists5Method
         }
 
         $results = $browse->get_objects();
-        if (empty($results)) {
-            Api5::empty('playlist', $input['api_format']);
-
-            return false;
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'playlist')
+                )
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset((int) ($input['offset'] ?? 0));
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::playlists($results, $user, $input['auth']);
-                break;
-            default:
-                Xml5_Data::set_offset((int) ($input['offset'] ?? 0));
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::playlists($results, $user, $input['auth']);
-        }
+        $output->setOffset($apiVersion, (int) ($input['offset'] ?? 0));
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->playlists($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

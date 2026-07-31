@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,7 +43,7 @@ final class HttpAuthenticator implements AuthenticatorInterface
     {
         unset($password);
         $results = [];
-        if (Core::get_server('REMOTE_USER') == $username || Core::get_server('HTTP_REMOTE_USER') == $username) {
+        if (Core::get_server('REMOTE_USER') === $username || Core::get_server('HTTP_REMOTE_USER') === $username) {
             $results['success']  = true;
             $results['type']     = 'http';
             $results['username'] = $username;

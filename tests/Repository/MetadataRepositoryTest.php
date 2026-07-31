@@ -36,21 +36,8 @@ use PHPUnit\Framework\TestCase;
 class MetadataRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
-
     private MetadataFieldRepositoryInterface&MockObject $metadataFieldRepository;
-
     private MetadataRepository $subject;
-
-    protected function setUp(): void
-    {
-        $this->connection              = $this->createMock(DatabaseConnectionInterface::class);
-        $this->metadataFieldRepository = $this->createMock(MetadataFieldRepositoryInterface::class);
-
-        $this->subject = new MetadataRepository(
-            $this->connection,
-            $this->metadataFieldRepository
-        );
-    }
 
     public function testCollectGarbageExecutesQuery(): void
     {
@@ -59,54 +46,6 @@ class MetadataRepositoryTest extends TestCase
             ->with('DELETE FROM `metadata` USING `metadata` LEFT JOIN `song` ON `song`.`id` = `metadata`.`object_id` WHERE `song`.`id` IS NULL;');
 
         $this->subject->collectGarbage();
-    }
-
-    public function testMigrateMigrates(): void
-    {
-        $objectType  = 'some-object-type';
-        $oldObjectId = 666;
-        $newObjectId = 42;
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'UPDATE IGNORE `metadata` SET `object_id` = ? WHERE `object_id` = ? AND `type` = ?',
-                [
-                    $newObjectId,
-                    $oldObjectId,
-                    ucfirst($objectType),
-                ],
-            );
-
-        $this->subject->migrate($objectType, $oldObjectId, $newObjectId);
-    }
-
-    public function testFindByIdReturnsNullIfNothingWasFound(): void
-    {
-        $metadataId = 666;
-
-        $result = $this->createMock(PDOStatement::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT * FROM `metadata` WHERE `id` = ?',
-                [
-                    $metadataId
-                ],
-            )
-            ->willReturn($result);
-
-        $result->expects(static::once())
-            ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, Metadata::class, [$this->subject, $this->metadataFieldRepository]);
-        $result->expects(static::once())
-            ->method('fetch')
-            ->willReturn(false);
-
-        static::assertNull(
-            $this->subject->findById($metadataId)
-        );
     }
 
     public function testFindByIdReturnsFoundObject(): void
@@ -133,8 +72,36 @@ class MetadataRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($metadata);
 
-        static::assertSame(
+        self::assertSame(
             $metadata,
+            $this->subject->findById($metadataId)
+        );
+    }
+
+    public function testFindByIdReturnsNullIfNothingWasFound(): void
+    {
+        $metadataId = 666;
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT * FROM `metadata` WHERE `id` = ?',
+                [
+                    $metadataId
+                ],
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('setFetchMode')
+            ->with(PDO::FETCH_CLASS, Metadata::class, [$this->subject, $this->metadataFieldRepository]);
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn(false);
+
+        self::assertNull(
             $this->subject->findById($metadataId)
         );
     }
@@ -172,7 +139,7 @@ class MetadataRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($metadata);
 
-        static::assertSame(
+        self::assertSame(
             $metadata,
             $this->subject->findByObjectIdAndFieldAndType($objectId, $metadataField, $objectType)
         );
@@ -210,7 +177,7 @@ class MetadataRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findByObjectIdAndFieldAndType($objectId, $metadataField, $objectType)
         );
     }
@@ -241,7 +208,7 @@ class MetadataRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($metadata, false);
 
-        static::assertSame(
+        self::assertSame(
             [$metadata],
             iterator_to_array(
                 $this->subject->findByObjectIdAndType($objectId, $objectType)
@@ -249,81 +216,24 @@ class MetadataRepositoryTest extends TestCase
         );
     }
 
-    public function testRemoveDeletesItem(): void
+    public function testMigrateMigrates(): void
     {
-        $metadata = $this->createMock(Metadata::class);
-
-        $metadataId = 666;
-
-        $metadata->expects(static::once())
-            ->method('getId')
-            ->willReturn($metadataId);
+        $objectType  = 'some-object-type';
+        $oldObjectId = 666;
+        $newObjectId = 42;
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'DELETE FROM `metadata` where `id` = ?',
+                'UPDATE IGNORE `metadata` SET `object_id` = ? WHERE `object_id` = ? AND `type` = ?',
                 [
-                    $metadataId
-                ]
+                    $newObjectId,
+                    $oldObjectId,
+                    ucfirst($objectType),
+                ],
             );
 
-        $this->subject->remove($metadata);
-    }
-
-    public function testPrototypeReturnsObject(): void
-    {
-        static::assertInstanceOf(
-            Metadata::class,
-            $this->subject->prototype()
-        );
-    }
-
-    public function testPersistWritesNewItemAndReturnsId(): void
-    {
-        $metadata = $this->createMock(Metadata::class);
-
-        $metadataId = 666;
-        $objectId   = 42;
-        $fieldId    = 33;
-        $data       = 'some-data';
-        $type       = 'some-type';
-
-        $metadata->expects(static::exactly(2))
-            ->method('getObjectId')
-            ->willReturn($objectId);
-        $metadata->expects(static::exactly(2))
-            ->method('getFieldId')
-            ->willReturn($fieldId);
-        $metadata->expects(static::exactly(2))
-            ->method('getData')
-            ->willReturn($data);
-        $metadata->expects(static::once())
-            ->method('getType')
-            ->willReturn($type);
-        $metadata->expects(static::once())
-            ->method('isNew')
-            ->willReturn(true);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'INSERT INTO `metadata` (`object_id`, `field`, `data`, `type`) VALUES (?, ?, ?, ?)',
-                [
-                    $objectId,
-                    $fieldId,
-                    $data,
-                    $type
-                ]
-            );
-        $this->connection->expects(static::once())
-            ->method('getLastInsertedId')
-            ->willReturn($metadataId);
-
-        static::assertSame(
-            $metadataId,
-            $this->subject->persist($metadata)
-        );
+        $this->subject->migrate($objectType, $oldObjectId, $newObjectId);
     }
 
     public function testPersistUpdatesExistingItem(): void
@@ -368,8 +278,96 @@ class MetadataRepositoryTest extends TestCase
                 ]
             );
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->persist($metadata)
+        );
+    }
+
+    public function testPersistWritesNewItemAndReturnsId(): void
+    {
+        $metadata = $this->createMock(Metadata::class);
+
+        $metadataId = 666;
+        $objectId   = 42;
+        $fieldId    = 33;
+        $data       = 'some-data';
+        $type       = 'some-type';
+
+        $metadata->expects(static::exactly(2))
+            ->method('getObjectId')
+            ->willReturn($objectId);
+        $metadata->expects(static::exactly(2))
+            ->method('getFieldId')
+            ->willReturn($fieldId);
+        $metadata->expects(static::exactly(2))
+            ->method('getData')
+            ->willReturn($data);
+        $metadata->expects(static::once())
+            ->method('getType')
+            ->willReturn($type);
+        $metadata->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `metadata` (`object_id`, `field`, `data`, `type`) VALUES (?, ?, ?, ?)',
+                [
+                    $objectId,
+                    $fieldId,
+                    $data,
+                    $type
+                ]
+            );
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn($metadataId);
+
+        self::assertSame(
+            $metadataId,
+            $this->subject->persist($metadata)
+        );
+    }
+
+    public function testPrototypeReturnsObject(): void
+    {
+        self::assertInstanceOf(
+            Metadata::class,
+            $this->subject->prototype()
+        );
+    }
+
+    public function testRemoveDeletesItem(): void
+    {
+        $metadata = $this->createMock(Metadata::class);
+
+        $metadataId = 666;
+
+        $metadata->expects(static::once())
+            ->method('getId')
+            ->willReturn($metadataId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `metadata` where `id` = ?',
+                [
+                    $metadataId
+                ]
+            );
+
+        $this->subject->remove($metadata);
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection              = $this->createMock(DatabaseConnectionInterface::class);
+        $this->metadataFieldRepository = $this->createMock(MetadataFieldRepositoryInterface::class);
+
+        $this->subject = new MetadataRepository(
+            $this->connection,
+            $this->metadataFieldRepository
         );
     }
 }

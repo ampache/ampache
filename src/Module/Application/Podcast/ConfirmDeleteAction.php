@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -42,29 +43,17 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Actually deletes a podcast object
  */
-final class ConfirmDeleteAction implements ApplicationActionInterface
+final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_delete';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private PodcastRepositoryInterface $podcastRepository;
-
-    private PodcastDeleterInterface $podcastDeleter;
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        PodcastRepositoryInterface $podcastRepository,
-        PodcastDeleterInterface $podcastDeleter
-    ) {
-        $this->configContainer   = $configContainer;
-        $this->ui                = $ui;
-        $this->podcastRepository = $podcastRepository;
-        $this->podcastDeleter    = $podcastDeleter;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private PodcastRepositoryInterface $podcastRepository,
+        private PodcastDeleterInterface $podcastDeleter,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -73,13 +62,14 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         }
 
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             throw new AccessDeniedException();
         }
 
-        $podcastId = (int) ($request->getQueryParams()['podcast_id'] ?? 0);
+        $queryParams = $request->getQueryParams();
+        $podcastId   = (int) ($queryParams['podcast_id'] ?? 0);
 
         $podcast = $this->podcastRepository->findById($podcastId);
 
@@ -87,16 +77,24 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             throw new ObjectNotFoundException($podcastId);
         }
 
+        // A podcast has no parent object, so leaving its own page can only fall back to the podcast browser.
+        $webPath     = $this->configContainer->getWebPath();
+        $burlParam   = (string) ($queryParams['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'podcast',
+            $podcastId,
+            '',
+            sprintf('%s/browse.php?action=podcast', $webPath)
+        );
+
         $this->podcastDeleter->delete($podcast);
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Podcast has been deleted'),
-            sprintf(
-                '%s/browse.php?action=podcast',
-                $this->configContainer->getWebPath()
-            )
+            $continueUrl
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

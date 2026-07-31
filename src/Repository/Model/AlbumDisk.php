@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,95 +26,68 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Dba;
+use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * This is the class responsible for handling the Album object
  * it is related to the album table in the database.
  */
-class AlbumDisk extends database_object implements library_item, CatalogItemInterface
+class AlbumDisk extends database_object implements
+    library_item,
+    displayable_item,
+    container_item,
+    CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'album_disk';
+    protected const string DB_TABLENAME = 'album_disk';
 
-    public int $id = 0;
-
-    public int $album_id = 0;
-
-    public int $disk;
-
-    public int $disk_count = 0;
-
-    public ?int $time = null;
-
+    public ?int $addition_time = null;
+    public ?int $album_artist;
+    public int $album_id     = 0;
+    public int $artist_count = 0;
+    public ?string $barcode;
     public int $catalog;
-
-    public int $song_count = 0;
-
-    public int $total_count = 0;
-
-    public int $total_skip = 0;
-
-    private int $weight = 0;
-
+    public int $catalog_id = 0;
+    public ?string $catalog_number;
+    public int $disk;
+    public int $disk_count       = 0;
     public ?string $disksubtitle = null;
+    public int $id               = 0;
+    public ?string $link         = null;
+    public ?string $mbid; // MusicBrainz ID
+    public ?string $mbid_group; // MusicBrainz Release Group ID
 
     /**
      * Variables from parent Album
      */
-
     public ?string $name;
 
-    public ?string $prefix;
-
-    public ?string $mbid; // MusicBrainz ID
-
-    public ?int $year;
-
-    public ?string $mbid_group; // MusicBrainz Release Group ID
-
-    public ?string $release_type;
-
-    public ?int $album_artist;
-
     public ?int $original_year;
-
-    public ?string $barcode;
-
-    public ?string $catalog_number;
-
-    public ?string $version;
-
+    public ?string $prefix;
     public ?string $release_status;
-
-    public ?int $addition_time = null;
-
-    public int $artist_count = 0;
-
+    public ?string $release_type;
     public int $song_artist_count = 0;
-
-    public ?string $link = null;
-
-    public int $catalog_id = 0;
+    public int $song_count        = 0;
+    public ?int $time             = null;
+    public int $total_count       = 0;
+    public int $total_skip        = 0;
+    public ?string $version;
+    public ?int $year;
+    private Album $album;
 
     /** @var int[] $album_artists */
     private ?array $album_artists = null;
 
-    /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
-    private ?array $tags = null;
-
-    private ?string $f_artist_name = null;
-
     private ?string $f_artist_link = null;
-
-    private ?string $f_link = null;
+    private ?string $f_artist_name = null;
+    private ?string $f_link        = null;
 
     // Prefix + Name, generated
     private ?string $f_name = null;
+    private ?bool $has_art  = null;
 
-    private ?bool $has_art = null;
-
-    private Album $album;
+    /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
+    private ?array $tags = null;
 
     /**
      * __construct
@@ -144,9 +117,15 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->id           = (int) ($info['id'] ?? 0);
+        $this->album_id     = (int) ($info['album_id'] ?? 0);
+        $this->catalog      = (int) ($info['catalog'] ?? 0);
+        $this->disk         = (int) ($info['disk'] ?? 0);
+        $this->disksubtitle = $info['disksubtitle'] ?? null;
+        $this->song_count   = (int) ($info['song_count'] ?? 0);
+        $this->time         = isset($info['time']) ? (int) $info['time'] : null;
+        $this->total_count  = (int) ($info['total_count'] ?? 0);
+        $this->total_skip   = (int) ($info['total_skip'] ?? 0);
 
         // set the album variables just in case
         $this->name              = $this->album->name;
@@ -166,21 +145,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         $this->song_artist_count = $this->album->song_artist_count;
     }
 
-    public function getId(): int
-    {
-        return (int)($this->id ?? 0);
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
-    public function getAlbumId(): int
-    {
-        return $this->album_id;
-    }
-
     /**
      * check
      *
@@ -188,105 +152,133 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      */
     public static function check(int $album_id, int $disk, int $catalog_id, ?string $disksubtitle = null, ?int $current_id = null): int
     {
-        // check if the album_disk exists
-        $db_results = (!empty($disksubtitle))
-            ? Dba::read("SELECT `album_disk`.* FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND album_disk.`disksubtitle` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle])
-            : Dba::read("SELECT `album_disk`.* FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND (`album_disk`.`disksubtitle` = '' OR `album_disk`.`disksubtitle` IS NULL);", [$album_id, $disk, $catalog_id]);
-        $row = Dba::fetch_assoc($db_results);
-        if (isset($row['id'])) {
-            return (int)$row['id'];
-        }
-
-        // update existing ID
-        if (is_int($current_id) && $current_id > 0) {
-            $db_results = Dba::read("SELECT * FROM `album_disk` WHERE `id` = ?;", [$current_id]);
-            $row        = Dba::fetch_assoc($db_results);
-            if (isset($row['id'])) {
-                // remember the current disk before a collision re-fetch can clobber $row
-                $old_disk = (int)$row['disk'];
-                // alter the existing disk after editing
-                if (!Dba::write("UPDATE `album_disk` SET `album_id` = ?, `disk` = ?, `catalog` = ?, `disksubtitle` = ? WHERE `id` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle, $current_id])) {
-                    // Duplicates might collide here. Match on the unique key alone (filtering by disksubtitle never matches a null)
-                    $db_results = Dba::read("SELECT `album_disk`.`id` FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END;", [$album_id, $disk, $catalog_id]);
-                    if ($row = Dba::fetch_assoc($db_results)) {
-                        $current_id = (int)$row['id'];
-                    }
-                }
-
-                // Update songs when you edit an album_disk object
-                if ($old_disk !== $disk) {
-                    Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $old_disk]);
-                }
-
-                return (int)$current_id;
-            }
-        }
-
-        // create the album_disk (if missing)
-        $db_results = Dba::write("REPLACE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) SELECT `album`.`id`, ?, CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END, ? FROM `album` WHERE `album`.`id` = ?;", [$disk, $catalog_id, $disksubtitle ?: null, $album_id]);
-        if (!$db_results) {
-            return 0;
-        }
-
-        $album_disk_id = (int)Dba::insert_id();
-
-        // count a new song on the new disk right away
-        $sql = "UPDATE `album_disk` SET `song_count` = `song_count` + 1 WHERE `id` = ?;";
-        Dba::write($sql, [$album_disk_id]);
-        if (!empty($disksubtitle)) {
-            // set the subtitle on insert too
-            $sql = "UPDATE `album_disk` SET `disksubtitle` = ? WHERE `id` = ?;";
-            Dba::write($sql, [$disksubtitle, $album_disk_id]);
-        }
-
-        return $album_disk_id;
+        return self::getAlbumDiskRepository()->check($album_id, $disk, $catalog_id, $disksubtitle, $current_id);
     }
 
     /**
-     * does the item have art?
+     * @deprecated inject dependency
      */
-    public function has_art(): bool
+    private static function getAlbumDiskRepository(): AlbumDiskRepositoryInterface
     {
-        if ($this->has_art === null) {
-            $this->has_art = Art::has_db($this->album_id, 'album');
-        }
+        global $dic;
 
-        return $this->has_art;
+        return $dic->get(AlbumDiskRepositoryInterface::class);
     }
 
     /**
-     * Get item keywords for metadata searches.
-     * @return array<string, array{important: bool, label: string, value: string}>
+     * display_art
+     * @param array{width: int, height: int} $size
      */
-    public function get_keywords(): array
+    public function display_art(array $size, bool $force = false): void
     {
-        return [
-            'mb_albumid' => [
-                'important' => false,
-                'label' => T_('Album MusicBrainzID'),
-                'value' => (string)$this->mbid,
-            ],
-            'mb_albumid_group' => [
-                'important' => false,
-                'label' => T_('Release Group MusicBrainzID'),
-                'value' => (string)$this->mbid_group,
-            ],
-            'artist' => [
-                'important' => true,
-                'label' => T_('Artist'),
-                'value' => (string)$this->get_parent_fullname(),
-            ],
-            'album' => [
-                'important' => true,
-                'label' => T_('Album'),
-                'value' => (string)$this->get_fullname(true),
-            ],
-            'year' => [
-                'important' => false,
-                'label' => T_('Year'),
-                'value' => (string)$this->year,
-            ],
-        ];
+        if (Art::has_db($this->album_id, 'album')) {
+            $title = (!empty($this->get_parent_fullname()))
+                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
+                : $this->get_fullname();
+
+            Art::display('album', $this->album_id, $title, $size, $this->get_link());
+        } elseif (
+            $this->album->album_artist
+            && (
+                Art::has_db($this->album->album_artist, 'artist')
+                || $force
+            )
+        ) {
+            $title = (!empty($this->get_parent_fullname()))
+                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
+                : $this->get_fullname();
+
+            Art::display('artist', $this->album->album_artist, $title, $size, $this->get_link());
+        }
+    }
+
+    /**
+     * does the item have a single album artist and song artist?
+     */
+    public function get_artist_count(): int
+    {
+        return $this->getAlbumDiskRepository()->getArtistCount($this);
+    }
+
+    /**
+     * Get item album_artists array
+     * @return int[]
+     */
+    public function get_artists(): array
+    {
+        if (!$this->album_artist) {
+            return [];
+        }
+
+        if (
+            $this->album_artists === null
+            || $this->album_artists === []
+        ) {
+            $this->album_artists = $this->album->get_artists();
+        }
+
+        return $this->album_artists;
+    }
+
+    /**
+     * Get default art kind for this item.
+     */
+    public function get_default_art_kind(): string
+    {
+        return 'default';
+    }
+
+    /**
+     * get_description
+     */
+    public function get_description(): string
+    {
+        // Album description is not supported yet, always return artist description
+        $artist = new Artist($this->album->album_artist);
+
+        return $artist->get_description();
+    }
+
+    /**
+     * Get item f_link.
+     */
+    public function get_f_link(?string $title = null): string
+    {
+        // don't do anything if it's formatted
+        if ($this->f_link === null) {
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($title ?? $this->get_fullname()) . "</a>";
+        }
+
+        return $this->f_link;
+    }
+
+    /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        // don't do anything if it's formatted
+        if ($this->f_artist_link === null) {
+            $this->f_artist_link = $this->album->get_f_parent_link();
+        }
+
+        return $this->f_artist_link;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->get_tags(), true, 'album_disk');
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
     }
 
     /**
@@ -329,6 +321,41 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     }
 
     /**
+     * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
+     */
+    public function get_keywords(): array
+    {
+        return [
+            'mb_albumid' => [
+                'important' => false,
+                'label' => T_('Album MusicBrainzID'),
+                'value' => (string) $this->mbid,
+            ],
+            'mb_albumid_group' => [
+                'important' => false,
+                'label' => T_('Release Group MusicBrainzID'),
+                'value' => (string) $this->mbid_group,
+            ],
+            'artist' => [
+                'important' => true,
+                'label' => T_('Artist'),
+                'value' => $this->get_parent_fullname(),
+            ],
+            'album' => [
+                'important' => true,
+                'label' => T_('Album'),
+                'value' => $this->get_fullname(true),
+            ],
+            'year' => [
+                'important' => false,
+                'label' => T_('Year'),
+                'value' => (string) $this->year,
+            ],
+        ];
+    }
+
+    /**
      * Get item link.
      */
     public function get_link(): string
@@ -344,107 +371,21 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     }
 
     /**
-     * Get item tags.
-     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
+     * Get all children and sub-childrens media.
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_tags(): array
+    public function get_medias(?string $filter_type = null): array
     {
-        if ($this->tags === null) {
-            $this->tags = Tag::get_top_tags('album', $this->album_id);
+        $medias = [];
+        if (!$filter_type || $filter_type === 'song') {
+            $songs = $this->getSongRepository()->getByAlbumDisk($this->id);
+            foreach ($songs as $song_id) {
+                $medias[] = ['object_type' => LibraryItemEnum::SONG, 'object_id' => $song_id];
+            }
         }
 
-        return $this->tags ?? [];
-    }
-
-    /**
-     * Get item f_tags.
-     */
-    public function get_f_tags(): string
-    {
-        return Tag::get_display($this->get_tags(), true, 'album_disk');
-    }
-
-    /**
-     * Get item f_link.
-     */
-    public function get_f_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
-        }
-
-        return $this->f_link;
-    }
-
-    /**
-     * Return a formatted link to the parent object (if appliccable)
-     */
-    public function get_f_parent_link(): ?string
-    {
-        // don't do anything if it's formatted
-        if ($this->f_artist_link === null) {
-            $this->f_artist_link = $this->album->get_f_parent_link();
-        }
-
-        return $this->f_artist_link;
-    }
-
-    /**
-     * Get item f_time or f_time_h.
-     */
-    public function get_f_time(): string
-    {
-        return '';
-    }
-
-    /**
-     * Get item album_artists array
-     * @return int[]
-     */
-    public function get_artists(): array
-    {
-        if (!$this->album_artist) {
-            return [];
-        }
-
-        if (
-            $this->album_artists === null ||
-            $this->album_artists === []
-        ) {
-            $this->album_artists = $this->album->get_artists();
-        }
-
-        return $this->album_artists;
-    }
-
-    /**
-     * Get item song_artists array
-     * @return int[]
-     */
-    public function get_song_artists(): array
-    {
-        return $this->album->get_song_artists();
-    }
-
-    /**
-     * getYear
-     */
-    public function getYear(): string
-    {
-        return (string)($this->year ?: '');
-    }
-
-    /**
-     * Get item album_artist fullname.
-     */
-    public function get_parent_fullname(): string
-    {
-        if ($this->f_artist_name === null) {
-            $this->f_artist_name = $this->album->get_parent_fullname();
-        }
-
-        return $this->f_artist_name ?? '';
+        return $medias;
     }
 
     /**
@@ -463,49 +404,48 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     }
 
     /**
-     * Get item children.
-     * @return array{song: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * Get item album_artist fullname.
      */
-    public function get_childrens(): array
+    public function get_parent_fullname(): string
     {
-        return ['song' => $this->get_medias()];
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
-    }
-
-    /**
-     * Get all children and sub-childrens media.
-     *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_medias(?string $filter_type = null): array
-    {
-        $medias = [];
-        if (!$filter_type || $filter_type === 'song') {
-            $songs = $this->getSongRepository()->getByAlbumDisk($this->id);
-            foreach ($songs as $song_id) {
-                $medias[] = ['object_type' => LibraryItemEnum::SONG, 'object_id' => $song_id];
-            }
+        if ($this->f_artist_name === null) {
+            $this->f_artist_name = $this->album->get_parent_fullname();
         }
 
-        return $medias;
+        return $this->f_artist_name ?? '';
     }
 
     /**
-     * Returns the id of the catalog the item is associated to
+     * Get item song_artists array
+     * @return int[]
      */
-    public function getCatalogId(): int
+    public function get_song_artists(): array
     {
-        return $this->catalog;
+        return $this->album->get_song_artists();
+    }
+
+    /**
+     * get_songs
+     *
+     * Get each song id for the album_disk
+     * @return int[]
+     */
+    public function get_songs(): array
+    {
+        return $this->getAlbumDiskRepository()->getSongs($this);
+    }
+
+    /**
+     * Get item tags.
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('album', $this->album_id);
+        }
+
+        return $this->tags ?? [];
     }
 
     /**
@@ -522,76 +462,52 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         return $artist->get_user_owner();
     }
 
-    /**
-     * Get default art kind for this item.
-     */
-    public function get_default_art_kind(): string
+    public function getAlbumId(): int
     {
-        return 'default';
+        return $this->album_id;
     }
 
     /**
-     * get_songs
-     *
-     * Get each song id for the album_disk
-     * @return int[]
+     * Returns the id of the catalog the item is associated to
      */
-    public function get_songs(): array
+    public function getCatalogId(): int
     {
-        $results = [];
-        $params  = [$this->album_id, $this->disk];
-        $sql     = (AmpConfig::get('catalog_disable'))
-            ? "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `song`.`disk` = ? AND `catalog`.`enabled` = '1'"
-            : "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`disk` = ?";
-        $db_results = Dba::read($sql, $params);
+        return $this->catalog;
+    }
 
-        while ($row = Dba::fetch_assoc($db_results, false)) {
-            $results[] = (int)$row['id'];
-        }
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
-        return $results;
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::ALBUM_DISK;
     }
 
     /**
-     * get_description
+     * getYear
      */
-    public function get_description(): string
+    public function getYear(): string
     {
-        // Album description is not supported yet, always return artist description
-        $artist = new Artist($this->album->album_artist);
-
-        return $artist->get_description();
+        return (string) ($this->year ?: '');
     }
 
     /**
-     * display_art
-     * @param array{width: int, height: int} $size
+     * does the item have art?
      */
-    public function display_art(array $size, bool $force = false): void
+    public function has_art(): bool
     {
-        $album_id = null;
-        $type     = null;
-
-        if (Art::has_db($this->album_id, 'album')) {
-            $album_id = $this->album_id;
-            $type     = 'album';
-        } elseif (
-            $this->album->album_artist &&
-            (
-                Art::has_db($this->album->album_artist, 'artist') ||
-                $force
-            )
-        ) {
-            $album_id = $this->album->album_artist;
-            $type     = 'artist';
+        if ($this->has_art === null) {
+            $this->has_art = Art::has_db($this->album_id, 'album');
         }
 
-        if ($album_id !== null && $type !== null) {
-            $title = (!empty($this->get_parent_fullname()))
-                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
-                : $this->get_fullname();
-            Art::display($type, $album_id, $title, $size, $this->get_link());
-        }
+        return $this->has_art;
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
     }
 
     /**
@@ -603,31 +519,11 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     {
         //debug_event(self::class, "update: " . print_r($data, true), 4);
         $album_id     = $this->album->update($data);
-        $disk         = (int)($data['disk'] ?? $this->disk);
-        $catalog      = $data['catalog'] ?? $this->catalog;
+        $disk         = (int) ($data['disk'] ?? $this->disk);
+        $catalog      = (int) ($data['catalog'] ?? $this->catalog);
         $disksubtitle = $data['disksubtitle'] ?? $this->disksubtitle;
 
         return self::check($album_id, $disk, $catalog, $disksubtitle, $this->id);
-    }
-
-    /**
-     * does the item have a single album artist and song artist?
-     */
-    public function get_artist_count(): int
-    {
-        $sql        = "SELECT COUNT(DISTINCT(`object_id`)) AS `artist_count` FROM `album_map` WHERE `album_id` = ?;";
-        $db_results = Dba::read($sql, [$this->id]);
-        $row        = Dba::fetch_assoc($db_results);
-        if ($row !== []) {
-            return (int)$row['artist_count'];
-        }
-
-        return 0;
-    }
-
-    public function getMediaType(): LibraryItemEnum
-    {
-        return LibraryItemEnum::ALBUM_DISK;
     }
 
     /**

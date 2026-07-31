@@ -34,19 +34,12 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\User;
 use Psr\Log\LoggerInterface;
 
-final class FunctionChecker implements FunctionCheckerInterface
+final readonly class FunctionChecker implements FunctionCheckerInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
-    ) {
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
-    }
+        private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * This checks if specific functionality is enabled.
@@ -66,16 +59,16 @@ final class FunctionChecker implements FunctionCheckerInterface
                     return false;
                 }
 
-                /** @var User $user */
                 $user = Core::get_global('user');
 
                 if (
-                    $user instanceof User &&
-                    $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) === true &&
-                    $user->has_access(AccessLevelEnum::GUEST)
+                    $user instanceof User
+                    && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
+                    && $user->has_access(AccessLevelEnum::GUEST)
                 ) {
                     return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DOWNLOAD);
                 }
+
                 break;
         }
 

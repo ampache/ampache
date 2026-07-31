@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,9 +43,8 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private ShoutRepositoryInterface $shoutRepository,
-        private ShoutRendererInterface $shoutRenderer
-    ) {
-    }
+        private ShoutRendererInterface $shoutRenderer,
+    ) {}
 
     public function handle(User $user): void
     {
@@ -56,12 +55,12 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'flip_state':
                 if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                    debug_event('song.ajax', (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to change the state of a song', 1);
+                    debug_event('song.ajax', (Core::get_global('user')->username ?? T_('Unknown')) . ' attempted to change the state of a song', 1);
 
                     return;
                 }
 
-                $song        = new Song($_REQUEST['song_id']);
+                $song        = new Song((int) ($_REQUEST['song_id'] ?? 0));
                 $new_enabled = !$song->enabled;
                 Song::update_enabled($new_enabled, $song->id);
                 $song->enabled = $new_enabled;
@@ -80,8 +79,12 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'shouts':
                 ob_start();
-                $type   = LibraryItemEnum::from(Core::get_request('object_type'));
+                // tryFrom keeps an unknown object_type out of the uncaught ValueError path that would 500 the request
+                $type   = LibraryItemEnum::tryFrom(Core::get_request('object_type'));
                 $songid = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                if ($type === null) {
+                    debug_event('song.ajax', 'shouts: unknown object_type {' . Core::get_request('object_type') . '}', 3);
+                }
 
                 if ($type === LibraryItemEnum::SONG && $songid > 0) {
                     $media  = new Song($songid);
@@ -105,6 +108,6 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
         } // switch on action;
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

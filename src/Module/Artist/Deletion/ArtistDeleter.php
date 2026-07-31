@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -30,6 +32,7 @@ use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -40,63 +43,34 @@ use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
-final class ArtistDeleter implements ArtistDeleterInterface
+final readonly class ArtistDeleter implements ArtistDeleterInterface
 {
-    private AlbumDeleterInterface $albumDeleter;
-
-    private ArtistRepositoryInterface $artistRepository;
-
-    private AlbumRepositoryInterface $albumRepository;
-
-    private SongRepositoryInterface $songRepository;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private LoggerInterface $logger;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private UserActivityRepositoryInterface $useractivityRepository;
-
-    private LabelRepositoryInterface $labelRepository;
-    private ArtCleanupInterface $artCleanup;
-
     public function __construct(
-        AlbumDeleterInterface $albumDeleter,
-        ArtistRepositoryInterface $artistRepository,
-        AlbumRepositoryInterface $albumRepository,
-        SongRepositoryInterface $songRepository,
-        ModelFactoryInterface $modelFactory,
-        LoggerInterface $logger,
-        ShoutRepositoryInterface $shoutRepository,
-        UserActivityRepositoryInterface $useractivityRepository,
-        LabelRepositoryInterface $labelRepository,
-        ArtCleanupInterface $artCleanup
-    ) {
-        $this->albumDeleter           = $albumDeleter;
-        $this->artistRepository       = $artistRepository;
-        $this->albumRepository        = $albumRepository;
-        $this->songRepository         = $songRepository;
-        $this->modelFactory           = $modelFactory;
-        $this->logger                 = $logger;
-        $this->shoutRepository        = $shoutRepository;
-        $this->useractivityRepository = $useractivityRepository;
-        $this->labelRepository        = $labelRepository;
-        $this->artCleanup             = $artCleanup;
-    }
+        private AlbumDeleterInterface $albumDeleter,
+        private ArtistRepositoryInterface $artistRepository,
+        private AlbumRepositoryInterface $albumRepository,
+        private SongRepositoryInterface $songRepository,
+        private ModelFactoryInterface $modelFactory,
+        private LoggerInterface $logger,
+        private ShoutRepositoryInterface $shoutRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
+        private LabelRepositoryInterface $labelRepository,
+        private ArtCleanupInterface $artCleanup,
+        private FolderRepositoryInterface $folderRepository,
+    ) {}
 
     /**
      * @throws ArtistDeletionException
      */
     public function remove(
-        Artist $artist
+        Artist $artist,
     ): void {
         $album_ids = $this->albumRepository->getAlbumByArtist($artist->id);
 
         $song_ids = [];
         foreach ($album_ids as $albumId) {
-            $album      = $this->modelFactory->createAlbum($albumId);
-            $song_ids   = [...$song_ids, ...$this->songRepository->getByAlbum($albumId)];
+            $album    = $this->modelFactory->createAlbum($albumId);
+            $song_ids = [...$song_ids, ...$this->songRepository->getByAlbum($albumId)];
 
             try {
                 $this->albumDeleter->delete($album, true);
@@ -116,7 +90,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
         Userflag::garbage_collection('album');
         Rating::garbage_collection('album');
         $this->shoutRepository->collectGarbage('album');
-        $this->useractivityRepository->collectGarbage('album');
+        $this->userActivityRepository->collectGarbage('album');
 
         $artistId = $artist->getId();
 
@@ -132,6 +106,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
         Rating::garbage_collection('artist', $artistId);
         $this->labelRepository->collectGarbage();
         $this->shoutRepository->collectGarbage('artist', $artistId);
-        $this->useractivityRepository->collectGarbage('artist', $artistId);
+        $this->userActivityRepository->collectGarbage('artist', $artistId);
+        $this->folderRepository->collectGarbage();
     }
 }

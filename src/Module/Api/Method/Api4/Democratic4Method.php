@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class Democratic4Method
 {
-    public const ACTION = 'democratic';
+    public const string ACTION = 'democratic';
 
     /**
      * democratic
@@ -71,7 +71,7 @@ final class Democratic4Method
                 $object_id = (int) ($input['oid'] ?? 0);
                 $media     = new Song($object_id);
                 if ($media->isNew()) {
-                    Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
+                    Api4::message('error', 'Media object invalid or not specified', '400', $input['api_format']);
                     break;
                 }
                 $democratic->add_vote(
@@ -101,7 +101,7 @@ final class Democratic4Method
                 $object_id = (int) ($input['oid'] ?? 0);
                 $media     = new Song($object_id);
                 if ($media->isNew()) {
-                    Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
+                    Api4::message('error', 'Media object invalid or not specified', '400', $input['api_format']);
                     break;
                 }
 
@@ -147,7 +147,7 @@ final class Democratic4Method
                 }
                 break;
             default:
-                Api4::message('error', T_('Invalid request'), '405', $input['api_format']);
+                Api4::message('error', 'Invalid request', '405', $input['api_format']);
                 break;
         } // switch on method
 

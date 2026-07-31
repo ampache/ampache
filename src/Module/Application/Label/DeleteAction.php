@@ -32,25 +32,20 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class DeleteAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -66,22 +61,31 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: label features are not enabled.');
         }
 
-        $labelId = (int) ($request->getQueryParams()['label_id'] ?? 0);
+        $queryParams = $request->getQueryParams();
+        $labelId     = (int) ($queryParams['label_id'] ?? 0);
+        $burlParam   = (string) ($queryParams['burl'] ?? '');
 
         $this->ui->showHeader();
 
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) {
-            $this->ui->showConfirmation(
+            $webPath = $this->configContainer->getWebPath();
+
+            $this->ui->showConfirmationWithReturn(
                 T_('Are You Sure?'),
                 T_('This Label will be deleted'),
                 sprintf(
-                    '%s/labels.php?action=confirm_delete&label_id=%s',
-                    $this->configContainer->getWebPath(),
+                    '%s/labels.php?action=confirm_delete&label_id=%s&burl=%s',
+                    $webPath,
+                    $labelId,
+                    rawurlencode($burlParam)
+                ),
+                $this->deletionUrlResolver->resolveBurl($burlParam) ?: sprintf(
+                    '%s/labels.php?action=show&label=%d',
+                    $webPath,
                     $labelId
                 ),
-                1,
                 'delete_label'
             );
         } else {

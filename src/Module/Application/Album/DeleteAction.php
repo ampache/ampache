@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,30 +30,22 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class DeleteAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->logger          = $logger;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -65,7 +57,9 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $albumId = (int) ($request->getQueryParams()['album_id'] ?? 0);
+        $queryParams = $request->getQueryParams();
+        $albumId     = (int) ($queryParams['album_id'] ?? 0);
+        $burlParam   = (string) ($queryParams['burl'] ?? '');
 
         $this->ui->showHeader();
         if ($albumId < 1) {
@@ -75,18 +69,26 @@ final class DeleteAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->showConfirmation(
+            $webPath = $this->configContainer->getWebPath();
+
+            $this->ui->showConfirmationWithReturn(
                 T_('Are You Sure?'),
                 T_('The Album and all files will be deleted'),
                 sprintf(
-                    '%s/albums.php?action=confirm_delete&album_id=%d',
-                    $this->configContainer->getWebPath(),
+                    '%s/albums.php?action=confirm_delete&album_id=%d&burl=%s',
+                    $webPath,
+                    $albumId,
+                    rawurlencode($burlParam)
+                ),
+                $this->deletionUrlResolver->resolveBurl($burlParam) ?: sprintf(
+                    '%s/albums.php?action=show&album=%d',
+                    $webPath,
                     $albumId
                 ),
-                1,
                 'delete_album'
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

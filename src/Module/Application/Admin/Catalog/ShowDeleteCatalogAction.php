@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -35,27 +35,21 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowDeleteCatalogAction implements ApplicationActionInterface
+final readonly class ShowDeleteCatalogAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_delete_catalog';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'show_delete_catalog';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
+
         $catalogs = (isset($_REQUEST['catalogs']))
             ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT)
             : [];

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -39,9 +39,8 @@ use Ampache\Repository\Model\User;
 final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
-        private RequestParserInterface $requestParser
-    ) {
-    }
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function handle(User $user): void
     {
@@ -61,7 +60,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $type = (isset($_REQUEST['instance'])) ? 'localplay' : 'stream';
 
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
-                $localplay->set_active_instance((int)$_REQUEST['instance']);
+                $localplay->set_active_instance((int) ($_REQUEST['instance'] ?? 0));
                 Preference::update('play_type', $user->getId(), $type);
 
                 // We should also refresh the sidebar
@@ -81,14 +80,14 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->connect();
 
+                // Player-state commands re-render the status panel (#information_actions) below so the
+                // displayed volume/state/track reflect what the controller now reports.
+                $command          = (string) ($_REQUEST['command'] ?? '');
+                $refresh_commands = ['refresh', 'prev', 'next', 'stop', 'play', 'pause', 'volume_up', 'volume_down', 'volume_mute'];
+
                 // Switch on valid commands
-                switch ($_REQUEST['command']) {
+                switch ($command) {
                     case 'refresh':
-                        ob_start();
-                        $objects = $localplay->get();
-                        require_once Ui::find_template('show_localplay_status.inc.php');
-                        $results['localplay_status'] = ob_get_contents();
-                        ob_end_clean();
                         break;
                     case 'prev':
                         $localplay->prev();
@@ -103,8 +102,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         $localplay->play();
                         break;
                     case 'pause':
-                        $command = scrub_in((string) $_REQUEST['command']);
-                        $localplay->$command();
+                        $localplay->pause();
                         break;
                     case 'volume_up':
                         $localplay->volume_up();
@@ -113,15 +111,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         $localplay->volume_down();
                         break;
                     case 'volume_mute':
-                        $command = scrub_in((string) $_REQUEST['command']);
-                        $localplay->$command();
-
-                        // We actually want to refresh something here
-                        ob_start();
-                        $objects = $localplay->get();
-                        require_once Ui::find_template('show_localplay_status.inc.php');
-                        $results['localplay_status'] = ob_get_contents();
-                        ob_end_clean();
+                        $localplay->volume_mute();
                         break;
                     case 'delete_all':
                         $localplay->delete_all();
@@ -148,7 +138,15 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         $results[$browse->get_content_div()] = ob_get_contents();
                         ob_end_clean();
                         break;
-                } // end whitelist
+                }
+
+                if (in_array($command, $refresh_commands, true)) {
+                    ob_start();
+                    $objects = $localplay->get();
+                    require Ui::find_template('show_localplay_status.inc.php');
+                    $results['localplay_status'] = (string) ob_get_contents();
+                    ob_end_clean();
+                }
 
                 break;
             case 'delete_track':
@@ -171,7 +169,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $objects = $localplay->get();
 
                 ob_start();
-                $browse_id = (int)($_REQUEST['browse_id'] ?? 0);
+                $browse_id = (int) ($_REQUEST['browse_id'] ?? 0);
                 $browse    = new Browse($browse_id);
                 $browse->set_type('playlist_localplay');
                 $browse->set_static_content(true);
@@ -191,10 +189,11 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // Scrub it in
+                $instance  = (int) ($_REQUEST['instance'] ?? 0);
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
-                $localplay->delete_instance((int)$_REQUEST['instance']);
+                $localplay->delete_instance($instance);
 
-                $key           = 'localplay_instance_' . $_REQUEST['instance'];
+                $key           = 'localplay_instance_' . $instance;
                 $results[$key] = '';
                 break;
             case 'repeat':
@@ -208,7 +207,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 // Scrub her in
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->connect();
-                $localplay->repeat(make_bool($_REQUEST['value']));
+                $localplay->repeat(make_bool($_REQUEST['value'] ?? false));
 
                 ob_start();
                 $objects = $localplay->get();
@@ -228,7 +227,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 // Scrub her in
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->connect();
-                $localplay->random(make_bool($_REQUEST['value']));
+                $localplay->random(make_bool($_REQUEST['value'] ?? false));
 
                 ob_start();
                 $objects = $localplay->get();
@@ -238,6 +237,6 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
         } // switch on action;
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

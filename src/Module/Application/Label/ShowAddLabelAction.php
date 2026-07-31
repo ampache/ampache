@@ -36,21 +36,14 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAddLabelAction implements ApplicationActionInterface
+final readonly class ShowAddLabelAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_add_label';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'show_add_label';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -61,7 +54,7 @@ final class ShowAddLabelAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) {
             $this->ui->show('show_add_label.inc.php');
         } else {

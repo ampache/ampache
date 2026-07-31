@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// subnavbar.inc.php
+
 /**
  * This file expect an array of 'items' which have ['0']['url'] ['0']['title']
  * ['0']['active'] == true/false and ['0']['cssclass'] this is called from show_submenu($items);
@@ -33,7 +35,7 @@ use Ampache\Config\AmpConfig;
 ?>
 <ul class="subnavside">
 <?php
-/** @var list<array{url: string, active: string, cssclass: string, title: string}> $items */
+/** @var array<int, array{url: string, active: string, cssclass: string, title: string}> $items */
 if (!(empty($items))) {
     foreach ($items as $item) {
         $li_class = '';

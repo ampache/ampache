@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,13 +23,15 @@ declare(strict_types=0);
  *
  */
 
+// show_localplay_status.inc.php
+
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
 
 /** @var Localplay $localplay */
-/** @var list<int> $objects */
+/** @var int[] $objects */
 
 Ajax::start_container('localplay_status');
 Ui::show_box_top(T_('Localplay Control') . ' - ' . strtoupper($localplay->type), 'box box_localplay_status');
@@ -49,17 +51,17 @@ if (!empty($status)) {
         <?php echo T_('Volume'); ?>: <?php echo $status['volume']; ?>%
         </li>
         <li>
-            <?php echo Ui::printBool($status['repeat']); ?> |
+            <?php echo Ui::printBool(make_bool($status['repeat'])); ?> |
             <?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_bool($status['repeat']), Ui::printBool(invert_bool($status['repeat'])), 'localplay_repeat'); ?>
             <?php echo T_('Repeat'); ?>
         </li>
         <li>
-            <?php echo Ui::printBool($status['random']); ?> |
+            <?php echo Ui::printBool(make_bool($status['random'])); ?> |
             <?php echo Ajax::text('?page=localplay&action=random&value=' . invert_bool($status['random']), Ui::printBool(invert_bool($status['random'])), 'localplay_random'); ?>
             <?php echo T_('Random'); ?>
         </li>
         <li>
-            <?php echo Ajax::button('?page=localplay&action=command&command=delete_all', 'close', T_('Clear Playlist'), 'localplay_clear_all'); ?><?php echo T_('Clear Playlist'); ?>
+            <?php echo Ajax::button('?page=localplay&action=command&command=delete_all', 'close', T_('Clear Playlist'), 'localplay_clear_all', '', '', T_('Are you sure?')); ?><?php echo T_('Clear Playlist'); ?>
         </li>
     </ul>
 </div>

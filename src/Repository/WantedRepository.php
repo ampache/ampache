@@ -40,14 +40,62 @@ use Ampache\Repository\Model\Wanted;
  */
 final readonly class WantedRepository implements WantedRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
+    public function __construct(private DatabaseConnectionInterface $connection) {}
+
+    /**
+     * This cleans out unused wanted items
+     */
+    public function collectGarbage(): void
     {
+        try {
+            $this->connection->query('DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        }
+    }
+
+    /**
+     * Delete wanted release.
+     */
+    public function deleteByMusicbrainzId(
+        string $musicbrainzId,
+        ?User $user = null,
+    ): void {
+        $sql    = 'DELETE FROM `wanted` WHERE `mbid` = ?';
+        $params = [$musicbrainzId];
+
+        if ($user !== null) {
+            $sql .= ' AND `user` = ?';
+            $params[] = $user->getId();
+        }
+
+        $this->connection->query(
+            $sql,
+            $params
+        );
+    }
+
+    /**
+     * Check if a release mbid is already marked as wanted
+     */
+    public function find(string $musicbrainzId, User $user): ?int
+    {
+        $wantedId = $this->connection->fetchOne(
+            'SELECT `id` FROM `wanted` WHERE `mbid` = ? AND `user` = ? LIMIT 1',
+            [$musicbrainzId, $user->getId()]
+        );
+
+        if ($wantedId === false) {
+            return null;
+        }
+
+        return (int) $wantedId;
     }
 
     /**
      * Get wanted list.
      *
-     * @return list<int>
+     * @return int[]
      */
     public function findAll(?User $user = null): array
     {
@@ -73,41 +121,50 @@ final readonly class WantedRepository implements WantedRepositoryInterface
     }
 
     /**
-     * Check if a release mbid is already marked as wanted
+     * Find a single item by its id
      */
-    public function find(string $musicbrainzId, User $user): ?int
+    public function findById(int $itemId): ?Wanted
     {
-        $wantedId = $this->connection->fetchOne(
-            'SELECT `id` FROM `wanted` WHERE `mbid` = ? AND `user` = ? LIMIT 1',
-            [$musicbrainzId, $user->getId()]
-        );
-
-        if ($wantedId === false) {
+        $item = new Wanted($itemId);
+        if ($item->isNew()) {
             return null;
         }
 
-        return (int) $wantedId;
+        return $item;
     }
 
     /**
-     * Delete wanted release.
+     * Find wanted release by mbid.
      */
-    public function deleteByMusicbrainzId(
-        string $musicbrainzId,
-        ?User $user = null
-    ): void {
-        $sql    = 'DELETE FROM `wanted` WHERE `mbid` = ?';
-        $params = [$musicbrainzId];
+    public function findByMusicBrainzId(string $mbid): ?Wanted
+    {
+        $rowId = $this->connection->fetchOne(
+            'SELECT `id` FROM `wanted` WHERE `mbid` = ?',
+            [$mbid]
+        );
 
-        if ($user !== null) {
-            $sql .= ' AND `user` = ?';
-            $params[] = $user->getId();
+        if ($rowId === false) {
+            return null;
         }
 
-        $this->connection->query(
-            $sql,
-            $params
+        return new Wanted($rowId);
+    }
+
+    /**
+     * Find wanted release by name.
+     */
+    public function findByName(string $name): ?Wanted
+    {
+        $rowId = $this->connection->fetchOne(
+            'SELECT `id` FROM `wanted` WHERE `name` = ? LIMIT 1',
+            [$name]
         );
+
+        if ($rowId === false) {
+            return null;
+        }
+
+        return new Wanted($rowId);
     }
 
     /**
@@ -147,70 +204,6 @@ final readonly class WantedRepository implements WantedRepositoryInterface
     }
 
     /**
-     * Find a single item by its id
-     */
-    public function findById(int $itemId): ?Wanted
-    {
-        $item = new Wanted($itemId);
-        if ($item->isNew()) {
-            return null;
-        }
-
-        return $item;
-    }
-
-    /**
-     * Find wanted release by name.
-     */
-    public function findByName(string $name): ?Wanted
-    {
-        $rowId = $this->connection->fetchOne(
-            'SELECT `id` FROM `wanted` WHERE `name` = ? LIMIT 1',
-            [$name]
-        );
-
-        if ($rowId === false) {
-            return null;
-        }
-
-        return new Wanted($rowId);
-    }
-
-    /**
-     * Find wanted release by mbid.
-     */
-    public function findByMusicBrainzId(string $mbid): ?Wanted
-    {
-        $rowId = $this->connection->fetchOne(
-            'SELECT `id` FROM `wanted` WHERE `mbid` = ?',
-            [$mbid]
-        );
-
-        if ($rowId === false) {
-            return null;
-        }
-
-        return new Wanted($rowId);
-    }
-
-    public function prototype(): Wanted
-    {
-        return new Wanted();
-    }
-
-    /**
-     * This cleans out unused wanted items
-     */
-    public function collectGarbage(): void
-    {
-        try {
-            $this->connection->query('DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
-        } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
-        }
-    }
-
-    /**
      * Migrate an object associate stats to a new object
      */
     public function migrateArtist(int $oldObjectId, int $newObjectId): void
@@ -222,5 +215,10 @@ final readonly class WantedRepository implements WantedRepositoryInterface
                 $oldObjectId
             ]
         );
+    }
+
+    public function prototype(): Wanted
+    {
+        return new Wanted();
     }
 }

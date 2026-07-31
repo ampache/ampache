@@ -32,13 +32,19 @@ use PhpTal\TranslationServiceInterface;
 
 final readonly class TalFactory implements TalFactoryInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer, private GuiFactoryInterface $guiFactory)
-    {
-    }
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private GuiFactoryInterface $guiFactory,
+    ) {}
 
     public function createPhpTal(): PhpTalInterface
     {
         return new PHPTAL();
+    }
+
+    public function createTalTranslationService(): TranslationServiceInterface
+    {
+        return new TalTranslationService();
     }
 
     public function createTalView(): TalViewInterface
@@ -48,10 +54,5 @@ final readonly class TalFactory implements TalFactoryInterface
             $this->configContainer,
             $this->guiFactory
         );
-    }
-
-    public function createTalTranslationService(): TranslationServiceInterface
-    {
-        return new TalTranslationService();
     }
 }

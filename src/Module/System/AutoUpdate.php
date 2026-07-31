@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -27,6 +27,7 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Preference;
 use Exception;
 use WpOrg\Requests\Requests;
@@ -39,112 +40,51 @@ use WpOrg\Requests\Requests;
 class AutoUpdate
 {
     /**
-     * Check if current version is a development version.
+     * Reset and clear information about impending updates for git installs
      */
-    protected static function _is_develop(): bool
+    public static function clear_status(): void
     {
-        $version    = (string)AmpConfig::get('version');
-        $vspart     = explode('-', $version);
+        $time = time();
+        // reset the update status
+        Preference::update_all('autoupdate_lastversion', null);
+        AmpConfig::set('autoupdate_lastversion', null, true);
+        Preference::update_all('autoupdate_lastversion_new', 0);
+        AmpConfig::set('autoupdate_lastversion_new', false, true);
+        Preference::update_all('autoupdate_lastcheck', $time);
+        AmpConfig::set('autoupdate_lastcheck', (string) $time, true);
+    }
+
+    /**
+     * Get current local git commit.
+     */
+    public static function get_current_commit(): string
+    {
         $git_branch = self::is_force_git_branch();
-
-        if ($git_branch == 'develop') {
-            return true;
-        }
-        // if you are using a non-develop branch
-        if ($git_branch !== '') {
-            return false;
+        if (
+            $git_branch !== ''
+            && is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)
+        ) {
+            return trim((string) file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
         }
 
-        return ($vspart[count($vspart) - 1] == 'develop');
-    }
-
-    /**
-     * Check if current version is a git repository.
-     */
-    protected static function _is_git_repository(): bool
-    {
-        return is_dir(__DIR__ . '/../../../.git');
-    }
-
-    /**
-     * Check if there is a default branch set in the config file.
-     */
-    public static function is_force_git_branch(): string
-    {
-        $config_branch = (string)AmpConfig::get('github_force_branch');
-        if (!empty($config_branch)) {
-            return $config_branch;
-        }
-        if (is_readable(__DIR__ . '/../../../.git/HEAD')) {
-            $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
-            $pattern = '/ref: refs\/heads\/(.*)/';
-            $matches = [];
-            if (
-                is_string($current) &&
-                preg_match($pattern, $current, $matches) &&
-                !in_array((string)$matches[1], ['master', 'release5', 'release6', 'release7'])
-            ) {
-                return (string)$matches[1];
-            }
+        if (self::_is_branch_develop_exists()) {
+            return trim((string) file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
         }
 
         return '';
     }
 
     /**
-     * Check if branch develop exists in git repository.
+     * Get current local version.
      */
-    protected static function _is_branch_develop_exists(): bool
+    public static function get_current_version(): string
     {
-        return is_readable(__DIR__ . '/../../../.git/refs/heads/develop');
-    }
-
-    /**
-     * Perform a GitHub request.
-     */
-    public static function github_request(string $action): ?object
-    {
-        try {
-            // https is mandatory
-            $url     = "https://api.github.com/repos/ampache/ampache" . $action;
-            $request = Requests::get($url, [], Core::requests_options());
-            if ($request->status_code != 200) {
-                debug_event(self::class, 'GitHub API request ' . $url . ' failed with http code ' . $request->status_code, 1);
-                // Not connected / API rate limit exceeded: just ignore, it will pass next time
-                self::_set_lastcheck(time());
-
-                return null;
-            }
-            debug_event(self::class, 'GitHub API request ' . $url, 5);
-            $result = json_decode((string)$request->body);
-
-            return (is_object($result))
-                ? $result
-                : null;
-        } catch (Exception $error) {
-            debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
-
-            return null;
-        }
-    }
-
-    /**
-     * Check if last GitHub check expired.
-     */
-    public static function lastcheck_expired(): bool
-    {
-        // if you're not auto updating the check should never expire
-        if (!AmpConfig::get('autoupdate', false)) {
-            return false;
+        $commit = self::get_current_commit();
+        if ($commit !== '' && $commit !== '0') {
+            return $commit;
         }
 
-        $lastcheck = AmpConfig::get('autoupdate_lastcheck');
-        if (!$lastcheck) {
-            Preference::update_all('autoupdate_lastcheck', 1);
-            AmpConfig::set('autoupdate_lastcheck', '1', true);
-        }
-
-        return ((time() - 3600) > $lastcheck);
+        return AmpConfig::get('version');
     }
 
     /**
@@ -156,8 +96,8 @@ class AutoUpdate
 
         // Don't spam the GitHub API
         if (
-            $force === false &&
-            self::lastcheck_expired() === false
+            $force === false
+            && self::lastcheck_expired() === false
         ) {
             return $lastversion;
         }
@@ -168,20 +108,21 @@ class AutoUpdate
         $git_branch = self::is_force_git_branch();
         // Development version, get latest commit on develop branch
         if (
-            self::_is_develop() ||
-            $git_branch !== ''
+            self::_is_develop()
+            || $git_branch !== ''
         ) {
             if (
-                self::_is_develop() ||
-                $git_branch == 'develop'
+                self::_is_develop()
+                || $git_branch === 'develop'
             ) {
                 $commits = self::github_request('/commits/develop');
             } else {
                 $commits = self::github_request('/commits/' . $git_branch);
             }
+
             if (
-                !empty($commits) &&
-                isset($commits->sha)
+                $commits instanceof \stdClass
+                && isset($commits->sha)
             ) {
                 $lastversion = $commits->sha;
                 Preference::update_all('autoupdate_lastversion', $lastversion);
@@ -190,14 +131,16 @@ class AutoUpdate
                 return $lastversion;
             }
         }
+
         // Otherwise it is stable version, get latest tag
         $tags = self::github_request('/tags');
-        if (!$tags) {
+        if (!is_array($tags)) {
             return $lastversion;
         }
+
         foreach ($tags as $release) {
-            $str = strstr($release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
-            if (empty($str)) {
+            $str = strstr((string) $release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
+            if (in_array($str, ['', '0', false], true)) {
                 $lastversion = $release->name;
                 Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
@@ -226,32 +169,57 @@ class AutoUpdate
     }
 
     /**
-     * Get current local version.
+     * Perform a GitHub request.
+     * @return array<int, \stdClass>|\stdClass|null
      */
-    public static function get_current_version(): string
+    public static function github_request(string $action): array|\stdClass|null
     {
-        $commit = self::get_current_commit();
-        if (!empty($commit)) {
-            return $commit;
-        }
+        try {
+            // https is mandatory
+            $url     = "https://api.github.com/repos/ampache/ampache" . $action;
+            $request = Requests::get($url, [], Core::requests_options());
+            if ($request->status_code != 200) {
+                debug_event(self::class, 'GitHub API request ' . $url . ' failed with http code ' . $request->status_code, 1);
+                // Not connected / API rate limit exceeded: just ignore, it will pass next time
+                self::_set_lastcheck(time());
 
-        return AmpConfig::get('version');
+                return null;
+            }
+
+            debug_event(self::class, 'GitHub API request ' . $url, 5);
+            $result = json_decode($request->body);
+
+            return ($result instanceof \stdClass || is_array($result))
+                ? $result
+                : null;
+        } catch (Exception $exception) {
+            debug_event(self::class, 'Request error: ' . $exception->getMessage(), 1);
+
+            return null;
+        }
     }
 
     /**
-     * Get current local git commit.
+     * Check if there is a default branch set in the config file.
      */
-    public static function get_current_commit(): string
+    public static function is_force_git_branch(): string
     {
-        $git_branch = self::is_force_git_branch();
-        if (
-            $git_branch !== '' &&
-            is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)
-        ) {
-            return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
+        $config_branch = (string) AmpConfig::get('github_force_branch');
+        if ($config_branch !== '' && $config_branch !== '0') {
+            return $config_branch;
         }
-        if (self::_is_branch_develop_exists()) {
-            return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
+
+        if (is_readable(__DIR__ . '/../../../.git/HEAD')) {
+            $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
+            $pattern = '/ref: refs\/heads\/(.*)/';
+            $matches = [];
+            if (
+                is_string($current)
+                && preg_match($pattern, $current, $matches)
+                && !in_array($matches[1], ['master', 'release5', 'release6', 'release7'], true)
+            ) {
+                return $matches[1];
+            }
         }
 
         return '';
@@ -263,10 +231,10 @@ class AutoUpdate
     public static function is_update_available(?bool $force = false): bool
     {
         if (
-            $force === false &&
-            self::lastcheck_expired() === false
+            $force === false
+            && self::lastcheck_expired() === false
         ) {
-            return (bool)AmpConfig::get('autoupdate_lastversion_new', false);
+            return (bool) AmpConfig::get('autoupdate_lastversion_new', false);
         }
 
         if ($force) {
@@ -280,12 +248,12 @@ class AutoUpdate
 
         debug_event(self::class, 'Checking latest version online...', 5);
         if (
-            !empty($latest) &&
-            $current !== $latest
+            $latest !== '' && $latest !== '0'
+            && $current !== $latest
         ) {
             if (
-                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $current) &&
-                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $latest)
+                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $current)
+                && preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $latest)
             ) {
                 $cpart = explode('-', $current);
                 $lpart = explode('-', $latest);
@@ -296,19 +264,19 @@ class AutoUpdate
                 // returns -1 if the first version is lower than the second, (e.g. version_compare(6.3.3, 7.0.0) = -1)
                 $available = (version_compare($current, $latest) === -1);
             } elseif (
-                self::_is_develop() ||
-                $git_branch !== ''
+                self::_is_develop()
+                || $git_branch !== ''
             ) {
                 $ccommit = AmpConfig::get($current) ?? self::github_request('/commits/' . $current);
                 $lcommit = AmpConfig::get($latest) ?? self::github_request('/commits/' . $latest);
 
                 if (
-                    !empty($ccommit) &&
-                    !empty($lcommit)
+                    !empty($ccommit)
+                    && !empty($lcommit)
                 ) {
                     // Comparison based on commit date
-                    $ctime = strtotime($ccommit->commit->author->date);
-                    $ltime = strtotime($lcommit->commit->author->date);
+                    $ctime = strtotime((string) $ccommit->commit->author->date);
+                    $ltime = strtotime((string) $lcommit->commit->author->date);
                     AmpConfig::set($current, $ctime, true);
                     AmpConfig::set($latest, $ltime, true);
 
@@ -321,39 +289,36 @@ class AutoUpdate
     }
 
     /**
+     * Check if last GitHub check expired.
+     */
+    public static function lastcheck_expired(): bool
+    {
+        // if you're not auto updating the check should never expire
+        if (!AmpConfig::get('autoupdate', false)) {
+            return false;
+        }
+
+        $lastcheck = AmpConfig::get('autoupdate_lastcheck');
+        if (!$lastcheck) {
+            Preference::update_all('autoupdate_lastcheck', 1);
+            AmpConfig::set('autoupdate_lastcheck', '1', true);
+        }
+
+        return ((time() - 3600) > $lastcheck);
+    }
+
+    /**
      * Display information from the Ampache Project as a message. (Develop branch only)
      */
     public static function show_ampache_message(): void
     {
-        if (self::_is_develop()) {
-            echo '<div id="autoupdate">';
-            echo '<span>' . T_("WARNING") . '</span>';
-            echo ' (Ampache Develop is about to go through a major change!)<br />';
-            echo '<a href="https://github.com/ampache/ampache/pull/4387" target="_blank">' . T_('View changes') . '</a><br /> ';
-            echo '</div>';
-        }
-    }
-
-    protected static function _set_lastcheck(int $time): void
-    {
-        //debug_event(self::class, 'Set autoupdate_lastcheck to ' . $time, 5);
-        Preference::update_all('autoupdate_lastcheck', $time);
-        AmpConfig::set('autoupdate_lastcheck', $time, true);
-    }
-
-    /**
-     * Reset and clear information about impending updates for git installs
-     */
-    public static function clear_status(): void
-    {
-        $time = time();
-        // reset the update status
-        Preference::update_all('autoupdate_lastversion', null);
-        AmpConfig::set('autoupdate_lastversion', null, true);
-        Preference::update_all('autoupdate_lastversion_new', 0);
-        AmpConfig::set('autoupdate_lastversion_new', false, true);
-        Preference::update_all('autoupdate_lastcheck', $time);
-        AmpConfig::set('autoupdate_lastcheck', (string)$time, true);
+        //if (self::is_develop()) {
+        //    echo '<div id="autoupdate">';
+        //    echo '<span>' . T_("WARNING") . '</span>';
+        //    echo ' (Ampache Develop is about to go through a major change!)<br />';
+        //    echo '<a href="https://ampache.org/docs/old-information/ampache5-changes' . '" target="_blank">' . T_('View changes') . '</a><br /> ';
+        //    echo '</div>';
+        //}
     }
 
     /**
@@ -366,12 +331,12 @@ class AutoUpdate
 
         // Don't show anything if the current version is newer than the second, (e.g. version_compare(7.0.0, 6.9.0) = 1)
         if (
-            empty($latest) ||
-            $current === $latest ||
-            (
-                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $current) &&
-                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $latest) &&
-                version_compare($current, $latest) === 1
+            $latest === '' || $latest === '0'
+            || $current === $latest
+            || (
+                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $current)
+                && preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $latest)
+                && version_compare($current, $latest) === 1
             )
         ) {
             echo '<div id="autoupdate">';
@@ -379,10 +344,11 @@ class AutoUpdate
 
             return;
         }
+
         $git_branch    = self::is_force_git_branch();
-        $develop_check = self::_is_develop() || $git_branch != '';
-        $changelog     = ($git_branch == '') ? 'master' : $git_branch;
-        $zip_name      = ($git_branch == '') ? 'develop' : $git_branch;
+        $develop_check = self::_is_develop() || $git_branch !== '';
+        $changelog     = ($git_branch === '') ? 'master' : $git_branch;
+        $zip_name      = ($git_branch === '') ? 'develop' : $git_branch;
 
         echo '<div id="autoupdate">';
         echo '<span>' . T_('Update available') . '</span>';
@@ -393,54 +359,14 @@ class AutoUpdate
         } else {
             echo ' | <a href="' . self::get_zip_url() . '" target="_blank">' . T_('Download') . '</a>';
         }
+
         if (self::_is_git_repository()) {
             echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
-            echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=clear">' . T_('Ignore') . '</a>';
+            echo ' | ' . Ajax::text('?page=index&action=ignore_update', T_('Ignore'), 'autoupdate_ignore');
         }
+
+        echo '<br />';
         echo '</div>';
-    }
-
-    /**
-     * Update local git repository. Returns false when git was unavailable or exited with an error.
-     */
-    public static function update_files(?bool $api = false): bool
-    {
-        if (!self::_can_execute((bool) $api)) {
-            return false;
-        }
-
-        $cmd        = 'git pull https://github.com/ampache/ampache.git';
-        $git_branch = self::is_force_git_branch();
-        if ($git_branch !== '') {
-            $cmd = 'git pull https://github.com/ampache/ampache.git ' . $git_branch;
-        } elseif (self::_is_develop()) {
-            $cmd = 'git pull https://github.com/ampache/ampache.git develop';
-        }
-        if (!$api) {
-            echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
-        }
-        self::_flush_output();
-        chdir(__DIR__ . '/../../../');
-        $success = self::_run_command($cmd, (bool) $api);
-        if (!$api) {
-            echo(($success) ? T_('Done') : T_('Update failed. Please check the logs for further information.')) . '<br />';
-        }
-        self::_flush_output();
-
-        if (!$success) {
-            return false;
-        }
-
-        $commit = self::get_current_commit();
-        if (!empty($commit)) {
-            // reset the update status
-            Preference::update_all('autoupdate_lastversion', $commit);
-            AmpConfig::set('autoupdate_lastversion', $commit, true);
-            Preference::update_all('autoupdate_lastversion_new', 0);
-            AmpConfig::set('autoupdate_lastversion_new', false, true);
-        }
-
-        return true;
     }
 
     /**
@@ -448,7 +374,7 @@ class AutoUpdate
      */
     public static function update_dependencies(
         ConfigContainerInterface $config,
-        bool $api = false
+        bool $api = false,
     ): bool {
         if (!self::_can_execute($api)) {
             return false;
@@ -483,7 +409,7 @@ class AutoUpdate
         // node_modules, vendor and the generated asset directories are written by these commands, so a checkout
         // owned by a different user than the webserver fails halfway through and leaves a broken install behind
         $unwritable = self::_unwritable_dependency_paths();
-        if (!empty($unwritable)) {
+        if ($unwritable !== []) {
             $message = sprintf(
                 /* HINT: comma separated list of filesystem paths */
                 T_('Unable to update dependencies: the web server user cannot write to %s'),
@@ -506,7 +432,7 @@ class AutoUpdate
         self::_redirect_npm_home();
 
         $restored = self::_reset_dirty_vendor_checkouts();
-        if (!empty($restored)) {
+        if ($restored !== []) {
             $message = sprintf(
                 'Restored: %s',
                 implode(', ', $restored)
@@ -532,6 +458,96 @@ class AutoUpdate
         sleep(5);
 
         return $success;
+    }
+
+    /**
+     * Update local git repository. Returns false when git was unavailable or exited with an error.
+     */
+    public static function update_files(?bool $api = false): bool
+    {
+        if (!self::_can_execute((bool) $api)) {
+            return false;
+        }
+
+        $cmd        = 'git pull https://github.com/ampache/ampache.git';
+        $git_branch = self::is_force_git_branch();
+        if ($git_branch !== '') {
+            $cmd = 'git pull https://github.com/ampache/ampache.git ' . $git_branch;
+        } elseif (self::_is_develop()) {
+            $cmd = 'git pull https://github.com/ampache/ampache.git develop';
+        }
+
+        if (!$api) {
+            echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
+        }
+
+        self::_flush_output();
+        chdir(__DIR__ . '/../../../');
+        $success = self::_run_command($cmd, (bool) $api);
+        if (!$api) {
+            echo(($success) ? T_('Done') : T_('Update failed. Please check the logs for further information.')) . '<br />';
+        }
+
+        self::_flush_output();
+
+        if (!$success) {
+            return false;
+        }
+
+        $commit = self::get_current_commit();
+        if ($commit !== '' && $commit !== '0') {
+            // reset the update status
+            Preference::update_all('autoupdate_lastversion', $commit);
+            AmpConfig::set('autoupdate_lastversion', $commit, true);
+            Preference::update_all('autoupdate_lastversion_new', 0);
+            AmpConfig::set('autoupdate_lastversion_new', false, true);
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if branch develop exists in git repository.
+     */
+    protected static function _is_branch_develop_exists(): bool
+    {
+        return is_readable(__DIR__ . '/../../../.git/refs/heads/develop');
+    }
+
+    /**
+     * Check if current version is a development version.
+     */
+    protected static function _is_develop(): bool
+    {
+        $version    = (string) AmpConfig::get('version');
+        $vspart     = explode('-', $version);
+        $git_branch = self::is_force_git_branch();
+
+        if ($git_branch === 'develop') {
+            return true;
+        }
+
+        // if you are using a non-develop branch
+        if ($git_branch !== '') {
+            return false;
+        }
+
+        return ($vspart[count($vspart) - 1] == 'develop');
+    }
+
+    /**
+     * Check if current version is a git repository.
+     */
+    protected static function _is_git_repository(): bool
+    {
+        return is_dir(__DIR__ . '/../../../.git');
+    }
+
+    protected static function _set_lastcheck(int $time): void
+    {
+        //debug_event(self::class, 'Set autoupdate_lastcheck to ' . $time, 5);
+        Preference::update_all('autoupdate_lastcheck', $time);
+        AmpConfig::set('autoupdate_lastcheck', $time, true);
     }
 
     /**
@@ -566,13 +582,29 @@ class AutoUpdate
     }
 
     /**
+     * Test a directory by writing to it. is_writable() reports the permission bits, which disagree with reality
+     * on anything using ACLs or a remote filesystem, and a false alarm here would block an update that works.
+     */
+    private static function _is_writable_directory(string $path): bool
+    {
+        $probe = rtrim($path, '/\\') . DIRECTORY_SEPARATOR . '.ampache-update-write-test';
+        if (!@touch($probe)) {
+            return false;
+        }
+
+        @unlink($probe);
+
+        return true;
+    }
+
+    /**
      * npm refuses to run when it cannot create its cache directory, which is what happens under a web server user
      * whose home directory isn't writable, so point it at a directory we know can be written instead.
      */
     private static function _redirect_npm_home(): void
     {
         $home = (string) getenv('HOME');
-        if (!empty($home) && is_writable($home)) {
+        if ($home !== '' && is_writable($home)) {
             return;
         }
 
@@ -588,13 +620,7 @@ class AutoUpdate
     }
 
     /**
-     * Restore vendor git checkouts that were dirtied by install time code generation.
-     *
-     * Composer refuses to remove or update a package installed from source when its working tree has local
-     * modifications, and packages writing into their own directory during install (phpstan/extension-installer
-     * regenerates src/GeneratedConfig.php) leave that state behind. Installs made before the switch to
-     * --prefer-dist still hold those checkouts, so a --no-dev run would abort partway through removing the dev
-     * packages and leave vendor in a broken state.
+     * Restore vendor git checkouts dirtied by install time code generation, which composer refuses to remove.
      *
      * @return string[] the packages that were restored
      */
@@ -611,9 +637,9 @@ class AutoUpdate
             $output = [];
             $status = 0;
 
-            // composer only inspects tracked files here, so untracked leftovers are not worth touching
+            // composer only inspects tracked files
             exec(sprintf('git -C %s status --porcelain --untracked-files=no 2>&1', escapeshellarg($path)), $output, $status);
-            if ($status !== 0 || empty($output)) {
+            if ($status !== 0 || $output === []) {
                 continue;
             }
 
@@ -675,21 +701,5 @@ class AutoUpdate
         }
 
         return $unwritable;
-    }
-
-    /**
-     * Test a directory by writing to it. is_writable() reports the permission bits, which disagree with reality
-     * on anything using ACLs or a remote filesystem, and a false alarm here would block an update that works.
-     */
-    private static function _is_writable_directory(string $path): bool
-    {
-        $probe = rtrim($path, '/\\') . DIRECTORY_SEPARATOR . '.ampache-update-write-test';
-        if (!@touch($probe)) {
-            return false;
-        }
-
-        @unlink($probe);
-
-        return true;
     }
 }

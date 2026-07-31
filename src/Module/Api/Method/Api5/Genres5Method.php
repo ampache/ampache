@@ -25,18 +25,28 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Genres5Method
+ * Returns the genres (tags) of the server.
+ *
+ * Version 5 sorts by name and ignores the `sort` and `cond` parameters that the later versions
+ * understand, so it keeps a method of its own.
  */
-final class Genres5Method
+final class Genres5Method implements MethodInterface
 {
-    public const ACTION = 'genres';
+    public const string ACTION = 'genres';
+
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * genres
@@ -59,35 +69,44 @@ final class Genres5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
      */
-    public static function genres(array $input, User $user): bool
-    {
-        $browse = Api::getBrowse($user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $browse = $this->modelFactory->createBrowse(null, false);
+
+        $browse->set_user_id($user);
         $browse->set_type('tag');
         $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1)
+            ? 'exact_match'
+            : 'alpha_match';
+
         $browse->set_api_filter($method, $input['filter'] ?? '');
+
         $results = $browse->get_objects();
-        if (empty($results)) {
-            Api5::empty('genre', $input['api_format']);
-
-            return false;
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'genre')
+                )
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::genres($results);
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::genres($results, $user);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->genres($apiVersion, $results, $user)
+            )
+        );
     }
 }

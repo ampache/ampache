@@ -37,19 +37,12 @@ final class ShowGenerateApiKeyAction extends AbstractUserAction
 {
     use UserAdminApplicationTrait;
 
-    public const REQUEST_KEY = 'show_generate_apikey';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'show_generate_apikey';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -34,25 +36,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class LogoutAction implements ApplicationActionInterface
+final readonly class LogoutAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'logout';
-
-    private ConfigContainerInterface $configContainer;
-
-    private AuthenticationManagerInterface $authenticationManager;
-
-    private LoggerInterface $logger;
+    public const string REQUEST_KEY = 'logout';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        AuthenticationManagerInterface $authenticationManager,
-        LoggerInterface $logger
-    ) {
-        $this->configContainer       = $configContainer;
-        $this->authenticationManager = $authenticationManager;
-        $this->logger                = $logger;
-    }
+        private ConfigContainerInterface $configContainer,
+        private AuthenticationManagerInterface $authenticationManager,
+        private LoggerInterface $logger,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -62,8 +54,8 @@ final class LogoutAction implements ApplicationActionInterface
             $sessionName    = $this->configContainer->get('session_name');
             $cookie_options = [
                 'expires' => -1,
-                'path' => (string)$this->configContainer->get('cookie_path'),
-                'domain' => (string)$this->configContainer->get('cookie_domain'),
+                'path' => (string) $this->configContainer->get('cookie_path'),
+                'domain' => (string) $this->configContainer->get('cookie_domain'),
                 'secure' => make_bool($this->configContainer->get('cookie_secure')),
                 'samesite' => 'Strict'
             ];
@@ -74,7 +66,7 @@ final class LogoutAction implements ApplicationActionInterface
             // To end a legitimate session, just call logout.
             setcookie($sessionName . '_remember', '', $cookie_options);
 
-            $this->authenticationManager->logout((string)$input['session'], false);
+            $this->authenticationManager->logout((string) $input['session'], false);
         } else {
             header('Location: ' . $this->configContainer->getWebPath());
         }

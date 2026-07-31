@@ -39,25 +39,7 @@ use PDO;
  */
 final class LicenseRepository extends BaseRepository implements LicenseRepositoryInterface
 {
-    public function __construct(protected DatabaseConnectionInterface $connection)
-    {
-    }
-
-    /**
-     * Returns a list of licenses accessible by the current user.
-     *
-     * @return Generator<int, string>
-     */
-    public function getList(bool $show_hidden = true): Generator
-    {
-        $result = ($show_hidden)
-            ? $this->connection->query('SELECT `id`, `name` FROM `license`;')
-            : $this->connection->query('SELECT `id`, `name` FROM `license` WHERE `order` != 0;');
-
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            yield (int) $row['id'] => (string) $row['name'];
-        }
-    }
+    public function __construct(protected DatabaseConnectionInterface $connection) {}
 
     /**
      * Searches for the License by name and external link
@@ -88,24 +70,19 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
     }
 
     /**
-     * @return class-string<License>
+     * Returns a list of licenses accessible by the current user.
+     *
+     * @return Generator<int, string>
      */
-    protected function getModelClass(): string
+    public function getList(bool $show_hidden = true): Generator
     {
-        return License::class;
-    }
+        $result = ($show_hidden)
+            ? $this->connection->query('SELECT `id`, `name` FROM `license`;')
+            : $this->connection->query('SELECT `id`, `name` FROM `license` WHERE `order` != 0;');
 
-    protected function getTableName(): string
-    {
-        return 'license';
-    }
-
-    /**
-     * @return list<mixed>
-     */
-    protected function getPrototypeParameters(): array
-    {
-        return [$this];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            yield (int) $row['id'] => (string) $row['name'];
+        }
     }
 
     /**
@@ -145,5 +122,26 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
         }
 
         return $result;
+    }
+
+    /**
+     * @return class-string<License>
+     */
+    protected function getModelClass(): string
+    {
+        return License::class;
+    }
+
+    /**
+     * @return list<mixed>
+     */
+    protected function getPrototypeParameters(): array
+    {
+        return [$this];
+    }
+
+    protected function getTableName(): string
+    {
+        return 'license';
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,19 +33,16 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdateFromAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'update_from';
+    public const string REQUEST_KEY = 'update_from';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    private readonly UiInterface $ui;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->ui = $ui;
     }
 
     /**
@@ -53,9 +50,9 @@ final class UpdateFromAction extends AbstractCatalogAction
      */
     protected function handle(
         ServerRequestInterface $request,
-        array $catalogIds
+        array $catalogIds,
     ): ?ResponseInterface {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 

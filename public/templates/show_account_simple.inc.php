@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_account_simple.inc.php
 
 // Because this is a reset of the persons password make the form a little more secure
 
@@ -98,6 +100,14 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
                         echo "<br /><div style=\"background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;\"><div id=\"apikey_qrcode\"></div></div><br /><script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '" . $client->apikey . "', background: '#ffffff', foreground: '#000000'});</script>" . $client->apikey;
                     } ?>
                 </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo T_('Subsonic Password'); ?>
+            </td>
+            <td>
+                <span><?php echo ($client->subsonic_secret) ? T_('Currently set') : T_('Not set'); ?></span>
             </td>
         </tr>
         <tr>

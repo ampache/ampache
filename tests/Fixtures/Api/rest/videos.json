@@ -1,0 +1,42 @@
+{
+    "total_count": 546,
+    "md5": "8e6abff1e22c7d83e1f4169ef09ae2ef",
+    "video": [
+        {
+            "id": "1500",
+            "title": "01 - Da Funk",
+            "mime": "video\/avi",
+            "resolution": "720x480",
+            "size": 43891712,
+            "genre": [],
+            "time": 323,
+            "url": "https:\/\/music.com.au\/play\/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=video&oid=1500&uid=2&player=api&name=01%20-%20Da%20Funk.avi",
+            "art": "https:\/\/music.com.au\/image.php?object_id=1500&object_type=video&id=2632081&name=art.png",
+            "has_art": false,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "playcount": 1,
+            "last_played": null,
+            "catalog": "68"
+        },
+        {
+            "id": "1470",
+            "title": "01 - Firestarter",
+            "mime": "video\/avi",
+            "resolution": "480x368",
+            "size": 29687808,
+            "genre": [],
+            "time": 227,
+            "url": "https:\/\/music.com.au\/play\/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=video&oid=1470&uid=2&player=api&name=01%20-%20Firestarter.avi",
+            "art": "https:\/\/music.com.au\/image.php?object_id=1470&object_type=video&id=1481161&name=art.jpg",
+            "has_art": false,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "playcount": 0,
+            "last_played": null,
+            "catalog": "68"
+        }
+    ]
+}

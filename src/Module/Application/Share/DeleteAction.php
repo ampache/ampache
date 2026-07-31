@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -39,35 +39,23 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Deletes a share-item
  */
-final class DeleteAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private ShareRepositoryInterface $shareRepository;
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        ShareRepositoryInterface $shareRepository
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->shareRepository = $shareRepository;
-    }
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ShareRepositoryInterface $shareRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)) {
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             throw new AccessDeniedException();
         }
@@ -79,9 +67,9 @@ final class DeleteAction implements ApplicationActionInterface
         );
 
         if (
-            $share === null ||
-            $user === null ||
-            !$share->isAccessible($user)
+            $share === null
+            || $user === null
+            || !$share->isAccessible($user)
         ) {
             throw new AccessDeniedException();
         }

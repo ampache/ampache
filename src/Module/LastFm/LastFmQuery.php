@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,21 +26,16 @@ declare(strict_types=0);
 namespace Ampache\Module\LastFm;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\LastFm\Exception\LastFmQueryFailedException;
 use Ampache\Module\System\Core;
 use SimpleXMLElement;
 use WpOrg\Requests\Requests;
 
-final class LastFmQuery implements LastFmQueryInterface
+final readonly class LastFmQuery implements LastFmQueryInterface
 {
-    private const API_URL = 'http://ws.audioscrobbler.com/2.0/?method=';
+    private const string API_URL = 'http://ws.audioscrobbler.com/2.0/?method=';
 
-    private ConfigContainerInterface $configContainer;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     /**
      * @throws Exception\LastFmQueryFailedException
@@ -64,15 +59,15 @@ final class LastFmQuery implements LastFmQueryInterface
 
         $request = Requests::get($url, [], Core::requests_options());
 
-        $result = simplexml_load_string((string)$request->body);
+        $result = simplexml_load_string($request->body);
 
         if ($result === false) {
-            throw new Exception\LastFmQueryFailedException();
+            throw new LastFmQueryFailedException();
         }
 
         // last.fm reports errors with a parseable body, so the payload elements callers expect are missing
-        if ((string)$result['status'] !== 'ok') {
-            throw new Exception\LastFmQueryFailedException(trim((string)$result->error));
+        if ((string) $result['status'] !== 'ok') {
+            throw new LastFmQueryFailedException(trim((string) $result->error));
         }
 
         return $result;

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,12 +23,14 @@ declare(strict_types=0);
  *
  */
 
+// show_now_playing_similar.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
 
-/** @var list<array{id: null|int, mbid: string, name: string}> $artists */
-/** @var list<array{id: int}> $songs */
+/** @var array<int, array{id: null|int, mbid: string, name: string}> $artists */
+/** @var array<int, array{id: int}> $songs */
 
 $web_path = AmpConfig::get_web_path();
 

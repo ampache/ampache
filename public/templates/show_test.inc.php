@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_test.inc.php
 
 use Ampache\Module\Util\Ui;
 
@@ -69,5 +71,6 @@ use Ampache\Module\Util\Ui;
                 <?php require __DIR__ . '/show_test_table.inc.php'; ?>
             </table>
         </div>
+    <?php echo Ui::material_symbol_sprite(); ?>
     </body>
 </html>

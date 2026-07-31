@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -29,14 +31,19 @@ use Ampache\Repository\Model\User;
 interface LiveStreamRepositoryInterface
 {
     /**
+     * This deletes the object with the given id from the database
+     */
+    public function delete(Live_Stream $liveStream): void;
+
+    /**
      * Returns all items
      *
      * If a user is provided, the result will be limited to catalogs the user has access to
      *
-     * @return list<int>
+     * @return int[]
      */
     public function findAll(
-        ?User $user = null
+        ?User $user = null,
     ): array;
 
     /**
@@ -45,7 +52,9 @@ interface LiveStreamRepositoryInterface
     public function findById(int $objectId): ?Live_Stream;
 
     /**
-     * This deletes the object with the given id from the database
+     * Saves the item, inserting it when it is new
+     *
+     * Returns the id of a newly created item, null when an existing one was updated
      */
-    public function delete(Live_Stream $liveStream): void;
+    public function persist(Live_Stream $liveStream): ?int;
 }

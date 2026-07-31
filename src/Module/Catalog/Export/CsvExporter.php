@@ -29,22 +29,13 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
-final class CsvExporter implements CatalogExporterInterface
+final readonly class CsvExporter implements CatalogExporterInterface
 {
-    private SongRepositoryInterface $songRepository;
-
-    private string $filePointer;
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        SongRepositoryInterface $songRepository,
-        ModelFactoryInterface $modelFactory,
-        string $filePointer = 'php://output'
-    ) {
-        $this->songRepository = $songRepository;
-        $this->modelFactory   = $modelFactory;
-        $this->filePointer    = $filePointer;
-    }
+        private SongRepositoryInterface $songRepository,
+        private ModelFactoryInterface $modelFactory,
+        private string $filePointer = 'php://output',
+    ) {}
 
     /**
      * Exports all songs
@@ -78,7 +69,7 @@ final class CsvExporter implements CatalogExporterInterface
             ]
         );
         foreach ($result as $songId) {
-            $song = $this->modelFactory->createSong((int)$songId);
+            $song = $this->modelFactory->createSong((int) $songId);
 
             fputcsv(
                 $stream,
@@ -88,10 +79,10 @@ final class CsvExporter implements CatalogExporterInterface
                     $song->get_parent_fullname(),
                     $song->get_album_fullname(),
                     $song->get_f_time(),
-                    (string)$song->track,
+                    (string) $song->track,
                     $song->year,
                     get_datetime($song->getAdditionTime()),
-                    (int)($song->bitrate / 1024) . "-" . strtoupper((string)$song->mode),
+                    (int) ($song->bitrate / 1024) . "-" . strtoupper((string) $song->mode),
                     $song->played,
                     $song->file
                 ]

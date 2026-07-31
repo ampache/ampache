@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-05-12 13:02+1000\n"
+"POT-Creation-Date: 2026-07-31 12:06+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -122,12 +122,6 @@ msgstr ""
 msgid "Show/Hide Player"
 msgstr ""
 
-msgid "Home"
-msgstr ""
-
-msgid "Play"
-msgstr ""
-
 msgid "Artists"
 msgstr ""
 
@@ -135,15 +129,6 @@ msgid "Albums"
 msgstr ""
 
 msgid "Playlists"
-msgstr ""
-
-msgid "Genres"
-msgstr ""
-
-msgid "Favorites"
-msgstr ""
-
-msgid "Upload"
 msgstr ""
 
 msgid "Now Playing"
@@ -167,6 +152,9 @@ msgstr ""
 msgid "Information"
 msgstr ""
 
+msgid "Menu"
+msgstr ""
+
 msgid "New messages"
 msgstr ""
 
@@ -182,6 +170,9 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Your Ampache config file is out of date!"
 msgstr ""
 
@@ -192,6 +183,12 @@ msgid "Download a copy of the new version"
 msgstr ""
 
 msgid "Installation"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Upload"
 msgstr ""
 
 msgid "Localplay"
@@ -278,6 +275,15 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Are you sure?"
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid "Play"
+msgstr ""
+
 msgid "Play next"
 msgstr ""
 
@@ -285,9 +291,6 @@ msgid "Play last"
 msgstr ""
 
 msgid "Add to Temporary Playlist"
-msgstr ""
-
-msgid "Add to playlist"
 msgstr ""
 
 msgid "Prev"
@@ -314,6 +317,9 @@ msgstr ""
 msgid "Grid View"
 msgstr ""
 
+msgid "Select"
+msgstr ""
+
 msgid "Alphabet"
 msgstr ""
 
@@ -323,7 +329,13 @@ msgstr ""
 msgid "Item Count"
 msgstr ""
 
+msgid "Log out"
+msgstr ""
+
 msgid "Add to New Playlist"
+msgstr ""
+
+msgid "Add to New Collection"
 msgstr ""
 
 msgid "Batch download"
@@ -414,6 +426,15 @@ msgid "New Password"
 msgstr ""
 
 msgid "Confirm Password"
+msgstr ""
+
+msgid "Subsonic Password"
+msgstr ""
+
+msgid "Currently set"
+msgstr ""
+
+msgid "Not set"
 msgstr ""
 
 msgid "Avatar"
@@ -544,9 +565,6 @@ msgstr ""
 msgid "Catalog Type"
 msgstr ""
 
-msgid "Select"
-msgstr ""
-
 msgid "Filename Pattern"
 msgstr ""
 
@@ -566,6 +584,24 @@ msgid "Catalog Media Type"
 msgstr ""
 
 msgid "Music"
+msgstr ""
+
+msgid "Create Collection"
+msgstr ""
+
+msgid "Private"
+msgstr ""
+
+msgid "Public"
+msgstr ""
+
+msgid "Object Type"
+msgstr ""
+
+msgid "Mixed"
+msgstr ""
+
+msgid "Create"
 msgstr ""
 
 msgid "Add Catalog Filter"
@@ -664,15 +700,6 @@ msgid "Codec"
 msgstr ""
 
 msgid "Create Playlist"
-msgstr ""
-
-msgid "Private"
-msgstr ""
-
-msgid "Public"
-msgstr ""
-
-msgid "Create"
 msgstr ""
 
 msgid "Subscribe to Podcast"
@@ -993,6 +1020,9 @@ msgstr ""
 msgid "Songs"
 msgstr ""
 
+msgid "Genres"
+msgstr ""
+
 msgid "Rating"
 msgstr ""
 
@@ -1110,6 +1140,9 @@ msgstr ""
 msgid "Clean"
 msgstr ""
 
+msgid "Scan Folders"
+msgstr ""
+
 msgid "Update"
 msgstr ""
 
@@ -1161,6 +1194,46 @@ msgid "Cleaning the \"%s\" Catalog"
 msgstr ""
 
 msgid "Checking"
+msgstr ""
+
+msgid "Owner"
+msgstr ""
+
+msgid "Collection Edit"
+msgstr ""
+
+msgid "Save the current order of this collection?"
+msgstr ""
+
+msgid "Do you really want to delete this Collection?"
+msgstr ""
+
+msgid "This Collection is empty"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
+msgid "Reorder"
+msgstr ""
+
+msgid "Remove from collection"
+msgstr ""
+
+msgid "Remove {count} selected items from this collection?"
+msgstr ""
+
+#. HINT: Number of items in a playlist
+msgid "# Items"
+msgstr ""
+
+msgid "Holds"
+msgstr ""
+
+msgid "No collection found"
 msgstr ""
 
 msgid "Continue"
@@ -1290,9 +1363,6 @@ msgstr ""
 msgid "Votes"
 msgstr ""
 
-msgid "Title"
-msgstr ""
-
 msgid "Remove Vote"
 msgstr ""
 
@@ -1360,9 +1430,6 @@ msgstr ""
 msgid "Year Formed"
 msgstr ""
 
-msgid "Owner"
-msgstr ""
-
 msgid "Overwrite tags of sub albums and sub songs"
 msgstr ""
 
@@ -1378,6 +1445,9 @@ msgid "Settings for Catalog: %s"
 msgstr ""
 
 msgid "Save Catalog Settings"
+msgstr ""
+
+msgid "Collaborate"
 msgstr ""
 
 msgid "Base Playlist"
@@ -1405,9 +1475,6 @@ msgid "Order"
 msgstr ""
 
 msgid "Confirm"
-msgstr ""
-
-msgid "Collaborate"
 msgstr ""
 
 msgid "GUID"
@@ -1511,6 +1578,9 @@ msgstr ""
 msgid "Browse Ampache..."
 msgstr ""
 
+msgid "Folders"
+msgstr ""
+
 msgid "Album Artists"
 msgstr ""
 
@@ -1556,6 +1626,9 @@ msgstr ""
 msgid "Save as Playlist"
 msgstr ""
 
+msgid "Favorites"
+msgstr ""
+
 msgid "Art Search"
 msgstr ""
 
@@ -1592,9 +1665,6 @@ msgstr ""
 msgid "Statistical Graphs"
 msgstr ""
 
-msgid "Show large"
-msgstr ""
-
 msgid "Start Date"
 msgstr ""
 
@@ -1611,6 +1681,10 @@ msgid "Day"
 msgstr ""
 
 msgid "Hour"
+msgstr ""
+
+msgid ""
+"The visualizer and equalizer are not available for remote catalog streams."
 msgstr ""
 
 msgid "Your browser doesn't support this feature."
@@ -1664,9 +1738,6 @@ msgstr ""
 msgid "Show Lyrics"
 msgstr ""
 
-msgid "Double click to post a new shout"
-msgstr ""
-
 msgid "Add All to playlist"
 msgstr ""
 
@@ -1676,22 +1747,25 @@ msgstr ""
 msgid "Expand/Collapse playlist"
 msgstr ""
 
+msgid "Visualizer"
+msgstr ""
+
 msgid "Slideshow"
 msgstr ""
 
 msgid "My Broadcast"
 msgstr ""
 
-msgid "Visualizer"
+msgid "Show Now Playing"
 msgstr ""
 
 msgid "ReplayGain"
 msgstr ""
 
-msgid "Visualizer full-screen"
+msgid "Equalizer"
 msgstr ""
 
-msgid "Equalizer"
+msgid "Visualizer full-screen"
 msgstr ""
 
 msgid "Unsupported"
@@ -2053,6 +2127,12 @@ msgstr ""
 msgid "Lost Password"
 msgstr ""
 
+msgid "Mini player"
+msgstr ""
+
+msgid "Sign in with OpenID Connect"
+msgstr ""
+
 msgid ""
 "Ampache places cookies on your computer to help make this website better."
 msgstr ""
@@ -2119,10 +2199,10 @@ msgstr ""
 msgid "Clean All"
 msgstr ""
 
-msgid "Update All"
+msgid "Scan All Folders"
 msgstr ""
 
-msgid "Are you sure?"
+msgid "Update All"
 msgstr ""
 
 msgid "Add new files from:"
@@ -2183,6 +2263,10 @@ msgstr ""
 msgid "No missing artists found"
 msgstr ""
 
+#, php-format
+msgid "%s selected"
+msgstr ""
+
 msgid "Are you sure? This will replace the current track order"
 msgstr ""
 
@@ -2210,14 +2294,13 @@ msgstr ""
 msgid "Duration"
 msgstr ""
 
-msgid "Reorder"
+msgid "Remove from playlist"
+msgstr ""
+
+msgid "Remove {count} selected items from this playlist?"
 msgstr ""
 
 msgid "Playlist Name"
-msgstr ""
-
-#. HINT: Number of items in a playlist
-msgid "# Items"
 msgstr ""
 
 msgid "No playlist found"
@@ -2458,9 +2541,6 @@ msgstr ""
 msgid "Options"
 msgstr ""
 
-msgid "Object Type"
-msgstr ""
-
 msgid "Creation Date"
 msgstr ""
 
@@ -2473,7 +2553,8 @@ msgstr ""
 msgid "Public URL"
 msgstr ""
 
-msgid "Shared by"
+#, php-format
+msgid "Shared by %s"
 msgstr ""
 
 msgid "Skipped"
@@ -2518,9 +2599,6 @@ msgstr ""
 msgid "Web Installation"
 msgstr ""
 
-msgid "OK"
-msgstr ""
-
 msgid "PHP version"
 msgstr ""
 
@@ -2538,7 +2616,7 @@ msgstr ""
 msgid ""
 "Please download Composer from http://getcomposer.org, and install it (e.g: "
 "mv composer.phar /usr/local/bin/composer). Then run `composer install --no-"
-"dev --prefer-source --no-interaction` on the Ampache directory."
+"dev --prefer-dist --no-interaction` on the Ampache directory."
 msgstr ""
 
 msgid "PHP hash extension"
@@ -2719,6 +2797,12 @@ msgid ""
 "then your web_path is not set correctly."
 msgstr ""
 
+msgid "Smartlists"
+msgstr ""
+
+msgid "Radio"
+msgstr ""
+
 msgid "Update from tags complete"
 msgstr ""
 
@@ -2780,6 +2864,9 @@ msgid "User Agreement"
 msgstr ""
 
 msgid "Required fields"
+msgstr ""
+
+msgid "Captcha is required"
 msgstr ""
 
 msgid "I Accept"
@@ -2889,25 +2976,19 @@ msgstr ""
 msgid "Expand/Collapse"
 msgstr ""
 
-msgid "Radio"
-msgstr ""
-
 msgid "Uploads"
 msgstr ""
 
 msgid "Smart Playlists"
 msgstr ""
 
-msgid "Smartlists"
+msgid "Collections"
 msgstr ""
 
 msgid "Wanted"
 msgstr ""
 
 msgid "Shares"
-msgstr ""
-
-msgid "Log out"
 msgstr ""
 
 msgid "Admin Disabled"
@@ -2949,6 +3030,9 @@ msgstr ""
 msgid ""
 "You may have reached this page because Ampache was unable to load the "
 "required dependencies"
+msgstr ""
+
+msgid "Added to collection"
 msgstr ""
 
 #, php-format
@@ -2995,7 +3079,16 @@ msgstr ""
 msgid "View License"
 msgstr ""
 
+msgid "Folder Edit"
+msgstr ""
+
+msgid "Collection Name"
+msgstr ""
+
 msgid "Song Edit"
+msgstr ""
+
+msgid "Song Information"
 msgstr ""
 
 msgid "Links"
@@ -3034,14 +3127,11 @@ msgstr ""
 msgid "Licensing"
 msgstr ""
 
-msgid "Song Information"
+msgid "Ampache :: For the Love of Music - Installation"
 msgstr ""
 
 #, php-format
 msgid "%s - Update"
-msgstr ""
-
-msgid "Ampache :: For the Love of Music - Installation"
 msgstr ""
 
 #, php-format
@@ -3060,221 +3150,6 @@ msgstr ""
 
 #, php-format
 msgid "Art files written: %d"
-msgstr ""
-
-msgid "Missing mandatory parameter"
-msgstr ""
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
-#, php-format
-msgid "Bad Request: %s"
-msgstr ""
-
-#. HINT: Access level, eg 75, 100
-#, php-format
-msgid "Require: %s"
-msgstr ""
-
-msgid "Access Control not Enabled"
-msgstr ""
-
-msgid "Session Expired"
-msgstr ""
-
-msgid "Unauthorized access attempt to API - ACL Error"
-msgstr ""
-
-msgid "Invalid Request"
-msgstr ""
-
-msgid "Deprecated"
-msgstr ""
-
-msgid "Wrong object type "
-msgstr ""
-
-msgid "Media Object Invalid or Not Specified"
-msgstr ""
-
-msgid "Login Failed: version too old"
-msgstr ""
-
-msgid "Login Failed: timestamp out of range"
-msgstr ""
-
-msgid "Error Invalid Handshake - "
-msgstr ""
-
-msgid "Invalid Username/Password"
-msgstr ""
-
-msgid "Access denied to this playlist."
-msgstr ""
-
-msgid "Wrong library item type."
-msgstr ""
-
-msgid "Library item not found."
-msgstr ""
-
-msgid "Incorrect catalog task"
-msgstr ""
-
-msgid "The requested item was not found"
-msgstr ""
-
-msgid "Access Denied: delete from disk is not enabled."
-msgstr ""
-
-msgid "Incorrect file task"
-msgstr ""
-
-msgid "File not found"
-msgstr ""
-
-msgid "Catalog not found"
-msgstr ""
-
-msgid "The requested catalog was not found"
-msgstr ""
-
-msgid "Media object invalid or not specified"
-msgstr ""
-
-msgid "Invalid request"
-msgstr ""
-
-msgid "Access Denied: Rating features are not enabled."
-msgstr ""
-
-msgid "Incorrect object type"
-msgstr ""
-
-msgid "Wrong library item type"
-msgstr ""
-
-msgid "Library item not found"
-msgstr ""
-
-msgid "Access Denied: social features are not enabled."
-msgstr ""
-
-msgid "Access Denied: allow_video is not enabled."
-msgstr ""
-
-msgid "Access Denied: podcast features are not enabled."
-msgstr ""
-
-msgid "Access Denied: sharing features are not enabled."
-msgstr ""
-
-msgid "Login failed, API version is too old"
-msgstr ""
-
-msgid "Login Failed, timestamp is out of range"
-msgstr ""
-
-msgid "Received Invalid Handshake"
-msgstr ""
-
-msgid "Login failed, timestamp is out of range"
-msgstr ""
-
-msgid "Server"
-msgstr ""
-
-msgid "Incorrect username or password"
-msgstr ""
-
-msgid "Access Denied: licensing features are not enabled."
-msgstr ""
-
-msgid "Error Unable to connect to localplay controller"
-msgstr ""
-
-msgid "Access denied to this playlist"
-msgstr ""
-
-msgid "Can't add a duplicate item when check is enabled"
-msgstr ""
-
-msgid "Nothing was changed"
-msgstr ""
-
-msgid "Song not found in playlist"
-msgstr ""
-
-msgid "Track ID not found in playlist"
-msgstr ""
-
-msgid "Bad Request"
-msgstr ""
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
-msgid "Ratings must be between [0-5]. "
-msgstr ""
-
-msgid "User_id not found"
-msgstr ""
-
-msgid "Invalid input options"
-msgstr ""
-
-msgid "Failed to scrobble: No item found!"
-msgstr ""
-
-msgid "Failed to update_art for "
-msgstr ""
-
-msgid "Failed to update_artist_info or recommendations for "
-msgstr ""
-
-msgid "Failed to sync episodes for podcast: "
-msgstr ""
-
-msgid "Enable: video"
-msgstr ""
-
-msgid "Not Found"
-msgstr ""
-
-msgid "Enable: delete_from_disk"
-msgstr ""
-
-msgid "Enable: podcast"
-msgstr ""
-
-msgid "Enable: ratings"
-msgstr ""
-
-msgid "Enable: sociable"
-msgstr ""
-
-msgid "Enable: share"
-msgstr ""
-
-msgid "Enable: live_stream"
-msgstr ""
-
-msgid "Enable: label"
-msgstr ""
-
-msgid "Enable: licensing"
-msgstr ""
-
-msgid "Unable to connect to localplay controller"
-msgstr ""
-
-msgid "Require: 100"
-msgstr ""
-
-msgid "Require: 75"
-msgstr ""
-
-msgid "Access denied"
-msgstr ""
-
-msgid "Ampache XSPF Playlist"
 msgstr ""
 
 msgid "IP Address version mismatch"
@@ -3352,6 +3227,9 @@ msgstr ""
 msgid "The Catalog art search has started"
 msgstr ""
 
+msgid "The Catalog folder scan has started"
+msgstr ""
+
 msgid "This will permanently delete your Catalog"
 msgstr ""
 
@@ -3373,7 +3251,7 @@ msgstr ""
 msgid "A filter name is required"
 msgstr ""
 
-msgid "That filter name already exists"
+msgid "That name already exists"
 msgstr ""
 
 msgid "The new filter was not created"
@@ -3489,9 +3367,6 @@ msgstr ""
 msgid "A Username is required"
 msgstr ""
 
-msgid "That Username already exists"
-msgstr ""
-
 msgid "You entered an invalid e-mail address"
 msgstr ""
 
@@ -3553,6 +3428,10 @@ msgstr ""
 msgid "This Avatar will be deleted"
 msgstr ""
 
+msgid ""
+"This will remove the Subsonic password and disconnect any client using it"
+msgstr ""
+
 msgid "This will replace your existing API key"
 msgstr ""
 
@@ -3563,6 +3442,17 @@ msgstr ""
 
 #, php-format
 msgid "%s IP History"
+msgstr ""
+
+msgid "That Username already exists"
+msgstr ""
+
+msgid "Passwords do not match"
+msgstr ""
+
+msgid ""
+"Could not store the Subsonic password. Check that secret_key is set in your "
+"Ampache config"
 msgstr ""
 
 #, php-format
@@ -3608,6 +3498,9 @@ msgstr ""
 msgid "Artist information updated using MusicBrainz"
 msgstr ""
 
+msgid "Missing mandatory parameter"
+msgstr ""
+
 msgid "Art file failed size check"
 msgstr ""
 
@@ -3619,13 +3512,43 @@ msgstr ""
 msgid "Art file failed to insert, check the size does not exceed the limit."
 msgstr ""
 
+msgid "Failed to update_art for "
+msgstr ""
+
 msgid "Broadcast has been deleted"
 msgstr ""
 
 msgid "This Broadcast will be deleted"
 msgstr ""
 
+msgid "This collection does not accept items of that type"
+msgstr ""
+
+msgid "Object added to collection"
+msgstr ""
+
+msgid "Name is required"
+msgstr ""
+
+msgid "Not a valid item type"
+msgstr ""
+
+msgid "Failed to create collection"
+msgstr ""
+
+msgid "Collection created"
+msgstr ""
+
+msgid "Object removed from collection"
+msgstr ""
+
 msgid "The Playlist has been deleted"
+msgstr ""
+
+msgid "Folder"
+msgstr ""
+
+msgid "This Folder will be deleted"
 msgstr ""
 
 msgid "The Ampache database username or password is missing"
@@ -3646,6 +3569,9 @@ msgstr ""
 msgid "The Label cannot be found"
 msgstr ""
 
+msgid "Incorrect username or password"
+msgstr ""
+
 msgid "Account is disabled, please contact the administrator"
 msgstr ""
 
@@ -3655,16 +3581,14 @@ msgstr ""
 msgid "Unable to create a local account"
 msgstr ""
 
+msgid "OpenID Connect is not configured correctly"
+msgstr ""
+
 #, php-format
 msgid "%s - Now Playing"
 msgstr ""
 
 msgid "Playlist created"
-msgstr ""
-
-#. HINT: %1 playlist name, %2 playlist type
-#, php-format
-msgid "%1$s (%2$s) has been created"
 msgstr ""
 
 #. HINT: Number of songs
@@ -3687,6 +3611,9 @@ msgid "No valid songs found in playlist file"
 msgstr ""
 
 msgid "Podcast has been deleted"
+msgstr ""
+
+msgid "Catalog not found"
 msgstr ""
 
 msgid "Feed URL is invalid"
@@ -3724,6 +3651,9 @@ msgid "Invalid catalog type"
 msgstr ""
 
 msgid "Import Podcasts"
+msgstr ""
+
+msgid "Server"
 msgstr ""
 
 msgid "Your account has been updated"
@@ -3781,9 +3711,6 @@ msgstr ""
 msgid "Radio Station created"
 msgstr ""
 
-msgid "Captcha is required"
-msgstr ""
-
 msgid "Captcha failed"
 msgstr ""
 
@@ -3797,9 +3724,6 @@ msgid "Invalid e-mail address"
 msgstr ""
 
 msgid "You must enter a password"
-msgstr ""
-
-msgid "Passwords do not match"
 msgstr ""
 
 msgid "Failed to create user"
@@ -3872,15 +3796,21 @@ msgstr ""
 msgid "local_metadata_dir setting is required to store art on disk"
 msgstr ""
 
+msgid "OpenID Connect requires an interactive browser login"
+msgstr ""
+
+msgid "OpenID Connect authentication failed"
+msgstr ""
+
+msgid "The identity provider did not return a username"
+msgstr ""
+
 msgid "Running Beets Update"
 msgstr ""
 
 #. HINT: filename (file path)
 #, php-format
 msgid "Unable to add Song - %s"
-msgstr ""
-
-msgid "Beets Database File"
 msgstr ""
 
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
@@ -3890,10 +3820,38 @@ msgstr ""
 msgid "This path belongs to an existing Beets Catalog: %s"
 msgstr ""
 
-msgid "Beets Server URI"
+msgid "Beets Database File"
 msgstr ""
 
 msgid "Remote Catalog type was selected, but the path is not a URL"
+msgstr ""
+
+msgid "Beets Server URI"
+msgstr ""
+
+msgid "Invalid \"dropbox-path\": "
+msgstr ""
+
+#, php-format
+msgid "Error: Catalog with %s already exists"
+msgstr ""
+
+msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
+msgstr ""
+
+msgid "Invalid \"API key\", \"secret\", or \"access token\": "
+msgstr ""
+
+msgid "Running Dropbox Remote Update"
+msgstr ""
+
+msgid "Access Token"
+msgstr ""
+
+msgid "Get chunked files on analyze"
+msgstr ""
+
+msgid "API Error: cannot connect to Dropbox."
 msgstr ""
 
 msgid "Go to https://www.dropbox.com/developers/apps/create"
@@ -3915,28 +3873,6 @@ msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
 msgstr ""
 
-msgid "Access Token"
-msgstr ""
-
-msgid "Get chunked files on analyze"
-msgstr ""
-
-msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
-msgstr ""
-
-msgid "Invalid \"API key\", \"secret\", or \"access token\": "
-msgstr ""
-
-msgid "Invalid \"dropbox-path\": "
-msgstr ""
-
-#, php-format
-msgid "Error: Catalog with %s already exists"
-msgstr ""
-
-msgid "Running Dropbox Remote Update"
-msgstr ""
-
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr ""
@@ -3954,20 +3890,20 @@ msgstr ""
 msgid "Removing song: \"%s\""
 msgstr ""
 
-msgid "API Error: cannot connect to Dropbox."
+msgid "Path was not specified"
 msgstr ""
 
-msgid "Path was not specified"
+msgid "Specified path is inside an existing catalog"
+msgstr ""
+
+#. HINT: directory (file path)
+#, php-format
+msgid "The folder couldn't be read. Does it exist? %s"
 msgstr ""
 
 #. HINT: directory (file path)
 #, php-format
 msgid "This path belongs to an existing local Catalog: %s"
-msgstr ""
-
-#. HINT: directory (file path)
-#, php-format
-msgid "Unable to open: %s"
 msgstr ""
 
 #. HINT: directory (file path)
@@ -3990,6 +3926,11 @@ msgstr ""
 msgid "\"%s\" does not match site charset"
 msgstr ""
 
+#. HINT: directory (file path)
+#, php-format
+msgid "Unable to open: %s"
+msgstr ""
+
 msgid "N/A"
 msgstr ""
 
@@ -4000,8 +3941,7 @@ msgstr ""
 msgid "Total Time: [%s] Total Media: [%s] Media Per Second: [%s]"
 msgstr ""
 
-#, php-format
-msgid "File count: %d"
+msgid "Catalog root unreadable, stopping check"
 msgstr ""
 
 msgid "Catalog root unreadable, stopping clean"
@@ -4010,15 +3950,24 @@ msgstr ""
 msgid "All files would be removed. Doing nothing"
 msgstr ""
 
+#. HINT: filename (file path)
+#, php-format
+msgid "File was not found or is 0 Bytes: %s"
+msgstr ""
+
+#, php-format
+msgid "File count: %d"
+msgstr ""
+
+#, php-format
+msgid "Create directory \"%s\""
+msgstr ""
+
 msgid "File already exists"
 msgstr ""
 
 #, php-format
 msgid "Copying \"%1$s\" to \"%2$s\""
-msgstr ""
-
-#, php-format
-msgid "Create directory \"%s\""
 msgstr ""
 
 #, php-format
@@ -4033,25 +3982,6 @@ msgstr ""
 msgid "There was an error trying to delete \"%s\""
 msgstr ""
 
-#. HINT: filename (file path)
-#, php-format
-msgid "File was not found or is 0 Bytes: %s"
-msgstr ""
-
-msgid "Specified path is inside an existing catalog"
-msgstr ""
-
-#. HINT: directory (file path)
-#, php-format
-msgid "The folder couldn't be read. Does it exist? %s"
-msgstr ""
-
-msgid "Catalog root unreadable, stopping check"
-msgstr ""
-
-msgid "URI"
-msgstr ""
-
 msgid "No username or password was specified"
 msgstr ""
 
@@ -4061,6 +3991,9 @@ msgid "This path belongs to an existing remote Catalog: %s"
 msgstr ""
 
 msgid "Running Remote Update"
+msgstr ""
+
+msgid "URI"
 msgstr ""
 
 msgid "Failed to connect to the remote server"
@@ -4080,42 +4013,6 @@ msgid "Updated"
 msgstr ""
 
 msgid "Completed updating remote Catalog(s)."
-msgstr ""
-
-msgid "Install a Seafile server as described in the documentation"
-msgstr ""
-
-msgid ""
-"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
-"(e.g. 'Music')."
-msgstr ""
-
-msgid ""
-"API Call Delay is the delay inserted between repeated requests to Seafile "
-"(such as during an Add or Clean action) to accommodate Seafile's Rate "
-"Limiting."
-msgstr ""
-
-msgid "The default is tuned towards Seafile's default rate limit settings."
-msgstr ""
-
-msgid ""
-"After creating the Catalog, you must 'Make it ready' on the Catalog table."
-msgstr ""
-
-msgid "Server URI"
-msgstr ""
-
-msgid "Library Name"
-msgstr ""
-
-msgid "API Call Delay"
-msgstr ""
-
-msgid "Seafile Username/Email"
-msgstr ""
-
-msgid "Seafile Password"
 msgstr ""
 
 msgid "Seafile server URL is required"
@@ -4148,19 +4045,19 @@ msgstr ""
 msgid "No media was updated, did you respect the patterns?"
 msgstr ""
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Skipping existing song: %s"
+msgid "Server URI"
 msgstr ""
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Adding a new song: %s"
+msgid "Library Name"
 msgstr ""
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Could not add song: %s"
+msgid "API Call Delay"
+msgstr ""
+
+msgid "Seafile Username/Email"
+msgstr ""
+
+msgid "Seafile Password"
 msgstr ""
 
 #, php-format
@@ -4170,6 +4067,42 @@ msgstr ""
 #. HINT: filename (File path)
 #, php-format
 msgid "Keeping song: %s"
+msgstr ""
+
+msgid "Install a Seafile server as described in the documentation"
+msgstr ""
+
+msgid ""
+"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
+"(e.g. 'Music')."
+msgstr ""
+
+msgid ""
+"API Call Delay is the delay inserted between repeated requests to Seafile "
+"(such as during an Add or Clean action) to accommodate Seafile's Rate "
+"Limiting."
+msgstr ""
+
+msgid "The default is tuned towards Seafile's default rate limit settings."
+msgstr ""
+
+msgid ""
+"After creating the Catalog, you must 'Make it ready' on the Catalog table."
+msgstr ""
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Could not add song: %s"
+msgstr ""
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Skipping existing song: %s"
+msgstr ""
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Adding a new song: %s"
 msgstr ""
 
 #. HINT: subsonic catalog URI
@@ -4231,6 +4164,9 @@ msgstr ""
 msgid "Start verifying media related to Catalog entries"
 msgstr ""
 
+msgid "Start scanning folders"
+msgstr ""
+
 msgid "Start searching new media art"
 msgstr ""
 
@@ -4260,6 +4196,9 @@ msgstr ""
 
 #, php-format
 msgid "Catalog `%s` not found"
+msgstr ""
+
+msgid "File not found"
 msgstr ""
 
 #. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
@@ -4306,10 +4245,84 @@ msgstr ""
 msgid "User creation failed"
 msgstr ""
 
-msgid "Users List"
+msgid ""
+"Clear a cache. Only `perpetual_api_session` persists; object caches live for "
+"one process"
+msgstr ""
+
+msgid "Destroy stored perpetual API sessions"
+msgstr ""
+
+#, php-format
+msgid "Unknown cache type: %s"
+msgstr ""
+
+#, php-format
+msgid "Cleared cache: %s"
+msgstr ""
+
+msgid "Delete a User"
 msgstr ""
 
 msgid "User ID"
+msgstr ""
+
+msgid "Delete the User with the name `some-user`"
+msgstr ""
+
+msgid "Disable a User"
+msgstr ""
+
+msgid "Disable the User with the name `some-user`"
+msgstr ""
+
+msgid "Enable a User"
+msgstr ""
+
+msgid "Enable the User with the name `some-user`"
+msgstr ""
+
+#, php-format
+msgid "Database version: %s"
+msgstr ""
+
+msgid "Install a catalog type"
+msgstr ""
+
+msgid "Enable the subsonic catalog type"
+msgstr ""
+
+msgid "Install a localplay controller"
+msgstr ""
+
+msgid "User ID to receive the localplay preferences"
+msgstr ""
+
+msgid "Localplay Type"
+msgstr ""
+
+msgid "Enable the mpd localplay controller"
+msgstr ""
+
+msgid "Install a plugin"
+msgstr ""
+
+msgid "Install the Last.FM plugin"
+msgstr ""
+
+msgid "List plugins, catalog types and localplay controllers"
+msgstr ""
+
+msgid "List all pluggable modules and their installed state"
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Users List"
 msgstr ""
 
 msgid "Find a User with the name `some-user`"
@@ -4317,6 +4330,15 @@ msgstr ""
 
 #, php-format
 msgid "%s (%d)"
+msgstr ""
+
+msgid "Send an e-mail to a group of users"
+msgstr ""
+
+msgid "Mail all standard users"
+msgstr ""
+
+msgid "Mail is not enabled"
 msgstr ""
 
 msgid "Reset preference values for users"
@@ -4332,6 +4354,24 @@ msgid "Running in Test Mode. Use -e|--execute to update"
 msgstr ""
 
 msgid "No changes have been made"
+msgstr ""
+
+msgid "Uninstall a catalog type"
+msgstr ""
+
+msgid "Disable the subsonic catalog type"
+msgstr ""
+
+msgid "Uninstall a localplay controller"
+msgstr ""
+
+msgid "Disable the mpd localplay controller"
+msgstr ""
+
+msgid "Uninstall a plugin"
+msgstr ""
+
+msgid "Uninstall the Last.FM plugin"
 msgstr ""
 
 msgid "Update the Ampache config file"
@@ -4356,10 +4396,6 @@ msgstr ""
 #. HINT: config version string (e.g. 62)
 #, php-format
 msgid "Config version: %s"
-msgstr ""
-
-#, php-format
-msgid "Database version: %s"
 msgstr ""
 
 msgid "Missing database tables have been created"
@@ -4396,7 +4432,20 @@ msgstr ""
 msgid "Update Preference Access Level"
 msgstr ""
 
+msgid "Set the Subsonic password"
+msgstr ""
+
 msgid "Update API key for user with the name `some-user`"
+msgstr ""
+
+#, php-format
+msgid "Bad Request: %s"
+msgstr ""
+
+msgid "Upgrade a plugin"
+msgstr ""
+
+msgid "Upgrade the Last.FM plugin"
 msgstr ""
 
 msgid "Remove art which does not fit to the settings"
@@ -4460,6 +4509,16 @@ msgstr ""
 msgid "Completed cache process"
 msgstr ""
 
+msgid "Re-enable all disabled songs"
+msgstr ""
+
+msgid "Re-enable every disabled song"
+msgstr ""
+
+#, php-format
+msgid "Re-enabled %d songs"
+msgstr ""
+
 msgid "Update the object cache tables"
 msgstr ""
 
@@ -4487,6 +4546,24 @@ msgstr ""
 msgid "Cron process finished"
 msgstr ""
 
+msgid "Delete a media catalog"
+msgstr ""
+
+msgid "Delete the catalog with ID 3"
+msgstr ""
+
+msgid "Disable a media catalog"
+msgstr ""
+
+msgid "Disable the catalog with ID 3"
+msgstr ""
+
+msgid "Enable a media catalog"
+msgstr ""
+
+msgid "Enable the catalog with ID 3"
+msgstr ""
+
 msgid "Export album art"
 msgstr ""
 
@@ -4512,6 +4589,16 @@ msgid "Start Art Dump"
 msgstr ""
 
 msgid "Art Dump Complete"
+msgstr ""
+
+msgid "Export catalog metadata to a file"
+msgstr ""
+
+msgid "Export all catalogs as CSV"
+msgstr ""
+
+#, php-format
+msgid "Exported catalog metadata to %s"
 msgstr ""
 
 msgid "Export Playlists"
@@ -4594,6 +4681,9 @@ msgstr ""
 msgid "Possible Duplicate Albums"
 msgstr ""
 
+msgid "Invalid Request"
+msgstr ""
+
 msgid "Print file tags"
 msgstr ""
 
@@ -4621,6 +4711,21 @@ msgid "Listening port, default 8100"
 msgstr ""
 
 msgid "Run the websocket on port 8888"
+msgstr ""
+
+msgid "Show a system status and environment report"
+msgstr ""
+
+msgid "Query the remote version (network access required)"
+msgstr ""
+
+msgid "Print a headless status report"
+msgstr ""
+
+msgid "up to date"
+msgstr ""
+
+msgid "Environment"
 msgstr ""
 
 msgid "Delete disabled songs"
@@ -4659,6 +4764,53 @@ msgstr ""
 msgid "Sort song files"
 msgstr ""
 
+msgid "Consolidate old play history into summary counts"
+msgstr ""
+
+msgid "Only consolidate this count type (stream, skip, download)"
+msgstr ""
+
+msgid "Show what would be consolidated (dry-run)"
+msgstr ""
+
+msgid ""
+"Stats consolidation is disabled. Set stats_consolidate_threshold in your "
+"ampache.cfg.php to the number of days of detailed play history to keep"
+msgstr ""
+
+#, php-format
+msgid "%d rows consolidated into %d summary rows"
+msgstr ""
+
+msgid "Run OPTIMIZE TABLE on object_count to reclaim disk space"
+msgstr ""
+
+#. HINT: %1 row count, %2 group count
+#, php-format
+msgid "%d rows would be consolidated into %d summary rows (dry-run)"
+msgstr ""
+
+msgid "Restore consolidated play history from the archive"
+msgstr ""
+
+msgid "Show what would be restored (dry-run)"
+msgstr ""
+
+msgid "The play history archive is empty, there is nothing to restore"
+msgstr ""
+
+#. HINT: %1 archived row count, %2 rebuilt album/artist/podcast row count
+#, php-format
+msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
+msgstr ""
+
+msgid "Updating counts"
+msgstr ""
+
+#, php-format
+msgid "%d rows would be restored (dry-run)"
+msgstr ""
+
 msgid ""
 "Perform catalog actions for all files of a catalog. If no options are given, "
 "the defaults actions -ceagt are assumed"
@@ -4683,6 +4835,9 @@ msgid "Adds new media files and imports playlist files"
 msgstr ""
 
 msgid "Optimizes database tables"
+msgstr ""
+
+msgid "Scan Local Catalog folders for folder browsing"
 msgstr ""
 
 msgid "Temporarily deactivates PHP memory limit"
@@ -4858,13 +5013,22 @@ msgstr ""
 msgid "View changes"
 msgstr ""
 
-msgid "Updating Ampache sources with `"
-msgstr ""
-
 msgid "Updating dependencies with `"
 msgstr ""
 
 msgid "Updating npm build with `"
+msgstr ""
+
+#. HINT: comma separated list of filesystem paths
+#, php-format
+msgid "Unable to update dependencies: the web server user cannot write to %s"
+msgstr ""
+
+msgid "Updating Ampache sources with `"
+msgstr ""
+
+msgid ""
+"Unable to run the update: the PHP exec() function is disabled on this server"
 msgstr ""
 
 msgid "Invalid configuration settings"
@@ -4879,7 +5043,29 @@ msgstr ""
 msgid "Existing database was detected, unable to continue the installation"
 msgstr ""
 
+#. HINT: Database error message
+#, php-format
+msgid "Connection to the database failed: %s"
+msgstr ""
+
+#. HINT: Database error message
+#, php-format
+msgid "Database select failed: %s"
+msgstr ""
+
+#. HINT: Database error message
+#, php-format
+msgid "Administrative user creation failed: %s"
+msgstr ""
+
+msgid ""
+"Connection to the database failed: Check hostname, username and password"
+msgstr ""
+
 msgid "Config file is not writable"
+msgstr ""
+
+msgid "Failed writing config file"
 msgstr ""
 
 msgid "Database name is invalid"
@@ -4915,26 +5101,9 @@ msgstr ""
 msgid "Unable to open ampache.sql"
 msgstr ""
 
-msgid ""
-"Connection to the database failed: Check hostname, username and password"
-msgstr ""
-
-msgid "Failed writing config file"
-msgstr ""
-
-#. HINT: Database error message
+#. HINT: Database version number
 #, php-format
-msgid "Connection to the database failed: %s"
-msgstr ""
-
-#. HINT: Database error message
-#, php-format
-msgid "Database select failed: %s"
-msgstr ""
-
-#. HINT: Database error message
-#, php-format
-msgid "Administrative user creation failed: %s"
+msgid "Unable to update the database schema from version %s"
 msgstr ""
 
 msgid "commented on"
@@ -5023,6 +5192,9 @@ msgstr ""
 msgid "Finished checking file names for valid characters"
 msgstr ""
 
+msgid "There was an error trying to check the file names for valid characters"
+msgstr ""
+
 #, php-format
 msgid "There was an error trying to open \"%s\""
 msgstr ""
@@ -5073,13 +5245,28 @@ msgstr ""
 msgid "Play date"
 msgstr ""
 
-msgid "Enabled"
+msgid "Add to playlist"
+msgstr ""
+
+msgid "Add to list"
+msgstr ""
+
+msgid "Add to playlist / collection"
 msgstr ""
 
 msgid "On"
 msgstr ""
 
 msgid "Off"
+msgstr ""
+
+msgid "bps"
+msgstr ""
+
+msgid "0 = use the source file rate"
+msgstr ""
+
+msgid "KB/s"
 msgstr ""
 
 msgid "M3U"
@@ -5197,6 +5384,12 @@ msgstr ""
 msgid "Amazon associate tag"
 msgstr ""
 
+msgid "Sonic similarity from an AudioMuse-AI server"
+msgstr ""
+
+msgid "AudioMuse-AI server URL"
+msgstr ""
+
 msgid "URL shorteners on shared links with Bit.ly"
 msgstr ""
 
@@ -5212,6 +5405,9 @@ msgstr ""
 msgid "Catalog favorites on homepage"
 msgstr ""
 
+msgid "Highlight"
+msgstr ""
+
 msgid "Catalog favorites max items"
 msgstr ""
 
@@ -5222,9 +5418,6 @@ msgid "Plugin CSS order"
 msgstr ""
 
 msgid "Catalog favorites media row display"
-msgstr ""
-
-msgid "Highlight"
 msgstr ""
 
 msgid "Get lyrics from ChartLyrics"
@@ -5251,10 +5444,10 @@ msgstr ""
 msgid "Friend's Timeline on homepage"
 msgstr ""
 
-msgid "Friends timeline max items"
+msgid "Friends Timeline"
 msgstr ""
 
-msgid "Friends Timeline"
+msgid "Friends timeline max items"
 msgstr ""
 
 msgid "Google Analytics statistics"
@@ -5266,13 +5459,13 @@ msgstr ""
 msgid "Show user's location with Google Maps"
 msgstr ""
 
-msgid "Google Maps API key"
-msgstr ""
-
 msgid "Hits"
 msgstr ""
 
 msgid "Last activity"
+msgstr ""
+
+msgid "Google Maps API key"
 msgstr ""
 
 msgid "User's avatars from Gravatar"
@@ -5353,19 +5546,22 @@ msgstr ""
 msgid "PayPal donation button on user page"
 msgstr ""
 
-msgid "PayPal ID"
-msgstr ""
-
-msgid "PayPal Currency Code"
-msgstr ""
-
 msgid "on"
 msgstr ""
 
 msgid "PayPal - The safer, easier way to pay online!"
 msgstr ""
 
+msgid "PayPal ID"
+msgstr ""
+
+msgid "PayPal Currency Code"
+msgstr ""
+
 msgid "Personal favorites on homepage"
+msgstr ""
+
+msgid "Favorite Lists"
 msgstr ""
 
 msgid "Personal favorites on the homepage"
@@ -5375,9 +5571,6 @@ msgid "Favorite Playlists"
 msgstr ""
 
 msgid "Favorite Smartlists"
-msgstr ""
-
-msgid "Favorite Lists"
 msgstr ""
 
 msgid "Piwik statistics"
@@ -5500,16 +5693,29 @@ msgstr ""
 msgid "Reset Art"
 msgstr ""
 
-msgid "Broadcast Edit"
-msgstr ""
-
 msgid "Broadcast"
 msgstr ""
 
 msgid "Unbroadcast"
 msgstr ""
 
+msgid "Broadcast Edit"
+msgstr ""
+
+#, php-format
+msgid ""
+"This view has %d item and is too large to show all at once (limit %d). "
+"Enable paging or narrow your filters."
+msgid_plural ""
+"This view has %d items and is too large to show all at once (limit %d). "
+"Enable paging or narrow your filters."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Playlist Items"
+msgstr ""
+
+msgid "Collection Items"
 msgstr ""
 
 msgid "Current Playlist"
@@ -5534,6 +5740,11 @@ msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid ""
+"This subdirectory is not inside an existing Catalog. The update can not be "
+"processed."
+msgstr ""
+
 msgid "No Update Needed"
 msgstr ""
 
@@ -5549,24 +5760,16 @@ msgstr[1] ""
 msgid "Catalog Verified"
 msgstr ""
 
-msgid ""
-"This subdirectory is not inside an existing Catalog. The update can not be "
-"processed."
-msgstr ""
-
-msgid "Name is required"
-msgstr ""
-
-msgid "URL is invalid, must be mms://, https:// or http://"
+msgid "Codec is required (e.g. MP3, OGG...)"
 msgstr ""
 
 msgid "URL is invalid, must be http:// or https://"
 msgstr ""
 
-msgid "Codec is required (e.g. MP3, OGG...)"
+msgid "Catalog is invalid"
 msgstr ""
 
-msgid "Catalog is invalid"
+msgid "URL is invalid, must be mms://, https:// or http://"
 msgstr ""
 
 msgid "You have Plugins that need an update!"
@@ -5594,103 +5797,16 @@ msgstr ""
 msgid "Current rating"
 msgstr ""
 
-msgid "is greater than or equal to"
-msgstr ""
-
-msgid "is less than or equal to"
-msgstr ""
-
-msgid "equals"
-msgstr ""
-
-msgid "does not equal"
-msgstr ""
-
-msgid "is greater than"
-msgstr ""
-
-msgid "is less than"
-msgstr ""
-
-msgid "is true"
-msgstr ""
-
-msgid "is false"
-msgstr ""
-
-msgid "contains"
-msgstr ""
-
-msgid "does not contain"
-msgstr ""
-
-msgid "starts with"
-msgstr ""
-
-msgid "ends with"
-msgstr ""
-
-msgid "is"
-msgstr ""
-
-msgid "is not"
-msgstr ""
-
-msgid "sounds like"
-msgstr ""
-
-msgid "does not sound like"
-msgstr ""
-
-msgid "matches regular expression"
-msgstr ""
-
-msgid "does not match regular expression"
-msgstr ""
-
-msgid "before"
-msgstr ""
-
-msgid "after"
-msgstr ""
-
-msgid "before (x) days ago"
-msgstr ""
-
-msgid "after (x) days ago"
-msgstr ""
-
-msgid "has loved"
-msgstr ""
-
-msgid "has rated 5 stars"
-msgstr ""
-
-msgid "has rated 4 stars"
-msgstr ""
-
-msgid "has rated 3 stars"
-msgstr ""
-
-msgid "has rated 2 stars"
-msgstr ""
-
-msgid "has rated 1 star"
-msgstr ""
-
-msgid "has not rated"
-msgstr ""
-
-msgid "Any searchable text"
-msgstr ""
-
-msgid "Song Data"
-msgstr ""
-
-msgid "Album Title"
+msgid "Album Data"
 msgstr ""
 
 msgid "Length (in minutes)"
+msgstr ""
+
+msgid "Disk Count"
+msgstr ""
+
+msgid "Song Count"
 msgstr ""
 
 msgid "Database ID"
@@ -5702,7 +5818,7 @@ msgstr ""
 msgid "Rating (Average)"
 msgstr ""
 
-msgid "My Rating (Album)"
+msgid "My Rating (Song)"
 msgstr ""
 
 msgid "My Rating (Artist)"
@@ -5717,12 +5833,6 @@ msgstr ""
 msgid "My Favorite Artists"
 msgstr ""
 
-msgid "Favorites (Album)"
-msgstr ""
-
-msgid "Favorites (Artist)"
-msgstr ""
-
 msgid "Song popularity score"
 msgstr ""
 
@@ -5733,12 +5843,6 @@ msgid "Artist popularity score"
 msgstr ""
 
 msgid "Another User"
-msgstr ""
-
-msgid "Another User (Album)"
-msgstr ""
-
-msgid "Another User (Artist)"
 msgstr ""
 
 msgid "Play History"
@@ -5756,10 +5860,6 @@ msgstr ""
 msgid "# Played or Skipped"
 msgstr ""
 
-#. HINT: Percentage of (Times Played / Times skipped) * 100
-msgid "Played/Skipped ratio"
-msgstr ""
-
 msgid "My Last Play"
 msgstr ""
 
@@ -5770,9 +5870,6 @@ msgid "My Last Play or Skip"
 msgstr ""
 
 msgid "Played by Me"
-msgstr ""
-
-msgid "Played by Me (Album)"
 msgstr ""
 
 msgid "Played by Me (Artist)"
@@ -5790,13 +5887,7 @@ msgstr ""
 msgid "# Played or Skipped by Me"
 msgstr ""
 
-msgid "Album Genre"
-msgstr ""
-
-msgid "Artist Genre"
-msgstr ""
-
-msgid "Song Count"
+msgid "Song Genre"
 msgstr ""
 
 msgid "Album Count"
@@ -5811,58 +5902,40 @@ msgstr ""
 msgid "Date Updated"
 msgstr ""
 
-msgid "No Music License"
-msgstr ""
-
-msgid "Recently Added"
-msgstr ""
-
-msgid "Recently Updated"
-msgstr ""
-
-msgid "Duplicate Album Tracks"
-msgstr ""
-
-msgid "Orphaned Album"
-msgstr ""
-
-msgid "MusicBrainz"
-msgstr ""
-
-msgid "MusicBrainz ID (Album)"
-msgstr ""
-
-msgid "MusicBrainz ID (Artist)"
-msgstr ""
-
-msgid "Metadata"
-msgstr ""
-
-msgid "Artist Data"
-msgstr ""
-
-msgid "My Rating (Song)"
-msgstr ""
-
-msgid "Song Genre"
-msgstr ""
-
 msgid "Image Width"
 msgstr ""
 
 msgid "Image Height"
 msgstr ""
 
-msgid "MusicBrainz ID (Song)"
+msgid "Recently Added"
 msgstr ""
 
-msgid "Album Data"
-msgstr ""
-
-msgid "Disk Count"
+msgid "Duplicate Album Tracks"
 msgstr ""
 
 msgid "Duplicate MusicBrainz Release Group"
+msgstr ""
+
+msgid "MusicBrainz"
+msgstr ""
+
+msgid "MusicBrainz ID (Artist)"
+msgstr ""
+
+msgid "MusicBrainz ID (Song)"
+msgstr ""
+
+msgid "Artist Data"
+msgstr ""
+
+msgid "Album Title"
+msgstr ""
+
+msgid "My Rating (Album)"
+msgstr ""
+
+msgid "MusicBrainz ID (Album)"
 msgstr ""
 
 msgid "public"
@@ -5892,6 +5965,46 @@ msgstr ""
 msgid "Podcast Episode popularity score"
 msgstr ""
 
+msgid "Any searchable text"
+msgstr ""
+
+msgid "Song Data"
+msgstr ""
+
+msgid "Favorites (Album)"
+msgstr ""
+
+msgid "Favorites (Artist)"
+msgstr ""
+
+msgid "Another User (Album)"
+msgstr ""
+
+msgid "Another User (Artist)"
+msgstr ""
+
+#. HINT: Percentage of (Times Played / Times skipped) * 100
+msgid "Played/Skipped ratio"
+msgstr ""
+
+msgid "Played by Me (Album)"
+msgstr ""
+
+msgid "Album Genre"
+msgstr ""
+
+msgid "Artist Genre"
+msgstr ""
+
+msgid "No Music License"
+msgstr ""
+
+msgid "Recently Updated"
+msgstr ""
+
+msgid "Orphaned Album"
+msgstr ""
+
 msgid "Video Count"
 msgstr ""
 
@@ -5907,10 +6020,10 @@ msgstr ""
 msgid "Favorite"
 msgstr ""
 
-msgid "Username is required"
+msgid "User avatar"
 msgstr ""
 
-msgid "User avatar"
+msgid "Username is required"
 msgstr ""
 
 msgid "Afar"
@@ -6470,658 +6583,6 @@ msgstr ""
 
 msgid "Add to wanted list"
 msgstr ""
- #######################################################################
-
- # This file lists all description strings from your Ampache-database -> preference-table.
- # Please do not delete or modify the content by yourself. It will be automatically (re)generated
- # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 08.07.2025 09:44:34 AEST 
-
- #######################################################################
-
-#: Database preference table id 1
-msgid "Allow Downloads"
-msgstr ""
-
-#: Database preference table id 4
-msgid "Popular Threshold"
-msgstr ""
-
-#: Database preference table id 19
-msgid "Transcode Bitrate"
-msgstr ""
-
-#: Database preference table id 22
-msgid "Website Title"
-msgstr ""
-
-#: Database preference table id 23
-msgid "Lock Songs"
-msgstr ""
-
-#: Database preference table id 24
-msgid "Force HTTP playback regardless of port"
-msgstr ""
-
-#: Database preference table id 29
-msgid "Playback Type"
-msgstr ""
-
-#: Database preference table id 32
-msgid "Playlist Type"
-msgstr ""
-
-#: Database preference table id 33
-msgid "Theme"
-msgstr ""
-
-#: Database preference table id 40
-msgid "Localplay Access"
-msgstr ""
-
-#: Database preference table id 41
-msgid "Localplay Type"
-msgstr ""
-
-#: Database preference table id 44
-msgid "Allow Streaming"
-msgstr ""
-
-#: Database preference table id 45
-msgid "Allow Democratic Play"
-msgstr ""
-
-#: Database preference table id 46
-msgid "Allow Localplay Play"
-msgstr ""
-
-#: Database preference table id 47
-msgid "Statistics Day Threshold"
-msgstr ""
-
-#: Database preference table id 51
-msgid "Offset Limit"
-msgstr ""
-
-#: Database preference table id 52
-msgid "Rate Limit"
-msgstr ""
-
-#: Database preference table id 53
-msgid "Playlist Method"
-msgstr ""
-
-#: Database preference table id 69
-msgid "Show lyrics"
-msgstr ""
-
-#: Database preference table id 71
-msgid "httpQ Active Instance"
-msgstr ""
-
-#: Database preference table id 82
-msgid "Now Playing filtered per user"
-msgstr ""
-
-#: Database preference table id 83
-msgid "Album - Default sort"
-msgstr ""
-
-#: Database preference table id 84
-msgid "Show # played"
-msgstr ""
-
-#: Database preference table id 85
-msgid "Show current song in Web Player page title"
-msgstr ""
-
-#: Database preference table id 86
-msgid "Use Subsonic backend"
-msgstr ""
-
-#: Database preference table id 88
-msgid "Authorize Flash Web Player"
-msgstr ""
-
-#: Database preference table id 89
-msgid "Authorize HTML5 Web Player"
-msgstr ""
-
-#: Database preference table id 90
-msgid "Share Now Playing information"
-msgstr ""
-
-#: Database preference table id 91
-msgid "Share Recently Played information"
-msgstr ""
-
-#: Database preference table id 92
-msgid "Share Recently Played information - Allow access to streaming date/time"
-msgstr ""
-
-#: Database preference table id 93
-msgid "Share Recently Played information - Allow access to streaming agent"
-msgstr ""
-
-#: Database preference table id 94
-msgid "Fix header position on compatible themes"
-msgstr ""
-
-#: Database preference table id 95
-msgid "Check for Ampache updates automatically"
-msgstr ""
-
-#: Database preference table id 96
-msgid "AutoUpdate last check time"
-msgstr ""
-
-#: Database preference table id 97
-msgid "AutoUpdate last version from last check"
-msgstr ""
-
-#: Database preference table id 98
-msgid "AutoUpdate last version from last check is newer"
-msgstr ""
-
-#: Database preference table id 99
-msgid "Confirmation when closing current playing window"
-msgstr ""
-
-#: Database preference table id 100
-msgid "Auto-pause between tabs"
-msgstr ""
-
-#: Database preference table id 101
-msgid "Enable URL Rewriting"
-msgstr ""
-
-#: Database preference table id 102
-msgid "Allow Share"
-msgstr ""
-
-#: Database preference table id 103
-msgid "Share links default expiration days (0=never)"
-msgstr ""
-
-#: Database preference table id 104
-msgid "Artist slideshow inactivity time"
-msgstr ""
-
-#: Database preference table id 105
-msgid "Broadcast web player by default"
-msgstr ""
-
-#: Database preference table id 108
-msgid "Album - Group multiple disks"
-msgstr ""
-
-#: Database preference table id 109
-msgid "Top menu"
-msgstr ""
-
-#: Database preference table id 110
-msgid "Democratic - Clear votes for expired user sessions"
-msgstr ""
-
-#: Database preference table id 111
-msgid "Show donate button in footer"
-msgstr ""
-
-#: Database preference table id 113
-msgid "Allow user uploads"
-msgstr ""
-
-#: Database preference table id 114
-msgid "Create a subdirectory per user"
-msgstr ""
-
-#: Database preference table id 115
-msgid "Consider the user sender as the track's artist"
-msgstr ""
-
-#: Database preference table id 116
-msgid "Post-upload script (current directory = upload target directory)"
-msgstr ""
-
-#: Database preference table id 117
-msgid "Allow users to edit uploaded songs"
-msgstr ""
-
-#: Database preference table id 118
-msgid "Use DAAP backend"
-msgstr ""
-
-#: Database preference table id 119
-msgid "DAAP backend password"
-msgstr ""
-
-#: Database preference table id 120
-msgid "Use UPnP backend"
-msgstr ""
-
-#: Database preference table id 121
-msgid "Allow Video Features"
-msgstr ""
-
-#: Database preference table id 122
-msgid "Album - Group per release type"
-msgstr ""
-
-#: Database preference table id 123
-msgid "Ajax page load"
-msgstr ""
-
-#: Database preference table id 124
-msgid "Limit direct play to maximum media count"
-msgstr ""
-
-#: Database preference table id 125
-msgid "Show Albums of the Moment"
-msgstr ""
-
-#: Database preference table id 126
-msgid "Show Videos of the Moment"
-msgstr ""
-
-#: Database preference table id 127
-msgid "Show Recently Played"
-msgstr ""
-
-#: Database preference table id 128
-msgid "Show Now Playing"
-msgstr ""
-
-#: Database preference table id 129
-msgid "Custom URL - Logo"
-msgstr ""
-
-#: Database preference table id 130
-msgid "Album - Group per release type sort"
-msgstr ""
-
-#: Database preference table id 131
-msgid "Web Player browser notifications"
-msgstr ""
-
-#: Database preference table id 132
-msgid "Web Player browser notifications timeout (seconds)"
-msgstr ""
-
-#: Database preference table id 133
-msgid "Allow Geolocation"
-msgstr ""
-
-#: Database preference table id 134
-msgid "Authorize JavaScript decoder (Aurora.js) in Web Player"
-msgstr ""
-
-#: Database preference table id 135
-msgid "Allow users to remove uploaded songs"
-msgstr ""
-
-#: Database preference table id 136
-msgid "Custom URL - Login page logo"
-msgstr ""
-
-#: Database preference table id 137
-msgid "Custom URL - Favicon"
-msgstr ""
-
-#: Database preference table id 138
-msgid "Custom text footer"
-msgstr ""
-
-#: Database preference table id 139
-msgid "Use WebDAV backend"
-msgstr ""
-
-#: Database preference table id 140
-msgid "Allow E-mail notifications"
-msgstr ""
-
-#: Database preference table id 141
-msgid "Theme color"
-msgstr ""
-
-#: Database preference table id 142
-msgid "Custom metadata - Disable these fields"
-msgstr ""
-
-#: Database preference table id 143
-msgid "Custom metadata - Define field list"
-msgstr ""
-
-#: Database preference table id 144
-msgid "# latest episodes to keep"
-msgstr ""
-
-#: Database preference table id 145
-msgid "# episodes to download when new episodes are available"
-msgstr ""
-
-#: Database preference table id 146
-msgid "Library item context menu"
-msgstr ""
-
-#: Database preference table id 147
-msgid "Rename uploaded file according to catalog pattern"
-msgstr ""
-
-#: Database preference table id 148
-msgid "Check library item at import time and disable duplicates"
-msgstr ""
-
-#: Database preference table id 149
-msgid "Show filter box on browse"
-msgstr ""
-
-#: Database preference table id 150
-msgid "Light sidebar by default"
-msgstr ""
-
-#: Database preference table id 151
-msgid "Custom blank album default image"
-msgstr ""
-
-#: Database preference table id 153
-msgid "Alphabet browsing by default for following library items (album,artist,...)"
-msgstr ""
-
-#: Database preference table id 154
-msgid "Show # skipped"
-msgstr ""
-
-#: Database preference table id 155
-msgid "Custom datetime"
-msgstr ""
-
-#: Database preference table id 156
-msgid "Cache computed SQL data (eg. media hits stats) using a cron"
-msgstr ""
-
-#: Database preference table id 157
-msgid "Only add unique items to playlists"
-msgstr ""
-
-#: Database preference table id 158
-msgid "Set the amount of items Album/Video of the Moment will display"
-msgstr ""
-
-#: Database preference table id 159
-msgid "Custom URL - Login page background"
-msgstr ""
-
-#: Database preference table id 160
-msgid "Show License"
-msgstr ""
-
-#: Database preference table id 161
-msgid "Browse by Original Year for albums (falls back to Year)"
-msgstr ""
-
-#: Database preference table id 162
-msgid "Hide the Song Artist column for Albums with one Artist"
-msgstr ""
-
-#: Database preference table id 163
-msgid "Hide the Genre column in browse table rows"
-msgstr ""
-
-#: Database preference table id 164
-msgid "Force Subsonic streams to download. (Enable scrobble in your client to record stats)"
-msgstr ""
-
-#: Database preference table id 165
-msgid "Allow Ampache API3 responses"
-msgstr ""
-
-#: Database preference table id 166
-msgid "Allow Ampache API4 responses"
-msgstr ""
-
-#: Database preference table id 167
-msgid "Allow Ampache API5 responses"
-msgstr ""
-
-#: Database preference table id 168
-msgid "Force a specific API response no matter what version you send"
-msgstr ""
-
-#: Database preference table id 169
-msgid "Show playlist owner username in titles"
-msgstr ""
-
-#: Database preference table id 170
-msgid "Hide playlists in Subsonic and API clients that start with this string"
-msgstr ""
-
-#: Database preference table id 171
-msgid "Hide smartlists that match playlist names in Subsonic and API clients"
-msgstr ""
-
-#: Database preference table id 172
-msgid "Show 'Album Artists' link in the main sidebar"
-msgstr ""
-
-#: Database preference table id 173
-msgid "Show 'Artists' link in the main sidebar"
-msgstr ""
-
-#: Database preference table id 174
-msgid "Democratic - Use smartlists for base playlist"
-msgstr ""
-
-#: Database preference table id 175
-msgid "Remove tracks before the current playlist item in the webplayer when played"
-msgstr ""
-
-#: Database preference table id 176
-msgid "Allow Ampache API6 responses"
-msgstr ""
-
-#: Database preference table id 177
-msgid "Upload Access Level"
-msgstr ""
-
-#: Database preference table id 178
-msgid "Show Album subtitle on links (if available)"
-msgstr ""
-
-#: Database preference table id 179
-msgid "Show Album original year on links (if available)"
-msgstr ""
-
-#: Database preference table id 180
-msgid "Show the login / registration links in the site header"
-msgstr ""
-
-#: Database preference table id 181
-msgid "Use an alternative playback action for streaming if you have issues with playing music"
-msgstr ""
-
-#: Database preference table id 182
-msgid "Custom timezone (Override PHP date.timezone)"
-msgstr ""
-
-#: Database preference table id 183
-msgid "Only keep the latest media bookmark"
-msgstr ""
-
-#: Database preference table id 184
-msgid "Default webplayer volume"
-msgstr ""
-
-#: Database preference table id 185
-msgid "API sessions do not expire"
-msgstr ""
-
-#: Database preference table id 186
-msgid "Show all media types in Recently Played"
-msgstr ""
-
-#: Database preference table id 187
-msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
-msgstr ""
-
-#: Database preference table id 188
-msgid "Hide sidebar switcher arrows"
-msgstr ""
-
-#: Database preference table id 189
-msgid "Hide the Browse menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 190
-msgid "Hide the Dashboard menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 191
-msgid "Hide the Video menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 192
-msgid "Hide the Search menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 193
-msgid "Hide the Playlist menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 194
-msgid "Hide the Information menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 195
-msgid "Destination catalog"
-msgstr ""
-
-#: Database preference table id 196
-msgid "Custom URL - Use your avatar for header logo"
-msgstr ""
-
-#: Database preference table id 197
-msgid "Use Dashboard links for the index page header"
-msgstr ""
-
-#: Database preference table id 198
-msgid "Custom CSS Order - Browse"
-msgstr ""
-
-#: Database preference table id 199
-msgid "Custom CSS Order - Dashboard"
-msgstr ""
-
-#: Database preference table id 200
-msgid "Custom CSS Order - Video"
-msgstr ""
-
-#: Database preference table id 201
-msgid "Custom CSS Order - Playlist"
-msgstr ""
-
-#: Database preference table id 202
-msgid "Custom CSS Order - Search"
-msgstr ""
-
-#: Database preference table id 203
-msgid "Custom CSS Order - Information"
-msgstr ""
-
-#: Database preference table id 204
-msgid "Force API streams to download. (Enable scrobble in your client to record stats)"
-msgstr ""
-
-#: Database preference table id 205
-msgid "Show Google search icon on library items"
-msgstr ""
-
-#: Database preference table id 206
-msgid "Show DuckDuckGo search icon on library items"
-msgstr ""
-
-#: Database preference table id 207
-msgid "Show Wikipedia search icon on library items"
-msgstr ""
-
-#: Database preference table id 208
-msgid "Show Last.fm search icon on library items"
-msgstr ""
-
-#: Database preference table id 209
-msgid "Show Bandcamp search icon on library items"
-msgstr ""
-
-#: Database preference table id 210
-msgid "Show MusicBrainz search icon on library items"
-msgstr ""
-
-#: Database preference table id 211
-msgid "Show extended links for playlist media"
-msgstr ""
-
-#: Database preference table id 212
-msgid "Show Discogs search icon on library items"
-msgstr ""
-
-#: Database preference table id 213
-msgid "Force Grid View on Song browse"
-msgstr ""
-
-#: Database preference table id 214
-msgid "Force Grid View on Album browse"
-msgstr ""
-
-#: Database preference table id 215
-msgid "Force Grid View on Album Disk browse"
-msgstr ""
-
-#: Database preference table id 216
-msgid "Force Grid View on Artist browse"
-msgstr ""
-
-#: Database preference table id 217
-msgid "Force Grid View on Radio Station browse"
-msgstr ""
-
-#: Database preference table id 218
-msgid "Force Grid View on Playlist browse"
-msgstr ""
-
-#: Database preference table id 219
-msgid "Force Grid View on Video browse"
-msgstr ""
-
-#: Database preference table id 220
-msgid "Force Grid View on Podcast browse"
-msgstr ""
-
-#: Database preference table id 221
-msgid "Force Grid View on Podcast Episode browse"
-msgstr ""
-
-#: Database preference table id 222
-msgid "Show Artist column on playlist media rows"
-msgstr ""
-
-#: Database preference table id 223
-msgid "Enable legacy Subsonic API responses for compatibility issues"
-msgstr ""
-
-#: Database preference subcategory table id 77
-msgid "last.fm"
-msgstr ""
-
-#: Database preference subcategory table id 138
-msgid "interface"
-msgstr ""
-
-#: Database preference subcategory table id 164
-msgid "api"
-msgstr ""
-
-#: Database preference subcategory table id 213
-msgid "cookies"
-msgstr ""
 
 #: ./untranslated-strings.txt:3
 msgid "Connected Users"
@@ -7275,10 +6736,750 @@ msgstr ""
 msgid "ping"
 msgstr ""
 
-#: ./untranslated-strings.txt:250
+#: ./untranslated-strings.txt:256
+msgid "average"
+msgstr ""
+
+#: ./untranslated-strings.txt:260
 msgid "Home Dashboard"
 msgstr ""
 
-#: ./untranslated-strings.txt:256
-msgid "average"
+#: ./untranslated-strings.txt:269
+msgid "Mpd"
+msgstr "" #######################################################################
+
+ # This file lists all translatable strings from the Ampache preference table
+ # (descriptions and subcategories). It is generated from the source code by
+ # './gather-messages.sh [-gu|--getutds]' - descriptions come from
+ # Preference::translate_db() and subcategories from Preference::set_defaults(),
+ # so a live database is NOT required. Do not edit it by hand; re-run the script.
+
+ #######################################################################
+
+#: Ampache preference description
+msgid "Album - Group multiple disks"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Group per release type sort"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Group per release type"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Default sort"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Democratic Play"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Localplay Play"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Recently Played information - Allow access to streaming agent"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Now Playing information"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Recently Played information"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Recently Played information - Allow access to streaming date/time"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Streaming"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow user uploads"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Video Features"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force API streams to download. (Enable scrobble in your client to record stats)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API3 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API4 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API5 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API6 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API8 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force a specific API response no matter what version you send"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide playlists in Subsonic and API clients that start with this string"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide smartlists that match playlist names in Subsonic and API clients"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last check time"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last version from last check"
+msgstr ""
+
+#: Ampache preference description
+msgid "Check for Ampache updates automatically"
+msgstr ""
+
+#: Ampache preference description
+msgid "Bit.ly API key"
+msgstr ""
+
+#: Ampache preference description
+msgid "Bit.ly Username"
+msgstr ""
+
+#: Ampache preference description
+msgid "Only keep the latest media bookmark"
+msgstr ""
+
+#: Ampache preference description
+msgid "Broadcast web player by default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Album Disk browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Album browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Artist browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show filter box on browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Radio Station browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Playlist browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Podcast Episode browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Podcast browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Song browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Video browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Web Player browser notifications timeout (seconds)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Web Player browser notifications"
+msgstr ""
+
+#: Ampache preference description
+msgid "Check library item at import time and disable duplicates"
+msgstr ""
+
+#: Ampache preference description
+msgid "Cache computed SQL data (eg. media hits stats) using a cron"
+msgstr ""
+
+#: Ampache preference description
+msgid "Add live plays to the cached count for accurate stats (Require: Cron Cache)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom blank album default image"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom datetime"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Favicon"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Login page background"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Login page logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Use your avatar for header logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom text footer"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom timezone (Override PHP date.timezone)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use DAAP backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "DAAP backend password"
+msgstr ""
+
+#: Ampache preference description
+msgid "Democratic - Clear votes for expired user sessions"
+msgstr ""
+
+#: Ampache preference description
+msgid "Democratic - Use smartlists for base playlist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Limit direct play to maximum media count"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom metadata - Additional fields to disable"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom metadata - Disable these fields"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Downloads"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Audio Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Video Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Web Player (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - API (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show extended links for playlist media"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Google search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Discogs search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show DuckDuckGo search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Wikipedia search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Last.fm search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Bandcamp search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show MusicBrainz search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force HTTP playback regardless of port"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Geolocation"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Genre column in browse table rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Song Artist column for Albums with one Artist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Albums of the Moment"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Videos of the Moment"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Recently Played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show all media types in Recently Played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Dashboard links for the index page header"
+msgstr ""
+
+#: Ampache preference description
+msgid "Default webplayer volume"
+msgstr ""
+
+#: Ampache preference description
+msgid "Alphabet browsing by default for following library items (album,artist,...)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Library item context menu"
+msgstr ""
+
+#: Ampache preference description
+msgid "Localplay Access"
+msgstr ""
+
+#: Ampache preference description
+msgid "Lock Songs"
+msgstr ""
+
+#: Ampache preference description
+msgid "Maximum transcode bitrate for dynamic downsampling in bps (0 = disabled)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Minimum transcode bitrate for dynamic downsampling in bps"
+msgstr ""
+
+#: Ampache preference description
+msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow E-mail notifications"
+msgstr ""
+
+#: Ampache preference description
+msgid "Now Playing filtered per user"
+msgstr ""
+
+#: Ampache preference description
+msgid "Offset Limit"
+msgstr ""
+
+#: Ampache preference description
+msgid "Set the amount of items Album/Video of the Moment will display"
+msgstr ""
+
+#: Ampache preference description
+msgid "API sessions do not expire"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playlist Method"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playlist Type"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playback Type"
+msgstr ""
+
+#: Ampache preference description
+msgid "# latest episodes to keep"
+msgstr ""
+
+#: Ampache preference description
+msgid "# episodes to download when new episodes are available"
+msgstr ""
+
+#: Ampache preference description
+msgid "Popular Threshold"
+msgstr ""
+
+#: Ampache preference description
+msgid "Download Rate Limit"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share links default expiration days (0=never)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Share"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Album Artists' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Artists' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Collections' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show donate button in footer"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Folders' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show the login / registration links in the site header"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show License"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show lyrics"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Album original year on links (if available)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show # played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Artist column on playlist media rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show playlist owner username in titles"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show # skipped"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Album subtitle on links (if available)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
+msgstr ""
+
+#: Ampache preference description
+msgid "Light sidebar by default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Browse menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Dashboard menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Information menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Playlist menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Search menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide sidebar switcher arrows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Video menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Dashboard"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Information"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Playlist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Search"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Video"
+msgstr ""
+
+#: Ampache preference description
+msgid "Website Title"
+msgstr ""
+
+#: Ampache preference description
+msgid "Artist slideshow inactivity time"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show current song in Web player page title"
+msgstr ""
+
+#: Ampache preference description
+msgid "Statistics Day Threshold"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable URL Rewriting"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Subsonic streams to download. (Enable scrobble in your client to record stats)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Subsonic backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Album Artist for Subsonic API responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable legacy Subsonic API responses for compatibility issues"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use single user data for Subsonic API responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Theme color"
+msgstr ""
+
+#: Ampache preference description
+msgid "Theme"
+msgstr ""
+
+#: Ampache preference description
+msgid "Top menu"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - API (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - Web Player (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Fix header position on compatible themes"
+msgstr ""
+
+#: Ampache preference description
+msgid "Only add unique items to playlists"
+msgstr ""
+
+#: Ampache preference description
+msgid "Upload Access Level"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow users to edit uploaded songs"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow users to remove uploaded songs"
+msgstr ""
+
+#: Ampache preference description
+msgid "Rename uploaded file according to catalog pattern"
+msgstr ""
+
+#: Ampache preference description
+msgid "Destination catalog"
+msgstr ""
+
+#: Ampache preference description
+msgid "Post-upload script (current directory = upload target directory)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Create a subdirectory per user"
+msgstr ""
+
+#: Ampache preference description
+msgid "Consider the user sender as the track's artist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use UPnP backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Browse by Original Year for albums (falls back to Year)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use WebDAV backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Confirmation when closing current playing window"
+msgstr ""
+
+#: Ampache preference description
+msgid "Auto-pause between tabs"
+msgstr ""
+
+#: Ampache preference description
+msgid "Remove tracks before the current playlist item in the webplayer when played"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Api"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Backend"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Cookies"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Custom"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Feature"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Httpq"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Interface"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Last.fm"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Library"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Metadata"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Notification"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Player"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Privacy"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Query"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Sidebar"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Transcoding"
 msgstr ""

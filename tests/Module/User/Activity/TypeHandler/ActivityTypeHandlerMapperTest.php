@@ -26,28 +26,20 @@ declare(strict_types=1);
 namespace Ampache\Module\User\Activity\TypeHandler;
 
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 
 class ActivityTypeHandlerMapperTest extends MockeryTestCase
 {
-    /** @var UserActivityRepositoryInterface|MockInterface|null */
-    private MockInterface $userActivityRepository;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
     private ?ActivityTypeHandlerMapper $subject;
+    private UserActivityRepositoryInterface|MockInterface|null $userActivityRepository;
 
-    protected function setUp(): void
+    public function testMapReturnsGenericEntry(): void
     {
-        $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
-        $this->modelFactory           = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new ActivityTypeHandlerMapper(
-            $this->userActivityRepository,
-            $this->modelFactory
+        $this->assertInstanceOf(
+            GenericActivityTypeHandler::class,
+            $this->subject->map('foobar')
         );
     }
 
@@ -59,11 +51,13 @@ class ActivityTypeHandlerMapperTest extends MockeryTestCase
         );
     }
 
-    public function testMapReturnsGenericEntry(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $this->assertInstanceOf(
-            GenericActivityTypeHandler::class,
-            $this->subject->map('foobar')
+        $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
+
+        $this->subject = new ActivityTypeHandlerMapper(
+            $this->userActivityRepository
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_account.inc.php
 
 // Because this is a reset of the persons password make the form a little more secure
 
@@ -79,6 +81,23 @@ $access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMI
         <tr>
             <td><?php echo T_('Confirm Password'); ?>:</td>
             <td><input id="password2" type="password" name="password2" maxlength="64" autocomplete="new-password" /></td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo T_('Subsonic Password'); ?>
+                <?php if ($client->subsonic_secret) { ?>
+                    <a href="<?php echo $admin_path; ?>/users.php?action=show_delete_subsonic_secret&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <?php echo AmpError::display('subsonic_password'); ?>
+                <input id="subsonic_password1" type="password" name="subsonic_password1" maxlength="64" autocomplete="new-password" />
+                <span><?php echo ($client->subsonic_secret) ? T_('Currently set') : T_('Not set'); ?></span>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Confirm Password'); ?>:</td>
+            <td><input id="subsonic_password2" type="password" name="subsonic_password2" maxlength="64" autocomplete="new-password" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Avatar'); ?> (&lt; <?php echo Ui::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
@@ -146,7 +165,7 @@ $access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMI
         </tr>
     </table>
     <div class="formValidation">
-            <input type="hidden" name="user_id" value="<?php echo scrub_out((string)$client->id); ?>" />
+            <input type="hidden" name="user_id" value="<?php echo scrub_out((string) $client->id); ?>" />
             <?php echo Core::form_register('update_user'); ?>
             <input type="hidden" name="tab" value="<?php echo scrub_out(Core::get_request('tab')); ?>" />
             <input class="button" type="submit" value="<?php echo T_('Update Account'); ?>" />

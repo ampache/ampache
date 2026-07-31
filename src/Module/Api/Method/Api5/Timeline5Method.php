@@ -25,21 +25,34 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Timeline5Method
+ * Returns a user's timeline.
+ *
+ * Version 5 requires the `username`, only ever looks a user up by name and does not exempt the
+ * calling user from the privacy check, so it keeps a method of its own.
  */
-final class Timeline5Method
+final class Timeline5Method implements MethodInterface
 {
-    public const ACTION = 'timeline';
+    public const string ACTION = 'timeline';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private StreamFactoryInterface $streamFactory,
+        private UserActivityRepositoryInterface $userActivityRepository,
+    ) {}
 
     /**
      * timeline
@@ -52,61 +65,63 @@ final class Timeline5Method
      * since = (integer) UNIXTIME() //optional
      *
      * @param array{
-     *     username: string,
+     *     username?: string,
      *     limit?: int,
      *     since?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessDeniedException|RequestParamMissingException
      */
-    public static function timeline(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: sociable'), self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::SOCIABLE)) {
+            throw new AccessDeniedException(
+                'Enable: sociable'
+            );
+        }
 
-            return false;
+        if (!array_key_exists('username', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'username')
+            );
         }
-        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
-        }
+
         $username = $input['username'];
         $limit    = (int) ($input['limit'] ?? 0);
         $since    = (int) ($input['since'] ?? 0);
 
         if (!empty($username)) {
             $leadUser = User::get_from_username($username);
-            // an unknown user, or one who keeps their activity private, renders nothing.
-            // you can always see your own timeline
             if (
                 $leadUser instanceof User
                 && (
+                    // you can always see your own timeline, whatever the preference says
                     $leadUser->getId() === $user->getId()
-                    || Preference::get_by_user($leadUser->getId(), 'allow_personal_info_recent')
+                    || Preference::get_by_user($leadUser->id, 'allow_personal_info_recent')
                 )
             ) {
-                $results = self::getUseractivityRepository()->getActivities(
+                $results = $this->userActivityRepository->getActivities(
                     $leadUser->getId(),
                     $limit,
                     $since
                 );
-                ob_end_clean();
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo Json5_Data::timeline($results);
-                        break;
-                    default:
-                        echo Xml5_Data::timeline($results);
-                }
+
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->timeline($apiVersion, $results)
+                    )
+                );
             }
         }
 
-        return true;
-    }
-
-    private static function getUseractivityRepository(): UserActivityRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityRepositoryInterface::class);
+        return $response;
     }
 }

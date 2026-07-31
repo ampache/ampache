@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,9 +43,8 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
-        private PluginRetrieverInterface $pluginRetriever
-    ) {
-    }
+        private PluginRetrieverInterface $pluginRetriever,
+    ) {}
 
     public function handle(User $user): void
     {
@@ -59,20 +58,20 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     if ($user->id > 0) {
                         $name = $_REQUEST['name'] ?? null;
                         if (
-                            empty($name) &&
-                            !empty($_REQUEST['latitude']) &&
-                            !empty($_REQUEST['longitude'])
+                            empty($name)
+                            && !empty($_REQUEST['latitude'])
+                            && !empty($_REQUEST['longitude'])
                         ) {
-                            $latitude  = (float)$_REQUEST['latitude'];
-                            $longitude = (float)$_REQUEST['longitude'];
+                            $latitude  = (float) $_REQUEST['latitude'];
+                            $longitude = (float) $_REQUEST['longitude'];
                             // First try to get from local cache (avoid external api requests)
                             $name = Stats::get_cached_place_name($latitude, $longitude);
-                            if ($name === null || $name === '' || $name === '0') {
+                            if (in_array($name, [null, '', '0'], true)) {
                                 foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::GEO_LOCATION, $user) as $plugin) {
                                     $name = ($plugin->_plugin instanceof PluginLocationInterface)
                                         ? $plugin->_plugin->get_location_name($latitude, $longitude)
                                         : null;
-                                    if ($name !== null && $name !== '' && $name !== '0') {
+                                    if (!in_array($name, [null, '', '0'], true)) {
                                         break;
                                     }
                                 }
@@ -81,11 +80,11 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                             // Better to check for bugged values here and keep previous user good location
                             // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
                             if (
-                                $name !== null && $name !== '' && $name !== '0' &&
-                                $latitude > 0 &&
-                                $longitude > 0
+                                !in_array($name, [null, '', '0'], true)
+                                && $latitude > 0
+                                && $longitude > 0
                             ) {
-                                Session::update_geolocation((string)session_id(), $latitude, $longitude, $name);
+                                Session::update_geolocation((string) session_id(), $latitude, $longitude, $name);
                             }
                         }
                     }
@@ -96,11 +95,11 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'delete_play':
                 if (
-                    check_http_referer() === true &&
-                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
-                    isset($_REQUEST['activity_id'])
+                    check_http_referer() === true
+                    && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+                    && isset($_REQUEST['activity_id'])
                 ) {
-                    Stats::delete((int)$_REQUEST['activity_id']);
+                    Stats::delete((int) $_REQUEST['activity_id']);
                 }
 
                 ob_start();
@@ -108,8 +107,8 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
                 $user_id = (isset($_REQUEST['user_id']))
-                    ? (int)$this->requestParser->getFromRequest('user_id')
-                    : $user->id ?? -1;
+                    ? (int) $this->requestParser->getFromRequest('user_id')
+                    : ($user->id ?: -1);
                 $user_only = isset($_REQUEST['user_only']);
                 $ajax_page = 'stats';
                 if (AmpConfig::get('home_recently_played_all')) {
@@ -125,11 +124,11 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'delete_skip':
                 if (
-                    check_http_referer() === true &&
-                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
-                    isset($_REQUEST['activity_id'])
+                    check_http_referer() === true
+                    && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+                    && isset($_REQUEST['activity_id'])
                 ) {
-                    Stats::delete((int)$_REQUEST['activity_id']);
+                    Stats::delete((int) $_REQUEST['activity_id']);
                 }
 
                 ob_start();
@@ -137,8 +136,8 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
                 $user_id = (isset($_REQUEST['user_id']))
-                    ? (int)$this->requestParser->getFromRequest('user_id')
-                    : $user->id ?? -1;
+                    ? (int) $this->requestParser->getFromRequest('user_id')
+                    : ($user->id ?: -1);
                 $user_only = isset($_REQUEST['user_only']);
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
                 $ajax_page = 'stats';
@@ -152,8 +151,8 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
                 $user_id = (isset($_REQUEST['user_id']))
-                    ? (int)$this->requestParser->getFromRequest('user_id')
-                    : $user->id ?? -1;
+                    ? (int) $this->requestParser->getFromRequest('user_id')
+                    : ($user->id ?: -1);
                 $user_only = isset($_REQUEST['user_only']);
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
                 $ajax_page = 'stats';
@@ -164,6 +163,6 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
         } // switch on action;
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

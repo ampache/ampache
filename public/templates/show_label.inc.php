@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_label.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -35,7 +37,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Label;
 
 /** @var Label $label */
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 /** @var string $object_type */
 /** @var bool $isLabelEditable */
 
@@ -48,9 +50,9 @@ $browse->set_use_filters(false);
 $limit_threshold = AmpConfig::get('stats_threshold', 7);
 $argument        = false;
 if (array_key_exists('argument', $_REQUEST)) {
-    $argument = (string)scrub_in((string)$_REQUEST['argument']);
+    $argument = (string) scrub_in((string) $_REQUEST['argument']);
 }
-$f_name     = (string)$label->get_fullname();
+$f_name     = (string) $label->get_fullname();
 $url_f_name = rawurlencode($f_name);
 Ui::show_box_top($f_name, 'info-box');
 if ($label->website) {
@@ -134,6 +136,7 @@ if (AmpConfig::get('external_links_discogs')) {
     <div id="tabs_container">
         <ul id="tabs">
             <li class="tab_active"><a href="#artists"><?php echo T_('Artists'); ?></a></li>
+            <li><a id="albums_link" href="#albums"><?php echo T_('Albums'); ?></a></li>
             <li><a id="songs_link" href="#songs"><?php echo T_('Songs'); ?></a></li>
         </ul>
     </div>
@@ -142,6 +145,12 @@ if (AmpConfig::get('external_links_discogs')) {
 <?php $browse->show_objects($object_ids, true);
 $browse->set_use_alpha(false, false);
 $browse->store(); ?>
+        </div>
+<?php echo Ajax::observe('albums_link', 'click', Ajax::action('?page=index&action=albums&label=' . $label->id, 'albums')); ?>
+        <div id="albums" class="tab_content">
+        <?php Ui::show_box_top(T_('Albums'), 'info-box');
+echo T_('Loading...');
+Ui::show_box_bottom(); ?>
         </div>
 <?php echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs')); ?>
         <div id="songs" class="tab_content">

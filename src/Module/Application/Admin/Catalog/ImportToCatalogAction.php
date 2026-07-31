@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,19 +33,16 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ImportToCatalogAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'import_to_catalog';
+    public const string REQUEST_KEY = 'import_to_catalog';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    private readonly UiInterface $ui;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->ui = $ui;
     }
 
     /**
@@ -53,16 +50,16 @@ final class ImportToCatalogAction extends AbstractCatalogAction
      */
     protected function handle(
         ServerRequestInterface $request,
-        array $catalogIds
+        array $catalogIds,
     ): ?ResponseInterface {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
         catalog_worker('import_to_catalog', $catalogIds);
         $this->ui->showConfirmation(
+            T_('No Problem'),
             T_('Catalog update process has started'),
-            '',
             sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin')),
             0,
             'confirmation',

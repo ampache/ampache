@@ -35,6 +35,7 @@ use DI\NotFoundException;
 use Exception;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,204 +44,11 @@ use Slim\ResponseEmitter;
 
 class ApplicationRunnerTest extends MockeryTestCase
 {
-    /** @var ContainerInterface|MockInterface|null */
-    private ?MockInterface $dic;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private ?MockInterface $logger;
-
-    /** @var GatekeeperFactoryInterface|MockInterface|null */
-    private ?MockInterface $gatekeeperFactory;
-
-    /** @var MockInterface|UiInterface|null  */
-    private ?MockInterface $ui;
-
+    private ContainerInterface|MockInterface|null $dic;
+    private GatekeeperFactoryInterface|MockInterface|null $gatekeeperFactory;
+    private LoggerInterface|MockInterface|null $logger;
     private ApplicationRunner $subject;
-
-    protected function setUp(): void
-    {
-        $this->dic               = $this->mock(ContainerInterface::class);
-        $this->logger            = $this->mock(LoggerInterface::class);
-        $this->gatekeeperFactory = $this->mock(GatekeeperFactoryInterface::class);
-        $this->ui                = $this->mock(UiInterface::class);
-
-        $this->subject = new ApplicationRunner(
-            $this->dic,
-            $this->logger,
-            $this->gatekeeperFactory,
-            $this->ui
-        );
-    }
-
-    public function testRunFailsWithMissingAction(): void
-    {
-        $request = $this->mock(ServerRequestInterface::class);
-
-        $request->shouldReceive('getParsedBody')
-            ->withNoArgs()
-            ->once()
-            ->andReturn([]);
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn([]);
-
-        $this->dic->shouldReceive('get')
-            ->with('')
-            ->once()
-            ->andThrow(new NotFoundException());
-
-        $this->logger->shouldReceive('critical')
-            ->with(
-                'No handler found for action ""',
-                [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
-            )
-            ->once();
-
-        $this->subject->run($request, [], '');
-    }
-
-    public function testRunFailsWithActionFromQueryParams(): void
-    {
-        $request = $this->mock(ServerRequestInterface::class);
-
-        $action  = 'some-action';
-        $handler = 'some-handler';
-
-        $request->shouldReceive('getParsedBody')
-            ->withNoArgs()
-            ->once()
-            ->andReturn([]);
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['action' => $action]);
-
-        $this->dic->shouldReceive('get')
-            ->with($handler)
-            ->once()
-            ->andThrow(new NotFoundException());
-
-        $this->logger->shouldReceive('critical')
-            ->with(
-                sprintf('No handler found for action "%s"', $action),
-                [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
-            )
-            ->once();
-
-        $this->subject->run(
-            $request,
-            [$action => $handler],
-            ''
-        );
-    }
-
-    public function testRunRunsWithActionFromBody(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $handler    = $this->mock(ApplicationActionInterface::class);
-        $response   = $this->mock(ResponseInterface::class);
-        $emitter    = $this->mock(ResponseEmitter::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $action       = 'some-action';
-        $handler_name = 'some-handler';
-
-        $emitter->shouldReceive('emit')
-            ->with($response)
-            ->once();
-
-        $request->shouldReceive('getParsedBody')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['action' => $action]);
-
-        $this->dic->shouldReceive('get')
-            ->with($handler_name)
-            ->once()
-            ->andReturn($handler);
-        $this->dic->shouldReceive('get')
-            ->with(ResponseEmitter::class)
-            ->once()
-            ->andReturn($emitter);
-
-        $this->logger->shouldReceive('debug')
-            ->with(
-                sprintf('Found handler "%s" for action "%s"', $handler_name, $action),
-                [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
-            )
-            ->once();
-
-        $this->gatekeeperFactory->shouldReceive('createGuiGatekeeper')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($gatekeeper);
-
-        $handler->shouldReceive('run')
-            ->with($request, $gatekeeper)
-            ->once()
-            ->andReturn($response);
-
-        $this->subject->run(
-            $request,
-            [$action => $handler_name],
-            ''
-        );
-    }
-
-    public function testRunRunsWithDefaultAction(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $handler    = $this->mock(ApplicationActionInterface::class);
-        $response   = $this->mock(ResponseInterface::class);
-        $emitter    = $this->mock(ResponseEmitter::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $action         = 'some-action';
-        $default_action = 'some-default-action';
-        $handler_name   = 'some-handler';
-
-        $emitter->shouldReceive('emit')
-            ->with($response)
-            ->once();
-
-        $request->shouldReceive('getParsedBody')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['action' => $action]);
-
-        $this->dic->shouldReceive('get')
-            ->with($handler_name)
-            ->once()
-            ->andReturn($handler);
-        $this->dic->shouldReceive('get')
-            ->with(ResponseEmitter::class)
-            ->once()
-            ->andReturn($emitter);
-
-        $this->logger->shouldReceive('debug')
-            ->with(
-                sprintf('Found handler "%s" for action "%s"', $handler_name, $default_action),
-                [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
-            )
-            ->once();
-
-        $this->gatekeeperFactory->shouldReceive('createGuiGatekeeper')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($gatekeeper);
-
-        $handler->shouldReceive('run')
-            ->with($request, $gatekeeper)
-            ->once()
-            ->andReturn($response);
-
-        $this->subject->run(
-            $request,
-            [$default_action => $handler_name],
-            $default_action
-        );
-    }
+    private MockInterface|UiInterface|null $ui;
 
     public function testRunCatchesDeniedException(): void
     {
@@ -350,6 +158,192 @@ class ApplicationRunnerTest extends MockeryTestCase
             $request,
             [$action => $handler_name],
             ''
+        );
+    }
+
+    public function testRunFailsWithActionFromQueryParams(): void
+    {
+        $request = $this->mock(ServerRequestInterface::class);
+
+        $action  = 'some-action';
+        $handler = 'some-handler';
+
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([]);
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['action' => $action]);
+
+        $this->dic->shouldReceive('get')
+            ->with($handler)
+            ->once()
+            ->andThrow(new NotFoundException());
+
+        $this->logger->shouldReceive('critical')
+            ->with(
+                sprintf('No handler found for action "%s"', $action),
+                [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
+            )
+            ->once();
+
+        $this->subject->run(
+            $request,
+            [$action => $handler],
+            ''
+        );
+    }
+
+    public function testRunFailsWithMissingAction(): void
+    {
+        $request = $this->mock(ServerRequestInterface::class);
+
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([]);
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([]);
+
+        $this->dic->shouldReceive('get')
+            ->with('')
+            ->once()
+            ->andThrow(new NotFoundException());
+
+        $this->logger->shouldReceive('critical')
+            ->with(
+                'No handler found for action ""',
+                [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
+            )
+            ->once();
+
+        $this->subject->run($request, [], '');
+    }
+
+    public function testRunRunsWithActionFromBody(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $handler    = $this->mock(ApplicationActionInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $emitter    = $this->mock(ResponseEmitter::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $action       = 'some-action';
+        $handler_name = 'some-handler';
+
+        $emitter->shouldReceive('emit')
+            ->with($response)
+            ->once();
+
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['action' => $action]);
+
+        $this->dic->shouldReceive('get')
+            ->with($handler_name)
+            ->once()
+            ->andReturn($handler);
+        $this->dic->shouldReceive('get')
+            ->with(ResponseEmitter::class)
+            ->once()
+            ->andReturn($emitter);
+
+        $this->logger->shouldReceive('debug')
+            ->with(
+                sprintf('Found handler "%s" for action "%s"', $handler_name, $action),
+                [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
+            )
+            ->once();
+
+        $this->gatekeeperFactory->shouldReceive('createGuiGatekeeper')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($gatekeeper);
+
+        $handler->shouldReceive('run')
+            ->with($request, $gatekeeper)
+            ->once()
+            ->andReturn($response);
+
+        $this->subject->run(
+            $request,
+            [$action => $handler_name],
+            ''
+        );
+    }
+
+    public function testRunRunsWithDefaultAction(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $handler    = $this->mock(ApplicationActionInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $emitter    = $this->mock(ResponseEmitter::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $action         = 'some-action';
+        $default_action = 'some-default-action';
+        $handler_name   = 'some-handler';
+
+        $emitter->shouldReceive('emit')
+            ->with($response)
+            ->once();
+
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['action' => $action]);
+
+        $this->dic->shouldReceive('get')
+            ->with($handler_name)
+            ->once()
+            ->andReturn($handler);
+        $this->dic->shouldReceive('get')
+            ->with(ResponseEmitter::class)
+            ->once()
+            ->andReturn($emitter);
+
+        $this->logger->shouldReceive('debug')
+            ->with(
+                sprintf('Found handler "%s" for action "%s"', $handler_name, $default_action),
+                [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
+            )
+            ->once();
+
+        $this->gatekeeperFactory->shouldReceive('createGuiGatekeeper')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($gatekeeper);
+
+        $handler->shouldReceive('run')
+            ->with($request, $gatekeeper)
+            ->once()
+            ->andReturn($response);
+
+        $this->subject->run(
+            $request,
+            [$default_action => $handler_name],
+            $default_action
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->dic               = $this->mock(ContainerInterface::class);
+        $this->logger            = $this->mock(LoggerInterface::class);
+        $this->gatekeeperFactory = $this->mock(GatekeeperFactoryInterface::class);
+        $this->ui                = $this->mock(UiInterface::class);
+
+        $this->subject = new ApplicationRunner(
+            $this->dic,
+            $this->logger,
+            $this->gatekeeperFactory,
+            $this->ui
         );
     }
 }

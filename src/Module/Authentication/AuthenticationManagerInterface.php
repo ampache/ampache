@@ -30,8 +30,15 @@ interface AuthenticationManagerInterface
     public function login(
         string $username,
         string $password,
-        bool $allow_ui = false
+        bool $allow_ui = false,
     ): array;
+
+    /**
+     * This is called when you want to log out and nuke your session.
+     * This is the function used for the Ajax logouts, if no id is passed
+     * it tries to find one from the session,
+     */
+    public function logout(string $key = '', bool $relogin = true): void;
 
     public function postAuth(string $method): ?array;
 
@@ -45,13 +52,6 @@ interface AuthenticationManagerInterface
     public function tokenLogin(
         string $username,
         string $token,
-        string $salt
+        string $salt,
     ): array;
-
-    /**
-     * This is called when you want to log out and nuke your session.
-     * This is the function used for the Ajax logouts, if no id is passed
-     * it tries to find one from the session,
-     */
-    public function logout(string $key = '', bool $relogin = true): void;
 }

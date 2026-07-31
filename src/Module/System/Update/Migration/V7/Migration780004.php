@@ -32,8 +32,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration780004 extends AbstractMigration
 {
     protected array $changelog = ['Add preference to only show data (e.g. ratings, stars) for your user in Subsonic list calls'];
-
-    protected bool $warning = true;
+    protected bool $warning    = true;
 
     public function migrate(): void
     {

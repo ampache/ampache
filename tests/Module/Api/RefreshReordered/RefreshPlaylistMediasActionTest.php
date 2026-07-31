@@ -32,39 +32,24 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RefreshPlaylistMediasActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|RequestParserInterface|null */
-    private MockInterface $requestParser;
-
-    /** @var MockInterface|ModelFactoryInterface|null */
-    private MockInterface $modelFactory;
-
+    private MockInterface|ModelFactoryInterface|null $modelFactory;
+    private MockInterface|RequestParserInterface|null $requestParser;
     private ?RefreshPlaylistMediasAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->requestParser = $this->mock(RequestParserInterface::class);
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new RefreshPlaylistMediasAction(
-            $this->requestParser,
-            $this->modelFactory
-        );
-    }
 
     public function testRunRendersAndReturnsNull(): void
     {
         $objectId          = '666';
         $playlistObjectIds = [1, 2, 42];
 
-        $request      = $this->mock(ServerRequestInterface::class);
-        $gatekeeper   = $this->mock(GuiGatekeeperInterface::class);
-        $playlist     = $this->mock(Playlist::class);
-        $playlist->id = (int) $objectId;
-        $browse       = $this->mock(Browse::class);
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $playlist   = $this->mock(Playlist::class);
+        $browse     = $this->mock(Browse::class);
 
         $this->requestParser->shouldReceive('getFromRequest')
             ->with('id')
@@ -88,16 +73,12 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($playlistObjectIds);
-        $playlist->shouldReceive('getId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn((int) $objectId);
 
         $browse->shouldReceive('set_type')
             ->with('playlist_media')
             ->once();
         $browse->shouldReceive('add_supplemental_object')
-            ->with('playlist', (int) $objectId)
+            ->with('playlist', $playlist)
             ->once();
         $browse->shouldReceive('set_static_content')
             ->with(true)
@@ -111,6 +92,18 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->requestParser = $this->mock(RequestParserInterface::class);
+        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+
+        $this->subject = new RefreshPlaylistMediasAction(
+            $this->requestParser,
+            $this->modelFactory
         );
     }
 }

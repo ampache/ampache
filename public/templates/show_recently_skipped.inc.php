@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_recently_skipped.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -33,13 +35,13 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-/** @var list<array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
+/** @var array<int, array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
 /** @var User $user */
 
 $web_path = AmpConfig::get_web_path();
 
 $ajax_page = $ajax_page ?? 'stats';
-$user_id   = $user_id ?? $user->id ?? -1;
+$user_id   = $user_id ?? $user->id ?: -1;
 $user_only = (isset($user_only) && $user_only);
 $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)
@@ -132,7 +134,7 @@ foreach ($data as $row) {
                 <span class="cel_item_add">
                     <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'new_window', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $song->id); ?>
                     <a id="<?php echo 'add_to_playlist_' . $count . '_' . $song->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id; ?>')">
-                        <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+                        <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
                     </a>
                 </span>
                 </td>
@@ -141,7 +143,7 @@ foreach ($data as $row) {
                 <td class="cel_year"><?php echo $song->year; ?></td>
                 <?php if ($show_user) { ?>
                     <td class="cel_username">
-                        <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo scrub_out((string)$row_user->id); ?>">
+                        <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo scrub_out((string) $row_user->id); ?>">
                             <?php echo scrub_out($row_user->fullname); ?>
                         </a>
                     </td>

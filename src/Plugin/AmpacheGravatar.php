@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,22 +26,30 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {
-    public string $name = 'Gravatar';
-
+    #[Override]
     public string $categories = 'avatar';
 
-    public string $description = 'User\'s avatars with Gravatar';
+    #[Override]
+    public string $description = "User's avatars with Gravatar";
 
-    public string $url = 'https://gravatar.com';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000001';
-
+    #[Override]
     public string $min_ampache = '360040';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'Gravatar';
+
+    #[Override]
+    public string $url = 'https://gravatar.com';
+
+    #[Override]
+    public string $version = '000001';
 
     /**
      * Constructor
@@ -52,11 +60,41 @@ class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterfa
     }
 
     /**
+     * get_avatar_url
+     */
+    public function get_avatar_url(User $user, ?int $size = 80): string
+    {
+        $url = '';
+        if (!in_array($user->email, [null, '', '0'], true)
+        ) {
+            $url = sprintf(
+                '%s/avatar/%s?s=%d&r=g&d=identicon',
+                $this->url,
+                md5(strtolower(trim($user->email))),
+                $size
+            );
+        }
+
+        return $url;
+    }
+
+    /**
      * install
      * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
+        return true;
+    }
+
+    /**
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
+     */
+    public function load(User $user): bool
+    {
+        unset($user);
+
         return true;
     }
 
@@ -75,38 +113,6 @@ class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterfa
      */
     public function upgrade(): bool
     {
-        return true;
-    }
-
-    /**
-     * get_avatar_url
-     */
-    public function get_avatar_url(User $user, ?int $size = 80): string
-    {
-        $url = '';
-        if ($user->email !== null &&
-            $user->email !== '' &&
-            $user->email !== '0'
-        ) {
-            $url = sprintf(
-                '%s/avatar/%s?s=%d&r=g&d=identicon',
-                $this->url,
-                md5(strtolower(trim($user->email))),
-                $size
-            );
-        }
-
-        return $url;
-    }
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool
-    {
-        unset($user);
-
         return true;
     }
 }

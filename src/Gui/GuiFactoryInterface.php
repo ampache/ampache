@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -26,6 +28,7 @@ namespace Ampache\Gui;
 use Ampache\Gui\Album\AlbumViewAdapterInterface;
 use Ampache\Gui\AlbumDisk\AlbumDiskViewAdapterInterface;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
+use Ampache\Gui\Folder\FolderViewAdapterInterface;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapterInterface;
 use Ampache\Gui\Playlist\PlaylistViewAdapterInterface;
 use Ampache\Gui\Song\SongViewAdapterInterface;
@@ -38,39 +41,28 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 
 interface GuiFactoryInterface
 {
-    public function createSongViewAdapter(
+    public function createAlbumDiskViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
-        Song $song
-    ): SongViewAdapterInterface;
+        Browse $browse,
+        AlbumDisk $albumDisk,
+    ): AlbumDiskViewAdapterInterface;
 
     public function createAlbumViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Browse $browse,
-        Album $album
+        Album $album,
     ): AlbumViewAdapterInterface;
 
-    public function createAlbumDiskViewAdapter(
-        GuiGatekeeperInterface $gatekeeper,
-        Browse $browse,
-        AlbumDisk $albumDisk
-    ): AlbumDiskViewAdapterInterface;
-
-    public function createPlaylistViewAdapter(
-        GuiGatekeeperInterface $gatekeeper,
-        Playlist $playlist
-    ): PlaylistViewAdapterInterface;
-
-    public function createConfigViewAdapter(): ConfigViewAdapterInterface;
-
-    public function createStatsViewAdapter(): StatsViewAdapterInterface;
-
     public function createCatalogDetails(
-        Catalog $catalog
+        Catalog $catalog,
     ): CatalogDetailsInterface;
 
     /**
@@ -78,11 +70,33 @@ interface GuiFactoryInterface
      */
     public function createCatalogStats(array $stats): CatalogStatsInterface;
 
-    public function createUpdateViewAdapter(): UpdateViewAdapterInterface;
+    public function createConfigViewAdapter(): ConfigViewAdapterInterface;
+
+    public function createFolderViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Folder $folder,
+        Podcast_Episode|Video|Song|Folder $object,
+        string $object_type,
+    ): FolderViewAdapterInterface;
 
     public function createNewPlaylistDialogAdapter(
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        string $object_id
+        string $object_id,
+        string $object_groups = '',
     ): NewPlaylistDialogAdapterInterface;
+
+    public function createPlaylistViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Playlist $playlist,
+    ): PlaylistViewAdapterInterface;
+
+    public function createSongViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Song $song,
+    ): SongViewAdapterInterface;
+
+    public function createStatsViewAdapter(): StatsViewAdapterInterface;
+
+    public function createUpdateViewAdapter(): UpdateViewAdapterInterface;
 }

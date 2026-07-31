@@ -33,6 +33,19 @@ final class Migration700008 extends AbstractMigration
 {
     protected array $changelog = ['Create `user_playlist_map` table to allow browse access to playlists with collaborators'];
 
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 700008) {
+            yield 'user_playlist_map' => "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        }
+    }
+
     public function migrate(): void
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
@@ -43,23 +56,12 @@ final class Migration700008 extends AbstractMigration
             $this->updateDatabase('DROP TABLE IF EXISTS `user_playlist_map`;');
             $this->updateDatabase(
                 sprintf(
-                    "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;",
+                    "CREATE TABLE `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;",
                     $engine,
                     $charset,
                     $collation
                 )
             );
-        }
-    }
-
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build
-    ): Generator {
-        if ($build > 700008) {
-            yield 'user_playlist_map' => "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }
     }
 }

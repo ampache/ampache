@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_edit_artist_row.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -43,7 +45,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out((string)$libitem->get_fullname()); ?>" autofocus /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out((string) $libitem->get_fullname()); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
@@ -57,7 +59,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Summary'); ?></td>
-                <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out(trim((string)$libitem->summary)); ?></textarea></td>
+                <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out(trim((string) $libitem->summary)); ?></textarea></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Place Formed'); ?></td>
@@ -65,7 +67,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year Formed'); ?></td>
-                <td><input type="text" name="yearformed" value="<?php echo scrub_out((string)$libitem->yearformed); ?>" /></td>
+                <td><input type="text" name="yearformed" value="<?php echo scrub_out((string) $libitem->yearformed); ?>" /></td>
             </tr>
             <tr>
                 <td>

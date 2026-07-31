@@ -30,60 +30,22 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
     private ConfigContainerInterface&MockInterface $configContainer;
-
+    private DeletionUrlResolverInterface&MockInterface $deletionUrlResolver;
+    private LoggerInterface&MockInterface $logger;
+    private DeleteAction $subject;
     private UiInterface&MockInterface $ui;
 
-    private LoggerInterface&MockInterface $logger;
-
-    private DeleteAction $subject;
-
-    protected function setup(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
-
-        $this->subject = new DeleteAction(
-            $this->configContainer,
-            $this->ui,
-            $this->logger
-        );
-    }
-
-    public function testRunReturnsNullInDemoMode(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
-    }
-
-    public function testRunShowsAndReturnsNull(): void
+    public function testRunCancelsToTheAlbumItselfWithoutAnOriginPage(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
@@ -100,16 +62,16 @@ class DeleteActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('showConfirmation')
+        $this->ui->shouldReceive('showConfirmationWithReturn')
             ->with(
                 'Are You Sure?',
                 'The Album and all files will be deleted',
                 sprintf(
-                    '%s/albums.php?action=confirm_delete&album_id=%d',
+                    '%s/albums.php?action=confirm_delete&album_id=%d&burl=',
                     $webPath,
                     $albumId
                 ),
-                1,
+                sprintf('%s/albums.php?action=show&album=%d', $webPath, $albumId),
                 'delete_album'
             )
             ->once();
@@ -128,6 +90,11 @@ class DeleteActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($webPath);
+
+        $this->deletionUrlResolver->shouldReceive('resolveBurl')
+            ->with('')
+            ->once()
+            ->andReturn('');
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
@@ -170,8 +137,107 @@ class DeleteActionTest extends MockeryTestCase
 
         static::expectOutputString('You have requested an object that does not exist');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunReturnsNullInDemoMode(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunShowsAndReturnsNull(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $albumId    = 666;
+        $webPath    = 'some-path';
+        $burlParam  = 'aA+b/c=';
+        $originPage = 'some-path/artists.php?action=show&artist=42';
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showConfirmationWithReturn')
+            ->with(
+                'Are You Sure?',
+                'The Album and all files will be deleted',
+                sprintf(
+                    '%s/albums.php?action=confirm_delete&album_id=%d&burl=aA%%2Bb%%2Fc%%3D',
+                    $webPath,
+                    $albumId
+                ),
+                $originPage,
+                'delete_album'
+            )
+            ->once();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['album_id' => $albumId, 'burl' => $burlParam]);
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($webPath);
+
+        $this->deletionUrlResolver->shouldReceive('resolveBurl')
+            ->with($burlParam)
+            ->once()
+            ->andReturn($originPage);
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setup(): void
+    {
+        $this->configContainer     = $this->mock(ConfigContainerInterface::class);
+        $this->ui                  = $this->mock(UiInterface::class);
+        $this->logger              = $this->mock(LoggerInterface::class);
+        $this->deletionUrlResolver = $this->mock(DeletionUrlResolverInterface::class);
+
+        $this->subject = new DeleteAction(
+            $this->configContainer,
+            $this->ui,
+            $this->logger,
+            $this->deletionUrlResolver
         );
     }
 }

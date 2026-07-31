@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,7 +47,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
@@ -56,15 +56,14 @@ final readonly class ShowAction implements ApplicationActionInterface
         private TalFactoryInterface $talFactory,
         private RssFeedTypeFactoryInterface $rssFeedTypeFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check Perms */
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_RSS) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_RSS) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             return null;
         }

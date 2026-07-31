@@ -25,18 +25,28 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
-use Ampache\Repository\Model\Album;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * Class Album4Method
+ * @package Lib\Api4Methods
  */
-final class Album4Method
+final class Album4Method implements MethodInterface
 {
-    public const ACTION = 'album';
+    public const string ACTION = 'album';
+
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * album
@@ -48,24 +58,34 @@ final class Album4Method
      * include = (array) 'songs' //optional
      *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     include?: string|string[],
      *     api_format: string,
      *     auth: string,
      * } $input
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function album(array $input, User $user): bool
-    {
-        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $uid   = (int) scrub_in((string) $input['filter']);
-        $album = new Album($uid);
-        if ($album->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api4::message('error', sprintf(T_('Not Found: %s'), $uid), '404', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
 
-            return false;
+        if ($objectId === null || $objectId === '') {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
+        }
+
+        $album = $this->modelFactory->createAlbum((int) $objectId);
+        if ($album->isNew()) {
+            throw new ResultEmptyException((string) $objectId);
         }
         $include = [];
         if (array_key_exists('include', $input)) {
@@ -79,14 +99,19 @@ final class Album4Method
                 $include[] = 'songs';
             }
         }
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::albums([$uid], $include, $user, $input['auth']);
-                break;
-            default:
-                echo Xml4_Data::albums([$uid], $include, $user, $input['auth']);
-        }
 
-        return true;
+        $result = $output->albums(
+            $apiVersion,
+            [$album->getId()],
+            $include,
+            $user,
+            $input['auth'],
+        );
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $result
+            )
+        );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Beets;
 
+use Override;
+
 /**
  * Parse Json while loading and create the songs
  *
@@ -32,18 +34,16 @@ namespace Ampache\Module\Beets;
  */
 class JsonHandler extends Handler
 {
-    protected string $uri;
-
-    protected Catalog $handler;
-
     /**
      * Seperator between command and arguments
      */
+    #[Override]
     protected string $commandSeperator = '/';
 
     /**
      * Defines the differences between beets and ampache fields
      */
+    #[Override]
     protected array $fieldMapping = [
         'disc' => ['disk', '%d'],
         'length' => ['time', '%d'],
@@ -51,23 +51,56 @@ class JsonHandler extends Handler
         'bitrate' => ['bitrate', '%d']
     ];
 
+    protected Catalog $handler;
+
     /**
      * JsonHandler constructor.
      */
-    public function __construct(string $uri)
+    public function __construct(protected string $uri) {}
+
+    /**
+     * Compare the braces to ensure that we have a complete song object
+     */
+    public function compareBraces(string $item): bool
     {
-        $this->uri = $uri;
+        $start = $this->countChar('{', $item);
+        $end   = $this->countChar('}', $item);
+
+        return $start !== 0 && $start === $end;
     }
 
     /**
-     * Starts a command
+     * countChar
      */
-    public function start(string $command): void
+    public function countChar(string $char, string $string): int
     {
-        $handle = fopen($this->assembleUri($command), 'r');
-        if ($handle) {
-            $this->iterateItems($handle);
-        }
+        return substr_count($string, $char);
+    }
+
+    /**
+     * Create the Url to access the file
+     * Have to do some magic with the file ending so ampache can detect the type
+     */
+    public function createFileUrl(array $song): string
+    {
+        $parts = [
+            $this->uri,
+            'item',
+            $song['id'],
+            'file#.' . strtolower((string) $song['format']),
+        ];
+
+        return implode('/', $parts);
+    }
+
+    /**
+     * Check if the Json is complete to get a song
+     */
+    public function itemIsComlete(string $item): bool
+    {
+        $item = $this->removeUnwantedStrings($item);
+
+        return $this->compareBraces($item);
     }
 
     /**
@@ -90,35 +123,21 @@ class JsonHandler extends Handler
     }
 
     /**
-     * Assemble the URI from the different parts
-     * @param string $command
+     * convert the json string into a song array
      */
-    protected function assembleUri($command): string
+    public function parse(string $item): array
     {
-        $uriParts = [
-            $this->uri,
-            $command,
-        ];
+        $item         = $this->removeUnwantedStrings($item);
+        $song         = json_decode($item, true);
+        $song['file'] = $this->createFileUrl($song);
 
-        return implode('/', $uriParts);
-    }
-
-    /**
-     * Check if the Json is complete to get a song
-     * @param string $item
-     */
-    public function itemIsComlete($item): bool
-    {
-        $item = $this->removeUnwantedStrings($item);
-
-        return $this->compareBraces($item);
+        return $this->mapFields($song);
     }
 
     /**
      * Remove the beginning and the end of the json string so we can access the object in it.
-     * @param string $item
      */
-    public function removeUnwantedStrings($item): string
+    public function removeUnwantedStrings(string $item): string
     {
         $toRemove = [
             '{"items":[',
@@ -130,52 +149,26 @@ class JsonHandler extends Handler
     }
 
     /**
-     * Compare the braces to ensure that we have a complete song object
-     * @param string $item
+     * Starts a command
      */
-    public function compareBraces($item): bool
+    public function start(string $command): void
     {
-        $start = $this->countChar('{', $item);
-        $end   = $this->countChar('}', $item);
-
-        return $start !== 0 && $start === $end;
+        $handle = fopen($this->assembleUri($command), 'r');
+        if ($handle) {
+            $this->iterateItems($handle);
+        }
     }
 
     /**
-     * countChar
+     * Assemble the URI from the different parts
      */
-    public function countChar(string $char, string $string): int
+    protected function assembleUri(string $command): string
     {
-        return substr_count($string, $char);
-    }
-
-    /**
-     * convert the json string into a song array
-     * @param string $item
-     */
-    public function parse($item): array
-    {
-        $item         = $this->removeUnwantedStrings($item);
-        $song         = json_decode($item, true);
-        $song['file'] = $this->createFileUrl($song);
-
-        return $this->mapFields($song);
-    }
-
-    /**
-     * Create the Url to access the file
-     * Have to do some magic with the file ending so ampache can detect the type
-     * @param array $song
-     */
-    public function createFileUrl($song): string
-    {
-        $parts = [
+        $uriParts = [
             $this->uri,
-            'item',
-            $song['id'],
-            'file' . '#.' . strtolower($song['format']),
+            $command,
         ];
 
-        return implode('/', $parts);
+        return implode('/', $uriParts);
     }
 }

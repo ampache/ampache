@@ -34,30 +34,20 @@ use Ampache\Repository\Model\User;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 
-final class UserTracker implements UserTrackerInterface
+final readonly class UserTracker implements UserTrackerInterface
 {
-    private IpHistoryRepositoryInterface $ipHistoryRepository;
-
-    private LoggerInterface $logger;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        IpHistoryRepositoryInterface $ipHistoryRepository,
-        LoggerInterface $logger
-    ) {
-        $this->configContainer     = $configContainer;
-        $this->ipHistoryRepository = $ipHistoryRepository;
-        $this->logger              = $logger;
-    }
+        private ConfigContainerInterface $configContainer,
+        private IpHistoryRepositoryInterface $ipHistoryRepository,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Records the users ip in the ip history
      */
     public function trackIpAddress(
         User $user,
-        string $action
+        string $action,
     ): void {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::TRACK_USER_IP) === false) {
             return;
@@ -78,19 +68,20 @@ final class UserTracker implements UserTrackerInterface
             } else {
                 $sipar = parse_url('http://' . $ip);
             }
+
             $ip = $sipar['host'] ?? '';
         }
 
         $this->ipHistoryRepository->create(
             $user,
-            trim((string)$ip, '[]'),
+            trim((string) $ip, '[]'),
             Core::get_server('HTTP_USER_AGENT'),
             new DateTimeImmutable(),
             $action
         );
 
         /* Clean up old records... sometimes  */
-        if (rand(1, 100) > 60) {
+        if (random_int(1, 100) > 60) {
             $this->ipHistoryRepository->collectGarbage();
         }
     }

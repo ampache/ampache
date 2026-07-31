@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -27,7 +27,8 @@ namespace Ampache\Module\Art\Export;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Art\Export;
+use Ampache\Module\Art\Export\Exception\ArtExportException;
+use Ampache\Module\Art\Export\Writer\MetadataWriterInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\ImageRepositoryInterface;
 use Ampache\Repository\Model\Art;
@@ -37,28 +38,18 @@ use Psr\Log\LoggerInterface;
  * This runs through all of the images and tries to
  * export all database art to local_metadata_dir
  */
-final class ArtExporter implements ArtExporterInterface
+final readonly class ArtExporter implements ArtExporterInterface
 {
-    private LoggerInterface $logger;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ImageRepositoryInterface $imageRepository;
-
     public function __construct(
-        LoggerInterface $logger,
-        ConfigContainerInterface $configContainer,
-        ImageRepositoryInterface $imageRepository
-    ) {
-        $this->logger          = $logger;
-        $this->configContainer = $configContainer;
-        $this->imageRepository = $imageRepository;
-    }
+        private LoggerInterface $logger,
+        private ConfigContainerInterface $configContainer,
+        private ImageRepositoryInterface $imageRepository,
+    ) {}
 
     public function export(
         Interactor $interactor,
-        Writer\MetadataWriterInterface $metadataWriter,
-        bool $clearData
+        MetadataWriterInterface $metadataWriter,
+        bool $clearData,
     ): void {
         if ($clearData && !$this->configContainer->get('album_art_store_disk')) {
             $clearData = false;
@@ -71,6 +62,7 @@ final class ArtExporter implements ArtExporterInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
+
         // Get all of the art items with an image
         $images = $this->imageRepository->findAllImage();
         $count  = 0;
@@ -89,41 +81,33 @@ final class ArtExporter implements ArtExporterInterface
             $filename  = 'art-' . $artSize . '.' . $extension;
             $folder    = Art::get_dir_on_disk($artType, $artId, $artSize, $artKind, true);
             if (!$folder) {
-                throw new Export\Exception\ArtExportException(
+                throw new ArtExportException(
                     T_('local_metadata_dir setting is required to store art on disk')
                 );
             }
-            $target_file = $folder . $filename;
-            // check before opening; fopen in 'w' mode would truncate art that has already been exported
-            $is_file = is_file($target_file);
-            if (!$is_file) {
-                $file_handle = fopen($target_file, 'w');
-                if ($file_handle === false) {
-                    throw new Export\Exception\ArtExportException(
-                        sprintf(T_('Unable to open `%s` for writing'), $target_file)
-                    );
-                }
-                $write_result = fwrite(
-                    $file_handle,
-                    (string) $this->imageRepository->getRawImage($artId, $artType, $artSize, $artMime)
-                );
-                fclose($file_handle);
 
-                if ($write_result === false) {
-                    throw new Export\Exception\ArtExportException(
-                        sprintf(T_('Unable to write to `%s`'), $target_file)
+            $target_file = $folder . $filename;
+            if (!is_file($target_file)) {
+                $art      = new Art();
+                $art->raw = (string) $this->imageRepository->getRawImage($artId, $artType, $artSize, $artMime);
+
+                $metadataWriter->write($art, $target_file, $filename);
+
+                if (!is_file($target_file)) {
+                    throw new ArtExportException(
+                        sprintf(T_('Unable to open `%s` for writing'), $target_file)
                     );
                 }
 
                 $count++;
-                if (!($count % 100)) {
+                if ($count % 100 === 0) {
                     $interactor->info(
                         sprintf(T_('Art files written: %d'), $count),
                         true
                     );
                 }
             }
-            // the art is on disk by now, either it already was or it was just written (a failure throws above)
+
             // require a really good reason to clear this art
             if ($clearData) {
                 //The file is out so clear the table as well

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.16.1">
+  <albumList>
+    <album id="200000002" parent="100000002" album="CC Affiliates Mixtape #1" title="CC Affiliates Mixtape #1" isDir="true" coverArt="200000002" created="2026-07-15T06:35:01+00:00" duration="266" playCount="71" artistId="100000002" artist="Various Artists" year="2015" userRating="5"/>
+  </albumList>
+</subsonic-response>

@@ -25,20 +25,29 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class UrlToSong5Method
+ * Returns the song object for a stream url.
  */
-final class UrlToSong5Method
+final class UrlToSong5Method implements MethodInterface
 {
-    public const ACTION = 'url_to_song';
+    public const string ACTION = 'url_to_song';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * url_to_song
@@ -49,33 +58,48 @@ final class UrlToSong5Method
      * url = (string) $url
      *
      * @param array{
-     *     url: string,
+     *     url?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws RequestParamMissingException
      */
-    public static function url_to_song(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['url'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('url', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'url')
+            );
         }
-        $charset  = AmpConfig::get('site_charset', 'UTF-8');
+
+        $charset  = (string) ($this->configContainer->get(ConfigurationKeyEnum::SITE_CHARSET) ?? 'UTF-8');
         $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
         $url_data = Stream_Url::parse($song_url);
         if (!array_key_exists('id', $url_data)) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'url', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        'Bad Request',
+                        self::ACTION,
+                        'url'
+                    )
+                )
+            );
         }
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json5_Data::songs([(int) $url_data['id']], $user, $input['auth'], false);
-                break;
-            default:
-                echo Xml5_Data::songs([(int) $url_data['id']], $user, $input['auth']);
-        }
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, [(int) $url_data['id']], $user, $input['auth'], true, false)
+            )
+        );
     }
 }

@@ -38,7 +38,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
  */
 final class UpdatePodcast4Method
 {
-    public const ACTION = 'update_podcast';
+    public const string ACTION = 'update_podcast';
 
     /**
      * update_podcast
@@ -74,7 +74,7 @@ final class UpdatePodcast4Method
                 Api4::message('success', 'Synced episodes for podcast: ' . $object_id, null, $input['api_format']);
                 Session::extend($input['auth'], AccessTypeEnum::API->value);
             } else {
-                Api4::message('error', T_('Failed to sync episodes for podcast: ' . $object_id), '400', $input['api_format']);
+                Api4::message('error', 'Failed to sync episodes for podcast: ' . $object_id, '400', $input['api_format']);
             }
         } else {
             Api4::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);

@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -46,45 +47,83 @@ class ConfirmDeleteActionTest extends TestCase
     use ConsecutiveParams;
 
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private DeletionUrlResolverInterface&MockObject $deletionUrlResolver;
+    private GuiGatekeeperInterface&MockObject $gatekeeper;
+    private PodcastDeleterInterface&MockObject $podcastDeleter;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
+    private ServerRequestInterface&MockObject $request;
+    private ConfirmDeleteAction $subject;
     private UiInterface&MockObject $ui;
 
-    private PodcastRepositoryInterface&MockObject $podcastRepository;
-
-    private PodcastDeleterInterface&MockObject $podcastDeleter;
-
-    private ConfirmDeleteAction $subject;
-
-    private ServerRequestInterface&MockObject $request;
-
-    private GuiGatekeeperInterface&MockObject $gatekeeper;
-
-    protected function setUp(): void
+    public function testRunConfirmsRemoval(): void
     {
-        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
-        $this->ui                = $this->createMock(UiInterface::class);
-        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
-        $this->podcastDeleter    = $this->createMock(PodcastDeleterInterface::class);
+        $podcastId   = 666;
+        $webPath     = 'some-path';
+        $burlParam   = 'aA+b/c=';
+        $originPage  = 'some-path/browse.php?action=podcast';
+        $continueUrl = 'some-path/index.php';
 
-        $this->subject = new ConfirmDeleteAction(
-            $this->configContainer,
-            $this->ui,
-            $this->podcastRepository,
-            $this->podcastDeleter,
-        );
+        $podcast = $this->createMock(Podcast::class);
 
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-    }
-
-    public function testRunReturnsNullIfPodcastNotEnabled(): void
-    {
-        $this->configContainer->expects(static::once())
+        $this->configContainer->expects(static::exactly(2))
             ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn(false);
+            ->with(...$this->withConsecutive(
+                [ConfigurationKeyEnum::PODCAST],
+                [ConfigurationKeyEnum::DEMO_MODE],
+            ))
+            ->willReturn(true, false);
+        $this->configContainer->expects(static::once())
+            ->method('getWebPath')
+            ->willReturn($webPath);
 
-        static::assertNull(
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->willReturn(true);
+
+        $this->request->expects(static::once())
+            ->method('getQueryParams')
+            ->willReturn(['podcast_id' => (string) $podcastId, 'burl' => $burlParam]);
+
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
+            ->with($podcastId)
+            ->willReturn($podcast);
+
+        $this->deletionUrlResolver->expects(static::once())
+            ->method('resolveBurl')
+            ->with($burlParam)
+            ->willReturn($originPage);
+        $this->deletionUrlResolver->expects(static::once())
+            ->method('resolveContinueUrl')
+            ->with(
+                $originPage,
+                'podcast',
+                $podcastId,
+                '',
+                sprintf('%s/browse.php?action=podcast', $webPath)
+            )
+            ->willReturn($continueUrl);
+
+        $this->podcastDeleter->expects(static::once())
+            ->method('delete')
+            ->with($podcast);
+
+        $this->ui->expects(static::once())
+            ->method('showHeader');
+        $this->ui->expects(static::once())
+            ->method('showConfirmation')
+            ->with(
+                'No Problem',
+                'Podcast has been deleted',
+                $continueUrl
+            );
+        $this->ui->expects(static::once())
+            ->method('showQueryStats');
+        $this->ui->expects(static::once())
+            ->method('showFooter');
+
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }
@@ -102,26 +141,6 @@ class ConfirmDeleteActionTest extends TestCase
             ->method('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(false);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
-
-    public function testRunErrorsInDemoMode(): void
-    {
-        static::expectException(AccessDeniedException::class);
-
-        $this->configContainer->expects(static::exactly(2))
-            ->method('isFeatureEnabled')
-            ->with(...$this->withConsecutive(
-                [ConfigurationKeyEnum::PODCAST],
-                [ConfigurationKeyEnum::DEMO_MODE],
-            ))
-            ->willReturn(true, true);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->willReturn(true);
 
         $this->subject->run($this->request, $this->gatekeeper);
     }
@@ -151,12 +170,9 @@ class ConfirmDeleteActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
-    public function testRunConfirmsRemoval(): void
+    public function testRunErrorsInDemoMode(): void
     {
-        $podcastId = 666;
-        $webPath   = 'some-path';
-
-        $podcast = $this->createMock(Podcast::class);
+        static::expectException(AccessDeniedException::class);
 
         $this->configContainer->expects(static::exactly(2))
             ->method('isFeatureEnabled')
@@ -164,48 +180,45 @@ class ConfirmDeleteActionTest extends TestCase
                 [ConfigurationKeyEnum::PODCAST],
                 [ConfigurationKeyEnum::DEMO_MODE],
             ))
-            ->willReturn(true, false);
-        $this->configContainer->expects(static::once())
-            ->method('getWebPath')
-            ->willReturn($webPath);
+            ->willReturn(true, true);
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(true);
 
-        $this->request->expects(static::once())
-            ->method('getQueryParams')
-            ->willReturn(['podcast_id' => (string) $podcastId]);
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
 
-        $this->podcastRepository->expects(static::once())
-            ->method('findById')
-            ->with($podcastId)
-            ->willReturn($podcast);
+    public function testRunReturnsNullIfPodcastNotEnabled(): void
+    {
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn(false);
 
-        $this->podcastDeleter->expects(static::once())
-            ->method('delete')
-            ->with($podcast);
-
-        $this->ui->expects(static::once())
-            ->method('showHeader');
-        $this->ui->expects(static::once())
-            ->method('showConfirmation')
-            ->with(
-                'No Problem',
-                'Podcast has been deleted',
-                sprintf(
-                    '%s/browse.php?action=podcast',
-                    $webPath
-                )
-            );
-        $this->ui->expects(static::once())
-            ->method('showQueryStats');
-        $this->ui->expects(static::once())
-            ->method('showFooter');
-
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
+    }
+
+    protected function setUp(): void
+    {
+        $this->configContainer     = $this->createMock(ConfigContainerInterface::class);
+        $this->ui                  = $this->createMock(UiInterface::class);
+        $this->podcastRepository   = $this->createMock(PodcastRepositoryInterface::class);
+        $this->podcastDeleter      = $this->createMock(PodcastDeleterInterface::class);
+        $this->deletionUrlResolver = $this->createMock(DeletionUrlResolverInterface::class);
+
+        $this->subject = new ConfirmDeleteAction(
+            $this->configContainer,
+            $this->ui,
+            $this->podcastRepository,
+            $this->podcastDeleter,
+            $this->deletionUrlResolver,
+        );
+
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
     }
 }

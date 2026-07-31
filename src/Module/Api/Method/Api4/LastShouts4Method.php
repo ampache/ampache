@@ -37,7 +37,7 @@ use Ampache\Repository\ShoutRepositoryInterface;
  */
 final class LastShouts4Method
 {
-    public const ACTION = 'last_shouts';
+    public const string ACTION = 'last_shouts';
 
     /**
      * last_shouts
@@ -58,7 +58,7 @@ final class LastShouts4Method
     public static function last_shouts(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api4::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: social features are not enabled.', '400', $input['api_format']);
 
             return false;
         }

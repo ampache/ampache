@@ -30,28 +30,14 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class AdvancedActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
-    /** @var VideoRepositoryInterface|MockInterface|null */
-    private MockInterface $videoRepository;
-
     private ?AdvancedAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->videoRepository = $this->mock(VideoRepositoryInterface::class);
-
-        $this->subject = new AdvancedAction(
-            $this->ui,
-            $this->videoRepository
-        );
-    }
+    private UiInterface|MockInterface|null $ui;
+    private VideoRepositoryInterface|MockInterface|null $videoRepository;
 
     public function testRunRenders(): void
     {
@@ -79,6 +65,18 @@ class AdvancedActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->videoRepository = $this->mock(VideoRepositoryInterface::class);
+
+        $this->subject = new AdvancedAction(
+            $this->ui,
+            $this->videoRepository
         );
     }
 }

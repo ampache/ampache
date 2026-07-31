@@ -25,20 +25,33 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class SystemPreference5Method
+ * Returns a system preference by name.
+ *
+ * Version 5 renders a list rather than a bare object, so it keeps a method of its own.
  */
-final class SystemPreference5Method
+final class SystemPreference5Method implements MethodInterface
 {
-    public const ACTION = 'system_preference';
+    public const string ACTION = 'system_preference';
+
+    public function __construct(
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * system_preference
@@ -49,35 +62,49 @@ final class SystemPreference5Method
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function system_preference(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('filter', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
         }
-        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+
+        if (
+            !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::ADMIN,
+                $user->id
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
+
         $pref_name = (string) $input['filter'];
         $results   = Preference::get($pref_name, -1);
         if (empty($results)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $pref_name), self::ACTION, 'filter', $input['api_format']);
-
-            return false;
-        }
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($results, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Api::object_array($results, 'preference');
+            throw new ResultEmptyException($pref_name);
         }
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->objectArray($apiVersion, $results, $results, 'preference')
+            )
+        );
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -37,6 +39,6 @@ interface PrivilegeCheckerInterface
     public function check(
         AccessTypeEnum $type,
         AccessLevelEnum $level,
-        ?int $userId = null
+        ?int $userId = null,
     ): bool;
 }

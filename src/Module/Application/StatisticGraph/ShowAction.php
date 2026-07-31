@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -39,32 +39,22 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
-    }
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Check to see if they've got an interface session or a valid API session
         if (
-            !Session::exists(AccessTypeEnum::INTERFACE->value, $_COOKIE[$this->configContainer->getSessionName()]) &&
-            !Session::exists(AccessTypeEnum::API->value, $_REQUEST['auth'] ?? '')
+            !Session::exists(AccessTypeEnum::INTERFACE->value, $_COOKIE[$this->configContainer->getSessionName()])
+            && !Session::exists(AccessTypeEnum::API->value, $_REQUEST['auth'] ?? '')
         ) {
             $this->logger->warning(
                 sprintf(
@@ -78,10 +68,7 @@ final class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        if (
-            !$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) ||
-            !is_dir(__DIR__ . '/../../../../vendor/szymach/c-pchart/src/Chart/')
-        ) {
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS)) {
             $this->logger->warning(
                 'Access denied, statistical graph disabled.',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -94,40 +81,34 @@ final class ShowAction implements ApplicationActionInterface
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             $object_type = null;
         }
+
         $graph     = new Graph();
-        $user_id   = (int)$this->requestParser->getFromRequest('user_id');
-        $object_id = (int)$this->requestParser->getFromRequest('object_id');
-        $end_date  = (!empty($this->requestParser->getFromRequest('end_date')))
-            ? (int)$this->requestParser->getFromRequest('end_date')
-            : time();
-        $start_date = (!empty($this->requestParser->getFromRequest('start_date')))
-            ? (int)$this->requestParser->getFromRequest('start_date')
-            : ($end_date - 864000);
-        $zoom = (!empty($this->requestParser->getFromRequest('zoom')))
-            ? $this->requestParser->getFromRequest('zoom')
-            : 'day';
-        $width = ((int)$this->requestParser->getFromRequest('width') !== 0)
-            ? (int)$this->requestParser->getFromRequest('width')
+        $user_id   = (int) $this->requestParser->getFromRequest('user_id');
+        $object_id = (int) $this->requestParser->getFromRequest('object_id');
+        $end_date  = (in_array($this->requestParser->getFromRequest('end_date'), ['', '0'], true))
+            ? time()
+            : (int) $this->requestParser->getFromRequest('end_date');
+        $start_date = (in_array($this->requestParser->getFromRequest('start_date'), ['', '0'], true))
+            ? $end_date - 864000
+            : ((int) $this->requestParser->getFromRequest('start_date'));
+        $zoom = (in_array($this->requestParser->getFromRequest('zoom'), ['', '0'], true))
+            ? 'day'
+            : $this->requestParser->getFromRequest('zoom');
+        $width = ((int) $this->requestParser->getFromRequest('width') !== 0)
+            ? (int) $this->requestParser->getFromRequest('width')
             : 700;
-        $height = ((int)$this->requestParser->getFromRequest('height') !== 0)
-            ? (int)$this->requestParser->getFromRequest('height')
+        $height = ((int) $this->requestParser->getFromRequest('height') !== 0)
+            ? (int) $this->requestParser->getFromRequest('height')
             : 260;
 
         $action_type = $this->requestParser->getFromRequest('type');
-        switch ($action_type) {
-            case 'user_hits':
-                $graph->render_user_hits($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height);
-                break;
-            case 'user_bandwidth':
-                $graph->render_user_bandwidth($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height);
-                break;
-            case 'catalog_files':
-                $graph->render_catalog_files($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height);
-                break;
-            case 'catalog_size':
-                $graph->render_catalog_size($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height);
-                break;
-        }
+        match ($action_type) {
+            'user_hits' => $graph->render_user_hits($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height),
+            'user_bandwidth' => $graph->render_user_bandwidth($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height),
+            'catalog_files' => $graph->render_catalog_files($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height),
+            'catalog_size' => $graph->render_catalog_size($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height),
+            default => null,
+        };
 
         return null;
     }

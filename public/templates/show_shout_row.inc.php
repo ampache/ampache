@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,13 +23,14 @@ declare(strict_types=0);
  *
  */
 
+// show_shout_row.inc.php
+
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 
 /** @var Shoutbox $libitem */
-/** @var library_item $object */
+/** @var string $f_link */
 /** @var User $client */
 /** @var string $web_path */
 /** @var string $admin_path */
@@ -39,7 +40,7 @@ use Ampache\Repository\Model\User;
 /** @var string $t_no */
 ?>
 <tr id="flagged_<?php echo $libitem->getId(); ?>">
-    <td class="cel_object"><?php echo $object->get_f_link(); ?></td>
+    <td class="cel_object"><?php echo $f_link; ?></td>
     <td class="cel_username"><?php echo $client->get_f_link(); ?></td>
     <td class="cel_sticky"><?php echo $libitem->isSticky() ? $t_yes : $t_no; ?></td>
     <td class="cel_comment"><?php echo scrub_out($libitem->getText()); ?></td>

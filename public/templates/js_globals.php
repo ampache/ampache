@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Preference;
 
 global $dic;
@@ -38,12 +39,11 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
     // Using the following workaround to set global variable available from any javascript script.
 
     // AmpConfig values
-    var jsAmpConfigAjaxLoad = "<?php echo make_bool(AmpConfig::get('ajax_load')); ?>";
     var jsAmpConfigCookieSecure = "<?php echo make_bool(AmpConfig::get('cookie_secure')); ?>";
     var jsAmpConfigGeolocation = "<?php echo make_bool(AmpConfig::get('geolocation')); ?>";
     var jsAmpConfigLibitemContextmenu = "<?php echo make_bool(AmpConfig::get('libitem_contextmenu')); ?>";
     var jsAmpConfigPlayType = "<?php echo AmpConfig::get('play_type'); ?>";
-    var jsAmpConfigSlideshowTime = "<?php echo (int)(AmpConfig::get('slideshow_time', 0)); ?>";
+    var jsAmpConfigSlideshowTime = "<?php echo (int) (AmpConfig::get('slideshow_time', 0)); ?>";
     var jsAmpConfigSidebarHideSwitcher = "<?php echo make_bool(AmpConfig::get('sidebar_hide_switcher', false)); ?>";
     var jsAmpConfigSongPageTitle = "<?php echo make_bool(AmpConfig::get('song_page_title', '')); ?>";
 
@@ -89,9 +89,11 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
     var jsVideoTitle = "<?php echo addslashes(T_('Video')); ?>";
     var jsSaveTitle = "<?php echo addslashes(T_('Save')); ?>";
     var jsCancelTitle = "<?php echo addslashes(T_('Cancel')); ?>";
+    var jsConfirmTitle = "<?php echo addslashes(T_('Are you sure?')); ?>";
+    var jsConfirmOkTitle = "<?php echo addslashes(T_('OK')); ?>";
     var jsPlay = "<?php echo addslashes(T_('Play')); ?>";
     var jsPlayNext = "<?php echo addslashes(T_('Play next')); ?>";
     var jsPlayLast = "<?php echo addslashes(T_('Play last')); ?>";
     var jsAddTmpPlaylist = "<?php echo addslashes(T_('Add to Temporary Playlist')); ?>";
-    var jsAddPlaylist = "<?php echo addslashes(T_('Add to playlist')); ?>";
+    var jsAddPlaylist = "<?php echo addslashes(Ui::get_add_to_list_label()); ?>";
 </script>

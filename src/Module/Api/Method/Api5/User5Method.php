@@ -25,19 +25,30 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class User5Method
+ * Returns a user's public information.
+ *
+ * Version 5 requires the `username` and only ever looks a user up by name, so it keeps a method
+ * of its own.
  */
-final class User5Method
+final class User5Method implements MethodInterface
 {
-    public const ACTION = 'user';
+    public const string ACTION = 'user';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     /**
      * user
@@ -48,55 +59,47 @@ final class User5Method
      * username = (string) $username
      *
      * @param array{
-     *     username: string,
+     *     username?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws RequestParamMissingException|ResultEmptyException
      */
-    public static function user(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('username', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'username')
+            );
         }
+
         $username = (string) $input['username'];
         if (empty($username)) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $username), self::ACTION, 'username', $input['api_format']);
 
-            return false;
+            throw new ResultEmptyException($username, 'username');
         }
 
         $check_user = User::get_from_username($username);
-        $valid      = ($check_user instanceof User && $check_user->isNew() === false && in_array($check_user->id, self::getUserRepository()->getValid(true)));
-        if (!$valid) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $username), self::ACTION, 'username', $input['api_format']);
-
-            return false;
+        $valid      = ($check_user instanceof User && $check_user->isNew() === false && in_array($check_user->id, $this->userRepository->getValid(true)));
+        if (!$check_user instanceof User || !$valid) {
+            throw new ResultEmptyException($username, 'username');
         }
 
         // get full info when you're an admin or searching for yourself
         $fullinfo = (($check_user->id == $user->id) || ($user->access === 100));
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json5_Data::user($check_user, $fullinfo, false);
-                break;
-            default:
-                echo Xml5_Data::user($check_user, $fullinfo);
-        }
 
-        return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->user($apiVersion, $check_user, $fullinfo, $input['auth'], false)
+            )
+        );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Query;
 
 final class AlbumQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'add_gt',
         'add_lt',
         'album_artist',
@@ -62,8 +62,12 @@ final class AlbumQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% AS `id` FROM `album` ";
+    protected string $select = "`album`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
+        'addition_time',
         'album_artist_album_sort',
         'album_artist_title',
         'album_artist',
@@ -94,9 +98,15 @@ final class AlbumQuery implements QueryInterface
         'year',
     ];
 
-    protected string $select = "`album`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% AS `id` FROM `album` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -106,16 +116,6 @@ final class AlbumQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**
@@ -141,8 +141,9 @@ final class AlbumQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `album`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'no_genre':
@@ -157,7 +158,8 @@ final class AlbumQuery implements QueryInterface
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                 }
-                $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
+
+                $filter_sql = rtrim($filter_sql, 'AND ') . ") AND ";
                 break;
             case 'equal':
             case 'exact_match':
@@ -174,25 +176,29 @@ final class AlbumQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $query->set_join('LEFT', '`song`', '`album`.`id`', '`song`.`album`', 100);
                 $filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                if ($query->catalog != 0) {
+                if ($query->catalog !== 0) {
                     $filter_sql .= "`album`.`catalog` = '" . $query->catalog . "' AND ";
                 }
+
                 break;
             case 'not_starts_with':
                 $query->set_join('LEFT', '`song`', '`album`.`id`', '`song`.`album`', 100);
                 $filter_sql = " `album`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
-                if ($query->catalog != 0) {
+                if ($query->catalog !== 0) {
                     $filter_sql .= "`album`.`catalog` = '" . $query->catalog . "' AND ";
                 }
+
                 break;
             case 'artist':
                 $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "') AND ";
@@ -227,28 +233,30 @@ final class AlbumQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " (`album`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
+
                 break;
             case 'user_catalog':
                 $filter_sql = " `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
                 break;
             case 'user_flag':
-                $filter_sql = ((int)$value === 0)
-                    ? " `album`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `album`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `album`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `album`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album' AND `user` = " . (int) $query->user_id . ") AND ";
                 break;
             case 'user_rating':
-                $filter_sql = ((int)$value === 0)
-                    ? " `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `album`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `album`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album' AND `user` = " . (int) $query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album`.`catalog`', 100);
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
             case 'unplayed':
-                if ((int)$value == 1) {
+                if ((int) $value === 1) {
                     $filter_sql = " `album`.`total_count`='0' AND ";
                 }
+
                 break;
         }
 
@@ -259,11 +267,8 @@ final class AlbumQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
         switch ($field) {
             case 'name':
@@ -271,10 +276,10 @@ final class AlbumQuery implements QueryInterface
                 $sql = "`album`.`name`";
                 break;
             case 'name_original_year':
-                $sql = "`album`.`name` $order, IFNULL(`album`.`original_year`, `album`.`year`)";
+                $sql = sprintf('`album`.`name` %s, IFNULL(`album`.`original_year`, `album`.`year`)', $order);
                 break;
             case 'name_year':
-                $sql = "`album`.`name` $order, `album`.`year`";
+                $sql = sprintf('`album`.`name` %s, `album`.`year`', $order);
                 break;
             case 'generic_artist':
                 $sql = "`artist`.`name`";
@@ -288,7 +293,7 @@ final class AlbumQuery implements QueryInterface
                 );
                 break;
             case 'album_artist_album_sort':
-                $sql = "`artist`.`name` $order, ";
+                $sql = sprintf('`artist`.`name` %s, ', $order);
                 // sort the albums by arist AND default sort
                 $original_year = (AmpConfig::get('use_original_year')) ? "original_year" : "year";
                 $sort_type     = AmpConfig::get('album_sort');
@@ -313,10 +318,11 @@ final class AlbumQuery implements QueryInterface
                     default:
                         $sql .= '`album`.`name` ' . $order . ', `album`.`' . $original_year . '`';
                 }
+
                 $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
                 break;
             case 'album_artist_title':
-                $sql = "`artist`.`name` $order, `album`.`name`";
+                $sql = sprintf('`artist`.`name` %s, `album`.`name`', $order);
                 $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
                 break;
             case 'album_artist':
@@ -329,25 +335,26 @@ final class AlbumQuery implements QueryInterface
                 $query->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`date`";
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (string)$query->user_id, 100);
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag':
             case 'userflag':
                 $sql = "`user_flag`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album`.`id`", "`user_flag`.`object_type`", "'album'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album`.`id`", "`user_flag`.`object_type`", "'album'", "`user_flag`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album`.`id`", "`user_flag`.`object_type`", "'album'", "`user_flag`.`user`", (string)$query->user_id, 100);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (string)$query->user_id, 100);
+                $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album`.`id`", "`user_flag`.`object_type`", "'album'", "`user_flag`.`user`", (string) $query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'original_year':
-                $sql = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`addition_time`";
+                $sql = sprintf('IFNULL(`album`.`original_year`, `album`.`year`) %s, `album`.`addition_time`', $order);
                 break;
             case 'year':
-                $sql = "`album`.`year` $order, `album`.`addition_time`";
+                $sql = sprintf('`album`.`year` %s, `album`.`addition_time`', $order);
                 break;
+            case 'addition_time':
             case 'barcode':
             case 'catalog_number':
             case 'catalog':
@@ -360,16 +367,16 @@ final class AlbumQuery implements QueryInterface
             case 'time':
             case 'total_count':
             case 'version':
-                $sql = "`album`.`$field`";
+                $sql = sprintf('`album`.`%s`', $field);
                 break;
             default:
                 $sql = '';
         }
 
-        if (empty($sql)) {
+        if ($sql === '') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

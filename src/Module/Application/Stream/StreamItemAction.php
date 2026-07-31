@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -37,11 +38,11 @@ use Psr\Log\LoggerInterface;
 
 final class StreamItemAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'stream_item';
+    public const string REQUEST_KEY = 'stream_item';
 
     public function __construct(
         LoggerInterface $logger,
-        private readonly ConfigContainerInterface $configContainer,
+        ConfigContainerInterface $configContainer,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
     ) {
         parent::__construct($logger, $configContainer);
@@ -52,6 +53,7 @@ final class StreamItemAction extends AbstractStreamAction
         if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
+
         $fileName   = $request->getQueryParams()['name'] ?? null;
         $objectType = LibraryItemEnum::tryFrom($request->getQueryParams()['object_type'] ?? '');
         if ($objectType === null) {
@@ -67,25 +69,24 @@ final class StreamItemAction extends AbstractStreamAction
                 (int) $object_id,
             );
 
-            if ($item !== null) {
+            if ($item instanceof container_item) {
                 $mediaIds = array_merge($mediaIds, $item->get_medias());
 
                 if (array_key_exists('custom_play_action', $_REQUEST)) {
                     foreach ($mediaIds as $mediaId) {
-                        if (is_array($mediaId)) {
-                            $mediaId['custom_play_action'] = $_REQUEST['custom_play_action'];
-                        }
+                        $mediaId['custom_play_action'] = $_REQUEST['custom_play_action'];
                     }
                 }
+
                 $user = $gatekeeper->getUser();
                 // record this as a 'play' to help show usage and history for playlists and streams
                 if (
-                    $user !== null &&
-                    $mediaIds !== [] &&
-                    in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM])
+                    $user !== null
+                    && $mediaIds !== []
+                    && in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM])
                 ) {
                     $client = $_REQUEST['client'] ?? substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
-                    Stats::insert($objectType->value, (int)$object_id, $user->getId(), $client, [], 'stream', time());
+                    Stats::insert($objectType->value, (int) $object_id, $user->getId(), $client, [], 'stream', time());
                 }
             }
         }

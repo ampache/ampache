@@ -38,21 +38,8 @@ use PHPUnit\Framework\TestCase;
 class PodcastFolderProviderTest extends TestCase
 {
     private CatalogLoaderInterface&MockObject $catalogLoader;
-
-    private PodcastFolderProvider $subject;
-
     private vfsStreamDirectory $rootFolder;
-
-    protected function setUp(): void
-    {
-        $this->catalogLoader = $this->createMock(CatalogLoaderInterface::class);
-
-        $this->subject = new PodcastFolderProvider(
-            $this->catalogLoader,
-        );
-
-        $this->rootFolder = vfsStream::setup('/podcast');
-    }
+    private PodcastFolderProvider $subject;
 
     public function testGetBaseFolderErrorsIfCatalogWasNotFound(): void
     {
@@ -71,32 +58,6 @@ class PodcastFolderProviderTest extends TestCase
             ->method('getById')
             ->with($catalogId)
             ->willThrowException(new CatalogLoadingException());
-
-        $this->subject->getBaseFolder($podcast);
-    }
-
-    public function testGetBaseFolderErrorsOnInvalidCatalogType(): void
-    {
-        $catalogId = 666;
-
-        $podcast = $this->createMock(Podcast::class);
-        $catalog = $this->createMock(Catalog::class);
-
-        static::expectException(PodcastFolderException::class);
-        static::expectExceptionMessage('Bad catalog type: snafu');
-
-        $podcast->expects(static::once())
-            ->method('getCatalogId')
-            ->willReturn($catalogId);
-
-        $this->catalogLoader->expects(static::once())
-            ->method('getById')
-            ->with($catalogId)
-            ->willReturn($catalog);
-
-        $catalog->expects(static::once())
-            ->method('get_type')
-            ->willReturn('snafu');
 
         $this->subject->getBaseFolder($podcast);
     }
@@ -135,6 +96,32 @@ class PodcastFolderProviderTest extends TestCase
         $this->subject->getBaseFolder($podcast);
     }
 
+    public function testGetBaseFolderErrorsOnInvalidCatalogType(): void
+    {
+        $catalogId = 666;
+
+        $podcast = $this->createMock(Podcast::class);
+        $catalog = $this->createMock(Catalog::class);
+
+        static::expectException(PodcastFolderException::class);
+        static::expectExceptionMessage('Bad catalog type: snafu');
+
+        $podcast->expects(static::once())
+            ->method('getCatalogId')
+            ->willReturn($catalogId);
+
+        $this->catalogLoader->expects(static::once())
+            ->method('getById')
+            ->with($catalogId)
+            ->willReturn($catalog);
+
+        $catalog->expects(static::once())
+            ->method('get_type')
+            ->willReturn('snafu');
+
+        $this->subject->getBaseFolder($podcast);
+    }
+
     public function testGetBaseFolderReturnsCreatedFolder(): void
     {
         $catalogId    = 666;
@@ -162,7 +149,7 @@ class PodcastFolderProviderTest extends TestCase
             ->method('getCatalogId')
             ->willReturn($catalogId);
 
-        static::assertSame(
+        self::assertSame(
             sprintf('%s%s%s', $this->rootFolder->url(), DIRECTORY_SEPARATOR, $podcastTitle),
             $this->subject->getBaseFolder($podcast)
         );
@@ -197,9 +184,20 @@ class PodcastFolderProviderTest extends TestCase
             ->method('getCatalogId')
             ->willReturn($catalogId);
 
-        static::assertSame(
+        self::assertSame(
             sprintf('%s%s%s', $this->rootFolder->url(), DIRECTORY_SEPARATOR, $podcastTitle),
             $this->subject->getBaseFolder($podcast)
         );
+    }
+
+    protected function setUp(): void
+    {
+        $this->catalogLoader = $this->createMock(CatalogLoaderInterface::class);
+
+        $this->subject = new PodcastFolderProvider(
+            $this->catalogLoader,
+        );
+
+        $this->rootFolder = vfsStream::setup('/podcast');
     }
 }

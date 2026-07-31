@@ -38,23 +38,24 @@ use Psr\Container\ContainerInterface;
 class LibraryItemLoaderTest extends TestCase
 {
     private ContainerInterface&MockObject $dic;
-
     private LibraryItemLoader $subject;
 
-    protected function setUp(): void
+    public static function loadDataProvider(): Generator
     {
-        $this->dic = $this->createMock(ContainerInterface::class);
+        yield [LibraryItemEnum::LABEL, LabelRepositoryInterface::class, Label::class];
 
-        $this->subject = new LibraryItemLoader(
-            $this->dic,
-        );
+        yield [LibraryItemEnum::LIVE_STREAM, LiveStreamRepositoryInterface::class, Live_Stream::class];
+
+        yield [LibraryItemEnum::PODCAST, PodcastRepositoryInterface::class, Podcast::class];
+
+        yield[LibraryItemEnum::PODCAST_EPISODE, PodcastEpisodeRepositoryInterface::class, Podcast_Episode::class];
     }
 
     #[DataProvider(methodName: 'loadDataProvider')]
     public function testLoadLoads(
         LibraryItemEnum $itemType,
         string $repoClassName,
-        string $itemClassName
+        string $itemClassName,
     ): void {
         $objectId = 666;
 
@@ -75,21 +76,10 @@ class LibraryItemLoaderTest extends TestCase
             ->with($objectId)
             ->willReturn($item);
 
-        static::assertSame(
+        self::assertSame(
             $item,
             $this->subject->load($itemType, $objectId, [$itemClassName]),
         );
-    }
-
-    public static function loadDataProvider(): Generator
-    {
-        yield [LibraryItemEnum::LABEL, LabelRepositoryInterface::class, Label::class];
-
-        yield [LibraryItemEnum::LIVE_STREAM, LiveStreamRepositoryInterface::class, Live_Stream::class];
-
-        yield [LibraryItemEnum::PODCAST, PodcastRepositoryInterface::class, Podcast::class];
-
-        yield[LibraryItemEnum::PODCAST_EPISODE, PodcastEpisodeRepositoryInterface::class, Podcast_Episode::class];
     }
 
     public function testReturnsNullIfObjectWasNotFound(): void
@@ -113,8 +103,17 @@ class LibraryItemLoaderTest extends TestCase
             ->with($objectId)
             ->willReturn($item);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->load(LibraryItemEnum::LABEL, $objectId),
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->dic = $this->createMock(ContainerInterface::class);
+
+        $this->subject = new LibraryItemLoader(
+            $this->dic,
         );
     }
 }

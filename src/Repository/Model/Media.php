@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,15 +32,15 @@ namespace Ampache\Repository\Model;
  * work, this lists all required functions and the expected
  * input
  */
-interface Media
+interface Media extends library_item
 {
-    public function getId(): int;
+    public function check_play_history(int $user, string $agent, int $date): bool;
 
     /**
-     * isNew
-     * Whether the object failed to load from the database
+     * get_stream_name
+     * Get the complete name to display for the stream.
      */
-    public function isNew(): bool;
+    public function get_stream_name(): string;
 
     /**
      * get_stream_types
@@ -51,19 +51,6 @@ interface Media
      * @return list<string>
      */
     public function get_stream_types(?string $player = null): array;
-
-    /**
-     * play_url
-     *
-     * Returns the url to stream the specified object
-     */
-    public function play_url(string $additional_params = '', string $player = '', bool $local = false): string;
-
-    /**
-     * get_stream_name
-     * Get the complete name to display for the stream.
-     */
-    public function get_stream_name(): string;
 
     /**
      * get_transcode_settings
@@ -78,9 +65,33 @@ interface Media
     public function get_transcode_settings(?string $target = null, ?string $player = null, array $options = []): array;
 
     /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string;
+
+    /**
      * getYear
      */
     public function getYear(): string;
+
+    /**
+     * isNew
+     * Whether the object failed to load from the database
+     */
+    public function isNew(): bool;
+
+    /**
+     * play_url
+     *
+     * Returns the url to stream the specified object
+     */
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false): string;
+
+    /**
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     */
+    public function remove(): bool;
 
     /**
      * @param array{
@@ -90,32 +101,4 @@ interface Media
      * } $location
      */
     public function set_played(int $user_id, string $agent, array $location, int $date): bool;
-
-    /**
-     * @param int $user
-     * @param string $agent
-     * @param int $date
-     */
-    public function check_play_history($user, $agent, $date): bool;
-
-    /**
-     * remove
-     * Delete the object from disk and/or database where applicable.
-     */
-    public function remove(): bool;
-
-    /**
-     * Returns the full/formatted name of the media items artist/author
-     */
-    public function get_parent_fullname(): string;
-
-    /**
-     * Returns the filename of the media-item
-     */
-    public function getFileName(): string;
-
-    /**
-     * Returns the media-type of the library-item
-     */
-    public function getMediaType(): LibraryItemEnum;
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,33 +30,37 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\AmazonSearch;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
 {
-    public string $name = 'Amazon';
-
+    #[Override]
     public string $categories = 'metadata';
 
+    #[Override]
     public string $description = 'Amazon arts';
 
-    public string $url = 'http://www.amazon.com';
-
-    public string $version = '000001';
-
-    public string $min_ampache = '370009';
-
+    #[Override]
     public string $max_ampache = '999999';
 
+    #[Override]
+    public string $min_ampache = '370009';
+
+    #[Override]
+    public string $name = 'Amazon';
+
+    #[Override]
+    public string $url = 'http://www.amazon.com';
+
+    #[Override]
+    public string $version = '000001';
+
     // These are internal settings used by this class, run this->load to fill them out
-    private $amazon_base_url;
-
-    private $amazon_max_results_pages;
-
-    private $amazon_developer_public_key;
-
-    private $amazon_developer_private_api_key;
-
-    private $amazon_developer_associate_tag;
+    private string $amazon_base_url;
+    private string $amazon_developer_associate_tag;
+    private string $amazon_developer_private_api_key;
+    private string $amazon_developer_public_key;
+    private int $amazon_max_results_pages;
 
     /**
      * Constructor
@@ -65,119 +69,6 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
     public function __construct()
     {
         $this->description = T_('Amazon art search');
-    }
-
-    /**
-     * install
-     * This is a required plugin function
-     */
-    public function install(): bool
-    {
-        if (!Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, AccessLevelEnum::MANAGER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * This is a required plugin function
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('amazon_base_url') &&
-            Preference::delete('amazon_max_results_pages') &&
-            Preference::delete('amazon_developer_public_key') &&
-            Preference::delete('amazon_developer_private_api_key') &&
-            Preference::delete('amazon_developer_associate_tag')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
-     * load
-     * This is a required plugin function; here it populates the prefs we
-     * need for this object.
-     */
-    public function load(User $user): bool
-    {
-        $user->set_preferences();
-        $data = $user->prefs;
-        // load system when nothing is given
-        if (
-            !strlen(trim((string) $data['amazon_base_url'])) ||
-            !strlen(trim((string) $data['amazon_developer_public_key'])) ||
-            !strlen(trim((string) $data['amazon_developer_private_api_key'])) ||
-            !strlen(trim((string) $data['amazon_max_results_pages'])) ||
-            !strlen(trim((string) $data['amazon_developer_associate_tag']))
-        ) {
-            $data                                     = [];
-            $data['amazon_base_url']                  = Preference::get_by_user(-1, 'amazon_base_url');
-            $data['amazon_developer_public_key']      = Preference::get_by_user(-1, 'amazon_developer_public_key');
-            $data['amazon_developer_private_api_key'] = Preference::get_by_user(-1, 'amazon_developer_private_api_key');
-            $data['amazon_max_results_pages']         = Preference::get_by_user(-1, 'amazon_max_results_pages');
-            $data['amazon_developer_associate_tag']   = Preference::get_by_user(-1, 'amazon_developer_associate_tag');
-        }
-
-        if (strlen(trim((string) $data['amazon_base_url'])) !== 0) {
-            $this->amazon_base_url = trim((string) $data['amazon_base_url']);
-        } else {
-            debug_event('amazon.plugin', 'No amazon base url, plugin skipped', 3);
-
-            return false;
-        }
-
-        if (strlen(trim((string) $data['amazon_developer_public_key'])) !== 0) {
-            $this->amazon_developer_public_key = trim((string) $data['amazon_developer_public_key']);
-        } else {
-            debug_event('amazon.plugin', 'No amazon developer public key, plugin skipped', 3);
-
-            return false;
-        }
-
-        if (strlen(trim((string) $data['amazon_developer_private_api_key'])) !== 0) {
-            $this->amazon_developer_private_api_key = trim((string) $data['amazon_developer_private_api_key']);
-        } else {
-            debug_event('amazon.plugin', 'No amazon developer private key, plugin skipped', 3);
-
-            return false;
-        }
-
-        if (strlen(trim((string) $data['amazon_max_results_pages'])) !== 0) {
-            $this->amazon_max_results_pages = (int)trim((string) $data['amazon_max_results_pages']);
-        } else {
-            $this->amazon_max_results_pages = 1;
-        }
-
-        if (strlen(trim((string) $data['amazon_developer_associate_tag'])) !== 0) {
-            $this->amazon_developer_associate_tag = trim((string) $data['amazon_developer_associate_tag']);
-        } else {
-            $this->amazon_developer_associate_tag = '';
-        }
-
-        return true;
     }
 
     /**
@@ -266,16 +157,10 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
 
         /* Foreach through what we've found */
         foreach ($final_results as $result) {
-            $key = '';
-            /* Recurse through the images found */
-            foreach ($possible_keys as $pKey) {
-                if (strlen((string) $result[$pKey]) !== 0) {
-                    $key = $pKey;
-                    break;
-                }
-            } // foreach
+            $key = array_find($possible_keys, fn($pKey) => strlen((string) $result[$pKey]) !== 0);
+            // foreach
 
-            if ($key !== '' && $key !== '0') {
+            if ($key) {
                 // Rudimentary image type detection, only JPG and GIF allowed.
                 if (str_ends_with((string) $result[$key], '.jpg')) {
                     $mime = "image/jpeg";
@@ -302,5 +187,118 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
         } // if we've got something
 
         return $images;
+    }
+
+    /**
+     * install
+     * This is a required plugin function
+     */
+    public function install(): bool
+    {
+        if (!Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, AccessLevelEnum::MANAGER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
+    }
+
+    /**
+     * load
+     * This is a required plugin function; here it populates the prefs we
+     * need for this object.
+     */
+    public function load(User $user): bool
+    {
+        $user->set_preferences();
+        $data = $user->prefs;
+        // load system when nothing is given
+        if (
+            !strlen(trim((string) $data['amazon_base_url']))
+            || !strlen(trim((string) $data['amazon_developer_public_key']))
+            || !strlen(trim((string) $data['amazon_developer_private_api_key']))
+            || !strlen(trim((string) $data['amazon_max_results_pages']))
+            || !strlen(trim((string) $data['amazon_developer_associate_tag']))
+        ) {
+            $data                                     = [];
+            $data['amazon_base_url']                  = Preference::get_by_user(-1, 'amazon_base_url');
+            $data['amazon_developer_public_key']      = Preference::get_by_user(-1, 'amazon_developer_public_key');
+            $data['amazon_developer_private_api_key'] = Preference::get_by_user(-1, 'amazon_developer_private_api_key');
+            $data['amazon_max_results_pages']         = Preference::get_by_user(-1, 'amazon_max_results_pages');
+            $data['amazon_developer_associate_tag']   = Preference::get_by_user(-1, 'amazon_developer_associate_tag');
+        }
+
+        if (strlen(trim((string) $data['amazon_base_url'])) !== 0) {
+            $this->amazon_base_url = trim((string) $data['amazon_base_url']);
+        } else {
+            debug_event('amazon.plugin', 'No amazon base url, plugin skipped', 3);
+
+            return false;
+        }
+
+        if (strlen(trim((string) $data['amazon_developer_public_key'])) !== 0) {
+            $this->amazon_developer_public_key = trim((string) $data['amazon_developer_public_key']);
+        } else {
+            debug_event('amazon.plugin', 'No amazon developer public key, plugin skipped', 3);
+
+            return false;
+        }
+
+        if (strlen(trim((string) $data['amazon_developer_private_api_key'])) !== 0) {
+            $this->amazon_developer_private_api_key = trim((string) $data['amazon_developer_private_api_key']);
+        } else {
+            debug_event('amazon.plugin', 'No amazon developer private key, plugin skipped', 3);
+
+            return false;
+        }
+
+        if (strlen(trim((string) $data['amazon_max_results_pages'])) !== 0) {
+            $this->amazon_max_results_pages = (int) trim((string) $data['amazon_max_results_pages']);
+        } else {
+            $this->amazon_max_results_pages = 1;
+        }
+
+        if (strlen(trim((string) $data['amazon_developer_associate_tag'])) !== 0) {
+            $this->amazon_developer_associate_tag = trim((string) $data['amazon_developer_associate_tag']);
+        } else {
+            $this->amazon_developer_associate_tag = '';
+        }
+
+        return true;
+    }
+
+    /**
+     * uninstall
+     * This is a required plugin function
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('amazon_base_url')
+            && Preference::delete('amazon_max_results_pages')
+            && Preference::delete('amazon_developer_public_key')
+            && Preference::delete('amazon_developer_private_api_key')
+            && Preference::delete('amazon_developer_associate_tag')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
     }
 }

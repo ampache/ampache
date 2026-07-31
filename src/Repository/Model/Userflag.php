@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -40,12 +40,13 @@ use Exception;
  */
 class Userflag extends database_object
 {
-    protected const DB_TABLENAME = 'user_flag';
-
-    private const FLAG_TYPES = [
+    protected const string DB_TABLENAME = 'user_flag';
+    private const array FLAG_TYPES      = [
         'album_disk',
         'album',
         'artist',
+        'collection',
+        'folder',
         'live_stream',
         'playlist',
         'podcast_episode',
@@ -67,26 +68,17 @@ class Userflag extends database_object
      */
     public function __construct(
         ?int $object_id,
-        string $type
+        string $type,
     ) {
-        $this->id   = (int)($object_id);
+        $this->id   = (int) ($object_id);
         $this->type = $type;
-    }
-
-    public function getId(): int
-    {
-        return (int)($this->id ?? 0);
-    }
-
-    public static function is_valid(string $type): bool
-    {
-        return in_array($type, self::FLAG_TYPES);
     }
 
     /**
      * build_cache
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
+     * @param array<int|string> $ids
      */
     public static function build_cache(string $type, array $ids, ?int $user_id = null): bool
     {
@@ -94,9 +86,14 @@ class Userflag extends database_object
             return false;
         }
 
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         if ($user_id === 0) {
@@ -139,6 +136,7 @@ class Userflag extends database_object
             'album',
             'artist',
             'catalog',
+            'folder',
             'label',
             'live_stream',
             'playlist',
@@ -166,138 +164,46 @@ class Userflag extends database_object
     }
 
     /**
-     * get_flag
-     * @return bool|array{bool, int}
+     * get_latest
+     * Get the latest user flagged objects
+     * @return int[]
      */
-    public function get_flag(?int $user_id = null, bool $get_date = false): bool|array
-    {
-        if ($user_id === null) {
-            $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+    public static function get_latest(
+        string $type,
+        ?User $user = null,
+        int $count = 0,
+        int $offset = 0,
+        int $since = 0,
+        int $before = 0,
+        bool $by_user = false,
+        int $catalog_id = 0,
+    ): array {
+        if ($count === 0) {
+            $count = AmpConfig::get('popular_threshold', 10);
         }
 
-        if ($user_id === 0) {
-            return false;
+        if ($count === -1) {
+            $count  = 0;
+            $offset = 0;
         }
 
-        $key = 'userflag_' . $this->type . '_user' . $user_id;
-        if (parent::is_cached($key, $this->id)) {
-            $object = parent::get_from_cache($key, $this->id);
-            if (empty($object) || !$object[0]) {
-                return false;
-            }
-
-            if ($get_date) {
-                return [
-                    (bool)$object[0],
-                    (int)$object[1],
-                ];
-            }
-
-            return (bool)$object[0];
+        // Select Top objects counting by # of rows
+        $sql   = self::get_latest_sql($type, $user, $since, $before, $by_user, $catalog_id);
+        $limit = ($offset < 1)
+            ? $count
+            : $offset . "," . $count;
+        if ($limit > 0) {
+            $sql .= 'LIMIT ' . $limit;
         }
 
-        $flagged    = false;
-        $sql        = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ?";
-        $db_results = Dba::read($sql, [$user_id, $this->id, $this->type]);
-        if ($row = Dba::fetch_assoc($db_results)) {
-            // always cache the date in case it's called by subsonic
-            parent::add_to_cache($key, $this->id, [true, (int)$row['date']]);
-            if ($get_date) {
-                return [
-                    true,
-                    (int)$row['date']
-                ];
-            }
-
-            $flagged = true;
+        //debug_event(self::class, 'get_latest ' . $sql, 5);
+        $db_results = Dba::read($sql);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
         }
 
-        return $flagged;
-    }
-
-    /**
-     * set_flag
-     * This function sets the user flag for the current object.
-     * If no user_id is passed in, we use the currently logged in user.
-     */
-    public function set_flag(bool $flagged, ?int $user_id = null, ?int $date = null): bool
-    {
-        if ($user_id === null) {
-            $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
-        }
-
-        if ($user_id === 0) {
-            return false;
-        }
-
-        if (!self::is_valid($this->type)) {
-            return false;
-        }
-
-        if ($this->get_flag($user_id) === $flagged) {
-            return true;
-        }
-
-        $date = $date ?? time();
-
-        debug_event(self::class, sprintf('Setting userflag for %s %d to %s (%s)', $this->type, $this->id, $flagged, $date), 4);
-
-        // a playlist, search or live stream can be flagged but carries no weight column
-        $weighted = in_array($this->type, Stats::WEIGHT_TYPES, true);
-
-        if (!$flagged) {
-            $sql    = "DELETE FROM `user_flag` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
-            $params = [$this->id, $this->type, $user_id];
-            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [false]);
-
-            // adjust weight
-            if ($weighted) {
-                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
-            }
-        } else {
-            $sql    = "REPLACE INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
-            $params = [$this->id, $this->type, $user_id, $date];
-            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [1, $date]);
-
-            $this->getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, $this->id, $date);
-
-            if ($weighted) {
-                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
-            }
-        }
-
-        Dba::write($sql, $params);
-
-        if ($this->type == 'song') {
-            $user = new User($user_id);
-            $song = new Song($this->id);
-            if ($song->isNew() === false) {
-                self::save_flag($user, $song, $flagged);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * save_flag
-     * Forward flag to last.fm and Libre.fm (song only)
-     */
-    public static function save_flag(User $user, Song $song, bool $flagged): void
-    {
-        foreach (Plugin::get_plugins(PluginTypeEnum::USER_FLAG_MANAGER) as $plugin_name) {
-            try {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin instanceof PluginSaveMediaplayInterface && $plugin->load($user)) {
-                    debug_event(self::class, 'save_flag...' . $plugin_name, 5);
-                    $plugin->_plugin->set_flag($song, $flagged);
-                }
-            } catch (Exception $error) {
-                debug_event(self::class, 'save_flag plugin error: ' . $error->getMessage(), 1);
-            }
-        }
+        return $results;
     }
 
     /**
@@ -308,7 +214,8 @@ class Userflag extends database_object
         ?User $user = null,
         int $since = 0,
         int $before = 0,
-        bool $by_user = false
+        bool $by_user = false,
+        int $catalog_id = 0,
     ): string {
         $type = Stats::validate_type($input_type);
         $sql  = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
@@ -327,6 +234,11 @@ class Userflag extends database_object
 
         if (AmpConfig::get('catalog_filter')) {
             $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user?->getId() ?? -1);
+        }
+
+        $catalog_sql = Catalog::get_catalog_id_filter($input_type, '`user_flag`.`object_id`', $catalog_id);
+        if ($catalog_sql !== '') {
+            $sql .= " AND " . $catalog_sql;
         }
 
         if ($input_type == 'album_artist') {
@@ -349,46 +261,38 @@ class Userflag extends database_object
         return $sql . " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `date` DESC ";
     }
 
+    public static function is_valid(string $type): bool
+    {
+        return in_array($type, self::FLAG_TYPES);
+    }
+
     /**
-     * get_latest
-     * Get the latest user flagged objects
-     * @return int[]
+     * Migrate an object associate stats to a new object
      */
-    public static function get_latest(
-        string $type,
-        ?User $user = null,
-        int $count = 0,
-        int $offset = 0,
-        int $since = 0,
-        int $before = 0,
-        bool $by_user = false,
-    ): array {
-        if ($count === 0) {
-            $count = AmpConfig::get('popular_threshold', 10);
-        }
+    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
+    {
+        $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
-        if ($count === -1) {
-            $count  = 0;
-            $offset = 0;
-        }
+        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+    }
 
-        // Select Top objects counting by # of rows
-        $sql   = self::get_latest_sql($type, $user, $since, $before, $by_user);
-        $limit = ($offset < 1)
-            ? $count
-            : $offset . "," . $count;
-        if ($limit > 0) {
-            $sql .= 'LIMIT ' . $limit;
+    /**
+     * save_flag
+     * Forward flag to last.fm and Libre.fm (song only)
+     */
+    public static function save_flag(User $user, Song $song, bool $flagged): void
+    {
+        foreach (Plugin::get_plugins(PluginTypeEnum::USER_FLAG_MANAGER) as $plugin_name) {
+            try {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin instanceof PluginSaveMediaplayInterface && $plugin->load($user)) {
+                    debug_event(self::class, 'save_flag...' . $plugin_name, 5);
+                    $plugin->_plugin->set_flag($song, $flagged);
+                }
+            } catch (Exception $error) {
+                debug_event(self::class, 'save_flag plugin error: ' . $error->getMessage(), 1);
+            }
         }
-
-        //debug_event(self::class, 'get_latest ' . $sql, 5);
-        $db_results = Dba::read($sql);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
     }
 
     /**
@@ -426,13 +330,124 @@ class Userflag extends database_object
     }
 
     /**
-     * Migrate an object associate stats to a new object
+     * get_flag
+     * @return bool|array{bool, int}
      */
-    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
+    public function get_flag(?int $user_id = null, bool $get_date = false): bool|array
     {
-        $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        if ($user_id === null) {
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
+        }
 
-        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+        if ($user_id === 0) {
+            return false;
+        }
+
+        $key = 'userflag_' . $this->type . '_user' . $user_id;
+        if (parent::is_cached($key, $this->id)) {
+            $object = parent::get_from_cache($key, $this->id);
+            if (empty($object) || !$object[0]) {
+                return false;
+            }
+
+            if ($get_date) {
+                return [
+                    (bool) $object[0],
+                    (int) $object[1],
+                ];
+            }
+
+            return (bool) $object[0];
+        }
+
+        $flagged    = false;
+        $sql        = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ?";
+        $db_results = Dba::read($sql, [$user_id, $this->id, $this->type]);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            // always cache the date in case it's called by subsonic
+            parent::add_to_cache($key, $this->id, [true, (int) $row['date']]);
+            if ($get_date) {
+                return [
+                    true,
+                    (int) $row['date']
+                ];
+            }
+
+            $flagged = true;
+        }
+
+        return $flagged;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * set_flag
+     * This function sets the user flag for the current object.
+     * If no user_id is passed in, we use the currently logged in user.
+     */
+    public function set_flag(bool $flagged, ?int $user_id = null, ?int $date = null): bool
+    {
+        if ($user_id === null) {
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
+        }
+
+        if ($user_id === 0) {
+            return false;
+        }
+
+        if (!self::is_valid($this->type)) {
+            return false;
+        }
+
+        if ($this->get_flag($user_id) === $flagged) {
+            return true;
+        }
+
+        $date = $date ?? time();
+
+        debug_event(self::class, sprintf('Setting userflag for %s %d to %s (%s)', $this->type, $this->id, $flagged, $date), 4);
+
+        // a playlist, collection, folder, search or live stream can be flagged but carries no weight column
+        $weighted = in_array($this->type, Stats::WEIGHT_TYPES, true);
+
+        if (!$flagged) {
+            $sql    = "DELETE FROM `user_flag` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
+            $params = [$this->id, $this->type, $user_id];
+            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [false]);
+
+            // adjust weight
+            if ($weighted) {
+                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
+            }
+        } else {
+            $sql    = "REPLACE INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
+            $params = [$this->id, $this->type, $user_id, $date];
+            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [1, $date]);
+
+            $this->getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, $this->id, $date);
+
+            if ($weighted) {
+                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
+            }
+        }
+
+        Dba::write($sql, $params);
+
+        if ($this->type == 'song') {
+            $user = new User($user_id);
+            $song = new Song($this->id);
+            if ($song->isNew() === false) {
+                self::save_flag($user, $song, $flagged);
+            }
+        }
+
+        return true;
     }
 
     /**

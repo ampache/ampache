@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -35,6 +37,6 @@ interface SongSorterInterface
         bool $windowsCompat = false,
         ?string $various_artist_override = null,
         ?string $customPath = null,
-        ?string $catalogName = null
+        ?string $catalogName = null,
     ): void;
 }

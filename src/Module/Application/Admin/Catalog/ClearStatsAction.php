@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,27 +37,20 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ClearStatsAction implements ApplicationActionInterface
+final readonly class ClearStatsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'clear_stats';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'clear_stats';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             throw new AccessDeniedException();
         }

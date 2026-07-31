@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -35,29 +35,19 @@ use Ampache\Repository\Model\Rating;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class HighestPodcastEpisodeAction implements ApplicationActionInterface
+final readonly class HighestPodcastEpisodeAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'highest_podcast_episode';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'highest_podcast_episode';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-    }
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
+        $by_user = ((int) filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 
         $this->ui->showHeader();
         $this->ui->show(

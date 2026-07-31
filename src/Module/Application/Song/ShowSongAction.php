@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,43 +37,27 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowSongAction implements ApplicationActionInterface
+final readonly class ShowSongAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_song';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private GuiFactoryInterface $guiFactory;
-
-    private TalFactoryInterface $talFactory;
-
-    private LoggerInterface $logger;
+    public const string REQUEST_KEY = 'show_song';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        GuiFactoryInterface $guiFactory,
-        TalFactoryInterface $talFactory,
-        LoggerInterface $logger
-    ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
-        $this->guiFactory   = $guiFactory;
-        $this->talFactory   = $talFactory;
-        $this->logger       = $logger;
-    }
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private GuiFactoryInterface $guiFactory,
+        private TalFactoryInterface $talFactory,
+        private LoggerInterface $logger,
+    ) {}
 
     public function run(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         $this->ui->showHeader();
 
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
-        $catalogs = (isset($user->catalogs['music'])) ? $user->catalogs['music'] : User::get_user_catalogs($user->id);
-        $song     = $this->modelFactory->createSong((int)($request->getQueryParams()['song_id'] ?? 0));
+        $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
+        $song     = $this->modelFactory->createSong((int) ($request->getQueryParams()['song_id'] ?? 0));
 
         if ($song->isNew() || !in_array($song->catalog, $catalogs)) {
             $this->logger->warning(
@@ -95,6 +79,7 @@ final class ShowSongAction implements ApplicationActionInterface
 
             $this->ui->showBoxBottom();
         }
+
         // Show the Footer
         $this->ui->showQueryStats();
         $this->ui->showFooter();

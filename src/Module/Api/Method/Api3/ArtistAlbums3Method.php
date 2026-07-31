@@ -32,7 +32,7 @@ use Ampache\Repository\Model\User;
 
 final class ArtistAlbums3Method
 {
-    public const ACTION = 'artist_albums';
+    public const string ACTION = 'artist_albums';
 
     /**
      * artist_albums

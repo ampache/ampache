@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -34,33 +34,24 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class AddSongAction implements ApplicationActionInterface
+final readonly class AddSongAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_song';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'add_song';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->requestParser = $requestParser;
-        $this->ui            = $ui;
-        $this->modelFactory  = $modelFactory;
-    }
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
+        $playlist_id = (int) $this->requestParser->getFromRequest('playlist_id');
         $playlist    = $this->modelFactory->createPlaylist($playlist_id);
         if (!$playlist->has_collaborate()) {
             throw new AccessDeniedException();
         }
+
         $this->ui->showHeader();
 
         $playlist->add_songs([$_REQUEST['song_id']]);

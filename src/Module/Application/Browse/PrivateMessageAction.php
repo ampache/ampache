@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,25 +33,20 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class PrivateMessageAction implements ApplicationActionInterface
+final readonly class PrivateMessageAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'pvmsg';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'pvmsg';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui
-    ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
-    }
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(self::REQUEST_KEY);
@@ -69,6 +64,7 @@ final class PrivateMessageAction implements ApplicationActionInterface
         } else {
             $browse->set_filter('to_user', Core::get_global('user')?->getId());
         }
+
         $browse->update_browse_from_session();
         $browse->show_objects();
 

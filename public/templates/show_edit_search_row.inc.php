@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_edit_search_row.inc.php
 
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
@@ -54,7 +56,7 @@ use Ampache\Repository\Model\User;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)'); ?></td>
-                <td><input type="number" name="limit" value="<?php echo scrub_out((string)$libitem->limit); ?>" /></td>
+                <td><input type="number" name="limit" value="<?php echo scrub_out((string) $libitem->limit); ?>" /></td>
             </tr>
             <tr>
                 <td>
@@ -77,7 +79,7 @@ if (!empty($users)) {
                     <?php echo T_('Collaborate'); ?><br />
                 </td>
                 <td>
-                    <?php $ids = explode(',', (string)$libitem->collaborate);
+                    <?php $ids = explode(',', (string) $libitem->collaborate);
 $options                       = [];
 $users                         = User::getValidArray();
 if (!empty($users)) {

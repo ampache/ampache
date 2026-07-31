@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_video_row.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -65,13 +67,13 @@ $web_path = AmpConfig::get_web_path(); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php $art_showed = false;
 if ($libitem->get_default_art_kind() == 'preview') {
-    $art_showed = Art::display('video', $libitem->id, (string)$libitem->get_fullname(), ['width' => 150, 'height' => 84], $libitem->get_link(), false, true, 'preview');
+    $art_showed = Art::display('video', $libitem->id, (string) $libitem->get_fullname(), ['width' => 150, 'height' => 84], $libitem->get_link(), false, true, 'preview');
 }
 if (!$art_showed) {
     $size = ($browse->is_grid_view())
         ? ['width' => 200, 'height' => 300]
         : ['width' => 100, 'height' => 150];
-    Art::display('video', $libitem->id, (string)$libitem->get_fullname(), $size, $libitem->get_link());
+    Art::display('video', $libitem->id, (string) $libitem->get_fullname(), $size, $libitem->get_link());
 } ?>
 </td>
 <td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
@@ -81,7 +83,7 @@ if (!$art_showed) {
     echo Ajax::button('?action=basket&type=video&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_' . $libitem->id);
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <a id="<?php echo 'add_to_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'video', '<?php echo $libitem->id; ?>')">
-            <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
         </a>
     <?php } ?>
     </span>
@@ -98,16 +100,14 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
 <?php } ?>
 <?php if ($show_ratings) { ?>
         <td class="cel_ratings">
-            <?php if (AmpConfig::get('ratings')) { ?>
-                <div class="rating">
-                    <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_video">
-                        <?php echo Rating::show($libitem->id, 'video'); ?>
-                    </span>
-                    <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_video">
-                        <?php echo Userflag::show($libitem->id, 'video'); ?>
-                    </span>
-                </div>
-            <?php } ?>
+            <div class="rating">
+                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_video">
+                    <?php echo Rating::show($libitem->id, 'video'); ?>
+                </span>
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_video">
+                    <?php echo Userflag::show($libitem->id, 'video'); ?>
+                </span>
+            </div>
         </td>
     <?php } ?>
 <td class="cel_action">
@@ -139,7 +139,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
 <?php
 }
 if (Catalog::can_remove($libitem)) { ?>
-    <a id="<?php echo 'delete_video_' . $libitem->id; ?>" href="<?php echo $web_path; ?> /video.php?action=delete&video_id=<?php echo $libitem->id; ?>">
+    <a id="<?php echo 'delete_video_' . $libitem->id; ?>" href="<?php echo $web_path; ?>/video.php?action=delete&video_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
     </a>
 <?php } ?>

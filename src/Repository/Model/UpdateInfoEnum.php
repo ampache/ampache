@@ -26,6 +26,6 @@ namespace Ampache\Repository\Model;
 
 enum UpdateInfoEnum: string
 {
-    case DB_VERSION = 'db_version';
     case CRON_DATE  = 'cron_date';
+    case DB_VERSION = 'db_version';
 }

@@ -48,8 +48,7 @@ final readonly class PodcastAjaxHandler implements AjaxHandlerInterface
         private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
         private PrivilegeCheckerInterface $privilegeChecker,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {

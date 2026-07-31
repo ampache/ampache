@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
@@ -35,7 +34,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistCreate3Method
 {
-    public const ACTION = 'playlist_create';
+    public const string ACTION = 'playlist_create';
 
     /**
      * playlist_create
@@ -55,7 +54,6 @@ final class PlaylistCreate3Method
         if ($type !== 'private' && $type !== 'public') {
             $type = 'public';
         }
-        Catalog::count_table('playlist');
 
         $uid = Playlist::create($name, $type, $user->id);
         echo Xml3_Data::playlists([(int) $uid]);

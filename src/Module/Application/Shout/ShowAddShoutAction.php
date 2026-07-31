@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -38,38 +38,22 @@ use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAddShoutAction implements ApplicationActionInterface
+final readonly class ShowAddShoutAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_add_shout';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private ShoutRendererInterface $shoutRenderer;
-
-    private ShoutObjectLoaderInterface $shoutObjectLoader;
+    public const string REQUEST_KEY = 'show_add_shout';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ShoutRepositoryInterface $shoutRepository,
-        ShoutRendererInterface $shoutRenderer,
-        ShoutObjectLoaderInterface $shoutObjectLoader
-    ) {
-        $this->requestParser     = $requestParser;
-        $this->ui                = $ui;
-        $this->shoutRepository   = $shoutRepository;
-        $this->shoutRenderer     = $shoutRenderer;
-        $this->shoutObjectLoader = $shoutObjectLoader;
-    }
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ShoutRepositoryInterface $shoutRepository,
+        private ShoutRendererInterface $shoutRenderer,
+        private ShoutObjectLoaderInterface $shoutObjectLoader,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $object_type = LibraryItemEnum::from($this->requestParser->getFromRequest('type'));
-        $object_id   = (int)$this->requestParser->getFromRequest('id');
+        $object_id   = (int) $this->requestParser->getFromRequest('id');
 
         // Get our object first
         $object = $this->shoutObjectLoader->loadByObjectType($object_type, $object_id);
@@ -87,7 +71,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
         }
 
         $data = '';
-        if (get_class($object) === Song::class) {
+        if ($object::class === Song::class) {
             $data = $this->requestParser->getFromRequest('offset');
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
 use Ampache\Module\System\Core;
@@ -42,9 +43,8 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private ModelFactoryInterface $modelFactory,
         private LiveStreamRepositoryInterface $liveStreamRepository,
-        private ShareUiLinkRendererInterface $shareUiLinkRenderer
-    ) {
-    }
+        private ShareUiLinkRendererInterface $shareUiLinkRenderer,
+    ) {}
 
     public function handle(User $user): void
     {
@@ -53,7 +53,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         }
 
         $browse_id = (isset($_REQUEST['browse_id']))
-            ? (int)$_REQUEST['browse_id']
+            ? (int) $_REQUEST['browse_id']
             : null;
         $browse = $this->modelFactory->createBrowse($browse_id);
 
@@ -69,7 +69,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
         // hide some of the useless columns in a browse
         if (array_key_exists('hide', $_REQUEST)) {
-            $argument = ['hide' => explode(',', scrub_in((string)$_REQUEST['hide']))];
+            $argument = ['hide' => explode(',', scrub_in((string) $_REQUEST['hide']))];
         }
 
         $results = [];
@@ -94,7 +94,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                     // Checkbox unplayed
                     if (isset($_REQUEST['value'])) {
-                        $value = (int)($_REQUEST['value'] ?? 0);
+                        $value = (int) $_REQUEST['value'];
                         if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
                             $value = 0;
                         }
@@ -112,16 +112,16 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 // filter box Catalog select
                 if (isset($_REQUEST['catalog'])) {
-                    $browse->set_catalog($_SESSION['catalog']);
+                    $browse->set_catalog($_SESSION['catalog'] ?? null);
                 }
 
                 if (array_key_exists('catalog_key', $_REQUEST) && $_REQUEST['catalog_key']) {
-                    $_SESSION['catalog'] = $_REQUEST['catalog_key'];
+                    $_SESSION['catalog'] = (int) $_REQUEST['catalog_key'];
                     $browse->set_filter('catalog', $_REQUEST['catalog_key']);
                     $filter = true;
                 } else {
                     $_SESSION['catalog'] = null;
-                    if ($browse->get_filter('catalog') !== null && $browse->get_filter('catalog') !== '' && $browse->get_filter('catalog') !== '0') {
+                    if ((int) $browse->get_filter('catalog') !== 0) {
                         $browse->set_filter('catalog', null);
                         $filter = true;
                     }
@@ -156,7 +156,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
 
-                switch ($_REQUEST['type']) {
+                switch ($_REQUEST['type'] ?? '') {
                     case 'playlist':
                         // Check the perms we need to on this
                         $playlist = new Playlist((int) Core::get_request('id'));
@@ -169,7 +169,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $key = 'playlist_row_' . $playlist->id;
                         break;
                     case 'smartplaylist':
-                        $playlist = $this->modelFactory->createSearch((int) Core::get_request('id'));
+                        $playlist = $this->modelFactory->createSmartlist((int) Core::get_request('id'));
                         if (!$playlist->has_access()) {
                             return;
                         }
@@ -192,13 +192,13 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         break;
                     default:
                         return;
-                } // end switch on type
+                }
 
                 $results[$key] = '';
 
                 break;
             case 'page':
-                $browse->set_start((int)($_REQUEST['start'] ?? 0));
+                $browse->set_start((int) ($_REQUEST['start'] ?? 0));
                 ob_start();
                 $browse->show_objects([], $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
@@ -254,15 +254,18 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $value = ($value == 'true');
                         $browse->set_grid_view($value);
                         break;
+                    case 'use_select':
+                        $browse->set_use_select($value == 'true');
+                        break;
                     case 'limit':
-                        $value = (int)$value;
+                        $value = (int) $value;
                         if ($value > 0) {
                             $browse->set_offset($value);
                         }
 
                         break;
                     case 'custom':
-                        $value = (int)$value;
+                        $value = (int) $value;
                         $limit = $browse->get_offset();
                         if ($limit > 0 && $value > 0) {
                             $total = $browse->get_total();
@@ -288,9 +291,11 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'get_share_links':
                 $object_type = LibraryItemEnum::tryFrom(Core::get_request('object_type')) ?? null;
-                $object_id   = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
                 if ($object_type !== null && $object_id > 0) {
+                    header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset', 'UTF-8'));
+                    header_remove('Content-Disposition');
                     echo $this->shareUiLinkRenderer->render($object_type, $object_id);
 
                     return;
@@ -300,6 +305,6 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         $browse->store();
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

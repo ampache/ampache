@@ -33,12 +33,59 @@ use DateTimeInterface;
 
 final readonly class BookmarkRepository implements BookmarkRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
+    public function __construct(private DatabaseConnectionInterface $connection) {}
+
+    /**
+     * Remove bookmark for items that no longer exist.
+     */
+    public function collectGarbage(): void
     {
+        $types = [
+            'song',
+            'video',
+            'podcast_episode',
+        ];
+        foreach ($types as $type) {
+            try {
+                $this->connection->query(
+                    sprintf(
+                        "DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `%s` ON `%s`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = '%s' AND `%s`.`id` IS NULL;",
+                        $type,
+                        $type,
+                        $type,
+                        $type
+                    )
+                );
+            } catch (DatabaseException) {
+                debug_event(self::class, 'collectGarbage error', 5);
+            }
+        }
+    }
+
+    public function delete(int $bookmarkId): void
+    {
+        $this->connection->query(
+            'DELETE FROM `bookmark` WHERE `id` = ?',
+            [$bookmarkId]
+        );
     }
 
     /**
-     * @return list<int>
+     * Finds a single item by id
+     */
+    public function findById(int $itemId): ?Bookmark
+    {
+        $bookmark = new Bookmark($itemId);
+
+        if ($bookmark->isNew()) {
+            return null;
+        }
+
+        return $bookmark;
+    }
+
+    /**
+     * @return int[]
      */
     public function getByUser(User $user): array
     {
@@ -57,7 +104,7 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
     }
 
     /**
-     * @return list<int>
+     * @return int[]
      */
     public function getByUserAndComment(User $user, string $comment): array
     {
@@ -78,49 +125,6 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
         return $ids;
     }
 
-    public function delete(int $bookmarkId): void
-    {
-        $this->connection->query(
-            'DELETE FROM `bookmark` WHERE `id` = ?',
-            [$bookmarkId]
-        );
-    }
-
-    /**
-     * Remove bookmark for items that no longer exist.
-     */
-    public function collectGarbage(): void
-    {
-        $types = [
-            'song',
-            'video',
-            'podcast_episode',
-        ];
-        foreach ($types as $type) {
-            try {
-                $this->connection->query(
-                    sprintf(
-                        'DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `%s` ON `%s`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = \'%s\' AND `%s`.`id` IS NULL;',
-                        $type,
-                        $type,
-                        $type,
-                        $type
-                    )
-                );
-            } catch (DatabaseException) {
-                debug_event(self::class, 'collectGarbage error', 5);
-            }
-        }
-    }
-
-    public function update(int $bookmarkId, int $position, DateTimeInterface $date): void
-    {
-        $this->connection->query(
-            'UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `id` = ?',
-            [$position, $date->getTimestamp(), $bookmarkId]
-        );
-    }
-
     /**
      * Migrate an object associate stats to a new object
      */
@@ -132,17 +136,11 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
         );
     }
 
-    /**
-     * Finds a single item by id
-     */
-    public function findById(int $itemId): ?Bookmark
+    public function update(int $bookmarkId, int $position, DateTimeInterface $date): void
     {
-        $bookmark = new Bookmark($itemId);
-
-        if ($bookmark->isNew()) {
-            return null;
-        }
-
-        return $bookmark;
+        $this->connection->query(
+            'UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `id` = ?',
+            [$position, $date->getTimestamp(), $bookmarkId]
+        );
     }
 }

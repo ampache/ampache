@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,13 +23,15 @@ declare(strict_types=0);
  *
  */
 
+// show_localplay_playlist.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var list<array{track: string, id: int, name: string}> $object_ids */
+/** @var array<int, array{track: string, id: int, name: string}> $object_ids */
 
 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
 $localplay->connect();
@@ -55,10 +57,10 @@ $status = $localplay->status(); ?>
                 } ?>
         <tr id="localplay_playlist_<?php echo $object['id']; ?>">
             <td class="cel_track">
-                <?php echo scrub_out($object['track']); ?>
+                <?php echo scrub_out((string) $object['track']); ?>
             </td>
             <td<?php echo $class; ?>>
-                <?php echo $localplay->format_name($object['name'], $object['id']); ?>
+                <?php echo $localplay->format_name($object['name'], (int) $object['id']); ?>
             </td>
             <td class="cel_action">
             <?php echo Ajax::button('?page=localplay&action=delete_track&browse_id=' . $browse->getId() . '&id=' . (int) ($object['id']), 'close', T_('Delete'), 'localplay_delete_' . (int) ($object['id'])); ?>

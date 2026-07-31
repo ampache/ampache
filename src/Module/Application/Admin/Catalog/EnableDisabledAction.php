@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -34,19 +34,16 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class EnableDisabledAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'enable_disabled';
+    public const string REQUEST_KEY = 'enable_disabled';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    private readonly UiInterface $ui;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->ui = $ui;
     }
 
     /**
@@ -54,21 +51,23 @@ final class EnableDisabledAction extends AbstractCatalogAction
      */
     protected function handle(
         ServerRequestInterface $request,
-        array $catalogIds
+        array $catalogIds,
     ): ?ResponseInterface {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
         $songs = $_REQUEST['song'] ?? [];
-        if (count($songs)) {
+        if (count($songs) > 0) {
             foreach ($songs as $song_id) {
                 Song::update_enabled(true, $song_id);
             }
+
             $body = count($songs) . ' ' . nT_('Song has been enabled', 'Songs have been enabled', count($songs));
         } else {
             $body = T_("You didn't select any disabled Songs");
         }
+
         $url   = sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin'));
         $title = T_('Finished Processing Disabled Songs');
         $this->ui->showConfirmation($title, $body, $url);

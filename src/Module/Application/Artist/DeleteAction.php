@@ -29,25 +29,20 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class DeleteAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -59,18 +54,26 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $artistId = (int) ($request->getQueryParams()['artist_id'] ?? 0);
+        $queryParams = $request->getQueryParams();
+        $artistId    = (int) ($queryParams['artist_id'] ?? 0);
+        $burlParam   = (string) ($queryParams['burl'] ?? '');
+        $webPath     = $this->configContainer->getWebPath();
 
         $this->ui->showHeader();
-        $this->ui->showConfirmation(
+        $this->ui->showConfirmationWithReturn(
             T_('Are You Sure?'),
             T_('The Artist and all files will be deleted'),
             sprintf(
-                '%s/artists.php?action=confirm_delete&artist_id=%d',
-                $this->configContainer->getWebPath(),
+                '%s/artists.php?action=confirm_delete&artist_id=%d&burl=%s',
+                $webPath,
+                $artistId,
+                rawurlencode($burlParam)
+            ),
+            $this->deletionUrlResolver->resolveBurl($burlParam) ?: sprintf(
+                '%s/artists.php?action=show&artist=%d',
+                $webPath,
                 $artistId
             ),
-            1,
             'delete_artist'
         );
         $this->ui->showQueryStats();

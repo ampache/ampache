@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,36 +37,23 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
-        UiInterface $ui
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
-        $this->ui              = $ui;
-    }
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
+        private UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check Perms */
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_NOW_PLAYING_EMBEDDED) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_NOW_PLAYING_EMBEDDED) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             $this->logger->warning(
                 'Enable use_now_playing_embedded and disable demo mode for this feature',
@@ -125,7 +112,7 @@ final class ShowAction implements ApplicationActionInterface
             $css,
             $refreshLimit
         );
-        $user_id = (int)$this->requestParser->getFromRequest('user_id');
+        $user_id = (int) $this->requestParser->getFromRequest('user_id');
         $results = Stream::get_now_playing($user_id);
 
         $this->ui->show(

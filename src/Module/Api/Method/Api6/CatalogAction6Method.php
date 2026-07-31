@@ -25,113 +25,17 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Module\Api\Api6;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractCatalogActionMethod;
 
 /**
- * Class CatalogAction6Method
- * @package Lib\Api6Methods
+ * Kicks off a catalog update or clean for the selected catalog
+ *
+ * Api version 6 reports the catalog id as `catalog` and accepts `filter` as an alias. It does not
+ * know the `update_catalog` task that version 8 added.
  */
-final class CatalogAction6Method
+final class CatalogAction6Method extends AbstractCatalogActionMethod
 {
-    public const ACTION      = 'catalog_action';
-    public const REST_ACTION = 'action';
+    protected const string FILTER_ALIAS = 'filter';
 
-    /**
-     * @param array{
-     *     task: string,
-     *     filter?: int,
-     *     catalog?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function action(array $input, User $user): bool
-    {
-        return self::catalog_action($input, $user);
-    }
-
-    /**
-     * catalog_action
-     * MINIMUM_API_VERSION=400001
-     * CHANGED_IN_API_VERSION=420000
-     *
-     * Kick off a catalog update or clean for the selected catalog
-     * Added 'verify_catalog', 'gather_art'
-     *
-     * task = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'
-     * catalog = (integer) $catalog_id
-     *
-     * @param array{
-     *     task: string,
-     *     filter?: int,
-     *     catalog?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function catalog_action(array $input, User $user): bool
-    {
-        if (!Api6::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-
-        $input['catalog'] = $input['filter'] ?? $input['catalog'] ?? null;
-        if (!Api6::check_parameter($input, ['catalog', 'task'], self::ACTION)) {
-            return false;
-        }
-
-        $task = (string) $input['task'];
-        // confirm the correct data
-        if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'])) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $task), self::ACTION, 'task', $input['api_format']);
-
-            return false;
-        }
-
-        $catalog = Catalog::create_from_id((int) $input['catalog']);
-        if ($catalog !== null) {
-            switch ($task) {
-                case 'clean_catalog':
-                    $catalog->clean_catalog_proc();
-                    break;
-                case 'verify_catalog':
-                    $catalog->verify_catalog_proc();
-                    break;
-                case 'gather_art':
-                    $catalog->gather_art();
-                    break;
-                case 'add_to_catalog':
-                    $options = [
-                        'gather_art' => true,
-                        'parse_playlist' => false
-                    ];
-                    $catalog->add_to_catalog($options);
-                    break;
-                case 'garbage_collect':
-                    $catalog_media_type = $catalog->gather_types;
-                    if ($catalog_media_type == 'music') {
-                        Catalog::clean_empty_albums();
-                        Album::update_album_artist();
-                    }
-                    Catalog::update_catalog_map($catalog_media_type);
-                    Catalog::update_counts();
-                    break;
-            }
-
-            Api6::message('successfully started: ' . $task, $input['api_format']);
-        } else {
-            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $input['catalog']), self::ACTION, 'catalog', $input['api_format']);
-
-            return false;
-        }
-
-        return true;
-    }
+    protected const string FILTER_KEY = 'catalog';
 }

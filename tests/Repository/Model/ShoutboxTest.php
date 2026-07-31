@@ -36,68 +36,8 @@ use PHPUnit\Framework\TestCase;
 class ShoutboxTest extends TestCase
 {
     private ShoutRepositoryInterface&MockObject $shoutRepository;
-
-    private UserRepositoryInterface&MockObject $userRepository;
-
     private Shoutbox $subject;
-
-    protected function setUp(): void
-    {
-        $this->shoutRepository = $this->createMock(ShoutRepositoryInterface::class);
-        $this->userRepository  = $this->createMock(UserRepositoryInterface::class);
-
-        $this->subject = new Shoutbox(
-            $this->shoutRepository,
-            $this->userRepository,
-        );
-    }
-
-    public function testIsNewReturnsTrueIfIdIsZero(): void
-    {
-        static::assertTrue(
-            $this->subject->isNew()
-        );
-    }
-
-    public function testIsNewReturnsTrueIfIdIsNotZero(): void
-    {
-        $shoutId = 666;
-
-        $this->shoutRepository->expects(static::once())
-            ->method('persist')
-            ->with($this->subject)
-            ->willReturn($shoutId);
-
-        $this->subject->save();
-
-        static::assertFalse(
-            $this->subject->isNew()
-        );
-        static::assertSame(
-            $shoutId,
-            $this->subject->getId()
-        );
-    }
-
-    #[DataProvider(methodName: 'setterGetterDataProvider')]
-    public function testGetterReturnsSetData(
-        string $getterMethod,
-        string $setterMethod,
-        mixed $defaultValue,
-        mixed $setValue
-    ): void {
-        static::assertSame(
-            $defaultValue,
-            call_user_func_array([$this->subject, $getterMethod], [])
-        );
-
-        call_user_func_array([$this->subject, $setterMethod], [$setValue]);
-
-        static::assertSame(
-            $setValue,
-            call_user_func_array([$this->subject, $getterMethod], [])
-        );
-    }
+    private UserRepositoryInterface&MockObject $userRepository;
 
     public static function setterGetterDataProvider(): Generator
     {
@@ -106,15 +46,69 @@ class ShoutboxTest extends TestCase
         yield ['isSticky', 'setSticky', false, true];
     }
 
+    public function testGetDateReturnsSetDate(): void
+    {
+        self::assertSame(
+            0,
+            $this->subject->getDate()->getTimestamp()
+        );
+
+        $date = new DateTime();
+
+        $this->subject->setDate($date);
+
+        self::assertSame(
+            $date->getTimestamp(),
+            $this->subject->getDate()->getTimestamp()
+        );
+    }
+
     public function testGetObjectTypeReturnsSetValue(): void
     {
         $objectType = LibraryItemEnum::SONG;
 
         $this->subject->setObjectType($objectType);
 
-        static::assertSame(
+        self::assertSame(
             $objectType,
             $this->subject->getObjectType()
+        );
+    }
+
+    #[DataProvider(methodName: 'setterGetterDataProvider')]
+    public function testGetterReturnsSetData(
+        string $getterMethod,
+        string $setterMethod,
+        mixed $defaultValue,
+        mixed $setValue,
+    ): void {
+        self::assertSame(
+            $defaultValue,
+            call_user_func_array([$this->subject, $getterMethod], [])
+        );
+
+        call_user_func_array([$this->subject, $setterMethod], [$setValue]);
+
+        self::assertSame(
+            $setValue,
+            call_user_func_array([$this->subject, $getterMethod], [])
+        );
+    }
+
+    public function testGetTextReturnsSetText(): void
+    {
+        $text = '<div>AGGI AGGI é«ü%>?&</div>';
+
+        self::assertSame(
+            '',
+            $this->subject->getText()
+        );
+
+        $this->subject->setText($text);
+
+        self::assertSame(
+            strip_tags(htmlspecialchars($text)),
+            $this->subject->getText()
         );
     }
 
@@ -128,14 +122,14 @@ class ShoutboxTest extends TestCase
             ->method('getId')
             ->willReturn($userId);
 
-        static::assertSame(
+        self::assertSame(
             0,
             $this->subject->getUserId()
         );
 
         $this->subject->setUser($user);
 
-        static::assertSame(
+        self::assertSame(
             $userId,
             $this->subject->getUserId()
         );
@@ -150,43 +144,47 @@ class ShoutboxTest extends TestCase
             ->with(0)
             ->willReturn($user);
 
-        static::assertSame(
+        self::assertSame(
             $user,
             $this->subject->getUser()
         );
     }
 
-    public function testGetTextReturnsSetText(): void
+    public function testIsNewReturnsTrueIfIdIsNotZero(): void
     {
-        $text = '<div>AGGI AGGI é«ü%>?&</div>';
+        $shoutId = 666;
 
-        static::assertSame(
-            '',
-            $this->subject->getText()
+        $this->shoutRepository->expects(static::once())
+            ->method('persist')
+            ->with($this->subject)
+            ->willReturn($shoutId);
+
+        $this->subject->save();
+
+        self::assertFalse(
+            $this->subject->isNew()
         );
-
-        $this->subject->setText($text);
-
-        static::assertSame(
-            strip_tags(htmlspecialchars($text)),
-            $this->subject->getText()
+        self::assertSame(
+            $shoutId,
+            $this->subject->getId()
         );
     }
 
-    public function testGetDateReturnsSetDate(): void
+    public function testIsNewReturnsTrueIfIdIsZero(): void
     {
-        static::assertSame(
-            0,
-            $this->subject->getDate()->getTimestamp()
+        self::assertTrue(
+            $this->subject->isNew()
         );
+    }
 
-        $date = new DateTime();
+    protected function setUp(): void
+    {
+        $this->shoutRepository = $this->createMock(ShoutRepositoryInterface::class);
+        $this->userRepository  = $this->createMock(UserRepositoryInterface::class);
 
-        $this->subject->setDate($date);
-
-        static::assertSame(
-            $date->getTimestamp(),
-            $this->subject->getDate()->getTimestamp()
+        $this->subject = new Shoutbox(
+            $this->shoutRepository,
+            $this->userRepository,
         );
     }
 }

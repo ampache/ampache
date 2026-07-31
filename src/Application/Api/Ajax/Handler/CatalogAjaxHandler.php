@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,9 +36,8 @@ use Ampache\Repository\Model\User;
 final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
-        private RequestParserInterface $requestParser
-    ) {
-    }
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function handle(User $user): void
     {
@@ -52,7 +51,7 @@ final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
                 return;
             }
 
-            $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
+            $catalog = Catalog::create_from_id((int) $this->requestParser->getFromRequest('catalog_id'));
             if ($catalog === null) {
                 return;
             }
@@ -74,6 +73,6 @@ final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
         } // switch on action;
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

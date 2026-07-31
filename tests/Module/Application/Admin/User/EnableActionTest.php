@@ -37,113 +37,15 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class EnableActionTest extends MockeryTestCase
 {
-    private MockInterface&UiInterface $ui;
-
-    private MockInterface&ModelFactoryInterface $modelFactory;
-
     private MockInterface&ConfigContainerInterface $configContainer;
-
+    private MockInterface&ModelFactoryInterface $modelFactory;
     private EnableAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-
-        $this->subject = new EnableAction(
-            $this->ui,
-            $this->modelFactory,
-            $this->configContainer
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run(
-            $request,
-            $gatekeeper
-        );
-    }
-
-    public function testRunReturnsNullIfDemoModeIsEnabled(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertNull(
-            $this->subject->run(
-                $request,
-                $gatekeeper
-            )
-        );
-    }
-
-    public function testRunShowsErrorIfUserIdIsLesserThenOne(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $user       = $this->createMock(User::class);
-
-        $userId = -1;
-
-        static::expectException(ObjectNotFoundException::class);
-
-        $this->modelFactory->shouldReceive('createUser')
-            ->with($userId)
-            ->once()
-            ->andReturn($user);
-
-        $user->expects(static::once())
-            ->method('isNew')
-            ->willReturn(true);
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['user_id' => (string) $userId]);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnFalse();
-
-        $this->assertNull(
-            $this->subject->run(
-                $request,
-                $gatekeeper
-            )
-        );
-    }
+    private MockInterface&UiInterface $ui;
 
     public function testRunRendersConfirmation(): void
     {
@@ -216,6 +118,103 @@ class EnableActionTest extends MockeryTestCase
                 $request,
                 $gatekeeper
             )
+        );
+    }
+
+    public function testRunReturnsNullIfDemoModeIsEnabled(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertNull(
+            $this->subject->run(
+                $request,
+                $gatekeeper
+            )
+        );
+    }
+
+    public function testRunShowsErrorIfUserIdIsLesserThenOne(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $user       = $this->createMock(User::class);
+
+        $userId = -1;
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $this->modelFactory->shouldReceive('createUser')
+            ->with($userId)
+            ->once()
+            ->andReturn($user);
+
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['user_id' => (string) $userId]);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertNull(
+            $this->subject->run(
+                $request,
+                $gatekeeper
+            )
+        );
+    }
+
+    public function testRunThrowsExceptionIfAccessDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run(
+            $request,
+            $gatekeeper
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+
+        $this->subject = new EnableAction(
+            $this->ui,
+            $this->modelFactory,
+            $this->configContainer
         );
     }
 }

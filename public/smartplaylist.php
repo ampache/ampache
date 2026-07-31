@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Search\SaveAsPlaylistAction;
-use Ampache\Module\Application\SmartPlaylist\CreatePlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\DeletePlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\RefreshPlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\ShowAction;
@@ -44,7 +43,6 @@ $dic->get(ApplicationRunner::class)->run(
         UpdatePlaylistAction::REQUEST_KEY => UpdatePlaylistAction::class,
         SaveAsPlaylistAction::REQUEST_KEY => SaveAsPlaylistAction::class,
         DeletePlaylistAction::REQUEST_KEY => DeletePlaylistAction::class,
-        CreatePlaylistAction::REQUEST_KEY => CreatePlaylistAction::class,
     ],
     ShowAction::REQUEST_KEY
 );

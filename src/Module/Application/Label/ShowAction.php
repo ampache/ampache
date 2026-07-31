@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -41,33 +41,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
-
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    private LabelRepositoryInterface $labelRepository;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger,
-        PrivilegeCheckerInterface $privilegeChecker,
-        LabelRepositoryInterface $labelRepository
-    ) {
-        $this->configContainer  = $configContainer;
-        $this->ui               = $ui;
-        $this->logger           = $logger;
-        $this->privilegeChecker = $privilegeChecker;
-        $this->labelRepository  = $labelRepository;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private LabelRepositoryInterface $labelRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -80,12 +64,12 @@ final class ShowAction implements ApplicationActionInterface
         $input = $request->getQueryParams();
 
         // lookup by ID
-        $label_id = (isset($input['label'])) ? (int)$input['label'] : null;
+        $label_id = (isset($input['label'])) ? (int) $input['label'] : null;
         $label    = (is_int($label_id))
             ? $this->labelRepository->findById($label_id)
             : null;
         // lookup by name if ID didn't work
-        $label_name = (isset($input['name'])) ? urldecode((string)$input['name']) : null;
+        $label_name = (isset($input['name'])) ? urldecode((string) $input['name']) : null;
         if (!$label && $label_name !== null) {
             $label_id = $this->labelRepository->lookup($label_name);
             $label    = ($label_id > 0)
@@ -122,10 +106,7 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         // if you didn't set a label_id or name, show the add label form
-        if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) === true
-        ) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             $this->ui->show(
                 'show_add_label.inc.php'
             );
@@ -141,12 +122,10 @@ final class ShowAction implements ApplicationActionInterface
 
     private function isEditable(
         int $userId,
-        Label $label
+        Label $label,
     ): bool {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) === true) {
-            if ($label->user !== null && $userId == $label->user) {
-                return true;
-            }
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) && ($label->user !== null && $userId === $label->user)) {
+            return true;
         }
 
         return $this->privilegeChecker->check(

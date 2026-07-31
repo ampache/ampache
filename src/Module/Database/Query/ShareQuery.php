@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -29,8 +29,11 @@ use Ampache\Repository\Model\Query;
 
 final class ShareQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
     ];
+
+    protected string $base   = "SELECT %%SELECT%% FROM `share` ";
+    protected string $select = "`share`.`id`";
 
     /** @var string[] $sorts */
     protected array $sorts = [
@@ -46,9 +49,15 @@ final class ShareQuery implements QueryInterface
         'user',
     ];
 
-    protected string $select = "`share`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `share` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -58,16 +67,6 @@ final class ShareQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**
@@ -95,36 +94,19 @@ final class ShareQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
-        switch ($field) {
-            case 'object':
-                $sql = "`share`.`object_type`, `share`.`object.id`";
-                break;
-            case 'allow_download':
-            case 'allow_stream':
-            case 'counter':
-            case 'creation_date':
-            case 'expire':
-            case 'id':
-            case 'lastvisit_date':
-            case 'max_counter':
-            case 'object_type':
-            case 'user':
-                $sql = "`share`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'object' => "`share`.`object_type`, `share`.`object.id`",
+            'allow_download', 'allow_stream', 'counter', 'creation_date', 'expire', 'id', 'lastvisit_date', 'max_counter', 'object_type', 'user' => sprintf('`share`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

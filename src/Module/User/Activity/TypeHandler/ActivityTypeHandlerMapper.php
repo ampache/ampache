@@ -27,21 +27,15 @@ namespace Ampache\Module\User\Activity\TypeHandler;
 
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-final class ActivityTypeHandlerMapper implements ActivityTypeHandlerMapperInterface
+final readonly class ActivityTypeHandlerMapper implements ActivityTypeHandlerMapperInterface
 {
-    private const MAP = [
+    private const array MAP = [
         ActivityTypeEnum::TYPE_SONG => SongActivityTypeHandler::class,
         ActivityTypeEnum::TYPE_ALBUM => AlbumActivityTypeHandler::class,
         ActivityTypeEnum::TYPE_ARTIST => ArtistActivityTypeHandler::class,
     ];
 
-    private UserActivityRepositoryInterface $userActivityRepository;
-
-    public function __construct(
-        UserActivityRepositoryInterface $userActivityRepository
-    ) {
-        $this->userActivityRepository = $userActivityRepository;
-    }
+    public function __construct(private UserActivityRepositoryInterface $userActivityRepository) {}
 
     /**
      * Maps a certain object type to a type handler class. Returns a generic handler if

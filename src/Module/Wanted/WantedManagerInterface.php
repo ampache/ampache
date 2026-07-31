@@ -32,17 +32,11 @@ use MusicBrainz\Exception;
 interface WantedManagerInterface
 {
     /**
-     * Delete a wanted release by mbid.
-     * @throws Exception
-     */
-    public function delete(string $mbid, ?User $user = null): void;
-
-    /**
      * Accept a wanted request.
      */
     public function accept(
         Wanted $wanted,
-        User $user
+        User $user,
     ): void;
 
     /**
@@ -54,6 +48,12 @@ interface WantedManagerInterface
         ?int $artist,
         ?string $artist_mbid,
         string $name,
-        int $year
+        int $year,
     ): void;
+
+    /**
+     * Delete a wanted release by mbid.
+     * @throws Exception
+     */
+    public function delete(string $mbid, ?User $user = null): void;
 }

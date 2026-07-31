@@ -32,7 +32,7 @@ use Ampache\Repository\Model\User;
  */
 final class Search4Method
 {
-    public const ACTION = 'search';
+    public const string ACTION = 'search';
 
     /**
      * search

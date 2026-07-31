@@ -30,26 +30,14 @@ use PHPUnit\Framework\TestCase;
 
 class RegistrationAgreementRendererTest extends TestCase
 {
-    private vfsStreamFile $vfsStream;
-
     private RegistrationAgreementRenderer $subject;
-
-    protected function setUp(): void
-    {
-        $dir = vfsStream::setup('/');
-
-        $this->vfsStream = new vfsStreamFile('snafu');
-
-        $dir->addChild($this->vfsStream);
-
-        $this->subject = new RegistrationAgreementRenderer($this->vfsStream->url());
-    }
+    private vfsStreamFile $vfsStream;
 
     public function testRenderFailsIfFileDoesNotExist(): void
     {
         @unlink($this->vfsStream->url());
 
-        static::assertSame(
+        self::assertSame(
             '',
             $this->subject->render()
         );
@@ -59,7 +47,7 @@ class RegistrationAgreementRendererTest extends TestCase
     {
         chmod($this->vfsStream->url(), 0000);
 
-        static::assertSame(
+        self::assertSame(
             '',
             $this->subject->render()
         );
@@ -71,9 +59,20 @@ class RegistrationAgreementRendererTest extends TestCase
 
         file_put_contents($this->vfsStream->url(), $content);
 
-        static::assertSame(
+        self::assertSame(
             $content,
             $this->subject->render()
         );
+    }
+
+    protected function setUp(): void
+    {
+        $dir = vfsStream::setup('/');
+
+        $this->vfsStream = new vfsStreamFile('snafu');
+
+        $dir->addChild($this->vfsStream);
+
+        $this->subject = new RegistrationAgreementRenderer($this->vfsStream->url());
     }
 }

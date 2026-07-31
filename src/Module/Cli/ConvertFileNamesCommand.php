@@ -27,26 +27,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
+use Override;
 
 final class ConvertFileNamesCommand extends Command
 {
-    private FileNameConverterInterface $fileNameCorrector;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        FileNameConverterInterface $fileNameCorrector
+        private readonly FileNameConverterInterface $fileNameCorrector,
     ) {
         parent::__construct('run:convertFilenames', T_('Convert filenames using a charset'));
-
-        $this->fileNameCorrector = $fileNameCorrector;
 
         $this
             ->option('-f|--fire', T_('Enables `fire-and-forget`-mode (Disables prompting on rename)'), 'boolval', false)
@@ -77,5 +65,15 @@ final class ConvertFileNamesCommand extends Command
             $values['charset'],
             $values['fire']
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

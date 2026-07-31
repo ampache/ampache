@@ -27,33 +27,22 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFolderInterface;
+use Override;
 
 final class UpdateCatalogFolderCommand extends Command
 {
-    private UpdateSingleCatalogFolderInterface $updateSingleCatalogFolder;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        UpdateSingleCatalogFolderInterface $updateSingleCatalogFolder
+        private readonly UpdateSingleCatalogFolderInterface $updateSingleCatalogFolder,
     ) {
         parent::__construct('run:updateCatalogFolder', T_('Perform catalog actions for a single folder'));
-
-        $this->updateSingleCatalogFolder = $updateSingleCatalogFolder;
 
         $this
             ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
             ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
             ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
-            ->option('-m|--move', T_('Move file in the database to a new location'), 'strval', null)
+            ->option('-m|--move', T_('Move file in the database to a new location'), 'strval')
+            ->option('-s|--scan', T_('Scan Local Catalog folders for folder browsing'), 'boolval', false)
             ->argument('<catalogName>', T_('Catalog Name'))
             ->argument('<folderPath>', T_('Path'))
             /* HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album) */
@@ -62,19 +51,20 @@ final class UpdateCatalogFolderCommand extends Command
 
     public function execute(
         string $catalogName,
-        string $folderPath
+        string $folderPath,
     ): void {
         $values = $this->values();
 
         $interactor = $this->io();
 
         if (
-            ($values['move'] != null) &&
-            (
-                $values['verify'] ||
-                $values['add'] ||
-                $values['cleanup'] ||
-                $values['art']
+            ($values['move'] != null)
+            && (
+                $values['verify']
+                || $values['add']
+                || $values['cleanup']
+                || $values['art']
+                || $values['scan']
             )
         ) {
             $interactor->error(
@@ -93,7 +83,18 @@ final class UpdateCatalogFolderCommand extends Command
             $values['add'],
             $values['cleanup'],
             $values['art'],
+            $values['scan'],
             $values['move']
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

@@ -41,44 +41,11 @@ class ExportPodcastsActionTest extends TestCase
     use ConsecutiveParams;
 
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private PodcastExporterInterface&MockObject $podcastExporter;
-
-    private ResponseFactoryInterface&MockObject $responseFactory;
-
-    private ExportPodcastsAction $subject;
-
-    private ServerRequestInterface&MockObject $request;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->podcastExporter = $this->createMock(PodcastExporterInterface::class);
-        $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
-
-        $this->subject = new ExportPodcastsAction(
-            $this->configContainer,
-            $this->podcastExporter,
-            $this->responseFactory
-        );
-
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-    }
-
-    public function testRunReturnsNullIfPodcastsAreDisabled(): void
-    {
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn(false);
-
-        static::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
-        );
-    }
+    private PodcastExporterInterface&MockObject $podcastExporter;
+    private ServerRequestInterface&MockObject $request;
+    private ResponseFactoryInterface&MockObject $responseFactory;
+    private ExportPodcastsAction $subject;
 
     public function testRunExportsAllSubscriptions(): void
     {
@@ -101,7 +68,7 @@ class ExportPodcastsActionTest extends TestCase
             ->method('withHeader')
             ->with(
                 ...self::withConsecutive(
-                    ['Content-Disposition', static::stringContains('ampache')],
+                    ['Content-Disposition', self::stringContains('ampache')],
                     ['Content-Type', $contentType]
                 )
             )
@@ -121,9 +88,37 @@ class ExportPodcastsActionTest extends TestCase
             ->method('getContentType')
             ->willReturn($contentType);
 
-        static::assertSame(
+        self::assertSame(
             $response,
             $this->subject->run($this->request, $this->gatekeeper)
         );
+    }
+
+    public function testRunReturnsNullIfPodcastsAreDisabled(): void
+    {
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->run($this->request, $this->gatekeeper)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->podcastExporter = $this->createMock(PodcastExporterInterface::class);
+        $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
+
+        $this->subject = new ExportPodcastsAction(
+            $this->configContainer,
+            $this->podcastExporter,
+            $this->responseFactory
+        );
+
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
     }
 }

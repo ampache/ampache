@@ -35,7 +35,7 @@ use Ampache\Repository\ShareRepositoryInterface;
  */
 final class ShareDelete4Method
 {
-    public const ACTION = 'share_delete';
+    public const string ACTION = 'share_delete';
 
     /**
      * share_delete
@@ -54,7 +54,7 @@ final class ShareDelete4Method
     public static function share_delete(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api4::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: sharing features are not enabled.', '400', $input['api_format']);
 
             return false;
         }

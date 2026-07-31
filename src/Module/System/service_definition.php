@@ -25,8 +25,17 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System;
 
+use Ampache\Module\System\Crypto\SymmetricEncrypter;
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
+use Ampache\Module\System\Plugin\PluginManager;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\System\Plugin\PluginRetriever;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
+use Ampache\Module\System\Update\UpdateHelper;
+use Ampache\Module\System\Update\UpdateHelperInterface;
+use Ampache\Module\System\Update\Updater;
+use Ampache\Module\System\Update\UpdaterInterface;
+use Ampache\Module\System\Update\UpdateRunner;
 
 use function DI\autowire;
 
@@ -37,11 +46,13 @@ return [
     SessionInterface::class => autowire(Session::class),
     InstallationHelperInterface::class => autowire(InstallationHelper::class),
     PreferencesFromRequestUpdaterInterface::class => autowire(PreferencesFromRequestUpdater::class),
-    Update\UpdateHelperInterface::class => autowire(Update\UpdateHelper::class),
-    Update\UpdaterInterface::class => autowire(Update\Updater::class)
+    UpdateHelperInterface::class => autowire(UpdateHelper::class),
+    UpdaterInterface::class => autowire(Updater::class)
         ->constructorParameter(
             'updateRunner',
-            autowire(Update\UpdateRunner::class)
+            autowire(UpdateRunner::class)
         ),
     PluginRetrieverInterface::class => autowire(PluginRetriever::class),
+    PluginManagerInterface::class => autowire(PluginManager::class),
+    SymmetricEncrypterInterface::class => autowire(SymmetricEncrypter::class),
 ];

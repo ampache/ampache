@@ -25,18 +25,34 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Playlist;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class PlaylistAddSong5Method
+ * Adds a single song to a playlist.
+ *
+ * Version 5 only adds songs and knows nothing about the parent types the later versions accept,
+ * so it keeps a method of its own.
  */
-final class PlaylistAddSong5Method
+final class PlaylistAddSong5Method implements MethodInterface
 {
-    public const ACTION = 'playlist_add_song';
+    public const string ACTION = 'playlist_add_song';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * playlist_add_song
@@ -55,29 +71,60 @@ final class PlaylistAddSong5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException|RequestParamMissingException
      */
-    public static function playlist_add_song(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['filter', 'song'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        foreach (['filter', 'song'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
-        ob_end_clean();
-        $playlist = new Playlist((int) $input['filter']);
+
+        $playlist = $this->modelFactory->createPlaylist((int) $input['filter']);
         $song     = (int) $input['song'];
+
         if (!$playlist->has_collaborate($user)) {
-            Api5::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, T_('Require: 100'), self::ACTION, 'account', $input['api_format']);
-
-            return false;
+            throw new AccessFailedException(
+                'Require: 100'
+            );
         }
-        if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int) $input['check'] == 1)) && $playlist->has_item($song)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $song), self::ACTION, 'duplicate', $input['api_format']);
 
-            return false;
+        if (
+            (
+                $this->configContainer->get(ConfigurationKeyEnum::UNIQUE_PLAYLIST)
+                || (array_key_exists('check', $input) && (int) $input['check'] == 1)
+            )
+            && $playlist->has_item($song)
+        ) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        sprintf('Bad Request: %s', $song),
+                        self::ACTION,
+                        'duplicate'
+                    )
+                )
+            );
         }
+
         $playlist->add_songs([$song]);
-        Api5::message('song added to playlist', $input['api_format']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success($apiVersion, 'song added to playlist')
+            )
+        );
     }
 }

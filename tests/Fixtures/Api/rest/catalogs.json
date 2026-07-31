@@ -1,0 +1,32 @@
+{
+    "total_count": 8,
+    "md5": "61f47b9dfdf99afa8482e181acdfb563",
+    "catalog": [
+        {
+            "id": "2",
+            "name": "music",
+            "type": "local",
+            "gather_types": "music",
+            "enabled": true,
+            "last_add": 1783408730,
+            "last_clean": 1783408836,
+            "last_update": 1742793470,
+            "path": "/media/music",
+            "rename_pattern": "%d-%T - %t",
+            "sort_pattern": "%a\/(%y) %A [%C]"
+        },
+        {
+            "id": "6",
+            "name": "boots",
+            "type": "local",
+            "gather_types": "music",
+            "enabled": true,
+            "last_add": 1782214725,
+            "last_clean": 1782214001,
+            "last_update": 1632019379,
+            "path": "\/mnt\/files-music\/boots",
+            "rename_pattern": "%d-%T - %t",
+            "sort_pattern": "%a\/%A"
+        }
+    ]
+}

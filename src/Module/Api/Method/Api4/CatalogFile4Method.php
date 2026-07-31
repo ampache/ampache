@@ -44,7 +44,7 @@ use Ampache\Repository\Model\Video;
  */
 final class CatalogFile4Method
 {
-    public const ACTION = 'catalog_file';
+    public const string ACTION = 'catalog_file';
 
     /**
      * catalog_file
@@ -76,26 +76,26 @@ final class CatalogFile4Method
         }
         $task = (string) $input['task'];
         if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
-            Api4::message('error', T_('Access Denied: delete from disk is not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: delete from disk is not enabled.', '400', $input['api_format']);
 
             return false;
         }
         $file = html_entity_decode($input['file']);
         // confirm the correct data
         if (!in_array($task, ['add', 'clean', 'verify', 'remove'])) {
-            Api4::message('error', T_('Incorrect file task') . ' ' . $task, '401', $input['api_format']);
+            Api4::message('error', 'Incorrect file task' . ' ' . $task, '401', $input['api_format']);
 
             return false;
         }
         if (!file_exists($file) && $task !== 'clean') {
-            Api4::message('error', T_('File not found') . ' ' . $file, '404', $input['api_format']);
+            Api4::message('error', 'File not found' . ' ' . $file, '404', $input['api_format']);
 
             return false;
         }
         $catalog_id = (int) $input['catalog'];
         $catalog    = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
-            Api4::message('error', T_('Catalog not found') . ' ' . $catalog_id, '404', $input['api_format']);
+            Api4::message('error', 'Catalog not found' . ' ' . $catalog_id, '404', $input['api_format']);
 
             return false;
         }
@@ -139,7 +139,7 @@ final class CatalogFile4Method
             }
             Api4::message('success', 'successfully started: ' . $task . ' for ' . $file, null, $input['api_format']);
         } else {
-            Api4::message('error', T_('The requested catalog was not found'), '404', $input['api_format']);
+            Api4::message('error', 'The requested catalog was not found', '404', $input['api_format']);
         }
 
         return true;

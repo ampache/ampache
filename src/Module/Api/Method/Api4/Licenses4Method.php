@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class Licenses4Method
 {
-    public const ACTION = 'licenses';
+    public const string ACTION = 'licenses';
 
     /**
      * licenses
@@ -64,7 +64,7 @@ final class Licenses4Method
     public static function licenses(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
-            Api4::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: licensing features are not enabled.', '400', $input['api_format']);
 
             return false;
         }

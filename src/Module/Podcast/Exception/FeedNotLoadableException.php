@@ -25,6 +25,4 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast\Exception;
 
-final class FeedNotLoadableException extends PodcastCreationException
-{
-}
+final class FeedNotLoadableException extends PodcastCreationException {}

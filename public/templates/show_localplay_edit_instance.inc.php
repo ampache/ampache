@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_localplay_edit_instance.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
@@ -30,12 +32,13 @@ use Ampache\Module\Util\Ui;
 /** @var array<string, array{description: string, type: string}> $fields */
 
 Ui::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance'); ?>
-<form method="post" action="<?php echo AmpConfig::get_web_path(); ?>/localplay.php?action=update_instance&instance=<?php echo (int) scrub_in((string)filter_input(INPUT_GET, 'instance', FILTER_SANITIZE_SPECIAL_CHARS)); ?>">
+<form method="post" action="<?php echo AmpConfig::get_web_path(); ?>/localplay.php?action=update_instance&instance=<?php echo (int) scrub_in((string) filter_input(INPUT_GET, 'instance', FILTER_SANITIZE_SPECIAL_CHARS)); ?>" autocomplete="off">
 <table class="tabledata">
-<?php foreach ($fields as $key => $field) { ?>
+<?php foreach ($fields as $key => $field) {
+    $autocomplete = ($field['type'] === 'password') ? 'new-password' : 'off'; ?>
 <tr>
     <td><?php echo $field['description']; ?></td>
-    <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out($instance[$key]); ?>" /></td>
+    <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out($instance[$key]); ?>" autocomplete="<?php echo $autocomplete; ?>" /></td>
 </tr>
 <?php } ?>
 </table>

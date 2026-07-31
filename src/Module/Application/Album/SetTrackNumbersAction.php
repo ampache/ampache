@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -38,21 +38,14 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class SetTrackNumbersAction implements ApplicationActionInterface
+final readonly class SetTrackNumbersAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'set_track_numbers';
-
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
+    public const string REQUEST_KEY = 'set_track_numbers';
 
     public function __construct(
-        UiInterface $ui,
-        LoggerInterface $logger
-    ) {
-        $this->ui     = $ui;
-        $this->logger = $logger;
-    }
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -80,10 +73,10 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
         if (isset($_GET['order'])) {
             $songs = explode(';', Core::get_get('order'));
             $track = (filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT))
-                ? ((int)filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1
+                ? ((int) filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1
                 : 1;
             foreach ($songs as $song_id) {
-                if ($song_id != '') {
+                if ($song_id !== '') {
                     Song::update_track($track, (int) $song_id);
                     ++$track;
                 }

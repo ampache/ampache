@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_user_row.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
@@ -71,7 +73,7 @@ if (Core::get_global('user') instanceof User && Access::check(AccessTypeEnum::IN
 <?php } ?>
 <td class="cel_action">
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
-    <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get_web_path(); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode((string)$libitem->username); ?>">
+    <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get_web_path(); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode((string) $libitem->username); ?>">
         <?php echo Ui::get_material_symbol('mail', $t_send_pm); ?>
     </a>
 <?php } ?>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.16.1" type="ampache" serverVersion="8.0.0" openSubsonic="1">
+  <user username="admin" email="admin@example.com" scrobblingEnabled="true" adminRole="true" settingsRole="true" downloadRole="true" uploadRole="false" playlistRole="true" coverArtRole="true" commentRole="false" podcastRole="true" streamRole="true" jukeboxRole="true" shareRole="false" videoConversionRole="false"/>
+</subsonic-response>

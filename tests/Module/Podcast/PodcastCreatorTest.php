@@ -36,19 +36,38 @@ use Psr\Log\LoggerInterface;
 
 class PodcastCreatorTest extends TestCase
 {
+    private Catalog&MockObject $catalog;
     private FeedLoaderInterface&MockObject $feedLoader;
-
-    private PodcastRepositoryInterface&MockObject $podcastRepository;
-
-    private PodcastSyncerInterface&MockObject $podcastSyncer;
-
-    private PodcastFolderProviderInterface&MockObject $podcastFolderProvider;
-
     private LoggerInterface&MockObject $logger;
-
+    private PodcastFolderProviderInterface&MockObject $podcastFolderProvider;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
+    private PodcastSyncerInterface&MockObject $podcastSyncer;
     private PodcastCreator $subject;
 
-    private Catalog&MockObject $catalog;
+    public function testCreateFailsIfCatalogDoesNotSupportPodcasts(): void
+    {
+        static::expectException(InvalidCatalogException::class);
+
+        $this->catalog->expects(static::once())
+            ->method('supportsType')
+            ->with('podcast')
+            ->willReturn(false);
+
+        $this->subject->create(
+            'https://zomglol',
+            $this->catalog
+        );
+    }
+
+    public function testCreateFailsIfFeedUrlIsMalformed(): void
+    {
+        static::expectException(InvalidFeedUrlException::class);
+
+        $this->subject->create(
+            'ftp://not-available',
+            $this->catalog
+        );
+    }
 
     protected function setUp(): void
     {
@@ -67,30 +86,5 @@ class PodcastCreatorTest extends TestCase
         );
 
         $this->catalog = $this->createMock(Catalog::class);
-    }
-
-    public function testCreateFailsIfFeedUrlIsMalformed(): void
-    {
-        static::expectException(InvalidFeedUrlException::class);
-
-        $this->subject->create(
-            'ftp://not-available',
-            $this->catalog
-        );
-    }
-
-    public function testCreateFailsIfCatalogDoesNotSupportPodcasts(): void
-    {
-        static::expectException(InvalidCatalogException::class);
-
-        $this->catalog->expects(static::once())
-            ->method('supportsType')
-            ->with('podcast')
-            ->willReturn(false);
-
-        $this->subject->create(
-            'https://zomglol',
-            $this->catalog
-        );
     }
 }

@@ -28,15 +28,9 @@ namespace Ampache\Config\Init;
 use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Module\Util\EnvironmentInterface;
 
-final class InitializationHandlerEnvironment implements InitializationHandlerInterface
+final readonly class InitializationHandlerEnvironment implements InitializationHandlerInterface
 {
-    private EnvironmentInterface $environment;
-
-    public function __construct(
-        EnvironmentInterface $environment
-    ) {
-        $this->environment = $environment;
-    }
+    public function __construct(private EnvironmentInterface $environment) {}
 
     public function init(): void
     {

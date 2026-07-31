@@ -231,7 +231,7 @@ class Xml6_Data
      *
      * @param array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
-    public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
+    public static function browses(array $objects, string $parent_type, string $child_type, ?int $parent_id = null, ?int $catalog_id = null): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));

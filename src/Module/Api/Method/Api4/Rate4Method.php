@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class Rate4Method
 {
-    public const ACTION = 'rate';
+    public const string ACTION = 'rate';
 
     /**
      * rate
@@ -60,7 +60,7 @@ final class Rate4Method
     public static function rate(array $input, User $user): bool
     {
         if (!AmpConfig::get('ratings')) {
-            Api4::message('error', T_('Access Denied: Rating features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: Rating features are not enabled.', '400', $input['api_format']);
 
             return false;
         }
@@ -73,25 +73,24 @@ final class Rate4Method
         $rating    = (string) $input['rating'];
         // confirm the correct data
         if (!Rating::is_valid(strtolower($type))) {
-            Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
             return false;
         }
         if (!in_array($rating, ['0', '1', '2', '3', '4', '5'])) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api4::message('error', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'), '401', $input['api_format']);
+            Api4::message('error', 'Ratings must be between [0-5]. ' . $rating . ' is invalid', '401', $input['api_format']);
 
             return false;
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
         if (!$className || !$object_id) {
-            Api4::message('error', T_('Wrong library item type'), '401', $input['api_format']);
+            Api4::message('error', 'Wrong library item type', '401', $input['api_format']);
         } else {
             /** @var library_item $item */
             $item = new $className($object_id);
             if ($item->getId() === 0) {
-                Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
+                Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
                 return false;
             }

@@ -38,38 +38,9 @@ use PHPUnit\Framework\TestCase;
 
 class ShareRepositoryTest extends TestCase
 {
-    private DatabaseConnectionInterface&MockObject $connection;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private DatabaseConnectionInterface&MockObject $connection;
     private ShareRepository $subject;
-
-    protected function setUp(): void
-    {
-        $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new ShareRepository(
-            $this->connection,
-            $this->configContainer
-        );
-    }
-
-    public function testMigrateMigrates(): void
-    {
-        $objectType  = 'some-type';
-        $oldObjectId = 666;
-        $newObjectId = 42;
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
-                [$newObjectId, $objectType, $oldObjectId]
-            );
-
-        $this->subject->migrate($objectType, $oldObjectId, $newObjectId);
-    }
 
     public function testCollectGarbageCleansUp(): void
     {
@@ -82,43 +53,24 @@ class ShareRepositoryTest extends TestCase
         $this->subject->collectGarbage();
     }
 
-    public function testGetIdsByUserReturnsItemIdsForUser(): void
+    public function testDeleteDeletesItem(): void
     {
-        $user   = $this->createMock(User::class);
-        $result = $this->createMock(PDOStatement::class);
+        $share = $this->createMock(Share::class);
 
-        $userId  = 666;
-        $shareId = 42;
+        $shareId = 666;
 
-        $user->expects(static::once())
-            ->method('has_access')
-            ->with(AccessLevelEnum::MANAGER)
-            ->willReturn(false);
-        $user->expects(static::once())
+        $share->expects(static::once())
             ->method('getId')
-            ->willReturn($userId);
-
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::CATALOG_FILTER)
-            ->willReturn(false);
+            ->willReturn($shareId);
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `id` FROM `share` WHERE `user` = ?',
-                [$userId]
-            )
-            ->willReturn($result);
+                'DELETE FROM `share` WHERE `id` = ?',
+                [$shareId]
+            );
 
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $shareId, false);
-
-        static::assertSame(
-            [$shareId],
-            $this->subject->getIdsByUser($user)
-        );
+        $this->subject->delete($share);
     }
 
     public function testGetIdsByUserReturnsItemIdsForManagingUser(): void
@@ -154,30 +106,65 @@ class ShareRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $shareId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$shareId],
             $this->subject->getIdsByUser($user)
         );
     }
 
-    public function testDeleteDeletesItem(): void
+    public function testGetIdsByUserReturnsItemIdsForUser(): void
     {
-        $share = $this->createMock(Share::class);
+        $user   = $this->createMock(User::class);
+        $result = $this->createMock(PDOStatement::class);
 
-        $shareId = 666;
+        $userId  = 666;
+        $shareId = 42;
 
-        $share->expects(static::once())
+        $user->expects(static::once())
+            ->method('has_access')
+            ->with(AccessLevelEnum::MANAGER)
+            ->willReturn(false);
+        $user->expects(static::once())
             ->method('getId')
-            ->willReturn($shareId);
+            ->willReturn($userId);
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::CATALOG_FILTER)
+            ->willReturn(false);
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'DELETE FROM `share` WHERE `id` = ?',
-                [$shareId]
+                'SELECT `id` FROM `share` WHERE `user` = ?',
+                [$userId]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $shareId, false);
+
+        self::assertSame(
+            [$shareId],
+            $this->subject->getIdsByUser($user)
+        );
+    }
+
+    public function testMigrateMigrates(): void
+    {
+        $objectType  = 'some-type';
+        $oldObjectId = 666;
+        $newObjectId = 42;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+                [$newObjectId, $objectType, $oldObjectId]
             );
 
-        $this->subject->delete($share);
+        $this->subject->migrate($objectType, $oldObjectId, $newObjectId);
     }
 
     public function testRegisterAccessRegisters(): void
@@ -199,5 +186,78 @@ class ShareRepositoryTest extends TestCase
             );
 
         $this->subject->registerAccess($share, $date);
+    }
+
+    public function testUpdateScopesTheStatementToTheOwnerForANonManager(): void
+    {
+        $userId = 33;
+
+        $user = $this->createMock(User::class);
+
+        $share = new Share();
+
+        $share->id             = 666;
+        $share->max_counter    = 42;
+        $share->expire_days    = 7;
+        $share->allow_stream   = false;
+        $share->allow_download = true;
+        $share->description    = 'some-description';
+
+        $user->expects(static::once())
+            ->method('has_access')
+            ->with(AccessLevelEnum::MANAGER)
+            ->willReturn(false);
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ? AND `user` = ?',
+                [42, 7, 0, 1, 'some-description', 666, $userId]
+            );
+
+        $this->subject->update($share, $user);
+    }
+
+    public function testUpdateWritesTheEditablePropertiesForAManager(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $share = new Share();
+
+        $share->id             = 666;
+        $share->max_counter    = 42;
+        $share->expire_days    = 7;
+        $share->allow_stream   = true;
+        $share->allow_download = false;
+        $share->description    = 'some-description';
+
+        $user->expects(static::once())
+            ->method('has_access')
+            ->with(AccessLevelEnum::MANAGER)
+            ->willReturn(true);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ?',
+                [42, 7, 1, 0, 'some-description', 666]
+            );
+
+        $this->subject->update($share, $user);
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new ShareRepository(
+            $this->connection,
+            $this->configContainer
+        );
     }
 }

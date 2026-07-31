@@ -31,30 +31,18 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private DeletionUrlResolverInterface|MockInterface|null $deletionUrlResolver;
     private ?DeleteAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-
-        $this->subject = new DeleteAction(
-            $this->configContainer,
-            $this->ui
-        );
-    }
+    private UiInterface|MockInterface|null $ui;
 
     public function testDoesNothingAndReturnsNullInDemoMode(): void
     {
@@ -86,13 +74,20 @@ class DeleteActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
-        $labelId = 666;
-        $webPath = 'some-web-path';
+        $labelId    = 666;
+        $webPath    = 'some-web-path';
+        $burlParam  = 'aA+b/c=';
+        $originPage = 'some-web-path/browse.php?action=label';
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
-            ->andReturn(['label_id' => $labelId]);
+            ->andReturn(['label_id' => $labelId, 'burl' => $burlParam]);
+
+        $this->deletionUrlResolver->shouldReceive('resolveBurl')
+            ->with($burlParam)
+            ->once()
+            ->andReturn($originPage);
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::DEMO_MODE)
@@ -125,22 +120,103 @@ class DeleteActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('showConfirmation')
+        $this->ui->shouldReceive('showConfirmationWithReturn')
             ->with(
                 'Are You Sure?',
                 'This Label will be deleted',
                 sprintf(
-                    '%s/labels.php?action=confirm_delete&label_id=%s',
+                    '%s/labels.php?action=confirm_delete&label_id=%s&burl=aA%%2Bb%%2Fc%%3D',
                     $webPath,
                     $labelId
                 ),
-                1,
+                $originPage,
                 'delete_label'
             )
             ->once();
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testShowConfirmationCancelsToTheLabelItselfWithoutAnOriginPage(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $labelId = 666;
+        $webPath = 'some-web-path';
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['label_id' => $labelId]);
+
+        $this->deletionUrlResolver->shouldReceive('resolveBurl')
+            ->with('')
+            ->once()
+            ->andReturn('');
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::LABEL)
+            ->once()
+            ->andReturnTrue();
+        $this->configContainer->shouldReceive('getWebPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($webPath);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::CONTENT_MANAGER
+            )
+            ->once()
+            ->andReturnTrue();
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showConfirmationWithReturn')
+            ->with(
+                'Are You Sure?',
+                'This Label will be deleted',
+                sprintf(
+                    '%s/labels.php?action=confirm_delete&label_id=%s&burl=',
+                    $webPath,
+                    $labelId
+                ),
+                sprintf('%s/labels.php?action=show&label=%d', $webPath, $labelId),
+                'delete_label'
+            )
+            ->once();
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer     = $this->mock(ConfigContainerInterface::class);
+        $this->ui                  = $this->mock(UiInterface::class);
+        $this->deletionUrlResolver = $this->mock(DeletionUrlResolverInterface::class);
+
+        $this->subject = new DeleteAction(
+            $this->configContainer,
+            $this->ui,
+            $this->deletionUrlResolver
         );
     }
 }

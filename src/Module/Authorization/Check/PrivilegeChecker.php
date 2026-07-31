@@ -33,19 +33,12 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 
-final class PrivilegeChecker implements PrivilegeCheckerInterface
+final readonly class PrivilegeChecker implements PrivilegeCheckerInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-    }
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
     /**
      * This is the global 'has_access' function. it can check for any 'type'
@@ -56,9 +49,9 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
     public function check(
         AccessTypeEnum $type,
         AccessLevelEnum $level,
-        ?int $userId = null
+        ?int $userId = null,
     ): bool {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return true;
         }
 
@@ -76,9 +69,9 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
 
         // an empty string is an empty global
         if (
-            !$user instanceof User ||
-            $user == '' ||
-            $user->id === 0
+            !$user instanceof User
+            || $user == ''
+            || $user->id === 0
         ) {
             return false;
         }
@@ -86,8 +79,8 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
         // Switch on the type
         return match ($type) {
             AccessTypeEnum::LOCALPLAY => (
-                $this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) >= $level->value ||
-                $user->access >= AccessLevelEnum::ADMIN->value
+                $this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) >= $level->value
+                || $user->access >= AccessLevelEnum::ADMIN->value
             ),
             AccessTypeEnum::INTERFACE => ($user->access >= $level->value),
             default => false,

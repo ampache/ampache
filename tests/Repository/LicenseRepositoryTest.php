@@ -39,15 +39,66 @@ class LicenseRepositoryTest extends TestCase
     use RepositoryTestTrait;
 
     private DatabaseConnectionInterface&MockObject $connection;
-
     private LicenseRepository $subject;
 
-    protected function setUp(): void
+    public function testFindByIdPerformsTest(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->runFindByIdTrait(
+            'license',
+            License::class,
+            [$this->subject]
+        );
+    }
 
-        $this->subject = new LicenseRepository(
-            $this->connection
+    public function testFindFindObjectByExternalLink(): void
+    {
+        $value  = 'some-name';
+        $result = 666;
+
+        $this->connection->expects(static::exactly(2))
+            ->method('fetchOne')
+            ->with(...self::withConsecutive(
+                ['SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1'],
+                ['SELECT `id` FROM `license` WHERE `external_link` = ? LIMIT 1']
+            ))
+            ->willReturn(false, (string) $result);
+
+        self::assertSame(
+            $result,
+            $this->subject->find($value)
+        );
+    }
+
+    public function testFindFindObjectByName(): void
+    {
+        $value  = 'some-name';
+        $result = 666;
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1')
+            ->willReturn((string) $result);
+
+        self::assertSame(
+            $result,
+            $this->subject->find($value)
+        );
+    }
+
+    public function testFindReturnsNullIfNothingWasFound(): void
+    {
+        $value = 'some-name';
+
+        $this->connection->expects(static::exactly(2))
+            ->method('fetchOne')
+            ->with(...self::withConsecutive(
+                ['SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1'],
+                ['SELECT `id` FROM `license` WHERE `external_link` = ? LIMIT 1']
+            ))
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->find($value)
         );
     }
 
@@ -68,72 +119,11 @@ class LicenseRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => (string) $rowId, 'name' => $rowName], false);
 
-        static::assertSame(
+        self::assertSame(
             [$rowId => $rowName],
             iterator_to_array(
                 $this->subject->getList()
             )
-        );
-    }
-
-    public function testFindFindObjectByName(): void
-    {
-        $value  = 'some-name';
-        $result = 666;
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with('SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1')
-            ->willReturn((string) $result);
-
-        static::assertSame(
-            $result,
-            $this->subject->find($value)
-        );
-    }
-
-    public function testFindFindObjectByExternalLink(): void
-    {
-        $value  = 'some-name';
-        $result = 666;
-
-        $this->connection->expects(static::exactly(2))
-            ->method('fetchOne')
-            ->with(...self::withConsecutive(
-                ['SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1'],
-                ['SELECT `id` FROM `license` WHERE `external_link` = ? LIMIT 1']
-            ))
-            ->willReturn(false, (string) $result);
-
-        static::assertSame(
-            $result,
-            $this->subject->find($value)
-        );
-    }
-
-    public function testFindReturnsNullIfNothingWasFound(): void
-    {
-        $value = 'some-name';
-
-        $this->connection->expects(static::exactly(2))
-            ->method('fetchOne')
-            ->with(...self::withConsecutive(
-                ['SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1'],
-                ['SELECT `id` FROM `license` WHERE `external_link` = ? LIMIT 1']
-            ))
-            ->willReturn(false);
-
-        static::assertNull(
-            $this->subject->find($value)
-        );
-    }
-
-    public function testFindByIdPerformsTest(): void
-    {
-        $this->runFindByIdTrait(
-            'license',
-            License::class,
-            [$this->subject]
         );
     }
 
@@ -178,7 +168,7 @@ class LicenseRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn($licenseId);
 
-        static::assertSame(
+        self::assertSame(
             $licenseId,
             $this->subject->persist($license)
         );
@@ -226,8 +216,17 @@ class LicenseRepositoryTest extends TestCase
                 ]
             );
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->persist($license)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+
+        $this->subject = new LicenseRepository(
+            $this->connection
         );
     }
 }

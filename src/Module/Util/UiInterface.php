@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -26,14 +28,67 @@ namespace Ampache\Module\Util;
 interface UiInterface
 {
     /**
+     * Displays the default error page
+     */
+    public function accessDenied(string $error = 'Access Denied'): void;
+
+    /**
+     * takes the key and then creates the correct type of input for updating it
+     */
+    public function createPreferenceInput(
+        string $name,
+        $value,
+        ?string $type = null,
+    ): void;
+
+    /**
+     * Displays an error page when you can't write the config
+     */
+    public function permissionDenied(string $fileName): void;
+
+    public function scrubOut(?string $string): string;
+
+    /**
      * Show the requested template file
      */
     public function show(string $template, array $context = []): void;
 
+    public function showBoxBottom(): void;
+
+    public function showBoxTop(string $title = '', string $class = ''): void;
+
     /**
-     * This displays the query stats
+     * shows a confirmation of an action
      */
-    public function showQueryStats(): void;
+    public function showConfirmation(
+        string $title,
+        string $text,
+        string $next_url,
+        ?int $cancel = 0,
+        ?string $form_name = 'confirmation',
+        ?bool $visible = true,
+    ): void;
+
+    /**
+     * shows a confirmation of an action
+     */
+    public function showConfirmationWithReturn(
+        string $title,
+        string $text,
+        string $return_url,
+        string $cancel_url,
+        ?string $form_name = 'confirmation',
+        ?bool $visible = true,
+    ): void;
+
+    /**
+     * shows a simple continue button after an action
+     */
+    public function showContinue(
+        string $title,
+        string $text,
+        string $next_url,
+    ): void;
 
     /**
      * This displays the footer
@@ -45,52 +100,7 @@ interface UiInterface
      */
     public function showHeader(): void;
 
-    public function showBoxTop(string $title = '', string $class = ''): void;
-
-    public function showBoxBottom(): void;
-
     public function showObjectNotFound(): void;
-
-    /**
-     * Displays the default error page
-     */
-    public function accessDenied(string $error = 'Access Denied'): void;
-
-    /**
-     * Displays an error page when you can't write the config
-     */
-    public function permissionDenied(string $fileName): void;
-
-    /**
-     * shows a confirmation of an action
-     */
-    public function showConfirmation(
-        string $title,
-        string $text,
-        string $next_url,
-        ?int $cancel = 0,
-        ?string $form_name = 'confirmation',
-        ?bool $visible = true
-    ): void;
-
-    /**
-     * shows a simple continue button after an action
-     */
-    public function showContinue(
-        string $title,
-        string $text,
-        string $next_url
-    ): void;
-
-    public function scrubOut(?string $string): string;
-
-    /**
-     * takes the key and then creates the correct type of input for updating it
-     */
-    public function createPreferenceInput(
-        string $name,
-        $value
-    ): void;
 
     /**
      * This shows the preference box for the preferences pages.
@@ -98,4 +108,9 @@ interface UiInterface
      * @param array<string, mixed> $preferences
      */
     public function showPreferenceBox(array $preferences): void;
+
+    /**
+     * This displays the query stats
+     */
+    public function showQueryStats(): void;
 }

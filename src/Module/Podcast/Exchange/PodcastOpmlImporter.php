@@ -39,23 +39,13 @@ use Psr\Log\LoggerInterface;
  *
  * @see http://opml.org/spec2.opml
  */
-final class PodcastOpmlImporter implements PodcastOpmlImporterInterface
+final readonly class PodcastOpmlImporter implements PodcastOpmlImporterInterface
 {
-    private PodcastOpmlLoaderInterface $podcastOpmlLoader;
-
-    private PodcastCreatorInterface $podcastCreator;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        PodcastOpmlLoaderInterface $podcastOpmlLoader,
-        PodcastCreatorInterface $podcastCreator,
-        LoggerInterface $logger
-    ) {
-        $this->podcastOpmlLoader = $podcastOpmlLoader;
-        $this->podcastCreator    = $podcastCreator;
-        $this->logger            = $logger;
-    }
+        private PodcastOpmlLoaderInterface $podcastOpmlLoader,
+        private PodcastCreatorInterface $podcastCreator,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Loads the opml-xml and tries to create all contained podcasts

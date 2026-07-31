@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -26,12 +28,12 @@ namespace Ampache\Plugin;
 interface PluginLocationInterface extends AmpachePluginInterface
 {
     /**
-     * get_location_name
-     */
-    public function get_location_name(float $latitude, float $longitude): string;
-
-    /**
      * display_map
      */
     public function display_map(array $points): bool;
+
+    /**
+     * get_location_name
+     */
+    public function get_location_name(float $latitude, float $longitude): string;
 }

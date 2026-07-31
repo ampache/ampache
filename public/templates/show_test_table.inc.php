@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_test_table.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\EnvironmentInterface;
@@ -41,8 +43,8 @@ function debug_wresult(bool $status = false, ?string $value = null, string $comm
         $value = ($status) ? T_('OK') : T_('WARNING');
     }
 
-    return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .
-        '</span> <em>' . $comment . '</em></button>';
+    return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value)
+        . '</span> <em>' . $comment . '</em></button>';
 }
 
 // TODO remove me
@@ -64,7 +66,7 @@ $environment = $dic->get(EnvironmentInterface::class);
 <?php echo T_('This tests whether Ampache dependencies are installed.');
 if (!$environment->check_dependencies_folder()) { ?>
         <br />
-        <b><?php echo T_('Please download Composer from http://getcomposer.org, and install it (e.g: mv composer.phar /usr/local/bin/composer). Then run `composer install --no-dev --prefer-source --no-interaction` on the Ampache directory.'); ?></b>
+        <b><?php echo T_('Please download Composer from http://getcomposer.org, and install it (e.g: mv composer.phar /usr/local/bin/composer). Then run `composer install --no-dev --prefer-dist --no-interaction` on the Ampache directory.'); ?></b>
 <?php } ?>
     </td>
 </tr>

@@ -27,6 +27,7 @@ namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Generator;
@@ -35,14 +36,8 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
 {
     public function __construct(
         private ShoutRepositoryInterface $shoutRepository,
-        private ShoutObjectLoaderInterface $shoutObjectLoader
-    ) {
-    }
-
-    protected function getTitle(): string
-    {
-        return T_('Newest Shouts');
-    }
+        private ShoutObjectLoaderInterface $shoutObjectLoader,
+    ) {}
 
     protected function getItems(): Generator
     {
@@ -52,7 +47,7 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
         foreach ($shouts as $shout) {
             $object = $this->shoutObjectLoader->loadByShout($shout);
 
-            if ($object !== null) {
+            if ($object instanceof displayable_item) {
                 $user = $shout->getUser();
                 if ($user === null) {
                     continue;
@@ -70,5 +65,10 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
                 ];
             }
         }
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Newest Shouts');
     }
 }

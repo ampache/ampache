@@ -25,20 +25,40 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * Class Albums3Method
+ * @package Lib\Api3Methods
  */
-final class Albums3Method
+final class Albums3Method implements MethodInterface
 {
-    public const ACTION = 'albums';
+    public const string ACTION = 'albums';
+
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * albums
      * This returns albums based on the provided search filters
+     *
+     * filter = (string) Alpha-numeric search term //optional
+     * include = (array|string) 'songs' //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,
@@ -54,9 +74,16 @@ final class Albums3Method
      *     auth: string,
      * } $input
      */
-    public static function albums(array $input, User $user): void
-    {
-        $browse = Api::getBrowse($user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse->set_user_id($user);
         $browse->set_type('album');
         $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
         $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
@@ -80,10 +107,24 @@ final class Albums3Method
                 $include[] = 'songs';
             }
         }
-        // Set the offset
-        Xml3_Data::set_offset($input['offset'] ?? 0);
-        Xml3_Data::set_limit($input['limit'] ?? 0);
+
         ob_end_clean();
-        echo Xml3_Data::albums($results, $include, $user, $input['auth']);
+
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
+
+        $result = $output->albums(
+            $apiVersion,
+            $results,
+            $include,
+            $user,
+            $input['auth'],
+        );
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $result
+            )
+        );
     }
 }

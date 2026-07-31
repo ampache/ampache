@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,17 +32,16 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use getID3;
-use Psr\Log\LoggerInterface;
 
-final class MetaTagCollectorModule implements CollectorModuleInterface
+final readonly class MetaTagCollectorModule implements CollectorModuleInterface
 {
-    private const TAG_ALBUM_ART_PRIORITY = [
+    private const array TAG_ALBUM_ART_PRIORITY = [
         'ID3 Front Cover',
         'ID3 Illustration',
         'ID3 Media',
     ];
 
-    private const TAG_ARTIST_ART_PRIORITY = [
+    private const array TAG_ARTIST_ART_PRIORITY = [
         'ID3 Artist',
         'ID3 Lead Artist',
         'ID3 Band',
@@ -52,139 +51,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         'ID3 Other',
     ];
 
-    private LoggerInterface $logger;
-
-    private getID3 $getID3;
-
-    private SongRepositoryInterface $songRepository;
-
-    public function __construct(
-        LoggerInterface $logger,
-        getID3 $getID3,
-        SongRepositoryInterface $songRepository
-    ) {
-        $this->logger         = $logger;
-        $this->getID3         = $getID3;
-        $this->songRepository = $songRepository;
-    }
-
-    /**
-     * This looks for the art in the meta-tags of the file itself
-     *
-     * @param array{
-     *     mb_albumid?: string,
-     *     artist?: string,
-     *     album?: string,
-     *     cover?: ?string,
-     *     file?: string,
-     *     year_filter?: string,
-     *     search_limit?: int,
-     * } $data
-     * @return array<int, array{raw: string, mime: string, title: string}>
-     */
-    public function collectArt(
-        Art $art,
-        int $limit = 5,
-        array $data = []
-    ): array {
-        if (!$limit) {
-            $limit = 5;
-        }
-
-        if ($art->object_type == 'video') {
-            $data = $this->gatherVideoTags($art);
-        } elseif ($art->object_type == 'album' || $art->object_type == 'artist') {
-            $data = $this->gatherSongTags($art, $limit);
-        } elseif (($art->object_type == 'song') && (AmpConfig::get('gather_song_art', false))) {
-            $data = $this->gatherSongTagsSingle($art, $limit);
-        } else {
-            $data = [];
-        }
-
-        return $data;
-    }
-
-    /**
-     * Calculate the priority for the given art type.
-     */
-    private static function getArtTypePriority(string $type, array $priorities): int
-    {
-        $priority = array_search($type, $priorities);
-        if ($priority === false) {
-            return sizeof($priorities);
-        }
-
-        return (int)$priority;
-    }
-
-    /**
-     * Sort images in the data array using the ART_PRIORITY list for your art_type
-     * @param array<int, array{raw: string, mime: string, title: string}> $data
-     * @return array<int, array{raw: string, mime: string, title: string}>
-     */
-    private static function sortArtByPriority(array $data, string $art_type): array
-    {
-        $priorities = ($art_type === 'artist')
-            ? self::TAG_ARTIST_ART_PRIORITY
-            : self::TAG_ALBUM_ART_PRIORITY; // song and album art
-        uasort(
-            $data,
-            function ($image1, $image2) use (&$priorities) {
-                return self::getArtTypePriority($image1['title'], $priorities) <=> self::getArtTypePriority($image2['title'], $priorities);
-            }
-        );
-
-        return $data;
-    }
-
-    /**
-     * Gather tags from video files.
-     * @return array<int, array{raw: string, mime: string, title: string}>
-     */
-    private function gatherVideoTags(Art $art): array
-    {
-        $video = new Video($art->object_id);
-
-        return $this->gatherMediaTags($video, []);
-    }
-
-    /**
-     * Gather tags from audio files.
-     * @return array<int, array{raw: string, mime: string, title: string}>
-     */
-    private function gatherSongTags(Art $art, int $limit = 5): array
-    {
-        // We need the filenames
-        if ($art->object_type == 'album') {
-            $songs = $this->songRepository->getByAlbum($art->object_id);
-        } else {
-            $songs = $this->songRepository->getByArtist($art->object_id);
-        }
-
-        $data = [];
-
-        // Foreach songs in this album
-        foreach ($songs as $song_id) {
-            $song = new Song($song_id);
-            if ($song->isNew()) {
-                continue;
-            }
-
-            $data = $this->gatherMediaTags($song, $data);
-
-            if ($limit && count($data) >= $limit) {
-                break;
-            }
-        }
-
-        $data = self::sortArtByPriority($data, $art->object_type);
-
-        if ($limit && count($data) >= $limit) {
-            $data = array_slice($data, 0, $limit);
-        }
-
-        return $data;
-    }
+    public function __construct(private SongRepositoryInterface $songRepository) {}
 
     /**
      * Gather all art from tags in given file.
@@ -195,8 +62,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         try {
             $getID3 = new getID3();
             $id3    = $getID3->analyze($file);
-        } catch (Exception $error) {
-            debug_event(self::class, 'getid3' . $error->getMessage(), 2);
+        } catch (Exception $exception) {
+            debug_event(self::class, 'getid3' . $exception->getMessage(), 2);
 
             return [];
         }
@@ -218,7 +85,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
                 if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                    $type     = self::getPictureType((int)$image['picturetypeid']);
+                    $type     = self::getPictureType((int) $image['picturetypeid']);
                     $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['mime'],
@@ -232,7 +99,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['PIC'] as $image) {
                 if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                    $type     = self::getPictureType((int)$image['picturetypeid']);
+                    $type     = self::getPictureType((int) $image['picturetypeid']);
                     $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
@@ -246,7 +113,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['flac']['PICTURE'] as $image) {
                 if (isset($image['typeid']) && array_key_exists('data', $image)) {
-                    $type     = self::getPictureType((int)$image['typeid']);
+                    $type     = self::getPictureType((int) $image['typeid']);
                     $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
@@ -266,6 +133,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
                         'title' => 'ID3 ' . $image['picturetype']
                     ];
                 }
+
                 if (isset($image['description']) && array_key_exists('data', $image)) {
                     $images[] = [
                         'raw' => $image['data'],
@@ -277,57 +145,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         }
 
         return $images;
-    }
-
-    /**
-     * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
-     * @param array|array<int, array{raw: string, mime: string, title: string}> $data
-     * @return array<int, array{raw: string, mime: string, title: string}>
-     */
-    private function gatherMediaTags(Song|Video $media, array $data): array
-    {
-        if ($media instanceof Song) {
-            $mtype = 'song';
-        } else {
-            $mtype = 'video';
-        }
-        $images = self::gatherFileArt((string)$media->file);
-
-        // stop collecting dupes for each album
-        $raw_array = [];
-        foreach ($data as $image) {
-            $raw_array[] = $image['raw'];
-        }
-
-        foreach ($images as $image) {
-            if (!in_array($image['raw'], $raw_array)) {
-                $raw_array[]   = $image['raw'];
-                $image[$mtype] = $media->file;
-                $data[]        = $image;
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Gather tags from single song instead of full album
-     * (taken from function gather_song_tags with some changes)
-     * @return array<int, array{raw: string, mime: string, title: string}>
-     */
-    public function gatherSongTagsSingle(Art $art, int $limit = 5): array
-    {
-        // get song object directly from id, not by loop through album
-        $song = new Song($art->object_id);
-        $data = $this->gatherMediaTags($song, []);
-
-        $data = self::sortArtByPriority($data, $art->object_type);
-
-        if ($limit && count($data) >= $limit) {
-            $data = array_slice($data, 0, $limit);
-        }
-
-        return $data;
     }
 
     /**
@@ -359,5 +176,171 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             20 => 'Publisher Logo',
             default => 'Other',
         };
+    }
+
+    /**
+     * This looks for the art in the meta-tags of the file itself
+     *
+     * @param array{
+     *     mb_albumid?: string,
+     *     artist?: string,
+     *     album?: string,
+     *     cover?: ?string,
+     *     file?: string,
+     *     year_filter?: string,
+     *     search_limit?: int,
+     * } $data
+     * @return array<int, array{raw: string, mime: string, title: string}>
+     */
+    public function collectArt(
+        Art $art,
+        int $limit = 5,
+        array $data = [],
+    ): array {
+        if ($limit === 0) {
+            $limit = 5;
+        }
+
+        if ($art->object_type === 'video') {
+            $data = $this->gatherVideoTags($art);
+        } elseif ($art->object_type === 'album' || $art->object_type === 'artist') {
+            $data = $this->gatherSongTags($art, $limit);
+        } elseif (($art->object_type === 'song') && (AmpConfig::get('gather_song_art', false))) {
+            $data = $this->gatherSongTagsSingle($art, $limit);
+        } else {
+            $data = [];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Gather tags from single song instead of full album
+     * (taken from function gather_song_tags with some changes)
+     * @return array<int, array{raw: string, mime: string, title: string}>
+     */
+    public function gatherSongTagsSingle(Art $art, int $limit = 5): array
+    {
+        // get song object directly from id, not by loop through album
+        $song = new Song($art->object_id);
+        $data = $this->gatherMediaTags($song, []);
+
+        $data = $this->sortArtByPriority($data, $art->object_type);
+
+        if ($limit && count($data) >= $limit) {
+            $data = array_slice($data, 0, $limit);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
+     * @param array|array<int, array{raw: string, mime: string, title: string}> $data
+     * @return array<int, array{raw: string, mime: string, title: string}>
+     */
+    private function gatherMediaTags(Song|Video $media, array $data): array
+    {
+        $mtype = $media instanceof Song ? 'song' : 'video';
+
+        $images = self::gatherFileArt((string) $media->file);
+
+        // stop collecting dupes for each album
+        $raw_array = [];
+        foreach ($data as $image) {
+            $raw_array[] = $image['raw'];
+        }
+
+        foreach ($images as $image) {
+            if (!in_array($image['raw'], $raw_array)) {
+                $raw_array[]   = $image['raw'];
+                $image[$mtype] = $media->file;
+                $data[]        = $image;
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Gather tags from audio files.
+     * @return array<int, array{raw: string, mime: string, title: string}>
+     */
+    private function gatherSongTags(Art $art, int $limit = 5): array
+    {
+        // We need the filenames
+        if ($art->object_type === 'album') {
+            $songs = $this->songRepository->getByAlbum($art->object_id);
+        } else {
+            $songs = $this->songRepository->getByArtist($art->object_id);
+        }
+
+        $data = [];
+
+        // Foreach songs in this album
+        foreach ($songs as $song_id) {
+            $song = new Song($song_id);
+            if ($song->isNew()) {
+                continue;
+            }
+
+            $data = $this->gatherMediaTags($song, $data);
+
+            if ($limit && count($data) >= $limit) {
+                break;
+            }
+        }
+
+        $data = $this->sortArtByPriority($data, $art->object_type);
+
+        if ($limit && count($data) >= $limit) {
+            $data = array_slice($data, 0, $limit);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Gather tags from video files.
+     * @return array<int, array{raw: string, mime: string, title: string}>
+     */
+    private function gatherVideoTags(Art $art): array
+    {
+        $video = new Video($art->object_id);
+
+        return $this->gatherMediaTags($video, []);
+    }
+
+    /**
+     * Calculate the priority for the given art type.
+     */
+    private function getArtTypePriority(string $type, array $priorities): int
+    {
+        $priority = array_search($type, $priorities, true);
+        if ($priority === false) {
+            return count($priorities);
+        }
+
+        return (int) $priority;
+    }
+
+    /**
+     * Sort images in the data array using the ART_PRIORITY list for your art_type
+     * @param array<int, array{raw: string, mime: string, title: string}> $data
+     * @return array<int, array{raw: string, mime: string, title: string}>
+     */
+    private function sortArtByPriority(array $data, string $art_type): array
+    {
+        $priorities = ($art_type === 'artist')
+            ? self::TAG_ARTIST_ART_PRIORITY
+            : self::TAG_ALBUM_ART_PRIORITY; // song and album art
+        uasort(
+            $data,
+            function ($image1, $image2) use (&$priorities) {
+                return $this->getArtTypePriority($image1['title'], $priorities) <=> $this->getArtTypePriority($image2['title'], $priorities);
+            }
+        );
+
+        return $data;
     }
 }

@@ -34,8 +34,7 @@ use Ampache\Repository\Model\Catalog;
 final class Migration794004 extends AbstractMigration
 {
     protected array $changelog = ['Fix up Orphan Album Disk objects to be unique and update from tags'];
-
-    protected bool $warning = true;
+    protected bool $warning    = true;
 
     public function migrate(): void
     {
@@ -56,9 +55,9 @@ final class Migration794004 extends AbstractMigration
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['catalog'] == 0) {
-                $orphan_id = (int)$row['id'];
+                $orphan_id = (int) $row['id'];
             } else {
-                $results[] = (int)$row['id'];
+                $results[] = (int) $row['id'];
             }
         }
 

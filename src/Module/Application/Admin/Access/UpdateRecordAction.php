@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Application\Admin\Access\Lib\AccessListItem;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -42,55 +43,39 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateRecordAction implements ApplicationActionInterface
+final readonly class UpdateRecordAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_record';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private AccessListManagerInterface $accessListManager;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'update_record';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        AccessListManagerInterface $accessListManager,
-        RequestParserInterface $requestParser
-    ) {
-        $this->ui                = $ui;
-        $this->configContainer   = $configContainer;
-        $this->modelFactory      = $modelFactory;
-        $this->accessListManager = $accessListManager;
-        $this->requestParser     = $requestParser;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private AccessListManagerInterface $accessListManager,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            !$this->requestParser->verifyForm('edit_acl')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || !$this->requestParser->verifyForm('edit_acl')
         ) {
             throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();
 
-        $data     = (array)$request->getParsedBody();
-        $accessId = (int)($request->getQueryParams()['access_id'] ?? 0);
+        $data     = (array) $request->getParsedBody();
+        $accessId = (int) ($request->getQueryParams()['access_id'] ?? 0);
         try {
             $this->accessListManager->update(
                 $accessId,
                 $data['start'] ?? '',
                 $data['end'] ?? '',
                 $data['name'] ?? '',
-                (int)($data['user'] ?? -1),
-                AccessLevelEnum::from((int)($data['level'] ?? 0)),
+                (int) ($data['user'] ?? -1),
+                AccessLevelEnum::from((int) ($data['level'] ?? 0)),
                 AccessTypeEnum::from($data['type'] ?? 'stream')
             );
         } catch (InvalidIpRangeException) {
@@ -106,7 +91,7 @@ final class UpdateRecordAction implements ApplicationActionInterface
             $this->ui->show(
                 'show_edit_access.inc.php',
                 [
-                    'access' => new Lib\AccessListItem(
+                    'access' => new AccessListItem(
                         $this->modelFactory,
                         $this->modelFactory->createAccess($accessId)
                     )

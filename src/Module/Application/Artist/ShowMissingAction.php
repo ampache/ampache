@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,21 +33,14 @@ use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowMissingAction implements ApplicationActionInterface
+final readonly class ShowMissingAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_missing';
-
-    private UiInterface $ui;
-
-    private MissingArtistRetrieverInterface $missingArtistRetriever;
+    public const string REQUEST_KEY = 'show_missing';
 
     public function __construct(
-        UiInterface $ui,
-        MissingArtistRetrieverInterface $missingArtistRetriever
-    ) {
-        $this->ui                     = $ui;
-        $this->missingArtistRetriever = $missingArtistRetriever;
-    }
+        private UiInterface $ui,
+        private MissingArtistRetrieverInterface $missingArtistRetriever,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -55,11 +48,7 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         $musicBrainzId = VaInfo::parse_mbid($_REQUEST['mbid'] ?? '');
 
-        if ($musicBrainzId === null) {
-            $wartist = [];
-        } else {
-            $wartist = $this->missingArtistRetriever->retrieve($musicBrainzId);
-        }
+        $wartist = $musicBrainzId === null ? [] : $this->missingArtistRetriever->retrieve($musicBrainzId);
 
         $this->ui->show(
             'show_missing_artist.inc.php',

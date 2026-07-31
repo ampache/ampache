@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -28,13 +30,6 @@ use Ampache\Repository\Model\Query;
 interface QueryInterface
 {
     /**
-     * get_select
-     *
-     * This method returns the columns a query will user for SELECT
-     */
-    public function get_select(): string;
-
-    /**
      * get_base_sql
      *
      * Base SELECT query string without filters or joins
@@ -42,15 +37,11 @@ interface QueryInterface
     public function get_base_sql(): string;
 
     /**
-     * get_sql_filter
+     * get_select
      *
-     * SQL filters for WHERE and required table joins for the selected $filter
+     * This method returns the columns a query will user for SELECT
      */
-    public function get_sql_filter(
-        Query $query,
-        string $filter,
-        mixed $value
-    ): string;
+    public function get_select(): string;
 
     /**
      * get_sorts
@@ -61,16 +52,24 @@ interface QueryInterface
     public function get_sorts(): array;
 
     /**
+     * get_sql_filter
+     *
+     * SQL filters for WHERE and required table joins for the selected $filter
+     */
+    public function get_sql_filter(
+        Query $query,
+        string $filter,
+        mixed $value,
+    ): string;
+
+    /**
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
     public function get_sql_sort(
-        $query,
-        $field,
-        $order
+        Query   $query,
+        ?string $field,
+        ?string $order,
     ): string;
 }

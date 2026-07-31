@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,12 +23,14 @@ declare(strict_types=0);
  *
  */
 
+// show_big_art.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
 
-$art_url  = Art::url((int)Core::get_get('id'), 'album');
+$art_url  = Art::url((int) Core::get_get('id'), 'album');
 $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US')); ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">

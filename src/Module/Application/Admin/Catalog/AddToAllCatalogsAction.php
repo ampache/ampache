@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,19 +32,16 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AddToAllCatalogsAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'add_to_all_catalogs';
+    public const string REQUEST_KEY = 'add_to_all_catalogs';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    private readonly UiInterface $ui;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->ui = $ui;
     }
 
     /**
@@ -52,12 +49,12 @@ final class AddToAllCatalogsAction extends AbstractCatalogAction
      */
     protected function handle(
         ServerRequestInterface $request,
-        array $catalogIds
+        array $catalogIds,
     ): ?ResponseInterface {
         catalog_worker('add_to_all_catalogs');
         $this->ui->showConfirmation(
+            T_('No Problem'),
             T_('Catalog update process has started'),
-            '',
             sprintf(
                 '%s/catalog.php',
                 $this->configContainer->getWebPath('/admin')

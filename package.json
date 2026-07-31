@@ -23,6 +23,10 @@
     "build": "vite build --minify false",
     "postinstall": "npm-run-all copy:*",
     "verify:install": "node resources/scripts/verify-install.js",
+    "crawl": "node resources/scripts/crawl/crawl.mjs",
+    "minify": "npm-run-all minify:*",
+    "minify:jplayer": "uglifyjs public/lib/modules/jplayer/jquery.jplayer.js -o public/lib/modules/jplayer/jquery.jplayer.min.js",
+    "minify:jplayer-playlist": "uglifyjs public/lib/modules/jplayer/jplayer.playlist.js -o public/lib/modules/jplayer/jplayer.playlist.min.js",
     "copy:bootstrap": "copyfiles --error --up 3 \"node_modules/bootstrap/dist/**/*\" public/lib/components/bootstrap",
     "copy:contextmenu": "copyfiles --error --up 3 \"node_modules/jquery-contextmenu/dist/*\" public/lib/components/jquery-contextmenu",
     "copy:datetimepicker": "copyfiles --error --up 3 node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css public/lib/components/datetimepicker",
@@ -33,6 +37,7 @@
     "copy:jqueryui": "copyfiles --error --up 3 \"node_modules/jquery-ui/dist/*\" public/lib/components/jquery-ui",
     "copy:jqueryqrcode": "copyfiles --error --up 2 node_modules/jquery.qrcode/jquery.qrcode.min.js public/lib/components/jquery-qrcode",
     "copy:materialsymbols": "copyfiles --error --up 4 \"node_modules/@material-symbols/svg-400/rounded/*\" \"resources/images/material-symbols\"",
+    "copy:materialsymbolsweb": "copyfiles --error --flat node_modules/@material-symbols/svg-400/rounded/warning.svg node_modules/@material-symbols/svg-400/rounded/help.svg node_modules/@material-symbols/svg-400/rounded/expand_more.svg node_modules/@material-symbols/svg-400/rounded/chevron_right.svg node_modules/@material-symbols/svg-400/rounded/check_box.svg node_modules/@material-symbols/svg-400/rounded/check_box_outline_blank.svg node_modules/@material-symbols/svg-400/rounded/indeterminate_check_box.svg node_modules/@material-symbols/svg-400/rounded/radio_button_checked.svg node_modules/@material-symbols/svg-400/rounded/radio_button_unchecked.svg node_modules/@material-symbols/svg-400/rounded/radio_button_partial.svg node_modules/@material-symbols/svg-400/rounded/folder.svg node_modules/@material-symbols/svg-400/rounded/folder_open.svg node_modules/@material-symbols/svg-400/rounded/folder_special.svg node_modules/@material-symbols/svg-400/rounded/description.svg public/lib/components/material-symbols",
     "copy:tagit": "copyfiles --error --up 2 node_modules/tag-it/js/tag-it.min.js node_modules/tag-it/css/jquery.tagit.css public/lib/components/tag-it",
     "copy:wunderbaum": "copyfiles --error --up 3 \"node_modules/wunderbaum/dist/**/*\" public/lib/components/wunderbaum"
   },

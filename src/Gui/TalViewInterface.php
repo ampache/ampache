@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -27,7 +29,7 @@ interface TalViewInterface
 {
     public function render(): string;
 
-    public function setTemplate(string $templateFilePath): TalViewInterface;
-
     public function setContext(string $key, mixed $context): TalViewInterface;
+
+    public function setTemplate(string $templateFilePath): TalViewInterface;
 }

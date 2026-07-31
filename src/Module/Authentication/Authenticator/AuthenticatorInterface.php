@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -33,7 +35,7 @@ interface AuthenticatorInterface
      *     name?: string,
      *     email?: string,
      *     error?: string,
-     *      ui_required?: bool
+     *     ui_required?: bool
      * }
      */
     public function auth(string $username, string $password): array;

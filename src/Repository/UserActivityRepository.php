@@ -31,6 +31,89 @@ use Ampache\Module\System\Dba;
 final class UserActivityRepository implements UserActivityRepositoryInterface
 {
     /**
+     * Remove activities for items that no longer exist.
+     */
+    public function collectGarbage(
+        ?string $object_type = null,
+        ?int $object_id = null,
+    ): void {
+        $types = [
+            'album_disk',
+            'album',
+            'artist',
+            'catalog',
+            'folder',
+            'live_stream',
+            'playlist',
+            'podcast_episode',
+            'podcast',
+            'song',
+            'video',
+        ];
+
+        if ($object_type !== null) {
+            if (in_array($object_type, $types, true)) {
+                $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?";
+                Dba::write($sql, [$object_type, $object_id]);
+            } else {
+                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+            }
+        } else {
+            foreach ($types as $type) {
+                Dba::write(sprintf('DELETE FROM `user_activity` WHERE `object_type` = ? AND `user_activity`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`);', $type, $type), [$type], true);
+            }
+
+            // accidental plays
+            Dba::write("DELETE FROM `user_activity` WHERE `object_type` IN ('album', 'artist') AND `action` = 'play';", [], true);
+            // deleted users
+            Dba::write("DELETE FROM `user_activity` WHERE `user` NOT IN (SELECT `id` FROM `user`);", [], true);
+        }
+    }
+
+    /**
+     * Delete activity by date
+     */
+    public function deleteByDate(
+        int $date,
+        string $action,
+        int $user_id = 0,
+    ): void {
+        Dba::write(
+            "DELETE FROM `user_activity` WHERE `activity_date` = ? AND `action` = ? AND `user` = ?",
+            [$date, $action, $user_id]
+        );
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getActivities(
+        int $user_id,
+        int $limit = 0,
+        int $since = 0,
+    ): array {
+        if ($limit < 1) {
+            $limit = AmpConfig::get('popular_threshold', 10);
+        }
+
+        $params = [$user_id];
+        $sql    = "SELECT `id` FROM `user_activity` WHERE `user` = ? ";
+        if ($since > 0) {
+            $sql .= "AND `activity_date` <= ? ";
+            $params[] = $since;
+        }
+
+        $sql .= "ORDER BY `activity_date` DESC LIMIT " . $limit;
+        $db_results = Dba::read($sql, $params);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * @return int[]
      */
     public function getFriendsActivities(int $user_id, int $limit = 0, int $since = 0): array
@@ -57,88 +140,6 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
     }
 
     /**
-     * @return int[]
-     */
-    public function getActivities(
-        int $user_id,
-        int $limit = 0,
-        int $since = 0
-    ): array {
-        if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
-        }
-
-        $params = [$user_id];
-        $sql    = "SELECT `id` FROM `user_activity` WHERE `user` = ? ";
-        if ($since > 0) {
-            $sql .= "AND `activity_date` <= ? ";
-            $params[] = $since;
-        }
-
-        $sql .= "ORDER BY `activity_date` DESC LIMIT " . $limit;
-        $db_results = Dba::read($sql, $params);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * Delete activity by date
-     */
-    public function deleteByDate(
-        int $date,
-        string $action,
-        int $user_id = 0
-    ): void {
-        Dba::write(
-            "DELETE FROM `user_activity` WHERE `activity_date` = ? AND `action` = ? AND `user` = ?",
-            [$date, $action, $user_id]
-        );
-    }
-
-    /**
-     * Remove activities for items that no longer exist.
-     */
-    public function collectGarbage(
-        ?string $object_type = null,
-        ?int $object_id = null
-    ): void {
-        $types = [
-            'album_disk',
-            'album',
-            'artist',
-            'catalog',
-            'live_stream',
-            'playlist',
-            'podcast_episode',
-            'podcast',
-            'song',
-            'video',
-        ];
-
-        if ($object_type !== null) {
-            if (in_array($object_type, $types)) {
-                $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, [$object_type, $object_id]);
-            } else {
-                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
-            }
-        } else {
-            foreach ($types as $type) {
-                Dba::write(sprintf('DELETE FROM `user_activity` WHERE `object_type` = ? AND `user_activity`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`);', $type, $type), [$type], true);
-            }
-
-            // accidental plays
-            Dba::write("DELETE FROM `user_activity` WHERE `object_type` IN ('album', 'artist') AND `action` = 'play';", [], true);
-            // deleted users
-            Dba::write("DELETE FROM `user_activity` WHERE `user` NOT IN (SELECT `id` FROM `user`);", [], true);
-        }
-    }
-
-    /**
      * Inserts the necessary data to register a generic action on an object
      *
      * @todo Replace when active record models are available
@@ -148,7 +149,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         string $action,
         string $object_type,
         int $objectId,
-        int $date
+        int $date,
     ): void {
         Dba::write(
             "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)",

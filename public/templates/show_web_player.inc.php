@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_web_player.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\WebPlayer;
@@ -42,7 +44,6 @@ header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 <meta property="og:description" content="A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device." />
 <meta property="og:site_name" content="Ampache"/>
 <?php
-$isRadio      = false;
 $isVideo      = false;
 $isDemocratic = false;
 $isRandom     = false;
@@ -57,15 +58,12 @@ if (!$isShare) {
     }
 }
 
-if (isset($playlist)) {
-    if (WebPlayer::is_playlist_radio($playlist)) {
-        // Special stuff for web radio (to better handle Icecast/Shoutcast metadata ...)
-        // No special stuff for now
-        $isRadio = true;
-        $radio   = $playlist->urls[0];
-    }
-    $isVideo      = WebPlayer::is_playlist_video($playlist);
-    $isDemocratic = WebPlayer::is_playlist_democratic($playlist);
-    $isRandom     = WebPlayer::is_playlist_random($playlist);
+// show_html5_player.inc.php requires a Stream_Playlist unconditionally
+if (!isset($playlist)) {
+    $playlist = new Stream_Playlist(-1);
 }
+
+$isVideo      = WebPlayer::is_playlist_video($playlist);
+$isDemocratic = WebPlayer::is_playlist_democratic($playlist);
+$isRandom     = WebPlayer::is_playlist_random($playlist);
 require_once Ui::find_template('show_html5_player.inc.php'); ?>

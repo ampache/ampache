@@ -30,6 +30,7 @@ use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use DI\Definition\Exception\InvalidDefinition;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -37,27 +38,14 @@ use Psr\Log\LoggerInterface;
 use Slim\ResponseEmitter;
 use Throwable;
 
-final class ApplicationRunner
+final readonly class ApplicationRunner
 {
-    private ContainerInterface $dic;
-
-    private LoggerInterface $logger;
-
-    private GatekeeperFactoryInterface $gatekeeperFactory;
-
-    private UiInterface $ui;
-
     public function __construct(
-        ContainerInterface $dic,
-        LoggerInterface $logger,
-        GatekeeperFactoryInterface $gatekeeperFactory,
-        UiInterface $ui
-    ) {
-        $this->dic               = $dic;
-        $this->logger            = $logger;
-        $this->gatekeeperFactory = $gatekeeperFactory;
-        $this->ui                = $ui;
-    }
+        private ContainerInterface $dic,
+        private LoggerInterface $logger,
+        private GatekeeperFactoryInterface $gatekeeperFactory,
+        private UiInterface $ui,
+    ) {}
 
     /**
      * @param array<string, string> $action_list A dict containing request keys and handler class names
@@ -66,9 +54,9 @@ final class ApplicationRunner
     public function run(
         ServerRequestInterface $request,
         array $action_list,
-        string $default_action
+        string $default_action,
     ): void {
-        $body        = (array)$request->getParsedBody();
+        $body        = (array) $request->getParsedBody();
         $action_name = htmlspecialchars($body['action'] ?? $request->getQueryParams()['action'] ?? '');
 
         if (array_key_exists($action_name, $action_list) === false) {
@@ -80,6 +68,14 @@ final class ApplicationRunner
         try {
             /** @var ApplicationActionInterface $handler */
             $handler = $this->dic->get($handler_name);
+        } catch (InvalidDefinition) {
+            // something went wrong trying to load this action. check src/Config/DicBuilder.php
+            $this->logger->critical(
+                sprintf('Error loading handler for action "%s"', $action_name),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            return;
         } catch (ContainerExceptionInterface) {
             $this->logger->critical(
                 sprintf('No handler found for action "%s"', $action_name),
@@ -116,7 +112,7 @@ final class ApplicationRunner
                     LegacyLogger::CONTEXT_TYPE => sprintf(
                         '"%s" for "%s"',
                         self::class,
-                        get_class($handler)
+                        $handler::class
                     )
                 ]
             );
@@ -131,7 +127,7 @@ final class ApplicationRunner
                     LegacyLogger::CONTEXT_TYPE => sprintf(
                         '"%s" for "%s"',
                         self::class,
-                        get_class($handler)
+                        $handler::class
                     ),
                     'objectId' => $error->getObjectId()
                 ]

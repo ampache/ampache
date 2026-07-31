@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -39,9 +41,10 @@ interface UpdateCatalogInterface
         bool $updateInfo,
         bool $optimizeDatabase,
         bool $collectGarbage,
+        bool $scanFolders,
         string $catalogType,
         ?string $catalogName,
-        ?int $limit
+        ?int $limit,
     ): void;
 
     /**
@@ -51,6 +54,6 @@ interface UpdateCatalogInterface
         Interactor $interactor,
         string $catalogType,
         ?string $catalogName,
-        ?string $newPath
+        ?string $newPath,
     ): void;
 }

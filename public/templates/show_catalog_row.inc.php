@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_catalog_row.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -50,20 +52,22 @@ $button_flip_state_id = 'button_flip_state_' . $catalog->id; ?>
     <a href="<?php echo $admin_path; ?>/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $catalog->id; ?>"><b><?php echo T_('Make it ready ..'); ?></b></a><br />
 <?php } ?>
 <form name="catalog_action_<?php echo $catalog->id; ?>" method="post" action="<?php echo $admin_path; ?>/catalog.php">
-    <select name="action">
-<?php if ($catalog->isReady()) { ?>
-        <option value="add_to_catalog"><?php echo T_('Add'); ?></option>
-        <option value="update_catalog"><?php echo T_('Verify'); ?></option>
-        <option value="clean_catalog"><?php echo T_('Clean'); ?></option>
-        <option value="full_service"><?php echo T_('Update'); ?></option>
-        <option value="gather_media_art"><?php echo T_('Gather Art'); ?></option>
-        <option value="import_to_catalog"><?php echo T_('Import'); ?></option>
-        <option value="update_file_tags"><?php echo T_('Update File Tags'); ?></option>
-        <option value="garbage_collect"><?php echo T_('Garbage Collection'); ?></option>
-
-<?php } ?>
-        <option value="show_delete_catalog"><?php echo T_('Delete'); ?></option>
-    </select>
+    <label>
+        <select name="action">
+    <?php if ($catalog->isReady()) { ?>
+            <option value="add_to_catalog"><?php echo T_('Add'); ?></option>
+            <option value="update_catalog"><?php echo T_('Verify'); ?></option>
+            <option value="clean_catalog"><?php echo T_('Clean'); ?></option>
+            <option value="scan_catalog_folders"><?php echo T_('Scan Folders'); ?></option>
+            <option value="full_service"><?php echo T_('Update'); ?></option>
+            <option value="gather_media_art"><?php echo T_('Gather Art'); ?></option>
+            <option value="import_to_catalog"><?php echo T_('Import'); ?></option>
+            <option value="update_file_tags"><?php echo T_('Update File Tags'); ?></option>
+            <option value="garbage_collect"><?php echo T_('Garbage Collection'); ?></option>
+    <?php } ?>
+            <option value="show_delete_catalog"><?php echo T_('Delete'); ?></option>
+        </select>
+    </label>
     <div class="formValidation">
         <input class="button" type="submit" value="<?php echo T_('Go'); ?>" />
         <input type="hidden" name="catalogs[]" value="=<?php echo $catalog->id; ?>" />

@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use Generator;
@@ -46,59 +47,14 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
         protected DatabaseConnectionInterface $connection,
         private readonly UserRepositoryInterface $userRepository,
         private readonly LoggerInterface $logger,
-    ) {
-    }
-
-    /**
-     * @return class-string<Shoutbox>
-     */
-    protected function getModelClass(): string
-    {
-        return Shoutbox::class;
-    }
-
-    /**
-     * @return list<mixed>
-     */
-    protected function getPrototypeParameters(): array
-    {
-        return [
-            $this,
-            $this->userRepository,
-        ];
-    }
-
-    protected function getTableName(): string
-    {
-        return 'user_shout';
-    }
-
-    /**
-     * Returns all shout-box items for the provided object-type and -id
-     *
-     * @return Generator<Shoutbox>
-     */
-    public function getBy(
-        LibraryItemEnum $objectType,
-        int $objectId
-    ): Generator {
-        $result = $this->connection->query(
-            'SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
-            [$objectType->value, $objectId]
-        );
-        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, $this->getPrototypeParameters());
-
-        while ($shout = $result->fetch()) {
-            yield $shout;
-        }
-    }
+    ) {}
 
     /**
      * Cleans out orphaned shout-box items
      */
     public function collectGarbage(
         ?string $objectType = null,
-        ?int $objectId = null
+        ?int $objectId = null,
     ): void {
         $types = [
             'album',
@@ -109,14 +65,18 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
 
         if ($objectType !== null) {
             // @todo use php8+ enum to get rid of this check
-            if (in_array($objectType, $types)) {
+            if (in_array($objectType, $types, true)) {
                 $this->connection->query(
                     'DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?',
                     [$objectType, $objectId]
                 );
             } else {
                 $this->logger->critical(
-                    sprintf('Garbage collect on type `%s` is not supported.', $objectType)
+                    sprintf(
+                        'Garbage collect on type `%s` is not supported.',
+                        $objectType
+                    ),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         } else {
@@ -149,48 +109,23 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
     }
 
     /**
-     * Persists the shout-item in the database
+     * Returns all shout-box items for the provided object-type and -id
      *
-     * If the item is new, it will be created. Otherwise, an update will happen
-     *
-     * @return null|non-negative-int
+     * @return Generator<Shoutbox>
      */
-    public function persist(Shoutbox $shout): ?int
-    {
-        $result = null;
+    public function getBy(
+        LibraryItemEnum $objectType,
+        int $objectId,
+    ): Generator {
+        $result = $this->connection->query(
+            'SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
+            [$objectType->value, $objectId]
+        );
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, $this->getPrototypeParameters());
 
-        if ($shout->isNew()) {
-            $this->connection->query(
-                'INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [
-                    $shout->getUserId(),
-                    $shout->getDate()->getTimestamp(),
-                    $shout->getText(),
-                    (int) $shout->isSticky(),
-                    $shout->getObjectId(),
-                    $shout->getObjectType()->value,
-                    $shout->getOffset()
-                ]
-            );
-
-            $result = $this->connection->getLastInsertedId();
-        } else {
-            $this->connection->query(
-                'UPDATE `user_shout` SET `user` = ?, `date` = ?, `text` = ?, `sticky` = ?, `object_id` = ?, `object_type` = ?, `data` = ? WHERE `id` = ?',
-                [
-                    $shout->getUserId(),
-                    $shout->getDate()->getTimestamp(),
-                    $shout->getText(),
-                    (int) $shout->isSticky(),
-                    $shout->getObjectId(),
-                    $shout->getObjectType()->value,
-                    $shout->getOffset(),
-                    $shout->getId()
-                ]
-            );
+        while ($shout = $result->fetch()) {
+            yield $shout;
         }
-
-        return $result;
     }
 
     /**
@@ -328,5 +263,74 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
             'UPDATE `user_shout` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
             [$newObjectId, $objectType, $oldObjectId]
         );
+    }
+
+    /**
+     * Persists the shout-item in the database
+     *
+     * If the item is new, it will be created. Otherwise, an update will happen
+     *
+     * @return null|non-negative-int
+     */
+    public function persist(Shoutbox $shout): ?int
+    {
+        $result = null;
+
+        if ($shout->isNew()) {
+            $this->connection->query(
+                'INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [
+                    $shout->getUserId(),
+                    $shout->getDate()->getTimestamp(),
+                    $shout->getText(),
+                    (int) $shout->isSticky(),
+                    $shout->getObjectId(),
+                    $shout->getObjectType()->value,
+                    $shout->getOffset()
+                ]
+            );
+
+            $result = $this->connection->getLastInsertedId();
+        } else {
+            $this->connection->query(
+                'UPDATE `user_shout` SET `user` = ?, `date` = ?, `text` = ?, `sticky` = ?, `object_id` = ?, `object_type` = ?, `data` = ? WHERE `id` = ?',
+                [
+                    $shout->getUserId(),
+                    $shout->getDate()->getTimestamp(),
+                    $shout->getText(),
+                    (int) $shout->isSticky(),
+                    $shout->getObjectId(),
+                    $shout->getObjectType()->value,
+                    $shout->getOffset(),
+                    $shout->getId()
+                ]
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return class-string<Shoutbox>
+     */
+    protected function getModelClass(): string
+    {
+        return Shoutbox::class;
+    }
+
+    /**
+     * @return list<mixed>
+     */
+    protected function getPrototypeParameters(): array
+    {
+        return [
+            $this,
+            $this->userRepository,
+        ];
+    }
+
+    protected function getTableName(): string
+    {
+        return 'user_shout';
     }
 }

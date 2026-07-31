@@ -38,82 +38,17 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use ArrayIterator;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowIpHistoryActionTest extends MockeryTestCase
 {
-    private MockInterface&UiInterface $ui;
-
-    private MockInterface&ModelFactoryInterface $modelFactory;
-
-    private MockInterface&IpHistoryRepositoryInterface $ipHistoryRepository;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private MockInterface&IpHistoryRepositoryInterface $ipHistoryRepository;
+    private MockInterface&ModelFactoryInterface $modelFactory;
     private ShowIpHistoryAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui                  = $this->mock(UiInterface::class);
-        $this->modelFactory        = $this->mock(ModelFactoryInterface::class);
-        $this->ipHistoryRepository = $this->mock(IpHistoryRepositoryInterface::class);
-        $this->configContainer     = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new ShowIpHistoryAction(
-            $this->ui,
-            $this->modelFactory,
-            $this->ipHistoryRepository,
-            $this->configContainer,
-        );
-    }
-
-    public function testRunShowErrorIfUserDoesNotExist(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $user       = $this->createMock(User::class);
-
-        $userId = -1;
-
-        static::expectException(ObjectNotFoundException::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['user_id' => (string) $userId]);
-
-        $this->modelFactory->shouldReceive('createUser')
-            ->with($userId)
-            ->once()
-            ->andReturn($user);
-
-        $user->expects(static::once())
-            ->method('isNew')
-            ->willReturn(true);
-
-        $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
+    private MockInterface&UiInterface $ui;
 
     public function testRunRenders(): void
     {
@@ -261,6 +196,69 @@ class ShowIpHistoryActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunShowErrorIfUserDoesNotExist(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $user       = $this->createMock(User::class);
+
+        $userId = -1;
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['user_id' => (string) $userId]);
+
+        $this->modelFactory->shouldReceive('createUser')
+            ->with($userId)
+            ->once()
+            ->andReturn($user);
+
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui                  = $this->mock(UiInterface::class);
+        $this->modelFactory        = $this->mock(ModelFactoryInterface::class);
+        $this->ipHistoryRepository = $this->mock(IpHistoryRepositoryInterface::class);
+        $this->configContainer     = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new ShowIpHistoryAction(
+            $this->ui,
+            $this->modelFactory,
+            $this->ipHistoryRepository,
+            $this->configContainer,
         );
     }
 }

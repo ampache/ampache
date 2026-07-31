@@ -33,6 +33,8 @@ use Slim\ResponseEmitter;
 
 final class XmlRestApiApplication implements ApiApplicationInterface
 {
+    use RequestParserTrait;
+
     private ApiHandlerInterface $apiHandler;
     private ApiOutputFactoryInterface $apiOutputFactory;
     private ConfigContainerInterface $configContainer;
@@ -88,7 +90,7 @@ final class XmlRestApiApplication implements ApiApplicationInterface
 
         // normalize input actions (REST paths)
         $action = $this->apiHandler->normalizeAction((string) ($input['action'] ?? ''), $type, isset($input['filter']));
-        // an empty action is handled by the api handler; don't turn it into a method suffix
+        // an empty action is handled by the api handler as a ping; don't let the http verb turn it into a suffix
         $action = ($action === '')
             ? $action
             : match ($method) {
@@ -116,9 +118,7 @@ final class XmlRestApiApplication implements ApiApplicationInterface
             $parameters['task'] = $task;
         }
 
-        $post = (in_array($method, ['POST', 'PATCH', 'PUT', 'DELETE']))
-            ? (array) $request->getParsedBody()
-            : [];
+        $post = $this->parseRequestBody($request);
 
         $request = $request->withQueryParams(
             array_merge(

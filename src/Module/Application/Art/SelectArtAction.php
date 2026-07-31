@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -33,33 +35,23 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
 final class SelectArtAction extends AbstractArtAction
 {
-    public const REQUEST_KEY = 'select_art';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'select_art';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        ResponseFactoryInterface $responseFactory,
-        UiInterface $ui
-    ) {
-        $this->modelFactory    = $modelFactory;
-        $this->responseFactory = $responseFactory;
-        $this->ui              = $ui;
-    }
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check to see if we have the image url still */
-        $image_id    = $_REQUEST['image'];
-        $object_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $image_id    = $_REQUEST['image'] ?? null;
+        $object_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $item = $this->getItem($gatekeeper);
         if ($item === null) {
@@ -69,6 +61,21 @@ final class SelectArtAction extends AbstractArtAction
         $burl = '';
         if (isset($_GET['burl'])) {
             $burl = base64_decode(Core::get_get('burl'));
+        }
+
+        if ($image_id === null || !isset($_SESSION['form']['images'][$image_id])) {
+            $this->ui->showHeader();
+
+            $this->ui->showContinue(
+                T_('There Was a Problem'),
+                T_('Missing mandatory parameter'),
+                $burl
+            );
+
+            $this->ui->showQueryStats();
+            $this->ui->showFooter();
+
+            return null;
         }
 
         // Prevent the script from timing out
@@ -102,7 +109,7 @@ final class SelectArtAction extends AbstractArtAction
         $art->insert($image, $mime);
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 $burl

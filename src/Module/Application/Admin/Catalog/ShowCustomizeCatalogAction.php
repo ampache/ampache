@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,21 +36,14 @@ use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowCustomizeCatalogAction implements ApplicationActionInterface
+final readonly class ShowCustomizeCatalogAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_customize_catalog';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'show_customize_catalog';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui
-    ) {
-        $this->requestParser = $requestParser;
-        $this->ui            = $ui;
-    }
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -60,7 +53,7 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
+        $catalog = Catalog::create_from_id((int) $this->requestParser->getFromRequest('catalog_id'));
         if ($catalog === null) {
             return null;
         }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_democratic_playlist.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -58,8 +60,7 @@ if ($browse->is_show_header()) {
   <col id="col_admin" />
   <?php } ?>
 </colgroup>
-<?php /** @var list<array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
-if (empty($object_ids) && isset($democratic->base_playlist)) {
+<?php if (empty($object_ids) && $democratic->base_playlist > 0) {
     $playlist = ($use_search)
         ? new Search($democratic->base_playlist)
         : new Playlist($democratic->base_playlist); ?>
@@ -83,10 +84,8 @@ if (empty($object_ids) && isset($democratic->base_playlist)) {
 </thead>
 <tbody>
 <?php $democratic->set_parent();
+    /** @var array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
     foreach ($object_ids as $item) {
-        if (!is_array($item)) {
-            $item = (array) $item;
-        }
         $className = ObjectTypeToClassNameMapper::map($item['object_type']->value);
         /** @var Song $media */
         $media = new $className($item['object_id']);

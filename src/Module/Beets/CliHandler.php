@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Beets;
 
 use Ampache\Module\System\Core;
+use Override;
 
 /**
  * Start commands in CLI and dispatch them
@@ -34,33 +35,6 @@ use Ampache\Module\System\Core;
  */
 class CliHandler extends Handler
 {
-    protected Catalog $handler;
-
-    /**
-     * Field separator for beets field format
-     */
-    protected string $seperator = '###';
-
-    /**
-     * Custom limiter of beets song because we may have multi line output
-     */
-    protected string $itemEnd = '//EOS';
-
-    /**
-     * Format string for the '-f' argument from 'beet ls'
-     */
-    protected string $fieldFormat = '$';
-
-    /**
-     * Choose whether the -f argument from beets is applied. May be needed to use other commands than 'beet ls'
-     */
-    protected bool $useCustomFields = true;
-
-    /**
-     * All stored beets fields
-     */
-    protected array $fields = [];
-
     /**
      * Beets command
      */
@@ -69,11 +43,18 @@ class CliHandler extends Handler
     /**
      * Seperator between command and arguments
      */
+    #[Override]
     protected string $commandSeperator = ' ';
+
+    /**
+     * Format string for the '-f' argument from 'beet ls'
+     */
+    protected string $fieldFormat = '$';
 
     /**
      * Defines the differences between beets and ampache fields
      */
+    #[Override]
     protected array $fieldMapping = [
         'disc' => ['disk', '%d'],
         'path' => ['file', '%s'],
@@ -83,23 +64,29 @@ class CliHandler extends Handler
     ];
 
     /**
-     * CliHandler constructor.
+     * All stored beets fields
      */
-    public function __construct(Catalog $handler)
-    {
-        $this->handler = $handler;
-    }
+    protected array $fields = [];
 
     /**
-     * Starts a command
+     * Custom limiter of beets song because we may have multi line output
      */
-    public function start(string $command): void
-    {
-        $handle = popen($this->assembleCommand($command), 'r');
-        if ($handle) {
-            $this->iterateItems($handle);
-        }
-    }
+    protected string $itemEnd = '//EOS';
+
+    /**
+     * Field separator for beets field format
+     */
+    protected string $seperator = '###';
+
+    /**
+     * Choose whether the -f argument from beets is applied. May be needed to use other commands than 'beet ls'
+     */
+    protected bool $useCustomFields = true;
+
+    /**
+     * CliHandler constructor.
+     */
+    public function __construct(protected Catalog $handler) {}
 
     /**
      * @param resource $handle
@@ -114,6 +101,17 @@ class CliHandler extends Handler
                 $this->dispatch($song);
                 $item = '';
             }
+        }
+    }
+
+    /**
+     * Starts a command
+     */
+    public function start(string $command): void
+    {
+        $handle = popen($this->assembleCommand($command), 'r');
+        if ($handle) {
+            $this->iterateItems($handle);
         }
     }
 
@@ -137,6 +135,38 @@ class CliHandler extends Handler
     }
 
     /**
+     * Create the format string for beet ls -f
+     */
+    protected function getFieldFormat(): string
+    {
+        if ($this->fieldFormat !== '' && $this->fieldFormat !== '0') {
+            $this->fields      = $this->getFields();
+            $this->fieldFormat = '$' . implode(($this->seperator ?: '###') . '$', $this->fields) . $this->itemEnd;
+        }
+
+        return $this->fieldFormat;
+    }
+
+    /**
+     * getFields
+     * @return string[]
+     */
+    protected function getFields(): array
+    {
+        $fields          = null;
+        $processedFields = [];
+        exec($this->assembleCommand('fields', true), $fields);
+        foreach ($fields as $field) {
+            $matches = [];
+            if (preg_match('/^[\s]+([\w]+)$/', $field, $matches)) {
+                $processedFields[] = $matches[1];
+            }
+        }
+
+        return $processedFields;
+    }
+
+    /**
      * itemIsComlete
      */
     protected function itemIsComlete(string $item): bool
@@ -155,43 +185,11 @@ class CliHandler extends Handler
     protected function parse(string $item): array
     {
         $item               = str_replace($this->itemEnd, '', $item);
-        $values             = explode($this->seperator, $item);
+        $values             = explode(($this->seperator ?: '###'), $item);
         $song               = array_combine($this->fields, $values);
         $mappedSong         = $this->mapFields($song);
         $mappedSong['size'] = Core::get_filesize($mappedSong['file']);
 
         return $mappedSong;
-    }
-
-    /**
-     * Create the format string for beet ls -f
-     */
-    protected function getFieldFormat(): string
-    {
-        if (!empty($this->fieldFormat)) {
-            $this->fields      = $this->getFields();
-            $this->fieldFormat = '$' . implode($this->seperator . '$', $this->fields) . $this->itemEnd;
-        }
-
-        return $this->fieldFormat;
-    }
-
-    /**
-     * getFields
-     * @return string[]
-     */
-    protected function getFields(): array
-    {
-        $fields          = null;
-        $processedFields = [];
-        exec($this->assembleCommand('fields', true), $fields);
-        foreach ((array) $fields as $field) {
-            $matches = [];
-            if (preg_match('/^[\s]+([\w]+)$/', $field, $matches)) {
-                $processedFields[] = $matches[1];
-            }
-        }
-
-        return $processedFields;
     }
 }

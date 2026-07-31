@@ -40,28 +40,37 @@ class UpdateRunnerTest extends TestCase
 {
     use ConsecutiveParams;
 
+    private ConfigContainerInterface&MockObject $configContainer;
     private DatabaseConnectionInterface&MockObject $connection;
-
     private LoggerInterface&MockObject $logger;
-
+    private UpdateRunner $subject;
     private UpdateInfoRepositoryInterface&MockObject $updateInfoRepository;
 
-    private ConfigContainerInterface&MockObject $configContainer;
-
-    private UpdateRunner $subject;
-
-    protected function setUp(): void
+    public function testRunTableCheckReturnsNullIfEverythingIsAlright(): void
     {
-        $this->connection           = $this->createMock(DatabaseConnectionInterface::class);
-        $this->logger               = $this->createMock(LoggerInterface::class);
-        $this->updateInfoRepository = $this->createMock(UpdateInfoRepositoryInterface::class);
-        $this->configContainer      = $this->createMock(ConfigContainerInterface::class);
+        $tableName = 'some-table';
+        $sql       = 'some-sql';
 
-        $this->subject = new UpdateRunner(
-            $this->connection,
-            $this->logger,
-            $this->updateInfoRepository,
-            $this->configContainer
+        $migration = $this->createMock(MigrationInterface::class);
+        $updates   = new ArrayIterator([[
+            'migration' => $migration,
+        ]]);
+
+        $migration->expects(static::once())
+            ->method('getTableMigrations')
+            ->with('utf8mb4_unicode_ci', 'utf8mb4', 'InnoDB')
+            ->willReturn(new ArrayIterator([$tableName => $sql]));
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(sprintf('DESCRIBE `%s`', $tableName));
+
+        self::assertNull(
+            $this->subject->runTableCheck(
+                $updates,
+                true,
+                600000
+            )->current(),
         );
     }
 
@@ -94,7 +103,7 @@ class UpdateRunnerTest extends TestCase
                 ]
             );
 
-        static::assertSame(
+        self::assertSame(
             $tableName,
             $this->subject->runTableCheck(
                 $updates,
@@ -104,31 +113,18 @@ class UpdateRunnerTest extends TestCase
         );
     }
 
-    public function testRunTableCheckReturnsNullIfEverythingIsAlright(): void
+    protected function setUp(): void
     {
-        $tableName = 'some-table';
-        $sql       = 'some-sql';
+        $this->connection           = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger               = $this->createMock(LoggerInterface::class);
+        $this->updateInfoRepository = $this->createMock(UpdateInfoRepositoryInterface::class);
+        $this->configContainer      = $this->createMock(ConfigContainerInterface::class);
 
-        $migration = $this->createMock(MigrationInterface::class);
-        $updates   = new ArrayIterator([[
-            'migration' => $migration,
-        ]]);
-
-        $migration->expects(static::once())
-            ->method('getTableMigrations')
-            ->with('utf8mb4_unicode_ci', 'utf8mb4', 'InnoDB')
-            ->willReturn(new ArrayIterator([$tableName => $sql]));
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(sprintf('DESCRIBE `%s`', $tableName));
-
-        static::assertNull(
-            $this->subject->runTableCheck(
-                $updates,
-                true,
-                600000
-            )->current(),
+        $this->subject = new UpdateRunner(
+            $this->connection,
+            $this->logger,
+            $this->updateInfoRepository,
+            $this->configContainer
         );
     }
 }

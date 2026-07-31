@@ -47,7 +47,7 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 final class ShareCreate4Method
 {
-    public const ACTION = 'share_create';
+    public const string ACTION = 'share_create';
 
     /**
      * share_create
@@ -74,7 +74,7 @@ final class ShareCreate4Method
     public static function share_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api4::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: sharing features are not enabled.', '400', $input['api_format']);
 
             return false;
         }
@@ -88,19 +88,19 @@ final class ShareCreate4Method
         $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
         // confirm the correct data
         if (!in_array($object_type, ['song', 'album', 'artist'])) {
-            Api4::message('error', T_('Wrong object type ' . $object_type), '401', $input['api_format']);
+            Api4::message('error', 'Wrong object type ' . $object_type, '401', $input['api_format']);
 
             return false;
         }
         $results = [];
         if (!InterfaceImplementationChecker::is_library_item($object_type) || !$object_id) {
-            Api4::message('error', T_('Wrong library item type'), '401', $input['api_format']);
+            Api4::message('error', 'Wrong library item type', '401', $input['api_format']);
         } else {
             $className = ObjectTypeToClassNameMapper::map($object_type);
             /** @var library_item $item */
             $item = new $className($object_id);
             if ($item->getId() === 0) {
-                Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
+                Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
                 return false;
             }

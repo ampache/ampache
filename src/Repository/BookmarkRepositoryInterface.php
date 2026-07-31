@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -30,31 +32,31 @@ use DateTimeInterface;
 interface BookmarkRepositoryInterface
 {
     /**
-     * @return list<int>
-     */
-    public function getByUser(User $user): array;
-
-    /**
-     * @return list<int>
-     */
-    public function getByUserAndComment(User $user, string $comment): array;
-
-    public function delete(int $bookmarkId): void;
-
-    /**
      * Remove bookmark for items that no longer exist.
      */
     public function collectGarbage(): void;
 
-    public function update(int $bookmarkId, int $position, DateTimeInterface $date): void;
+    public function delete(int $bookmarkId): void;
+
+    /**
+     * Finds a single item by id
+     */
+    public function findById(int $itemId): ?Bookmark;
+
+    /**
+     * @return int[]
+     */
+    public function getByUser(User $user): array;
+
+    /**
+     * @return int[]
+     */
+    public function getByUserAndComment(User $user, string $comment): array;
 
     /**
      * Migrate an object associate stats to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
 
-    /**
-     * Finds a single item by id
-     */
-    public function findById(int $itemId): ?Bookmark;
+    public function update(int $bookmarkId, int $position, DateTimeInterface $date): void;
 }

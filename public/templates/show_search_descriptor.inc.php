@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_search_descriptor.inc.php
+
 use Ampache\Config\AmpConfig;
 
 $web_path = AmpConfig::get_web_path();
@@ -34,19 +36,19 @@ $description = scrub_out(T_('Search Ampache'));
 
 header(sprintf('Content-type: application/opensearchdescription+xml; charset=%s; filename=opensearch.xml', $char_set));
 
-echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" .
-    "<OpenSearchDescription xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">" .
-    "<ShortName>" . $short_name . "</ShortName>" .
-    "<Description>" . $description . "</Description>" .
-    "<InputEncoding>" . $char_set . "></InputEncoding>" .
-    "<OutputEncoding>" . $char_set . "></OutputEncoding>" .
-    "<Image width=\"16\" height=\"16\">" . $favicon . "</Image>" .
-    "<Url type=\"text/html\" method=\"get\" template=\"" . $web_path . "/search.php\">" .
-    "<Param name=\"type\" value=\"song\"></Param>" .
-    "<Param name=\"rule_1\" value=\"anywhere\"></Param>" .
-    "<Param name=\"rule_1_operator\" value=\"0\"></Param>" .
-    "<Param name=\"rule_1_input\" value=\"{searchTerms}\"></Param>" .
-    "<Param name=\"action\" value=\"search\"></Param>" .
-    "</Url>" .
-    "<Url type=\"application/opensearchdescription+xml\" rel=\"self\" template=\"" . $web_path . "/opensearch.php?action=descriptor\" />" .
-    "</OpenSearchDescription>";
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+    . "<OpenSearchDescription xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">"
+    . "<ShortName>" . $short_name . "</ShortName>"
+    . "<Description>" . $description . "</Description>"
+    . "<InputEncoding>" . $char_set . "></InputEncoding>"
+    . "<OutputEncoding>" . $char_set . "></OutputEncoding>"
+    . "<Image width=\"16\" height=\"16\">" . $favicon . "</Image>"
+    . "<Url type=\"text/html\" method=\"get\" template=\"" . $web_path . "/search.php\">"
+    . "<Param name=\"type\" value=\"song\"></Param>"
+    . "<Param name=\"rule_1\" value=\"anywhere\"></Param>"
+    . "<Param name=\"rule_1_operator\" value=\"0\"></Param>"
+    . "<Param name=\"rule_1_input\" value=\"{searchTerms}\"></Param>"
+    . "<Param name=\"action\" value=\"search\"></Param>"
+    . "</Url>"
+    . "<Url type=\"application/opensearchdescription+xml\" rel=\"self\" template=\"" . $web_path . "/opensearch.php?action=descriptor\" />"
+    . "</OpenSearchDescription>";

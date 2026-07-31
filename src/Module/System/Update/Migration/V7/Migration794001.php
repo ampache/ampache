@@ -33,8 +33,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration794001 extends AbstractMigration
 {
     protected array $changelog = ['Add weight columns to song, album, artist, podcast, podcast_episode and video tables'];
-
-    protected bool $warning = true;
+    protected bool $warning    = true;
 
     public function migrate(): void
     {

@@ -25,110 +25,136 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api6;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\System\Session;
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Random;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Download6Method
- * @package Lib\Api6Methods
+ * Redirects to the play url for a media file
+ *
+ * Api version 8 replaced this with a download that can also serve zip archives, so this is the
+ * version 6 shape only: it hands back a redirect to the stream.
  */
-final class Download6Method
+final class Download6Method implements MethodInterface
 {
-    public const ACTION = 'download';
+    public const string ACTION = 'download';
+
+    private ConfigContainerInterface $configContainer;
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory,
+    ) {
+        $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
+    }
 
     /**
-     * download
      * MINIMUM_API_VERSION=400001
      *
      * Downloads a given media file. set format=raw to download the full file
      * Search and Playlist will only stream a random object not the whole thing
      *
-     * id = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
-     * type = (string) 'song', 'podcast_episode', 'search', 'playlist'
-     * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb) //optional SONG ONLY
-     * format = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding //optional SONG ONLY
-     * stats = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
+     * id      = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
+     * type    = (string) 'song', 'podcast_episode', 'search', 'playlist'
+     * bitrate = (integer) max bitrate for transcoding in bytes //optional SONG ONLY
+     * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding //optional SONG ONLY
+     * stats   = (integer) 0,1, if false disable stat recording (default: 1) //optional
      *
      * @param array{
      *     filter?: string,
      *     id?: string,
-     *     type: string,
+     *     type?: string,
      *     bitrate?: int,
      *     format?: string,
      *     stats?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @throws RequestParamMissingException|ResultEmptyException
      */
-    public static function download(array $input, User $user): bool
-    {
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api6::check_parameter($input, ['id', 'type'], self::ACTION)) {
-            http_response_code(400);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $filter = $input['filter'] ?? $input['id'] ?? null;
+        if ($filter === null) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'id')
+            );
         }
 
-        $object_id = (int) $input['id'];
-        $type      = (string) $input['type'];
+        if (!array_key_exists('type', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'type')
+            );
+        }
 
+        $objectId = (int) $filter;
+        $type     = (string) $input['type'];
+
+        // The API can use searches as playlists so check for those too
         if (
-            $object_id === 0
-            && (
-                $type == 'playlist'
-                || $type == 'search'
-            )
+            $objectId === 0
+            && ($type === 'playlist' || $type === 'search')
         ) {
-            // The API can use searches as playlists so check for those too
-            $object_id = (int) str_replace('smart_', '', ($input['id'] ?? '0'));
-            $type      = 'search';
+            $objectId = (int) str_replace('smart_', '', (string) $filter);
+            $type     = 'search';
         }
 
         $maxBitRate  = (int) ($input['bitrate'] ?? 0);
         $format      = $input['format'] ?? null; // mp3, flv or raw
-        $params      = '&client=api&action=download';
         $recordStats = (int) ($input['stats'] ?? 1);
+        $params      = '&client=api&action=download';
 
-        if (AmpConfig::get('api_always_download') || $recordStats == 0) {
+        if ($this->configContainer->get('api_always_download') || $recordStats === 0) {
             $params .= '&cache=1';
         }
 
         if ($format && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&format=' . $format;
         }
-        if ($format != 'raw' && $maxBitRate > 0 && in_array($type, ['song', 'search', 'playlist'])) {
+
+        if ($format !== 'raw' && $maxBitRate > 0 && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&bitrate=' . $maxBitRate;
         }
-        $url = '';
-        if ($type == 'song') {
-            $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
-        }
-        if ($type == 'podcast_episode' || $type == 'podcast') {
-            $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
-        }
-        if ($type == 'search' || $type == 'playlist') {
-            $song_id = Random::get_single_song($type, $user, $object_id);
-            $media   = new Song($song_id);
-            $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
-        }
-        if (!empty($url)) {
-            Session::extend($input['auth'], AccessTypeEnum::API->value);
-            header('Location: ' . str_replace(':443/play', '/play', $url));
 
-            return true;
+        $media = match ($type) {
+            'song' => $this->modelFactory->createSong($objectId),
+            'podcast_episode', 'podcast' => $this->modelFactory->createPodcastEpisode($objectId),
+            'search', 'playlist' => $this->modelFactory->createSong(
+                Random::get_single_song($type, $user, $objectId)
+            ),
+            default => null,
+        };
+
+        $url = ($media !== null)
+            ? $media->play_url($params, 'api', false, $user->getId(), $user->streamtoken)
+            : '';
+
+        if (empty($url)) {
+            // download not found
+            throw new ResultEmptyException(
+                (string) $objectId
+            );
         }
 
-        // download not found
-        http_response_code(404);
+        // ApiHandler extends the session for every MethodInterface handler, so it is not done here
 
-        return false;
+        return $response
+            ->withStatus(302)
+            ->withHeader('Location', str_replace(':443/play', '/play', $url));
     }
 }

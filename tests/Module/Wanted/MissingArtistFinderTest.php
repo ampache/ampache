@@ -30,22 +30,12 @@ use Mockery;
 use Mockery\MockInterface;
 use MusicBrainz\Filters\ArtistFilter;
 use MusicBrainz\MusicBrainz;
+use Override;
 
 class MissingArtistFinderTest extends MockeryTestCase
 {
-    /** @var MockInterface|MusicBrainz|null */
-    private MockInterface $musicBrainz;
-
+    private MockInterface|MusicBrainz|null $musicBrainz;
     private ?MissingArtistFinder $subject;
-
-    protected function setUp(): void
-    {
-        $this->musicBrainz = $this->mock(MusicBrainz::class);
-
-        $this->subject = new MissingArtistFinder(
-            $this->musicBrainz
-        );
-    }
 
     public function testFindReturnsFinds(): void
     {
@@ -70,6 +60,16 @@ class MissingArtistFinderTest extends MockeryTestCase
         $this->assertSame(
             [['mbid' => $musicBrainzId, 'name' => $name]],
             $this->subject->find($artistName)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->musicBrainz = $this->mock(MusicBrainz::class);
+
+        $this->subject = new MissingArtistFinder(
+            $this->musicBrainz
         );
     }
 }

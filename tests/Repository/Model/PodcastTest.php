@@ -35,64 +35,19 @@ class PodcastTest extends TestCase
 {
     private Podcast $subject;
 
-    protected function setUp(): void
+    /**
+     * @return Generator<array{0: string, 1: string}>
+     */
+    public static function feedUrlDataProvider(): Generator
     {
-        $this->subject = new Podcast();
-    }
-
-    public function testIsNewReturnsTrueOnNewObject(): void
-    {
-        static::assertTrue(
-            $this->subject->isNew()
-        );
-    }
-
-    public function testGetIdReturnsZeroOnNewObject(): void
-    {
-        static::assertSame(
-            0,
-            $this->subject->getId()
-        );
-    }
-
-    public function testGetKeywordsReturnsKeywords(): void
-    {
-        $title = 'some-title';
-
-        $this->subject->setTitle($title);
-
-        static::assertSame(
-            [
-                'podcast' => [
-                    'important' => true,
-                    'label' => 'Podcast',
-                    'value' => $title
-                ]
-            ],
-            $this->subject->get_keywords()
-        );
-    }
-
-    public function testGetParentReturnsNull(): void
-    {
-        static::assertNull(
-            $this->subject->get_parent()
-        );
-    }
-
-    public function testGetUserOwnerReturnsNull(): void
-    {
-        static::assertNull(
-            $this->subject->get_user_owner()
-        );
-    }
-
-    public function testGetDefaultArtKindReturnsValue(): void
-    {
-        static::assertSame(
-            'default',
-            $this->subject->get_default_art_kind()
-        );
+        // Kept, because the feed has to be fetchable over http
+        yield ['http://some-server.com/feed.xml', 'http://some-server.com/feed.xml'];
+        yield ['https://some-server.com/feed.xml', 'https://some-server.com/feed.xml'];
+        // Refused, leaving the previous value in place rather than storing something unfetchable
+        yield ['ftp://some-server.com/feed.xml', ''];
+        yield ['javascript:alert(1)', ''];
+        yield ['some-value', ''];
+        yield ['', ''];
     }
 
     public static function getterSetterDataProvider(): Generator
@@ -104,40 +59,8 @@ class PodcastTest extends TestCase
         yield ['Website', '', 'some-value',];
         yield ['Copyright', '', 'some-value',];
         yield ['Language', '', 'chars',];
-        yield ['FeedUrl', '', 'some-value',];
         yield ['Title', '', 'some-value',];
         yield ['Description', '', 'some-value',];
-    }
-
-    #[DataProvider(methodName: 'getterSetterDataProvider')]
-    public function testStandardGetterSetterTest(
-        string $methodName,
-        mixed $default,
-        mixed $value,
-    ): void {
-        static::assertSame(
-            $default,
-            call_user_func([$this->subject, 'get' . $methodName])
-        );
-
-        call_user_func([$this->subject, 'set' . $methodName], $value);
-
-        static::assertSame(
-            $value,
-            call_user_func([$this->subject, 'get' . $methodName])
-        );
-    }
-
-    public function testSetLanguageTruncates(): void
-    {
-        $value = 'söme-löng-value';
-
-        $this->subject->setLanguage($value);
-
-        static::assertSame(
-            mb_substr($value, 0, 5),
-            $this->subject->getLanguage()
-        );
     }
 
     public function testGetCatalogIdReturnsSetValue(): void
@@ -150,28 +73,50 @@ class PodcastTest extends TestCase
             ->method('getId')
             ->willReturn($catalogId);
 
-        static::assertSame(
+        self::assertSame(
             0,
             $this->subject->getCatalogId()
         );
 
         $this->subject->setCatalog($catalog);
 
-        static::assertSame(
+        self::assertSame(
             $catalogId,
             $this->subject->getCatalogId()
         );
     }
 
-    public function testGetLastSyncDateReturnsSetValue(): void
+    public function testGetDefaultArtKindReturnsValue(): void
     {
-        $data = new DateTime();
+        self::assertSame(
+            'default',
+            $this->subject->get_default_art_kind()
+        );
+    }
 
-        $this->subject->setLastSyncDate($data);
+    public function testGetIdReturnsZeroOnNewObject(): void
+    {
+        self::assertSame(
+            0,
+            $this->subject->getId()
+        );
+    }
 
-        static::assertSame(
-            $data->getTimestamp(),
-            $this->subject->getLastSyncDate()->getTimestamp()
+    public function testGetKeywordsReturnsKeywords(): void
+    {
+        $title = 'some-title';
+
+        $this->subject->setTitle($title);
+
+        self::assertSame(
+            [
+                'podcast' => [
+                    'important' => true,
+                    'label' => 'Podcast',
+                    'value' => $title
+                ]
+            ],
+            $this->subject->get_keywords()
         );
     }
 
@@ -181,9 +126,100 @@ class PodcastTest extends TestCase
 
         $this->subject->setLastBuildDate($data);
 
-        static::assertSame(
+        self::assertSame(
             $data->getTimestamp(),
             $this->subject->getLastBuildDate()->getTimestamp()
+        );
+    }
+
+    public function testGetLastSyncDateReturnsSetValue(): void
+    {
+        $data = new DateTime();
+
+        $this->subject->setLastSyncDate($data);
+
+        self::assertSame(
+            $data->getTimestamp(),
+            $this->subject->getLastSyncDate()->getTimestamp()
+        );
+    }
+
+    public function testGetParentReturnsNull(): void
+    {
+        self::assertNull(
+            $this->subject->get_parent()
+        );
+    }
+
+    public function testGetUserOwnerReturnsNull(): void
+    {
+        self::assertNull(
+            $this->subject->get_user_owner()
+        );
+    }
+
+    public function testIsNewReturnsTrueOnNewObject(): void
+    {
+        self::assertTrue(
+            $this->subject->isNew()
+        );
+    }
+
+    /**
+     * Unlike the other setters this one validates, so it gets its own case
+     */
+    #[DataProvider(methodName: 'feedUrlDataProvider')]
+    public function testSetFeedUrlKeepsOnlyHttpUrls(string $value, string $expectation): void
+    {
+        $this->subject->setFeedUrl($value);
+
+        self::assertSame(
+            $expectation,
+            $this->subject->getFeedUrl()
+        );
+    }
+
+    public function testSetFeedUrlKeepsThePreviousValueWhenRefused(): void
+    {
+        $feedUrl = 'https://some-server.com/feed.xml';
+
+        $this->subject->setFeedUrl($feedUrl);
+        $this->subject->setFeedUrl('not-a-url');
+
+        self::assertSame(
+            $feedUrl,
+            $this->subject->getFeedUrl()
+        );
+    }
+
+    public function testSetLanguageTruncates(): void
+    {
+        $value = 'söme-löng-value';
+
+        $this->subject->setLanguage($value);
+
+        self::assertSame(
+            mb_substr($value, 0, 5),
+            $this->subject->getLanguage()
+        );
+    }
+
+    #[DataProvider(methodName: 'getterSetterDataProvider')]
+    public function testStandardGetterSetterTest(
+        string $methodName,
+        mixed $default,
+        mixed $value,
+    ): void {
+        self::assertSame(
+            $default,
+            call_user_func([$this->subject, 'get' . $methodName])
+        );
+
+        call_user_func([$this->subject, 'set' . $methodName], $value);
+
+        self::assertSame(
+            $value,
+            call_user_func([$this->subject, 'get' . $methodName])
         );
     }
 
@@ -192,5 +228,10 @@ class PodcastTest extends TestCase
         $this->expectException(LogicException::class);
 
         $this->subject->update([]);
+    }
+
+    protected function setUp(): void
+    {
+        $this->subject = new Podcast();
     }
 }

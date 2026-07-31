@@ -47,17 +47,7 @@ class MetadataField
      */
     private bool $public = true;
 
-    public function __construct(private readonly MetadataFieldRepositoryInterface $metadataFieldRepository)
-    {
-    }
-
-    /**
-     * Returns `true` if the object is new
-     */
-    public function isNew(): bool
-    {
-        return $this->id === 0;
-    }
+    public function __construct(private readonly MetadataFieldRepositoryInterface $metadataFieldRepository) {}
 
     /**
      * Returns the items id
@@ -76,13 +66,11 @@ class MetadataField
     }
 
     /**
-     * Sets the name
+     * Returns `true` if the object is new
      */
-    public function setName(string $name): MetadataField
+    public function isNew(): bool
     {
-        $this->name = $name;
-
-        return $this;
+        return $this->id === 0;
     }
 
     /**
@@ -94,16 +82,6 @@ class MetadataField
     }
 
     /**
-     * Sets the public-state of the item
-     */
-    public function setPublic(bool $public): MetadataField
-    {
-        $this->public = $public;
-
-        return $this;
-    }
-
-    /**
      * Saves the item
      */
     public function save(): void
@@ -112,5 +90,25 @@ class MetadataField
         if ($result !== null) {
             $this->id = $result;
         }
+    }
+
+    /**
+     * Sets the name
+     */
+    public function setName(string $name): MetadataField
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Sets the public-state of the item
+     */
+    public function setPublic(bool $public): MetadataField
+    {
+        $this->public = $public;
+
+        return $this;
     }
 }

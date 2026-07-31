@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -35,181 +35,44 @@ class FileSystem
     protected ?string $base = null;
 
     /**
-     * @throws Exception
-     */
-    protected function real(string $path): string
-    {
-        $temp = realpath($path);
-        if (!$temp) {
-            throw new Exception('Path does not exist');
-        }
-        if (!empty($this->base)) {
-            if (!str_starts_with($temp, $this->base)) {
-                throw new Exception('Path is not inside base');
-            }
-        }
-
-        return $temp;
-    }
-
-    /**
-     * path
-     * @throws Exception
-     */
-    protected function path(string $fs_id): string
-    {
-        $fs_id = str_replace('/', DIRECTORY_SEPARATOR, $fs_id);
-        $fs_id = trim($fs_id, DIRECTORY_SEPARATOR);
-
-        return $this->real($this->base . DIRECTORY_SEPARATOR . $fs_id);
-    }
-
-    /**
-     * id
-     * @throws Exception
-     */
-    protected function id(string $path): string
-    {
-        $path = $this->real($path);
-        $path = substr($path, strlen((string)$this->base));
-        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
-        $path = trim($path, '/');
-
-        return strlen($path)
-            ? $path
-            : '/';
-    }
-
-    /**
      * fs constructor.
      * @throws Exception
      */
     public function __construct(string $base)
     {
         $this->base = $this->real($base);
-        if (!$this->base) {
+        if ($this->base === '' || $this->base === '0') {
             throw new Exception('Base directory does not exist');
         }
     }
 
     /**
-     * @return array<int, array{
-     *     title: string,
-     *     children?: array<array{title: string, key: string, lazy: bool}>,
-     *     key: string,
-     *     expanded?: bool,
-     *     lazy: bool,
-     * }>|array<array{title: string, key: string, lazy: bool}>
+     * @return array{id: string}
      * @throws Exception
      */
-    public function lst(string $fs_id, bool $with_root = false): array
+    public function copy(string $fs_id, string $par): array
     {
-        $dir = (string)$this->path($fs_id);
-        $lst = @scandir($dir);
-        if (!$lst) {
-            throw new Exception('Could not list path: ' . $dir);
-        }
-        $res = [];
-        foreach ($lst as $item) {
-            if ($item == '.' || $item == '..' || $item === null) {
-                continue;
-            }
-            $tmp = preg_match('([^ a-zа-я-_0-9.()\[\]]+)ui', $item);
-            if ($tmp === false || $tmp === 1) {
-                continue;
-            }
-            $fullPath = $dir . DIRECTORY_SEPARATOR . $item;
-            if (is_dir($fullPath)) {
-                $res[] = [
-                    'title' => $item,
-                    'key' => $this->id($fullPath),
-                    'lazy' => true
-                ];
-            }
-        }
-        usort($res, function ($a, $b) {
-            return strcasecmp($a['title'], $b['title']);
-        });
-        if (
-            $with_root &&
-            $this->id($dir) === '/'
-        ) {
-            $res = [
-                [
-                    'title' => basename((string)$this->base),
-                    'children' => $res,
-                    'key' => '/',
-                    'expanded' => true,
-                    'lazy' => true
-                ]
-            ];
-        }
-
-        return $res;
-    }
-
-    /**
-     * @return array{type: string, content: string}
-     * @throws Exception
-     */
-    public function data(string $fs_id): array
-    {
-        if (strpos($fs_id, ":")) {
-            $fs_id = array_map([$this, 'id'], explode(':', $fs_id));
-
-            return [
-                'type' => 'multiple',
-                'content' => 'Multiple selected: ' . implode(' ', $fs_id)
-            ];
-        }
         $dir = $this->path($fs_id);
-        if (is_dir($dir)) {
-            return [
-                'type' => 'folder',
-                'content' => $fs_id
-            ];
+        $par = $this->path($par);
+        $new = explode(DIRECTORY_SEPARATOR, $dir);
+        $new = array_pop($new);
+        $new = $par . DIRECTORY_SEPARATOR . $new;
+        if (is_file($new) || is_dir($new)) {
+            throw new Exception('Path already exists: ' . $new);
         }
-        if (is_file($dir)) {
-            $ext = (strpos($dir, '.') !== false)
-                ? substr($dir, strrpos($dir, '.') + 1)
-                : '';
-            $dat = ['type' => $ext];
-            switch ($ext) {
-                /*case 'txt':
-                case 'text':
-                case 'md':
-                case 'js':
-                case 'json':
-                case 'css':
-                case 'html':
-                case 'htm':
-                case 'xml':
-                case 'c':
-                case 'cpp':
-                case 'h':
-                case 'sql':
-                case 'log':
-                case 'py':
-                case 'rb':
-                case 'htaccess':
-                case 'php':
-                    $dat['content'] = file_get_contents($dir);
-                    break;
-                case 'jpg':
-                case 'jpeg':
-                case 'gif':
-                case 'png':
-                case 'bmp':
-                    $dat['content'] = 'data:'.finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dir).';base64, '.base64_encode(file_get_contents($dir));
-                    break;*/
-                default:
-                    $dat['content'] = 'File not recognized: ' . $this->id($dir);
-                    break;
-            }
 
-            return $dat;
+        if (is_dir($dir)) {
+            mkdir($new, 0775);
+            foreach (array_diff(scandir($dir) ?: [], [".", ".."]) as $file) {
+                $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $file), $this->id($new));
+            }
         }
-        throw new Exception('Not a valid selection: ' . $dir);
+
+        if (is_file($dir)) {
+            copy($dir, $new);
+        }
+
+        return ['id' => $this->id($new)];
     }
 
     /**
@@ -223,6 +86,7 @@ class FileSystem
         if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name)) {
             throw new Exception('Invalid name: ' . $name);
         }
+
         if ($mkdir) {
             mkdir($dir . DIRECTORY_SEPARATOR . $name, 0775);
         } else {
@@ -233,28 +97,119 @@ class FileSystem
     }
 
     /**
+     * @return array{type: string, content: string}
+     * @throws Exception
+     */
+    public function data(string $fs_id): array
+    {
+        if (strpos($fs_id, ":")) {
+            $fs_id = array_map($this->id(...), explode(':', $fs_id));
+
+            return [
+                'type' => 'multiple',
+                'content' => 'Multiple selected: ' . implode(' ', $fs_id)
+            ];
+        }
+
+        $dir = $this->path($fs_id);
+        if (is_dir($dir)) {
+            return [
+                'type' => 'folder',
+                'content' => $fs_id
+            ];
+        }
+
+        if (is_file($dir)) {
+            $ext = (str_contains($dir, '.'))
+                ? substr($dir, strrpos($dir, '.') + 1)
+                : '';
+            $dat            = ['type' => $ext];
+            $dat['content'] = 'File not recognized: ' . $this->id($dir);
+
+            return $dat;
+        }
+
+        throw new Exception('Not a valid selection: ' . $dir);
+    }
+
+    /**
+     * @return array<int, array{
+     *     title: string,
+     *     children?: array<array{
+     *         title: string,
+     *         key: string,
+     *         lazy: bool
+     *     }>,
+     *     key: string,
+     *     expanded?: bool,
+     *     lazy: bool,
+     * }>|array<array{
+     *     title: string,
+     *     key: string,
+     *     lazy: bool
+     * }>
+     * @throws Exception
+     */
+    public function lst(string $fs_id, bool $with_root = false): array
+    {
+        $dir = $this->path($fs_id);
+        $lst = @scandir($dir);
+        if (!$lst) {
+            throw new Exception('Could not list path: ' . $dir);
+        }
+
+        $res = [];
+        foreach ($lst as $item) {
+            if (in_array($item, ['.', '..', null], true)) {
+                continue;
+            }
+
+            $tmp = preg_match('([^ a-zа-я-_0-9.()\[\]]+)ui', $item);
+            if ($tmp === false || $tmp === 1) {
+                continue;
+            }
+
+            $fullPath = $dir . DIRECTORY_SEPARATOR . $item;
+            if (is_dir($fullPath)) {
+                $res[] = [
+                    'title' => $item,
+                    'key' => $this->id($fullPath),
+                    'lazy' => true
+                ];
+            }
+        }
+
+        usort($res, fn($a, $b) => strcasecmp((string) $a['title'], (string) $b['title']));
+        if (
+            $with_root
+            && $this->id($dir) === '/'
+        ) {
+            $res = [
+                [
+                    'title' => basename((string) $this->base),
+                    'children' => $res,
+                    'key' => '/',
+                    'expanded' => true,
+                    'lazy' => true
+                ]
+            ];
+        }
+
+        return $res;
+    }
+
+    /**
      * @return array{id: string}
      * @throws Exception
      */
-    public function rename(string $fs_id, string $name, User $user): array
+    public function move(string $fs_id, string $par, User $user): array
     {
         $dir = $this->path($fs_id);
-
         $this->check($dir, $user);
-
-        if ($this->base && $dir === $this->base) {
-            throw new Exception('Cannot rename root');
-        }
-        if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name)) {
-            throw new Exception('Invalid name: ' . $name);
-        }
+        $par = $this->path($par);
         $new = explode(DIRECTORY_SEPARATOR, $dir);
-        array_pop($new);
-        $new[] = $name;
-        $new   = implode(DIRECTORY_SEPARATOR, $new);
-        if (is_file($new) || is_dir($new)) {
-            throw new Exception('Path already exists: ' . $new);
-        }
+        $new = array_pop($new);
+        $new = $par . DIRECTORY_SEPARATOR . $new;
         rename($dir, $new);
 
         return ['id' => $this->id($new)];
@@ -304,43 +259,29 @@ class FileSystem
      * @return array{id: string}
      * @throws Exception
      */
-    public function move(string $fs_id, string $par, User $user): array
+    public function rename(string $fs_id, string $name, User $user): array
     {
         $dir = $this->path($fs_id);
+
         $this->check($dir, $user);
-        $par = $this->path($par);
-        $new = explode(DIRECTORY_SEPARATOR, $dir);
-        $new = array_pop($new);
-        $new = $par . DIRECTORY_SEPARATOR . $new;
-        rename($dir, $new);
 
-        return ['id' => $this->id($new)];
-    }
+        if ($this->base && $dir === $this->base) {
+            throw new Exception('Cannot rename root');
+        }
 
-    /**
-     * @return array{id: string}
-     * @throws Exception
-     */
-    public function copy(string $fs_id, string $par): array
-    {
-        $dir = $this->path($fs_id);
-        $par = $this->path($par);
+        if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name)) {
+            throw new Exception('Invalid name: ' . $name);
+        }
+
         $new = explode(DIRECTORY_SEPARATOR, $dir);
-        $new = array_pop($new);
-        $new = $par . DIRECTORY_SEPARATOR . $new;
+        array_pop($new);
+        $new[] = $name;
+        $new   = implode(DIRECTORY_SEPARATOR, $new);
         if (is_file($new) || is_dir($new)) {
             throw new Exception('Path already exists: ' . $new);
         }
 
-        if (is_dir($dir)) {
-            mkdir($new, 0775);
-            foreach (array_diff(scandir($dir) ?: [], [".", ".."]) as $file) {
-                $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $file), $this->id($new));
-            }
-        }
-        if (is_file($dir)) {
-            copy($dir, $new);
-        }
+        rename($dir, $new);
 
         return ['id' => $this->id($new)];
     }
@@ -365,5 +306,50 @@ class FileSystem
                 throw new Exception('You do not have permission to manage this folder');
             }
         }
+    }
+
+    /**
+     * id
+     * @throws Exception
+     */
+    protected function id(string $path): string
+    {
+        $path = $this->real($path);
+        $path = substr($path, strlen((string) $this->base));
+        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
+        $path = trim($path, '/');
+
+        return strlen($path) !== 0
+            ? $path
+            : '/';
+    }
+
+    /**
+     * path
+     * @throws Exception
+     */
+    protected function path(string $fs_id): string
+    {
+        $fs_id = str_replace('/', DIRECTORY_SEPARATOR, $fs_id);
+        $fs_id = trim($fs_id, DIRECTORY_SEPARATOR);
+
+        return $this->real($this->base . DIRECTORY_SEPARATOR . $fs_id);
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function real(string $path): string
+    {
+        $temp = realpath($path);
+        if (!$temp) {
+            throw new Exception('Path does not exist');
+        }
+
+        if (!in_array($this->base, [null, '', '0'], true) && !str_starts_with($temp, $this->base)) {
+            throw new Exception('Path is not inside base');
+        }
+
+        return $temp;
     }
 }

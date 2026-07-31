@@ -33,67 +33,21 @@ use Psr\Log\LoggerInterface;
 class RequestParserTest extends TestCase
 {
     private LoggerInterface $logger;
-
     private RequestParser $subject;
-
-    protected function setUp(): void
-    {
-        $this->logger = $this->createMock(LoggerInterface::class);
-
-        $this->subject = new RequestParser(
-            $this->logger
-        );
-    }
-
-    public function testGetFromRequestReturnsEmptyStringIfNotContained(): void
-    {
-        static::assertSame(
-            '',
-            $this->subject->getFromRequest('snafu')
-        );
-    }
 
     public function testGetFromPostReturnsEmptyStringIfNotContained(): void
     {
-        static::assertSame(
+        self::assertSame(
             '',
             $this->subject->getFromPost('snafu')
         );
     }
 
-    public function testVerifyFormReturnsFalseIfSidNotKnown(): void
+    public function testGetFromRequestReturnsEmptyStringIfNotContained(): void
     {
-        $formName = 'some-form';
-
-        $this->logger->expects(static::once())
-            ->method('error')
-            ->with(
-                sprintf('Form %s not found in session, rejecting request', $formName),
-                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
-            );
-
-        static::assertFalse(
-            $this->subject->verifyForm($formName)
-        );
-    }
-
-    public function testVerifyFormReturnsFalseIfFormNameDoesNotMatchSessionData(): void
-    {
-        $formName = 'some-form';
-        $sid      = 'some-sid';
-
-        $_POST['form_validation'] = $sid;
-        $_SESSION['forms'][$sid]  = ['name' => 'lerl'];
-
-        $this->logger->expects(static::once())
-            ->method('error')
-            ->with(
-                sprintf('form %s failed consistency check, rejecting request', $formName),
-                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
-            );
-
-        static::assertFalse(
-            $this->subject->verifyForm($formName)
+        self::assertSame(
+            '',
+            $this->subject->getFromRequest('snafu')
         );
     }
 
@@ -118,7 +72,43 @@ class RequestParserTest extends TestCase
                 [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
             );
 
-        static::assertFalse(
+        self::assertFalse(
+            $this->subject->verifyForm($formName)
+        );
+    }
+
+    public function testVerifyFormReturnsFalseIfFormNameDoesNotMatchSessionData(): void
+    {
+        $formName = 'some-form';
+        $sid      = 'some-sid';
+
+        $_POST['form_validation'] = $sid;
+        $_SESSION['forms'][$sid]  = ['name' => 'lerl'];
+
+        $this->logger->expects(static::once())
+            ->method('error')
+            ->with(
+                sprintf('form %s failed consistency check, rejecting request', $formName),
+                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
+            );
+
+        self::assertFalse(
+            $this->subject->verifyForm($formName)
+        );
+    }
+
+    public function testVerifyFormReturnsFalseIfSidNotKnown(): void
+    {
+        $formName = 'some-form';
+
+        $this->logger->expects(static::once())
+            ->method('error')
+            ->with(
+                sprintf('Form %s not found in session, rejecting request', $formName),
+                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
+            );
+
+        self::assertFalse(
             $this->subject->verifyForm($formName)
         );
     }
@@ -138,8 +128,17 @@ class RequestParserTest extends TestCase
                 [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
             );
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->verifyForm($formName)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->logger = $this->createMock(LoggerInterface::class);
+
+        $this->subject = new RequestParser(
+            $this->logger
         );
     }
 }

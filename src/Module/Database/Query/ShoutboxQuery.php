@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -29,8 +29,11 @@ use Ampache\Repository\Model\Query;
 
 final class ShoutboxQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
     ];
+
+    protected string $base   = "SELECT %%SELECT%% FROM `user_shout` ";
+    protected string $select = "`user_shout`.`id`";
 
     /** @var string[] $sorts */
     protected array $sorts = [
@@ -40,9 +43,15 @@ final class ShoutboxQuery implements QueryInterface
         'user',
     ];
 
-    protected string $select = "`user_shout`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `user_shout` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -52,16 +61,6 @@ final class ShoutboxQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**
@@ -89,28 +88,18 @@ final class ShoutboxQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
-        switch ($field) {
-            case 'date':
-            case 'id':
-            case 'object_type':
-            case 'sticky':
-            case 'user':
-                $sql = "`user_shout`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'date', 'id', 'object_type', 'sticky', 'user' => sprintf('`user_shout`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

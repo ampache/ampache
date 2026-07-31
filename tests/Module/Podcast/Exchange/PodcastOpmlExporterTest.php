@@ -39,22 +39,9 @@ class PodcastOpmlExporterTest extends TestCase
 {
     use ConsecutiveParams;
 
-    private TalFactoryInterface&MockObject $talFactory;
-
     private PodcastRepositoryInterface&MockObject $podcastRepository;
-
     private PodcastOpmlExporter $subject;
-
-    protected function setUp(): void
-    {
-        $this->talFactory        = $this->createMock(TalFactoryInterface::class);
-        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
-
-        $this->subject = new PodcastOpmlExporter(
-            $this->talFactory,
-            $this->podcastRepository
-        );
-    }
+    private TalFactoryInterface&MockObject $talFactory;
 
     public function testExportExportsPodcasts(): void
     {
@@ -87,10 +74,10 @@ class PodcastOpmlExporterTest extends TestCase
             ->with(
                 ...self::withConsecutive(
                     ['TITLE', 'Ampache podcast subscriptions'],
-                    ['CREATION_DATE', static::isType('string')],
+                    ['CREATION_DATE', self::isType('string')],
                     [
                         'PODCASTS',
-                        static::callback(function (Traversable $value) use ($title, $feedUrl, $website, $language, $description): bool {
+                        self::callback(function (Traversable $value) use ($title, $feedUrl, $website, $language, $description): bool {
                             $item = current(iterator_to_array($value));
 
                             return $item === [
@@ -124,7 +111,7 @@ class PodcastOpmlExporterTest extends TestCase
             ->method('getDescription')
             ->willReturn($description);
 
-        static::assertSame(
+        self::assertSame(
             $result,
             $this->subject->export()
         );
@@ -132,9 +119,20 @@ class PodcastOpmlExporterTest extends TestCase
 
     public function testGetContentTypeReturnsValue(): void
     {
-        static::assertSame(
+        self::assertSame(
             'text/x-opml',
             $this->subject->getContentType()
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->talFactory        = $this->createMock(TalFactoryInterface::class);
+        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
+
+        $this->subject = new PodcastOpmlExporter(
+            $this->talFactory,
+            $this->podcastRepository
         );
     }
 }

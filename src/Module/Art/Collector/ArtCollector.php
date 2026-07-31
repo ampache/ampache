@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -31,35 +31,28 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginGatherArtsInterface;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
-final class ArtCollector implements ArtCollectorInterface
+final readonly class ArtCollector implements ArtCollectorInterface
 {
     /**
      * @const ART_SEARCH_LIMIT
      */
-    public const ART_SEARCH_LIMIT = 15;
-
-    private ContainerInterface $dic;
-
-    private LoggerInterface $logger;
-
-    private ConfigContainerInterface $configContainer;
+    public const int ART_SEARCH_LIMIT = 15;
 
     public function __construct(
-        ContainerInterface $dic,
-        LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->dic             = $dic;
-        $this->logger          = $logger;
-        $this->configContainer = $configContainer;
-    }
+        private ContainerInterface $dic,
+        private LoggerInterface $logger,
+        private ConfigContainerInterface $configContainer,
+        private LibraryItemLoaderInterface $libraryItemLoader,
+    ) {}
 
     /**
      * This tries to get the art in question
@@ -77,6 +70,7 @@ final class ArtCollector implements ArtCollectorInterface
      *     'raw'?: string,
      *     'db'?: int,
      *     'url'?: string,
+     *     'mosaic'?: array{object_id: int, limit: int},
      *     'title'?: string,
      *     'mime'?: string
      * }>
@@ -84,7 +78,7 @@ final class ArtCollector implements ArtCollectorInterface
     public function collect(
         Art $art,
         array $options = [],
-        int $limit = 0
+        int $limit = 0,
     ): array {
         // Define vars
         $results = [];
@@ -99,6 +93,7 @@ final class ArtCollector implements ArtCollectorInterface
 
             return [];
         }
+
         $artOrder = $this->configContainer->get('art_order');
 
         /* If it's not set */
@@ -119,36 +114,51 @@ final class ArtCollector implements ArtCollectorInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        if ($limit == 0) {
+        if ($limit === 0) {
             $search_limit = $this->configContainer->get('art_search_limit');
-            $limit        = (is_null($search_limit))
-                ? self::ART_SEARCH_LIMIT
-                : $search_limit;
+            $limit        = ($search_limit === null) ? self::ART_SEARCH_LIMIT : (int) $search_limit;
         }
 
-        if ($type == 'playlist') {
+        // playlists, smartlists and collections all build their art out of what they hold, so none of the
+        // configured providers can say anything useful about them
+        $itemType = LibraryItemEnum::tryFrom($type);
+        $libitem  = ($itemType === null)
+            ? null
+            : $this->libraryItemLoader->load($itemType, $art->object_id);
+
+        if ($libitem instanceof playlist_object) {
             $this->logger->notice(
-                "Method used: playlist",
+                'Method used: ' . $type,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-            $playlist = new Playlist($art->object_id);
 
-            return $playlist->gather_art($limit);
+            // This returns before the configured methods run, so the art it already has would never be
+            // offered back. Keep it at the front of the list the way the `db` method would.
+            $results = [];
+            if ($art->has_db_info() && $art->id) {
+                $results[] = [
+                    'db' => $art->id,
+                    'title' => T_('Art'),
+                    'mime' => $art->raw_mime,
+                ];
+            }
+
+            return array_merge($results, $libitem->gather_art($limit));
         }
-        /** @var User $user */
-        $user = (!empty(Core::get_global('user')))
+
+        $user = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')
             : new User(-1);
 
         $plugin_names = Plugin::get_plugins(PluginTypeEnum::ART_RETRIEVER);
         foreach ($artOrder as $method) {
             $data = [];
-            if (in_array(strtolower($method), $plugin_names)) {
+            if (in_array(strtolower((string) $method), $plugin_names)) {
                 $plugin = new Plugin($method);
                 if (
-                    $plugin->_plugin instanceof PluginGatherArtsInterface &&
-                    Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
-                    $plugin->load($user)
+                    $plugin->_plugin instanceof PluginGatherArtsInterface
+                    && Plugin::get_plugin_version($plugin->_plugin->name) > 0
+                    && $plugin->load($user)
                 ) {
                     $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                 }
@@ -156,7 +166,7 @@ final class ArtCollector implements ArtCollectorInterface
                 $handlerClassName = ArtCollectorTypeEnum::TYPE_CLASS_MAP[$method] ?? null;
                 if ($handlerClassName !== null) {
                     $this->logger->notice(
-                        "Method used: $method",
+                        'Method used: ' . $method,
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     try {
@@ -181,8 +191,9 @@ final class ArtCollector implements ArtCollectorInterface
             }
 
             // Add the results we got to the current set
-            $results = array_merge($results, (array)$data);
+            $results = array_merge($results, (array) $data);
         }
+
         $this->logger->notice(
             'found ' . count($results) . ' results',
             [LegacyLogger::CONTEXT_TYPE => self::class]

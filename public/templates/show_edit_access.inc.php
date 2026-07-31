@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_edit_access.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
@@ -66,7 +68,7 @@ ${$name}                    = 'checked="checked"'; ?>
         <tr>
             <td><?php echo T_('User') . ':'; ?></td>
             <td colspan="3">
-                <?php show_user_select('user', (string)$access->getUserId()); ?>
+                <?php show_user_select('user', (string) $access->getUserId()); ?>
             </td>
         </tr>
         <tr>

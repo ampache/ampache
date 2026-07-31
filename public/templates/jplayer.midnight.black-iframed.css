@@ -44,9 +44,7 @@ a:focus {
 .jp-audio,
 .jp-audio-stream,
 .jp-video {
-    /* Edit the font-size to counteract inherited font sizing.
-     * Eg. 1.25em = 1 / 0.8em
-     */
+    /* Edit the font-size to counteract inherited font sizing. Eg. 1.25em = 1 / 0.8em */
     font-size: 1.25em; /* 1.25em for testing in site pages */ /* No parent CSS that can effect the size in the demos ZIP */
     font-family: 'Verdana', Arial, sans-serif;
     line-height: 1.6;
@@ -226,7 +224,7 @@ a.jp-shuffle,
 a.jp-shuffle:hover,
 a.jp-shuffle-off,
 a.jp-shuffle-off:hover {
-    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.png") no-repeat;
+    background: none no-repeat; /* sprite removed */
 }
 
 a.jp-play {
@@ -341,7 +339,18 @@ a.jp-next:hover {
 
 /* The seeking class is added/removed inside jPlayer */
 .jp-seeking-bg {
-    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.seeking.gif");
+    /* Animated diagonal stripes (barber-pole), pure CSS — replaces seeking.gif.
+       Crisp at any DPI, no bitmap. Theme blue tones from the old gif. */
+    background-image: repeating-linear-gradient(
+        -45deg,
+        #5fa9ce 0, #5fa9ce 22px,
+        #4b9ec8 22px, #4b9ec8 44px);
+    background-size: 62px 100%;
+    animation: jp-seeking-stripes 1.4s linear infinite;
+}
+@keyframes jp-seeking-stripes {
+    from { background-position: 0 0; }
+    to   { background-position: 62px 0; }
 }
 
 /* @end */
@@ -536,13 +545,18 @@ a.jp-volume-max:hover {
     white-space: nowrap;
 }
 
+/* The video player is short; the offset title lands off-screen, so hide it. */
+.jp-video .jp-title {
+    display: none;
+}
+
 .playing_info {
     position: absolute;
     left: 110px;
     top: 10px;
     font-size: 1.5em;
     font-family: 'Verdana', Arial, sans-serif;
-    color: rgb(153, 153, 153);
+    /* text colour comes from the theme (dark.css / light.css) so it follows the theme */
     width: 300px;
     z-index: 9999;
 }
@@ -551,7 +565,6 @@ a.jp-volume-max:hover {
     font-size: 0.5em;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .playing_artist a {
@@ -562,7 +575,6 @@ a.jp-volume-max:hover {
     font-size: 0.7em;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .playing_title a {
@@ -591,32 +603,6 @@ a.jp-volume-max:hover {
 
 .playing_actions div {
     display: inline-block;
-}
-
-.waveform {
-    position: absolute;
-    top: 50px;
-    left: 40px;
-    height: 32px;
-    visibility: hidden;
-}
-
-.waveform a {
-    cursor: crosshair;
-}
-
-.waveform-shouts {
-    float: left;
-    display: inline;
-}
-
-.waveform-time {
-    position: absolute;
-    display: block;
-    height: 100%;
-    width: 0;
-    border-left: 1px solid #ffcaca;
-    left: 0;
 }
 
 .jp-title,
@@ -742,12 +728,12 @@ a.jp-video-play-icon {
     margin-top: -50px;
     left: 50%;
     top: 50%;
-    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 0 no-repeat;
+    background: none no-repeat; /* sprite removed */
     text-indent: -9999px;
 }
 
 .jp-video-play:hover a.jp-video-play-icon {
-    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 -100px no-repeat;
+    background: none no-repeat; /* sprite removed */
 }
 
 .jp-jplayer audio,
@@ -927,10 +913,18 @@ a.jp-shuffle-off:hover {
     height: 95px;
     text-align: right;
     display: inline;
-    opacity: 0.4;
+    /* keep the action buttons clearly visible and above the in-bar playlist */
+    opacity: 1;
+    z-index: 9995;
 }
 
 .player_actions:hover {
+    opacity: 1;
+}
+
+/* Playlist hidden: shift the actions into the freed space and keep them fully visible. */
+#jp_container_1.jp-playlist-collapsed .player_actions {
+    right: 4px;
     opacity: 1;
 }
 
@@ -957,3 +951,626 @@ a.jp-shuffle-off:hover {
 
 /* @end */
 
+/* @group Ampache modern player: compact mode, responsive, visualizer */
+
+/* Compact toggles (classes on #jp_container_1, persisted via cookies).
+   Default state is applied per-breakpoint in show_html5_player.inc.php. */
+#jp_container_1.jp-playlist-collapsed .jp-playlist {
+    display: none;
+}
+
+/* Default (in-bar) playlist sits BEHIND the controls so it doesn't cover them
+   (base skin gives it z-index:9999, same as the interface). The expanded panel
+   below overrides this with a higher z-index to float on top. */
+#jp_container_1 .jp-playlist {
+    z-index: 9990;
+}
+
+/* Expanded playlist: a tall panel anchored just above the player bar. It is
+   fixed to the viewport so it escapes the 100px player box and is not clipped. */
+#jp_container_1.jp-playlist-expanded .jp-playlist {
+    display: block;
+    position: fixed;
+    right: 0;
+    bottom: 100px;
+    top: auto;
+    /* match the default in-player playlist width (.jp-playlist { width: 25% }) */
+    width: 25%;
+    min-width: 320px;
+    height: 60vh;
+    max-height: calc(100vh - 110px);
+    /* background intentionally not set here so the theme's `div.jp-playlist`
+       colour (dark: #202020 / light: #d4d4d4) shows through in both themes. */
+    opacity: 1;
+    z-index: 10000;
+    overflow-y: auto;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.6);
+}
+
+body.webplayer-hidden #jp_container_1.jp-playlist-expanded .jp-playlist {
+    bottom: 0;
+}
+
+/* Keep the floating video centred on screen and above the expanded playlist
+   panel (the panel is z-index:10000; the video was unstacked below it). */
+#jp_container_1.jp-video-float .jp-jplayer {
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10001;
+}
+
+body.jp-nowplaying-hidden .playing_info,
+body.jp-nowplaying-hidden .jp-jplayer-audio {
+    display: none;
+}
+
+/* Now-playing artwork for internal random & democratic streams */
+.playing_art {
+    position: absolute;
+    top: 0;
+    left: -90px;
+    width: 80px;
+    height: 80px;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    margin: 0;
+    border-radius: 3px;
+    z-index: 10000;
+}
+
+.playing_album {
+    font-size: 0.5em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.playing_album a {
+    text-decoration: none;
+}
+
+/* Lightweight Web Audio AnalyserNode + canvas visualizer overlay.
+   Covers all page content above the player bar; the visualization itself
+   is centred (both axes) inside the overlay. */
+#visualizer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 100px;
+    z-index: 9998;
+    background-color: #000;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#visualizer:fullscreen {
+    bottom: 0;
+}
+
+/* When the player is hidden there is no 100px bar to leave room for:
+   let the visualizer cover the whole screen (no black box + gap). */
+body.webplayer-hidden #visualizer {
+    bottom: 0;
+}
+
+#viz-canvas {
+    display: block;
+    width: min(90%, 1000px);
+    height: min(80%, 520px);
+}
+
+/* Restored 5-band graphic equalizer panel (toggled by the EQ button). */
+#equalizer {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 110px;
+    z-index: 10001;
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    /* background + label colour come from the theme (dark.css / light.css) */
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+#equalizer .eq-band {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-family: 'Verdana', Arial, sans-serif;
+}
+
+#equalizer .eq-band input[type="range"] {
+    writing-mode: vertical-lr;
+    direction: rtl;
+    width: 10px;
+    height: 90px;
+    accent-color: #1e90ff;
+    cursor: pointer;
+}
+
+#webplayer.viz-active {
+    background-color: #000 !important;
+}
+
+/* Visualizer active: the bar is black, so the now-playing text must be light in any theme. */
+#webplayer.viz-active .playing_info,
+#webplayer.viz-active .playing_title a,
+#webplayer.viz-active .playing_artist a,
+#webplayer.viz-active .playing_album a {
+    color: #eee !important;
+}
+
+/* Only the active play/pause should render -- the flex reorder let the inactive
+   one linger (it was just camouflaged by the light player background). */
+#jp_container_1.jp-state-playing a.jp-play,
+#jp_container_1.jp-state-paused a.jp-pause {
+    display: none !important;
+}
+
+/* Blend the whole player chrome into the black bar. Opaque #000 (incl.
+   .jp-interface, which also carries the theme's #f8f8f8) so the sprite
+   artifacts stay covered -- transparency exposes them. Light text on top. */
+#webplayer.viz-active .jp-gui,
+#webplayer.viz-active .jp-interface,
+#webplayer.viz-active .jp-type-playlist,
+#webplayer.viz-active .jp-title,
+#webplayer.viz-active .jp-playlist {
+    background-color: #000 !important;
+    border-top-color: transparent !important;
+    box-shadow: none !important;
+}
+
+#webplayer.viz-active .jp-current-time,
+#webplayer.viz-active .jp-duration,
+#webplayer.viz-active .jp-playlist a {
+    color: #eee !important;
+}
+
+#webplayer.viz-active .jp-playlist a.jp-playlist-current {
+    color: #4db8ff !important;
+}
+
+/* Visualizer active: keep the action buttons fully lit (they default to opacity
+   0.4 and are hard to see against the black bar) as if permanently hovered. */
+#webplayer.viz-active .player_actions {
+    opacity: 1 !important;
+}
+
+/* Video always scales down to its container / the viewport (all screen sizes) */
+.jp-video-270p,
+.jp-video-360p {
+    max-width: 100%;
+}
+
+.jp-jplayer video {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Responsive: slim the player on small screens */
+@media (max-width: 768px) {
+    .jp-area,
+    .jp-audio {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .jp-video-360p,
+    .jp-video-270p {
+        width: 100% !important;
+    }
+
+    .jp-jplayer video {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* When expanded on mobile, let the playlist use more of the width */
+    .jp-title,
+    .jp-playlist {
+        width: 55%;
+    }
+
+    /* Surface the action toggles on mobile (previously hidden) */
+    .player_actions {
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        width: auto;
+        height: auto;
+        opacity: 1;
+    }
+
+    /* Give the seek bar the horizontal space freed by collapsing chrome */
+    .jp-audio .jp-type-playlist .jp-progress {
+        left: 60px;
+        right: 90px;
+    }
+
+    .jp-audio .jp-type-playlist .jp-volume-bar {
+        right: 60px;
+    }
+
+    /* Fluidize the video control bar so it fits narrow screens */
+    .jp-video .jp-type-single ul.jp-controls,
+    .jp-video .jp-type-playlist ul.jp-controls {
+        margin-left: 0;
+        width: auto;
+    }
+
+    .jp-video a.jp-mute,
+    .jp-video a.jp-unmute {
+        left: 40px;
+    }
+
+    .jp-video a.jp-volume-max {
+        left: 108px;
+    }
+
+    .jp-video .jp-volume-bar {
+        left: 60px;
+    }
+
+    .jp-video ul.jp-toggles {
+        right: 4px;
+    }
+
+    .playing_info {
+        width: 45%;
+    }
+}
+
+/* @end */
+
+/* @group Reordered player rows: controls (top) -> seek -> times (bottom).
+   Shared by BOTH the video and music players via #jp_container_1. The legacy
+   skin pins each row with absolute offsets, so we flatten the interface into a
+   real flex column and order the three rows. The #id prefix also gives these
+   rules the specificity to beat the base .jp-audio/.jp-video positions. */
+#jp_container_1 .jp-interface {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 7px;
+    padding: 4px 8px 6px;
+    box-sizing: border-box;
+    height: auto;
+    /* the interface grows downward from a fixed top, so shift the whole stack
+       up to lift the time row off the bottom edge (both players). */
+    position: relative;
+    bottom: 20px;
+}
+
+/* Row 3 -> top. Lay the whole control strip out as one centred flex row.
+   The <ul>/<li> wrappers are flattened with display:contents so every button
+   and the volume slider become direct, individually-orderable flex items. */
+#jp_container_1 .jp-interface > .jp-controls-holder {
+    order: 1;
+    top: auto;
+    width: auto;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    /* tight spacing *within* a group; group boundaries add margin below */
+    gap: 4px;
+    overflow: visible;
+}
+
+#jp_container_1 .jp-controls-holder ul.jp-controls,
+#jp_container_1 .jp-controls-holder ul.jp-toggles,
+#jp_container_1 .jp-controls-holder ul.jp-controls li,
+#jp_container_1 .jp-controls-holder ul.jp-toggles li {
+    display: contents;
+}
+
+/* Neutralise the legacy per-button offsets so spacing is even and every
+   icon is vertically centred on the row (incl. the taller Play button). */
+#jp_container_1 .jp-controls-holder a {
+    float: none;
+    margin: 0;
+    position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+}
+
+#jp_container_1 .jp-controls-holder a.jp-mute,
+#jp_container_1 .jp-controls-holder a.jp-unmute,
+#jp_container_1 .jp-controls-holder a.jp-volume-max {
+    /* hug the sprite glyph so the icon fills its box (was 19px, left-padded) */
+    width: 16px;
+    height: 16px;
+}
+
+/* nudge max-volume off the slider */
+#jp_container_1 .jp-controls-holder a.jp-volume-max {
+    margin-left: 6px;
+}
+
+#jp_container_1 .jp-controls-holder .jp-volume-bar {
+    position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+/* Left-to-right order: prev, play, next, stop, mute, slider, max, then the
+   fullscreen (video) / shuffle / repeat toggles. */
+#jp_container_1 .jp-controls-holder a.jp-previous { order: 1; }
+#jp_container_1 .jp-controls-holder a.jp-play,
+#jp_container_1 .jp-controls-holder a.jp-pause { order: 2; }
+#jp_container_1 .jp-controls-holder a.jp-next { order: 3; }
+#jp_container_1 .jp-controls-holder a.jp-stop { order: 4; }
+#jp_container_1 .jp-controls-holder a.jp-mute,
+#jp_container_1 .jp-controls-holder a.jp-unmute { order: 5; }
+#jp_container_1 .jp-controls-holder .jp-volume-bar { order: 6; }
+#jp_container_1 .jp-controls-holder a.jp-volume-max { order: 7; }
+#jp_container_1 .jp-controls-holder a.jp-full-screen,
+#jp_container_1 .jp-controls-holder a.jp-restore-screen { order: 8; }
+#jp_container_1 .jp-controls-holder a.jp-shuffle,
+#jp_container_1 .jp-controls-holder a.jp-shuffle-off { order: 9; }
+#jp_container_1 .jp-controls-holder a.jp-repeat,
+#jp_container_1 .jp-controls-holder a.jp-repeat-off { order: 10; }
+
+/* Group boundaries: a wider left margin separates group starts — stop, the
+   volume group (mute), and the toggles group. Video starts the toggles with
+   fullscreen; audio (no fullscreen) starts them with shuffle. */
+#jp_container_1 .jp-controls-holder a.jp-stop,
+#jp_container_1 .jp-controls-holder a.jp-mute,
+#jp_container_1 .jp-controls-holder a.jp-unmute,
+#jp_container_1 .jp-controls-holder a.jp-full-screen,
+#jp_container_1 .jp-controls-holder a.jp-restore-screen {
+    margin-left: 16px;
+}
+
+#jp_container_1.jp-audio .jp-controls-holder a.jp-shuffle,
+#jp_container_1.jp-audio .jp-controls-holder a.jp-shuffle-off {
+    margin-left: 16px;
+}
+
+/* The music player's jplayer element (the 80px album-art poster) reserves
+   space in the flow, which pushed the flex interface below the bar. Take it
+   out of flow like the video's floating media element so the three rows fit —
+   but keep it visible (don't collapse it) so the album art still shows. */
+#jp_container_1.jp-audio .jp-jplayer {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    /* keep the album-art poster above the interface's opaque themed background
+       (both default to z-index:9999, and the interface comes later in the DOM,
+       so full-width small-screen layouts would otherwise paint over the art) */
+    z-index: 10000;
+}
+
+/* Row 1 -> middle */
+#jp_container_1 .jp-interface > .jp-progress {
+    order: 2;
+    position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    margin: 0;
+}
+
+/* Row 2 -> bottom */
+#jp_container_1 .jp-interface > .jp-time-row {
+    order: 3;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    /* keep the times clear of the corner minimize/expand buttons */
+    padding: 0 28px;
+}
+
+.jp-video .jp-interface > .jp-title {
+    order: 4;
+}
+
+#jp_container_1 .jp-time-row .jp-current-time,
+#jp_container_1 .jp-time-row .jp-duration {
+    position: static;
+    margin: 0;
+    float: none;
+}
+
+/* @end */
+
+/* @group Modern player: small-screen layout. Keep BOTH the action buttons and
+   the controls visible — dock the actions on the left as a fixed-width column
+   and pad the flex interface by that width so they sit side by side without
+   overlapping. Placed after the flex block above so it wins the cascade. */
+@media (max-width: 768px) {
+    /* Album art stays on the left at its normal size; mirror the action buttons
+       as a same-size (80px) block on the RIGHT, above the player chrome (the
+       art poster is z-index:9999, which was hiding them). The controls sit
+       spaced in the centre, padded clear of both blocks. */
+    .player_actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: auto;
+        width: 80px;
+        height: auto;
+        opacity: 1;
+        z-index: 10001;
+        /* fixed 3-per-row grid to match the wider player */
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        align-content: start;
+        justify-items: center;
+    }
+
+    #jp_container_1 .jp-interface {
+        padding-left: 108px;
+        padding-right: 90px;
+    }
+
+    /* tighter group spacing so the control strip fits the reduced centre width
+       and prev/play/next don't wrap off-screen */
+    #jp_container_1 .jp-controls-holder a.jp-stop,
+    #jp_container_1 .jp-controls-holder a.jp-mute,
+    #jp_container_1 .jp-controls-holder a.jp-unmute,
+    #jp_container_1 .jp-controls-holder a.jp-full-screen,
+    #jp_container_1 .jp-controls-holder a.jp-restore-screen,
+    #jp_container_1.jp-audio .jp-controls-holder a.jp-shuffle,
+    #jp_container_1.jp-audio .jp-controls-holder a.jp-shuffle-off {
+        margin-left: 8px;
+    }
+}
+
+/* @end */
+
+@media (min-width: 769px) and (max-width: 1150px) {
+    #jp_container_1:not(.jp-playlist-expanded) .jp-playlist {
+        display: none;
+    }
+
+    .player_actions {
+        right: 4px;
+        opacity: 1;
+    }
+
+    .playing_info {
+        display: none;
+    }
+}
+
+/* @end */
+
+/* @group Modern player: very narrow -- the album art (80px on the left) would
+   overlap the leftmost control once the control strip fills the width. Hide it
+   (controls take priority, matching the info/playlist behaviour above) and
+   reclaim its left padding. Audio keeps playing: display:none doesn't stop the
+   <audio> element inside .jp-jplayer. */
+@media (max-width: 540px) {
+    #jp_container_1.jp-audio .jp-jplayer {
+        display: none;
+    }
+
+    #jp_container_1 .jp-interface {
+        padding-left: 8px;
+    }
+}
+
+/* @end */
+
+
+/*
+ * Crisp SVG transport icons (Bootstrap Icons, MIT — https://icons.getbootstrap.com/).
+ * Transport buttons: recreate the light circular button in CSS and lay a vector glyph
+ * on top (background-image). Volume buttons: bare light-grey glyph, no circle, enlarged
+ * box so the whole icon stays visible (background-size: contain, no clipping).
+ * Sharp at any DPI. background-* use !important to override the sprite.
+ */
+a.jp-play, a.jp-pause, a.jp-stop, a.jp-previous, a.jp-next,
+a.jp-shuffle, a.jp-shuffle-off, a.jp-repeat, a.jp-repeat-off {
+    background-color: #cfcfcf;
+    border-radius: 50%;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 58% !important;
+    transition: background-color .15s ease;
+}
+a.jp-play:hover, a.jp-pause:hover, a.jp-stop:hover, a.jp-previous:hover, a.jp-next:hover,
+a.jp-shuffle:hover, a.jp-shuffle-off:hover, a.jp-repeat:hover, a.jp-repeat-off:hover {
+    background-color: #fff;
+}
+a.jp-shuffle, a.jp-repeat { opacity: .45; }
+
+/* Volume buttons: bare light-grey glyph, no circle, enlarged box (no clipping). */
+a.jp-mute, a.jp-unmute, a.jp-volume-max {
+    width: 22px !important;
+    height: 22px !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: contain !important;
+    overflow: visible !important;
+    transition: opacity .15s ease;
+}
+a.jp-mute:hover, a.jp-unmute:hover, a.jp-volume-max:hover { opacity: .7; }
+
+a.jp-play       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/play.svg") !important; }
+a.jp-pause      { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/pause.svg") !important; }
+a.jp-stop       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/stop.svg") !important; }
+a.jp-previous   { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/previous.svg") !important; }
+a.jp-next       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/next.svg") !important; }
+a.jp-mute       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/volume-min.svg") !important; }
+a.jp-volume-max { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/volume-max.svg") !important; }
+a.jp-unmute     { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/unmute.svg") !important; }
+a.jp-shuffle, a.jp-shuffle-off { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/shuffle.svg") !important; }
+a.jp-repeat, a.jp-repeat-off   { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/repeat.svg") !important; }
+
+
+/*
+ * Sprite removal completion (Bootstrap Icons, MIT — https://icons.getbootstrap.com/).
+ * Covers the controls the first SVG pass left on the PNG sprite: full-screen /
+ * restore-screen buttons, the video play-overlay, and the seek / play / volume
+ * bars (rebuilt as pure-CSS gradients so no bitmap texture is needed).
+ * With this in place jplayer.midnight.black.png and
+ * jplayer.midnight.black.video.play.png can be deleted. background-* use
+ * !important to override the (now removed) sprite rules above.
+ */
+
+/* Full-screen / restore buttons: match the circular transport-button treatment. */
+a.jp-full-screen, a.jp-restore-screen {
+    background-color: #cfcfcf;
+    border-radius: 50%;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 58% !important;
+    transition: background-color .15s ease;
+}
+a.jp-full-screen:hover, a.jp-restore-screen:hover {
+    background-color: #fff;
+    background-position: center !important;
+}
+a.jp-full-screen    { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/fullscreen.svg") !important; }
+a.jp-restore-screen { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/restore-screen.svg") !important; }
+
+/* Video play-overlay: reuse the audio play glyph on a CSS circle (same
+   treatment as the transport buttons), scaled up for the overlay. */
+a.jp-video-play-icon {
+    background-color: #cfcfcf !important;
+    border-radius: 50% !important;
+    background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/play.svg") !important;
+    background-repeat: no-repeat !important;
+    background-position: 56% center !important;
+    background-size: 46% !important;
+    transition: background-color .15s ease;
+}
+.jp-video-play:hover a.jp-video-play-icon { background-color: #fff !important; }
+
+/* Progress + volume bars: rebuilt as gradients (theme blue), no sprite texture. */
+.jp-seek-bar {
+    background: #696969 !important;
+    background-image: none !important;
+}
+.jp-play-bar {
+    background: linear-gradient(to bottom, #34a9f2, #1c9ced) !important;
+}
+.jp-volume-bar {
+    background: #696969 !important;
+    background-image: none !important;
+}
+.jp-volume-bar-value {
+    background: linear-gradient(to bottom, #34a9f2, #1c9ced) !important;
+}

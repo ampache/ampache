@@ -25,18 +25,28 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class UserPreference5Method
+ * Returns one of the calling user's preferences by name.
+ *
+ * Version 5 reads the value stored for the calling user and renders a list, so it keeps a method
+ * of its own.
  */
-final class UserPreference5Method
+final class UserPreference5Method implements MethodInterface
 {
-    public const ACTION = 'user_preference';
+    public const string ACTION = 'user_preference';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * user_preference
@@ -51,28 +61,30 @@ final class UserPreference5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws ResultEmptyException
      */
-    public static function user_preference(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         // fix preferences that are missing for user
-        User::fix_preferences($user->id);
+        Preference::fix_user_preferences($user->id);
 
         $pref_name = (string) ($input['filter'] ?? '');
         $results   = Preference::get($pref_name, $user->id);
         if (empty($results)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $pref_name), self::ACTION, 'filter', $input['api_format']);
-
-            return false;
-        }
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($results, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Api::object_array($results, 'preference');
+            throw new ResultEmptyException($pref_name);
         }
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->objectArray($apiVersion, $results, $results, 'preference')
+            )
+        );
     }
 }

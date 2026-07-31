@@ -1,17 +1,26 @@
 # API Errors
 
-Ampache's API errors are loosely based around the HTTP status codes. All errors are returned in the form of an XML/JSON Document however the string error message provided is translated into the language of the Ampache server in question. All services should only use the code value.
+Ampache's API errors are modelled on the HTTP status codes. All errors are returned as an XML/JSON document with a US English message string; services should rely on the numeric code, not the message text.
 
-For API6 error codes are changing and expanding on the information available to the user/client/application that caused the error.
+The structured error format below applies to API versions 5, 6 and 8 (8 is the current default). It expands on the information available to the user/client/application that caused the error.
 
-An API6 error has the following parts:
+A structured error has the following parts:
 
 * errorCode: numeric code
 * errorAction: method that caused the error
 * errorType: further information such as the type of data missing or access level required
-* errorMessage: error message (US English string Ampache 6.4.0+ **OR** Translated string Ampache 6.0.0 => 6.3.1)
+* errorMessage: error message (US English string, Ampache 6.4.0+)
 
-**NOTE** Prior to Ampache 6.4.0 the API errorMessage text was translated into the server locale. All future versions will not translate the string.
+**NOTE** Prior to Ampache 6.4.0 the API errorMessage text was translated into the server locale. Current versions do not translate it.
+
+## HTTP status codes and API versions
+
+How an error reaches the client depends on the API version:
+
+* **API 3, 4, 5 and 6** always return HTTP `200`, carrying the failure only in the response body.
+* **API 8** sets a real HTTP status code for the error (mapped from the error code, see the list below) and returns HTTP `404` for an empty result. The body still carries the same `error` object.
+
+Only the `errorCode` value is portable across versions — do not rely on the HTTP status unless you are pinned to API8.
 
 ## Rules Regarding errors
 
@@ -22,31 +31,33 @@ An API6 error has the following parts:
 * Use errorType 'system' for things users can't change / server config
 * Use errorType 'account' for user issues (password, perms, auth, etc)
 * All other errorTypes should return the parameter name that caused the error. (type, filter, email, etc)
-* errorMessage must be a translated string to allow devs to show things for the user in their language.
+* errorMessage is written in US English only
 
 ## Error Codes
 
 All error codes are accompanied by a string value for the error and derived from the [HTTP/1.1 Status Codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
 
-To separate Ampache from the http codes it's been decided to prefix our codes with 47 to allow clear differentiation
+To separate Ampache from the http codes it's been decided to prefix our codes with 47 to allow clear differentiation. The HTTP status shown for each code is the one API8 sets (API 3-6 always answer HTTP 200; see above).
 
-* **4700** Access Control not Enabled
+* **4700** Access Control not Enabled (API8 HTTP 403)
   * The API is disabled. Enable 'access_control' in your config
-* **4701** Received Invalid Handshake
+* **4701** Received Invalid Handshake (API8 HTTP 401)
   * This is a temporary error, this means no valid session was passed or the handshake failed
-* **4703** Access Denied
+* **4702** Generic Error (API8 HTTP 500)
+  * An unexpected server-side error. Check the server debug logs for details
+* **4703** Access Denied (API8 HTTP 403)
   * The requested method is not available
   * You can check the error message for details about which feature is disabled
-* **4704** Not Found
+* **4704** Not Found (API8 HTTP 404)
   * The API could not find the requested object
-* **4705** Missing
+* **4705** Missing (API8 HTTP 400)
   * This is a fatal error, the service requested a method that the API does not implement
-* **4706** Depreciated
+* **4706** Depreciated (API8 HTTP 410)
   * This is a fatal error, the method requested is no longer available
-* **4710** Bad Request
+* **4710** Bad Request (API8 HTTP 400)
   * Used when you have specified a valid method but something about the input is incorrect, invalid or missing
   * You can check the error message for details, but do not re-attempt the exact same request
-* **4742** Failed Access Check
+* **4742** Failed Access Check (API8 HTTP 403)
   * Access denied to the requested object or function for this user
 
 ## Error Types
@@ -264,7 +275,7 @@ Error 4742: Failed Access Check
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-    <error errorCode="4710">
+    <error errorCode="4742">
         <errorAction><![CDATA[playlist_delete]]></errorAction>
         <errorType><![CDATA[account]]></errorType>
         <errorMessage><![CDATA[Require: 100]]></errorMessage>

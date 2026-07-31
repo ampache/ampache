@@ -42,134 +42,23 @@ class ShoutRepositoryTest extends TestCase
     use RepositoryTestTrait;
 
     private DatabaseConnectionInterface&MockObject $connection;
-
     private LoggerInterface&MockObject $logger;
-
+    private ShoutRepository $subject;
     private UserRepositoryInterface&MockObject $userRepository;
 
-    private ShoutRepository $subject;
-
-    protected function setUp(): void
+    public function testCollectGarbageDeletesDataForACertainType(): void
     {
-        $this->connection     = $this->createMock(DatabaseConnectionInterface::class);
-        $this->logger         = $this->createMock(LoggerInterface::class);
-        $this->userRepository = $this->createMock(UserRepositoryInterface::class);
-
-        $this->subject = new ShoutRepository(
-            $this->connection,
-            $this->userRepository,
-            $this->logger,
-        );
-    }
-
-    public function testGetByYieldsData(): void
-    {
-        $objectType = LibraryItemEnum::SONG;
-        $objectId   = 42;
-
-        $shoutBox  = $this->createMock(Shoutbox::class);
-        $statement = $this->createMock(PDOStatement::class);
+        $type   = 'song';
+        $typeId = 666;
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
-                [$objectType->value, $objectId]
-            )
-            ->willReturn($statement);
-
-        $statement->expects(static::once())
-            ->method('setFetchMode')
-            ->with(
-                PDO::FETCH_CLASS,
-                Shoutbox::class,
-                [
-                    $this->subject,
-                    $this->userRepository,
-                ]
-            );
-        $statement->expects(static::exactly(2))
-            ->method('fetch')
-            ->willReturn($shoutBox, false);
-
-        static::assertSame(
-            [$shoutBox],
-            iterator_to_array($this->subject->getBy($objectType, $objectId))
-        );
-    }
-
-    public function testFindByIdReturnsNullIfNotFound(): void
-    {
-        $shoutId = 666;
-
-        $result = $this->createMock(PDOStatement::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT * FROM `user_shout` WHERE `id` = ?',
-                [$shoutId]
-            )
-            ->willReturn($result);
-
-        $result->expects(static::once())
-            ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject, $this->userRepository]);
-        $result->expects(static::once())
-            ->method('fetch')
-            ->willReturn(false);
-
-        static::assertNull(
-            $this->subject->findById($shoutId)
-        );
-    }
-
-    public function testFindByIdReturnsShoutItem(): void
-    {
-        $shoutId = 666;
-
-        $result = $this->createMock(PDOStatement::class);
-        $shout  = $this->createMock(Shoutbox::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT * FROM `user_shout` WHERE `id` = ?',
-                [$shoutId]
-            )
-            ->willReturn($result);
-
-        $result->expects(static::once())
-            ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject, $this->userRepository]);
-        $result->expects(static::once())
-            ->method('fetch')
-            ->willReturn($shout);
-
-        static::assertSame(
-            $shout,
-            $this->subject->findById($shoutId)
-        );
-    }
-
-    public function testDeleteDeletesItem(): void
-    {
-        $shout = $this->createMock(Shoutbox::class);
-
-        $shoutBoxId = 666;
-
-        $shout->expects(static::once())
-            ->method('getId')
-            ->willReturn($shoutBoxId);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `user_shout` WHERE `id` = ?',
-                [$shoutBoxId]
+                'DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?',
+                [$type, $typeId]
             );
 
-        $this->subject->delete($shout);
+        $this->subject->collectGarbage($type, $typeId);
     }
 
     public function testCollectGarbageDeletesDefaults(): void
@@ -221,142 +110,122 @@ class ShoutRepositoryTest extends TestCase
         $this->subject->collectGarbage('snafu');
     }
 
-    public function testCollectGarbageDeletesDataForACertainType(): void
-    {
-        $type   = 'song';
-        $typeId = 666;
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?',
-                [$type, $typeId]
-            );
-
-        $this->subject->collectGarbage($type, $typeId);
-    }
-
-    public function testPersistCreatesShout(): void
+    public function testDeleteDeletesItem(): void
     {
         $shout = $this->createMock(Shoutbox::class);
 
-        $shoutId    = 666;
-        $userId     = 42;
-        $date       = new DateTime();
-        $text       = 'some-text';
-        $sticky     = true;
-        $objectId   = 123;
-        $objectType = LibraryItemEnum::ART;
-        $offset     = 567;
+        $shoutBoxId = 666;
 
         $shout->expects(static::once())
-            ->method('isNew')
-            ->willReturn(true);
-        $shout->expects(static::once())
-            ->method('getUserId')
-            ->willReturn($userId);
-        $shout->expects(static::once())
-            ->method('getDate')
-            ->willReturn($date);
-        $shout->expects(static::once())
-            ->method('getText')
-            ->willReturn($text);
-        $shout->expects(static::once())
-            ->method('isSticky')
-            ->willReturn($sticky);
-        $shout->expects(static::once())
-            ->method('getObjectId')
-            ->willReturn($objectId);
-        $shout->expects(static::once())
-            ->method('getObjectType')
-            ->willReturn($objectType);
-        $shout->expects(static::once())
-            ->method('getOffset')
-            ->willReturn($offset);
+            ->method('getId')
+            ->willReturn($shoutBoxId);
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [
-                    $userId,
-                    $date->getTimestamp(),
-                    $text,
-                    (int) $sticky,
-                    $objectId,
-                    $objectType->value,
-                    $offset
-                ]
+                'DELETE FROM `user_shout` WHERE `id` = ?',
+                [$shoutBoxId]
             );
-        $this->connection->expects(static::once())
-            ->method('getLastInsertedId')
-            ->willReturn($shoutId);
 
-        static::assertSame(
-            $shoutId,
-            $this->subject->persist($shout)
+        $this->subject->delete($shout);
+    }
+
+    public function testFindByIdPerformsTest(): void
+    {
+        $this->runFindByIdTrait(
+            'user_shout',
+            Shoutbox::class,
+            [$this->subject, $this->userRepository]
         );
     }
 
-    public function testPersistUpdatesShout(): void
+    public function testFindByIdReturnsNullIfNotFound(): void
     {
-        $shout = $this->createMock(Shoutbox::class);
+        $shoutId = 666;
 
-        $shoutId    = 666;
-        $userId     = 42;
-        $date       = new DateTime();
-        $text       = 'some-text';
-        $sticky     = true;
-        $objectId   = 123;
-        $objectType = LibraryItemEnum::TAG_HIDDEN;
-        $offset     = 567;
-
-        $shout->expects(static::once())
-            ->method('isNew')
-            ->willReturn(false);
-        $shout->expects(static::once())
-            ->method('getId')
-            ->willReturn($shoutId);
-        $shout->expects(static::once())
-            ->method('getUserId')
-            ->willReturn($userId);
-        $shout->expects(static::once())
-            ->method('getDate')
-            ->willReturn($date);
-        $shout->expects(static::once())
-            ->method('getText')
-            ->willReturn($text);
-        $shout->expects(static::once())
-            ->method('isSticky')
-            ->willReturn($sticky);
-        $shout->expects(static::once())
-            ->method('getObjectId')
-            ->willReturn($objectId);
-        $shout->expects(static::once())
-            ->method('getObjectType')
-            ->willReturn($objectType);
-        $shout->expects(static::once())
-            ->method('getOffset')
-            ->willReturn($offset);
+        $result = $this->createMock(PDOStatement::class);
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'UPDATE `user_shout` SET `user` = ?, `date` = ?, `text` = ?, `sticky` = ?, `object_id` = ?, `object_type` = ?, `data` = ? WHERE `id` = ?',
+                'SELECT * FROM `user_shout` WHERE `id` = ?',
+                [$shoutId]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('setFetchMode')
+            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject, $this->userRepository]);
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->findById($shoutId)
+        );
+    }
+
+    public function testFindByIdReturnsShoutItem(): void
+    {
+        $shoutId = 666;
+
+        $result = $this->createMock(PDOStatement::class);
+        $shout  = $this->createMock(Shoutbox::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT * FROM `user_shout` WHERE `id` = ?',
+                [$shoutId]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('setFetchMode')
+            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject, $this->userRepository]);
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn($shout);
+
+        self::assertSame(
+            $shout,
+            $this->subject->findById($shoutId)
+        );
+    }
+
+    public function testGetByYieldsData(): void
+    {
+        $objectType = LibraryItemEnum::SONG;
+        $objectId   = 42;
+
+        $shoutBox  = $this->createMock(Shoutbox::class);
+        $statement = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
+                [$objectType->value, $objectId]
+            )
+            ->willReturn($statement);
+
+        $statement->expects(static::once())
+            ->method('setFetchMode')
+            ->with(
+                PDO::FETCH_CLASS,
+                Shoutbox::class,
                 [
-                    $userId,
-                    $date->getTimestamp(),
-                    $text,
-                    (int) $sticky,
-                    $objectId,
-                    $objectType->value,
-                    $offset,
-                    $shoutId
+                    $this->subject,
+                    $this->userRepository,
                 ]
             );
+        $statement->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn($shoutBox, false);
 
-        static::assertNull(
-            $this->subject->persist($shout)
+        self::assertSame(
+            [$shoutBox],
+            iterator_to_array($this->subject->getBy($objectType, $objectId))
         );
     }
 
@@ -426,7 +295,7 @@ class ShoutRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($shout2, false);
 
-        static::assertSame(
+        self::assertSame(
             [$shout1, $shout2],
             iterator_to_array($this->subject->getTop($limit, $userName))
         );
@@ -448,12 +317,140 @@ class ShoutRepositoryTest extends TestCase
         $this->subject->migrate($objectType, $oldId, $newId);
     }
 
-    public function testFindByIdPerformsTest(): void
+    public function testPersistCreatesShout(): void
     {
-        $this->runFindByIdTrait(
-            'user_shout',
-            Shoutbox::class,
-            [$this->subject, $this->userRepository]
+        $shout = $this->createMock(Shoutbox::class);
+
+        $shoutId    = 666;
+        $userId     = 42;
+        $date       = new DateTime();
+        $text       = 'some-text';
+        $sticky     = true;
+        $objectId   = 123;
+        $objectType = LibraryItemEnum::ART;
+        $offset     = 567;
+
+        $shout->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+        $shout->expects(static::once())
+            ->method('getUserId')
+            ->willReturn($userId);
+        $shout->expects(static::once())
+            ->method('getDate')
+            ->willReturn($date);
+        $shout->expects(static::once())
+            ->method('getText')
+            ->willReturn($text);
+        $shout->expects(static::once())
+            ->method('isSticky')
+            ->willReturn($sticky);
+        $shout->expects(static::once())
+            ->method('getObjectId')
+            ->willReturn($objectId);
+        $shout->expects(static::once())
+            ->method('getObjectType')
+            ->willReturn($objectType);
+        $shout->expects(static::once())
+            ->method('getOffset')
+            ->willReturn($offset);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [
+                    $userId,
+                    $date->getTimestamp(),
+                    $text,
+                    (int) $sticky,
+                    $objectId,
+                    $objectType->value,
+                    $offset
+                ]
+            );
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn($shoutId);
+
+        self::assertSame(
+            $shoutId,
+            $this->subject->persist($shout)
+        );
+    }
+
+    public function testPersistUpdatesShout(): void
+    {
+        $shout = $this->createMock(Shoutbox::class);
+
+        $shoutId    = 666;
+        $userId     = 42;
+        $date       = new DateTime();
+        $text       = 'some-text';
+        $sticky     = true;
+        $objectId   = 123;
+        $objectType = LibraryItemEnum::TAG_HIDDEN;
+        $offset     = 567;
+
+        $shout->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
+        $shout->expects(static::once())
+            ->method('getId')
+            ->willReturn($shoutId);
+        $shout->expects(static::once())
+            ->method('getUserId')
+            ->willReturn($userId);
+        $shout->expects(static::once())
+            ->method('getDate')
+            ->willReturn($date);
+        $shout->expects(static::once())
+            ->method('getText')
+            ->willReturn($text);
+        $shout->expects(static::once())
+            ->method('isSticky')
+            ->willReturn($sticky);
+        $shout->expects(static::once())
+            ->method('getObjectId')
+            ->willReturn($objectId);
+        $shout->expects(static::once())
+            ->method('getObjectType')
+            ->willReturn($objectType);
+        $shout->expects(static::once())
+            ->method('getOffset')
+            ->willReturn($offset);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `user_shout` SET `user` = ?, `date` = ?, `text` = ?, `sticky` = ?, `object_id` = ?, `object_type` = ?, `data` = ? WHERE `id` = ?',
+                [
+                    $userId,
+                    $date->getTimestamp(),
+                    $text,
+                    (int) $sticky,
+                    $objectId,
+                    $objectType->value,
+                    $offset,
+                    $shoutId
+                ]
+            );
+
+        self::assertNull(
+            $this->subject->persist($shout)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection     = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger         = $this->createMock(LoggerInterface::class);
+        $this->userRepository = $this->createMock(UserRepositoryInterface::class);
+
+        $this->subject = new ShoutRepository(
+            $this->connection,
+            $this->userRepository,
+            $this->logger,
         );
     }
 }

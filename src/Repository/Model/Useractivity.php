@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -29,19 +29,14 @@ use Ampache\Module\System\Dba;
 
 class Useractivity extends database_object
 {
-    protected const DB_TABLENAME = 'user_activity';
-
-    public int $id = 0;
-
-    public int $user;
+    protected const string DB_TABLENAME = 'user_activity';
 
     public string $action;
-
-    public int $object_id;
-
-    public string $object_type;
-
     public int $activity_date;
+    public int $id = 0;
+    public int $object_id;
+    public string $object_type;
+    public int $user;
 
     /**
      * Constructor
@@ -54,24 +49,27 @@ class Useractivity extends database_object
             return;
         }
 
-        $info = $this->get_info($useract_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
-    }
-
-    public function getId(): int
-    {
-        return (int)($this->id ?? 0);
+        $info                = $this->get_info($useract_id, static::DB_TABLENAME);
+        $this->action        = (string) ($info['action'] ?? '');
+        $this->activity_date = (int) ($info['activity_date'] ?? 0);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->object_id     = (int) ($info['object_id'] ?? 0);
+        $this->object_type   = (string) ($info['object_type'] ?? '');
+        $this->user          = (int) ($info['user'] ?? 0);
     }
 
     /**
      * this attempts to build a cache of the data from the passed activities all in one query
-     * @param int[] $ids
+     * @param array<int|string> $ids
      */
     public static function build_cache(array $ids): bool
     {
         if (empty($ids)) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
             return false;
         }
 
@@ -94,5 +92,10 @@ class Useractivity extends database_object
         $sql = "UPDATE `user_activity` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

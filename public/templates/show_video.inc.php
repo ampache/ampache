@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_video.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -92,6 +94,11 @@ $gart = Art::display('video', $video->id, $fullname, ['width' => 200, 'height' =
             <?php } ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'new_window', T_('Add to Temporary Playlist'), 'add_video_' . $video->id); ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+            <a id="<?php echo 'add_to_playlist_' . $video->id; ?>" onclick="showPlaylistDialog(event, 'video', '<?php echo $video->id; ?>')">
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+            </a>
+        <?php } ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?></a>
@@ -113,7 +120,7 @@ $gart = Art::display('video', $video->id, $fullname, ['width' => 200, 'height' =
             <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>" rel="nofollow"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
-            <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+            <?php if (AmpConfig::get('statistical_graphs')) { ?>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?></a>
             <?php } ?>
             <a onclick="showEditDialog('video_row', '<?php echo $video->id; ?>', '<?php echo 'edit_video_' . $video->id; ?>', '<?php echo addslashes(T_('Video Edit')); ?>', '')">
@@ -137,12 +144,12 @@ $videoprops[T_('Codec')]         = scrub_out($video->video_codec . ' / ' . $vide
 $videoprops[T_('Resolution')]    = scrub_out($video->get_f_resolution());
 $videoprops[T_('Display')]       = scrub_out($video->get_f_display());
 $videoprops[T_('Audio Bitrate')] = scrub_out((int) ($video->bitrate / 1024) . "-" . strtoupper((string) $video->mode));
-$videoprops[T_('Video Bitrate')] = scrub_out((string)($video->video_bitrate / 1024));
+$videoprops[T_('Video Bitrate')] = scrub_out((string) ($video->video_bitrate / 1024));
 $videoprops[T_('Frame Rate')]    = scrub_out(($video->frame_rate) ? $video->frame_rate . ' fps' : '');
-$videoprops[T_('Channels')]      = scrub_out((string)$video->channels);
-if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+$videoprops[T_('Channels')]      = scrub_out((string) $video->channels);
+if ($video->file && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
     $data                       = pathinfo($video->file);
-    $videoprops[T_('Path')]     = scrub_out((string)($data['dirname'] ?? ''));
+    $videoprops[T_('Path')]     = scrub_out((string) ($data['dirname']));
     $videoprops[T_('Filename')] = (isset($data['extension']))
         ? scrub_out($data['filename'] . "." . $data['extension'])
         : '';
@@ -153,11 +160,11 @@ if ($video->update_time) {
 }
 $videoprops[T_('Added')] = get_datetime((int) $video->addition_time);
 if (AmpConfig::get('show_played_times')) {
-    $videoprops[T_('Played')] = scrub_out((string)$video->total_count);
+    $videoprops[T_('Played')] = scrub_out((string) $video->total_count);
 }
 
 foreach ($videoprops as $key => $value) {
-    if (trim((string)$value)) {
+    if (trim((string) $value)) {
         echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
     }
 } ?>

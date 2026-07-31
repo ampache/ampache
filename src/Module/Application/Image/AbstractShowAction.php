@@ -42,7 +42,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
 abstract readonly class AbstractShowAction implements ApplicationActionInterface
 {
@@ -53,18 +53,17 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         private Horde_Browser $horde_browser,
         private ResponseFactoryInterface $responseFactory,
         private StreamFactoryInterface $streamFactory,
-        private LoggerInterface $logger
-    ) {
-    }
+        private LoggerInterface $logger,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $response = $this->responseFactory->createResponse();
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PUBLIC_IMAGES) === false &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_AUTH) === true &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION) === true
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PUBLIC_IMAGES) === false
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_AUTH)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION)
         ) {
             // regular auth
             $auth = $this->requestParser->getFromRequest('auth');
@@ -81,9 +80,9 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
 
             // Check to see if they've got an interface session or a valid API session
             if (
-                Session::exists(AccessTypeEnum::INTERFACE->value, $cookie ?? $auth) ||
-                Session::exists(AccessTypeEnum::API->value, (empty($auth)) ? $apiKey : $auth) ||
-                (isset($token_check['success']) && $token_check['success'] === true)
+                Session::exists(AccessTypeEnum::INTERFACE->value, $cookie ?? $auth)
+                || Session::exists(AccessTypeEnum::API->value, ($auth === '' || $auth === '0') ? $apiKey : $auth)
+                || (isset($token_check['success']) && $token_check['success'])
             ) {
                 // authentication succeeded
             } else {
@@ -93,7 +92,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 );
 
                 return $response->withStatus(
-                    StatusCode\RFC\RFC7231::FORBIDDEN,
+                    RFC7231::FORBIDDEN,
                     'Access denied: No valid session found'
                 );
             }
@@ -105,7 +104,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             $_GET['size']  = null;
         }
 
-        $thumb = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
+        $thumb = (int) filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
         $size  = ($thumb === 0)
             ? filter_input(INPUT_GET, 'size', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE) ?? 'original'
             : 'original';
@@ -134,15 +133,17 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                         $mime        = $_SESSION['form']['images'][$filename]['mime'];
                         $typeManaged = true;
                     }
+
                     break;
             }
         }
+
         if (!$typeManaged) {
             $itemConfig = $this->getFileName($request);
 
             if ($itemConfig === null) {
                 return $response->withStatus(
-                    StatusCode\RFC\RFC7231::NOT_FOUND,
+                    RFC7231::NOT_FOUND,
                     'Bad Request: Invalid URL'
                 );
             }
@@ -151,7 +152,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
 
             $art      = new Art($objectId, $type, $kind);
             $has_info = $art->has_db_info($size ?: 'original');
-            $has_size = $size && preg_match('/^[0-9]+x[0-9]+$/', $size);
+            $has_size = $size && preg_match('/^\d+x\d+$/', $size);
             if (!$has_info) {
                 // show a fallback image
                 $rootimg = sprintf(
@@ -160,12 +161,17 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 );
 
                 $mime       = 'image/png';
-                $defaultimg = $this->configContainer->get('custom_blankalbum');
-                if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
+                $defaultimg = ($type === 'folder') ? '' : $this->configContainer->get('custom_blankalbum');
+                if (
+                    empty($defaultimg)
+                    || (!str_starts_with($defaultimg, "http://") && !str_starts_with($defaultimg, "https://"))
+                ) {
+                    $filename   = ($type === 'folder') ? 'folder' : 'blankalbum';
                     $defaultimg = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
-                        ? $rootimg . "blankalbum_" . $size . ".png"
-                        : $rootimg . "blankalbum.png";
+                        ? $rootimg . $filename . "_" . $size . ".png"
+                        : $rootimg . $filename . ".png";
                 }
+
                 $etag = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
                     ? "EmptyMediaAlbum" . $size
                     : "EmptyMediaAlbum";
@@ -197,11 +203,11 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         }
 
         if (!empty($image)) {
-            $extension = Art::extension((string)$mime);
+            $extension = Art::extension((string) $mime);
             $filename  = scrub_out($filename . '.' . $extension);
 
             // Send the headers and output the image
-            if (!empty($etag)) {
+            if ($etag !== '' && $etag !== '0') {
                 $response = $response->withHeader(
                     'ETag',
                     '"' . $etag . '"'
@@ -219,16 +225,18 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
 
             // That means the client has a cached version of the image
             $reqheaders = getallheaders();
-            if (is_array($reqheaders) && array_key_exists('If-Modified-Since', $reqheaders) && array_key_exists('If-None-Match', $reqheaders)) {
-                if (!array_key_exists('Cache-Control', $reqheaders) || ($reqheaders['Cache-Control'] != 'no-cache')) {
-                    $cetag = str_replace('"', '', $reqheaders['If-None-Match']);
-                    // Same image than the cached one? Use the cache.
-                    if (
-                        !is_array($cetag) &&
-                        $cetag == $etag
-                    ) {
-                        return $response->withStatus(304);
-                    }
+            if (
+                array_key_exists('If-Modified-Since', $reqheaders)
+                && array_key_exists('If-None-Match', $reqheaders)
+                && (!array_key_exists('Cache-Control', $reqheaders) || $reqheaders['Cache-Control'] != 'no-cache')
+            ) {
+                $cetag = str_replace('"', '', $reqheaders['If-None-Match']);
+                // Same image than the cached one? Use the cache.
+                if (
+                    !is_array($cetag)
+                    && $cetag === $etag
+                ) {
+                    return $response->withStatus(304);
                 }
             }
 

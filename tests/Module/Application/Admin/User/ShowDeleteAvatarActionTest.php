@@ -34,22 +34,9 @@ class ShowDeleteAvatarActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
 
-    private MockObject&UiInterface $ui;
-
     private MockObject&ConfigContainerInterface $configContainer;
-
     private ShowDeleteAvatarAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new ShowDeleteAvatarAction(
-            $this->ui,
-            $this->configContainer
-        );
-    }
+    private MockObject&UiInterface $ui;
 
     public function testHandleRendersConfirmation(): void
     {
@@ -69,6 +56,17 @@ class ShowDeleteAvatarActionTest extends TestCase
                         'delete_avatar'
                     );
             }
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new ShowDeleteAvatarAction(
+            $this->ui,
+            $this->configContainer
         );
     }
 }

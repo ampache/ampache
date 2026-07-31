@@ -34,8 +34,20 @@ use Generator;
 final class Migration530000 extends AbstractMigration
 {
     protected array $changelog = ['Create artist_map table and fill it with data'];
+    protected bool $warning    = true;
 
-    protected bool $warning = true;
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 530000) {
+            yield 'artist_map' => "CREATE TABLE IF NOT EXISTS `artist_map` (`artist_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_artist_map` (`object_id`, `object_type`, `artist_id`), KEY `object_id_index` (`object_id`), KEY `artist_id_index` (`artist_id`), KEY `artist_id_type_index` (`artist_id`, `object_type`), KEY `object_id_type_index` (`object_id`, `object_type`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        }
+    }
 
     public function migrate(): void
     {
@@ -48,16 +60,5 @@ final class Migration530000 extends AbstractMigration
 
         // fill the data
         $this->updateDatabase("INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist` AS `artist_id`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` > 0 AND `song`.`artist` > 0 UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` > 0 AND `album`.`album_artist` IS NOT NULL;");
-    }
-
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build
-    ): Generator {
-        if ($build > 530000) {
-            yield 'artist_map' => "CREATE TABLE IF NOT EXISTS `artist_map` (`artist_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_artist_map` (`object_id`, `object_type`, `artist_id`), KEY `object_id_index` (`object_id`), KEY `artist_id_index` (`artist_id`), KEY `artist_id_type_index` (`artist_id`, `object_type`), KEY `object_id_type_index` (`object_id`, `object_type`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-        }
     }
 }

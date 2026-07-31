@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_artist_row.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -68,7 +70,7 @@ $web_path = AmpConfig::get_web_path();
     } ?>
     </div>
 </td>
-<?php $name = scrub_out((string)$libitem->get_fullname()); ?>
+<?php $name = scrub_out((string) $libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php $size = (isset($browse) && $browse->is_grid_view())
         ? ['width' => 150, 'height' => 150]
@@ -82,7 +84,7 @@ Art::display('artist', $libitem->id, $name, $size, $web_path . '/artists.php?act
         echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_artist_' . $libitem->id);
         echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id, 'shuffle', T_('Random to Temporary Playlist'), 'random_artist_' . $libitem->id); ?>
             <a id="<?php echo 'add_to_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id; ?>')">
-                <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
             </a>
         <?php
     } ?>
@@ -99,16 +101,14 @@ Art::display('artist', $libitem->id, $name, $size, $web_path . '/artists.php?act
 <?php } ?>
 <?php if ($show_ratings) { ?>
         <td class="cel_ratings">
-            <?php if (AmpConfig::get('ratings')) { ?>
-                <div class="rating">
-                    <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist">
-                        <?php echo Rating::show($libitem->id, 'artist'); ?>
-                    </span>
-                    <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist">
-                        <?php echo Userflag::show($libitem->id, 'artist'); ?>
-                    </span>
-                </div>
-            <?php } ?>
+            <div class="rating">
+                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist">
+                    <?php echo Rating::show($libitem->id, 'artist'); ?>
+                </span>
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist">
+                    <?php echo Userflag::show($libitem->id, 'artist'); ?>
+                </span>
+            </div>
         </td>
     <?php } ?>
 <td class="cel_action">

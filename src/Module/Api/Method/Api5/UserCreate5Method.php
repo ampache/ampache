@@ -25,20 +25,35 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class UserCreate5Method
+ * Creates a new user.
+ *
+ * Version 5 does not know about catalog filter groups, so it keeps a method of its own.
  */
-final class UserCreate5Method
+final class UserCreate5Method implements MethodInterface
 {
-    public const ACTION = 'user_create';
+    public const string ACTION = 'user_create';
+
+    public function __construct(
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     /**
      * user_create
@@ -63,15 +78,37 @@ final class UserCreate5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException|RequestParamMissingException
      */
-    public static function user_create(array $input, User $user): bool
-    {
-        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (
+            !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::ADMIN,
+                $user->id
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
-        if (!Api5::check_parameter($input, ['username', 'password', 'email'], self::ACTION)) {
-            return false;
+
+        foreach (['username', 'password', 'email'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
+
         $username = $input['username'];
         $fullname = $input['fullname'] ?? $username;
         $email    = urldecode($input['email']);
@@ -93,38 +130,56 @@ final class UserCreate5Method
         );
 
         if ($user_id > 0) {
-            Api5::message('successfully created: ' . $username, $input['api_format']);
+            $result = $output->success($apiVersion, 'successfully created: ' . $username);
+
             Catalog::count_table('user');
 
-            return true;
+            return $response->withBody(
+                $this->streamFactory->createStream($result)
+            );
         }
 
-        $userRepository = self::getUserRepository();
-
-        if ($userRepository->idByUsername($username) > 0) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'username', $input['api_format']);
-
-            return false;
+        if ($this->userRepository->idByUsername($username) > 0) {
+            return $this->writeBadRequest($response, $output, $apiVersion, $username, 'username');
         }
-        if ($userRepository->idByEmail($email) > 0) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $email), self::ACTION, 'email', $input['api_format']);
 
-            return false;
+        if ($this->userRepository->idByEmail($email) > 0) {
+            return $this->writeBadRequest($response, $output, $apiVersion, $email, 'email');
         }
-        Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'system', $input['api_format']);
 
-        return false;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    'Bad Request',
+                    self::ACTION,
+                    'system'
+                )
+            )
+        );
     }
 
     /**
-     * @todo Inject by constructor
+     * @param 5 $apiVersion
      */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+    private function writeBadRequest(
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        int $apiVersion,
+        string $value,
+        string $type,
+    ): ResponseInterface {
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    sprintf('Bad Request: %s', $value),
+                    self::ACTION,
+                    $type
+                )
+            )
+        );
     }
 }

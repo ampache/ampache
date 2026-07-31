@@ -48,7 +48,7 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 final class Handshake3Method
 {
-    public const ACTION = 'handshake';
+    public const string ACTION = 'handshake';
 
     /**
      * handshake
@@ -86,7 +86,7 @@ final class Handshake3Method
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) $version < Api3::$auth_version) {
             debug_event(self::class, 'Login Failed: version too old', 1);
-            AmpError::add('api', T_('Login Failed: version too old'));
+            AmpError::add('api', 'Login Failed: version too old');
 
             return false;
         }
@@ -124,8 +124,8 @@ final class Handshake3Method
                     || ($timestamp > ($now_time + 1800))
                 ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
-                    AmpError::add('api', T_('Login Failed: timestamp out of range'));
-                    echo Xml3_Data::error(401, T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    AmpError::add('api', 'Login Failed: timestamp out of range');
+                    echo Xml3_Data::error(401, 'Error Invalid Handshake - ' . 'Login Failed: timestamp out of range');
 
                     return false;
                 }
@@ -135,8 +135,8 @@ final class Handshake3Method
 
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
-                    AmpError::add('api', T_('Invalid Username/Password'));
-                    echo Xml3_Data::error(401, T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    AmpError::add('api', 'Invalid Username/Password');
+                    echo Xml3_Data::error(401, 'Error Invalid Handshake - ' . 'Invalid Username/Password');
 
                     return false;
                 }
@@ -223,7 +223,7 @@ final class Handshake3Method
         }
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
-        echo Xml3_Data::error(401, T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        echo Xml3_Data::error(401, 'Error Invalid Handshake - ' . 'Invalid Username/Password');
 
         return false;
     }

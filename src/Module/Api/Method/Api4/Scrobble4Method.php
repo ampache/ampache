@@ -36,7 +36,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class Scrobble4Method
 {
-    public const ACTION = 'scrobble';
+    public const string ACTION = 'scrobble';
 
     /**
      * scrobble
@@ -89,7 +89,7 @@ final class Scrobble4Method
 
         // validate supplied user
         if ($valid === false) {
-            Api4::message('error', T_('User_id not found'), '404', $input['api_format']);
+            Api4::message('error', 'User_id not found', '404', $input['api_format']);
 
             return false;
         }
@@ -97,7 +97,7 @@ final class Scrobble4Method
         // validate minimum required options
         debug_event(self::class, 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
-            Api4::message('error', T_('Invalid input options'), '401', $input['api_format']);
+            Api4::message('error', 'Invalid input options', '401', $input['api_format']);
 
             return false;
         }
@@ -111,11 +111,11 @@ final class Scrobble4Method
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
 
         if ($scrobble_id === '') {
-            Api4::message('error', T_('Failed to scrobble: No item found!'), '401', $input['api_format']);
+            Api4::message('error', 'Failed to scrobble: No item found!', '401', $input['api_format']);
         } else {
             $item = new Song((int) $scrobble_id);
             if ($item->isNew()) {
-                Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
+                Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
                 return false;
             }

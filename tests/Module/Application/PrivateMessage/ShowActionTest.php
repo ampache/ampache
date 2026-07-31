@@ -36,147 +36,15 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    private UiInterface&MockInterface $ui;
-
     private ConfigContainerInterface&MockInterface $configContainer;
-
     private PrivateMessageRepositoryInterface&MockInterface $pmRepository;
-
     private ShowAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->pmRepository    = $this->mock(PrivateMessageRepositoryInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->ui,
-            $this->configContainer,
-            $this->pmRepository
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testRunThrowsExceptionIfSocialFeaturesAreDisabled(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SOCIABLE)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testRunThrowsExceptionIfAccessToItemIsDenied(): void
-    {
-        $msgId = 666;
-
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SOCIABLE)
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['pvmsg_id' => (string) $msgId]);
-
-        $this->pmRepository->shouldReceive('findById')
-            ->with($msgId)
-            ->once()
-            ->andReturnNull();
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-
-        $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testRunThrowsExceptionIfUserIdsDontMatch(): void
-    {
-        $msgId = 666;
-
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $message    = $this->mock(PrivateMessageInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-        $gatekeeper->shouldReceive('getUserId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(123);
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SOCIABLE)
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['pvmsg_id' => (string) $msgId]);
-
-        $this->pmRepository->shouldReceive('findById')
-            ->with($msgId)
-            ->once()
-            ->andReturn($message);
-
-        $message->shouldReceive('getRecipientUserId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(456);
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-
-        $this->subject->run($request, $gatekeeper);
-    }
+    private UiInterface&MockInterface $ui;
 
     public function testRunShowsAndSetsAsRead(): void
     {
@@ -241,6 +109,137 @@ class ShowActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsExceptionIfAccessToItemIsDenied(): void
+    {
+        $msgId = 666;
+
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnTrue();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['pvmsg_id' => (string) $msgId]);
+
+        $this->pmRepository->shouldReceive('findById')
+            ->with($msgId)
+            ->once()
+            ->andReturnNull();
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsExceptionIfSocialFeaturesAreDisabled(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsExceptionIfUserIdsDontMatch(): void
+    {
+        $msgId = 666;
+
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $message    = $this->mock(PrivateMessageInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+        $gatekeeper->shouldReceive('getUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(123);
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnTrue();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['pvmsg_id' => (string) $msgId]);
+
+        $this->pmRepository->shouldReceive('findById')
+            ->with($msgId)
+            ->once()
+            ->andReturn($message);
+
+        $message->shouldReceive('getRecipientUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(456);
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->pmRepository    = $this->mock(PrivateMessageRepositoryInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->ui,
+            $this->configContainer,
+            $this->pmRepository
         );
     }
 }

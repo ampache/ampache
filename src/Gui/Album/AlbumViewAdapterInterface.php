@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -25,73 +27,73 @@ namespace Ampache\Gui\Album;
 
 interface AlbumViewAdapterInterface
 {
-    public function getId(): int;
-
-    public function getRating(): string;
-
-    public function getAverageRating(): string;
-
-    public function getUserFlags(): string;
-
-    public function getArt(): string;
+    public function canAppendNext(): bool;
 
     public function canAutoplayNext(): bool;
 
-    public function canAppendNext(): bool;
+    public function canBatchDownload(): bool;
 
-    public function getDirectplayButton(): string;
-
-    public function getAutoplayNextButton(): string;
-
-    public function getAppendNextButton(): string;
-
-    public function getAddToTemporaryPlaylistButton(): string;
-
-    public function getRandomToTemporaryPlaylistButton(): string;
+    public function canBeDeleted(): bool;
 
     public function canPostShout(): bool;
 
-    public function getPostShoutUrl(): string;
-
-    public function getPostShoutIcon(): string;
-
     public function canShare(): bool;
 
-    public function getShareUi(): string;
+    public function canShowYear(): bool;
 
-    public function canBatchDownload(): bool;
+    public function getAddToPlaylistIcon(): string;
 
-    public function getBatchDownloadUrl(): string;
+    public function getAddToTemporaryPlaylistButton(): string;
+
+    public function getAlbumLink(): string;
+
+    public function getAlbumUrl(): string;
+
+    public function getAppendNextButton(): string;
+
+    public function getArt(): string;
+
+    public function getArtistLink(): string;
+
+    public function getAutoplayNextButton(): string;
+
+    public function getAverageRating(): string;
 
     public function getBatchDownloadIcon(): string;
 
-    public function isEditable(): bool;
+    public function getBatchDownloadUrl(): string;
+
+    public function getDeletionIcon(): string;
+
+    public function getDeletionUrl(): string;
+
+    public function getDirectplayButton(): string;
+
+    public function getDisplayYear(): int;
 
     public function getEditButtonTitle(): string;
 
     public function getEditIcon(): string;
 
-    public function getDeletionUrl(): string;
+    public function getGenre(): string;
 
-    public function getDeletionIcon(): string;
-
-    public function canBeDeleted(): bool;
-
-    public function getAddToPlaylistIcon(): string;
+    public function getId(): int;
 
     public function getPlayedTimes(): int;
 
-    public function getAlbumUrl(): string;
+    public function getPostShoutIcon(): string;
 
-    public function getAlbumLink(): string;
+    public function getPostShoutUrl(): string;
 
-    public function getArtistLink(): string;
+    public function getRandomToTemporaryPlaylistButton(): string;
 
-    public function canShowYear(): bool;
+    public function getRating(): string;
 
-    public function getDisplayYear(): int;
-
-    public function getGenre(): string;
+    public function getShareUi(): string;
 
     public function getSongCount(): int;
+
+    public function getUserFlags(): string;
+
+    public function isEditable(): bool;
 }

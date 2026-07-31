@@ -44,9 +44,9 @@ use Ampache\Repository\Model\Tag;
  */
 class Daap_Api
 {
-    public const AMPACHEID_SMARTPL = 400000000;
+    public const int AMPACHEID_SMARTPL = 400000000;
 
-    public const BASE_LIBRARY = 0;
+    public const int BASE_LIBRARY = 0;
 
     /** @var array<string> */
     public static array $metas = [
@@ -400,9 +400,7 @@ class Daap_Api
                                 $song_ids[] = $item['object_id'];
                             }
                         }
-                        if (AmpConfig::get('memory_cache', false)) {
-                            Song::build_cache($song_ids);
-                        }
+                        Song::build_cache($song_ids);
                         $songs = [];
                         foreach ($song_ids as $song_id) {
                             $songs[] = new Song($song_id);

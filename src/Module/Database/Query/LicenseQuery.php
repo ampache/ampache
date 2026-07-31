@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class LicenseQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'alpha_match',
         'equal',
         'exact_match',
@@ -44,6 +44,9 @@ final class LicenseQuery implements QueryInterface
         'starts_with',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `license` ";
+    protected string $select = "`license`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'external_link',
@@ -53,9 +56,15 @@ final class LicenseQuery implements QueryInterface
         'title',
     ];
 
-    protected string $select = "`license`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `license` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -65,16 +74,6 @@ final class LicenseQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**
@@ -100,8 +99,9 @@ final class LicenseQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `license`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'equal':
@@ -119,11 +119,13 @@ final class LicenseQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `license`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `license`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `license`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -145,30 +147,19 @@ final class LicenseQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
-        switch ($field) {
-            case 'name':
-            case 'title':
-                $sql = "`license`.`name`";
-                break;
-            case 'id':
-            case 'external_link':
-            case 'order':
-                $sql = "`license`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'name', 'title' => "`license`.`name`",
+            'id', 'external_link', 'order' => sprintf('`license`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

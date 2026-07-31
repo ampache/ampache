@@ -36,28 +36,89 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\License;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class EditActionTest extends MockeryTestCase
 {
+    private MockInterface&ConfigContainerInterface $configContainer;
+    private MockInterface&LicenseRepositoryInterface $licenseRepository;
+    private EditAction $subject;
     private MockInterface&UiInterface $ui;
 
-    private MockInterface&ConfigContainerInterface $configContainer;
-
-    private MockInterface&LicenseRepositoryInterface $licenseRepository;
-
-    private EditAction $subject;
-
-    protected function setUp(): void
+    public function testRunCreatesAndReturnsNull(): void
     {
-        $this->ui                = $this->mock(UiInterface::class);
-        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
-        $this->licenseRepository = $this->mock(LicenseRepositoryInterface::class);
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $license    = $this->createMock(License::class);
 
-        $this->subject = new EditAction(
-            $this->ui,
-            $this->configContainer,
-            $this->licenseRepository
+        $name        = 'some-name';
+        $description = 'some-description';
+        $webPath     = '/admin';
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->with($webPath)
+            ->once()
+            ->andReturn($webPath);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->once()
+            ->andReturnTrue();
+
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([
+                'name' => $name,
+                'description' => $description,
+            ]);
+
+        $this->licenseRepository->shouldReceive('prototype')
+            ->once()
+            ->andReturn($license);
+
+        $license->expects(static::once())
+            ->method('setName')
+            ->with($name)
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('setDescription')
+            ->with($description)
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('setExternalLink')
+            ->with('')
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('setOrder')
+            ->with(null)
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('save');
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showConfirmation')
+            ->with(
+                T_('No Problem'),
+                'A new License has been created',
+                sprintf('%s/license.php', $webPath)
+            )
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+
+        $this->assertNull(
+            $this->subject->run(
+                $request,
+                $gatekeeper
+            )
         );
     }
 
@@ -72,6 +133,38 @@ class EditActionTest extends MockeryTestCase
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnFalse();
+
+        $this->subject->run(
+            $request,
+            $gatekeeper
+        );
+    }
+
+    public function testRunThrowsIfObjectWasNotFound(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $licenseId = 666;
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $this->licenseRepository->shouldReceive('findById')
+            ->with($licenseId)
+            ->once()
+            ->andReturnNull();
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->once()
+            ->andReturnTrue();
+
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([
+                'license_id' => (string) 666,
+            ]);
 
         $this->subject->run(
             $request,
@@ -161,111 +254,17 @@ class EditActionTest extends MockeryTestCase
         );
     }
 
-    public function testRunThrowsIfObjectWasNotFound(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->licenseRepository = $this->mock(LicenseRepositoryInterface::class);
 
-        $licenseId = 666;
-
-        static::expectException(ObjectNotFoundException::class);
-
-        $this->licenseRepository->shouldReceive('findById')
-            ->with($licenseId)
-            ->once()
-            ->andReturnNull();
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getParsedBody')
-            ->withNoArgs()
-            ->once()
-            ->andReturn([
-                'license_id' => (string) 666,
-            ]);
-
-        $this->subject->run(
-            $request,
-            $gatekeeper
-        );
-    }
-
-    public function testRunCreatesAndReturnsNull(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $license    = $this->createMock(License::class);
-
-        $name        = 'some-name';
-        $description = 'some-description';
-        $webPath     = '/admin';
-
-        $this->configContainer->shouldReceive('getWebPath')
-            ->with($webPath)
-            ->once()
-            ->andReturn($webPath);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getParsedBody')
-            ->withNoArgs()
-            ->once()
-            ->andReturn([
-                'name' => $name,
-                'description' => $description,
-            ]);
-
-        $this->licenseRepository->shouldReceive('prototype')
-            ->once()
-            ->andReturn($license);
-
-        $license->expects(static::once())
-            ->method('setName')
-            ->with($name)
-            ->willReturnSelf();
-        $license->expects(static::once())
-            ->method('setDescription')
-            ->with($description)
-            ->willReturnSelf();
-        $license->expects(static::once())
-            ->method('setExternalLink')
-            ->with('')
-            ->willReturnSelf();
-        $license->expects(static::once())
-            ->method('setOrder')
-            ->with(null)
-            ->willReturnSelf();
-        $license->expects(static::once())
-            ->method('save');
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showConfirmation')
-            ->with(
-                T_('No Problem'),
-                'A new License has been created',
-                sprintf('%s/license.php', $webPath)
-            )
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        $this->assertNull(
-            $this->subject->run(
-                $request,
-                $gatekeeper
-            )
+        $this->subject = new EditAction(
+            $this->ui,
+            $this->configContainer,
+            $this->licenseRepository
         );
     }
 }

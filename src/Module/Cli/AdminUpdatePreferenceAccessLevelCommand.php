@@ -27,18 +27,10 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Repository\Model\Preference;
+use Override;
 
 final class AdminUpdatePreferenceAccessLevelCommand extends Command
 {
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct()
     {
         parent::__construct('admin:updatePreferenceAccessLevel', T_('Update Preference Access Level'));
@@ -63,7 +55,7 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
         $dryRun     = $this->values()['execute'] === false;
         $level      = $this->values()['level'];
 
-        if ($dryRun === true) {
+        if ($dryRun) {
             $interactor->info(
                 "\n" . T_('Running in Test Mode. Use -e|--execute to update'),
                 true
@@ -80,8 +72,8 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
                 true
             );
         } elseif (
-            $level &&
-            Preference::set_level($level)
+            $level
+            && Preference::set_level($level)
         ) {
             $interactor->ok(
                 "\n" . T_('Updated'),
@@ -100,5 +92,15 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
                 true
             );
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

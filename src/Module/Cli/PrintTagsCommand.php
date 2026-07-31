@@ -31,26 +31,14 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Catalog;
 use Exception;
+use Override;
 
 final class PrintTagsCommand extends Command
 {
-    private UtilityFactoryInterface $utilityFactory;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        UtilityFactoryInterface $utilityFactory
+        private readonly UtilityFactoryInterface $utilityFactory,
     ) {
         parent::__construct('print:tags', T_('Print file tags'));
-
-        $this->utilityFactory = $utilityFactory;
 
         $this
             ->argument('<filename>', T_('File Path'))
@@ -58,7 +46,7 @@ final class PrintTagsCommand extends Command
     }
 
     public function execute(
-        string $filename
+        string $filename,
     ): void {
         if ($this->app() === null) {
             return;
@@ -92,8 +80,8 @@ final class PrintTagsCommand extends Command
         );
 
         if (
-            $dir_pattern !== '' ||
-            $file_pattern !== ''
+            $dir_pattern !== ''
+            || $file_pattern !== ''
         ) {
             /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
             $interactor->info(
@@ -101,6 +89,7 @@ final class PrintTagsCommand extends Command
                 true
             );
         }
+
         try {
             $vainfo->gather_tags();
             $results         = $vainfo->tags;
@@ -126,8 +115,18 @@ final class PrintTagsCommand extends Command
             );
             $interactor->eol(2);
             print_r($ampache_results);
-        } catch (Exception $error) {
-            debug_event('print_tags', 'get_info exception: ' . $error->getMessage(), 1);
+        } catch (Exception $exception) {
+            debug_event('print_tags', 'get_info exception: ' . $exception->getMessage(), 1);
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

@@ -21,6 +21,8 @@
  *
  */
 
+// show_verify_catalog.inc.php
+
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Catalog;
 

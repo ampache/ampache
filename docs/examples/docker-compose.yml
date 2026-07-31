@@ -6,7 +6,7 @@ services:
     container_name: ampache
     restart: unless-stopped
     ports:
-      - 8082:80
+      - "8082:80"
     volumes:
       - ./config:/var/www/config
       - ./log:/var/log/ampache

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_now_playing_row.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -53,7 +55,7 @@ $showAlbum = AmpConfig::get('album_group'); ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo $t_username; ?></label>
-        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id ?? -1; ?>">
+        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id ?: -1; ?>">
         <?php echo scrub_out($np_user->fullname);
 echo '<div>' . $np_user->get_f_avatar('f_avatar_medium') . '</div>'; ?>
         </a>
@@ -86,7 +88,7 @@ echo '<div>' . $np_user->get_f_avatar('f_avatar_medium') . '</div>'; ?>
 </div>
 
 <div class="np_group" id="np_group_3">
-  <div id="album_<?php echo $media->album; ?>" class="np_cell cel_albumart libitem_menu">
+  <div id="album_<?php echo $media->album; ?>" class="np_cell cel_albumart libitem_menu" data-object-type="album" data-object-id="<?php echo $media->album; ?>">
       <?php
       if (AmpConfig::get('show_song_art') && Art::has_db($media->id, 'song')) {
           $playing = $media;

@@ -34,9 +34,9 @@ use Ampache\Module\Util\Rss\Type\LatestSongFeed;
 use Ampache\Module\Util\Rss\Type\LibraryItemFeed;
 use Ampache\Module\Util\Rss\Type\NowPlayingFeed;
 use Ampache\Module\Util\Rss\Type\RecentlyPlayedFeed;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Container\ContainerInterface;
@@ -45,50 +45,15 @@ use Psr\Http\Message\ServerRequestInterface;
 final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
 {
     public function __construct(
-        private ContainerInterface $dic
-    ) {
-    }
-
-    /**
-     * Creates the feed related to a certain library-item
-     */
-    public function createLibraryItemFeed(
-        ?User $user,
-        playable_item $libraryItem
-    ): FeedTypeInterface {
-        return new LibraryItemFeed(
-            $this->dic->get(ModelFactoryInterface::class),
-            $this->dic->get(LibraryItemLoaderInterface::class),
-            $user,
-            $libraryItem
-        );
-    }
-
-    /**
-     * Creates a feed for recently played items
-     */
-    public function createRecentlyPlayedFeed(
-        ?User $user
-    ): FeedTypeInterface {
-        return new RecentlyPlayedFeed(
-            $user
-        );
-    }
-
-    /**
-     * Creates a feed for currently playing items
-     */
-    public function createNowPlayingFeed(): FeedTypeInterface
-    {
-        return new NowPlayingFeed();
-    }
+        private ContainerInterface $dic,
+    ) {}
 
     /**
      * Creates a feed for recent albums
      */
     public function createLatestAlbumFeed(
         ?User $user,
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
     ): FeedTypeInterface {
         return new LatestAlbumFeed(
             $user,
@@ -101,7 +66,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      */
     public function createLatestArtistFeed(
         ?User $user,
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
     ): FeedTypeInterface {
         return new LatestArtistFeed(
             $user,
@@ -125,11 +90,45 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      */
     public function createLatestSongFeed(
         ?User $user,
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
     ): FeedTypeInterface {
         return new LatestSongFeed(
             $user,
             $request,
+        );
+    }
+
+    /**
+     * Creates the feed related to a certain library-item
+     */
+    public function createLibraryItemFeed(
+        ?User $user,
+        library_item $libraryItem,
+    ): FeedTypeInterface {
+        return new LibraryItemFeed(
+            $this->dic->get(ModelFactoryInterface::class),
+            $this->dic->get(LibraryItemLoaderInterface::class),
+            $user,
+            $libraryItem
+        );
+    }
+
+    /**
+     * Creates a feed for currently playing items
+     */
+    public function createNowPlayingFeed(): FeedTypeInterface
+    {
+        return new NowPlayingFeed();
+    }
+
+    /**
+     * Creates a feed for recently played items
+     */
+    public function createRecentlyPlayedFeed(
+        ?User $user,
+    ): FeedTypeInterface {
+        return new RecentlyPlayedFeed(
+            $user
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_playlists.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
@@ -47,6 +49,19 @@ $hide_genres       = AmpConfig::get('hide_genres');
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
 $css_class = ($is_table) ? '' : ' gridview';
+if ($show_playlist_add) { ?>
+<div id="information_actions">
+    <ul>
+        <li>
+            <a href="<?php echo AmpConfig::get_web_path(); ?>/playlist.php?action=show_create">
+                <?php echo Ui::get_material_symbol('add_circle', T_('Create Playlist')); ?>
+                <?php echo T_('Create Playlist'); ?>
+            </a>
+        </li>
+    </ul>
+</div>
+<?php }
+
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -75,6 +90,10 @@ $talFactory = $dic->get(TalFactoryInterface::class);
 $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
+
+// One TAL view reused for all rows
+$playlistRowView = $talFactory->createTalView()->setTemplate('playlist_row.xhtml');
+
 foreach ($object_ids as $playlist_id) {
     $libitem = new Playlist($playlist_id);
     if ($libitem->isNew() || (!$libitem->has_collaborate() && $libitem->type === 'private')) {
@@ -84,15 +103,16 @@ foreach ($object_ids as $playlist_id) {
     // Don't show empty playlist if not admin or the owner
     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) || $libitem->get_user_owner() == $user_id || $libitem->get_media_count() > 0) { ?>
         <tr id="playlist_row_<?php echo $libitem->id; ?>">
-            <?php $content = $talFactory->createTalView()
-        ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-        ->setContext('PLAYLIST', $guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
-        ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
-        ->setContext('IS_SHOW_ART', $show_art)
-        ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
-        ->setContext('CLASS_COVER', $cel_cover)
-        ->setTemplate('playlist_row.xhtml')
-        ->render();
+            <?php
+             // Reassign EVERY key each row. Prev row's value sticks otherwise.
+             // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
+            $content = $playlistRowView
+                           ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+                           ->setContext('PLAYLIST', $guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
+                           ->setContext('IS_SHOW_ART', $show_art)
+                           ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
+                           ->setContext('CLASS_COVER', $cel_cover)
+                           ->render();
 
         echo $content; ?>
         </tr>

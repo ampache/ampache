@@ -38,60 +38,164 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Mockery\MockInterface;
+use Override;
 
 class PlaylistViewAdapterTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var ZipHandlerInterface|MockInterface|null */
-    private MockInterface $zipHandler;
-
-    /** @var FunctionCheckerInterface|MockInterface|null */
-    private MockInterface $functionChecker;
-
-    /** @var GuiGatekeeperInterface|MockInterface|null */
-    private ?MockInterface $gatekeeper;
-
-    /** @var Playlist|MockInterface|null */
-    private MockInterface $playlist;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private FunctionCheckerInterface|MockInterface|null $functionChecker;
+    private GuiGatekeeperInterface|MockInterface|null $gatekeeper;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private Playlist|MockInterface|null $playlist;
     private PlaylistViewAdapter $subject;
+    private ZipHandlerInterface|MockInterface|null $zipHandler;
 
-    protected function setUp(): void
+    public function testCanBatchDownloadReturnsValue(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->zipHandler      = $this->mock(ZipHandlerInterface::class);
-        $this->functionChecker = $this->mock(FunctionCheckerInterface::class);
-        $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
-        $this->playlist        = $this->mock(Playlist::class);
+        $this->functionChecker->shouldReceive('check')
+            ->with(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            ->once()
+            ->andReturnTrue();
 
-        $this->subject = new PlaylistViewAdapter(
-            $this->configContainer,
-            $this->modelFactory,
-            $this->zipHandler,
-            $this->functionChecker,
-            $this->gatekeeper,
-            $this->playlist,
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
+            ->once()
+            ->andReturnTrue();
+
+        $this->zipHandler->shouldReceive('isZipable')
+            ->with('playlist')
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canBatchDownload()
         );
     }
 
-    public function testGetIdReturnsPlaylistId(): void
+    public function testCanBeRefreshedReturnsFalseIfHasNoSearch(): void
     {
-        $AlbumId = 666;
+        $searchId = 0;
+        $userId   = 1;
 
-        $this->playlist->shouldReceive('getId')
+        $this->playlist->shouldReceive('has_access')
             ->withNoArgs()
             ->once()
-            ->andReturn($AlbumId);
+            ->andReturnTrue();
 
-        $this->assertSame(
-            $AlbumId,
-            $this->subject->getId()
+        $this->playlist->user = $userId;
+
+        $this->playlist->shouldReceive('has_search')
+            ->with($this->playlist->user)
+            ->once()
+            ->andReturn($searchId);
+
+        $this->assertEquals(
+            0,
+            $searchId
+        );
+
+        $this->assertFalse(
+            $this->subject->canBeRefreshed()
+        );
+    }
+
+    public function testCanBeRefreshedReturnsFalseIfNotAccessible(): void
+    {
+        $searchId = 1;
+        $userId   = 1;
+
+        $this->playlist->shouldReceive('has_access')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $this->playlist->user = $userId;
+
+        $this->playlist->shouldReceive('has_search')
+            ->with($this->playlist->user)
+            ->once()
+            ->andReturn($searchId);
+
+        $this->assertGreaterThan(
+            0,
+            $searchId
+        );
+
+        $this->assertFalse(
+            $this->subject->canBeRefreshed()
+        );
+    }
+
+    public function testCanBeRefreshedReturnsTrueIfConditionsAreMet(): void
+    {
+        $searchId = 1;
+        $userId   = 1;
+
+        $this->playlist->shouldReceive('has_access')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
+        $this->playlist->user = $userId;
+
+        $this->playlist->shouldReceive('has_search')
+            ->with($this->playlist->user)
+            ->once()
+            ->andReturn($searchId);
+
+        $this->assertGreaterThan(
+            0,
+            $searchId
+        );
+
+        $this->assertTrue(
+            $this->subject->canBeRefreshed()
+        );
+    }
+
+    public function testCanShareReturnsFalseIfFeatureIsDeactivated(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canShare()
+        );
+    }
+
+    public function testCanShareReturnsFalseIfNotAccessible(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canShare()
+        );
+    }
+
+    public function testCanShareReturnsTrueIfConditionsAreMet(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canShare()
         );
     }
 
@@ -120,14 +224,6 @@ class PlaylistViewAdapterTest extends MockeryTestCase
         $this->assertSame(
             $averageRating,
             $this->subject->getAverageRating()
-        );
-    }
-
-    public function testGetEditButtonTitleReturnsValue(): void
-    {
-        $this->assertSame(
-            'Playlist Edit',
-            $this->subject->getEditButtonTitle()
         );
     }
 
@@ -174,84 +270,58 @@ class PlaylistViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testCanBeRefreshedReturnsTrueIfConditionsAreMet(): void
+    public function testGetEditButtonTitleReturnsValue(): void
     {
-        $searchId = 1;
-        $userId   = 1;
-
-        $this->playlist->shouldReceive('has_access')
-            ->withNoArgs()
-            ->once()
-            ->andReturnTrue();
-
-        $this->playlist->user = $userId;
-
-        $this->playlist->shouldReceive('has_search')
-            ->with($this->playlist->user)
-            ->once()
-            ->andReturn($searchId);
-
-        $this->assertGreaterThan(
-            0,
-            $searchId
-        );
-
-        $this->assertTrue(
-            $this->subject->canBeRefreshed()
+        $this->assertSame(
+            'Playlist Edit',
+            $this->subject->getEditButtonTitle()
         );
     }
 
-    public function testCanBeRefreshedReturnsFalseIfNotAccessible(): void
+    public function testGetIdReturnsPlaylistId(): void
     {
-        $searchId = 1;
-        $userId   = 1;
+        $AlbumId = 666;
 
-        $this->playlist->shouldReceive('has_access')
+        $this->playlist->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andReturnFalse();
+            ->andReturn($AlbumId);
 
-        $this->playlist->user = $userId;
-
-        $this->playlist->shouldReceive('has_search')
-            ->with($this->playlist->user)
-            ->once()
-            ->andReturn($searchId);
-
-        $this->assertGreaterThan(
-            0,
-            $searchId
-        );
-
-        $this->assertFalse(
-            $this->subject->canBeRefreshed()
+        $this->assertSame(
+            $AlbumId,
+            $this->subject->getId()
         );
     }
 
-    public function testCanBeRefreshedReturnsFalseIfHasNoSearch(): void
+    public function testGetPlaylistLinkReturnsValue(): void
     {
-        $searchId = 0;
-        $userId   = 1;
+        $value = 'some-album-link';
 
-        $this->playlist->shouldReceive('has_access')
+        $this->playlist->shouldReceive('get_f_link')
             ->withNoArgs()
             ->once()
-            ->andReturnTrue();
+            ->andReturn($value);
 
-        $this->playlist->user = $userId;
-
-        $this->playlist->shouldReceive('has_search')
-            ->with($this->playlist->user)
-            ->once()
-            ->andReturn($searchId);
-
-        $this->assertEquals(
-            0,
-            $searchId
+        $this->assertSame(
+            $value,
+            $this->subject->getPlaylistLink()
         );
+    }
 
-        $this->assertFalse(
-            $this->subject->canBeRefreshed()
+    public function testGetPlaylistUrlReturnsValue(): void
+    {
+        $value = 'some-url';
+
+        $this->playlist->link = $value;
+
+        $this->playlist->shouldReceive('get_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getPlaylistUrl()
         );
     }
 
@@ -291,103 +361,23 @@ class PlaylistViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetPlaylistUrlReturnsValue(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $value = 'some-url';
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->zipHandler      = $this->mock(ZipHandlerInterface::class);
+        $this->functionChecker = $this->mock(FunctionCheckerInterface::class);
+        $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
+        $this->playlist        = $this->mock(Playlist::class);
 
-        $this->playlist->link = $value;
-
-        $this->playlist->shouldReceive('get_link')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($value);
-
-        $this->assertSame(
-            $value,
-            $this->subject->getPlaylistUrl()
-        );
-    }
-
-    public function testGetPlaylistLinkReturnsValue(): void
-    {
-        $value = 'some-album-link';
-
-        $this->playlist->shouldReceive('get_f_link')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($value);
-
-        $this->assertSame(
-            $value,
-            $this->subject->getPlaylistLink()
-        );
-    }
-
-    public function testCanShareReturnsFalseIfNotAccessible(): void
-    {
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->assertFalse(
-            $this->subject->canShare()
-        );
-    }
-
-    public function testCanShareReturnsFalseIfFeatureIsDeactivated(): void
-    {
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SHARE)
-            ->once()
-            ->andReturnFalse();
-
-        $this->assertFalse(
-            $this->subject->canShare()
-        );
-    }
-
-    public function testCanShareReturnsTrueIfConditionsAreMet(): void
-    {
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SHARE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertTrue(
-            $this->subject->canShare()
-        );
-    }
-
-    public function testCanBatchDownloadReturnsValue(): void
-    {
-        $this->functionChecker->shouldReceive('check')
-            ->with(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
-            ->once()
-            ->andReturnTrue();
-
-        $this->zipHandler->shouldReceive('isZipable')
-            ->with('playlist')
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertTrue(
-            $this->subject->canBatchDownload()
+        $this->subject = new PlaylistViewAdapter(
+            $this->configContainer,
+            $this->modelFactory,
+            $this->zipHandler,
+            $this->functionChecker,
+            $this->gatekeeper,
+            $this->playlist,
         );
     }
 }

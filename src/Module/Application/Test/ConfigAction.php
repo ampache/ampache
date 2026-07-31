@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -31,25 +31,19 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\Preference;
 use Exception;
+use Gettext\Translations;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfigAction implements ApplicationActionInterface
+final readonly class ConfigAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'config';
-
-    private ConfigContainerInterface $configContainer;
-
-    private ResponseFactoryInterface $responseFactory;
+    public const string REQUEST_KEY = 'config';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory
-    ) {
-        $this->configContainer = $configContainer;
-        $this->responseFactory = $responseFactory;
-    }
+        private ConfigContainerInterface $configContainer,
+        private ResponseFactoryInterface $responseFactory,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -57,7 +51,7 @@ final class ConfigAction implements ApplicationActionInterface
         // through to the default, else show the appropriate template
         $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
 
-        if (!count(parse_ini_file($configfile) ?: [])) {
+        if ((parse_ini_file($configfile) ?: []) === []) {
             require_once __DIR__ . '/../../../../public/templates/show_test_config.inc.php';
 
             return null;
@@ -71,16 +65,21 @@ final class ConfigAction implements ApplicationActionInterface
                     '/install.php'
                 );
         }
+
         // Make sure the config file is set up and parsable
-        $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
-        if (empty($results)) {
+        $results = (is_readable($configfile) && parse_ini_file($configfile))
+            ? parse_ini_file($configfile)
+            : false;
+        if (!$results) {
             $link = __DIR__ . '/../../../../public/test.php?action=config';
         }
-        if (is_array($results)) {
+
+        if ($results !== [] && $results !== false) {
             /* Temp Fixes */
             $results = Preference::fix_preferences($results);
             $this->configContainer->updateConfig($results);
         }
+
         unset($results);
         // Try to load localization from cookie
         $session_name = $this->configContainer->getSessionName();
@@ -88,10 +87,12 @@ final class ConfigAction implements ApplicationActionInterface
         if (isset($_COOKIE[$session_name . '_lang'])) {
             AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
         }
-        if (!class_exists('Gettext\Translations')) {
+
+        if (!class_exists(Translations::class)) {
             require_once __DIR__ . '/../../../../public/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
         }
+
         load_gettext();
         // Load template
         require_once __DIR__ . '/../../../../public/templates/show_test.inc.php';

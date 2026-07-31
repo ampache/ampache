@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_label_row.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -34,7 +36,7 @@ use Ampache\Repository\Model\Catalog;
 /** @var Ampache\Repository\Model\Label $libitem */
 /** @var string $cel_cover */
 
-$name     = scrub_out((string)$libitem->get_fullname());
+$name     = scrub_out((string) $libitem->get_fullname());
 $web_path = AmpConfig::get_web_path(); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php Art::display('label', $libitem->id, $name, ['width' => 100, 'height' => 100], $web_path . '/labels.php?action=show&label=' . $libitem->id); ?>
@@ -50,6 +52,11 @@ $web_path = AmpConfig::get_web_path(); ?>
 } ?>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
+    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+    <a id="<?php echo 'add_to_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'label', '<?php echo $libitem->id; ?>')">
+        <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+    </a>
+    <?php }
     if (AmpConfig::get('sociable')) { ?>
     <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?>

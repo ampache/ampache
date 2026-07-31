@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -44,7 +44,7 @@ final class TagSearch implements SearchInterface
      * }
      */
     public function getSql(
-        Search $search
+        Search $search,
     ): array {
         $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
 
@@ -54,18 +54,20 @@ final class TagSearch implements SearchInterface
         $parameters = [];
 
         foreach ($search->rules as $rule) {
-            $type     = $search->get_rule_type($rule[0]);
+            $type     = $search->get_rule_type_by_name($rule[0]);
             $operator = [];
             if ($type === null) {
                 continue;
             }
-            foreach ($search->basetypes[$type] as $baseOperator) {
+
+            foreach ($search->get_basetypes()[$type] as $baseOperator) {
                 if ($baseOperator['name'] == $rule[1]) {
                     $operator = $baseOperator;
                     break;
                 }
             }
-            $input        = $search->filter_data((string)$rule[2], $type, $operator);
+
+            $input        = $search->filter_data((string) $rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
@@ -73,32 +75,30 @@ final class TagSearch implements SearchInterface
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
                         $where[] = "NOT (`tag`.`category` SOUNDS LIKE ?)";
                     } else {
-                        $where[] = "`tag`.`category` $operator_sql ?";
+                        $where[] = sprintf('`tag`.`category` %s ?', $operator_sql);
                     }
+
                     $parameters[] = $input;
                     break;
                 case 'title':
-                    if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = "NOT (`tag`.`name` SOUNDS LIKE ?)";
-                    } else {
-                        $where[] = "`tag`.`name` $operator_sql ?";
-                    }
+                    $where[] = $operator_sql === 'NOT SOUNDS LIKE' ? "NOT (`tag`.`name` SOUNDS LIKE ?)" : sprintf('`tag`.`name` %s ?', $operator_sql);
+
                     $parameters[] = $input;
                     break;
                 case 'artist_count':
-                    $where[]      = "`tag`.`artist` $operator_sql ?";
+                    $where[]      = sprintf('`tag`.`artist` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
                 case 'album_count':
-                    $where[]      = "`tag`.`album` $operator_sql ?";
+                    $where[]      = sprintf('`tag`.`album` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
                 case 'song_count':
-                    $where[]      = "`tag`.`song` $operator_sql ?";
+                    $where[]      = sprintf('`tag`.`song` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
                 case 'video_count':
-                    $where[]      = "`tag`.`video` $operator_sql ?";
+                    $where[]      = sprintf('`tag`.`video` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
                 default:
@@ -107,7 +107,7 @@ final class TagSearch implements SearchInterface
             } // switch on ruletype
         } // foreach rule
 
-        $where_sql = implode(" $sql_logic_operator ", $where);
+        $where_sql = implode(sprintf(' %s ', $sql_logic_operator), $where);
 
         return [
             'base' => 'SELECT DISTINCT(`tag`.`id`), `tag`.`name` FROM `tag`',

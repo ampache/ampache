@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class GetIndexes4Method
 {
-    public const ACTION = 'get_indexes';
+    public const string ACTION = 'get_indexes';
 
     /**
      * get_indexes
@@ -79,17 +79,17 @@ final class GetIndexes4Method
         $album_artist = ((string) $input['type'] == 'album_artist');
         $type         = ($album_artist) ? 'artist' : (string) $input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api4::message('error', T_('Access Denied: allow_video is not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: allow_video is not enabled.', '400', $input['api_format']);
 
             return false;
         }
         if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
-            Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: podcast features are not enabled.', '400', $input['api_format']);
 
             return false;
         }
         if (!AmpConfig::get('share') && $type == 'share') {
-            Api4::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: sharing features are not enabled.', '400', $input['api_format']);
 
             return false;
         }
@@ -97,7 +97,7 @@ final class GetIndexes4Method
         $hide    = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'])) {
-            Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
             return false;
         }

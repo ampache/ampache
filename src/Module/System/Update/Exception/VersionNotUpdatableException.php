@@ -24,6 +24,4 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Exception;
 
-final class VersionNotUpdatableException extends UpdateException
-{
-}
+final class VersionNotUpdatableException extends UpdateException {}

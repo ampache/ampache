@@ -38,71 +38,16 @@ use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowAddMessageActionTest extends MockeryTestCase
 {
     private ConfigContainerInterface&MockInterface $configContainer;
-
-    private UiInterface&MockInterface $ui;
-
     private ModelFactoryInterface&MockInterface $modelFactory;
-
     private PrivateMessageRepositoryInterface&MockInterface $pmRepository;
-
     private ShowAddMessageAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->pmRepository    = $this->mock(PrivateMessageRepositoryInterface::class);
-
-        $this->subject = new ShowAddMessageAction(
-            $this->configContainer,
-            $this->ui,
-            $this->modelFactory,
-            $this->pmRepository
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-        $this->expectExceptionMessage('Access Denied: sociable features are not enabled.');
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testRunThrowsExceptionIfSocialFeatureAreDisabled(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-        $this->expectExceptionMessage('Access Denied: sociable features are not enabled.');
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SOCIABLE)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
+    private UiInterface&MockInterface $ui;
 
     public function testRunRenders(): void
     {
@@ -276,6 +221,59 @@ class ShowAddMessageActionTest extends MockeryTestCase
         $this->assertStringContainsString(
             $messageText,
             $_REQUEST['message']
+        );
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage('Access Denied: sociable features are not enabled.');
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsExceptionIfSocialFeatureAreDisabled(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage('Access Denied: sociable features are not enabled.');
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->pmRepository    = $this->mock(PrivateMessageRepositoryInterface::class);
+
+        $this->subject = new ShowAddMessageAction(
+            $this->configContainer,
+            $this->ui,
+            $this->modelFactory,
+            $this->pmRepository
         );
     }
 }

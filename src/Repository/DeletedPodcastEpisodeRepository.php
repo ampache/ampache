@@ -36,9 +36,7 @@ use PDO;
  */
 final readonly class DeletedPodcastEpisodeRepository implements DeletedPodcastEpisodeRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * Returns all deleted podcast episodes

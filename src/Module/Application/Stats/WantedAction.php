@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -34,25 +34,15 @@ use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class WantedAction implements ApplicationActionInterface
+final readonly class WantedAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'wanted';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private WantedRepositoryInterface $wantedRepository;
+    public const string REQUEST_KEY = 'wanted';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        WantedRepositoryInterface $wantedRepository
-    ) {
-        $this->ui               = $ui;
-        $this->modelFactory     = $modelFactory;
-        $this->wantedRepository = $wantedRepository;
-    }
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private WantedRepositoryInterface $wantedRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -67,8 +57,8 @@ final class WantedAction implements ApplicationActionInterface
 
         $user = $gatekeeper->getUser();
         if (
-            $user !== null &&
-            $user->has_access(AccessLevelEnum::MANAGER)
+            $user !== null
+            && $user->has_access(AccessLevelEnum::MANAGER)
         ) {
             $user = null;
         }

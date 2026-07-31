@@ -25,20 +25,30 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class PodcastEpisodes5Method
+ * @package Lib\Api5Methods
  */
-final class PodcastEpisodes5Method
+final class PodcastEpisodes5Method implements MethodInterface
 {
-    public const ACTION = 'podcast_episodes';
+    public const string ACTION = 'podcast_episodes';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private PodcastRepositoryInterface $podcastRepository,
+    ) {}
 
     /**
      * podcast_episodes
@@ -54,64 +64,53 @@ final class PodcastEpisodes5Method
      *     filter?: string,
      *     offset?: string,
      *     limit?: string,
-     *     cond?: string,
-     *     sort?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function podcast_episodes(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('podcast')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: podcast'), self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
+            throw new AccessDeniedException(
+                'Enable: podcast'
+            );
         }
-        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+
+        $podcastId = (int) ($input['filter'] ?? 0);
+        if ($podcastId === 0) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
         }
 
-        $podcastRepository = self::getPodcastRepository();
-
-        $object_id = (int) ($input['filter'] ?? 0);
-        $podcast   = $podcastRepository->findById($object_id);
+        $podcast = $this->podcastRepository->findById($podcastId);
         if ($podcast === null) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException((string) $podcastId);
         }
 
         $results = $podcast->getEpisodeIds();
         if ($results === []) {
-            Api5::empty('podcast_episode', $input['api_format']);
+            $response->getBody()->write(
+                $output->writeEmpty($apiVersion, 'podcast_episode')
+            );
 
-            return false;
+            return $response;
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::podcast_episodes($results, $user, $input['auth']);
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::podcast_episodes($results, $user, $input['auth']);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
-    }
+        $response->getBody()->write(
+            $output->podcastEpisodes($apiVersion, $results, $user, $input['auth'])
+        );
 
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
+        return $response;
     }
 }

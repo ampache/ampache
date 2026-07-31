@@ -42,31 +42,15 @@ use Psr\Log\LoggerInterface;
 /**
  * Handles the creation of new podcasts
  */
-final class PodcastCreator implements PodcastCreatorInterface
+final readonly class PodcastCreator implements PodcastCreatorInterface
 {
-    private FeedLoaderInterface $feedLoader;
-
-    private PodcastRepositoryInterface $podcastRepository;
-
-    private LoggerInterface $logger;
-
-    private PodcastSyncerInterface $podcastSyncer;
-
-    private PodcastFolderProviderInterface $podcastFolderProvider;
-
     public function __construct(
-        FeedLoaderInterface $feedLoader,
-        PodcastRepositoryInterface $podcastRepository,
-        PodcastSyncerInterface $podcastSyncer,
-        PodcastFolderProviderInterface $podcastFolderProvider,
-        LoggerInterface $logger
-    ) {
-        $this->feedLoader            = $feedLoader;
-        $this->podcastRepository     = $podcastRepository;
-        $this->podcastSyncer         = $podcastSyncer;
-        $this->podcastFolderProvider = $podcastFolderProvider;
-        $this->logger                = $logger;
-    }
+        private FeedLoaderInterface $feedLoader,
+        private PodcastRepositoryInterface $podcastRepository,
+        private PodcastSyncerInterface $podcastSyncer,
+        private PodcastFolderProviderInterface $podcastFolderProvider,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Creates a new podcast object
@@ -77,12 +61,12 @@ final class PodcastCreator implements PodcastCreatorInterface
      */
     public function create(
         string $feedUrl,
-        Catalog $catalog
+        Catalog $catalog,
     ): Podcast {
         // Feed must be http/https
         if (
-            strpos($feedUrl, 'http://') !== 0 &&
-            strpos($feedUrl, 'https://') !== 0
+            !str_starts_with($feedUrl, 'http://')
+            && !str_starts_with($feedUrl, 'https://')
         ) {
             throw new InvalidFeedUrlException();
         }
@@ -120,9 +104,9 @@ final class PodcastCreator implements PodcastCreatorInterface
 
         try {
             $this->podcastFolderProvider->getBaseFolder($podcast);
-        } catch (PodcastFolderException $error) {
+        } catch (PodcastFolderException $podcastFolderException) {
             $this->logger->critical(
-                $error->getMessage(),
+                $podcastFolderException->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }

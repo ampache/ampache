@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -34,24 +34,18 @@ use Ampache\Module\System\Dba;
  */
 class Bookmark extends database_object
 {
-    protected const DB_TABLENAME = 'bookmark';
+    protected const string DB_TABLENAME = 'bookmark';
+
+    public ?string $comment = null;
+    public int $creation_date;
 
     // Public variables
     public int $id = 0;
-
-    public int $user;
-
-    public int $position;
-
-    public ?string $comment = null;
-
-    public ?string $object_type = null;
-
     public int $object_id;
-
-    public int $creation_date;
-
+    public ?string $object_type = null;
+    public int $position;
     public int $update_date;
+    public int $user;
 
     /**
      * Constructor
@@ -61,7 +55,7 @@ class Bookmark extends database_object
     public function __construct(
         ?int $object_id = 0,
         ?string $object_type = null,
-        ?int $user_id = null
+        ?int $user_id = null,
     ) {
         if (!$object_id) {
             return;
@@ -72,7 +66,7 @@ class Bookmark extends database_object
         } else {
             if ($user_id === null) {
                 $user    = Core::get_global('user');
-                $user_id = $user?->id ?? 0;
+                $user_id = $user->id ?? 0;
             }
 
             if ($user_id === 0) {
@@ -89,50 +83,14 @@ class Bookmark extends database_object
             $info = Dba::fetch_assoc($db_results);
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
-    /**
-     * getBookmarks
-     * @param array{
-     *     object_type: string,
-     *     object_id: int,
-     *     comment: ?string,
-     *     user: int,
-     *     position?: int
-     * } $data
-     * @return list<int>
-     */
-    public static function getBookmarks(array $data): array
-    {
-        $bookmarks = [];
-        if ($data['object_type'] !== 'bookmark') {
-            $comment_sql = (empty($data['comment'])) ? "" : "AND `comment` = '" . scrub_in($data['comment']) . "'";
-            $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql . ' ORDER BY `update_date` DESC;';
-            $db_results  = Dba::read($sql, [$data['user'], $data['object_type'], $data['object_id']]);
-        } else {
-            // bookmarks are per user
-            $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `id` = ?;";
-            $db_results = Dba::read($sql, [$data['user'], $data['object_id']]);
-        }
-
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $bookmarks[] = (int) $results['id'];
-        }
-
-        return $bookmarks;
+        $this->comment       = $info['comment'] ?? null;
+        $this->creation_date = (int) ($info['creation_date'] ?? 0);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->object_id     = (int) ($info['object_id'] ?? 0);
+        $this->object_type   = $info['object_type'] ?? null;
+        $this->position      = (int) ($info['position'] ?? 0);
+        $this->update_date   = (int) ($info['update_date'] ?? 0);
+        $this->user          = (int) ($info['user'] ?? 0);
     }
 
     /**
@@ -173,9 +131,50 @@ class Bookmark extends database_object
         Dba::write($sql, [$data['position'], scrub_in((string) $data['comment']), $updateDate, $bookmarkId]);
     }
 
+    /**
+     * getBookmarks
+     * @param array{
+     *     object_type: string,
+     *     object_id: int,
+     *     comment: ?string,
+     *     user: int,
+     *     position?: int
+     * } $data
+     * @return int[]
+     */
+    public static function getBookmarks(array $data): array
+    {
+        $bookmarks = [];
+        if ($data['object_type'] !== 'bookmark') {
+            $comment_sql = (empty($data['comment'])) ? "" : "AND `comment` = '" . scrub_in($data['comment']) . "'";
+            $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql . ' ORDER BY `update_date` DESC;';
+            $db_results  = Dba::read($sql, [$data['user'], $data['object_type'], $data['object_id']]);
+        } else {
+            // bookmarks are per user
+            $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `id` = ?;";
+            $db_results = Dba::read($sql, [$data['user'], $data['object_id']]);
+        }
+
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $bookmarks[] = (int) $results['id'];
+        }
+
+        return $bookmarks;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
     public function getUserName(): string
     {
         return User::get_username($this->user);
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
     }
 
     public function ownedByUser(User $user): bool

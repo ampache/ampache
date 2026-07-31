@@ -33,16 +33,15 @@ final readonly class UserFollowToggler implements UserFollowTogglerInterface
 {
     public function __construct(
         private UserFollowerRepositoryInterface $userFollowerRepository,
-        private UserActivityPosterInterface $userActivityPoster
-    ) {
-    }
+        private UserActivityPosterInterface $userActivityPoster,
+    ) {}
 
     /**
      * Let a user (un)follow another user
      */
     public function toggle(
         User $user,
-        User $followingUser
+        User $followingUser,
     ): void {
         if ($this->userFollowerRepository->isFollowedBy($user, $followingUser)) {
             $this->userFollowerRepository->delete($user, $followingUser);

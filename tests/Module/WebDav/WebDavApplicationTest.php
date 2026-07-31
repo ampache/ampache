@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
+use Override;
 use Sabre\DAV\Auth\Backend\BackendInterface;
 use Sabre\DAV\Auth\Plugin;
 use Sabre\DAV\Browser\Plugin as BrowserPlugin;
@@ -37,36 +38,9 @@ use Sabre\DAV\Server;
 
 class WebDavApplicationTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private ?MockInterface $configContainer;
-
-    /** @var MockInterface|WebDavFactoryInterface|null */
-    private ?MockInterface $webDavFactory;
-
+    private MockInterface|ConfigContainerInterface|null $configContainer;
     private ?WebDavApplication $subject;
-
-    protected function setUp(): void
-    {
-        $this->configContainer = Mockery::mock(ConfigContainerInterface::class);
-        $this->webDavFactory   = Mockery::mock(WebDavFactoryInterface::class);
-
-        $this->subject = new WebDavApplication(
-            $this->configContainer,
-            $this->webDavFactory
-        );
-    }
-
-    public function testRunsDoesnWorkIfDisabled(): void
-    {
-        $this->configContainer->shouldReceive('isWebDavBackendEnabled')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-
-        $this->expectOutputString('Disabled');
-
-        $this->subject->run();
-    }
+    private MockInterface|WebDavFactoryInterface|null $webDavFactory;
 
     public function testRunDelegatesToDavServer(): void
     {
@@ -126,5 +100,29 @@ class WebDavApplicationTest extends MockeryTestCase
             ->once();
 
         $this->subject->run();
+    }
+
+    public function testRunsDoesnWorkIfDisabled(): void
+    {
+        $this->configContainer->shouldReceive('isWebDavBackendEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $this->expectOutputString('Disabled');
+
+        $this->subject->run();
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer = Mockery::mock(ConfigContainerInterface::class);
+        $this->webDavFactory   = Mockery::mock(WebDavFactoryInterface::class);
+
+        $this->subject = new WebDavApplication(
+            $this->configContainer,
+            $this->webDavFactory
+        );
     }
 }

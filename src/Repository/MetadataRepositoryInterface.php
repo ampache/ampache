@@ -38,11 +38,6 @@ interface MetadataRepositoryInterface
     public function collectGarbage(): void;
 
     /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
-
-    /**
      * Finds a single `metadata` item by its id
      */
     public function findById(int $metadataId): ?Metadata;
@@ -50,7 +45,7 @@ interface MetadataRepositoryInterface
     public function findByObjectIdAndFieldAndType(
         int $objectId,
         MetadataField $field,
-        string $objectType
+        string $objectType,
     ): ?Metadata;
 
     /**
@@ -60,18 +55,13 @@ interface MetadataRepositoryInterface
      */
     public function findByObjectIdAndType(
         int $objectId,
-        string $objectType
+        string $objectType,
     ): Traversable;
 
     /**
-     * Deletes the `metadata` item
+     * Migrate an object associate stats to a new object
      */
-    public function remove(Metadata $metadata): void;
-
-    /**
-     * Creates a new `metadata` item
-     */
-    public function prototype(): Metadata;
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
 
     /**
      * Saves the item
@@ -80,4 +70,14 @@ interface MetadataRepositoryInterface
      * @throws DatabaseException
      */
     public function persist(Metadata $metadata): ?int;
+
+    /**
+     * Creates a new `metadata` item
+     */
+    public function prototype(): Metadata;
+
+    /**
+     * Deletes the `metadata` item
+     */
+    public function remove(Metadata $metadata): void;
 }

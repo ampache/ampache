@@ -34,22 +34,9 @@ class ShowGenerateRssTokenActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
 
-    private MockObject&UiInterface $ui;
-
     private MockObject&ConfigContainerInterface $configContainer;
-
     private ShowGenerateRssTokenAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new ShowGenerateRssTokenAction(
-            $this->ui,
-            $this->configContainer,
-        );
-    }
+    private MockObject&UiInterface $ui;
 
     public function testHandleRendersConfirmation(): void
     {
@@ -69,6 +56,17 @@ class ShowGenerateRssTokenActionTest extends TestCase
                         'generate_rsstoken'
                     );
             }
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new ShowGenerateRssTokenAction(
+            $this->ui,
+            $this->configContainer,
         );
     }
 }

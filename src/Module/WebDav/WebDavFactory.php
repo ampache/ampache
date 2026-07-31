@@ -33,26 +33,18 @@ use Sabre\DAV\Exception;
 use Sabre\DAV\ICollection;
 use Sabre\DAV\Server;
 
-final class WebDavFactory implements WebDavFactoryInterface
+final readonly class WebDavFactory implements WebDavFactoryInterface
 {
-    private AuthenticationManagerInterface $authenticationManager;
+    public function __construct(private AuthenticationManagerInterface $authenticationManager) {}
 
-    public function __construct(
-        AuthenticationManagerInterface $authenticationManager
-    ) {
-        $this->authenticationManager = $authenticationManager;
+    public function createBrowserPlugin(bool $enablePost): BrowserPlugin
+    {
+        return new BrowserPlugin($enablePost);
     }
 
-    public function createWebDavAuth(): WebDavAuth
+    public function createPlugin(?BackendInterface $backend): Plugin
     {
-        return new WebDavAuth(
-            $this->authenticationManager
-        );
-    }
-
-    public function createWebDavCatalog(int $catalog_id = 0): WebDavCatalog
-    {
-        return new WebDavCatalog($catalog_id);
+        return new Plugin($backend);
     }
 
     /**
@@ -63,13 +55,15 @@ final class WebDavFactory implements WebDavFactoryInterface
         return new Server($node);
     }
 
-    public function createPlugin(?BackendInterface $backend): Plugin
+    public function createWebDavAuth(): WebDavAuth
     {
-        return new Plugin($backend);
+        return new WebDavAuth(
+            $this->authenticationManager
+        );
     }
 
-    public function createBrowserPlugin(bool $enablePost): BrowserPlugin
+    public function createWebDavCatalog(): WebDavCatalog
     {
-        return new BrowserPlugin($enablePost);
+        return new WebDavCatalog();
     }
 }

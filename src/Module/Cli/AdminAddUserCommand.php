@@ -28,27 +28,16 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Override;
 
 final class AdminAddUserCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct('admin:addUser', T_('Add a User'));
-
-        $this->configContainer = $configContainer;
 
         $this
             ->option('-p|--password', T_('Password'), 'strval', bin2hex(random_bytes(20)))
@@ -66,7 +55,7 @@ final class AdminAddUserCommand extends Command
     }
 
     public function execute(
-        string $username
+        string $username,
     ): void {
         $values     = $this->values();
         $interactor = $this->io();
@@ -94,12 +83,22 @@ final class AdminAddUserCommand extends Command
             );
             echo "\n";
 
-            User::fix_preferences(-1);
+            Preference::fix_user_preferences(-1);
         } else {
             $interactor->error(
                 T_('User creation failed'),
                 true
             );
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

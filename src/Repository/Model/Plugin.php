@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,9 +33,18 @@ use Ampache\Plugin\PluginEnum;
 
 class Plugin
 {
-    public ?string $name = null;
+    /**
+     * Installed plugin versions, keyed `Plugin_<name>`, or null when not yet loaded
+     *
+     * A plain static rather than `database_object`'s cache, which is a no-op unless `memory_cache` is
+     * enabled — and it is commented out by default, so this read ran once per plugin per page.
+     *
+     * @var array<string, string>|null
+     */
+    private static ?array $_version_cache = null;
 
     public ?AmpachePlugin $_plugin = null;
+    public ?string $name           = null;
 
     /**
      * Constructor
@@ -58,13 +67,34 @@ class Plugin
     }
 
     /**
+     * get_plugin_version
+     * This returns the version of the specified plugin
+     */
+    public static function get_plugin_version(string $plugin_name): int
+    {
+        if (self::$_version_cache === null) {
+            // only `Plugin_` keys are ever looked up here, so the rest of update_info stays on the server
+            $db_results = Dba::read("SELECT `key`, `value` FROM `update_info` WHERE `key` LIKE 'Plugin\_%';");
+
+            $results = [];
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $results[$row['key']] = $row['value'];
+            }
+
+            self::$_version_cache = $results;
+        }
+
+        return (int) (self::$_version_cache['Plugin_' . $plugin_name] ?? 0);
+    }
+
+    /**
      * get_plugins
      * This returns an array of plugin names
      * @return array<string, string>
      */
     public static function get_plugins(?PluginTypeEnum $type = null): array
     {
-        $type = (string)$type?->value;
+        $type = (string) $type?->value;
 
         // make static cache for optimization when multiple call
         static $plugins_list = [];
@@ -107,64 +137,6 @@ class Plugin
     }
 
     /**
-     * is_valid
-     * This checks to make sure the plugin has the required functions and
-     * settings. Ampache requires public variables name, description, and
-     * version (as an int), and methods install, uninstall, and load. We
-     * also check that Ampache's database version falls within the min/max
-     * version specified by the plugin.
-     */
-    public function is_valid(): bool
-    {
-        if (!$this->_plugin instanceof AmpachePlugin) {
-            return false;
-        }
-
-        /* Check the plugin to make sure it's got the needed vars */
-        if ((string)$this->_plugin->name === '') {
-            return false;
-        }
-
-        if ((string)$this->_plugin->description === '') {
-            return false;
-        }
-
-        if ((string)$this->_plugin->version === '') {
-            return false;
-        }
-
-        /* Make sure we've got the required methods */
-        if (!method_exists($this->_plugin, 'install')) {
-            return false;
-        }
-
-        if (!method_exists($this->_plugin, 'uninstall')) {
-            return false;
-        }
-
-        if (!method_exists($this->_plugin, 'load')) {
-            return false;
-        }
-
-        if (!method_exists($this->_plugin, 'upgrade')) {
-            // TODO mark upgrade as required for Ampache 7+
-            debug_event(self::class, 'WARNING: Plugin missing upgrade method. ' . $this->_plugin->name . '`.', 1);
-        }
-
-        /* Make sure it's within the version confines */
-        $db_version = $this->get_ampache_db_version();
-
-        if (
-            empty($db_version) ||
-            $db_version < $this->_plugin->min_ampache
-        ) {
-            return false;
-        }
-
-        return $db_version <= $this->_plugin->max_ampache;
-    }
-
-    /**
      * is_installed
      * This checks to see if the specified plugin is currently installed in
      * the database, it doesn't check the files for integrity
@@ -173,105 +145,6 @@ class Plugin
     {
         /* All we do is check the version */
         return self::get_plugin_version($plugin_name);
-    }
-
-    /**
-     * install
-     * This runs the install function of the plugin and inserts a row into
-     * the update_info table to indicate that it's installed.
-     */
-    public function install(): bool
-    {
-        if (
-            $this->_plugin instanceof AmpachePlugin &&
-            $this->_plugin->install()
-        ) {
-            $this->set_plugin_version($this->_plugin->version);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * uninstall
-     * This runs the uninstall function of the plugin and removes the row
-     * from the update_info table to indicate that it isn't installed.
-     */
-    public function uninstall(): bool
-    {
-        if (
-            $this->_plugin instanceof AmpachePlugin &&
-            method_exists($this->_plugin, 'uninstall') &&
-            $this->_plugin->uninstall()
-        ) {
-            $this->remove_plugin_version();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * upgrade
-     * This runs the upgrade function of the plugin (if it exists) and
-     * updates the database to indicate our new version.
-     */
-    public function upgrade(): bool
-    {
-        if (
-            $this->_plugin instanceof AmpachePlugin &&
-            method_exists($this->_plugin, 'upgrade') &&
-            $this->_plugin->upgrade()
-        ) {
-            $this->set_plugin_version($this->_plugin->version);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * load
-     * This calls the plugin's load function
-     */
-    public function load(User $user): bool
-    {
-        if ($this->_plugin === null) {
-            return false;
-        }
-
-        $user->set_preferences();
-
-        return $this->_plugin->load($user);
-    }
-
-    /**
-     * get_plugin_version
-     * This returns the version of the specified plugin
-     */
-    public static function get_plugin_version(string $plugin_name): int
-    {
-        $name = 'Plugin_' . $plugin_name;
-        if (database_object::is_cached('plugin_version_update_info', 1)) {
-            $cache = database_object::get_from_cache('plugin_version_update_info', 1);
-
-            return (int)($cache[$name] ?? 0);
-        }
-        $sql        = "SELECT `key`, `value` FROM `update_info`;";
-        $db_results = Dba::read($sql, [$name]);
-
-        $results=[];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['key']] = $row['value'];
-        }
-
-        database_object::add_to_cache('plugin_version_update_info', 1, $results);
-
-        return (int)($results[$name] ?? 0);
     }
 
     /**
@@ -285,8 +158,8 @@ class Plugin
                 $installed_version = self::get_plugin_version($plugin->_plugin->name);
                 // if any plugin needs an update then you need to update
                 if (
-                    $installed_version > 0 &&
-                    $installed_version < $plugin->_plugin->version
+                    $installed_version > 0
+                    && $installed_version < $plugin->_plugin->version
                 ) {
                     return true;
                 }
@@ -294,6 +167,23 @@ class Plugin
         }
 
         return false;
+    }
+
+    /**
+     * Display Plugin Update information and update links.
+     */
+    public static function show_update_available(): void
+    {
+        $web_path = AmpConfig::get_web_path();
+
+        $admin_path = AmpConfig::get_web_path('/admin');
+
+        echo '<div id="autoupdate_plugins">';
+        echo '<span>' . T_('Update available') . '</span> ' . T_('You have Plugins that need an update!');
+        echo '<br />';
+        echo '<a class="nohtml" href="' . $web_path . '/update.php?type=sources&action=update_plugins">' . T_('Update Plugins automatically') . '</a> | <a class="nohtml" href="' . $admin_path . '/modules.php?action=show_plugins">' . T_('Manage Plugins') . '</a>';
+        echo '<br />';
+        echo '</div>';
     }
 
     /**
@@ -306,10 +196,9 @@ class Plugin
             $plugin            = new Plugin($name);
             $installed_version = self::get_plugin_version($plugin->_plugin->name ?? '');
             if (
-                $plugin->_plugin instanceof AmpachePlugin &&
-                $installed_version > 0 &&
-                $installed_version < $plugin->_plugin->version &&
-                method_exists($plugin->_plugin, 'upgrade')
+                $plugin->_plugin instanceof AmpachePlugin
+                && $installed_version > 0
+                && $installed_version < $plugin->_plugin->version
             ) {
                 if ($plugin->_plugin->upgrade()) {
                     $plugin->set_plugin_version($plugin->_plugin->version);
@@ -335,28 +224,84 @@ class Plugin
         $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key`='db_version'";
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
-        $version    = (string)($results['value'] ?? '');
+        $version    = (string) ($results['value'] ?? '');
         database_object::add_to_cache('plugin_version_db_version', 1, [$version]);
 
         return $version;
     }
 
     /**
-     * set_plugin_version
-     * This sets the plugin version in the update_info table
+     * install
+     * This runs the install function of the plugin and inserts a row into
+     * the update_info table to indicate that it's installed.
      */
-    public function set_plugin_version(string $version): void
+    public function install(): bool
     {
-        if ($this->_plugin === null) {
-            return;
+        if (
+            $this->_plugin instanceof AmpachePlugin
+            && $this->_plugin->install()
+        ) {
+            $this->set_plugin_version($this->_plugin->version);
+
+            return true;
         }
 
-        $name    = Dba::escape('Plugin_' . $this->_plugin->name);
-        $version = (int)Dba::escape($version);
+        return false;
+    }
 
-        $sql = "REPLACE INTO `update_info` SET `key` = ?, `value` = ?";
-        Dba::write($sql, [$name, $version]);
-        database_object::remove_from_cache('plugin_version_update_info', 1);
+    /**
+     * is_valid
+     * This checks to make sure the plugin has the required functions and
+     * settings. Ampache requires public variables name, description, and
+     * version (as an int), and methods install, uninstall, and load. We
+     * also check that Ampache's database version falls within the min/max
+     * version specified by the plugin.
+     */
+    public function is_valid(): bool
+    {
+        if (!$this->_plugin instanceof AmpachePlugin) {
+            return false;
+        }
+
+        /* Check the plugin to make sure it's got the needed vars */
+        if ($this->_plugin->name === '') {
+            return false;
+        }
+
+        if ($this->_plugin->description === '') {
+            return false;
+        }
+
+        if ($this->_plugin->version === '') {
+            return false;
+        }
+
+        /* Make sure it's within the version confines */
+        $db_version = $this->get_ampache_db_version();
+
+        if (
+            empty($db_version)
+            || $db_version < $this->_plugin->min_ampache
+        ) {
+            return false;
+        }
+
+        return $db_version <= $this->_plugin->max_ampache;
+    }
+
+    /**
+     * load
+     * This calls the plugin's load function
+     */
+    public function load(User $user): bool
+    {
+        if ($this->_plugin === null) {
+            return false;
+        }
+
+        $user->set_preferences();
+
+        return $this->_plugin->load($user);
     }
 
     /**
@@ -372,23 +317,62 @@ class Plugin
         $name = Dba::escape('Plugin_' . $this->_plugin->name);
         $sql  = sprintf('DELETE FROM `update_info` WHERE `key`=\'%s\'', $name);
         Dba::write($sql);
-        database_object::remove_from_cache('plugin_version_update_info', 1);
+        self::$_version_cache = null;
     }
 
     /**
-     * Display Plugin Update information and update links.
+     * set_plugin_version
+     * This sets the plugin version in the update_info table
      */
-    public static function show_update_available(): void
+    public function set_plugin_version(string $version): void
     {
-        $web_path = AmpConfig::get_web_path();
+        if ($this->_plugin === null) {
+            return;
+        }
 
-        $admin_path = AmpConfig::get_web_path('/admin');
+        $name    = Dba::escape('Plugin_' . $this->_plugin->name);
+        $version = (int) Dba::escape($version);
 
-        echo '<div id="autoupdate">';
-        echo '<span>' . T_('Update available') . '</span> ' . T_('You have Plugins that need an update!');
-        echo '<br />';
-        echo '<a class="nohtml" href="' . $web_path . '/update.php?type=sources&action=update_plugins">' . T_('Update Plugins automatically') . '</a> | <a class="nohtml" href="' . $admin_path . '/modules.php?action=show_plugins">' . T_('Manage Plugins') . '</a>';
-        echo '<br />';
-        echo '</div>';
+        $sql = "REPLACE INTO `update_info` SET `key` = ?, `value` = ?";
+        Dba::write($sql, [$name, $version]);
+        self::$_version_cache = null;
+    }
+
+    /**
+     * uninstall
+     * This runs the uninstall function of the plugin and removes the row
+     * from the update_info table to indicate that it isn't installed.
+     */
+    public function uninstall(): bool
+    {
+        if (
+            $this->_plugin instanceof AmpachePlugin
+            && $this->_plugin->uninstall()
+        ) {
+            $this->remove_plugin_version();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * upgrade
+     * This runs the upgrade function of the plugin (if it exists) and
+     * updates the database to indicate our new version.
+     */
+    public function upgrade(): bool
+    {
+        if (
+            $this->_plugin instanceof AmpachePlugin
+            && $this->_plugin->upgrade()
+        ) {
+            $this->set_plugin_version($this->_plugin->version);
+
+            return true;
+        }
+
+        return false;
     }
 }

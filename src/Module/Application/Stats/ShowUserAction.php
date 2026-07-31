@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -41,19 +41,18 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowUserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_user';
+    public const string REQUEST_KEY = 'show_user';
 
     public function __construct(
         private UiInterface $ui,
         private LoggerInterface $logger,
         private ModelFactoryInterface $modelFactory,
-        private UserActivityRepositoryInterface $useractivityRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
         private UserActivityRendererInterface $userActivityRenderer,
         private UserFollowerRepositoryInterface $userFollowerRepository,
         private UserFollowStateRendererInterface $userFollowStateRenderer,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -64,7 +63,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
+        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
         $client = $this->modelFactory->createUser($userId);
         if ($client->isNew()) {
             $this->logger->warning(
@@ -77,7 +76,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
                 'show_user.inc.php',
                 [
                     'client' => $client,
-                    'activities' => $this->useractivityRepository->getActivities($userId),
+                    'activities' => $this->userActivityRepository->getActivities($userId),
                     'followers' => $this->userFollowerRepository->getFollowers($client),
                     'following' => $this->userFollowerRepository->getFollowing($client),
                     'userFollowStateRenderer' => $this->userFollowStateRenderer,
@@ -87,6 +86,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
             );
             show_table_render(false, true);
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

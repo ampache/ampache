@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -34,19 +36,12 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UploadArtAction extends AbstractArtAction
 {
-    public const REQUEST_KEY = 'upload_art';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'upload_art';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui
-    ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
-    }
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -55,7 +50,7 @@ final class UploadArtAction extends AbstractArtAction
             $burl = base64_decode(Core::get_get('burl'));
         }
 
-        $object_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $item        = $this->getItem($gatekeeper);
 
         if ($item === null) {

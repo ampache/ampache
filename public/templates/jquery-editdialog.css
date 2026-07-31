@@ -1,7 +1,17 @@
 /* --------------------------
       jQuery edit dialog
    -------------------------- */
+
+/* The modal backdrop only gets z-index 100 from .ui-front, but app chrome sits well above it
+   (#rightbar is 10000, the mobile loading pill 9997), so it punches through the dim cover. Lift the
+   backdrop above the chrome; jQuery UI then stacks the dialog itself at backdrop+1 automatically.
+   Higher specificity than .ui-front is required because this file loads before jquery-ui.min.css. */
+.ui-widget-overlay.ui-front {
+    z-index: 10001;
+}
+
 .editdialogstyle.ui-dialog {
+    z-index: 10002;
     background-image: url('../images/background.png');
     background-repeat: repeat;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -123,14 +133,9 @@
    jQuery add to playlist dialog
    ------------------------------ */
 .playlistdialogstyle.ui-dialog {
-    background-color: #222;
     font-size: 10px;
-    overflow-x: hidden;
-    overflow-y: auto;
     padding: 0;
     margin: 0;
-    width: 100%;
-    height: 100%;
     border-radius: 2px;
     border: 2px solid rgba(0, 0, 0, 0.15);
     z-index: 10000;
@@ -140,6 +145,30 @@
     text-decoration: none;
     text-align: left;
     padding: 0.4em;
+}
+
+/* Playlists and collections are separate destinations, so each gets its own labelled group rather than one
+   run-on list where the two kinds of name look identical. */
+.playlistdialog_group + .playlistdialog_group {
+    border-top: 1px solid rgba(128, 128, 128, 0.35);
+    margin-top: 0.4em;
+    padding-top: 0.2em;
+}
+
+.playlistdialog_heading {
+    margin: 0;
+    padding: 0.4em 0.4em 0.2em;
+    font-size: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+}
+
+.playlistdialog_group ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .playlistdialogstyle.ui-widget-content a:hover {
@@ -284,4 +313,16 @@
 
 .sharedialogstyle.ui-dialog .ui-dialog-buttonset button:focus:active {
     display: none;
+}
+
+/* ------------------------------
+   Mobile: fit the edit dialog to the viewport
+   ------------------------------ */
+@media (max-width: 768px) {
+    .edit_dialog_content input[type=text],
+    .edit_dialog_content select {
+        width: 100%;
+        max-width: 430px;
+        box-sizing: border-box;
+    }
 }

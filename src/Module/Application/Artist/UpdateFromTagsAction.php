@@ -37,25 +37,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateFromTagsAction implements ApplicationActionInterface
+final readonly class UpdateFromTagsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_from_tags';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'update_from_tags';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
-    ) {
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-    }
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -67,8 +57,8 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
 
         // Make sure they are a 'power' user or the object owner
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false &&
-            $gatekeeper->getUserId() !== $artist->get_user_owner()
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
+            && $gatekeeper->getUserId() !== $artist->get_user_owner()
         ) {
             throw new AccessDeniedException();
         }

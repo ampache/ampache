@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,27 +30,35 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
-    public string $name = 'Piwik';
-
+    #[Override]
     public string $categories = 'stats';
 
+    #[Override]
     public string $description = 'Piwik statistics';
 
-    public string $url = '';
-
-    public string $version = '000001';
-
-    public string $min_ampache = '370034';
-
+    #[Override]
     public string $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to fill them out
-    private $site_id;
+    #[Override]
+    public string $min_ampache = '370034';
 
-    private $piwik_url;
+    #[Override]
+    public string $name = 'Piwik';
+
+    #[Override]
+    public string $url = '';
+
+    #[Override]
+    public string $version = '000001';
+
+    private string $piwik_url;
+
+    // These are internal settings used by this class, run this->load to fill them out
+    private string $site_id;
 
     /**
      * Constructor
@@ -58,40 +66,6 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
     public function __construct()
     {
         $this->description = T_('Piwik statistics');
-    }
-
-    /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        if (!Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'piwik')) {
-            return false;
-        }
-
-        return Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get_web_path() . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('piwik_site_id') &&
-            Preference::delete('piwik_url')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
     }
 
     /**
@@ -104,6 +78,9 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
         echo "<!-- Piwik -->\n";
         echo "<script>\n";
         echo "var _paq = _paq || [];\n";
+        // Defer all tracking work until after the page has fully loaded so the
+        // beacon and piwik.js fetch stay off the critical rendering path.
+        echo "window.addEventListener('load', function() {\n";
         echo "_paq.push(['trackLink', '" . $currentUrl . "', 'link']);\n";
         echo "_paq.push(['enableLinkTracking']);\n";
         echo "(function() {\n";
@@ -117,9 +94,23 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
         echo "g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);\n";
         echo "})();\n";
+        echo "});\n";
         echo "</script>\n";
         echo "<noscript><p><img src='" . scrub_out($this->piwik_url) . "piwik.php?idsite=" . scrub_out($this->site_id) . "' style='border:0;' alt= '' /></p></noscript>\n";
         echo "<!-- End Piwik Code -->\n";
+    }
+
+    /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        if (!Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'piwik')) {
+            return false;
+        }
+
+        return Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get_web_path() . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -151,6 +142,27 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('piwik_site_id')
+            && Preference::delete('piwik_url')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

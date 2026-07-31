@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -38,9 +38,8 @@ use Ampache\Repository\Model\User;
 final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
-        private RequestParserInterface $requestParser
-    ) {
-    }
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function handle(User $user): void
     {
@@ -54,7 +53,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
         // Switch on the actions
         switch ($action) {
             case 'delete_vote':
-                $democratic->remove_vote((int)$_REQUEST['row_id']);
+                $democratic->remove_vote((int) ($_REQUEST['row_id'] ?? 0));
                 $show_browse = true;
                 break;
             case 'add_vote':
@@ -62,7 +61,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                     [
                         [
                             Core::get_request('type'),
-                            (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
+                            (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
                         ]
                     ]
                 );
@@ -73,7 +72,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                     return;
                 }
 
-                $democratic->delete_votes($_REQUEST['row_id']);
+                $democratic->delete_votes((int) ($_REQUEST['row_id'] ?? 0));
                 $show_browse = true;
                 break;
             case 'send_playlist':
@@ -81,7 +80,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                     return;
                 }
 
-                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id'] ?? '');
                 $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             case 'clear_playlist':
@@ -89,7 +88,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                     return;
                 }
 
-                $democratic = new Democratic($_REQUEST['democratic_id']);
+                $democratic = new Democratic((int) ($_REQUEST['democratic_id'] ?? 0));
                 $democratic->set_parent();
                 $democratic->clear();
 
@@ -99,7 +98,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
         if ($show_browse) {
             ob_start();
             $object_ids = $democratic->get_items();
-            $browse_id  = (int)($_REQUEST['browse_id'] ?? 0);
+            $browse_id  = (int) ($_REQUEST['browse_id'] ?? 0);
             $browse     = new Browse($browse_id);
             $browse->set_type('democratic');
             $browse->set_static_content(false);
@@ -110,6 +109,6 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
         }
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

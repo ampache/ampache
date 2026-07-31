@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class Localplay4Method
 {
-    public const ACTION = 'localplay';
+    public const string ACTION = 'localplay';
 
     /**
      * localplay
@@ -70,7 +70,7 @@ final class Localplay4Method
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {
-            Api4::message('error', T_('Error Unable to connect to localplay controller'), '405', $input['api_format']);
+            Api4::message('error', 'Error Unable to connect to localplay controller', '405', $input['api_format']);
 
             return false;
         }
@@ -85,7 +85,7 @@ final class Localplay4Method
                 $type      = LibraryItemEnum::tryFrom(strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
-                    Api4::message('error', T_('Access Denied: allow_video is not enabled.'), '400', $input['api_format']);
+                    Api4::message('error', 'Access Denied: allow_video is not enabled.', '400', $input['api_format']);
 
                     return false;
                 }
@@ -142,14 +142,14 @@ final class Localplay4Method
                 break;
             default:
                 // They are doing it wrong
-                Api4::message('error', T_('Invalid request'), '405', $input['api_format']);
+                Api4::message('error', 'Invalid request', '405', $input['api_format']);
 
                 return false;
         }
 
         // bad status calls can happen
         if ($command === 'status' && empty($status)) {
-            Api4::message('error', T_('Error Unable to connect to localplay controller'), '405', $input['api_format']);
+            Api4::message('error', 'Error Unable to connect to localplay controller', '405', $input['api_format']);
 
             return false;
         }

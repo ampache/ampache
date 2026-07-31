@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -51,58 +51,15 @@ class UPnPDevice
     }
 
     /**
-     * Reads description URL from session
-     * @param string $descriptionUrl
+     * helper function for calls that require only an instance id
      */
-    private function restoreDescriptionUrl($descriptionUrl): bool
+    public function instanceOnly($command, string $type = 'AVTransport', int $instance_id = 0): string
     {
-        debug_event('upnpdevice', 'readDescriptionUrl: ' . $descriptionUrl, 5);
-        $this->_settings = json_decode(Session::read('upnp_dev_' . $descriptionUrl), true);
+        $args = ['InstanceID' => $instance_id];
+        //$response = \Format::forge($response, 'xml:ns')->to_[];
+        //return $response['s:Body']['u:' . $command . 'Response'];
 
-        if ($this->_settings && $this->_settings['descriptionURL'] == $descriptionUrl) {
-            debug_event('upnpdevice', 'service Urls restored from session.', 5);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param string $descriptionUrl
-     */
-    private function parseDescriptionUrl($descriptionUrl): void
-    {
-        debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $descriptionUrl);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        $response = curl_exec($curl);
-        //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
-
-        $responseXML = simplexml_load_string((string)$response);
-        $services    = $responseXML->device->serviceList->service ?? [];
-        foreach ($services as $service) {
-            $serviceType                                      = $service->serviceType;
-            $serviceTypeNames                                 = explode(":", $serviceType);
-            $serviceTypeName                                  = $serviceTypeNames[3];
-            $this->_settings['controlURLs'][$serviceTypeName] = (string)$service->controlURL;
-            $this->_settings['eventURLs'][$serviceTypeName]   = (string)$service->eventSubURL;
-        }
-
-        $urldata                 = parse_url($descriptionUrl);
-        $this->_settings['host'] = $urldata['scheme'] . '://' . $urldata['host'] . ':' . $urldata['port'];
-
-        $this->_settings['descriptionURL'] = $descriptionUrl;
-
-        Session::create(
-            [
-                'type' => 'stream',
-                'sid' => 'upnp_dev_' . $descriptionUrl,
-                'value' => json_encode($this->_settings) ?: '',
-            ]
-        );
+        return $this->sendRequestToDevice($command, $args, $type);
     }
 
     /**
@@ -110,23 +67,24 @@ class UPnPDevice
      *
      * @param string $method Method name
      * @param array $arguments Key-Value array
-     * @param string $type
      */
-    public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl'): string
+    public function sendRequestToDevice(string $method, array $arguments, string $type = 'RenderingControl'): string
     {
-        if (!array_key_exists('host', $this->_settings) || !array_key_exists('controlURLs', $this->_settings)) {
+        if (!$this->_settings['host'] || !$this->_settings['controlURLs'][$type]) {
             return '';
         }
+
         $body = '<?xml version="1.0" encoding="utf-8"?>';
         $body .= '<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body>';
         $body .= '  <u:' . $method . ' xmlns:u="urn:schemas-upnp-org:service:' . $type . ':1">';
         foreach ($arguments as $arg => $value) {
             $body .= ' <' . $arg . '>' . $value . '</' . $arg . '>';
         }
+
         $body .= '  </u:' . $method . '>';
         $body .= '</s:Body></s:Envelope>';
 
-        $controlUrl = $this->_settings['host'] . ((substr($this->_settings['controlURLs'][$type], 0, 1) != '/') ? '/' : '') . $this->_settings['controlURLs'][$type];
+        $controlUrl = $this->_settings['host'] . ((str_starts_with($this->_settings['controlURLs'][$type], '/')) ? '' : '/') . $this->_settings['controlURLs'][$type];
 
         //!! TODO - need to use scheme in header ??
         $header = [
@@ -142,7 +100,7 @@ class UPnPDevice
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $controlUrl);
-        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, true);
@@ -153,30 +111,80 @@ class UPnPDevice
         //debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
 
         $headers = [];
-        $tmp     = explode("\r\n\r\n", (string)$response);
+        $tmp     = explode("\r\n\r\n", (string) $response);
 
         foreach ($tmp as $key => $value) {
-            if (substr($value, 0, 8) == 'HTTP/1.1') {
+            if (str_starts_with($value, 'HTTP/1.1')) {
                 $headers[] = $value;
                 unset($tmp[$key]);
             }
         }
 
-        return join("\r\n", $tmp);
+        return implode("\r\n", $tmp);
     }
 
     /**
-     * helper function for calls that require only an instance id
-     * @param string $type
-     * @param int $instance_id
      */
-    public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0): string
+    private function parseDescriptionUrl(string $descriptionUrl): void
     {
-        $args = ['InstanceID' => $instance_id];
-        //$response = \Format::forge($response, 'xml:ns')->to_[];
-        //return $response['s:Body']['u:' . $command . 'Response'];
+        debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
 
-        return $this->sendRequestToDevice($command, $args, $type);
+        $curl = curl_init();
+        if ($descriptionUrl === '' || $descriptionUrl === '0') {
+            return;
+        }
+
+        curl_setopt($curl, CURLOPT_URL, $descriptionUrl);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
+
+        $responseXML = simplexml_load_string((string) $response);
+        $services    = $responseXML->device->serviceList->service ?? [];
+        foreach ($services as $service) {
+            if (!isset($service->serviceType) || !isset($service->controlURL) || !isset($service->eventSubURL)) {
+                continue;
+            }
+            $serviceType                                      = (string) $service->serviceType;
+            $serviceTypeNames                                 = explode(':', $serviceType);
+            $serviceTypeName                                  = $serviceTypeNames[3];
+            $this->_settings['controlURLs'][$serviceTypeName] = (string) $service->controlURL;
+            $this->_settings['eventURLs'][$serviceTypeName]   = (string) $service->eventSubURL;
+        }
+
+        $urldata = parse_url($descriptionUrl);
+        if (!isset($urldata['scheme']) || !isset($urldata['host']) || !isset($urldata['port'])) {
+            return;
+        }
+
+        $this->_settings['host'] = $urldata['scheme'] . '://' . $urldata['host'] . ':' . $urldata['port'];
+
+        $this->_settings['descriptionURL'] = $descriptionUrl;
+
+        Session::create(
+            [
+                'type' => 'stream',
+                'sid' => 'upnp_dev_' . $descriptionUrl,
+                'value' => json_encode($this->_settings) ?: '',
+            ]
+        );
+    }
+
+    /**
+     * Reads description URL from session
+     */
+    private function restoreDescriptionUrl(string $descriptionUrl): bool
+    {
+        debug_event('upnpdevice', 'readDescriptionUrl: ' . $descriptionUrl, 5);
+        $this->_settings = json_decode(Session::read('upnp_dev_' . $descriptionUrl), true);
+
+        if ($this->_settings && $this->_settings['descriptionURL'] == $descriptionUrl) {
+            debug_event('upnpdevice', 'service Urls restored from session.', 5);
+
+            return true;
+        }
+
+        return false;
     }
 
     //!! UPNP subscription work not for all renderers, and works strange

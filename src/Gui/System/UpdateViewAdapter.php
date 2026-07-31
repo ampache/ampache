@@ -38,8 +38,21 @@ use Generator;
 
 final readonly class UpdateViewAdapter implements UpdateViewAdapterInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer, private UpdateInfoRepositoryInterface $updateInfoRepository, private UpdateHelperInterface $updateHelper, private UpdaterInterface $updater)
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private UpdateInfoRepositoryInterface $updateInfoRepository,
+        private UpdateHelperInterface $updateHelper,
+        private UpdaterInterface $updater,
+    ) {}
+
+    public function getCharset(): string
     {
+        return $this->configContainer->get(ConfigurationKeyEnum::SITE_CHARSET);
+    }
+
+    public function getErrorText(): string
+    {
+        return AmpError::getErrorsFormatted('general');
     }
 
     public function getHtmlLanguage(): string
@@ -51,9 +64,14 @@ final readonly class UpdateViewAdapter implements UpdateViewAdapterInterface
         );
     }
 
-    public function getCharset(): string
+    public function getInstallationTitle(): string
     {
-        return $this->configContainer->get(ConfigurationKeyEnum::SITE_CHARSET);
+        return T_('Ampache :: For the Love of Music - Installation');
+    }
+
+    public function getLogoUrl(): string
+    {
+        return Ui::get_logo_url('dark');
     }
 
     public function getTitle(): string
@@ -62,37 +80,6 @@ final readonly class UpdateViewAdapter implements UpdateViewAdapterInterface
             T_('%s - Update'),
             $this->configContainer->get(ConfigurationKeyEnum::SITE_TITLE)
         );
-    }
-
-    public function getLogoUrl(): string
-    {
-        return Ui::get_logo_url('dark');
-    }
-
-    public function getInstallationTitle(): string
-    {
-        return T_('Ampache :: For the Love of Music - Installation');
-    }
-
-    public function getUpdateInfoText(): string
-    {
-        /* HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows current database version */
-        return sprintf(
-            T_('This page handles all database updates to Ampache starting with %1$s. Your current version is %2$s with database version %3$s'),
-            '<strong>3.3.3.5</strong>',
-            '<strong>' . $this->configContainer->get(ConfigurationKeyEnum::VERSION) . '</strong>',
-            '<strong>' . $this->updateHelper->formatVersion((string) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION)) . '</strong>'
-        );
-    }
-
-    public function getErrorText(): string
-    {
-        return AmpError::getErrorsFormatted('general');
-    }
-
-    public function hasUpdate(): bool
-    {
-        return $this->updater->hasPendingUpdates();
     }
 
     public function getUpdateActionUrl(): string
@@ -124,8 +111,24 @@ final readonly class UpdateViewAdapter implements UpdateViewAdapterInterface
         }
     }
 
+    public function getUpdateInfoText(): string
+    {
+        /* HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows current database version */
+        return sprintf(
+            T_('This page handles all database updates to Ampache starting with %1$s. Your current version is %2$s with database version %3$s'),
+            '<strong>3.3.3.5</strong>',
+            '<strong>' . $this->configContainer->get(ConfigurationKeyEnum::VERSION) . '</strong>',
+            '<strong>' . $this->updateHelper->formatVersion((string) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION)) . '</strong>'
+        );
+    }
+
     public function getWebPath(?string $suffix = ''): string
     {
         return $this->configContainer->getWebPath($suffix);
+    }
+
+    public function hasUpdate(): bool
+    {
+        return $this->updater->hasPendingUpdates();
     }
 }

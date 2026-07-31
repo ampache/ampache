@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -31,40 +31,30 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Preference;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class InstallLocalplayAction implements ApplicationActionInterface
+final readonly class InstallLocalplayAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'install_localplay';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'install_localplay';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+        private PluginManagerInterface $pluginManager,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            !$this->requestParser->verifyForm('install_localplay')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || !$this->requestParser->verifyForm('install_localplay')
         ) {
             throw new AccessDeniedException();
         }
@@ -78,8 +68,10 @@ final class InstallLocalplayAction implements ApplicationActionInterface
 
             return null;
         }
-        $localplay = new LocalPlay((string)filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
-        if (!$localplay->player_loaded()) {
+
+        // The manager loads the controller, installs it and applies the localplay enable/level/controller preferences
+        $type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
+        if (!$this->pluginManager->installLocalplay($type, $user->getId())) {
             AmpError::add('general', T_('Failed to enable the Localplay module'));
             echo AmpError::display('general');
 
@@ -88,14 +80,6 @@ final class InstallLocalplayAction implements ApplicationActionInterface
 
             return null;
         }
-        // Install it!
-        $localplay->install();
-
-        // Go ahead and enable Localplay (Admin->System) as we assume they want to do that
-        // if they are enabling this
-        Preference::update('allow_localplay_playback', -1, '1');
-        Preference::update('localplay_level', $user->getId(), AccessLevelEnum::ADMIN->value);
-        Preference::update('localplay_controller', $user->getId(), $localplay->type);
 
         /* Show Confirmation */
         $url   = sprintf('%s/modules.php?action=show_localplay', $this->configContainer->getWebPath('/admin'));

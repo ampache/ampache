@@ -25,29 +25,45 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Session;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Stats5Method
+ * Returns a list of objects based on a simple search type and filter. (Random by default)
+ *
+ * Version 5 sorts the random browses by `rand` and does not understand the `sort` and `cond`
+ * parameters of the later versions, so it keeps a method of its own.
  */
-final class Stats5Method
+final class Stats5Method implements MethodInterface
 {
-    public const ACTION = 'stats';
+    public const string ACTION = 'stats';
+
+    public function __construct(
+        private AlbumRepositoryInterface $albumRepository,
+        private ArtistRepositoryInterface $artistRepository,
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * stats
@@ -65,66 +81,93 @@ final class Stats5Method
      * limit = (integer) Default: 10 (popular_threshold) //optional
      *
      * @param array{
-     *     type: string,
+     *     type?: string,
      *     filter?: string,
      *     user_id?: int,
      *     username?: string,
      *     offset?: int,
      *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     *
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
-    public static function stats(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['type'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('type', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'type')
+            );
         }
-        $type   = strtolower((string) $input['type']);
+
+        // the type is matched case insensitively, so everything below works on the normalized name
+        $requested_type = (string) $input['type'];
+        $type           = strtolower($requested_type);
+
         $offset = (int) ($input['offset'] ?? 0);
         $limit  = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = (int) AmpConfig::get('popular_threshold', 10);
+            $limit = (int) ($this->configContainer->get(ConfigurationKeyEnum::POPULAR_THRESHOLD) ?? 10);
         }
+
         // do you allow video?
-        if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
-
-            return false;
+        if (
+            !$this->configContainer->get(ConfigurationKeyEnum::ALLOW_VIDEO)
+            && $type == 'video'
+        ) {
+            throw new AccessDeniedException(
+                'Enable: video'
+            );
         }
-        if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: podcast'), self::ACTION, 'system', $input['api_format']);
 
-            return false;
+        if (
+            !$this->configContainer->get(ConfigurationKeyEnum::PODCAST)
+            && ($type == 'podcast' || $type == 'podcast_episode')
+        ) {
+            throw new AccessDeniedException(
+                'Enable: podcast'
+            );
         }
+
         // confirm the correct data
         if (!in_array($type, ['song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'])) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        sprintf('Bad Request: %s', $requested_type),
+                        self::ACTION,
+                        'type'
+                    )
+                )
+            );
         }
 
+        $userId = $user->id;
         // override your user if you're looking at others
-        if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
-            $user = User::get_from_username($input['username']);
+        if (
+            array_key_exists('username', $input)
+            && ($namedUser = User::get_from_username($input['username'])) instanceof User
+        ) {
+            $user   = $namedUser;
+            $userId = $user->id;
         } elseif (array_key_exists('user_id', $input)) {
-            $userTwo = new User((int) $input['user_id']);
-            if (!$userTwo->isNew()) {
-                $user = $userTwo;
+            $requestedUser = $this->modelFactory->createUser((int) $input['user_id']);
+            if (!$requestedUser->isNew()) {
+                $user   = $requestedUser;
+                $userId = $requestedUser->id;
             }
         }
-
-        if ($user->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), 'user'), self::ACTION, 'type', $input['api_format']);
-
-            return false;
-        }
-
-        $user_id = $user->id;
 
         $results = [];
         $filter  = $input['filter'] ?? '';
@@ -135,12 +178,12 @@ final class Stats5Method
                 $limit   = 0;
                 break;
             case 'highest':
-                $results = Rating::get_highest($type, $limit, $offset, $user_id);
+                $results = Rating::get_highest($type, $limit, $offset, $userId);
                 $offset  = 0;
                 $limit   = 0;
                 break;
             case 'frequent':
-                $threshold = (int) AmpConfig::get('stats_threshold', 7);
+                $threshold = (int) ($this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD) ?? 7);
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 $offset    = 0;
                 $limit     = 0;
@@ -166,26 +209,31 @@ final class Stats5Method
                         $results = Random::get_default($limit, $user);
                         break;
                     case 'artist':
-                        $results = self::getArtistRepository()->getRandom(
-                            $user_id,
+                        $results = $this->artistRepository->getRandom(
+                            $userId,
                             $limit
                         );
                         break;
                     case 'album':
-                        $results = self::getAlbumRepository()->getRandom(
-                            $user_id,
+                        $results = $this->albumRepository->getRandom(
+                            $userId,
                             $limit
                         );
                         break;
                     case 'playlist':
-                        $browse = Api::getBrowse($user);
+                        $browse = $this->modelFactory->createBrowse(null, false);
+                        $browse->set_user_id($user);
                         $browse->set_type('playlist_search');
                         $browse->set_sort('rand', null, false);
                         $browse->set_filter('playlist_open', $user->getId());
 
-                        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user->getId(), 'api_hidden_playlists')));
-                        if (!empty($hide_string)) {
-                            $browse->set_filter('not_starts_with', $hide_string);
+                        $hideString = str_replace(
+                            '%',
+                            '\%',
+                            str_replace('_', '\_', (string) Preference::get_by_user($user->getId(), 'api_hidden_playlists'))
+                        );
+                        if (!empty($hideString)) {
+                            $browse->set_filter('not_starts_with', $hideString);
                         }
 
                         $results = $browse->get_objects();
@@ -193,134 +241,43 @@ final class Stats5Method
                     case 'video':
                     case 'podcast':
                     case 'podcast_episode':
-                        $browse = Api::getBrowse($user);
+                        $browse = $this->modelFactory->createBrowse(null, false);
+                        $browse->set_user_id($user);
                         $browse->set_type($type);
                         $browse->set_sort('rand', null, false);
                         $results = $browse->get_objects();
                 }
         }
+
         if (empty($results)) {
-            Api5::empty($type, $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, $type)
+                )
+            );
         }
 
-        ob_end_clean();
-        switch ($type) {
-            case 'song':
-                switch ($input['api_format']) {
-                    case 'json':
-                        Json5_Data::set_offset($offset);
-                        Json5_Data::set_limit($limit);
-                        echo Json5_Data::songs($results, $user, $input['auth']);
-                        break;
-                    default:
-                        Xml5_Data::set_offset($offset);
-                        Xml5_Data::set_limit($limit);
-                        echo Xml5_Data::songs($results, $user, $input['auth']);
-                }
-                break;
-            case 'artist':
-                switch ($input['api_format']) {
-                    case 'json':
-                        Json5_Data::set_offset($offset);
-                        Json5_Data::set_limit($limit);
-                        echo Json5_Data::artists($results, [], $user, $input['auth']);
-                        break;
-                    default:
-                        Xml5_Data::set_offset($offset);
-                        Xml5_Data::set_limit($limit);
-                        echo Xml5_Data::artists($results, [], $user, $input['auth']);
-                }
-                break;
-            case 'album':
-                switch ($input['api_format']) {
-                    case 'json':
-                        Json5_Data::set_offset($offset);
-                        Json5_Data::set_limit($limit);
-                        echo Json5_Data::albums($results, [], $user, $input['auth']);
-                        break;
-                    default:
-                        Xml5_Data::set_offset($offset);
-                        Xml5_Data::set_limit($limit);
-                        echo Xml5_Data::albums($results, [], $user, $input['auth']);
-                }
-                break;
-            case 'playlist':
-                switch ($input['api_format']) {
-                    case 'json':
-                        Json5_Data::set_offset($offset);
-                        Json5_Data::set_limit($limit);
-                        echo Json5_Data::playlists($results, $user, $input['auth']);
-                        break;
-                    default:
-                        Xml5_Data::set_offset($offset);
-                        Xml5_Data::set_limit($limit);
-                        echo Xml5_Data::playlists($results, $user, $input['auth']);
-                }
-                break;
-            case 'video':
-                switch ($input['api_format']) {
-                    case 'json':
-                        Json5_Data::set_offset($offset);
-                        Json5_Data::set_limit($limit);
-                        echo Json5_Data::videos($results, $user, $input['auth']);
-                        break;
-                    default:
-                        Xml5_Data::set_offset($offset);
-                        Xml5_Data::set_limit($limit);
-                        echo Xml5_Data::videos($results, $user, $input['auth']);
-                }
-                Session::extend($input['auth'], AccessTypeEnum::API->value);
-                break;
-            case 'podcast':
-                switch ($input['api_format']) {
-                    case 'json':
-                        Json5_Data::set_offset($offset);
-                        Json5_Data::set_limit($limit);
-                        echo Json5_Data::podcasts($results, $user, $input['auth']);
-                        break;
-                    default:
-                        Xml5_Data::set_offset($offset);
-                        Xml5_Data::set_limit($limit);
-                        echo Xml5_Data::podcasts($results, $user, $input['auth']);
-                }
-                break;
-            case 'podcast_episode':
-                switch ($input['api_format']) {
-                    case 'json':
-                        Json5_Data::set_offset($offset);
-                        Json5_Data::set_limit($limit);
-                        echo Json5_Data::podcast_episodes($results, $user, $input['auth']);
-                        break;
-                    default:
-                        Xml5_Data::set_offset($offset);
-                        Xml5_Data::set_limit($limit);
-                        echo Xml5_Data::podcast_episodes($results, $user, $input['auth']);
-                }
-                break;
+        $output->setOffset($apiVersion, $offset);
+        $output->setLimit($apiVersion, $limit);
+
+        $result = match ($type) {
+            'song' => $output->songs($apiVersion, $results, $user, $input['auth']),
+            'artist' => $output->artists($apiVersion, $results, [], $user, $input['auth']),
+            'album' => $output->albums($apiVersion, $results, [], $user, $input['auth']),
+            'playlist' => $output->playlists($apiVersion, $results, $user, $input['auth']),
+            'video' => $output->videos($apiVersion, $results, $user, $input['auth']),
+            'podcast' => $output->podcasts($apiVersion, $results, $user, $input['auth']),
+            'podcast_episode' => $output->podcastEpisodes($apiVersion, $results, $user, $input['auth']),
+        };
+
+        if ($type === 'video') {
+            Session::extend($input['auth'], AccessTypeEnum::API->value);
         }
 
-        return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getArtistRepository(): ArtistRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ArtistRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $result
+            )
+        );
     }
 }

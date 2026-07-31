@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Repository\Model\playable_item;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Song_Preview;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -33,29 +33,11 @@ use stdClass;
 
 class InterfaceImplementationCheckerTest extends MockeryTestCase
 {
-    public function testIsPlayableItemReturnsTrueIfImplemented(): void
-    {
-        $instance = Mockery::mock(Song_Preview::class, playable_item::class);
-
-        static::assertTrue(
-            InterfaceImplementationChecker::is_playable_item($instance::class)
-        );
-    }
-
-    public function testIsPlayableItemReturnsFalseIfNotImplemented(): void
-    {
-        $instance = new stdClass();
-
-        static::assertFalse(
-            InterfaceImplementationChecker::is_playable_item($instance::class)
-        );
-    }
-
     public function testIsLibraryItemReturnsFalseIfNotImplemented(): void
     {
         $instance = new stdClass();
 
-        static::assertFalse(
+        self::assertFalse(
             InterfaceImplementationChecker::is_library_item($instance::class)
         );
     }
@@ -64,8 +46,26 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
     {
         $instance = new stdClass();
 
-        static::assertFalse(
+        self::assertFalse(
             InterfaceImplementationChecker::is_media($instance::class)
+        );
+    }
+
+    public function testIsPlayableItemReturnsFalseIfNotImplemented(): void
+    {
+        $instance = new stdClass();
+
+        self::assertFalse(
+            InterfaceImplementationChecker::is_library_item($instance::class)
+        );
+    }
+
+    public function testIsPlayableItemReturnsTrueIfImplemented(): void
+    {
+        $instance = Mockery::mock(Song_Preview::class, library_item::class);
+
+        self::assertTrue(
+            InterfaceImplementationChecker::is_library_item($instance::class)
         );
     }
 }

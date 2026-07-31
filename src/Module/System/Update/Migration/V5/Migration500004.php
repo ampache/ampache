@@ -36,8 +36,20 @@ use Generator;
 final class Migration500004 extends AbstractMigration
 {
     protected array $changelog = ['Create catalog_map table and fill it with data'];
+    protected bool $warning    = true;
 
-    protected bool $warning = true;
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 500004) {
+            yield 'catalog_map' => "CREATE TABLE IF NOT EXISTS `catalog_map` (`catalog_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_catalog_map` (`object_id`, `object_type`, `catalog_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        }
+    }
 
     public function migrate(): void
     {
@@ -77,16 +89,5 @@ final class Migration500004 extends AbstractMigration
         $this->updateDatabase("REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`catalog` > 0;");
 
         $this->updateDatabase("REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `album`.`catalog` > 0;");
-    }
-
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build
-    ): Generator {
-        if ($build > 500004) {
-            yield 'catalog_map' => "CREATE TABLE IF NOT EXISTS `catalog_map` (`catalog_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_catalog_map` (`object_id`, `object_type`, `catalog_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        }
     }
 }

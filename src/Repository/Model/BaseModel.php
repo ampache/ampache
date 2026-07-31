@@ -30,14 +30,6 @@ abstract class BaseModel implements ModelInterface
     protected int $id = 0;
 
     /**
-     * Returns true if the object is new/unknown
-     */
-    public function isNew(): bool
-    {
-        return $this->id === 0;
-    }
-
-    /**
      * Returns the id of the object
      *
      * Will return `0` if the object is not persisted yet
@@ -45,5 +37,13 @@ abstract class BaseModel implements ModelInterface
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * Returns true if the object is new/unknown
+     */
+    public function isNew(): bool
+    {
+        return $this->id === 0;
     }
 }

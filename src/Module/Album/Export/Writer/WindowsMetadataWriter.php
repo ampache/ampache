@@ -30,7 +30,7 @@ final class WindowsMetadataWriter implements MetadataWriterInterface
     public function write(
         string $fileName,
         string $dirName,
-        string $iconFileName
+        string $iconFileName,
     ): void {
         $meta_file = $dirName . '/desktop.ini';
         $string    = sprintf(

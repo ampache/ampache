@@ -702,8 +702,7 @@ class Json5_Data
                 $results = self::live_streams($objects);
                 break;
             default:
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+                return self::error('4710', sprintf('Bad Request: %s', $type), 'indexes', 'type');
         }
 
         return $results;
@@ -1197,6 +1196,18 @@ class Json5_Data
         }
 
         return $JSON;
+    }
+
+    /**
+     * set_count
+     *
+     * This sets the total count for any ampache transactions
+     *
+     * @param int|string $count Set the total count of your results
+     */
+    public static function set_count(int|string $count): void
+    {
+        self::$count = (int) $count;
     }
 
     /**

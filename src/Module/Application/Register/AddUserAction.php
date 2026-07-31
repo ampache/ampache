@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
+use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -46,31 +47,15 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AddUserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_user';
-
-    public UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UserRepositoryInterface $userRepository;
-
-    private Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer;
+    public const string REQUEST_KEY = 'add_user';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        UserRepositoryInterface $userRepository,
-        Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer,
-        UiInterface $ui
-    ) {
-        $this->configContainer               = $configContainer;
-        $this->modelFactory                  = $modelFactory;
-        $this->userRepository                = $userRepository;
-        $this->registrationAgreementRenderer = $registrationAgreementRenderer;
-        $this->ui                            = $ui;
-    }
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly RegistrationAgreementRendererInterface $registrationAgreementRenderer,
+        public UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -80,11 +65,11 @@ final class AddUserAction implements ApplicationActionInterface
         ) {
             throw new AccessDeniedException('Error `allow_public_registration` disabled');
         }
+
         // Check for confirmation email requirements when mail is disabled
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === true &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false &&
-            !Mailer::is_mail_enabled()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false
+            && !Mailer::is_mail_enabled()
         ) {
             throw new AccessDeniedException('Error `mail_enable` failed. Enable `user_no_email_confirm` to disable mail requirements');
         }
@@ -112,17 +97,15 @@ final class AddUserAction implements ApplicationActionInterface
             $captcha_phrase = $_POST['captcha_phrase'] ?? false;
             $captcha_user   = $_POST['captcha_user'] ?? '';
             if (
-                $captcha_user !== '' &&
-                !PhraseBuilder::comparePhrases($captcha_phrase, $captcha_user)
+                $captcha_user !== ''
+                && !PhraseBuilder::comparePhrases($captcha_phrase, $captcha_user)
             ) {
                 AmpError::add('captcha_user', T_('Captcha failed'));
             }
-        } // end if it's enabled
+        }
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_AGREEMENT) === true) {
-            if (!$_POST['accept_agreement']) {
-                AmpError::add('user_agreement', T_('You must accept the user agreement'));
-            }
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_AGREEMENT) && !$_POST['accept_agreement']) {
+            AmpError::add('user_agreement', T_('You must accept the user agreement'));
         } // if they have to agree to something
 
         if ($username === '') {
@@ -138,26 +121,29 @@ final class AddUserAction implements ApplicationActionInterface
         if (in_array('fullname', $mandatory_fields) && !$fullname) {
             AmpError::add('fullname', T_("Please fill in your full name (first name, last name)"));
         }
+
         if (in_array('website', $mandatory_fields) && !$website) {
             AmpError::add('website', T_("Please fill in your website"));
         }
+
         if (in_array('state', $mandatory_fields) && !$state) {
             AmpError::add('state', T_("Please fill in your state"));
         }
+
         if (in_array('city', $mandatory_fields) && !$city) {
             AmpError::add('city', T_("Please fill in your city"));
         }
 
-        if (!$passOne) {
+        if ($passOne === '' || $passOne === '0') {
             AmpError::add('password', T_('You must enter a password'));
         }
 
-        if ($passOne != $passTwo) {
+        if ($passOne !== $passTwo) {
             AmpError::add('password', T_('Passwords do not match'));
         }
 
-        if ($this->userRepository->idByUsername((string) $username) > 0) {
-            AmpError::add('duplicate_user', T_('That Username already exists'));
+        if ($this->userRepository->idByUsername($username) > 0) {
+            AmpError::add('duplicate_user', T_('That name already exists'));
         }
 
         // If we've hit an error anywhere up there break!
@@ -203,7 +189,7 @@ final class AddUserAction implements ApplicationActionInterface
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false) {
             $client     = $this->modelFactory->createUser($userId);
-            $validation = md5(uniqid((string) mt_rand(), true));
+            $validation = Core::generate_random_key();
             $client->update_validation($validation);
 
             // Notify user and/or admins

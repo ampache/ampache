@@ -43,8 +43,48 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
-        private ConfigContainerInterface $configContainer
-    ) {
+        private ConfigContainerInterface $configContainer,
+    ) {}
+
+    /**
+     * Deletes outdated records
+     */
+    public function collectGarbage(): void
+    {
+        try {
+            $this->connection->query(
+                'DELETE FROM `ip_history` WHERE `date` < `date` - ?',
+                [86400 * (int) $this->configContainer->get('user_ip_cardinality')]
+            );
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        }
+    }
+
+    /**
+     * Inserts a new row into the database
+     */
+    public function create(
+        User $user,
+        string $ipAddress,
+        string $userAgent,
+        DateTimeInterface $date,
+        string $action,
+    ): void {
+        if ($ipAddress !== '') {
+            $ipAddress = inet_pton($ipAddress);
+        }
+
+        $this->connection->query(
+            'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`, `action`) VALUES (?, ?, ?, ?, ?)',
+            [
+                $ipAddress,
+                $user->getId(),
+                $date->getTimestamp(),
+                $userAgent,
+                $action
+            ]
+        );
     }
 
     /**
@@ -54,7 +94,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
      */
     public function getHistory(
         User $user,
-        ?bool $limited = true
+        ?bool $limited = true,
     ): Generator {
         $where_sql = '';
         $params    = [$user->getId()];
@@ -96,46 +136,5 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
         }
 
         return null;
-    }
-
-    /**
-     * Deletes outdated records
-     */
-    public function collectGarbage(): void
-    {
-        try {
-            $this->connection->query(
-                'DELETE FROM `ip_history` WHERE `date` < `date` - ?',
-                [86400 * (int)$this->configContainer->get('user_ip_cardinality')]
-            );
-        } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
-        }
-    }
-
-    /**
-     * Inserts a new row into the database
-     */
-    public function create(
-        User $user,
-        string $ipAddress,
-        string $userAgent,
-        DateTimeInterface $date,
-        string $action
-    ): void {
-        if ($ipAddress !== '') {
-            $ipAddress = inet_pton($ipAddress);
-        }
-
-        $this->connection->query(
-            'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`, `action`) VALUES (?, ?, ?, ?, ?)',
-            [
-                $ipAddress,
-                $user->getId(),
-                $date->getTimestamp(),
-                $userAgent,
-                $action
-            ]
-        );
     }
 }

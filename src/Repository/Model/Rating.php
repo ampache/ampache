@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -40,12 +40,13 @@ use Exception;
  */
 class Rating extends database_object
 {
-    protected const DB_TABLENAME = 'rating';
-
-    private const RATING_TYPES = [
+    protected const string DB_TABLENAME = 'rating';
+    private const array RATING_TYPES    = [
         'album_disk',
         'album',
         'artist',
+        'collection',
+        'folder',
         'live_stream',
         'playlist',
         'podcast_episode',
@@ -67,20 +68,67 @@ class Rating extends database_object
      */
     public function __construct(
         ?int $rating_id,
-        string $type
+        string $type,
     ) {
-        $this->id   = (int)$rating_id;
+        $this->id   = (int) $rating_id;
         $this->type = $type;
     }
 
-    public function getId(): int
+    /**
+     * build_cache
+     * This attempts to get everything we'll need for this page load in a
+     * single query, saving on connection overhead
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(string $type, array $ids, ?int $user_id = null): bool
     {
-        return (int)($this->id ?? 0);
-    }
+        if (empty($ids)) {
+            return false;
+        }
 
-    public static function is_valid(string $type): bool
-    {
-        return in_array($type, self::RATING_TYPES);
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        if ($user_id === null) {
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
+        }
+
+        if ($user_id === 0) {
+            return false;
+        }
+
+        $ratings      = [];
+        $user_ratings = [];
+        $idlist       = '(' . implode(',', $ids) . ')';
+        $sql          = sprintf('SELECT `rating`, `object_id` FROM `rating` WHERE `user` = ? AND `object_id` IN %s AND `object_type` = ?', $idlist);
+        $db_results   = Dba::read($sql, [$user_id, $type]);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $user_ratings[$row['object_id']] = $row['rating'];
+        }
+
+        $sql        = sprintf('SELECT ROUND(AVG(`rating`), 2) AS `rating`, `object_id` FROM `rating` WHERE `object_id` IN %s AND `object_type` = ? GROUP BY `object_id`', $idlist);
+        $db_results = Dba::read($sql, [$type]);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $ratings[$row['object_id']] = (float) $row['rating'];
+        }
+
+        foreach ($ids as $object_id) {
+            // First store the user-specific rating
+            $rating = (isset($user_ratings[$object_id])) ? (int) $user_ratings[$object_id] : 0;
+
+            parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, [$rating]);
+            // Then store the average
+            $rating = (isset($ratings[$object_id])) ? round($ratings[$object_id], 1) : 0;
+
+            parent::add_to_cache('rating_' . $type . '_all', $object_id, [(int) $rating]);
+        }
+
+        return true;
     }
 
     /**
@@ -95,6 +143,7 @@ class Rating extends database_object
             'album',
             'artist',
             'catalog',
+            'folder',
             'label',
             'live_stream',
             'playlist',
@@ -125,122 +174,44 @@ class Rating extends database_object
     }
 
     /**
-     * build_cache
-     * This attempts to get everything we'll need for this page load in a
-     * single query, saving on connection overhead
-     * @param list<int|string> $ids
+     * get_highest
+     * Get objects with the highest average rating.
+     * @return int[]
      */
-    public static function build_cache(string $type, array $ids, ?int $user_id = null): bool
+    public static function get_highest(string $input_type, int $count = 0, int $offset = 0, ?int $user_id = null, bool $by_user = false, int $catalog_id = 0): array
     {
-        if (empty($ids)) {
-            return false;
+        if ($count === 0) {
+            $count = AmpConfig::get('popular_threshold', 10);
         }
 
-        if ($user_id === null) {
-            $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+        if ($count === -1) {
+            $count  = 0;
+            $offset = 0;
         }
 
-        if ($user_id === 0) {
-            return false;
+        // Select Top objects counting by # of rows
+        $sql   = self::get_highest_sql($input_type, $user_id, $by_user, $catalog_id);
+        $limit = ($offset < 1)
+            ? $count
+            : $offset . "," . $count;
+        if ($limit > 0) {
+            $sql .= 'LIMIT ' . $limit;
         }
 
-        $ratings      = [];
-        $user_ratings = [];
-        $idlist       = '(' . implode(',', $ids) . ')';
-        $sql          = sprintf('SELECT `rating`, `object_id` FROM `rating` WHERE `user` = ? AND `object_id` IN %s AND `object_type` = ?', $idlist);
-        $db_results   = Dba::read($sql, [$user_id, $type]);
-
+        //debug_event(self::class, 'get_highest ' . $sql, 5);
+        $db_results = Dba::read($sql);
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $user_ratings[$row['object_id']] = $row['rating'];
+            $results[] = (int) $row['id'];
         }
 
-        $sql        = sprintf('SELECT ROUND(AVG(`rating`), 2) AS `rating`, `object_id` FROM `rating` WHERE `object_id` IN %s AND `object_type` = ? GROUP BY `object_id`', $idlist);
-        $db_results = Dba::read($sql, [$type]);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $ratings[$row['object_id']] = $row['rating'];
-        }
-
-        foreach ($ids as $object_id) {
-            // First store the user-specific rating
-            $rating = (isset($user_ratings[$object_id])) ? (int)$user_ratings[$object_id] : 0;
-
-            parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, [$rating]);
-            // Then store the average
-            $rating = (isset($ratings[$object_id])) ? round($ratings[$object_id], 1) : 0;
-
-            parent::add_to_cache('rating_' . $type . '_all', $object_id, [(int)$rating]);
-        }
-
-        return true;
-    }
-
-    /**
-     * get_user_rating
-     * Get a user's rating. If no userid is passed in, we use the currently logged in user.
-     */
-    public function get_user_rating(?int $user_id = null): ?int
-    {
-        if ($user_id === null) {
-            $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
-        }
-
-        if ($user_id === 0) {
-            return null;
-        }
-
-        $key = 'rating_' . $this->type . '_user' . $user_id;
-        if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {
-            return parent::get_from_cache($key, $this->id)[0];
-        }
-
-        $params     = [$user_id, $this->id, $this->type];
-        $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ? AND `rating` > 0;";
-        $db_results = Dba::read($sql, $params);
-        $row        = Dba::fetch_assoc($db_results);
-        //debug_event(self::class, 'get_user_rating ' . $sql . ' ' . print_r($params, true), 5);
-        if ($row === []) {
-            return null;
-        }
-
-        $rating = (int)$row['rating'];
-        parent::add_to_cache($key, $this->id, [$rating]);
-
-        return $rating;
-    }
-
-    /**
-     * get_average_rating
-     * Get the floored average rating of what everyone has rated this object as.
-     */
-    public function get_average_rating(): ?float
-    {
-        $key = 'rating_' . $this->type . '_all';
-        if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {
-            return (float)parent::get_from_cache($key, $this->id)[0];
-        }
-
-        $params     = [$this->id, $this->type];
-        $sql        = "SELECT ROUND(AVG(`rating`), 2) AS `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
-        $db_results = Dba::read($sql, $params);
-        $row        = Dba::fetch_assoc($db_results);
-        //debug_event(self::class, 'get_average_rating ' . $sql . ' ' . print_r($params, true), 5);
-        if ($row === []) {
-            return null;
-        }
-
-        $rating = (float)$row['rating'];
-        parent::add_to_cache($key, $this->id, [$rating]);
-
-        return $rating;
+        return $results;
     }
 
     /**
      * get_highest_sql
      */
-    public static function get_highest_sql(string $input_type, ?int $user_id = null, bool $by_user = false): string
+    public static function get_highest_sql(string $input_type, ?int $user_id = null, bool $by_user = false, int $catalog_id = 0): string
     {
         $type    = Stats::validate_type($input_type);
         $user_id = $user_id ?? -1;
@@ -262,6 +233,11 @@ class Rating extends database_object
             $sql .= " AND" . Catalog::get_user_filter('rating_' . $type, $user_id);
         }
 
+        $catalog_sql = Catalog::get_catalog_id_filter($input_type, '`rating`.`object_id`', $catalog_id);
+        if ($catalog_sql !== '') {
+            $sql .= " AND " . $catalog_sql;
+        }
+
         if ($input_type == 'album_artist') {
             $sql .= " AND `artist`.`album_count` > 0";
         }
@@ -276,12 +252,18 @@ class Rating extends database_object
     }
 
     /**
-     * get_highest
-     * Get objects with the highest average rating.
+     * get_latest
+     * Get the latest user flagged objects
      * @return int[]
      */
-    public static function get_highest(string $input_type, int $count = 0, int $offset = 0, ?int $user_id = null, bool $by_user = false): array
-    {
+    public static function get_latest(
+        string $type,
+        ?User $user = null,
+        int $count = 0,
+        int $offset = 0,
+        int $since = 0,
+        int $before = 0,
+    ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
@@ -292,7 +274,7 @@ class Rating extends database_object
         }
 
         // Select Top objects counting by # of rows
-        $sql   = self::get_highest_sql($input_type, $user_id, $by_user);
+        $sql   = self::get_latest_sql($type, $user, $since, $before);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;
@@ -300,104 +282,14 @@ class Rating extends database_object
             $sql .= 'LIMIT ' . $limit;
         }
 
-        //debug_event(self::class, 'get_highest ' . $sql, 5);
+        //debug_event(self::class, 'get_latest ' . $sql, 5);
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
-    }
-
-    /**
-     * set_rating
-     * This function sets the rating for the current object.
-     * If no user_id is passed in, we use the currently logged in user.
-     */
-    public function set_rating(int $rating, ?int $user_id = null, bool $write_back = true): bool
-    {
-        if ($user_id === null) {
-            $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
-        }
-
-        if ($user_id === 0) {
-            return false;
-        }
-
-        if (!self::is_valid($this->type)) {
-            return false;
-        }
-
-        if (self::get_user_rating($user_id) === $rating) {
-            return true;
-        }
-
-        $time = time();
-        // Everything else is a single item
-        debug_event(self::class, sprintf('Setting rating for %s %d to %d', $this->type, $this->id, $rating), 5);
-        // a playlist, search or live stream can be rated but carries no weight column
-        $weighted = in_array($this->type, Stats::WEIGHT_TYPES, true);
-
-        if ($rating < 1) {
-            // If score is negative or 0, then remove rating
-            $sql    = "DELETE FROM `rating` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
-            $params = [$this->id, $this->type, $user_id];
-
-            if ($weighted) {
-                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
-            }
-        } else {
-            $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`, `date`) VALUES (?, ?, ?, ?, ?)";
-            $params = [
-                $this->id,
-                $this->type,
-                $rating,
-                $user_id,
-                $time,
-            ];
-
-            $this->getUserActivityPoster()->post((int) $user_id, 'rating', $this->type, $this->id, $time);
-
-            if ($weighted) {
-                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
-            }
-        }
-
-        Dba::write($sql, $params);
-
-        parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, [$rating]);
-
-        // sometimes we're reading the rating so don't always write back
-        if ($write_back) {
-            self::save_rating($this->id, $this->type, (int)$rating, (int)$user_id);
-        }
-
-        return true;
-    }
-
-    /**
-     * save_rating
-     * Forward rating value to plugins
-     */
-    public static function save_rating(int $object_id, string $object_type, int $new_rating, int $user_id): void
-    {
-        $rating = new Rating($object_id, $object_type);
-        $user   = new User($user_id);
-        if ($rating->id !== 0) {
-            foreach (Plugin::get_plugins(PluginTypeEnum::RATING_SAVER) as $plugin_name) {
-                try {
-                    $plugin = new Plugin($plugin_name);
-                    if ($plugin->_plugin instanceof AmpacheRatingMatch && $plugin->load($user)) {
-                        debug_event(self::class, 'save_rating... ' . $plugin_name, 5);
-                        $plugin->_plugin->save_rating($rating, $new_rating);
-                    }
-                } catch (Exception $error) {
-                    debug_event(self::class, 'save_rating plugin error: ' . $error->getMessage(), 1);
-                }
-            }
-        }
     }
 
     /**
@@ -407,7 +299,7 @@ class Rating extends database_object
         string $input_type,
         ?User $user = null,
         int $since = 0,
-        int $before = 0
+        int $before = 0,
     ): string {
         $type = Stats::validate_type($input_type);
         $sql  = "SELECT DISTINCT(`rating`.`object_id`) AS `id`, `rating`.`rating`, `rating`.`object_type` AS `type`, MAX(`rating`.`user`) AS `user`, MAX(`rating`.`date`) AS `date` FROM `rating`";
@@ -446,45 +338,42 @@ class Rating extends database_object
         return $sql . " GROUP BY `rating`.`object_id`, `type` ORDER BY `rating` DESC, `date` DESC ";
     }
 
+    public static function is_valid(string $type): bool
+    {
+        return in_array($type, self::RATING_TYPES);
+    }
+
     /**
-     * get_latest
-     * Get the latest user flagged objects
-     * @return int[]
+     * Migrate an object associate stats to a new object\
      */
-    public static function get_latest(
-        string $type,
-        ?User $user = null,
-        int $count = 0,
-        int $offset = 0,
-        int $since = 0,
-        int $before = 0
-    ): array {
-        if ($count === 0) {
-            $count = AmpConfig::get('popular_threshold', 10);
-        }
+    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
+    {
+        $sql = "UPDATE IGNORE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
-        if ($count === -1) {
-            $count  = 0;
-            $offset = 0;
-        }
+        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+    }
 
-        // Select Top objects counting by # of rows
-        $sql   = self::get_latest_sql($type, $user, $since, $before);
-        $limit = ($offset < 1)
-            ? $count
-            : $offset . "," . $count;
-        if ($limit > 0) {
-            $sql .= 'LIMIT ' . $limit;
+    /**
+     * save_rating
+     * Forward rating value to plugins
+     */
+    public static function save_rating(int $object_id, string $object_type, int $new_rating, int $user_id): void
+    {
+        $rating = new Rating($object_id, $object_type);
+        $user   = new User($user_id);
+        if ($rating->id !== 0) {
+            foreach (Plugin::get_plugins(PluginTypeEnum::RATING_SAVER) as $plugin_name) {
+                try {
+                    $plugin = new Plugin($plugin_name);
+                    if ($plugin->_plugin instanceof AmpacheRatingMatch && $plugin->load($user)) {
+                        debug_event(self::class, 'save_rating... ' . $plugin_name, 5);
+                        $plugin->_plugin->save_rating($rating, $new_rating);
+                    }
+                } catch (Exception $error) {
+                    debug_event(self::class, 'save_rating plugin error: ' . $error->getMessage(), 1);
+                }
+            }
         }
-
-        //debug_event(self::class, 'get_latest ' . $sql, 5);
-        $db_results = Dba::read($sql);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
     }
 
     /**
@@ -559,13 +448,136 @@ class Rating extends database_object
     }
 
     /**
-     * Migrate an object associate stats to a new object\
+     * get_average_rating
+     * Get the floored average rating of what everyone has rated this object as.
      */
-    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
+    public function get_average_rating(): ?float
     {
-        $sql = "UPDATE IGNORE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $key = 'rating_' . $this->type . '_all';
+        if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {
+            return (float) parent::get_from_cache($key, $this->id)[0];
+        }
 
-        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+        $params     = [$this->id, $this->type];
+        $sql        = "SELECT ROUND(AVG(`rating`), 2) AS `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
+        $db_results = Dba::read($sql, $params);
+        $row        = Dba::fetch_assoc($db_results);
+        //debug_event(self::class, 'get_average_rating ' . $sql . ' ' . print_r($params, true), 5);
+        if ($row === []) {
+            return null;
+        }
+
+        $rating = (float) $row['rating'];
+        parent::add_to_cache($key, $this->id, [$rating]);
+
+        return $rating;
+    }
+
+    /**
+     * get_user_rating
+     * Get a user's rating. If no userid is passed in, we use the currently logged in user.
+     */
+    public function get_user_rating(?int $user_id = null): ?int
+    {
+        if ($user_id === null) {
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
+        }
+
+        if ($user_id === 0) {
+            return null;
+        }
+
+        $key = 'rating_' . $this->type . '_user' . $user_id;
+        if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {
+            return parent::get_from_cache($key, $this->id)[0];
+        }
+
+        $params     = [$user_id, $this->id, $this->type];
+        $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ? AND `rating` > 0;";
+        $db_results = Dba::read($sql, $params);
+        $row        = Dba::fetch_assoc($db_results);
+        //debug_event(self::class, 'get_user_rating ' . $sql . ' ' . print_r($params, true), 5);
+        if ($row === []) {
+            return null;
+        }
+
+        $rating = (int) $row['rating'];
+        parent::add_to_cache($key, $this->id, [$rating]);
+
+        return $rating;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * set_rating
+     * This function sets the rating for the current object.
+     * If no user_id is passed in, we use the currently logged in user.
+     */
+    public function set_rating(int $rating, ?int $user_id = null, bool $write_back = true): bool
+    {
+        if ($user_id === null) {
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
+        }
+
+        if ($user_id === 0) {
+            return false;
+        }
+
+        if (!self::is_valid($this->type)) {
+            return false;
+        }
+
+        if (self::get_user_rating($user_id) === $rating) {
+            return true;
+        }
+
+        $time = time();
+        // Everything else is a single item
+        debug_event(self::class, sprintf('Setting rating for %s %d to %d', $this->type, $this->id, $rating), 5);
+        // a playlist, collection, folder, search or live stream can be rated but carries no weight column
+        $weighted = in_array($this->type, Stats::WEIGHT_TYPES, true);
+
+        if ($rating < 1) {
+            // If score is negative or 0, then remove rating
+            $sql    = "DELETE FROM `rating` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
+            $params = [$this->id, $this->type, $user_id];
+
+            if ($weighted) {
+                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
+            }
+        } else {
+            $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`, `date`) VALUES (?, ?, ?, ?, ?)";
+            $params = [
+                $this->id,
+                $this->type,
+                $rating,
+                $user_id,
+                $time,
+            ];
+
+            $this->getUserActivityPoster()->post((int) $user_id, 'rating', $this->type, $this->id, $time);
+
+            if ($weighted) {
+                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
+            }
+        }
+
+        Dba::write($sql, $params);
+
+        parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, [$rating]);
+
+        // sometimes we're reading the rating so don't always write back
+        if ($write_back) {
+            self::save_rating($this->id, $this->type, $rating, (int) $user_id);
+        }
+
+        return true;
     }
 
     /**

@@ -25,20 +25,36 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Rate5Method
+ * Rates a library item.
+ *
+ * Version 5 reads the object id from `id` only and knows nothing about the smart playlists the
+ * later versions accept, so it keeps a method of its own.
  */
-final class Rate5Method
+final class Rate5Method implements MethodInterface
 {
-    public const ACTION = 'rate';
+    public const string ACTION = 'rate';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * rate
@@ -57,51 +73,94 @@ final class Rate5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function rate(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('ratings')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: ratings'), self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::RATINGS)) {
+            throw new AccessDeniedException(
+                'Enable: ratings'
+            );
+        }
 
-            return false;
+        foreach (['type', 'id', 'rating'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
-        if (!Api5::check_parameter($input, ['type', 'id', 'rating'], self::ACTION)) {
-            return false;
-        }
-        ob_end_clean();
+
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
+
         // confirm the correct data
         if (!Rating::is_valid(strtolower($type))) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
+            return $this->writeTypeError($response, $output, $apiVersion, $type);
         }
-        if (!in_array($rating, ['0', '1', '2', '3', '4', '5'])) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $rating), self::ACTION, 'rating', $input['api_format']);
 
-            return false;
+        if (!in_array($rating, ['0', '1', '2', '3', '4', '5'])) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        sprintf('Bad Request: %s', $rating),
+                        self::ACTION,
+                        'rating'
+                    )
+                )
+            );
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
         if (!$className || !$object_id) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-        } else {
-            /** @var library_item $item */
-            $item = new $className($object_id);
-            if ($item->isNew()) {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'id', $input['api_format']);
-
-                return false;
-            }
-            $rate = new Rating($object_id, $type);
-            $rate->set_rating((int) $rating, $user->id);
-            Api5::message('rating set to ' . $rating . ' for ' . $object_id, $input['api_format']);
+            return $this->writeTypeError($response, $output, $apiVersion, $type);
         }
 
-        return true;
+        /** @var library_item $item */
+        $item = new $className($object_id);
+        if ($item->isNew()) {
+            throw new ResultEmptyException(
+                (string) $object_id,
+                'id'
+            );
+        }
+
+        $rate = new Rating($object_id, $type);
+        $rate->set_rating((int) $rating, $user->id);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success($apiVersion, 'rating set to ' . $rating . ' for ' . $object_id)
+            )
+        );
+    }
+
+    private function writeTypeError(
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        int $apiVersion,
+        string $type,
+    ): ResponseInterface {
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    sprintf('Bad Request: %s', $type),
+                    self::ACTION,
+                    'type'
+                )
+            )
+        );
     }
 }

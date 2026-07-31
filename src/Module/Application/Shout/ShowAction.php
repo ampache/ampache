@@ -32,23 +32,16 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->responseFactory = $responseFactory;
-        $this->configContainer = $configContainer;
-    }
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         return $this->responseFactory
             ->createResponse()

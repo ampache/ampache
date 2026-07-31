@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,23 +23,28 @@ declare(strict_types=0);
  *
  */
 
+// show_missing_artist.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-/** @var array{name: string, mbid: string} $wartist */
+/** @var array{name?: string, mbid?: string} $wartist */
 
 $web_path = AmpConfig::get_web_path();
 
-Ui::show_box_top($wartist['name'], 'info-box');
-if (AmpConfig::get('lastfm_api_key')) {
-    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&fullname=' . rawurlencode($wartist['name']), 'artist_info')); ?>
+$wartist_name = $wartist['name'] ?? '';
+$wartist_mbid = $wartist['mbid'] ?? '';
+
+Ui::show_box_top($wartist_name, 'info-box');
+if ($wartist_name !== '' && AmpConfig::get('lastfm_api_key')) {
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&fullname=' . rawurlencode($wartist_name), 'artist_info')); ?>
     <div id="artist_biography">
         <?php echo T_('Loading...'); ?>
     </div>
 <?php }
 Ui::show_box_bottom();
-if (AmpConfig::get('wanted')) {
-    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=wanted_missing_albums&artist_mbid=' . $wartist['mbid'], 'missing_albums')); ?>
+if ($wartist_mbid !== '' && AmpConfig::get('wanted')) {
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=wanted_missing_albums&artist_mbid=' . $wartist_mbid, 'missing_albums')); ?>
     <div id="missing_albums"></div>
 <?php } ?>

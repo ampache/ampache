@@ -34,22 +34,17 @@ use Ampache\Repository\UserRepositoryInterface;
 /**
  * Disables/Enables users
  */
-final class UserStateToggler implements UserStateTogglerInterface
+final readonly class UserStateToggler implements UserStateTogglerInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private UtilityFactoryInterface $utilityFactory;
-
-    private UserRepositoryInterface $userRepository;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UtilityFactoryInterface $utilityFactory,
-        UserRepositoryInterface $userRepository
-    ) {
-        $this->configContainer = $configContainer;
-        $this->utilityFactory  = $utilityFactory;
-        $this->userRepository  = $userRepository;
+        private ConfigContainerInterface $configContainer,
+        private UtilityFactoryInterface $utilityFactory,
+        private UserRepositoryInterface $userRepository,
+    ) {}
+
+    public function disable(User $user): bool
+    {
+        return $user->disable();
     }
 
     public function enable(User $user): bool
@@ -68,9 +63,9 @@ final class UserStateToggler implements UserStateTogglerInterface
 
             /* HINT: Username */
             $mailer->setMessage(
-                sprintf(T_('A new user has been enabled. %s'), $user->getUsername()) .
-                /* HINT: Ampache Login Page */"\n\n" .
-                sprintf(
+                sprintf(T_('A new user has been enabled. %s'), $user->getUsername())
+                /* HINT: Ampache Login Page */
+                . "\n\n" . sprintf(
                     T_('You can log in at the following address %s'),
                     $this->configContainer->getWebPath()
                 )
@@ -81,10 +76,5 @@ final class UserStateToggler implements UserStateTogglerInterface
         }
 
         return true;
-    }
-
-    public function disable(User $user): bool
-    {
-        return $user->disable();
     }
 }

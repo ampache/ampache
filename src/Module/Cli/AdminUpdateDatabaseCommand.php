@@ -28,41 +28,27 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
-use Ampache\Module\System\Update;
+use Ampache\Module\System\Update\Exception\UpdateException;
+use Ampache\Module\System\Update\Exception\UpdateFailedException;
+use Ampache\Module\System\Update\UpdateHelperInterface;
+use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Override;
 
 final class AdminUpdateDatabaseCommand extends Command
 {
-    private UpdateInfoRepositoryInterface $updateInfoRepository;
-
-    private Update\UpdateHelperInterface $updateHelper;
-
-    private Update\UpdaterInterface $updater;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        UpdateInfoRepositoryInterface $updateInfoRepository,
-        Update\UpdateHelperInterface $updateHelper,
-        Update\UpdaterInterface $updater
+        private readonly UpdateInfoRepositoryInterface $updateInfoRepository,
+        private readonly UpdateHelperInterface $updateHelper,
+        private readonly UpdaterInterface $updater,
     ) {
         parent::__construct('admin:updateDatabase', T_('Update the database to the latest version'));
 
         $this
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
             ->usage('<bold>  admin:updateDatabase</end> <comment> ## ' . T_('Display database update information') . '</end><eol/>');
-        $this->updateInfoRepository = $updateInfoRepository;
-        $this->updateHelper         = $updateHelper;
-        $this->updater              = $updater;
     }
 
     public function execute(): void
@@ -101,7 +87,7 @@ final class AdminUpdateDatabaseCommand extends Command
 
         // check tables
         try {
-            $build   = (int)$this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
+            $build   = (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
             $missing = $this->updater->checkTables($execute, $build);
             if ($missing->valid()) {
                 $message = ($execute)
@@ -119,11 +105,11 @@ final class AdminUpdateDatabaseCommand extends Command
                     );
                 }
             }
-        } catch (Update\Exception\UpdateFailedException $error) {
+        } catch (UpdateFailedException $updateFailedException) {
             $interactor->error(
                 sprintf(
                     T_('Update failed! %s'),
-                    $error->getMessage()
+                    $updateFailedException->getMessage()
                 ),
                 true
             );
@@ -146,7 +132,7 @@ final class AdminUpdateDatabaseCommand extends Command
                         sprintf(T_('Database version: %s'), $this->retrieveVersion()),
                         true
                     );
-                } catch (Update\Exception\UpdateFailedException $error) {
+                } catch (UpdateFailedException $error) {
                     $interactor->error(
                         sprintf(
                             T_('Update failed! %s'),
@@ -176,7 +162,7 @@ final class AdminUpdateDatabaseCommand extends Command
                 $updated = true;
                 try {
                     $this->updater->update($interactor);
-                } catch (Update\Exception\UpdateException) {
+                } catch (UpdateException) {
                     $interactor->error(
                         "\n" . T_('Error'),
                         true
@@ -229,6 +215,16 @@ final class AdminUpdateDatabaseCommand extends Command
                 }
             }
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 
     private function retrieveVersion(): string

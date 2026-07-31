@@ -33,41 +33,31 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class DeletePlaylistAction implements ApplicationActionInterface
+final readonly class DeletePlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete_playlist';
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'delete_playlist';
 
     public function __construct(
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->responseFactory = $responseFactory;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-    }
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (check_http_referer()) {
             $playlistId = $request->getQueryParams()['playlist_id'] ?? null;
             if ($playlistId !== null) {
-                $playlist = $this->modelFactory->createSearch((int)$playlistId);
+                $playlist = $this->modelFactory->createSmartlist((int) $playlistId);
                 // Check rights
                 if ($playlist->has_access()) {
                     $playlist->delete();
 
                     // Go elsewhere
                     return $this->responseFactory
-                        ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+                        ->createResponse(RFC7231::FOUND)
                         ->withHeader(
                             'Location',
                             sprintf(

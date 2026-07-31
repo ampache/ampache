@@ -35,72 +35,9 @@ use PHPUnit\Framework\TestCase;
 
 class PrivateMessageRepositoryTest extends TestCase
 {
-    private ModelFactoryInterface&MockObject $modelFactory;
-
     private DatabaseConnectionInterface&MockObject $connection;
-
+    private ModelFactoryInterface&MockObject $modelFactory;
     private PrivateMessageRepository $subject;
-
-    protected function setUp(): void
-    {
-        $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
-        $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
-
-        $this->subject = new PrivateMessageRepository(
-            $this->modelFactory,
-            $this->connection
-        );
-    }
-
-    public function testGetUnreadCountReturnsValue(): void
-    {
-        $user = $this->createMock(User::class);
-
-        $userId = 666;
-        $value  = 42;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = \'0\'',
-                [$userId]
-            )
-            ->willReturn($value);
-
-        static::assertSame(
-            $value,
-            $this->subject->getUnreadCount($user)
-        );
-    }
-
-    public function testGetChatMessagesReturnsData(): void
-    {
-        $since    = 123;
-        $objectId = 42;
-
-        $result = $this->createMock(PDOStatement::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0  AND `user_pvmsg`.`creation_date` > ? ORDER BY `user_pvmsg`.`creation_date` DESC',
-                [$since]
-            )
-            ->willReturn($result);
-
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $objectId, false);
-
-        static::assertSame(
-            [$objectId],
-            $this->subject->getChatMessages($since)
-        );
-    }
 
     public function testCleanChatMessagesCleans(): void
     {
@@ -116,87 +53,6 @@ class PrivateMessageRepositoryTest extends TestCase
             );
 
         $this->subject->cleanChatMessages($days);
-    }
-
-    public function testSetIsReadSetsStateForMessage(): void
-    {
-        $message = $this->createMock(PrivateMessageInterface::class);
-
-        $messageId = 666;
-
-        $message->expects(static::once())
-            ->method('getId')
-            ->willReturn($messageId);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?',
-                [1, $messageId]
-            );
-
-        $this->subject->setIsRead($message, 1);
-    }
-
-    public function testDeleteDeletes(): void
-    {
-        $messageId = 666;
-
-        $message = $this->createMock(PrivateMessageInterface::class);
-
-        $message->expects(static::once())
-            ->method('getId')
-            ->willReturn($messageId);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `user_pvmsg` WHERE `id` = ?',
-                [$messageId]
-            );
-
-        $this->subject->delete($message);
-    }
-
-    public function testFindByIdReturnsNullIfObjectWasNotFound(): void
-    {
-        $messageId = 666;
-
-        $message = $this->createMock(PrivateMessageInterface::class);
-
-        $message->expects(static::once())
-            ->method('isNew')
-            ->willReturn(true);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createPrivateMsg')
-            ->with($messageId)
-            ->willReturn($message);
-
-        static::assertNull(
-            $this->subject->findById($messageId)
-        );
-    }
-
-    public function testFindByIdReturnsObject(): void
-    {
-        $messageId = 666;
-
-        $message = $this->createMock(PrivateMessageInterface::class);
-
-        $message->expects(static::once())
-            ->method('isNew')
-            ->willReturn(false);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createPrivateMsg')
-            ->with($messageId)
-            ->willReturn($message);
-
-        static::assertSame(
-            $message,
-            $this->subject->findById($messageId)
-        );
     }
 
     public function testCreateCreatesPmWithoutSender(): void
@@ -227,7 +83,7 @@ class PrivateMessageRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn($insertedId);
 
-        static::assertSame(
+        self::assertSame(
             $insertedId,
             $this->subject->create(null, $recipient, $subject, $message)
         );
@@ -267,9 +123,151 @@ class PrivateMessageRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn($insertedId);
 
-        static::assertSame(
+        self::assertSame(
             $insertedId,
             $this->subject->create($sender, $recipient, $subject, $message)
+        );
+    }
+
+    public function testDeleteDeletes(): void
+    {
+        $messageId = 666;
+
+        $message = $this->createMock(PrivateMessageInterface::class);
+
+        $message->expects(static::once())
+            ->method('getId')
+            ->willReturn($messageId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `user_pvmsg` WHERE `id` = ?',
+                [$messageId]
+            );
+
+        $this->subject->delete($message);
+    }
+
+    public function testFindByIdReturnsNullIfObjectWasNotFound(): void
+    {
+        $messageId = 666;
+
+        $message = $this->createMock(PrivateMessageInterface::class);
+
+        $message->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPrivateMsg')
+            ->with($messageId)
+            ->willReturn($message);
+
+        self::assertNull(
+            $this->subject->findById($messageId)
+        );
+    }
+
+    public function testFindByIdReturnsObject(): void
+    {
+        $messageId = 666;
+
+        $message = $this->createMock(PrivateMessageInterface::class);
+
+        $message->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPrivateMsg')
+            ->with($messageId)
+            ->willReturn($message);
+
+        self::assertSame(
+            $message,
+            $this->subject->findById($messageId)
+        );
+    }
+
+    public function testGetChatMessagesReturnsData(): void
+    {
+        $since    = 123;
+        $objectId = 42;
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0  AND `user_pvmsg`.`creation_date` > ? ORDER BY `user_pvmsg`.`creation_date` DESC',
+                [$since]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $objectId, false);
+
+        self::assertSame(
+            [$objectId],
+            $this->subject->getChatMessages($since)
+        );
+    }
+
+    public function testGetUnreadCountReturnsValue(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $userId = 666;
+        $value  = 42;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                "SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'",
+                [$userId]
+            )
+            ->willReturn($value);
+
+        self::assertSame(
+            $value,
+            $this->subject->getUnreadCount($user)
+        );
+    }
+
+    public function testSetIsReadSetsStateForMessage(): void
+    {
+        $message = $this->createMock(PrivateMessageInterface::class);
+
+        $messageId = 666;
+
+        $message->expects(static::once())
+            ->method('getId')
+            ->willReturn($messageId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?',
+                [1, $messageId]
+            );
+
+        $this->subject->setIsRead($message, 1);
+    }
+
+    protected function setUp(): void
+    {
+        $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
+        $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
+
+        $this->subject = new PrivateMessageRepository(
+            $this->modelFactory,
+            $this->connection
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Artist\Deletion\ArtistDeleterInterface;
 use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
@@ -39,33 +40,18 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmDeleteAction implements ApplicationActionInterface
+final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_delete';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ArtistDeleterInterface $artistDeleter;
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ArtistDeleterInterface $artistDeleter
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->artistDeleter   = $artistDeleter;
-    }
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private ArtistDeleterInterface $artistDeleter,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -76,7 +62,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
             return null;
         }
-        $artist_id = (int)$this->requestParser->getFromRequest('artist_id');
+
+        $artist_id = (int) $this->requestParser->getFromRequest('artist_id');
         $artist    = $this->modelFactory->createArtist($artist_id);
 
         if (!Catalog::can_remove($artist)) {
@@ -85,20 +72,31 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
+        // An artist has no parent object, so leaving its own page can only fall back to the artist browser.
+        $webPath     = $this->configContainer->getWebPath();
+        $burlParam   = (string) ($request->getQueryParams()['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'artist',
+            $artist_id,
+            '',
+            sprintf('%s/browse.php?action=artist', $webPath)
+        );
+
         $this->ui->showHeader();
         try {
             $this->artistDeleter->remove($artist);
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Artist has been deleted'),
-                $this->configContainer->getWebPath()
+                $continueUrl
             );
         } catch (ArtistDeletionException) {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
-                sprintf(T_('Couldn\'t delete this %s'), T_('Artist')),
-                $this->configContainer->getWebPath()
+                sprintf(T_("Couldn't delete this %s"), T_('Artist')),
+                $continueUrl
             );
         }
 

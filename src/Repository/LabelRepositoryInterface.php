@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -28,12 +30,28 @@ use DateTimeInterface;
 
 interface LabelRepositoryInterface
 {
+    /**
+     * Associate a label with an album, ignoring a pairing that is already recorded
+     */
+    public function addAlbumAssoc(int $labelId, int $albumId, DateTimeInterface $date): void;
+
+    public function addArtistAssoc(int $labelId, int $artistId, DateTimeInterface $date): void;
+
+    /**
+     * This cleans out unused labels
+     */
+    public function collectGarbage(): void;
+
+    public function delete(int $labelId): void;
+
     public function findById(int $labelId): ?Label;
 
     /**
-     * @return string[]
+     * Returns the ids of every album associated with the label
+     *
+     * @return int[]
      */
-    public function getByArtist(int $artistId): array;
+    public function getAlbums(Label $label): array;
 
     /**
      * Return the list of all available labels
@@ -42,16 +60,41 @@ interface LabelRepositoryInterface
      */
     public function getAll(): array;
 
-    public function lookup(string $labelName, int $labelId = 0): int;
-
-    public function removeArtistAssoc(int $labelId, int $artistId): void;
-
-    public function addArtistAssoc(int $labelId, int $artistId, DateTimeInterface $date): void;
-
-    public function delete(int $labelId): void;
+    /**
+     * Returns the ids of every artist associated with the label
+     *
+     * @return int[]
+     */
+    public function getArtists(Label $label): array;
 
     /**
-     * This cleans out unused labels
+     * @return array<int, string>
      */
-    public function collectGarbage(): void;
+    public function getByAlbum(int $albumId): array;
+
+    /**
+     * @return string[]
+     */
+    public function getByArtist(int $artistId): array;
+
+    public function lookup(string $labelName, int $labelId = 0): int;
+
+    /**
+     * Moves every album association from one album onto another
+     */
+    public function migrateAlbum(int $oldAlbumId, int $newAlbumId): void;
+
+    /**
+     * Moves every artist association from one artist onto another
+     */
+    public function migrateArtist(int $oldArtistId, int $newArtistId): void;
+
+    /**
+     * Saves the label, inserting it when it is new
+     *
+     * Returns the id of a newly created label, null when an existing one was updated
+     */
+    public function persist(Label $label): ?int;
+
+    public function removeArtistAssoc(int $labelId, int $artistId): void;
 }

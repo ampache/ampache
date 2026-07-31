@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// stylesheets.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
@@ -37,7 +39,10 @@ if ($theme_css_base === null) {
 }
 if (is_string($theme_css_base)) {
     $theme_css_base = [$theme_css_base];
-} ?>
+}
+// Cache-bust CSS by file mtime so edits load immediately (falls back to the app version).
+$themeFsPath = __DIR__ . '/..' . $theme_path;
+$cssBust     = static fn(string $fsPath): string => is_file($fsPath) ? (string) filemtime($fsPath) : $ampache_version; ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/prettyphoto/css/prettyPhoto.min.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-ui.custom.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-editdialog.css" type="text/css" media="screen">
@@ -48,15 +53,15 @@ if (is_string($theme_css_base)) {
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jquery-contextmenu/jquery.contextMenu.min.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/filepond/filepond.min.css" type="text/css" media="screen">
 <?php foreach ($theme_css_base as $css_base) { ?>
-    <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . (str_ends_with(($css_base[0]), '.css') ? $css_base[0] . '?v=' . $ampache_version : $css_base[0]); ?>" type="text/css" media="<?php echo $css_base[1]; ?>">
+    <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . (str_ends_with(($css_base[0]), '.css') ? $css_base[0] . '?v=' . $cssBust($themeFsPath . '/' . $css_base[0]) : $css_base[0]); ?>" type="text/css" media="<?php echo $css_base[1]; ?>">
 <?php } ?>
-<link rel="stylesheet" href="<?php echo $web_path . '/templates/base.css?v=' . $ampache_version; ?>" type="text/css" media="screen">
-<link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $theme_color . '.css?v=' . $ampache_version; ?>" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path . '/templates/base.css?v=' . $cssBust(__DIR__ . '/base.css'); ?>" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $theme_color . '.css?v=' . $cssBust($themeFsPath . '/' . $theme_color . '.css'); ?>" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/print.css'; ?>" type="text/css" media="print">
 <?php
 if (
-    is_rtl(AmpConfig::get('lang', 'en_US')) &&
-    is_file(__DIR__ . '/../../public/' . $theme_path . '/rtl.css')
+    is_rtl(AmpConfig::get('lang', 'en_US'))
+    && is_file(__DIR__ . '/../../public/' . $theme_path . '/rtl.css')
 ) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen">
 <?php } ?>

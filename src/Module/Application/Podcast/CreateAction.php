@@ -43,29 +43,16 @@ use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class CreateAction implements ApplicationActionInterface
+final readonly class CreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'create';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private PodcastCreatorInterface $podcastCreator;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'create';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        PodcastCreatorInterface $podcastCreator,
-        RequestParserInterface $requestParser
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->podcastCreator  = $podcastCreator;
-        $this->requestParser   = $requestParser;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private PodcastCreatorInterface $podcastCreator,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -74,14 +61,14 @@ final class CreateAction implements ApplicationActionInterface
         }
 
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !$this->requestParser->verifyForm('add_podcast')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || !$this->requestParser->verifyForm('add_podcast')
         ) {
             throw new AccessDeniedException();
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
 
         $catalog = Catalog::create_from_id((int) ($data['catalog'] ?? 0));
         if ($catalog === null) {
@@ -106,7 +93,7 @@ final class CreateAction implements ApplicationActionInterface
             $this->ui->show(
                 'show_add_podcast.inc.php',
                 [
-                    'catalog_id' => (int)($data['catalog'] ?? 0),
+                    'catalog_id' => (int) ($data['catalog'] ?? 0),
                     'feed' => ($data['feed'] ?? '')
                 ]
             );

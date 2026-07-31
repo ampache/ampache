@@ -25,18 +25,27 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class GenreSongs5Method
+ * Returns the songs of a single genre.
+ *
+ * Version 5 reads the songs from the tag map instead of browsing them, so it keeps a method of
+ * its own.
  */
-final class GenreSongs5Method
+final class GenreSongs5Method implements MethodInterface
 {
-    public const ACTION = 'genre_songs';
+    public const string ACTION = 'genre_songs';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * genre_songs
@@ -52,34 +61,35 @@ final class GenreSongs5Method
      *     filter?: string,
      *     offset?: int,
      *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
      */
-    public static function genre_songs(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $results = Tag::get_tag_objects('song', (int) ($input['filter'] ?? 0));
         if (empty($results)) {
-            Api5::empty('song', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'song')
+                )
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::songs($results, $user, $input['auth']);
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::songs($results, $user, $input['auth']);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

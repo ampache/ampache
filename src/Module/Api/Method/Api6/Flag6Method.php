@@ -25,105 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api6;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
+use Ampache\Module\Api\Method\AbstractFlagMethod;
 
 /**
- * Class Flag6Method
- * @package Lib\Api6Methods
+ * Flags a library item as a favorite
+ *
+ * Api version 6 reports the object id as `id` and accepts `filter` as an alias.
  */
-final class Flag6Method
+final class Flag6Method extends AbstractFlagMethod
 {
-    public const ACTION = 'flag';
+    protected const string FILTER_ALIAS = 'filter';
 
-    /**
-     * flag
-     * MINIMUM_API_VERSION=400001
-     *
-     * This flags a library item as a favorite
-     * Setting flag to true (1) will set the flag
-     * Setting flag to false (0) will remove the flag
-     *
-     * id = (string) $object_id
-     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
-     * flag = (integer) 0,1 $flag
-     * date = (integer) UNIXTIME() //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     id?: string,
-     *     type: string,
-     *     flag: int,
-     *     date?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function flag(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('ratings')) {
-            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: ratings', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api6::check_parameter($input, ['type', 'id', 'flag'], self::ACTION)) {
-            return false;
-        }
-
-        ob_end_clean();
-        $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
-        $flag      = make_bool($input['flag']);
-        $date      = (int) ($input['date'] ?? time());
-
-        // confirm the correct data
-        if (!Userflag::is_valid(strtolower($type))) {
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
-        }
-
-        // searches are playlists but not in the database
-        if (
-            $type === 'playlist'
-            && $object_id === 0
-        ) {
-            $type      = 'search';
-            $object_id = (int) str_replace('smart_', '', (string) $input['id']);
-        }
-
-        $className = ObjectTypeToClassNameMapper::map($type);
-
-        if (!$className || !$object_id) {
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
-        } else {
-            /** @var library_item $item */
-            $item = new $className($object_id);
-            if ($item->isNew()) {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
-
-                return false;
-            }
-            $userflag = new Userflag($object_id, $type);
-            if ($userflag->set_flag($flag, $user->id, $date)) {
-                $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
-                Api6::message($message . $object_id, $input['api_format']);
-
-                return true;
-            }
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'flag failed ' . $object_id, self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        return true;
-    }
+    protected const string FILTER_KEY = 'id';
 }

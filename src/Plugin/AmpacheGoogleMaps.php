@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,81 +30,41 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
+use Override;
 use WpOrg\Requests\Requests;
 
 class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
 {
-    public string $name = 'GoogleMaps';
-
+    #[Override]
     public string $categories = 'geolocation';
 
-    public string $description = 'Show user\'s location with Google Maps';
+    #[Override]
+    public string $description = "Show user's location with Google Maps";
 
-    public string $url = 'http://maps.google.com';
-
-    public string $version = '000001';
-
-    public string $min_ampache = '370022';
-
+    #[Override]
     public string $max_ampache = '999999';
 
+    #[Override]
+    public string $min_ampache = '370022';
+
+    #[Override]
+    public string $name = 'GoogleMaps';
+
+    #[Override]
+    public string $url = 'http://maps.google.com';
+
+    #[Override]
+    public string $version = '000001';
+
     // These are internal settings used by this class, run this->load to fill them out
-    private $api_key;
+    private string $api_key;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->description = T_('Show user\'s location with Google Maps');
-    }
-
-    /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        return Preference::insert('gmaps_api_key', T_('Google Maps API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return Preference::delete('gmaps_api_key');
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
-     * get_location_name
-     */
-    public function get_location_name(float $latitude, float $longitude): string
-    {
-        $name = "";
-        try {
-            $url     = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&sensor=false";
-            $request = Requests::get($url, [], Core::requests_options());
-
-            $place = json_decode($request->body, true);
-            if (count($place['results']) > 0) {
-                $name = $place['results'][0]['formatted_address'];
-            }
-        } catch (Exception $exception) {
-            debug_event(self::class, 'Error getting location name: ' . $exception->getMessage(), 1);
-        }
-
-        return $name;
+        $this->description = T_("Show user's location with Google Maps");
     }
 
     /**
@@ -163,6 +123,36 @@ class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
     }
 
     /**
+     * get_location_name
+     */
+    public function get_location_name(float $latitude, float $longitude): string
+    {
+        $name = "";
+        try {
+            $url     = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&sensor=false";
+            $request = Requests::get($url, [], Core::requests_options());
+
+            $place = json_decode($request->body, true);
+            if (count($place['results']) > 0) {
+                $name = $place['results'][0]['formatted_address'];
+            }
+        } catch (Exception $exception) {
+            debug_event(self::class, 'Error getting location name: ' . $exception->getMessage(), 1);
+        }
+
+        return $name;
+    }
+
+    /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        return Preference::insert('gmaps_api_key', T_('Google Maps API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
+    }
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
@@ -180,6 +170,24 @@ class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
             $this->api_key = trim((string) $data['gmaps_api_key']);
         }
 
+        return true;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return Preference::delete('gmaps_api_key');
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

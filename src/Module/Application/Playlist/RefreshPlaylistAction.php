@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,40 +32,30 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class RefreshPlaylistAction implements ApplicationActionInterface
+final readonly class RefreshPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'refresh_playlist';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'refresh_playlist';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->modelFactory    = $modelFactory;
-        $this->responseFactory = $responseFactory;
-        $this->configContainer = $configContainer;
-    }
+        private ModelFactoryInterface $modelFactory,
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         $userId     = $request->getQueryParams()['user_id'] ?? null;
         $playlistId = $request->getQueryParams()['playlist_id'] ?? null;
         $searchId   = $request->getQueryParams()['search_id'] ?? null;
         if ($userId !== null && $playlistId !== null && $searchId !== null) {
             // Check rights
-            $user     = $this->modelFactory->createUser((int)$userId);
-            $playlist = $this->modelFactory->createPlaylist((int)$playlistId);
-            $search   = $this->modelFactory->createSearch((int)$searchId, 'song', $user);
+            $user     = $this->modelFactory->createUser((int) $userId);
+            $playlist = $this->modelFactory->createPlaylist((int) $playlistId);
+            $search   = $this->modelFactory->createSmartlist((int) $searchId, $user);
             $objects  = $search->get_items();
-            if ($playlist->has_access() && !empty($objects)) {
+            if ($playlist->has_access() && $objects !== []) {
                 $playlist->delete_all();
                 debug_event(self::class, 'Refreshing playlist {' . $playlist->id . '} from search {' . $search->id . '} for user {' . $user->id . '}', 5);
                 $playlist->add_medias($objects);
@@ -74,7 +64,7 @@ final class RefreshPlaylistAction implements ApplicationActionInterface
 
         // Go elsewhere
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf('%s/browse.php?action=playlist', $this->configContainer->getWebPath())

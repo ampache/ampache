@@ -1,0 +1,62 @@
+{
+    "total_count": 1,
+    "md5": "49a9cc3c780c761aea8b1c808488569f",
+    "album": [
+        {
+            "id": "170238",
+            "name": "The Amazing Power of The...",
+            "prefix": "The",
+            "basename": "Amazing Power of The...",
+            "artist": {
+                "id": "5770",
+                "name": "_ and The Secret Formula",
+                "prefix": null,
+                "basename": "_ and The Secret Formula"
+            },
+            "artists": [
+                {
+                    "id": "5770",
+                    "name": "_ and The Secret Formula",
+                    "prefix": null,
+                    "basename": "_ and The Secret Formula"
+                }
+            ],
+            "songartists": [
+                {
+                    "id": "5770",
+                    "name": "_ and The Secret Formula",
+                    "prefix": null,
+                    "basename": "_ and The Secret Formula"
+                }
+            ],
+            "time": 279,
+            "year": 1999,
+            "tracks": [],
+            "songcount": 1,
+            "diskcount": 1,
+            "type": "single",
+            "genre": [
+                {
+                    "id": "4",
+                    "name": "Electronic"
+                },
+                {
+                    "id": "163",
+                    "name": "Downtempo"
+                },
+                {
+                    "id": "854",
+                    "name": "Broken Beat"
+                }
+            ],
+            "art": "https:\/\/music.com.au\/image.php?object_id=170238&object_type=album&id=2634891&name=art.jpg",
+            "has_art": true,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "mbid": "a6338959-2961-466f-8726-19264b3f7593",
+            "mbid_group": "1677ac93-95cd-3df2-9201-fee3363fb888",
+            "catalog": "2"
+        }
+    ]
+}

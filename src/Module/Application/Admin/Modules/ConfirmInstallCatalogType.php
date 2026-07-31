@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -35,21 +35,14 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmInstallCatalogType implements ApplicationActionInterface
+final readonly class ConfirmInstallCatalogType implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_install_catalog_type';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'confirm_install_catalog_type';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

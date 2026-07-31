@@ -36,136 +36,15 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ConfirmDeleteActionTest extends MockeryTestCase
 {
     private ConfigContainerInterface&MockInterface $configContainer;
-
-    private UiInterface&MockInterface $ui;
-
     private PrivateMessageRepositoryInterface&MockInterface $pmRepository;
-
     private ConfirmDeleteAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->pmRepository    = $this->mock(PrivateMessageRepositoryInterface::class);
-
-        $this->subject = new ConfirmDeleteAction(
-            $this->configContainer,
-            $this->ui,
-            $this->pmRepository
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testRunThrowsExceptionIfSocialFeaturesAreDisabled(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SOCIABLE)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testRunReturnsNullIfDemoMode(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SOCIABLE)
-            ->once()
-            ->andReturnTrue();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessToMessageIsDenied(): void
-    {
-        $messageId = 666;
-
-        $this->expectException(AccessDeniedException::class);
-        $this->expectExceptionMessage(sprintf('Unknown or unauthorized private message `%d`.', $messageId));
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $message    = $this->mock(PrivateMessageInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-        $gatekeeper->shouldReceive('getUserId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(456);
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SOCIABLE)
-            ->once()
-            ->andReturnTrue();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnFalse();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['msgs' => implode(',', [$messageId, 42])]);
-
-        $this->pmRepository->shouldReceive('findById')
-            ->with($messageId)
-            ->once()
-            ->andReturn($message);
-
-        $message->shouldReceive('getRecipientUserId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(123);
-
-        $this->subject->run($request, $gatekeeper);
-    }
+    private UiInterface&MockInterface $ui;
 
     public function testRunDeletes(): void
     {
@@ -238,5 +117,125 @@ class ConfirmDeleteActionTest extends MockeryTestCase
             ->once();
 
         $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunReturnsNullIfDemoMode(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnTrue();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsExceptionIfAccessToMessageIsDenied(): void
+    {
+        $messageId = 666;
+
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage(sprintf('Unknown or unauthorized private message `%d`.', $messageId));
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $message    = $this->mock(PrivateMessageInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+        $gatekeeper->shouldReceive('getUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(456);
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnTrue();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['msgs' => implode(',', [$messageId, 42])]);
+
+        $this->pmRepository->shouldReceive('findById')
+            ->with($messageId)
+            ->once()
+            ->andReturn($message);
+
+        $message->shouldReceive('getRecipientUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(123);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsExceptionIfSocialFeaturesAreDisabled(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->pmRepository    = $this->mock(PrivateMessageRepositoryInterface::class);
+
+        $this->subject = new ConfirmDeleteAction(
+            $this->configContainer,
+            $this->ui,
+            $this->pmRepository
+        );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,6 +30,7 @@ use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepository;
 use Ampache\Repository\PodcastRepositoryInterface;
+use DateMalformedStringException;
 use DateTime;
 use DateTimeInterface;
 use LogicException;
@@ -39,45 +40,31 @@ use LogicException;
  *
  * @see PodcastRepository
  */
-class Podcast extends database_object implements library_item, CatalogItemInterface
+class Podcast extends database_object implements
+    library_item,
+    displayable_item,
+    container_item,
+    CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'podcast';
+    protected const string DB_TABLENAME = 'podcast';
 
-    private int $id = 0;
-
-    private ?string $feed = null;
-
-    public int $catalog = 0;
-
-    private ?string $title = null;
-
-    private ?string $website = null;
-
+    public int $catalog          = 0;
+    private ?string $copyright   = null;
     private ?string $description = null;
-
-    private ?string $language = null;
-
-    private ?string $copyright = null;
-
-    private ?string $generator = null;
-
-    private int $lastbuilddate = 0;
-
-    private int $lastsync = 0;
-
-    private int $total_count = 0;
-
-    private int $total_skip = 0;
-
-    private int $weight = 0;
-
-    private int $episodes = 0;
-
-    private ?string $link = null;
-
-    private ?string $f_link = null;
-
-    private ?bool $has_art = null;
+    private int $episodes        = 0;
+    private ?string $f_link      = null;
+    private ?string $feed        = null;
+    private ?string $generator   = null;
+    private ?bool $has_art       = null;
+    private int $id              = 0;
+    private ?string $language    = null;
+    private int $lastbuilddate   = 0;
+    private int $lastsync        = 0;
+    private ?string $link        = null;
+    private ?string $title       = null;
+    private int $total_count     = 0;
+    private int $total_skip      = 0;
+    private ?string $website     = null;
 
     /**
      * Podcast
@@ -90,79 +77,59 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         }
 
         $info = $this->get_info($podcast_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
+        if ($info === []) {
+            return;
+        }
+
+        $this->catalog       = (int) ($info['catalog'] ?? 0);
+        $this->copyright     = $info['copyright'] ?? null;
+        $this->description   = $info['description'] ?? null;
+        $this->episodes      = (int) ($info['episodes'] ?? 0);
+        $this->feed          = $info['feed'] ?? null;
+        $this->generator     = $info['generator'] ?? null;
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->language      = $info['language'] ?? null;
+        $this->lastbuilddate = (int) ($info['lastbuilddate'] ?? 0);
+        $this->lastsync      = (int) ($info['lastsync'] ?? 0);
+        $this->link          = $info['link'] ?? null;
+        $this->title         = $info['title'] ?? null;
+        $this->total_count   = (int) ($info['total_count'] ?? 0);
+        $this->total_skip    = (int) ($info['total_skip'] ?? 0);
+        $this->website       = $info['website'] ?? null;
+    }
+
+    /**
+     * display_art
+     * @param array{width: int, height: int} $size
+     */
+    public function display_art(array $size, bool $force = false): void
+    {
+        if (Art::has_db($this->id, 'podcast') || $force) {
+            Art::display('podcast', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
         }
     }
 
-    public function getId(): int
+    public function get_default_art_kind(): string
     {
-        return (int)($this->id ?? 0);
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
+        return 'default';
     }
 
     /**
-     * does the item have art?
+     * get_description
      */
-    public function has_art(): bool
+    public function get_description(): string
     {
-        if ($this->has_art === null) {
-            $this->has_art = Art::has_db($this->id, 'podcast');
-        }
-
-        return $this->has_art ?? false;
-    }
-
-    /**
-     * Get item keywords for metadata searches.
-     * @return array<string, array{important: bool, label: string, value: string}>
-     */
-    public function get_keywords(): array
-    {
-        return [
-            'podcast' => [
-                'important' => true,
-                'label' => T_('Podcast'),
-                'value' => (string)$this->get_fullname(),
-            ],
-        ];
-    }
-
-    /**
-     * get_fullname
-     */
-    public function get_fullname(): ?string
-    {
-        return $this->title;
-    }
-
-    /**
-     * Get item link.
-     */
-    public function get_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->link === null) {
-            $web_path = AmpConfig::get_web_path();
-
-            $this->link = $web_path . '/podcast.php?action=show&podcast=' . $this->id;
-        }
-
-        return $this->link ?? '';
+        return scrub_out($this->description ?? '');
     }
 
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(?string $title = null): string
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($title ?? $this->get_fullname()) . '</a>';
         }
 
         return $this->f_link;
@@ -185,43 +152,45 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * get_fullname
      */
-    public function get_parent(): ?array
+    public function get_fullname(): ?string
     {
-        return null;
+        return $this->title;
     }
 
     /**
-     * @return array{podcast_episode: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
-    public function get_childrens(): array
+    public function get_keywords(): array
     {
-        $results = [];
-        foreach ($this->getEpisodeIds() as $episodeId) {
-            $results[] = [
-                'object_type' => LibraryItemEnum::PODCAST_EPISODE,
-                'object_id' => $episodeId
-            ];
+        return [
+            'podcast' => [
+                'important' => true,
+                'label' => T_('Podcast'),
+                'value' => (string) $this->get_fullname(),
+            ],
+        ];
+    }
+
+    /**
+     * Get item link.
+     */
+    public function get_link(): string
+    {
+        // don't do anything if it's formatted
+        if ($this->link === null) {
+            $web_path = AmpConfig::get_web_path();
+
+            $this->link = $web_path . '/podcast.php?action=show&podcast=' . $this->id;
         }
 
-        return ['podcast_episode' => $results];
+        return $this->link ?? '';
     }
 
     /**
-     * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
-    }
-
-    /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -236,122 +205,31 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         return $medias;
     }
 
+    /**
+     * get_parent
+     * Return parent `object_type`, `object_id`; null otherwise.
+     */
+    public function get_parent(): ?array
+    {
+        return null;
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return '';
+    }
+
     public function get_user_owner(): ?int
     {
         return null;
     }
 
-    public function get_default_art_kind(): string
-    {
-        return 'default';
-    }
-
     /**
-     * get_description
+     * Returns the id of the catalog the item is associated to
      */
-    public function get_description(): string
+    public function getCatalogId(): int
     {
-        return scrub_out($this->description ?? '');
-    }
-
-    /**
-     * Sets the episode count
-     */
-    public function setEpisodeCount(int $value): Podcast
-    {
-        $this->episodes = $value;
-
-        return $this;
-    }
-
-    /**
-     * Returns the episode count
-     */
-    public function getEpisodeCount(): int
-    {
-        return $this->episodes;
-    }
-
-    /**
-     * Sets the total count
-     */
-    public function setTotalCount(int $value): Podcast
-    {
-        $this->total_count = $value;
-
-        return $this;
-    }
-
-    /**
-     * Returns the total count
-     */
-    public function getTotalCount(): int
-    {
-        return $this->total_count;
-    }
-
-    /**
-     * Sets the total skip count
-     */
-    public function setTotalSkip(int $value): Podcast
-    {
-        $this->total_skip = $value;
-
-        return $this;
-    }
-
-    /**
-     * Returns the total skip count
-     */
-    public function getTotalSkip(): int
-    {
-        return $this->total_skip;
-    }
-
-    /**
-     * Sets the generator
-     */
-    public function setGenerator(string $value): Podcast
-    {
-        $this->generator = $value;
-
-        return $this;
-    }
-
-    /**
-     * Returns the generator
-     */
-    public function getGenerator(): string
-    {
-        return (string) $this->generator;
-    }
-
-    /**
-     * Sets the website
-     */
-    public function setWebsite(string $value): Podcast
-    {
-        $this->website = $value;
-
-        return $this;
-    }
-
-    /**
-     * Returns the website
-     */
-    public function getWebsite(): string
-    {
-        return (string) $this->website;
-    }
-
-    /**
-     * Sets the copyright
-     */
-    public function setCopyright(string $value): Podcast
-    {
-        $this->copyright = $value;
-
-        return $this;
+        return $this->catalog;
     }
 
     /**
@@ -363,37 +241,31 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
-     * Sets the language
+     * Returns the description
      */
-    public function setLanguage(string $value): Podcast
+    public function getDescription(): string
     {
-        $this->language = mb_substr($value, 0, 5);
-
-        return $this;
+        return (string) $this->description;
     }
 
     /**
-     * Returns the language
+     * Returns the episode count
      */
-    public function getLanguage(): string
+    public function getEpisodeCount(): int
     {
-        return (string) $this->language;
+        return $this->episodes;
     }
 
     /**
-     * Sets the feed-url
+     * Returns the ids of all available episodes
+     *
+     * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
+     * @return list<int>
      */
-    public function setFeedUrl(string $value): Podcast
-    {
-        // Feed must be http/https
-        if (
-            str_starts_with($value, 'http://')
-            || !str_starts_with($value, 'https://')
-        ) {
-            $this->feed = $value;
-        }
-
-        return $this;
+    public function getEpisodeIds(
+        ?PodcastEpisodeStateEnum $stateFilter = null,
+    ): array {
+        return $this->getPodcastEpisodeRepository()->getEpisodes($this, $stateFilter);
     }
 
     /**
@@ -405,13 +277,47 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
-     * Sets the title
+     * Returns the generator
      */
-    public function setTitle(string $value): Podcast
+    public function getGenerator(): string
     {
-        $this->title = $value;
+        return (string) $this->generator;
+    }
 
-        return $this;
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * Returns the language
+     */
+    public function getLanguage(): string
+    {
+        return (string) $this->language;
+    }
+
+    /**
+     * Returns the last build-date
+     * @throws DateMalformedStringException
+     */
+    public function getLastBuildDate(): DateTimeInterface
+    {
+        return new DateTime('@' . $this->lastbuilddate);
+    }
+
+    /**
+     * Returns the last sync-date
+     * @throws DateMalformedStringException
+     */
+    public function getLastSyncDate(): DateTimeInterface
+    {
+        return new DateTime('@' . $this->lastsync);
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::PODCAST;
     }
 
     /**
@@ -420,6 +326,79 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     public function getTitle(): string
     {
         return (string) $this->title;
+    }
+
+    /**
+     * Returns the total count
+     */
+    public function getTotalCount(): int
+    {
+        return $this->total_count;
+    }
+
+    /**
+     * Returns the total skip count
+     */
+    public function getTotalSkip(): int
+    {
+        return $this->total_skip;
+    }
+
+    /**
+     * Returns the website
+     */
+    public function getWebsite(): string
+    {
+        return (string) $this->website;
+    }
+
+    /**
+     * does the item have art?
+     */
+    public function has_art(): bool
+    {
+        if ($this->has_art === null) {
+            $this->has_art = Art::has_db($this->id, 'podcast');
+        }
+
+        return $this->has_art ?? false;
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
+    /**
+     * Saves the item
+     */
+    public function save(): void
+    {
+        $id = $this->getPodcastRepository()->persist($this);
+
+        if ($id !== null) {
+            $this->id = $id;
+        }
+    }
+
+    /**
+     * Sets the catalog
+     */
+    public function setCatalog(Catalog $catalog): Podcast
+    {
+        $this->catalog = $catalog->getId();
+
+        return $this;
+    }
+
+    /**
+     * Sets the copyright
+     */
+    public function setCopyright(string $value): Podcast
+    {
+        $this->copyright = $value;
+
+        return $this;
     }
 
     /**
@@ -436,47 +415,49 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
-     * Returns the description
+     * Sets the episode count
      */
-    public function getDescription(): string
+    public function setEpisodeCount(int $value): Podcast
     {
-        return (string) $this->description;
-    }
-
-    /**
-     * Sets the catalog
-     */
-    public function setCatalog(Catalog $catalog): Podcast
-    {
-        $this->catalog = $catalog->getId();
+        $this->episodes = $value;
 
         return $this;
     }
 
     /**
-     * Returns the id of the catalog the item is associated to
+     * Sets the feed-url
      */
-    public function getCatalogId(): int
+    public function setFeedUrl(string $value): Podcast
     {
-        return $this->catalog;
-    }
-
-    /**
-     * Sets the last sync-date
-     */
-    public function setLastSyncDate(DateTimeInterface $value): Podcast
-    {
-        $this->lastsync = $value->getTimestamp();
+        // Feed must be http/https
+        if (
+            str_starts_with($value, 'http://')
+            || str_starts_with($value, 'https://')
+        ) {
+            $this->feed = $value;
+        }
 
         return $this;
     }
 
     /**
-     * Returns the last sync-date
+     * Sets the generator
      */
-    public function getLastSyncDate(): DateTimeInterface
+    public function setGenerator(string $value): Podcast
     {
-        return new DateTime('@' . $this->lastsync);
+        $this->generator = $value;
+
+        return $this;
+    }
+
+    /**
+     * Sets the language
+     */
+    public function setLanguage(string $value): Podcast
+    {
+        $this->language = mb_substr($value, 0, 5);
+
+        return $this;
     }
 
     /**
@@ -492,72 +473,62 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
-     * Returns the last build-date
+     * Sets the last sync-date
      */
-    public function getLastBuildDate(): DateTimeInterface
+    public function setLastSyncDate(DateTimeInterface $value): Podcast
     {
-        return new DateTime('@' . $this->lastbuilddate);
+        $this->lastsync = $value->getTimestamp();
+
+        return $this;
     }
 
     /**
-     * Saves the item
+     * Sets the title
      */
-    public function save(): void
+    public function setTitle(string $value): Podcast
     {
-        $id = $this->getPodcastRepository()->persist($this);
+        $this->title = $value;
 
-        if ($id !== null) {
-            $this->id = $id;
-        }
+        return $this;
     }
 
     /**
-     * display_art
-     * @param array{width: int, height: int} $size
+     * Sets the total count
      */
-    public function display_art(array $size, bool $force = false): void
+    public function setTotalCount(int $value): Podcast
     {
-        if (Art::has_db($this->id, 'podcast') || $force) {
-            Art::display('podcast', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
-        }
+        $this->total_count = $value;
+
+        return $this;
+    }
+
+    /**
+     * Sets the total skip count
+     */
+    public function setTotalSkip(int $value): Podcast
+    {
+        $this->total_skip = $value;
+
+        return $this;
+    }
+
+    /**
+     * Sets the website
+     */
+    public function setWebsite(string $value): Podcast
+    {
+        $this->website = $value;
+
+        return $this;
     }
 
     /**
      * update
      * This takes a key'd array of data and updates the current podcast
-     * @param array<mixed> $data
      */
     public function update(array $data): never
     {
         throw new LogicException('Podcast::update is not in use');
-    }
-
-    /**
-     * Returns the ids of all available episodes
-     *
-     * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
-     *
-     * @return list<int>
-     */
-    public function getEpisodeIds(
-        ?PodcastEpisodeStateEnum $stateFilter = null
-    ): array {
-        return $this->getPodcastEpisodeRepository()->getEpisodes($this, $stateFilter);
-    }
-
-    public function getMediaType(): LibraryItemEnum
-    {
-        return LibraryItemEnum::PODCAST;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
     }
 
     /**
@@ -568,5 +539,15 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         global $dic;
 
         return $dic->get(PodcastEpisodeRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

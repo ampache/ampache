@@ -26,159 +26,26 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\UserFieldEnum;
+use PDO;
 
 final readonly class UserRepository implements UserRepositoryInterface
 {
-    /**
-     * This returns a built user from a rsstoken
-     */
-    public function getByRssToken(string $rssToken): ?User
-    {
-        $user       = null;
-        $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
-        $db_results = Dba::read($sql, [$rssToken]);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User((int) $results['id']);
-        }
-
-        return $user;
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
-     * Finds a user by its id
+     * Activates the user by username
      */
-    public function findById(int $id): ?User
+    public function activateByUsername(string $username): void
     {
-        $user = new User($id);
-        if ($user->isNew()) {
-            return null;
-        }
-
-        return $user;
-    }
-
-    /**
-     * Lookup for a user id with a certain name
-     */
-    public function idByUsername(string $username): int
-    {
-        if ($username === '-1') {
-            return 0;
-        }
-
-        $db_results = Dba::read(
-            'SELECT `id` FROM `user` WHERE `username` = ?',
-            [$username]
-        );
-
-        $data   = Dba::fetch_assoc($db_results);
-        $result = $data['id'] ?? null;
-
-        if ($result !== null) {
-            return (int) $result;
-        }
-
-        return 0;
-    }
-
-    /**
-     * Lookup for a user id with a certain email
-     */
-    public function idByEmail(string $email): int
-    {
-        $db_results = Dba::read(
-            'SELECT `id` FROM `user` WHERE `email` = ?',
-            [$email]
-        );
-
-        $data   = Dba::fetch_assoc($db_results);
-        $result = $data['id'] ?? null;
-
-        if ($result !== null) {
-            return (int) $result;
-        }
-
-        return 0;
-    }
-
-    /**
-     * Look up a user id by reset token (DOES NOT FIND ADMIN USERS)
-     */
-    public function idByResetToken(string $token): int
-    {
-        $sql        = 'SELECT `id`, `username`, `email` FROM `user` WHERE `access` != 100;';
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $email_hash = hash('sha256', (string) $row['email']);
-            $user_token = hash('sha256', $row['username'] . $email_hash);
-            if ($token === $user_token) {
-                return (int)$row['id'];
-            }
-        }
-
-        return 0;
-    }
-
-    /**
-     * This returns all valid users in database.
-     *
-     * @return int[]
-     */
-    public function getValid(bool $includeDisabled = false): array
-    {
-        $key   = 'users';
-        $value = ($includeDisabled)
-            ? 'users_all'
-            : 'users_valid';
-        if (User::is_cached($key, $value)) {
-            return User::get_from_cache($key, $value);
-        }
-
-        $users = [];
-        $sql   = ($includeDisabled)
-            ? 'SELECT `id` FROM `user`;'
-            : 'SELECT `id` FROM `user` WHERE `disabled` = \'0\';';
-
-        $db_results = Dba::read($sql);
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = (int) $results['id'];
-        }
-
-        User::add_to_cache($key, $value, $users);
-
-        return $users;
-    }
-
-    /**
-     * This returns all valid users in an array (id => name).
-     *
-     * @return string[]
-     */
-    public function getValidArray(bool $includeDisabled = false): array
-    {
-        $key   = 'users';
-        $value = ($includeDisabled)
-            ? 'userarray_all'
-            : 'userarray_valid';
-        if (User::is_cached($key, $value)) {
-            return User::get_from_cache($key, $value);
-        }
-
-        $users = [];
-        $sql   = ($includeDisabled)
-            ? 'SELECT `id`, `username` FROM `user`;'
-            : 'SELECT `id`, `username` FROM `user` WHERE `disabled` = \'0\';';
-
-        $db_results = Dba::read($sql);
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[(int) $results['id']] = $results['username'];
-        }
-
-        User::add_to_cache($key, $value, $users);
-
-        return $users;
+        $sql = "UPDATE `user` SET `disabled`='0', `validation` = NULL WHERE `username` = ?";
+        Dba::write($sql, [$username]);
     }
 
     /**
@@ -194,6 +61,8 @@ final readonly class UserRepository implements UserRepositoryInterface
             'democratic',
             'ip_history',
             'object_count',
+            'object_count_archive',
+            'object_count_summary',
             'playlist',
             'rating',
             'search',
@@ -249,57 +118,111 @@ final readonly class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * This returns a built user from a username
+     * Counts the album disks reachable through a set of catalogs, which has no plain per-table equivalent
+     *
+     * @param array<int> $catalogIds
      */
-    public function findByUsername(string $username): ?User
+    public function countAlbumDisksForCatalogs(array $catalogIds): int
     {
-        if ($username === '-1') {
-            return new User(-1);
-        }
+        $idList = implode(',', array_map('intval', $catalogIds));
 
-        $user       = null;
-        $sql        = 'SELECT `id` FROM `user` WHERE `username` = ?';
-        $db_results = Dba::read($sql, [$username]);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User((int) $results['id']);
-        }
-
-        return $user;
+        return (int) $this->connection->fetchOne(
+            "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `album`.`catalog` IN (" . $idList . ')'
+        );
     }
 
     /**
-     * This returns a built user from a email
+     * Counts the rows of a table a user is allowed to see, honouring the catalog filter when one applies
      */
-    public function findByEmail(string $email): ?User
+    public function countForUser(string $table, int $userId, bool $filtered): int
     {
-        $user       = null;
-        $sql        = 'SELECT `id` FROM `user` WHERE `email` = ?';
-        $db_results = Dba::read($sql, [$email]);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User((int) $results['id']);
-        }
+        // `search`, `user` and `license` have no catalog, so they are the same number for everybody
+        $sql = ($filtered)
+            ? sprintf('SELECT COUNT(`id`) FROM `%s` WHERE', $table) . Catalog::get_user_filter($table, $userId)
+            : sprintf('SELECT COUNT(`id`) FROM `%s`', $table);
 
-        return $user;
+        return (int) $this->connection->fetchOne($sql);
     }
 
     /**
-     * This returns users list related to a website.
+     * Inserts a new user row and returns its id, or 0 when the write failed
      *
-     * @return int[]
-     *
-     * @todo rework. the query limits the results to 1, so it doesn't need to return an array
+     * @param array<string, mixed> $columns Column name => value; the optional ones are simply absent
      */
-    public function findByWebsite(string $website): array
+    public function create(array $columns): int
     {
-        $website    = rtrim($website, "/");
-        $sql        = 'SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1';
-        $db_results = Dba::read($sql, [$website]);
-        $users      = [];
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = (int) $results['id'];
+        $names        = array_keys($columns);
+        $placeholders = implode(', ', array_fill(0, count($names), '?'));
+
+        try {
+            $this->connection->query(
+                sprintf(
+                    'INSERT INTO `user` (%s) VALUES(%s)',
+                    implode(', ', array_map(static fn(string $name): string => sprintf('`%s`', $name), $names)),
+                    $placeholders
+                ),
+                array_values($columns)
+            );
+        } catch (DatabaseException) {
+            // the caller reads 0 as "not created" and stops, which is what the old falsy `Dba::write()` gave it
+            return 0;
         }
 
-        return $users;
+        return $this->connection->getLastInsertedId();
+    }
+
+    /**
+     * Removes a user along with its custom access rules and any session it left behind
+     */
+    public function delete(int $userId, string $userName): void
+    {
+        $this->connection->query('DELETE FROM `user` WHERE `id` = ?', [$userId]);
+        $this->connection->query('DELETE FROM `access_list` WHERE `user` = ?', [$userId]);
+        $this->deleteSessions($userName);
+    }
+
+    /**
+     * Drops every session a user holds, logging them out everywhere
+     */
+    public function deleteSessions(string $userName): void
+    {
+        $this->connection->query('DELETE FROM `session` WHERE `username` = ?', [$userName]);
+    }
+
+    /**
+     * Marks a user disabled, without touching their access level
+     */
+    public function disableUser(int $userId): void
+    {
+        $this->connection->query("UPDATE `user` SET `disabled`='1' WHERE `id` = ?", [$userId]);
+    }
+
+    /**
+     * this enables the user
+     */
+    public function enable(int $userId): void
+    {
+        Dba::write(
+            "UPDATE `user` SET `disabled`='0' WHERE `id` = ?",
+            [$userId]
+        );
+    }
+
+    /**
+     * Returns the IP of a live session for this user, or null when they are not logged in anywhere
+     */
+    public function findActiveSessionIp(string $userName, int $now, bool $perpetualApiSession): ?string
+    {
+        // a perpetual api session never expires, so it has to be matched on type rather than on the expiry
+        $sql = ($perpetualApiSession)
+            ? "SELECT `ip` FROM `session` WHERE `username` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
+            : 'SELECT `ip` FROM `session` WHERE `username` = ? AND `expire` > ?;';
+
+        $ip = $this->connection->fetchOne($sql, [$userName, $now]);
+
+        return ($ip === false || $ip === null)
+            ? null
+            : (string) $ip;
     }
 
     /**
@@ -347,6 +270,34 @@ final readonly class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * This returns a built user from a email
+     */
+    public function findByEmail(string $email): ?User
+    {
+        $user       = null;
+        $sql        = 'SELECT `id` FROM `user` WHERE `email` = ?';
+        $db_results = Dba::read($sql, [$email]);
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user = new User((int) $results['id']);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Finds a user by its id
+     */
+    public function findById(int $id): ?User
+    {
+        $user = new User($id);
+        if ($user->isNew()) {
+            return null;
+        }
+
+        return $user;
+    }
+
+    /**
      * This returns a built user from a streamToken
      */
     public function findByStreamToken(string $streamToken): ?User
@@ -380,96 +331,259 @@ final readonly class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * updates the last seen data for the user
+     * This returns a built user from a username
      */
-    public function updateLastSeen(
-        int $userId
-    ): void {
-        Dba::write(
-            'UPDATE user SET last_seen = ? WHERE `id` = ?',
-            [time(), $userId]
-        );
+    public function findByUsername(string $username): ?User
+    {
+        if ($username === '-1') {
+            return new User(-1);
+        }
+
+        $user       = null;
+        $sql        = 'SELECT `id` FROM `user` WHERE `username` = ?';
+        $db_results = Dba::read($sql, [$username]);
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user = new User((int) $results['id']);
+        }
+
+        return $user;
     }
 
     /**
-     * this enables the user
+     * This returns users list related to a website.
+     *
+     * @return int[]
+     *
+     * @todo rework. the query limits the results to 1, so it doesn't need to return an array
      */
-    public function enable(int $userId): void
+    public function findByWebsite(string $website): array
     {
-        Dba::write(
-            'UPDATE `user` SET `disabled`=\'0\' WHERE `id` = ?',
+        $website    = rtrim($website, "/");
+        $sql        = 'SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1';
+        $db_results = Dba::read($sql, [$website]);
+        $users      = [];
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $users[] = (int) $results['id'];
+        }
+
+        return $users;
+    }
+
+    /**
+     * Clears the validation key of everyone who has since managed to log in
+     */
+    public function garbageCollectUnvalidated(): void
+    {
+        // activated accounts can log in but might not have cleared validation
+        $this->connection->query('UPDATE `user` SET `validation` = NULL WHERE `last_seen` > 0;');
+        // then drop the accounts that were never activated at all, once they are more than a month old
+        $this->connection->query('DELETE FROM `user` WHERE (`last_seen` = 0 OR `validation` IS NOT NULL) AND `create_date` < UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL -1 MONTH));');
+    }
+
+    /**
+     * Reads every user id, for the sweeps that have to touch all of them
+     *
+     * @return list<int>
+     */
+    public function getAllIds(): array
+    {
+        $result = $this->connection->query('SELECT `id` FROM `user`');
+
+        $userIds = [];
+        while ($userId = $result->fetchColumn()) {
+            $userIds[] = (int) $userId;
+        }
+
+        return $userIds;
+    }
+
+    /**
+     * This returns a built user from a rsstoken
+     */
+    public function getByRssToken(string $rssToken): ?User
+    {
+        $user       = null;
+        $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
+        $db_results = Dba::read($sql, [$rssToken]);
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user = new User((int) $results['id']);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Sums the count, playtime and megabytes of one media table across a set of catalogs
+     *
+     * @param array<int> $catalogIds
+     * @return array{count: int, time: int, size: int}
+     */
+    public function getMediaTotals(string $table, array $catalogIds, bool $enabledOnly): array
+    {
+        $idList = implode(',', array_map('intval', $catalogIds));
+
+        $sql = ($enabledOnly)
+            ? sprintf("SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `catalog` IN (%s) AND `%s`.`enabled`='1';", $table, $idList, $table)
+            : sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `catalog` IN (%s);', $table, $idList);
+
+        $result = $this->connection->query($sql);
+        $row    = $result->fetch(PDO::FETCH_NUM);
+
+        return [
+            'count' => (int) ($row[0] ?? 0),
+            'time' => (int) ($row[1] ?? 0),
+            'size' => (int) ($row[2] ?? 0),
+        ];
+    }
+
+    /**
+     * Reads the playlists a user owns
+     *
+     * @return list<int>
+     */
+    public function getPlaylistIds(int $userId, bool $includePrivate): array
+    {
+        $sql = ($includePrivate)
+            ? 'SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`;'
+            : "SELECT `id` FROM `playlist` WHERE `user` = ? AND `type` = 'public' ORDER BY `name`;";
+
+        $result = $this->connection->query($sql, [$userId]);
+
+        $playlistIds = [];
+        while ($playlistId = $result->fetchColumn()) {
+            $playlistIds[] = (int) $playlistId;
+        }
+
+        return $playlistIds;
+    }
+
+    /**
+     * Sums the megabytes a user has streamed, across the live counts and the summarised ones
+     */
+    public function getPlaySize(int $userId): int
+    {
+        $statements = [
+            "SELECT (IFNULL(SUM(`size`)/1024/1024, 0) + (SELECT IFNULL(SUM(`song`.`size` * `object_count_summary`.`count`)/1024/1024, 0) FROM `object_count_summary` LEFT JOIN `song` ON `song`.`id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'song' AND `object_count_summary`.`count_type` = 'stream' AND `object_count_summary`.`user` = ?)) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;",
+            "SELECT (IFNULL(SUM(`size`)/1024/1024, 0) + (SELECT IFNULL(SUM(`video`.`size` * `object_count_summary`.`count`)/1024/1024, 0) FROM `object_count_summary` LEFT JOIN `video` ON `video`.`id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'video' AND `object_count_summary`.`count_type` = 'stream' AND `object_count_summary`.`user` = ?)) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;",
+            "SELECT (IFNULL(SUM(`size`)/1024/1024, 0) + (SELECT IFNULL(SUM(`podcast_episode`.`size` * `object_count_summary`.`count`)/1024/1024, 0) FROM `object_count_summary` LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'podcast_episode' AND `object_count_summary`.`count_type` = 'stream' AND `object_count_summary`.`user` = ?)) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;",
+        ];
+
+        $total = 0;
+        foreach ($statements as $sql) {
+            $total += (int) $this->connection->fetchOne($sql, [$userId, $userId]);
+        }
+
+        return $total;
+    }
+
+    /**
+     * Reads the preference rows behind the settings pages, joined to their descriptions
+     *
+     * @return list<array{name: string, description: string, category: string, subcategory: ?string, type: string, level: int, value: ?string}>
+     */
+    public function getPreferenceRows(int $userId, ?string $category, bool $excludeSystem): array
+    {
+        $limit = '';
+        if ($excludeSystem) {
+            $limit = "AND `preference`.`category` != 'system'";
+        } elseif ($category !== null) {
+            $limit = 'AND `preference`.`category` = ?';
+        }
+
+        $params = ($limit === 'AND `preference`.`category` = ?')
+            ? [$userId, $category]
+            : [$userId];
+
+        $result = $this->connection->query(
+            'SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, `preference`.`type`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? ' . $limit . ' ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`',
+            $params
+        );
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = [
+                'name' => (string) $row['name'],
+                'description' => (string) $row['description'],
+                'category' => (string) $row['category'],
+                'subcategory' => $row['subcategory'],
+                'type' => (string) $row['type'],
+                'level' => (int) $row['level'],
+                'value' => $row['value'],
+            ];
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Reads the non-system preference name/value pairs that get loaded into the session
+     *
+     * @return list<array{name: string, value: ?string}>
+     */
+    public function getPreferenceValues(int $userId): array
+    {
+        $result = $this->connection->query(
+            "SELECT `preference`.`name`, `user_preference`.`value` FROM `preference`, `user_preference` WHERE `user_preference`.`user` = ? AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system';",
             [$userId]
         );
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = [
+                'name' => (string) $row['name'],
+                'value' => $row['value'],
+            ];
+        }
+
+        return $rows;
     }
 
     /**
-     * Retrieve the validation code of a certain user by its username
+     * Reads the objects a user played most recently, or least recently when asked for the oldest
+     *
+     * @return list<int>
      */
-    public function getValidationByUsername(string $username): ?string
+    public function getRecentlyPlayed(int $userId, string $objectType, string $countType, int $count, int $offset, bool $newest): array
     {
-        $sql        = "SELECT `validation` FROM `user` WHERE `username` = ?";
-        $db_results = Dba::read($sql, [$username]);
+        $order = ($newest) ? 'DESC' : 'ASC';
+        $limit = ($offset < 1)
+            ? sprintf('%d', $count)
+            : sprintf('%d, %d', $offset, $count);
 
-        $row = Dba::fetch_assoc($db_results);
+        $result = $this->connection->query(
+            'SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? AND `count_type` = ? GROUP BY `object_id` ORDER BY `date` ' . $order . ' LIMIT ' . $limit . ' ',
+            [$objectType, $userId, $countType]
+        );
 
-        return $row['validation'] ?? null;
+        $objectIds = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $objectIds[] = (int) $row['object_id'];
+        }
+
+        return $objectIds;
     }
 
     /**
-     * Activates the user by username
+     * Reads the whole user row the model hydrates itself from
+     *
+     * @return array<string, mixed>|null
      */
-    public function activateByUsername(string $username): void
+    public function getRow(int $userId): ?array
     {
-        $sql = "UPDATE `user` SET `disabled`='0', `validation` = NULL WHERE `username` = ?";
-        Dba::write($sql, [$username]);
-    }
+        $row = $this->connection->fetchRow(
+            'SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `subsonic_secret`, `catalog_filter_group` FROM `user` WHERE `id` = ?;',
+            [$userId]
+        );
 
-    /**
-     * Updates a users RSS token
-     */
-    public function updateRssToken(int $userId, string $rssToken): void
-    {
-        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
-
-        Dba::write($sql, [$rssToken, $userId]);
-    }
-
-    /**
-     * Updates a users Stream token
-     */
-    public function updateStreamToken(int $userId, string $userName, string $streamToken): void
-    {
-        $sql = "UPDATE `user` SET `streamtoken` = ? WHERE `id` = ?";
-        Dba::write($sql, [$streamToken, $userId]);
-    }
-
-    /**
-     * Updates a users api key
-     */
-    public function updateApiKey(int $userId, string $apikey): void
-    {
-        $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
-
-        Dba::write($sql, [$apikey, $userId]);
-    }
-
-    /**
-     * Get the current hashed user password
-     */
-    public function retrievePasswordFromUser(int $userId): string
-    {
-        $sql        = 'SELECT * FROM `user` WHERE `id` = ?';
-        $db_results = Dba::read($sql, [$userId]);
-        $row        = Dba::fetch_assoc($db_results);
-
-        return $row['password'] ?? '';
+        return (is_array($row) && $row !== [])
+            ? $row
+            : null;
     }
 
     /**
      * Returns statistical data related to user accounts and active users
      *
      * @param int $timePeriod Time period to consider sessions `active` (in seconds)
-     *
      * @return array{users: int, connected: int}
      */
     public function getStatistics(int $timePeriod = 1200): array
@@ -496,5 +610,284 @@ final readonly class UserRepository implements UserRepositoryInterface
             'users' => (int) $userResult,
             'connected' => (int) $sessionResult,
         ];
+    }
+
+    /**
+     * Reads the free-form counters kept against a user, optionally narrowed to one key
+     *
+     * @return array<string, string>
+     */
+    public function getUserData(int $userId, ?string $key): array
+    {
+        $sql    = 'SELECT `key`, `value` FROM `user_data` WHERE `user` = ?';
+        $params = [$userId];
+        if ($key !== null) {
+            $sql .= ' AND `key` = ?';
+            $params[] = $key;
+        }
+
+        $result = $this->connection->query($sql, $params);
+
+        $data = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $data[(string) $row['key']] = (string) $row['value'];
+        }
+
+        return $data;
+    }
+
+    /**
+     * This returns all valid users in database.
+     *
+     * @return int[]
+     */
+    public function getValid(bool $includeDisabled = false): array
+    {
+        $key   = 'users';
+        $value = ($includeDisabled)
+            ? 'users_all'
+            : 'users_valid';
+        if (User::is_cached($key, $value)) {
+            return User::get_from_cache($key, $value);
+        }
+
+        $users = [];
+        $sql   = ($includeDisabled)
+            ? 'SELECT `id` FROM `user`;'
+            : "SELECT `id` FROM `user` WHERE `disabled` = '0';";
+
+        $db_results = Dba::read($sql);
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $users[] = (int) $results['id'];
+        }
+
+        User::add_to_cache($key, $value, $users);
+
+        return $users;
+    }
+
+    /**
+     * This returns all valid users in an array (id => name).
+     *
+     * @return string[]
+     */
+    public function getValidArray(bool $includeDisabled = false): array
+    {
+        $key   = 'users';
+        $value = ($includeDisabled)
+            ? 'userarray_all'
+            : 'userarray_valid';
+        if (User::is_cached($key, $value)) {
+            return User::get_from_cache($key, $value);
+        }
+
+        $users = [];
+        $sql   = ($includeDisabled)
+            ? 'SELECT `id`, `username` FROM `user`;'
+            : "SELECT `id`, `username` FROM `user` WHERE `disabled` = '0';";
+
+        $db_results = Dba::read($sql);
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $users[(int) $results['id']] = $results['username'];
+        }
+
+        User::add_to_cache($key, $value, $users);
+
+        return $users;
+    }
+
+    /**
+     * Retrieve the validation code of a certain user by its username
+     */
+    public function getValidationByUsername(string $username): ?string
+    {
+        $sql        = "SELECT `validation` FROM `user` WHERE `username` = ?";
+        $db_results = Dba::read($sql, [$username]);
+
+        $row = Dba::fetch_assoc($db_results);
+
+        return $row['validation'] ?? null;
+    }
+
+    /**
+     * Whether another admin account exists, so the caller can refuse to strip the last one
+     */
+    public function hasOtherAdmin(int $excludingUserId, bool $enabledOnly): bool
+    {
+        $sql = ($enabledOnly)
+            ? "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `access` = ? AND `id` != ? "
+            : 'SELECT `id` FROM `user` WHERE `access`= ? AND `id` != ?';
+
+        return $this->connection->fetchOne($sql, [AccessLevelEnum::ADMIN->value, $excludingUserId]) !== false;
+    }
+
+    /**
+     * Lookup for a user id with a certain email
+     */
+    public function idByEmail(string $email): int
+    {
+        $db_results = Dba::read(
+            'SELECT `id` FROM `user` WHERE `email` = ?',
+            [$email]
+        );
+
+        $data   = Dba::fetch_assoc($db_results);
+        $result = $data['id'] ?? null;
+
+        if ($result !== null) {
+            return (int) $result;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Look up a user id by reset token (DOES NOT FIND ADMIN USERS)
+     */
+    public function idByResetToken(string $token): int
+    {
+        $sql        = 'SELECT `id`, `username`, `email` FROM `user` WHERE `access` != 100;';
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $email_hash = hash('sha256', (string) $row['email']);
+            $user_token = hash('sha256', $row['username'] . $email_hash);
+            if ($token === $user_token) {
+                return (int) $row['id'];
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * Lookup for a user id with a certain name
+     */
+    public function idByUsername(string $username): int
+    {
+        if ($username === '-1') {
+            return 0;
+        }
+
+        $db_results = Dba::read(
+            'SELECT `id` FROM `user` WHERE `username` = ?',
+            [$username]
+        );
+
+        $data   = Dba::fetch_assoc($db_results);
+        $result = $data['id'] ?? null;
+
+        if ($result !== null) {
+            return (int) $result;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Get the current hashed user password
+     */
+    public function retrievePasswordFromUser(int $userId): string
+    {
+        $sql        = 'SELECT * FROM `user` WHERE `id` = ?';
+        $db_results = Dba::read($sql, [$userId]);
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['password'] ?? '';
+    }
+
+    /**
+     * Writes a single user column, bounded by the enum because the column name goes into the statement
+     */
+    public function setField(int $userId, UserFieldEnum $field, int|string|null $value): bool
+    {
+        try {
+            $this->connection->query(
+                sprintf('UPDATE `user` SET `%s` = ? WHERE `id` = ?', $field->value),
+                [$value, $userId]
+            );
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Writes a free-form counter against a user, replacing whatever was there
+     */
+    public function setUserData(int $userId, string $key, float|int|string $value): void
+    {
+        $this->connection->query(
+            'REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;',
+            [$userId, $key, $value]
+        );
+    }
+
+    /**
+     * Writes a fresh validation key and disables the account until it is used
+     */
+    public function setValidation(int $userId, string $validation): bool
+    {
+        try {
+            $this->connection->query(
+                "UPDATE `user` SET `validation` = ?, `disabled`='1' WHERE `id` = ?",
+                [$validation, $userId]
+            );
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Updates a users api key
+     */
+    public function updateApiKey(int $userId, string $apikey): void
+    {
+        $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
+
+        Dba::write($sql, [$apikey, $userId]);
+    }
+
+    /**
+     * updates the last seen data for the user
+     */
+    public function updateLastSeen(
+        int $userId,
+    ): void {
+        Dba::write(
+            'UPDATE user SET last_seen = ? WHERE `id` = ?',
+            [time(), $userId]
+        );
+    }
+
+    /**
+     * Updates a users RSS token
+     */
+    public function updateRssToken(int $userId, string $rssToken): void
+    {
+        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
+
+        Dba::write($sql, [$rssToken, $userId]);
+    }
+
+    /**
+     * Updates a users Stream token
+     */
+    public function updateStreamToken(int $userId, string $userName, string $streamToken): void
+    {
+        $sql = "UPDATE `user` SET `streamtoken` = ? WHERE `id` = ?";
+        Dba::write($sql, [$streamToken, $userId]);
+    }
+
+    /**
+     * Stores the encrypted Subsonic secret for a user, or clears it when `null` is given
+     */
+    public function updateSubsonicSecret(int $userId, ?string $secret): void
+    {
+        $sql = "UPDATE `user` SET `subsonic_secret` = ? WHERE `id` = ?";
+
+        Dba::write($sql, [$secret, $userId]);
     }
 }

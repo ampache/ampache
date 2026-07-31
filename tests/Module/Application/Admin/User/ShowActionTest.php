@@ -33,28 +33,14 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?ShowAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->ui,
-            $this->modelFactory
-        );
-    }
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunRendersList(): void
     {
@@ -103,6 +89,18 @@ class ShowActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui           = $this->mock(UiInterface::class);
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->ui,
+            $this->modelFactory
         );
     }
 }

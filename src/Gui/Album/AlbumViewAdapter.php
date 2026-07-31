@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -55,39 +55,94 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         private FunctionCheckerInterface $functionChecker,
         private GuiGatekeeperInterface $gatekeeper,
         private Browse $browse,
-        private Album $album
-    ) {
+        private Album $album,
+    ) {}
+
+    public function canAppendNext(): bool
+    {
+        return Stream_Playlist::check_autoplay_append();
     }
 
-    public function getId(): int
+    public function canAutoplayNext(): bool
     {
-        return $this->album->getId();
+        return Stream_Playlist::check_autoplay_next();
     }
 
-    public function getRating(): string
+    public function canBatchDownload(): bool
     {
-        return Rating::show($this->album->getId(), 'album');
+        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
+            && $this->zipHandler->isZipable('album');
     }
 
-    public function getAverageRating(): string
+    public function canBeDeleted(): bool
     {
-        $rating = $this->modelFactory->createRating(
-            $this->album->getId(),
-            'album'
+        return Catalog::can_remove($this->album);
+    }
+
+    public function canPostShout(): bool
+    {
+        return (
+            $this->configContainer->isAuthenticationEnabled() === false
+            || $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+        )
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
+    }
+
+    public function canShare(): bool
+    {
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
+    }
+
+    public function canShowYear(): bool
+    {
+        return $this->getDisplayYear() > 0;
+    }
+
+    public function getAddToPlaylistIcon(): string
+    {
+        return Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label());
+    }
+
+    public function getAddToTemporaryPlaylistButton(): string
+    {
+        $albumId = $this->album->getId();
+
+        return Ajax::button(
+            '?action=basket&type=album&id=' . $albumId,
+            'new_window',
+            T_('Add to Temporary Playlist'),
+            'add_album_' . $albumId
         );
-
-        return (string) $rating->get_average_rating();
     }
 
-    public function getUserFlags(): string
+    public function getAlbumLink(): string
     {
-        return Userflag::show($this->album->getId(), 'album');
+        return $this->album->get_f_link();
+    }
+
+    public function getAlbumUrl(): string
+    {
+        return $this->album->get_link();
+    }
+
+    public function getAppendNextButton(): string
+    {
+        $albumId = $this->album->getId();
+
+        return Ajax::button(
+            '?page=stream&action=directplay&object_type=album&object_id=' . $albumId . '&append=true',
+            'low_priority',
+            T_('Play last'),
+            'addplay_album_' . $albumId
+        );
     }
 
     public function getArt(): string
     {
         $albumId = $this->album->getId();
-        $name    = ($this->album->get_parent_fullname() != "")
+        $name    = ($this->album->get_parent_fullname() !== "")
             ? '[' . $this->album->get_parent_fullname() . '] ' . scrub_out($this->album->get_fullname())
             : scrub_out($this->album->get_fullname());
 
@@ -106,26 +161,9 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         return '';
     }
 
-    public function canAutoplayNext(): bool
+    public function getArtistLink(): string
     {
-        return Stream_Playlist::check_autoplay_next();
-    }
-
-    public function canAppendNext(): bool
-    {
-        return Stream_Playlist::check_autoplay_append();
-    }
-
-    public function getDirectplayButton(): string
-    {
-        $albumId = $this->album->getId();
-
-        return Ajax::button(
-            '?page=stream&action=directplay&object_type=album&object_id=' . $albumId,
-            'play_circle',
-            T_('Play'),
-            'play_album_' . $albumId
-        );
+        return (string) $this->album->get_f_parent_link();
     }
 
     public function getAutoplayNextButton(): string
@@ -140,27 +178,100 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         );
     }
 
-    public function getAppendNextButton(): string
+    public function getAverageRating(): string
     {
-        $albumId = $this->album->getId();
+        $rating = $this->modelFactory->createRating(
+            $this->album->getId(),
+            'album'
+        );
 
-        return Ajax::button(
-            '?page=stream&action=directplay&object_type=album&object_id=' . $albumId . '&append=true',
-            'low_priority',
-            T_('Play last'),
-            'addplay_album_' . $albumId
+        return (string) $rating->get_average_rating();
+    }
+
+    public function getBatchDownloadIcon(): string
+    {
+        return Ui::get_material_symbol('folder_zip', T_('Batch download'));
+    }
+
+    public function getBatchDownloadUrl(): string
+    {
+        return sprintf(
+            '%s/batch.php?action=album&id=%s',
+            $this->configContainer->getWebPath(),
+            $this->album->id
         );
     }
 
-    public function getAddToTemporaryPlaylistButton(): string
+    public function getDeletionIcon(): string
+    {
+        return Ui::get_material_symbol('close', T_('Delete'));
+    }
+
+    public function getDeletionUrl(): string
+    {
+        return sprintf(
+            '%s/albums.php?action=%s&album_id=%d',
+            $this->configContainer->getWebPath(),
+            DeleteAction::REQUEST_KEY,
+            $this->album->getId()
+        );
+    }
+
+    public function getDirectplayButton(): string
     {
         $albumId = $this->album->getId();
 
         return Ajax::button(
-            '?action=basket&type=album&id=' . $albumId,
-            'new_window',
-            T_('Add to Temporary Playlist'),
-            'add_album_' . $albumId
+            '?page=stream&action=directplay&object_type=album&object_id=' . $albumId,
+            'play_circle',
+            T_('Play'),
+            'play_album_' . $albumId
+        );
+    }
+
+    public function getDisplayYear(): int
+    {
+        return ($this->configContainer->get('use_original_year') && $this->album->original_year)
+            ? $this->album->original_year
+            : $this->album->year;
+    }
+
+    public function getEditButtonTitle(): string
+    {
+        return T_('Album Edit');
+    }
+
+    public function getEditIcon(): string
+    {
+        return Ui::get_material_symbol('edit', T_('Edit'));
+    }
+
+    public function getGenre(): string
+    {
+        return $this->album->get_f_tags();
+    }
+
+    public function getId(): int
+    {
+        return $this->album->getId();
+    }
+
+    public function getPlayedTimes(): int
+    {
+        return $this->album->total_count;
+    }
+
+    public function getPostShoutIcon(): string
+    {
+        return Ui::get_material_symbol('comment', T_('Post Shout'));
+    }
+
+    public function getPostShoutUrl(): string
+    {
+        return sprintf(
+            '%s/shout.php?action=show_add_shout&type=album&id=%d',
+            $this->configContainer->getWebPath(),
+            $this->album->getId()
         );
     }
 
@@ -176,33 +287,9 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         );
     }
 
-    public function canPostShout(): bool
+    public function getRating(): string
     {
-        return (
-            $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        ) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
-    }
-
-    public function getPostShoutUrl(): string
-    {
-        return sprintf(
-            '%s/shout.php?action=show_add_shout&type=album&id=%d',
-            $this->configContainer->getWebPath(),
-            $this->album->getId()
-        );
-    }
-
-    public function getPostShoutIcon(): string
-    {
-        return Ui::get_material_symbol('comment', T_('Post Shout'));
-    }
-
-    public function canShare(): bool
-    {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
+        return Rating::show($this->album->getId(), 'album');
     }
 
     public function getShareUi(): string
@@ -210,109 +297,21 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         return Share::display_ui('album', $this->album->getId(), false);
     }
 
-    public function canBatchDownload(): bool
+    public function getSongCount(): int
     {
-        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
-            $this->zipHandler->isZipable('album');
+        return $this->album->song_count;
     }
 
-    public function getBatchDownloadUrl(): string
+    public function getUserFlags(): string
     {
-        return sprintf(
-            '%s/batch.php?action=album&id=%s',
-            $this->configContainer->getWebPath(),
-            $this->album->id
-        );
-    }
-
-    public function getBatchDownloadIcon(): string
-    {
-        return Ui::get_material_symbol('folder_zip', T_('Batch download'));
+        return Userflag::show($this->album->getId(), 'album');
     }
 
     public function isEditable(): bool
     {
         return (
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
-            $this->gatekeeper->getUserId() == $this->album->get_user_owner()
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            || $this->gatekeeper->getUserId() == $this->album->get_user_owner()
         );
-    }
-
-    public function getEditButtonTitle(): string
-    {
-        return T_('Album Edit');
-    }
-
-    public function getEditIcon(): string
-    {
-        return Ui::get_material_symbol('edit', T_('Edit'));
-    }
-
-    public function getDeletionUrl(): string
-    {
-        return sprintf(
-            '%s/albums.php?action=%s&album_id=%d',
-            $this->configContainer->getWebPath(),
-            DeleteAction::REQUEST_KEY,
-            $this->album->getId()
-        );
-    }
-
-    public function getDeletionIcon(): string
-    {
-        return Ui::get_material_symbol('close', T_('Delete'));
-    }
-
-    public function canBeDeleted(): bool
-    {
-        return Catalog::can_remove($this->album);
-    }
-
-    public function getAddToPlaylistIcon(): string
-    {
-        return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
-    }
-
-    public function getPlayedTimes(): int
-    {
-        return $this->album->total_count;
-    }
-
-    public function getAlbumUrl(): string
-    {
-        return $this->album->get_link();
-    }
-
-    public function getAlbumLink(): string
-    {
-        return $this->album->get_f_link();
-    }
-
-    public function getArtistLink(): string
-    {
-        return (string)$this->album->get_f_parent_link();
-    }
-
-    public function canShowYear(): bool
-    {
-        return $this->getDisplayYear() > 0;
-    }
-
-    public function getDisplayYear(): int
-    {
-        return ($this->configContainer->get('use_original_year') && $this->album->original_year)
-            ? $this->album->original_year
-            : $this->album->year;
-    }
-
-    public function getGenre(): string
-    {
-        return $this->album->get_f_tags();
-    }
-
-    public function getSongCount(): int
-    {
-        return $this->album->song_count;
     }
 }

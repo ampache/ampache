@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,29 +33,22 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class DeleteAction extends AbstractFilterAction
 {
-    public const REQUEST_KEY = 'delete';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-    }
+        private readonly UiInterface $ui,
+        private readonly ConfigContainerInterface $configContainer,
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
         $this->ui->showHeader();
 
-        $filter_id   = (int)($request->getQueryParams()['filter_id'] ?? 0);
+        $filter_id   = (int) ($request->getQueryParams()['filter_id'] ?? 0);
         $filter_name = scrub_out($request->getQueryParams()['filter_name']);
         /* HINT: The name of the catalog filter */
         $warning_msg = sprintf(T_('This will permanently delete the catalog filter "%s"'), $filter_name) . '<br>' . T_('Users will be reset to the DEFAULT filter.');

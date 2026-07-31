@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,17 +36,11 @@ use Ampache\Repository\Model\Plugin;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowPluginsAction implements ApplicationActionInterface
+final readonly class ShowPluginsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_plugins';
+    public const string REQUEST_KEY = 'show_plugins';
 
-    private UiInterface $ui;
-
-    public function __construct(
-        UiInterface $ui
-    ) {
-        $this->ui = $ui;
-    }
+    public function __construct(private UiInterface $ui) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

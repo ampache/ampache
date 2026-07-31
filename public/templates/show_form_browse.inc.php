@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,24 +23,31 @@ declare(strict_types=0);
  *
  */
 
+// show_form_browse.inc.php
+
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;
 
 $web_path = AmpConfig::get_web_path();
 
-$videoRepository = $dic->get(VideoRepositoryInterface::class);
-$filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
-$showAlbumArtist = AmpConfig::get('show_album_artist');
-$showArtist      = AmpConfig::get('show_artist');
-$albumString     = (AmpConfig::get('album_group'))
+$videoRepository  = $dic->get(VideoRepositoryInterface::class);
+$folderRepository = $dic->get(FolderRepositoryInterface::class);
+$filter_str       = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+$showAlbumArtist  = AmpConfig::get('show_album_artist');
+$showArtist       = AmpConfig::get('show_artist');
+$albumString      = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk'; ?>
 
 <h3 class="box-title"><?php echo T_('Browse Ampache...'); ?></h3>
 
 <div class="category_options">
+    <?php if (AmpConfig::get('show_folder') && $folderRepository->getItemCount()) { ?>
+        <a class="category <?php echo ($filter_str == 'show') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/folders.php?action=show&folder=-1"><?php echo T_('Folders'); ?></a>
+    <?php } ?>
     <a class="category <?php echo ($filter_str == 'song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Songs'); ?></a>
     <a class="category <?php echo ($filter_str == 'album_disk' || $filter_str == 'album') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
     <?php if ($showArtist || $filter_str == 'artist') { ?>

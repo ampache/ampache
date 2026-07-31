@@ -4,16 +4,59 @@ services:
   ampache:
     build:
       context: .
-      dockerfile: docker/Dockerfilephp82
+      dockerfile: docker/Dockerfilephp85
     container_name: ampache
     restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "8084:80"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
+      # live-mount the whole repo so code edits are picked up immediately
       - ./:/var/www/html
       - ./docker/log:/var/log/ampache
+      # drop media into docker/media on the host; add a catalog pointing at /media in Ampache
       - ./docker/media:/media
     environment:
       DISABLE_INOTIFYWAIT_CLEAN: ${DISABLE_INOTIFYWAIT_CLEAN-0}
+      # Database connection used for the first-run auto-install (see docker/data/bin/run.sh).
+      # DB_USER/DB_PASSWORD are admin creds used to create the schema; AMPACHE_DB_USER/PASSWORD
+      # are the app creds written into config/ampache.cfg.php.
+      # Leave DB_NAME empty to skip auto-install and use the web installer instead.
+      DB_HOST: ${DB_HOST-db}
+      DB_PORT: ${DB_PORT-3306}
+      DB_NAME: ${DB_NAME-ampache}
+      DB_USER: ${DB_USER-root}
+      DB_PASSWORD: ${DB_PASSWORD-ampache}
+      AMPACHE_DB_USER: ${AMPACHE_DB_USER-ampache}
+      AMPACHE_DB_PASSWORD: ${AMPACHE_DB_PASSWORD-ampache}
+      # Optional first-run admin account (omit AMPACHE_ADMIN_USER to skip)
+      AMPACHE_ADMIN_USER: ${AMPACHE_ADMIN_USER-admin}
+      AMPACHE_ADMIN_PASSWORD: ${AMPACHE_ADMIN_PASSWORD-admin}
+      AMPACHE_ADMIN_EMAIL: ${AMPACHE_ADMIN_EMAIL-admin@example.com}
+
+  db:
+    image: mariadb:lts
+    container_name: ampache-db
+    restart: on-failure
+    ports:
+      # exposed on the host so you can connect with an external DB tool
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD-ampache}
+      MARIADB_DATABASE: ${DB_NAME-ampache}
+      MARIADB_USER: ${AMPACHE_DB_USER-ampache}
+      MARIADB_PASSWORD: ${AMPACHE_DB_PASSWORD-ampache}
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  db-data:

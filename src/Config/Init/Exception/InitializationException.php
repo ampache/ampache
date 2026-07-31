@@ -27,6 +27,4 @@ namespace Ampache\Config\Init\Exception;
 
 use Exception;
 
-abstract class InitializationException extends Exception
-{
-}
+abstract class InitializationException extends Exception {}

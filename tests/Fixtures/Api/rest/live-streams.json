@@ -1,0 +1,22 @@
+{
+    "total_count": 20,
+    "md5": "a2cd0ea1d7b273c04cdb37c11895ed6c",
+    "live_stream": [
+        {
+            "id": "10",
+            "name": "4ZZZ Community Radio",
+            "url": "https:\/\/iheart.4zzz.org.au\/4zzz",
+            "codec": "mp3",
+            "catalog": "2",
+            "site_url": "https:\/\/4zzzfm.org.au"
+        },
+        {
+            "id": "29",
+            "name": "dewaardradio",
+            "url": "https:\/\/music.com.au\/dewaardradio",
+            "codec": "mp3",
+            "catalog": "2",
+            "site_url": "https:\/\/music.com.au:8000\/"
+        }
+    ]
+}

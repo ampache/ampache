@@ -33,15 +33,9 @@ use Ampache\Repository\Model\Podcast;
 /**
  * Provides functionality to build the podcasts root folder
  */
-final class PodcastFolderProvider implements PodcastFolderProviderInterface
+final readonly class PodcastFolderProvider implements PodcastFolderProviderInterface
 {
-    private CatalogLoaderInterface $catalogLoader;
-
-    public function __construct(
-        CatalogLoaderInterface $catalogLoader
-    ) {
-        $this->catalogLoader = $catalogLoader;
-    }
+    public function __construct(private CatalogLoaderInterface $catalogLoader) {}
 
     /**
      * Returns the podcasts base folder
@@ -71,8 +65,8 @@ final class PodcastFolderProvider implements PodcastFolderProviderInterface
 
         // create path if it doesn't exist
         if (
-            !is_dir($fullPath) &&
-            @mkdir($fullPath, 0775) === false
+            !is_dir($fullPath)
+            && @mkdir($fullPath, 0775) === false
         ) {
             throw new PodcastFolderException(sprintf('Cannot create folder: %s', $fullPath));
         }

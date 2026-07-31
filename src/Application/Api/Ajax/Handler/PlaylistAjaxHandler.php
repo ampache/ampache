@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,16 +33,15 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
 final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
-        private RequestParserInterface $requestParser
-    ) {
-    }
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function handle(User $user): void
     {
@@ -53,23 +52,34 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'delete_track':
                 // Create the object and remove the track
-                $playlist = new Playlist($_REQUEST['playlist_id']);
+                $playlist = new Playlist((int) ($_REQUEST['playlist_id'] ?? 0));
                 if ($playlist->isNew()) {
                     break;
                 }
 
                 if ($playlist->has_collaborate()) {
-                    $playlist->delete_track($_REQUEST['track_id']);
-                    // This could have performance issues
-                    $playlist->regenerate_track_numbers();
+                    // A multi-select bar sends every checked row at once, so renumber once at the end instead
+                    // of paying for a full regenerate per track.
+                    $track_ids = array_filter(
+                        array_map('intval', explode(',', (string) ($_REQUEST['track_id'] ?? ''))),
+                        static fn(int $track_id): bool => $track_id > 0
+                    );
+                    foreach ($track_ids as $track_id) {
+                        $playlist->delete_track($track_id);
+                    }
+
+                    if ($track_ids !== []) {
+                        // This could have performance issues
+                        $playlist->regenerate_track_numbers();
+                    }
                 }
 
-                $browse_id  = (int)($_REQUEST['browse_id'] ?? 0);
+                $browse_id  = (int) ($_REQUEST['browse_id'] ?? 0);
                 $object_ids = $playlist->get_items();
                 ob_start();
                 $browse = new Browse($browse_id);
                 $browse->set_type('playlist_media');
-                $browse->add_supplemental_object('playlist', $playlist->id);
+                $browse->add_supplemental_object('playlist', $playlist);
                 $browse->save_objects($object_ids);
                 $browse->show_objects($object_ids);
                 $browse->store();
@@ -89,14 +99,14 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                         $name = $user->username . ' - ' . get_datetime(time());
                     }
 
-                    $playlist_id = (int)Playlist::create($name, 'public');
+                    $playlist_id = (int) Playlist::create($name, 'public');
                     if ($playlist_id < 1) {
                         break;
                     }
 
                     $playlist = new Playlist($playlist_id);
                 } else {
-                    $playlist = new Playlist($_REQUEST['playlist_id']);
+                    $playlist = new Playlist((int) $_REQUEST['playlist_id']);
                 }
 
                 if (!$playlist->has_collaborate()) {
@@ -109,13 +119,13 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 $item_id   = $_REQUEST['item_id'] ?? '';
                 $item_type = $_REQUEST['item_type'] ?? '';
 
-                if (!empty($item_type) && InterfaceImplementationChecker::is_playable_item($item_type)) {
+                if (!empty($item_type) && InterfaceImplementationChecker::is_library_item($item_type)) {
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
                     $item_ids = explode(',', (string) $item_id);
                     foreach ($item_ids as $iid) {
                         $className = ObjectTypeToClassNameMapper::map($item_type);
-                        /** @var library_item $libitem */
-                        $libitem = new $className($iid);
+                        /** @var container_item $libitem */
+                        $libitem = new $className((int) $iid);
                         if ($libitem->isNew() === false) {
                             $medias = array_merge($medias, $libitem->get_medias());
                         }
@@ -126,20 +136,21 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if (
-                    $medias !== [] &&
-                    $playlist->add_medias($medias)
+                    $medias !== []
+                    && $playlist->add_medias($medias)
                 ) {
                     Ajax::set_include_override(true);
 
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
                     ob_start();
                     display_notification(T_('Added to playlist'));
-                    $results['reloader'] = ob_get_clean();
+                    $results['reloader']    = ob_get_clean();
+                    $results['playlist_id'] = (string) $playlist->id;
                 } else {
                     debug_event('playlist.ajax', 'No item to add. Aborting...', 5);
                 }
         }
 
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

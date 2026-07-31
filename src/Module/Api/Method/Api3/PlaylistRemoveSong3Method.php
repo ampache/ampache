@@ -34,7 +34,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistRemoveSong3Method
 {
-    public const ACTION = 'playlist_remove_song';
+    public const string ACTION = 'playlist_remove_song';
 
     /**
      * playlist_remove_song
@@ -56,10 +56,10 @@ final class PlaylistRemoveSong3Method
         $playlist = new Playlist((int) $input['filter']);
         $track    = (int) scrub_in((string) ($input['track'] ?? 0));
         if (!$playlist->has_collaborate()) {
-            echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
+            echo Xml3_Data::error(401, 'Access denied to this playlist.');
         } else {
             $playlist->delete_track_number($track);
-            echo Xml3_Data::single_string('success');
+            echo Xml3_Data::success();
         }
     }
 }

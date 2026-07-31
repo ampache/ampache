@@ -25,20 +25,32 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
-use Ampache\Repository\Model\Artist;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class ArtistSongs5Method
+ * Returns the songs of a single artist.
+ *
+ * Version 5 reads the songs straight from the song repository and ignores the `sort` and `cond`
+ * parameters that the later versions browse with, so it keeps a method of its own.
  */
-final class ArtistSongs5Method
+final class ArtistSongs5Method implements MethodInterface
 {
-    public const ACTION = 'artist_songs';
+    public const string ACTION = 'artist_songs';
+
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private SongRepositoryInterface $songRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * artist_songs
@@ -52,58 +64,58 @@ final class ArtistSongs5Method
      * limit = (integer) //optional
      *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     top50?: int,
      *     offset?: int,
      *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function artist_songs(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('filter', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
         }
-        $object_id = (int) $input['filter'];
-        $artist    = new Artist($object_id);
+
+        $objectId = (int) $input['filter'];
+
+        $artist = $this->modelFactory->createArtist($objectId);
         if ($artist->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException((string) $objectId);
         }
+
         $results = (array_key_exists('top50', $input) && (int) $input['top50'] == 1)
-            ? self::getSongRepository()->getTopSongsByArtist($artist)
-            : self::getSongRepository()->getByArtist($object_id);
-        if (empty($results)) {
-            Api5::empty('song', $input['api_format']);
+            ? $this->songRepository->getTopSongsByArtist($artist)
+            : $this->songRepository->getByArtist($objectId);
 
-            return false;
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'song')
+                )
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::songs($results, $user, $input['auth']);
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::songs($results, $user, $input['auth']);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
-    }
-
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

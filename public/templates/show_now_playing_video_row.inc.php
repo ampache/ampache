@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_now_playing_video_row.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
@@ -39,7 +41,7 @@ use Ampache\Repository\Model\Video;
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo $t_username; ?></label>
-        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id ?? -1; ?>">
+        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id ?: -1; ?>">
         <?php echo scrub_out($np_user->fullname); ?>
         <?php echo '<div>' . $np_user->get_f_avatar('f_avatar_medium') . '</div>'; ?>
         </a>
@@ -57,10 +59,10 @@ use Ampache\Repository\Model\Video;
     <div class="np_cell cel_video">
         <?php $art_showed = false;
 if ($media->get_default_art_kind() == 'preview') {
-    $art_showed = Art::display('video', $media->id, (string)$media->getFileName(), ['width' => 150, 'height' => 84], $media->get_link(), false, true, 'preview');
+    $art_showed = Art::display('video', $media->id, (string) $media->getFileName(), ['width' => 150, 'height' => 84], $media->get_link(), false, true, 'preview');
 }
 if (!$art_showed) {
-    Art::display('video', $media->id, (string)$media->getFileName(), ['width' => 100, 'height' => 150], $media->get_link());
+    Art::display('video', $media->id, (string) $media->getFileName(), ['width' => 100, 'height' => 150], $media->get_link());
 } ?>
     </div>
 </div>

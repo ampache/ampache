@@ -37,31 +37,21 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class DeleteAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        RequestParserInterface $requestParser
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->requestParser   = $requestParser;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
         ) {
             throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
@@ -70,7 +60,7 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 

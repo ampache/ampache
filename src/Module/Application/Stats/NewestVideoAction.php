@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -38,15 +38,14 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class NewestVideoAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'newest_video';
+    public const string REQUEST_KEY = 'newest_video';
 
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private ConfigContainerInterface $configContainer,
-        private VideoRepositoryInterface $videoRepository
-    ) {
-    }
+        private VideoRepositoryInterface $videoRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -61,8 +60,8 @@ final readonly class NewestVideoAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO)
+            && $this->videoRepository->getItemCount()
         ) {
             $objects = Stats::get_newest('video', -1, 0, 0, $gatekeeper->getUser());
             $browse  = $this->modelFactory->createBrowse();

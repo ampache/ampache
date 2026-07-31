@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -26,22 +28,12 @@ namespace Ampache\Repository;
 interface UserActivityRepositoryInterface
 {
     /**
-     * @return int[]
+     * Remove activities for items that no longer exist.
      */
-    public function getFriendsActivities(
-        int $user_id,
-        int $limit = 0,
-        int $since = 0
-    ): array;
-
-    /**
-     * @return int[]
-     */
-    public function getActivities(
-        int $user_id,
-        int $limit = 0,
-        int $since = 0
-    ): array;
+    public function collectGarbage(
+        ?string $object_type = null,
+        ?int $object_id = null,
+    ): void;
 
     /**
      * Delete activity by date
@@ -49,16 +41,26 @@ interface UserActivityRepositoryInterface
     public function deleteByDate(
         int $date,
         string $action,
-        int $user_id = 0
+        int $user_id = 0,
     ): void;
 
     /**
-     * Remove activities for items that no longer exist.
+     * @return int[]
      */
-    public function collectGarbage(
-        ?string $object_type = null,
-        ?int $object_id = null
-    ): void;
+    public function getActivities(
+        int $user_id,
+        int $limit = 0,
+        int $since = 0,
+    ): array;
+
+    /**
+     * @return int[]
+     */
+    public function getFriendsActivities(
+        int $user_id,
+        int $limit = 0,
+        int $since = 0,
+    ): array;
 
     /**
      * Inserts the necessary data to register a generic action on an object
@@ -70,6 +72,6 @@ interface UserActivityRepositoryInterface
         string $action,
         string $object_type,
         int $objectId,
-        int $date
+        int $date,
     ): void;
 }

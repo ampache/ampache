@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
@@ -42,34 +43,20 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdateUserAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'update_user';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UserRepositoryInterface $userRepository;
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'update_user';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        UserRepositoryInterface $userRepository,
-        RequestParserInterface $requestParser
-    ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->userRepository  = $userRepository;
-        $this->requestParser   = $requestParser;
-    }
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly RequestParserInterface $requestParser,
+        private readonly SymmetricEncrypterInterface $symmetricEncrypter,
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
@@ -77,7 +64,7 @@ final class UpdateUserAction extends AbstractUserAction
             throw new AccessDeniedException();
         }
 
-        $body = (array)$request->getParsedBody();
+        $body = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
 
@@ -93,6 +80,8 @@ final class UpdateUserAction extends AbstractUserAction
         $catalog_filter_group = (int) ($body['catalog_filter_group'] ?? 0);
         $pass1                = Core::get_post('password_1');
         $pass2                = Core::get_post('password_2');
+        $subsonicPass1        = Core::get_post('subsonic_password_1');
+        $subsonicPass2        = Core::get_post('subsonic_password_2');
         $state                = scrub_in(htmlspecialchars($body['state'] ?? '', ENT_NOQUOTES));
         $city                 = scrub_in(htmlspecialchars($body['city'] ?? '', ENT_NOQUOTES));
         $fullname_public      = isset($_POST['fullname_public']);
@@ -101,11 +90,11 @@ final class UpdateUserAction extends AbstractUserAction
         $client = $this->modelFactory->createUser($user_id);
 
         // option to reset user preferences to default
-        $preset = (string)($body['preset'] ?? '');
+        $preset = (string) ($body['preset'] ?? '');
         // you must explicitly disable the option on the edit page to reset user preferences admin can't be changed
         $prevent_override = ($client->access === 100)
             ? 1
-            : (int)($body['prevent_override'] ?? 0);
+            : (int) ($body['prevent_override'] ?? 0);
 
         /* Verify Input */
         if (empty($username)) {
@@ -113,8 +102,13 @@ final class UpdateUserAction extends AbstractUserAction
         } elseif ($username != $client->username && $this->userRepository->idByUsername($username) > 0) {
             AmpError::add('username', T_("That Username already exists"));
         }
-        if ($pass1 !== $pass2 && !empty($pass1)) {
+
+        if ($pass1 !== $pass2 && ($pass1 !== '' && $pass1 !== '0')) {
             AmpError::add('password', T_("Your Passwords don't match"));
+        }
+
+        if ($subsonicPass1 !== $subsonicPass2 && $subsonicPass1 !== '') {
+            AmpError::add('subsonic_password', T_("Passwords do not match"));
         }
 
         // Check the mail for correct address formation.
@@ -124,9 +118,9 @@ final class UpdateUserAction extends AbstractUserAction
 
         // Check the website for a valid site.
         if (
-            isset($body['website']) &&
-            strlen($body['website']) > 6 &&
-            $website === ''
+            isset($body['website'])
+            && strlen($body['website']) > 6
+            && $website === ''
         ) {
             AmpError::add('website', T_('Error'));
         }
@@ -141,43 +135,64 @@ final class UpdateUserAction extends AbstractUserAction
             return null;
         }
 
-        if ($access != $client->access) {
+        if ($access !== $client->access) {
             $client->update_access($access);
         }
-        if ($catalog_filter_group != $client->catalog_filter_group) {
+
+        if ($catalog_filter_group !== $client->catalog_filter_group) {
             $client->update_catalog_filter_group($catalog_filter_group);
         }
+
         if ($email != $client->email) {
             $client->update_email($email);
         }
+
         if ($website != $client->website) {
             $client->update_website($website);
         }
+
         if ($username != $client->username) {
             $client->update_username($username);
         }
+
         if ($fullname != $client->fullname) {
             $client->update_fullname($fullname);
         }
-        if ($fullname_public != $client->fullname_public) {
+
+        if ($fullname_public !== $client->fullname_public) {
             $client->update_fullname_public($fullname_public);
         }
-        if ($pass1 == $pass2 && strlen($pass1)) {
+
+        if ($pass1 === $pass2 && strlen($pass1)) {
             $client->update_password($pass1);
         }
+
+        // Stored reversibly encrypted rather than hashed, because Subsonic token auth has to recompute md5(secret+salt)
+        if ($subsonicPass1 === $subsonicPass2 && strlen($subsonicPass1)) {
+            $secret = $this->symmetricEncrypter->encrypt($subsonicPass1);
+            if ($secret === null) {
+                AmpError::add('subsonic_password', T_('Could not store the Subsonic password. Check that secret_key is set in your Ampache config'));
+            } else {
+                $this->userRepository->updateSubsonicSecret($client->getId(), $secret);
+            }
+        }
+
         if ($state != $client->state) {
             $client->update_state($state);
         }
+
         if ($city != $client->city) {
             $client->update_city($city);
         }
+
         // reset preferences if allowed
         if (
-            $prevent_override === 0 &&
-            in_array($preset, ['system', 'default', 'minimalist', 'community'])
+            $prevent_override === 0
+            && in_array($preset, ['system', 'default', 'minimalist', 'community'], true)
         ) {
             Preference::set_preset($client->getUsername(), $preset);
         }
+
         if (!$client->upload_avatar()) {
             $mindimension = sprintf(
                 '%dx%d',

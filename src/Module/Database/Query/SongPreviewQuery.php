@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -29,26 +29,15 @@ use Ampache\Repository\Model\Query;
 
 final class SongPreviewQuery implements QueryInterface
 {
-    protected string $select = "";
-
-    protected string $base = "";
-
-    public const FILTERS = [
+    public const array FILTERS = [
     ];
+
+    protected string $base   = "";
+    protected string $select = "";
 
     /** @var string[] $sorts */
     protected array $sorts = [
     ];
-
-    /**
-     * get_select
-     *
-     * This method returns the columns a query will user for SELECT
-     */
-    public function get_select(): string
-    {
-        return $this->select;
-    }
 
     /**
      * get_base_sql
@@ -58,6 +47,16 @@ final class SongPreviewQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_select
+     *
+     * This method returns the columns a query will user for SELECT
+     */
+    public function get_select(): string
+    {
+        return $this->select;
     }
 
     /**
@@ -85,11 +84,8 @@ final class SongPreviewQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
         return '';
     }

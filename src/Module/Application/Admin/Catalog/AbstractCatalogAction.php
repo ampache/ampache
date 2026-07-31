@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -35,13 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractCatalogAction implements ApplicationActionInterface
 {
-    private UiInterface $ui;
-
-    public function __construct(
-        UiInterface $ui
-    ) {
-        $this->ui = $ui;
-    }
+    public function __construct(private readonly UiInterface $ui) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -63,33 +59,32 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
         return null;
     }
 
-    abstract protected function handle(
-        ServerRequestInterface $request,
-        array $catalogIds
-    ): ?ResponseInterface;
-
     protected function getCatalogIds(): ?array
     {
         $catalogs = (isset($_REQUEST['catalogs']))
             ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT)
             : [];
-        if (!is_array($catalogs)) {
-            return null;
-        }
+
         // If only one catalog, check it is ready.
-        if (count($catalogs) == 1) {
+        if (count($catalogs) === 1) {
             // If not ready, display the data to make it ready / stop the action.
-            $catalog = Catalog::create_from_id((int)$catalogs[0]);
+            $catalog = Catalog::create_from_id((int) $catalogs[0]);
             if ($catalog !== null && !$catalog->isReady()) {
                 if (!isset($_REQUEST['perform_ready'])) {
                     $catalog->show_ready_process();
 
                     return null;
                 }
+
                 $catalog->perform_ready();
             }
         }
 
         return $catalogs;
     }
+
+    abstract protected function handle(
+        ServerRequestInterface $request,
+        array $catalogIds,
+    ): ?ResponseInterface;
 }

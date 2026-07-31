@@ -40,21 +40,14 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Exports a catalog according to the submitted configuration
  */
-final class ExportAction implements ApplicationActionInterface
+final readonly class ExportAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'export';
-
-    private CatalogExportFactoryInterface $catalogExportFactory;
-
-    private CatalogLoaderInterface $catalogLoader;
+    public const string REQUEST_KEY = 'export';
 
     public function __construct(
-        CatalogExportFactoryInterface $catalogExportFactory,
-        CatalogLoaderInterface $catalogLoader
-    ) {
-        $this->catalogExportFactory = $catalogExportFactory;
-        $this->catalogLoader        = $catalogLoader;
-    }
+        private CatalogExportFactoryInterface $catalogExportFactory,
+        private CatalogLoaderInterface $catalogLoader,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -73,7 +66,7 @@ final class ExportAction implements ApplicationActionInterface
         // instead of waiting until contents are generated, which could take a long time.
         ob_implicit_flush();
 
-        $requestData  = (array)$request->getParsedBody();
+        $requestData  = (array) $request->getParsedBody();
         $catalogId    = (int) ($requestData['export_catalog'] ?? 0);
         $exportFormat = CatalogExportTypeEnum::tryFrom($requestData['export_format'] ?? '') ?? CatalogExportTypeEnum::CSV;
 

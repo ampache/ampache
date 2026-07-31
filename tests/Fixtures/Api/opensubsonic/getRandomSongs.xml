@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.16.1" type="ampache" serverVersion="8.0.0" openSubsonic="1">
+  <randomSongs>
+    <song id="so-1" parent="al-2" title="Pasadinha" isDir="false" isVideo="false" type="music" albumId="al-2" album="CC Affiliates Mixtape #1" artistId="ar-3" artist="Mendes Brothers" coverArt="al-2" duration="266" bitRate="197" userRating="5" playCount="71" played="2026-07-26T19:42:17Z" track="4" year="2015" size="7234398" discNumber="1" suffix="mp3" contentType="audio/mpeg" path="/media/music/Mendes Brothers - Pasadinha.mp3"/>
+  </randomSongs>
+</subsonic-response>

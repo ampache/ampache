@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,28 +30,36 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
+use Override;
 use WpOrg\Requests\Requests;
 
 class AmpacheBitly extends AmpachePlugin implements PluginShortenerInterface
 {
-    public string $name = 'Bit.ly';
-
+    #[Override]
     public string $categories = 'shortener';
 
+    #[Override]
     public string $description = 'URL shorteners on shared links with Bit.ly';
 
-    public string $url = 'http://bitly.com';
-
-    public string $version = '000003';
-
-    public string $min_ampache = '360037';
-
+    #[Override]
     public string $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to fill them out
-    private $bitly_token;
+    #[Override]
+    public string $min_ampache = '360037';
 
-    private $bitly_group_guid;
+    #[Override]
+    public string $name = 'Bit.ly';
+
+    #[Override]
+    public string $url = 'http://bitly.com';
+
+    #[Override]
+    public string $version = '000003';
+
+    private string $bitly_group_guid;
+
+    // These are internal settings used by this class, run this->load to fill them out
+    private string $bitly_token;
 
     /**
      * Constructor
@@ -75,30 +83,35 @@ class AmpacheBitly extends AmpachePlugin implements PluginShortenerInterface
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function uninstall(): bool
+    public function load(User $user): bool
     {
-        return (
-            Preference::delete('bitly_username') &&
-            Preference::delete('bitly_api_key') &&
-            Preference::delete('bitly_token') &&
-            Preference::delete('bitly_group_guid')
-        );
-    }
+        $user->set_preferences();
+        $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim((string) $data['bitly_token'])) || !strlen(trim((string) $data['bitly_group_guid']))) {
+            $data                     = [];
+            $data['bitly_token']      = Preference::get_by_user(-1, 'bitly_token');
+            $data['bitly_group_guid'] = Preference::get_by_user(-1, 'bitly_group_guid');
+        }
 
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        // Remove v3 preferences
-        Preference::delete('bitly_username');
-        Preference::delete('bitly_api_key');
+        if (strlen(trim((string) $data['bitly_token'])) !== 0) {
+            $this->bitly_token = trim((string) $data['bitly_token']);
+        } else {
+            debug_event('bitly.plugin', 'No Bit.ly Token, shortener skipped', 3);
 
-        $this->install();
+            return false;
+        }
+
+        if (strlen(trim((string) $data['bitly_group_guid'])) !== 0) {
+            $this->bitly_group_guid = trim((string) $data['bitly_group_guid']);
+        } else {
+            debug_event('bitly.plugin', 'No Bit.ly Group GUID, shortener skipped', 3);
+
+            return false;
+        }
 
         return true;
     }
@@ -153,35 +166,30 @@ class AmpacheBitly extends AmpachePlugin implements PluginShortenerInterface
     }
 
     /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
      */
-    public function load(User $user): bool
+    public function uninstall(): bool
     {
-        $user->set_preferences();
-        $data = $user->prefs;
-        // load system when nothing is given
-        if (!strlen(trim((string) $data['bitly_token'])) || !strlen(trim((string) $data['bitly_group_guid']))) {
-            $data                     = [];
-            $data['bitly_token']      = Preference::get_by_user(-1, 'bitly_token');
-            $data['bitly_group_guid'] = Preference::get_by_user(-1, 'bitly_group_guid');
-        }
+        return (
+            Preference::delete('bitly_username')
+            && Preference::delete('bitly_api_key')
+            && Preference::delete('bitly_token')
+            && Preference::delete('bitly_group_guid')
+        );
+    }
 
-        if (strlen(trim((string) $data['bitly_token'])) !== 0) {
-            $this->bitly_token = trim((string) $data['bitly_token']);
-        } else {
-            debug_event('bitly.plugin', 'No Bit.ly Token, shortener skipped', 3);
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        // Remove v3 preferences
+        Preference::delete('bitly_username');
+        Preference::delete('bitly_api_key');
 
-            return false;
-        }
-
-        if (strlen(trim((string) $data['bitly_group_guid'])) !== 0) {
-            $this->bitly_group_guid = trim((string) $data['bitly_group_guid']);
-        } else {
-            debug_event('bitly.plugin', 'No Bit.ly Group GUID, shortener skipped', 3);
-
-            return false;
-        }
+        $this->install();
 
         return true;
     }

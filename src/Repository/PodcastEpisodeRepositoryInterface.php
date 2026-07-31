@@ -37,13 +37,9 @@ use Traversable;
 interface PodcastEpisodeRepositoryInterface
 {
     /**
-     * Returns all episode-ids for the given podcast
-     *
-     * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
-     *
-     * @return list<int>
+     * Cleans up orphaned episodes
      */
-    public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array;
+    public function collectGarbage(): void;
 
     /**
      * Deletes a podcast-episode
@@ -51,6 +47,24 @@ interface PodcastEpisodeRepositoryInterface
      * Before deleting the episode, a backup of the episodes meta-data is created
      */
     public function deleteEpisode(Podcast_Episode $episode): void;
+
+    /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Podcast_Episode;
+
+    /**
+     * Returns the calculated count of available episodes for the given podcast
+     */
+    public function getEpisodeCount(Podcast $podcast): int;
+
+    /**
+     * Returns all episode-ids for the given podcast
+     *
+     * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
+     * @return list<int>
+     */
+    public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array;
 
     /**
      * Returns all podcast episodes which are eligible for deletion
@@ -65,31 +79,46 @@ interface PodcastEpisodeRepositoryInterface
      * Returns all podcast episodes which are eligible for download
      *
      * @param null|positive-int $downloadLimit
-     *
      * @return Traversable<Podcast_Episode>
      */
-    public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit): Traversable;
+    public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit = null): Traversable;
 
     /**
-     * Returns the calculated count of available episodes for the given podcast
+     * Returns a number of random, completed podcast episodes from the whole library
+     *
+     * @return list<int>
      */
-    public function getEpisodeCount(Podcast $podcast): int;
+    public function getRandom(int $userId, ?int $count = 1): array;
 
     /**
-     * Updates the state of an episode
+     * Returns a number of random, completed episodes from a single podcast
+     *
+     * @return list<int>
      */
+    public function getRandomByPodcast(int $podcastId, int $userId, ?int $count = 1): array;
+
+    /**
+     * Stores the path the episode was downloaded to
+     */
+    public function setFile(int $episodeId, string $file): void;
+
+    /**
+     * Flags the episode as played
+     */
+    public function setPlayed(int $episodeId): void;
+
+    /**
+     * Stamps the episode as updated
+     */
+    public function setUpdateTime(int $episodeId, int $time): void;
+
+    /**
+     * Writes the editable properties of an existing episode
+     */
+    public function update(Podcast_Episode $episode): void;
+
     public function updateState(
         Podcast_Episode $episode,
-        PodcastEpisodeStateEnum $state
+        PodcastEpisodeStateEnum $state,
     ): void;
-
-    /**
-     * Cleans up orphaned episodes
-     */
-    public function collectGarbage(): void;
-
-    /**
-     * Finds a single item by its id
-     */
-    public function findById(int $itemId): ?Podcast_Episode;
 }

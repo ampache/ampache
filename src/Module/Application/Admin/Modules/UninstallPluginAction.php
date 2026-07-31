@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,43 +32,31 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class UninstallPluginAction implements ApplicationActionInterface
+final readonly class UninstallPluginAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'uninstall_plugin';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
+    public const string REQUEST_KEY = 'uninstall_plugin';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
-    }
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
+        private PluginManagerInterface $pluginManager,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            !$this->requestParser->verifyForm('uninstall_plugin')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || !$this->requestParser->verifyForm('uninstall_plugin')
         ) {
             throw new AccessDeniedException();
         }
@@ -90,11 +78,9 @@ final class UninstallPluginAction implements ApplicationActionInterface
 
             return null;
         }
-        $plugin = new Plugin($plugin_name);
-        $plugin->uninstall();
 
-        // Don't trust the plugin to do it
-        User::rebuild_all_preferences();
+        // The manager uninstalls and runs the preference rebuild that the plugin cannot be trusted to do itself
+        $this->pluginManager->uninstallPlugin($plugin_name);
 
         /* Show Confirmation */
         $url   = sprintf('%s/modules.php?action=show_plugins', $this->configContainer->getWebPath('/admin'));

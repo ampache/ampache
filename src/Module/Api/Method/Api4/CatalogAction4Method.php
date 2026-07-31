@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class CatalogAction4Method
 {
-    public const ACTION = 'catalog_action';
+    public const string ACTION = 'catalog_action';
 
     /**
      * catalog_action
@@ -68,7 +68,7 @@ final class CatalogAction4Method
         $task = (string) $input['task'];
         // confirm the correct data
         if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'])) {
-            Api4::message('error', T_('Incorrect catalog task') . ' ' . $task, '401', $input['api_format']);
+            Api4::message('error', 'Incorrect catalog task' . ' ' . $task, '401', $input['api_format']);
 
             return false;
         }
@@ -105,7 +105,7 @@ final class CatalogAction4Method
 
             Api4::message('success', 'successfully started: ' . $task, null, $input['api_format']);
         } else {
-            Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
+            Api4::message('error', 'The requested item was not found', '404', $input['api_format']);
         }
 
         return true;

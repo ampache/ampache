@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.16.1">
+  <albumInfo>
+    <notes/>
+    <musicBrainzId>4ff00c1b-d9ee-40dc-aa1d-cd8ec4540667</musicBrainzId>
+    <smallImageUrl>https://music.com.au/image.php?object_id=2&amp;object_type=album&amp;id=1&amp;name=art.jpg</smallImageUrl>
+    <mediumImageUrl>https://music.com.au/image.php?object_id=2&amp;object_type=album&amp;id=1&amp;name=art.jpg</mediumImageUrl>
+    <largeImageUrl>https://music.com.au/image.php?object_id=2&amp;object_type=album&amp;id=1&amp;name=art.jpg</largeImageUrl>
+  </albumInfo>
+</subsonic-response>

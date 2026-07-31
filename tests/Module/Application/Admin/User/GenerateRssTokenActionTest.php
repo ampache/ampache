@@ -44,41 +44,14 @@ class GenerateRssTokenActionTest extends TestCase
 {
     use UserAdminAccessTestTrait;
 
-    private RequestParserInterface&MockObject $requestParser;
-
-    private UiInterface&MockObject $ui;
-
-    private ModelFactoryInterface&MockObject $modelFactory;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private UserKeyGeneratorInterface&MockObject $userKeyGenerator;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
+    private ModelFactoryInterface&MockObject $modelFactory;
     private ServerRequestInterface&MockObject $request;
-
+    private RequestParserInterface&MockObject $requestParser;
     private GenerateRssTokenAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui               = $this->createMock(UiInterface::class);
-        $this->requestParser    = $this->createMock(RequestParserInterface::class);
-        $this->modelFactory     = $this->createMock(ModelFactoryInterface::class);
-        $this->configContainer  = $this->createMock(ConfigContainerInterface::class);
-        $this->userKeyGenerator = $this->createMock(UserKeyGeneratorInterface::class);
-
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-
-        $this->subject = new GenerateRssTokenAction(
-            $this->requestParser,
-            $this->ui,
-            $this->modelFactory,
-            $this->configContainer,
-            $this->userKeyGenerator
-        );
-    }
+    private UiInterface&MockObject $ui;
+    private UserKeyGeneratorInterface&MockObject $userKeyGenerator;
 
     public function testRunErrorsIUserWasNotFound(): void
     {
@@ -171,7 +144,7 @@ class GenerateRssTokenActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }
@@ -179,5 +152,25 @@ class GenerateRssTokenActionTest extends TestCase
     protected function getValidationFormName(): string
     {
         return 'generate_rsstoken';
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui               = $this->createMock(UiInterface::class);
+        $this->requestParser    = $this->createMock(RequestParserInterface::class);
+        $this->modelFactory     = $this->createMock(ModelFactoryInterface::class);
+        $this->configContainer  = $this->createMock(ConfigContainerInterface::class);
+        $this->userKeyGenerator = $this->createMock(UserKeyGeneratorInterface::class);
+
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+
+        $this->subject = new GenerateRssTokenAction(
+            $this->requestParser,
+            $this->ui,
+            $this->modelFactory,
+            $this->configContainer,
+            $this->userKeyGenerator
+        );
     }
 }

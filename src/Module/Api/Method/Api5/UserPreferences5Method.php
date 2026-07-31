@@ -25,16 +25,28 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PreferenceRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class UserPreferences5Method
+ * Returns the calling user's preferences.
+ *
+ * Version 5 wraps the json payload in a `preference` array, so it keeps a method of its own.
  */
-final class UserPreferences5Method
+final class UserPreferences5Method implements MethodInterface
 {
-    public const ACTION = 'user_preferences';
+    public const string ACTION = 'user_preferences';
+
+    public function __construct(
+        private PreferenceRepositoryInterface $preferenceRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * user_preferences
@@ -46,30 +58,25 @@ final class UserPreferences5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
      */
-    public static function user_preferences(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         // fix preferences that are missing for user
-        User::fix_preferences($user->id);
+        Preference::fix_user_preferences($user->id);
 
-        $results = ['preference' => self::getPreferenceRepository()->getAll($user)];
+        $results = ['preference' => $this->preferenceRepository->getAll($user)];
 
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($results, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Api::object_array($results['preference'], 'preference');
-        }
-    }
-
-    /**
-     * @todo Replace by constructor injection
-     */
-    private static function getPreferenceRepository(): PreferenceRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PreferenceRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->objectArray($apiVersion, $results, $results['preference'], 'preference')
+            )
+        );
     }
 }

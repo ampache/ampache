@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 87
+config_version = 95
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -37,7 +37,7 @@ config_version = 87
 ;composer_binary_path = "composer"
 
 ; By default Ampache doesn't install dev packages using the --no-dev parameter
-; disable this setting to install dev packages (e.g. composer install --prefer-source --no-interaction)
+; disable this setting to install dev packages (e.g. composer install --prefer-dist --no-interaction)
 ; DEFAULT: "true"
 composer_no_dev = "true"
 
@@ -188,8 +188,9 @@ session_cookiesecure = 0
 ; Auth Methods
 ; This defines which auth methods Auth will attempt to use and in which order.
 ; If auto_create isn't enabled the user must exist locally.
+; Separate the values with a comma and do not add spaces between them.
 ; DEFAULT: mysql
-; VALUES: mysql,ldap,http,pam,external
+; VALUES: mysql,ldap,http,pam,external,oidc
 auth_methods = "mysql"
 
 ; External authentication
@@ -451,7 +452,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; This setting allows/disallows zip download of specific object types
 ; If empty, all supported object types can be zipped.
 ; Otherwise, only the given object list can be zipped.
-; POSSIBLE VALUES: artist, album, album_disk, playlist, search, tmp_playlist
+; POSSIBLE VALUES: artist, album, album_disk, playlist, search, song, tmp_playlist
 ; DEFAULT: none
 ;allow_zip_types = "album, album_disk"
 
@@ -608,13 +609,12 @@ sociable = "true"
 ;simple_user_mode = "true"
 
 ; Caching
-; This turns the caching mechanisms on or off, due to a large number of
-; problems with people with very large catalogs and low memory settings
-; this is off by default as it does significantly increase the memory
-; requirements on larger catalogs. If you have the memory this can create
-; a 2-3x speed improvement.
-; DEFAULT: "false"
-;memory_cache = "true"
+; This turns the caching mechanisms on or off. It batches the per-object lookups
+; a page would otherwise repeat, which roughly halves the query count on a large
+; browse, at the cost of higher memory use on very large catalogs. Set this to
+; "false" if you have a big catalog and a low PHP memory limit.
+; DEFAULT: "true"
+;memory_cache = "false"
 
 ; Memory Limit
 ; This defines the "Min" memory limit for PHP if your php.ini
@@ -689,7 +689,12 @@ album_art_min_height = 30
 ; Disable this option to require a valid user session for viewing images.
 ; When enabled, images can be displayed without checking for an active session,
 ; bypassing `use_auth` and `require_session` settings.
-; If disabled, image links will require a valid session to be accessed.
+; If disabled, image links will require a valid session to be accessed. A session
+; cookie, an `auth` parameter, an `apiKey` or a Subsonic token all satisfy this.
+; Disabling only takes effect when `use_auth` and `require_session` are both on;
+; with either of them off images stay public whatever this is set to.
+; Clients that cannot present a session are not sent image links at all, so the
+; Subsonic albumInfo/artistInfo image urls are empty while this is disabled.
 ; DEFAULT: "true"
 public_images = "true"
 
@@ -715,18 +720,59 @@ public_images = "true"
 ; DEFAULT: "true"
 playlist_art = "true"
 
-; Statistical Graphs * Requires PHP-GD *
-; Set this to true if you want Ampache to generate statistical graphs on usages / users.
-; This is false by default due to issues around the licensing of c-pchart.
-;  https://github.com/ampache/ampache/issues/1515
-;  http://www.pchart.net/license
-; REFERENCE: https://ampache.org/docs/help/troubleshooting/chart-faq
-; You can enable c-chart with the following command:
-;  composer install --dev
-; Or add it as a non-dev requirement with:
-;  composer require szymach/c-pchart "3.*"
+; Playlist Cover Art Mosaic * Requires PHP-GD *
+; When playlist_art is enabled, stitch up to nine covers from the
+; playlist into a single grid image instead of picking one at random.
+; Playlists with fewer than four distinct covers fall back to a single cover.
+; DEFAULT: "true"
+playlist_art_mosaic = "true"
+
+; Playlist Cover Art Mosaic Fallback * Requires PHP-GD *
+; Show a generated mosaic for a playlist that has no art of its own, instead of the
+; blank placeholder image. The covers are picked using the playlist contents as a seed,
+; so the same playlist always gets the same mosaic until its items change.
+; The generated image is then stored as that playlist's art, so it is only built once.
 ; DEFAULT: "false"
-;statistical_graphs = "true"
+;playlist_art_mosaic_fallback = "true"
+
+; Statistical Graphs
+; Set this to false if you don't want Ampache to generate statistical graphs on usages / users.
+; The graph queries read the whole object_count table, so turning this off is worth doing on a
+; large catalog if you never look at the charts.
+; Charts are drawn by goat1000/svggraph, a normal (non-dev) requirement, so nothing extra to install.
+; DEFAULT: "true"
+statistical_graphs = "true"
+
+; Stats Consolidation Threshold
+; Number of days of detailed play history to keep in the object_count table.
+; When set to a value greater than 0, the cleanup:consolidateStats CLI command
+; will aggregate older rows into the object_count_summary table and move the
+; detail rows to the object_count_archive table, keeping object_count small on
+; long-running servers. Nothing is deleted: the archive keeps every media row
+; (song, video, podcast_episode, playlist, live_stream) with its exact date,
+; agent and location, for streams, skips and downloads alike. Parent rows
+; (album, album_disk, artist, podcast) are not archived because
+; cleanup:restoreStats regenerates them from the media rows, which resolves the
+; parent that is correct now rather than a stored id that a merge or a re-tag
+; may have moved. Run cleanup:restoreStats to put it all back.
+; Stored counters stay exact (total/skip counts, played flags, all-time
+; per-object and per-user counts, streamed data size, auto-rating plugin).
+; Smart playlist / search play-history rules (Played, Played by Me, My Last
+; Play/Skip, # Played/Skipped by Me, ...) also stay accurate: once consolidation
+; is enabled they read object_count_summary alongside object_count.
+; The following only evaluate the retained detail window after consolidation:
+; period-based statistics (trending, recent, graphs, Last.fm export) which are
+; windowed by design, live all-time "top" charts computed without cron_cache
+; (the cron cache merges consolidated counts into its 0 threshold entries),
+; browsing sorted by play count, and the "Recently Played" smart playlist rule.
+; "Recently Played" is the one exception that cannot be made exact: it orders by
+; individual play timestamps, and consolidation archives those older detail rows
+; (into object_count_archive) rather than keeping them in object_count, so it
+; only reaches back as far as your retained window until you run
+; cleanup:restoreStats.
+; When set to 0 (or unset) consolidation is disabled.
+; DEFAULT: 0
+;stats_consolidate_threshold = 730
 
 ; Art Gather Order
 ; Simply arrange the following in the order you would like
@@ -851,6 +897,16 @@ wanted_types = "album,official"
 ; DEFAULT: "false"
 ;label = "true"
 
+; Label Ignore Pattern
+; Publisher tags often hold placeholder text instead of a real label, and these are neither
+; created during a scan nor kept by the catalog clean up. The value is a regex, matched
+; case-insensitively against the whole name, and replaces the default shown below rather than
+; adding to it. Set it to a pattern that cannot match (for example "(?!)") to keep every name.
+; The last branch of the default drops names holding fewer than two letters or digits, such as
+; "/<" or "/v/", while leaving short real labels like "XL" and "4AD" alone.
+; DEFAULT: "^\[no label\]|^not on label\b|^\[fwd:|^self[\s-]*released?\b|\(self[\s-]*released?\)|^[^\p{L}\p{N}]*[\p{L}\p{N}]?[^\p{L}\p{N}]*$"
+;label_ignore_pattern = "^\[no label\]|^not on label\b"
+
 ; Broadcasts
 ; Allow users to broadcast music.
 ; This feature requires advanced server configuration, please take a look on the wiki for more information.
@@ -969,12 +1025,6 @@ log_filename = "%name.%Y%m%d.log"
 ; See https://www.php.net/manual/en/function.date.php for possible formats.
 ; DEFAULT: c (ISO 8601 date)
 log_time_format = "c"
-
-; API Debug Handler
-; If this is enabled Ampache will not catch exceptions during API calls.
-; Used for development and not recommended for regular use.
-; DEFAULT: "false"
-;api_debug_handler = "true"
 
 ; Load the debug webplayer
 ; This will load the *.js player instead of the *.min.js player
@@ -1101,6 +1151,99 @@ site_charset = "UTF-8"
 ;ldap_member_attribute = "memberuid"
 
 ;#########################################################
+; OpenID Connect (OIDC) login info                       #
+;#########################################################
+
+; Add "oidc" to auth_methods above to enable this, e.g. auth_methods = "mysql,oidc"
+; Keep "mysql" in the list as well, or local accounts (including the admin) can no
+; longer log in.
+;
+; Users are matched to a local account by the username claim (oidc_username_claim).
+; Enable auto_create to let Ampache create accounts on first login and use
+; auto_user to pick the access level they are created with.
+;
+; Register this exact redirect uri with your identity provider (no query string,
+; it needs no webserver configuration):
+;
+;     <your web_path>/oidc/
+;
+; e.g. https://music.example.com/oidc/ or https://example.com/ampache/oidc/
+;
+; Only one provider is supported at a time.
+;
+; To sign out of the provider as well as Ampache, point logout_redirect
+; at the end_session_endpoint of your provider.
+
+; Base url of the identity provider. Ampache appends
+; /.well-known/openid-configuration to it to discover the endpoints.
+; DEFAULT: none
+;oidc_url = "https://idp.example.com/realms/ampache"
+
+; Expected "iss" value of the id token, if it differs from oidc_url.
+; DEFAULT: none (oidc_url is used)
+;oidc_issuer = "https://idp.example.com/realms/ampache"
+
+; Credentials of the client (app registration) you created at the provider.
+; It has to be a confidential client using the authorization code grant with
+; PKCE (S256) enabled.
+; DEFAULT: none
+;oidc_client_id = "ampache"
+;oidc_client_secret = ""
+
+; Comma separated list of scopes to request.
+; DEFAULT: openid,profile,email
+;oidc_scopes = "openid,profile,email"
+
+; Claim holding the Ampache username. With auto_create enabled the local account
+; is created with this name, so pick a claim which does not change.
+; DEFAULT: preferred_username
+;oidc_username_claim = "preferred_username"
+
+; Claims copied onto the local account. Enable external_auto_update below to keep
+; them in sync on every login, otherwise they only fill in empty fields.
+; DEFAULT: name / email
+;oidc_name_claim = "name"
+;oidc_email_claim = "email"
+
+; Optional additional claim mappings. Leave these unset to skip them.
+; DEFAULT: none
+;oidc_website_claim = "website"
+;oidc_state_claim = ""
+;oidc_city_claim = ""
+
+; Ask the userinfo endpoint for the claims above. When this is disabled, or the
+; provider has no userinfo endpoint, the verified id token claims are used.
+; DEFAULT: "true"
+;oidc_use_userinfo = "false"
+
+; Text of the login button.
+; DEFAULT: Sign in with OpenID Connect
+;oidc_button_text = "Sign in with <PROVIDER> SSO"
+
+; Skip the Ampache login form and go straight to the identity provider.
+; Use <your web_path>/login.php?force_display=1 to reach the local form,
+; which you still need for local accounts.
+; DEFAULT: "false"
+;oidc_auto_redirect = "true"
+
+; Endpoints for providers which do not publish a discovery document.
+; DEFAULT: none
+;oidc_authorization_endpoint = ""
+;oidc_token_endpoint = ""
+;oidc_userinfo_endpoint = ""
+;oidc_jwks_uri = ""
+;oidc_end_session_endpoint = ""
+
+; CA bundle used to verify the certificate of the identity provider.
+; DEFAULT: none (the system CA store is used)
+;oidc_cert_path = "/etc/ssl/certs/ca-certificates.crt"
+
+; Disable TLS verification when talking to the identity provider.
+; Never enable this outside of a development environment.
+; DEFAULT: "false"
+;oidc_disable_ssl_verify = "true"
+
+;#########################################################
 ; Public Registration settings, defaults to disabled     #
 ;#########################################################
 
@@ -1124,6 +1267,19 @@ site_charset = "UTF-8"
 ; If you don't have an email server, make sure to enable user_no_email_confirm below
 ; DEFAULT: "false"
 ;allow_public_registration = "true"
+
+; Allow users to reset a forgotten password by email.
+; Turning this off hides the "Lost Password" link AND rejects lostpassword.php,
+; so a stranger can't trigger reset mail to your users by posting to it directly.
+; Only relevant on a server with mail enabled; without mail the feature is already off.
+; DEFAULT: "true"
+;allow_lost_password = "false"
+
+; Show the "Mini player" button on the login form, which sends you to the
+; cut down player at /m/ after logging in instead of the full interface.
+; This only hides the button; /m/ stays reachable by url either way.
+; DEFAULT: "true"
+;show_mini_player = "false"
 
 ; Require Captcha Text on Image confirmation
 ; Turning this on requires the user to correctly
@@ -1192,18 +1348,26 @@ registration_mandatory_fields = "fullname"
 ; *Note* Transcoding must be enabled and working         #
 ;#########################################################
 
+; NOTE: `max_bit_rate` and `min_bit_rate` have MOVED to per-user preferences
+; (Preferences -> Streaming -> Transcoding). The values below are only read once,
+; at upgrade time, to seed each user's default; once the preference exists the
+; config value is ignored. Leave them commented out. All bitrate values are now
+; expressed in bits per second (bps), NOT kilobits (e.g. 576000 = 576 kbps).
+
 ; Attempt to optimize bandwidth by dynamically lowering the bit rate of new
 ; streams. Since the bit rate is only adjusted at the beginning of a song, the
 ; actual cumulative bitrate for concurrent streams can be up to around
 ; double the configured value. It also only applies to streams that are
 ; transcoded.
+; UNIT: bits per second (bps)
 ; DEFAULT: none
-;max_bit_rate = 576
+;max_bit_rate = 576000
 
 ; New dynamically downsampled streams will be denied if they are forced below
 ; this value.
-; DEFAULT: 8
-;min_bit_rate = 48
+; UNIT: bits per second (bps)
+; DEFAULT: 8000
+;min_bit_rate = 48000
 
 ;#########################################################
 ; Transcode Settings                                     #
@@ -1255,6 +1419,12 @@ transcode_mp3 = "allowed"
 ;transcode_m2ts = "allowed"
 ;transcode_webm = "allowed"
 
+; NOTE: `encode_target`, `encode_video_target`, `encode_player_webplayer_target`
+; and `encode_player_api_target` have MOVED to per-user preferences
+; (Preferences -> Streaming -> Transcoding). The values below are only read once,
+; at upgrade time, to seed each user's default; once the preference exists the
+; config value is ignored. Leave them commented out.
+
 ; Default audio output format
 ; DEFAULT: none
 ;encode_target = "mp3"
@@ -1279,6 +1449,8 @@ transcode_mp3 = "allowed"
 ;transcode_player_webplayer_mpc = "required"
 
 ; Override the default output format on a per-player basis
+; MOVED to per-user preferences (Preferences -> Streaming -> Transcoding); the
+; values below only seed the default at upgrade time and are otherwise ignored.
 ; encode_player_PLAYER_target = TYPE
 ; Valid PLAYER is: webplayer, api
 ; DEFAULT: none
@@ -1291,8 +1463,10 @@ transcode_player_customize = "true"
 
 ; Command configuration. Substitutions will be made as follows:
 ; %FILE% => filename
-; %BITRATE% => target bit rate (as chosen by the admin or users in the
-; preferences, if transcode_player_customize = "true")
+; %BITRATE% => target bit rate in bits per second (as chosen by the admin or
+; users in the preferences, if transcode_player_customize = "true")
+; %MAXBITRATE% => ceiling bit rate in bits per second, from the `maxbitrate`
+; stream URL argument. Both are plain bps values, so do NOT add a `k` suffix.
 ; You can do fancy things like VBR, but consider whether the consequences are
 ; acceptable in your environment.
 
@@ -1321,15 +1495,27 @@ transcode_input = "-i %FILE%"
 ; For each output format, you should provide the necessary arguments for
 ; your transcode_cmd.
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
-encode_args_mp3 = "-vn -b:a %BITRATE%k -c:a libmp3lame -f mp3 pipe:1"
-encode_args_ogg = "-vn -b:a %BITRATE%k -c:a libvorbis -f ogg pipe:1"
-encode_args_opus = "-vn -b:a %BITRATE%k -c:a libopus -compression_level 10 -f ogg pipe:1"
-encode_args_m4a = "-vn -b:a %BITRATE%k -c:a libfdk_aac -f adts pipe:1"
-encode_args_wav = "-vn -b:a %BITRATE%k -c:a pcm_s16le -f wav pipe:1"
-encode_args_flv = "-b:a %BITRATE%k -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
-encode_args_webm = "-b:a %BITRATE%k -f webm -c:v libvpx -preset superfast -threads 0 pipe:1"
-encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+encode_args_mp3 = "-vn -b:a %BITRATE% -c:a libmp3lame -f mp3 pipe:1"
+encode_args_ogg = "-vn -b:a %BITRATE% -c:a libvorbis -f ogg pipe:1"
+encode_args_opus = "-vn -b:a %BITRATE% -c:a libopus -compression_level 10 -f ogg pipe:1"
+encode_args_m4a = "-vn -b:a %BITRATE% -c:a aac -movflags +frag_keyframe+empty_moov+default_base_moof -f mp4 pipe:1"
+encode_args_wav = "-vn -b:a %BITRATE% -c:a pcm_s16le -f wav pipe:1"
+encode_args_flv = "-b:a %BITRATE% -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
+encode_args_webm = "-b:a %BITRATE% -f webm -c:v libvpx -preset superfast -threads 0 pipe:1"
+encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE% -preset superfast -threads 0 pipe:1"
 encode_args_ogv = "-codec:v libtheora -qscale:v 7 -codec:a libvorbis -qscale:a 5 -f ogg pipe:1"
+
+; ReplayGain / "car" output profiles (gonic-compatible).
+; These apply loudness normalisation from ReplayGain tags, so the SOURCE files
+; MUST be tagged with ReplayGain (use loudgain or rsgain) or the gain clauses are
+; a no-op. The `_car` variants additionally resample (heavier CPU) for in-car use.
+; These formats are intentionally NEVER cached (the normalisation is per-source),
+; so keep `cache_target` set to a plain format such as `mp3` or `opus`.
+; `opus_rg`/`opus_car` cannot play on iOS (Opus-in-Ogg); `mp3_rg`/`mp3_car` are cross-platform.
+encode_args_mp3_rg = "-map 0:a:0 -vn -b:a %BITRATE% -c:a libmp3lame -af \"volume=replaygain=track:replaygain_preamp=6dB:replaygain_noclip=0,alimiter=level=disabled,asidedata=mode=delete:type=REPLAYGAIN\" -metadata replaygain_album_gain= -metadata replaygain_album_peak= -metadata replaygain_track_gain= -metadata replaygain_track_peak= -metadata r128_album_gain= -metadata r128_track_gain= -ar 48000 -v 0 -f mp3 pipe:1"
+encode_args_mp3_car = "-map 0:a:0 -vn -b:a %BITRATE% -c:a libmp3lame -af \"aresample=96000:resampler=soxr,volume=replaygain=track:replaygain_preamp=15dB:replaygain_noclip=0,alimiter=level=disabled,asidedata=mode=delete:type=REPLAYGAIN,aresample=48000:resampler=soxr\" -metadata replaygain_album_gain= -metadata replaygain_album_peak= -metadata replaygain_track_gain= -metadata replaygain_track_peak= -metadata r128_album_gain= -metadata r128_track_gain= -v 0 -f mp3 pipe:1"
+encode_args_opus_rg = "-map 0:a:0 -vn -b:a %BITRATE% -c:a libopus -vbr on -af \"volume=replaygain=track:replaygain_preamp=6dB:replaygain_noclip=0,alimiter=level=disabled,asidedata=mode=delete:type=REPLAYGAIN\" -metadata replaygain_album_gain= -metadata replaygain_album_peak= -metadata replaygain_track_gain= -metadata replaygain_track_peak= -metadata r128_album_gain= -metadata r128_track_gain= -v 0 -f opus pipe:1"
+encode_args_opus_car = "-map 0:a:0 -vn -b:a %BITRATE% -c:a libopus -vbr on -af \"aresample=96000:resampler=soxr,volume=replaygain=track:replaygain_preamp=15dB:replaygain_noclip=0,alimiter=level=disabled,asidedata=mode=delete:type=REPLAYGAIN\" -metadata replaygain_album_gain= -metadata replaygain_album_peak= -metadata replaygain_track_gain= -metadata replaygain_track_peak= -metadata r128_album_gain= -metadata r128_track_gain= -v 0 -f opus pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame
 encode_get_image = "-ss %TIME% -f image2 -vframes 1 pipe:1"

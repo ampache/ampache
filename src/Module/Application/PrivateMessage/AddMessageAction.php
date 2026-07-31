@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,39 +43,23 @@ use PHPMailer\PHPMailer\Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class AddMessageAction implements ApplicationActionInterface
+final readonly class AddMessageAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_message';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private PrivateMessageCreatorInterface $privateMessageCreator;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'add_message';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        PrivateMessageCreatorInterface $privateMessageCreator,
-        ModelFactoryInterface $modelFactory,
-        RequestParserInterface $requestParser
-    ) {
-        $this->configContainer       = $configContainer;
-        $this->ui                    = $ui;
-        $this->privateMessageCreator = $privateMessageCreator;
-        $this->modelFactory          = $modelFactory;
-        $this->requestParser         = $requestParser;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private PrivateMessageCreatorInterface $privateMessageCreator,
+        private ModelFactoryInterface $modelFactory,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
         ) {
             throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
@@ -84,11 +68,11 @@ final class AddMessageAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
 
@@ -96,12 +80,14 @@ final class AddMessageAction implements ApplicationActionInterface
         $message = trim(strip_tags(htmlspecialchars($data['message'] ?? '', ENT_NOQUOTES)));
         $to_user = User::get_from_username($data['to_user'] ?? '');
 
-        if (!$to_user) {
+        if (!$to_user instanceof User) {
             AmpError::add('to_user', T_('Unknown user'));
         }
-        if (empty($subject)) {
+
+        if ($subject === '' || $subject === '0') {
             AmpError::add('subject', T_('Subject is required'));
         }
+
         if (AmpError::occurred()) {
             $this->ui->show('show_add_pvmsg.inc.php');
             $this->ui->showQueryStats();
@@ -126,7 +112,7 @@ final class AddMessageAction implements ApplicationActionInterface
                     $this->configContainer->getWebPath()
                 )
             );
-        } catch (PrivateMessageCreationException | Exception) {
+        } catch (PrivateMessageCreationException|Exception) {
             $this->ui->show('show_add_pvmsg.inc.php');
         }
 

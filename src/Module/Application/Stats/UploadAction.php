@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,25 +36,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UploadAction implements ApplicationActionInterface
+final readonly class UploadAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'upload';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'upload';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-    }
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -70,7 +60,7 @@ final class UploadAction implements ApplicationActionInterface
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_type(
             'song',
-            Catalog::get_uploads_sql('song', (int)$user_id)
+            Catalog::get_uploads_sql('song', $user_id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -79,7 +69,7 @@ final class UploadAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'album',
-            Catalog::get_uploads_sql('album', (int)$user_id)
+            Catalog::get_uploads_sql('album', $user_id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -89,7 +79,7 @@ final class UploadAction implements ApplicationActionInterface
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type(
                 'artist',
-                Catalog::get_uploads_sql('artist', (int)$user_id)
+                Catalog::get_uploads_sql('artist', $user_id)
             );
             $browse->set_simple_browse(true);
             $browse->show_objects();

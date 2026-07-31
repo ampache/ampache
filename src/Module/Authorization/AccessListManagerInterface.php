@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -34,23 +36,6 @@ use Ampache\Module\Authorization\Exception\InvalidStartIpException;
 interface AccessListManagerInterface
 {
     /**
-     * Updates an existing acl item
-     *
-     * @throws InvalidEndIpException
-     * @throws InvalidIpRangeException
-     * @throws InvalidStartIpException
-     */
-    public function update(
-        int $accessId,
-        string $startIp,
-        string $endIp,
-        string $name,
-        int $userId,
-        AccessLevelEnum $level,
-        AccessTypeEnum $type
-    ): void;
-
-    /**
      * Creates a new acl item
      * Also creates further items on special type configs
      *
@@ -66,6 +51,23 @@ interface AccessListManagerInterface
         int $userId,
         AccessLevelEnum $level,
         AccessTypeEnum $type,
-        AccessTypeEnum $additionalType
+        AccessTypeEnum $additionalType,
+    ): void;
+
+    /**
+     * Updates an existing acl item
+     *
+     * @throws InvalidEndIpException
+     * @throws InvalidIpRangeException
+     * @throws InvalidStartIpException
+     */
+    public function update(
+        int $accessId,
+        string $startIp,
+        string $endIp,
+        string $name,
+        int $userId,
+        AccessLevelEnum $level,
+        AccessTypeEnum $type,
     ): void;
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.16.1">
+  <videos>
+    <video id="500000001" title="Video Project.mp4" isDir="false" isVideo="true" type="video" duration="12" size="3180005" suffix="mp4" contentType="video/mp4" path="Video Project.mp4"/>
+  </videos>
+</subsonic-response>

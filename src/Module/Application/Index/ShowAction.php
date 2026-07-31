@@ -36,25 +36,15 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-    }
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -65,9 +55,10 @@ final class ShowAction implements ApplicationActionInterface
         if (!Core::is_session_started()) {
             session_start();
         }
+
         $_SESSION['catalog'] = 0;
 
-        $refreshLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT);
+        $refreshLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT);
 
         /**
          * Check for the refresh mojo, if it's there then require the
@@ -75,8 +66,8 @@ final class ShowAction implements ApplicationActionInterface
          * going to let them break their servers
          */
         if (
-            $refreshLimit > 5 &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HOME_NOW_PLAYING)
+            $refreshLimit > 5
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HOME_NOW_PLAYING)
         ) {
             $refresh_limit = $refreshLimit;
             $ajax_url      = '?page=index&action=refresh_index';

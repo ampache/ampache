@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -38,35 +38,22 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAddMessageAction implements ApplicationActionInterface
+final readonly class ShowAddMessageAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_add_message';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private PrivateMessageRepositoryInterface $pmRepository;
+    public const string REQUEST_KEY = 'show_add_message';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        PrivateMessageRepositoryInterface $pmRepository
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->pmRepository    = $pmRepository;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private PrivateMessageRepositoryInterface $pmRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
         ) {
             throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
@@ -81,8 +68,8 @@ final class ShowAddMessageAction implements ApplicationActionInterface
                 $senderUserId = $message->getSenderUserId();
 
                 if (
-                    $senderUserId === $userId ||
-                    $message->getRecipientUserId() === $userId
+                    $senderUserId === $userId
+                    || $message->getRecipientUserId() === $userId
                 ) {
                     $to_user             = $this->modelFactory->createUser($senderUserId);
                     $_REQUEST['to_user'] = $to_user->username;

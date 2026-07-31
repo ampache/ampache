@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_edit_song_row.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -80,11 +82,11 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                 <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Disk'); ?></td>
-                <td><input type="text" name="disk" value="<?php echo scrub_out((string)$libitem->disk); ?>" /></td>
+                <td><input type="text" name="disk" value="<?php echo scrub_out((string) $libitem->disk); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Track'); ?></td>
-                <td><input type="text" name="track" value="<?php echo scrub_out((string)$libitem->track); ?>" /></td>
+                <td><input type="text" name="track" value="<?php echo scrub_out((string) $libitem->track); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
@@ -112,7 +114,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year'); ?></td>
-                <td><input type="text" name="year" value="<?php echo scrub_out((string)$libitem->year); ?>" /></td>
+                <td><input type="text" name="year" value="<?php echo scrub_out((string) $libitem->year); ?>" /></td>
             </tr>
             <tr>
                 <td>
@@ -149,7 +151,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                     <tr>
                         <td class="edit_dialog_content_header"><?php echo T_('Music License'); ?></td>
                         <td>
-                            <?php show_license_select('license', (int)$libitem->license, $libitem->id); ?>
+                            <?php show_license_select('license', (int) $libitem->license, $libitem->id); ?>
                             <div id="album_select_license_<?php echo $libitem->license; ?>">
                                 <?php echo Ajax::observe('license_select_' . $libitem->license, 'change', 'check_inline_song_edit("license", ' . $libitem->id . ')'); ?>
                             </div>
@@ -167,14 +169,14 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                 /** @var Metadata $metadata */
                 $field = $metadata->getField();
                 if (
-                    $field !== null &&
-                    $field->isPublic() &&
-                    !in_array($field->getName(), $dismetas)
+                    $field !== null
+                    && $field->isPublic()
+                    && !in_array($field->getName(), $dismetas)
                 ) {
-                    echo '<tr>' .
-                    '<td class="edit_dialog_content_header">' . ucwords(str_replace("_", " ", $field->getName())) . '</td>' .
-                    '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>' .
-                    '</tr>';
+                    echo '<tr>'
+                    . '<td class="edit_dialog_content_header">' . ucwords(str_replace("_", " ", $field->getName())) . '</td>'
+                    . '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>'
+                    . '</tr>';
                 }
             } ?>
                     </table>

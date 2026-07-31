@@ -29,6 +29,7 @@ use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Sabre\DAV\Auth\Plugin;
 use Sabre\DAV\ICollection;
@@ -37,15 +38,24 @@ use Sabre\DAV\Server;
 class WebDavFactoryTest extends MockeryTestCase
 {
     private AuthenticationManagerInterface&MockInterface $authenticationManager;
-
     private WebDavFactory $subject;
 
-    protected function setUp(): void
+    public static function methodDataProvider(): array
     {
-        $this->authenticationManager = Mockery::mock(AuthenticationManagerInterface::class);
+        return [
+            ['createWebDavAuth', WebDavAuth::class, []],
+            ['createWebDavCatalog', WebDavCatalog::class, [666]],
+            ['createPlugin', Plugin::class, [null]]
+        ];
+    }
 
-        $this->subject = new WebDavFactory(
-            $this->authenticationManager
+    public function testCreateServerReturnsInstance(): void
+    {
+        self::assertInstanceOf(
+            Server::class,
+            $this->subject->createServer(
+                $this->createMock(ICollection::class)
+            )
         );
     }
 
@@ -56,28 +66,19 @@ class WebDavFactoryTest extends MockeryTestCase
     #[DataProvider(methodName: 'methodDataProvider')]
     public function testFactoryMethods(string $method, string $expected_instance_name, array $params): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             $expected_instance_name,
             call_user_func_array([$this->subject, $method], $params)
         );
     }
 
-    public function testCreateServerReturnsInstance(): void
+    #[Override]
+    protected function setUp(): void
     {
-        static::assertInstanceOf(
-            Server::class,
-            $this->subject->createServer(
-                $this->createMock(ICollection::class)
-            )
-        );
-    }
+        $this->authenticationManager = Mockery::mock(AuthenticationManagerInterface::class);
 
-    public static function methodDataProvider(): array
-    {
-        return [
-            ['createWebDavAuth', WebDavAuth::class, []],
-            ['createWebDavCatalog', WebDavCatalog::class, [666]],
-            ['createPlugin', Plugin::class, [null]]
-        ];
+        $this->subject = new WebDavFactory(
+            $this->authenticationManager
+        );
     }
 }

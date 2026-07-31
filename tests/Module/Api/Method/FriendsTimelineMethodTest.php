@@ -1,0 +1,231 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Ampache\Module\Api\Method;
+
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\MockeryTestCase;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\UserActivityRepositoryInterface;
+use Mockery\MockInterface;
+use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
+
+class FriendsTimelineMethodTest extends MockeryTestCase
+{
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private ?FriendsTimelineMethod $subject;
+    private MockInterface|UserActivityRepositoryInterface|null $userActivityRepository;
+
+    /**
+     * The same method serves both api versions; the version is only handed to the output
+     *
+     * @return array<string, array{0: int}>
+     */
+    public static function apiVersionProvider(): array
+    {
+        return [
+            'api6' => [6],
+            'api8' => [8],
+        ];
+    }
+
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleReturnsEmptyResult(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $result = 'empty-result';
+
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnTrue();
+
+        $user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(42);
+
+        $this->userActivityRepository->shouldReceive('getFriendsActivities')
+            ->with(42, 0, 0)
+            ->once()
+            ->andReturn([]);
+
+        $output->shouldReceive('timeline')
+            ->with($apiVersion, [])
+            ->once()
+            ->andReturn($result);
+
+        $response->shouldReceive('getBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($stream);
+        $stream->shouldReceive('write')
+            ->with($result)
+            ->once();
+
+        $this->assertSame(
+            $response,
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                ['api_format' => 'json', 'auth' => 'some-auth'],
+                $user,
+                $apiVersion
+            )
+        );
+    }
+
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleReturnsErrorIfDisabled(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $result = 'error-result';
+
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnFalse();
+
+        $output->shouldReceive('error')
+            ->with(
+                $apiVersion,
+                ErrorCodeEnum::ACCESS_DENIED,
+                'Enable: sociable',
+                FriendsTimelineMethod::ACTION,
+                'system'
+            )
+            ->once()
+            ->andReturn($result);
+
+        $response->shouldReceive('getBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($stream);
+        $stream->shouldReceive('write')
+            ->with($result)
+            ->once();
+
+        $this->assertSame(
+            $response,
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                ['api_format' => 'json', 'auth' => 'some-auth'],
+                $user,
+                $apiVersion
+            )
+        );
+    }
+
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleReturnsResult(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $results = [1, 2, 3];
+        $result  = 'some-result';
+
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnTrue();
+
+        $user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(42);
+
+        $this->userActivityRepository->shouldReceive('getFriendsActivities')
+            ->with(42, 10, 1234)
+            ->once()
+            ->andReturn($results);
+
+        // the resolved api version must reach the output untouched
+        $output->shouldReceive('timeline')
+            ->with($apiVersion, $results)
+            ->once()
+            ->andReturn($result);
+
+        $response->shouldReceive('getBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($stream);
+        $stream->shouldReceive('write')
+            ->with($result)
+            ->once();
+
+        $this->assertSame(
+            $response,
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                [
+                    'limit' => 10,
+                    'since' => 1234,
+                    'api_format' => 'json',
+                    'auth' => 'some-auth',
+                ],
+                $user,
+                $apiVersion
+            )
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer        = $this->mock(ConfigContainerInterface::class);
+        $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
+
+        $this->subject = new FriendsTimelineMethod(
+            $this->configContainer,
+            $this->userActivityRepository
+        );
+    }
+}

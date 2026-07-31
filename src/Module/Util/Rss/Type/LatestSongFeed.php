@@ -34,25 +34,16 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class LatestSongFeed extends AbstractGenericRssFeed
 {
-    private ServerRequestInterface $request;
-
     public function __construct(
         private ?User $user,
-        ServerRequestInterface $request,
-    ) {
-        $this->request = $request;
-    }
-
-    protected function getTitle(): string
-    {
-        return T_('Newest Songs');
-    }
+        private ServerRequestInterface $request,
+    ) {}
 
     protected function getItems(): Generator
     {
         $queryParams = $this->request->getQueryParams();
-        $count       = (int)($queryParams['count'] ?? 10);
-        $offset      = (int)($queryParams['offset'] ?? 0);
+        $count       = (int) ($queryParams['count'] ?? 10);
+        $offset      = (int) ($queryParams['offset'] ?? 0);
         $ids         = Stats::get_newest('song', $count, $offset, 0, $this->user);
 
         foreach ($ids as $songid) {
@@ -64,14 +55,19 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
                 'description' => $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_parent_fullname(),
                 'comments' => '',
                 'pubDate' => '',
-                'guid' => (isset($song->mbid))
+                'guid' => ($song->mbid !== null)
                     ? 'https://musicbrainz.org/recording/' . $song->mbid
                     : 'song-' . $song->id,
-                'isPermaLink' => (isset($song->mbid))
+                'isPermaLink' => ($song->mbid !== null)
                     ? 'true'
                     : 'false',
-                'image' => (string)Art::url($song->id, 'song', null, 2),
+                'image' => (string) Art::url($song->id, 'song', null, 2),
             ];
         }
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Newest Songs');
     }
 }

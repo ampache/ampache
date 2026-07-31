@@ -35,22 +35,24 @@ final class Migration360006 extends AbstractMigration
 {
     protected array $changelog = ['Add table for dynamic playlists'];
 
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 360006) {
+            yield 'search' => "CREATE TABLE IF NOT EXISTS `search` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `type` enum('private','public') CHARACTER SET utf8 DEFAULT NULL, `rules` mediumtext NOT NULL, `name` varchar(255) CHARACTER SET $charset DEFAULT NULL, `logic_operator` varchar(3) CHARACTER SET $charset DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=4 DEFAULT CHARSET=$charset;";
+        }
+    }
+
     public function migrate(): void
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `search` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `type` enum('private','public') CHARACTER SET utf8 DEFAULT NULL, `rules` mediumtext NOT NULL, `name` varchar(255) CHARACTER SET $charset DEFAULT NULL, `logic_operator` varchar(3) CHARACTER SET $charset DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=4 DEFAULT CHARSET=$charset;");
-    }
-
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build
-    ): Generator {
-        if ($build > 360006) {
-            yield 'search' => "CREATE TABLE IF NOT EXISTS `search` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `type` enum('private','public') CHARACTER SET utf8 DEFAULT NULL, `rules` mediumtext NOT NULL, `name` varchar(255) CHARACTER SET $charset DEFAULT NULL, `logic_operator` varchar(3) CHARACTER SET $charset DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=4 DEFAULT CHARSET=$charset;";
-        }
     }
 }

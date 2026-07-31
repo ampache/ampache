@@ -30,29 +30,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class CatalogStatsTest extends MockeryTestCase
 {
-    #[DataProvider(methodName: 'methodDataProvider')]
-    public function testArrayAccessorsReturnData(
-        string $methodName,
-        string $arrayKey,
-        $testValue,
-        $defaultValue
-    ): void {
-        $subject = new CatalogStats([$arrayKey => $testValue]);
-
-        $this->assertSame(
-            $testValue,
-            call_user_func_array([$subject, $methodName], [])
-        );
-
-        // also test the default value
-        $subject = new CatalogStats([]);
-
-        $this->assertSame(
-            $defaultValue,
-            call_user_func_array([$subject, $methodName], [])
-        );
-    }
-
     public static function methodDataProvider(): array
     {
         return [
@@ -70,5 +47,28 @@ class CatalogStatsTest extends MockeryTestCase
             ['getItemCount', 'items', 666, 0],
             ['getVideoCount', 'video', 666, 0],
         ];
+    }
+
+    #[DataProvider(methodName: 'methodDataProvider')]
+    public function testArrayAccessorsReturnData(
+        string $methodName,
+        string $arrayKey,
+        $testValue,
+        $defaultValue,
+    ): void {
+        $subject = new CatalogStats([$arrayKey => $testValue]);
+
+        $this->assertSame(
+            $testValue,
+            call_user_func_array([$subject, $methodName], [])
+        );
+
+        // also test the default value
+        $subject = new CatalogStats([]);
+
+        $this->assertSame(
+            $defaultValue,
+            call_user_func_array([$subject, $methodName], [])
+        );
     }
 }

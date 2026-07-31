@@ -35,10 +35,23 @@ final class Migration370018 extends AbstractMigration
 {
     protected array $changelog = ['Enhance tag persistent merge reference'];
 
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 370018) {
+            yield 'tag_merge' => "CREATE TABLE IF NOT EXISTS `tag_merge` (`tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, PRIMARY KEY (`tag_id`, `merged_to`), KEY `merged_to` (`merged_to`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        }
+    }
+
     public function migrate(): void
     {
         $this->updateDatabase("DROP TABLE IF EXISTS `tag_merge`;");
-        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `tag_merge` (`tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, PRIMARY KEY (`tag_id`,`merged_to`), KEY `merged_to` (`merged_to`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+        $this->updateDatabase("CREATE TABLE `tag_merge` (`tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, PRIMARY KEY (`tag_id`,`merged_to`), KEY `merged_to` (`merged_to`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
         $sql        = "DESCRIBE `tag`";
         $db_results = Dba::read($sql);
@@ -56,17 +69,6 @@ final class Migration370018 extends AbstractMigration
         }
         if (!$is_hidden) {
             $this->updateDatabase("ALTER TABLE `tag` ADD COLUMN `is_hidden` TINYINT(1) NOT NULL DEFAULT 0;");
-        }
-    }
-
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build
-    ): Generator {
-        if ($build > 370018) {
-            yield 'tag_merge' => "CREATE TABLE IF NOT EXISTS `tag_merge` (`tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, PRIMARY KEY (`tag_id`, `merged_to`), KEY `merged_to` (`merged_to`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }
     }
 }

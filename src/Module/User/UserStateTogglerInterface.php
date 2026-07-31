@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -27,7 +29,7 @@ use Ampache\Repository\Model\User;
 
 interface UserStateTogglerInterface
 {
-    public function enable(User $user): bool;
-
     public function disable(User $user): bool;
+
+    public function enable(User $user): bool;
 }

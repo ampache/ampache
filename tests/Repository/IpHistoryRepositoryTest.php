@@ -34,74 +34,9 @@ use PHPUnit\Framework\TestCase;
 
 class IpHistoryRepositoryTest extends TestCase
 {
-    private DatabaseConnectionInterface&MockObject $connection;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private DatabaseConnectionInterface&MockObject $connection;
     private IpHistoryRepository $subject;
-
-    protected function setUp(): void
-    {
-        $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new IpHistoryRepository(
-            $this->connection,
-            $this->configContainer,
-        );
-    }
-
-    public function testGetRecipientForUserReturnsNullIfIpWasNotAvailable(): void
-    {
-        $user = $this->createMock(User::class);
-
-        $userId = 666;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
-                [
-                    $userId,
-                ]
-            )
-            ->willReturn(false);
-
-        static::assertNull(
-            $this->subject->getRecentIpForUser($user)
-        );
-    }
-
-    public function testGetRecipientForUserReturnsIp(): void
-    {
-        $user = $this->createMock(User::class);
-
-        $userId = 666;
-        $ip     = '1.2.3.4';
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
-                [
-                    $userId,
-                ]
-            )
-            ->willReturn(inet_pton($ip));
-
-        static::assertSame(
-            $ip,
-            $this->subject->getRecentIpForUser($user)
-        );
-    }
 
     public function testCollectGarbageDeletes(): void
     {
@@ -190,6 +125,69 @@ class IpHistoryRepositoryTest extends TestCase
             $userAgent,
             $date,
             'login'
+        );
+    }
+
+    public function testGetRecipientForUserReturnsIp(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $userId = 666;
+        $ip     = '1.2.3.4';
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
+                [
+                    $userId,
+                ]
+            )
+            ->willReturn(inet_pton($ip));
+
+        self::assertSame(
+            $ip,
+            $this->subject->getRecentIpForUser($user)
+        );
+    }
+
+    public function testGetRecipientForUserReturnsNullIfIpWasNotAvailable(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $userId = 666;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
+                [
+                    $userId,
+                ]
+            )
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->getRecentIpForUser($user)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new IpHistoryRepository(
+            $this->connection,
+            $this->configContainer,
         );
     }
 }

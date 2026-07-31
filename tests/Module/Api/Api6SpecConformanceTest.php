@@ -31,10 +31,10 @@ use PHPUnit\Framework\TestCase;
 /**
  * Locks the API6 contract described by docs/openapi-6.json.
  *
- * API6 is served by both Ampache7 and Ampache8, so its surface must not drift on either line.
- * docs/openapi-6.json is a static, hand-maintained document shared verbatim with the develop8 tree;
- * these tests assert this server still matches it. A failure means either the spec needs updating or
- * an API6 change slipped in that would break clients moving between Ampache7 and Ampache8.
+ * API6 is served by both Ampache7 and Ampache8, so its surface must not drift as Ampache8 evolves.
+ * docs/openapi-6.json is a static, hand-maintained document; these tests assert the running code still
+ * matches it. A failure means either the spec needs updating or an API6 change slipped in that would
+ * break clients pointed at an Ampache7 server.
  *
  * Deliberately independent of any generator: the spec is read from disk and compared with
  * `Api6::METHOD_LIST` and the `Json6_Data` `@return` docblocks.
@@ -47,7 +47,7 @@ class Api6SpecConformanceTest extends TestCase
      *
      * @var list<string>
      */
-    private const API8_ONLY_PATHS = [
+    private const array API8_ONLY_PATHS = [
         '/folder',
         '/folders',
         '/playlists/{playlist_id}/remove',
@@ -60,14 +60,14 @@ class Api6SpecConformanceTest extends TestCase
      *
      * @var list<string>
      */
-    private const FORBIDDEN_STATUS_CODES = ['400', '403', '404', '410', '500'];
+    private const array FORBIDDEN_STATUS_CODES = ['400', '403', '404', '410', '500'];
 
     /**
      * Response schema -> the Json6_Data builder whose @return shape defines it.
      *
      * @var array<string, string>
      */
-    private const SCHEMA_BUILDERS = [
+    private const array SCHEMA_BUILDERS = [
         'AlbumObject' => 'albums_array',
         'ArtistObject' => 'artists_array',
         'GenreObject' => 'genres_array',

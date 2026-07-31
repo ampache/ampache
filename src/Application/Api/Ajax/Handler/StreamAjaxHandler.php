@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,9 +36,8 @@ use Ampache\Repository\Model\User;
 final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
-        private RequestParserInterface $requestParser
-    ) {
-    }
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function handle(User $user): void
     {
@@ -53,7 +52,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                     break;
                 }
 
-                switch ($_POST['type']) {
+                switch ($_POST['type'] ?? '') {
                     case 'stream':
                     case 'localplay':
                     case 'democratic':
@@ -69,12 +68,12 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                         break;
                     default:
                         break 2;
-                } // end switch
+                }
 
                 $current = AmpConfig::get('play_type');
 
                 // Go ahead and update their preference
-                if (Preference::update('play_type', (int)(Core::get_global('user')?->getId()), $new)) {
+                if (Preference::update('play_type', (int) (Core::get_global('user')?->getId()), $new)) {
                     AmpConfig::set('play_type', $new, true);
                 }
 
@@ -93,8 +92,8 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 debug_event('stream.ajax', 'Called for ' . $object_type . ': {' . $object_id . '}', 5);
 
                 if (
-                    $object_type === 'browse' ||
-                    InterfaceImplementationChecker::is_playable_item($object_type)
+                    $object_type === 'browse'
+                    || InterfaceImplementationChecker::is_library_item($object_type)
                 ) {
                     $web_path = AmpConfig::get_web_path();
 
@@ -113,7 +112,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 
                     if (array_key_exists('subtitle', $_REQUEST) && !empty($_REQUEST['subtitle'])) {
                         $_SESSION['iframe']['subtitle'] = $_REQUEST['subtitle'];
-                    } elseif (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe'])) {
+                    } elseif (array_key_exists('subtitle', $_SESSION['iframe'])) {
                         unset($_SESSION['iframe']['subtitle']);
                     }
 
@@ -121,7 +120,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                         $_SESSION['iframe']['target'] .= '&client=' . AmpConfig::get('localplay_controller');
                     }
 
-                    $results['reloader'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
+                    $results['reloader'] = '<script>' . Core::get_reloadutil() . "('" . $web_path . "/util.php');</script>";
                 }
 
                 break;
@@ -141,10 +140,10 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 $_SESSION['iframe']['target'] = (array_key_exists('playlist_method', $_REQUEST))
                     ? $web_path . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
                     : $web_path . '/stream.php?action=basket';
-                $results['reloader'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
+                $results['reloader'] = '<script>' . Core::get_reloadutil() . "('" . $web_path . "/util.php');</script>";
         } // switch on action;
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

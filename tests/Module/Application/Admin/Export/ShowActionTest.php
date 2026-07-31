@@ -34,45 +34,15 @@ use Ampache\Module\Catalog\CatalogLoaderInterface;
 use Ampache\Module\Catalog\Export\CatalogExportTypeEnum;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    private MockInterface&UiInterface $ui;
-
     private CatalogLoaderInterface&MockObject $catalogLoader;
-
     private ShowAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui            = $this->mock(UiInterface::class);
-        $this->catalogLoader = $this->createMock(CatalogLoaderInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->ui,
-            $this->catalogLoader,
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run(
-            $request,
-            $gatekeeper
-        );
-    }
+    private MockInterface&UiInterface $ui;
 
     public function testRunRenders(): void
     {
@@ -112,11 +82,41 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run(
                 $request,
                 $gatekeeper
             )
+        );
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run(
+            $request,
+            $gatekeeper
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui            = $this->mock(UiInterface::class);
+        $this->catalogLoader = $this->createMock(CatalogLoaderInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->ui,
+            $this->catalogLoader,
         );
     }
 }

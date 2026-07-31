@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -47,6 +49,6 @@ interface CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array;
 }

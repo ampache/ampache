@@ -25,18 +25,28 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Users5Method
+ * Returns the ids and usernames of the valid users of the server.
+ *
+ * Version 5 ignores the `sort` and `cond` parameters that the later versions understand and does
+ * not paginate the result, so it keeps a method of its own.
  */
-final class Users5Method
+final class Users5Method implements MethodInterface
 {
-    public const ACTION = 'users';
+    public const string ACTION = 'users';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     /**
      * users
@@ -52,40 +62,32 @@ final class Users5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
      */
-    public static function users(array $input, User $user): bool
-    {
-        $results = self::getUserRepository()->getValid();
-        if (empty($results)) {
-            Api5::empty('user', $input['api_format']);
-
-            return false;
-        }
-        unset($user);
-
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::users($results);
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::users($results);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $results = $this->userRepository->getValid();
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'user')
+                )
+            );
         }
 
-        return true;
-    }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->users($apiVersion, $results)
+            )
+        );
     }
 }

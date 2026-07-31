@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,33 +36,20 @@ use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class HighestVideoAction implements ApplicationActionInterface
+final readonly class HighestVideoAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'highest_video';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private VideoRepositoryInterface $videoRepository;
+    public const string REQUEST_KEY = 'highest_video';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        VideoRepositoryInterface $videoRepository
-    ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->videoRepository = $videoRepository;
-    }
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
+        private VideoRepositoryInterface $videoRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
+        $by_user = ((int) filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 
         $this->ui->showHeader();
         $this->ui->show(
@@ -77,8 +64,8 @@ final class HighestVideoAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO)
+            && $this->videoRepository->getItemCount()
         ) {
             $user_id = $gatekeeper->getUser()?->id;
             $objects = Rating::get_highest('video', -1, 0, $user_id, $by_user);

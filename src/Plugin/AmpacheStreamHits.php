@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,29 +30,36 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\Graph;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInterface
 {
-    public string $name = 'Stream Hits';
-
+    #[Override]
     public string $categories = 'stream_control';
 
+    #[Override]
     public string $description = 'Control hits per user';
 
-    public string $url = '';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000001';
-
+    #[Override]
     public string $min_ampache = '370024';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'Stream Hits';
+
+    #[Override]
+    public string $url = '';
+
+    #[Override]
+    public string $version = '000001';
+
+    private int $hits_days;
+    private int $hits_max;
 
     // These are internal settings used by this class, run this->load to fill them out
     private int $user_id;
-
-    private int $hits_days;
-
-    private int $hits_max;
 
     /**
      * Constructor
@@ -76,23 +83,20 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function uninstall(): bool
+    public function load(User $user): bool
     {
-        return (
-            Preference::delete('stream_control_hits_max') &&
-            Preference::delete('stream_control_hits_days')
-        );
-    }
+        $user->set_preferences();
+        $data = $user->prefs;
 
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
+        $this->user_id   = $user->id;
+        $this->hits_max  = (int) ($data['stream_control_hits_max']) ?: -1;
+        $this->hits_days = ((int) ($data['stream_control_hits_days']) > 0)
+            ? (int) ($data['stream_control_hits_days'])
+            : 30;
+
         return true;
     }
 
@@ -107,7 +111,7 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
         }
 
         // if using free software only you can't use this plugin
-        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
+        if (AmpConfig::get('statistical_graphs')) {
             $next_total    = count($media_ids);
             $graph         = new Graph();
             $end_date      = time();
@@ -126,20 +130,23 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
     }
 
     /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
      */
-    public function load(User $user): bool
+    public function uninstall(): bool
     {
-        $user->set_preferences();
-        $data = $user->prefs;
+        return (
+            Preference::delete('stream_control_hits_max')
+            && Preference::delete('stream_control_hits_days')
+        );
+    }
 
-        $this->user_id   = $user->id;
-        $this->hits_max  = (int)($data['stream_control_hits_max']) ?: -1;
-        $this->hits_days = ((int)($data['stream_control_hits_days']) > 0)
-            ? (int)($data['stream_control_hits_days'])
-            : 30;
-
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

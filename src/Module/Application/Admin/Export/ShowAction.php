@@ -39,21 +39,14 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Renders the catalog export view
  */
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private UiInterface $ui;
-
-    private CatalogLoaderInterface $catalogLoader;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        UiInterface $ui,
-        CatalogLoaderInterface $catalogLoader
-    ) {
-        $this->ui            = $ui;
-        $this->catalogLoader = $catalogLoader;
-    }
+        private UiInterface $ui,
+        private CatalogLoaderInterface $catalogLoader,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

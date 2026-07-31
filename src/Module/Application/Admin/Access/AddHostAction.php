@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,47 +45,31 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class AddHostAction implements ApplicationActionInterface
+final readonly class AddHostAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_host';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private AccessListManagerInterface $accessListManager;
-
-    private RequestParserInterface $requestParser;
-
-    private LoggerInterface $logger;
+    public const string REQUEST_KEY = 'add_host';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        AccessListManagerInterface $accessListManager,
-        RequestParserInterface $requestParser,
-        LoggerInterface $logger
-    ) {
-        $this->ui                = $ui;
-        $this->configContainer   = $configContainer;
-        $this->accessListManager = $accessListManager;
-        $this->requestParser     = $requestParser;
-        $this->logger            = $logger;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private AccessListManagerInterface $accessListManager,
+        private RequestParserInterface $requestParser,
+        private LoggerInterface $logger,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Make sure we've got a valid form submission
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            !$this->requestParser->verifyForm('add_acl')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || !$this->requestParser->verifyForm('add_acl')
         ) {
             throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();
 
-        $data    = (array)$request->getParsedBody();
+        $data    = (array) $request->getParsedBody();
         $startIp = $data['start'] ?? '';
         $endIp   = $data['end'] ?? '';
 
@@ -94,8 +78,8 @@ final class AddHostAction implements ApplicationActionInterface
                 $startIp,
                 $endIp,
                 $data['name'] ?? '',
-                (int)($data['user'] ?? -1),
-                AccessLevelEnum::from((int)($data['level'] ?? 0)),
+                (int) ($data['user'] ?? -1),
+                AccessLevelEnum::from((int) ($data['level'] ?? 0)),
                 AccessTypeEnum::from($data['type'] ?? 'stream'),
                 AccessTypeEnum::from($data['addtype'] ?? 'stream')
             );

@@ -1,0 +1,83 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Ampache\Repository;
+
+use Ampache\Repository\Model\Broadcast;
+
+/**
+ * Manages broadcast related database access
+ *
+ * Tables: `broadcast`
+ */
+interface BroadcastRepositoryInterface
+{
+    /**
+     * Creates a new broadcast owned by the given user and returns its id
+     */
+    public function create(int $userId, string $name, string $description): int;
+
+    /**
+     * Deletes a single item
+     */
+    public function delete(Broadcast $broadcast): void;
+
+    /**
+     * Loads a single broadcast, or null when the id matches nothing
+     */
+    public function findById(int $objectId): ?Broadcast;
+
+    /**
+     * Finds the broadcast currently published under the given key
+     */
+    public function findByKey(string $key): ?Broadcast;
+
+    /**
+     * Returns the ids of every broadcast owned by the user
+     *
+     * @return int[]
+     */
+    public function getIdsByUser(int $userId): array;
+
+    /**
+     * Writes the editable properties of an existing broadcast
+     */
+    public function update(Broadcast $broadcast): void;
+
+    /**
+     * Stores the current listener count
+     */
+    public function updateListeners(Broadcast $broadcast, int $listeners): void;
+
+    /**
+     * Stores the song currently being broadcast
+     */
+    public function updateSong(Broadcast $broadcast, int $songId): void;
+
+    /**
+     * Starts or stops the broadcast, resetting the current song and listener count
+     */
+    public function updateState(Broadcast $broadcast, int $started, string $key): void;
+}

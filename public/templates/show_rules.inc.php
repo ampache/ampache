@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_rules.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -47,7 +49,7 @@ if (empty($logic_operator)) {
     // rules are based on request so make sure it's set
     $_REQUEST['operator'] = $logic_operator;
 }
-$logic_operator = strtolower((string)$logic_operator); ?>
+$logic_operator = strtolower((string) $logic_operator); ?>
 <script src="<?php echo $web_path; ?>/lib/javascript/search.js"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/search-data.php?type=<?php echo $currentType; ?>"></script>
 
@@ -89,5 +91,6 @@ $logic_operator = strtolower((string)$logic_operator); ?>
 if ($out) {
     echo $out;
 } else {
+    // @see search.js SearchRow.add(ruleType, operator, input, subtype)
     echo '<script>SearchRow.add();</script>';
 } ?>

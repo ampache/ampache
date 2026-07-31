@@ -31,9 +31,14 @@ use Traversable;
 interface MetadataManagerInterface
 {
     /**
-     * @return Traversable<Metadata>
+     * Adds a new metadata item
      */
-    public function getMetadata(MetadataEnabledInterface $item): Traversable;
+    public function addMetadata(MetadataEnabledInterface $item, string $name, string $data): void;
+
+    /**
+     * Cleans up metadata-related database tables
+     */
+    public function collectGarbage(): void;
 
     /**
      * Deletes a metadata-item
@@ -48,14 +53,9 @@ interface MetadataManagerInterface
     public function getDisabledMetadataFields(): array;
 
     /**
-     * Adds a new metadata item
+     * @return Traversable<Metadata>
      */
-    public function addMetadata(MetadataEnabledInterface $item, string $name, string $data): void;
-
-    /**
-     * @throws DatabaseException
-     */
-    public function updateOrAddMetadata(MetadataEnabledInterface $item, string $name, string $data): void;
+    public function getMetadata(MetadataEnabledInterface $item): Traversable;
 
     /**
      * Returns `true` if custom metadata is enabled
@@ -63,7 +63,7 @@ interface MetadataManagerInterface
     public function isCustomMetadataEnabled(): bool;
 
     /**
-     * Cleans up metadata-related database tables
+     * @throws DatabaseException
      */
-    public function collectGarbage(): void;
+    public function updateOrAddMetadata(MetadataEnabledInterface $item, string $name, string $data): void;
 }

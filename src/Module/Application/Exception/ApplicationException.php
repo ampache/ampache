@@ -27,6 +27,4 @@ namespace Ampache\Module\Application\Exception;
 
 use Exception;
 
-abstract class ApplicationException extends Exception
-{
-}
+abstract class ApplicationException extends Exception {}

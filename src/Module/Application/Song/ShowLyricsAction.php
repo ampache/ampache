@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -34,33 +34,23 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowLyricsAction implements ApplicationActionInterface
+final readonly class ShowLyricsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_lyrics';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'show_lyrics';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->requestParser = $requestParser;
-        $this->ui            = $ui;
-        $this->modelFactory  = $modelFactory;
-    }
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
     public function run(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         $this->ui->showHeader();
 
-        $song_id = (int)$this->requestParser->getFromRequest('song_id');
+        $song_id = (int) $this->requestParser->getFromRequest('song_id');
         $song    = $this->modelFactory->createSong($song_id);
         if ($song->isNew()) {
             throw new ObjectNotFoundException($song_id);

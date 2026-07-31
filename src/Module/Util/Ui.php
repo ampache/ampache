@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -28,8 +28,12 @@ namespace Ampache\Module\Util;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
@@ -49,7 +53,8 @@ use Ampache\Repository\Model\User;
  */
 class Ui implements UiInterface
 {
-    private static int $_ticker = 0;
+    /** @var array<string, bool> material symbols already emitted in a sprite for the current page */
+    private static array $_emitted_symbols = [];
 
     /** @var array<string, string> $_icon_cache */
     private static array $_icon_cache = [];
@@ -57,102 +62,20 @@ class Ui implements UiInterface
     /** @var array<string, string> $_image_cache */
     private static array $_image_cache = [];
 
+    /** @var array<string, array{attrs: string, viewbox: string, inner: string}|null> parsed material symbol source files */
+    private static array $_symbol_cache = [];
+
+    /** @var array<string, string> resolved template paths, keyed by theme|extern|template */
+    private static array $_template_cache = [];
+
+    private static int $_ticker = 0;
+
+    /** @var array<string, bool> material symbols referenced on the current page (sprite content) */
+    private static array $_used_symbols = [];
+
     public function __construct(
-        private readonly ConfigContainerInterface $configContainer
-    ) {
-    }
-
-    /**
-     * This dumps out some html and an icon for the type of rss that we specify
-     *
-     * @param array<string, string>|null $params
-     */
-    public static function getRssLink(
-        RssFeedTypeEnum $type,
-        ?User $user = null,
-        string $title = '',
-        ?array $params = null
-    ): string {
-        $strparams = "";
-        if (is_array($params)) {
-            foreach ($params as $key => $value) {
-                $strparams .= "&" . scrub_out($key) . "=" . scrub_out($value);
-            }
-        }
-
-        $rsstoken = '';
-        if ($user !== null) {
-            $rsstoken = "&rsstoken=" . $user->getRssToken();
-        }
-
-        $string = (
-            '<a class="nohtml" href="' . AmpConfig::get('web_path') .
-            '/rss.php?type=' . $type->value .
-            $rsstoken . $strparams . '" target="_blank">' .
-            self::get_material_symbol(
-                'rss_feed',
-                T_('RSS Feed')
-            )
-        );
-        if (!empty($title)) {
-            $string .= '&nbsp;' . $title;
-        }
-        $string .= '</a>';
-
-        return $string;
-    }
-
-    /**
-     * find_template
-     *
-     * Return the path to the template file wanted. The file can be overwritten
-     * by the theme if it's not a php file, or if it is and if option
-     * allow_php_themes is set to true.
-     */
-    public static function find_template(string $template, bool $extern = false): string
-    {
-        $path      = AmpConfig::get('theme_path', '/themes/reborn') . '/templates/' . $template;
-        $realpath  = __DIR__ . '/../../../public/' . $path;
-        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-        if (($extension != 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
-            return $path;
-        }
-        if ($extern === true) {
-            return '/templates/' . $template;
-        }
-
-        return __DIR__ . '/../../../public/templates/' . $template;
-    }
-
-    public function showObjectNotFound(): void
-    {
-        $this->showHeader();
-        echo T_('You have requested an object that does not exist');
-        $this->showQueryStats();
-        $this->showFooter();
-    }
-
-    /**
-     * Displays the default error page
-     */
-    public function accessDenied(string $error = 'Access Denied'): void
-    {
-        // Clear any buffered crap
-        ob_end_clean();
-        header("HTTP/1.1 403 $error");
-        require_once self::find_template('show_denied.inc.php');
-    }
-
-    /**
-     * Displays an error page when you can't write the config
-     */
-    public function permissionDenied(string $fileName): void
-    {
-        // Clear any buffered crap
-        ob_end_clean();
-        header("HTTP/1.1 403 Permission Denied");
-        require_once self::find_template('show_denied_permission.inc.php');
-    }
+        private readonly ConfigContainerInterface $configContainer,
+    ) {}
 
     /**
      * ajax_include
@@ -177,7 +100,7 @@ class Ui implements UiInterface
      */
     public static function check_iconv(): bool
     {
-        return (bool)(function_exists('iconv') && function_exists('iconv_substr'));
+        return function_exists('iconv') && function_exists('iconv_substr');
     }
 
     /**
@@ -191,7 +114,8 @@ class Ui implements UiInterface
         if (defined('SSE_OUTPUT') || defined('CLI') || defined('API')) {
             return false;
         }
-        if (!isset(self::$_ticker) || (time() > self::$_ticker + 1)) {
+
+        if (!self::$_ticker || (time() > self::$_ticker + 1)) {
             self::$_ticker = time();
 
             return true;
@@ -209,7 +133,7 @@ class Ui implements UiInterface
      */
     public static function clean_utf8(string $string): string
     {
-        if ($string) {
+        if ($string !== '' && $string !== '0') {
             $clean = preg_replace(
                 '/[^\x{9}\x{a}\x{d}\x{20}-\x{d7ff}\x{e000}-\x{fffd}\x{10000}-\x{10ffff}]|[\x{7f}-\x{84}\x{86}-\x{9f}\x{fdd0}-\x{fddf}\x{1fffe}-\x{1ffff}\x{2fffe}-\x{2ffff}\x{3fffe}-\x{3ffff}\x{4fffe}-\x{4ffff}\x{5fffe}-\x{5ffff}\x{6fffe}-\x{6ffff}\x{7fffe}-\x{7ffff}\x{8fffe}-\x{8ffff}\x{9fffe}-\x{9ffff}\x{afffe}-\x{affff}\x{bfffe}-\x{bffff}\x{cfffe}-\x{cffff}\x{dfffe}-\x{dffff}\x{efffe}-\x{effff}\x{ffffe}-\x{fffff}\x{10fffe}-\x{10ffff}]/u',
                 '',
@@ -217,7 +141,7 @@ class Ui implements UiInterface
             );
 
             if ($clean) {
-                return rtrim((string)$clean);
+                return rtrim((string) $clean);
             }
 
             debug_event(self::class, 'Charset cleanup failed, something might break', 1);
@@ -227,19 +151,54 @@ class Ui implements UiInterface
     }
 
     /**
+     * find_template
+     *
+     * Return the path to the template file wanted. The file can be overwritten
+     * by the theme if it's not a php file, or if it is and if option
+     * allow_php_themes is set to true.
+     */
+    public static function find_template(string $template, bool $extern = false): string
+    {
+        // Path only depends on theme + extern + template name, so resolve once per request.
+        $theme    = (string) AmpConfig::get('theme_path', '/themes/reborn');
+        $cacheKey = $theme . '|' . ($extern ? '1' : '0') . '|' . $template;
+        if (isset(self::$_template_cache[$cacheKey])) {
+            return self::$_template_cache[$cacheKey];
+        }
+
+        $path      = $theme . '/templates/' . $template;
+        $realpath  = __DIR__ . '/../../../public/' . $path;
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (($extension !== 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
+            return self::$_template_cache[$cacheKey] = $path;
+        }
+
+        if ($extern) {
+            return self::$_template_cache[$cacheKey] = '/templates/' . $template;
+        }
+
+        return self::$_template_cache[$cacheKey] = __DIR__ . '/../../../public/templates/' . $template;
+    }
+
+    /**
      * format_bytes
      *
      * Turns a size in bytes into the best human-readable value
-     * @param int|float $value Size in bytes
+     * @param int|float|string $value Size in bytes
      * @param int $precision Number of decimal places to show
      * @param int $pass Internal counter for recursion
      */
-    public static function format_bytes(int|float $value, int $precision = 2, int $pass = 0): string
+    public static function format_bytes(int|float|string $value, int $precision = 2, int $pass = 0): string
     {
         if (!$value) {
             return '';
         }
-        while (strlen((string)floor($value)) > 3) {
+
+        if (is_string($value)) {
+            $value = (float) $value;
+        }
+
+        while (strlen((string) floor($value)) > 3) {
             $value /= 1024;
             $pass++;
         }
@@ -253,7 +212,365 @@ class Ui implements UiInterface
             default => 'B',
         };
 
-        return ((string)round($value, $precision)) . ' ' . $unit;
+        return (round($value, $precision)) . ' ' . $unit;
+    }
+
+    /**
+     * The label for the control that opens the add-to-list dialog.
+     * @param bool $short for a control with no room for the full label, such as a multi-select action bar
+     */
+    public static function get_add_to_list_label(bool $short = false): string
+    {
+        if (!AmpConfig::get('show_collection')) {
+            return T_('Add to playlist');
+        }
+
+        return ($short)
+            ? T_('Add to list')
+            : T_('Add to playlist / collection');
+    }
+
+    /**
+     * get_icon
+     *
+     * Returns an <img> or <svg> tag for the specified icon
+     */
+    public static function get_icon(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
+    {
+        $title ??= T_(ucfirst($name));
+        $icon_url = self::_find_icon($name);
+        $icontype = pathinfo($icon_url, PATHINFO_EXTENSION);
+        $tag      = '';
+        if ($icontype == 'svg') {
+            // load svg file
+            $svgicon = simplexml_load_file($icon_url);
+            if ($svgicon !== false) {
+                if (empty($svgicon->title)) {
+                    $svgicon->addChild('title', $title);
+                } else {
+                    $svgicon->title = $title;
+                }
+
+                if (empty($svgicon->desc)) {
+                    $svgicon->addChild('desc', $title);
+                } else {
+                    $svgicon->desc = $title;
+                }
+
+                if (!in_array($id_attrib, [null, '', '0'], true)) {
+                    $svgicon->addAttribute('id', $id_attrib);
+                }
+
+                if (in_array($class_attrib, [null, '', '0'], true)) {
+                    $class_attrib = 'icon icon-' . $name;
+                }
+
+                $svgicon->addAttribute('class', $class_attrib);
+
+                $tag = explode("\n", (string) $svgicon->asXML(), 2)[1];
+            }
+        } else {
+            // fall back to png
+            $tag = '<img src="' . $icon_url . '" ';
+            $tag .= 'alt="' . $title . '" ';
+            $tag .= 'title="' . $title . '" ';
+            if ($id_attrib !== null) {
+                $tag .= 'id="' . $id_attrib . '" ';
+            }
+
+            if ($class_attrib !== null) {
+                $tag .= 'class="' . $class_attrib . '" ';
+            }
+
+            $tag .= '/>';
+        }
+
+        return $tag;
+    }
+
+    /**
+     * get_image
+     *
+     * Returns an <img> or <svg> tag for the specified image
+     */
+    public static function get_image(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
+    {
+        $title ??= ucfirst($name);
+        $image_url = self::_find_image($name);
+        $imagetype = pathinfo($image_url, PATHINFO_EXTENSION);
+        $tag       = '';
+        if ($imagetype == 'svg') {
+            // load svg file
+            $svgimage = simplexml_load_file($image_url);
+            if ($svgimage !== false) {
+                if (empty($svgimage->title)) {
+                    $svgimage->addChild('title', $title);
+                } else {
+                    $svgimage->title = $title;
+                }
+
+                if (empty($svgimage->desc)) {
+                    $svgimage->addChild('desc', $title);
+                } else {
+                    $svgimage->desc = $title;
+                }
+
+                if (!in_array($id_attrib, [null, '', '0'], true)) {
+                    $svgimage->addAttribute('id', $id_attrib);
+                }
+
+                $class_attrib ??= 'image image-' . $name;
+                $svgimage->addAttribute('class', $class_attrib);
+
+                $tag = explode("\n", (string) $svgimage->asXML(), 2)[1];
+            }
+        } else {
+            // fall back to png
+            $tag = '<img src="' . $image_url . '" ';
+            $tag .= 'alt="' . $title . '" ';
+            $tag .= 'title="' . $title . '" ';
+            if ($id_attrib !== null) {
+                $tag .= 'id="' . $id_attrib . '" ';
+            }
+
+            if ($class_attrib !== null) {
+                $tag .= 'class="' . $class_attrib . '" ';
+            }
+
+            $tag .= '/>';
+        }
+
+        return $tag;
+    }
+
+    /**
+     * get_logo_url
+     *
+     * Get the custom logo or logo relating to your theme color
+     */
+    public static function get_logo_url(?string $color = null): string
+    {
+        if (AmpConfig::get('custom_logo')) {
+            return AmpConfig::get('custom_logo');
+        }
+
+        if ($color !== null) {
+            return AmpConfig::get_web_path() . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . $color . '.png';
+        }
+
+        return AmpConfig::get_web_path() . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . AmpConfig::get('theme_color', 'dark') . '.png';
+    }
+
+    /**
+     * get_material_symbol
+     *
+     * Returns an <svg> tag for the specified Material Symbol
+     */
+    public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
+    {
+        $title      = $title ?? T_(ucfirst($name));
+        $symbol_key = $name;
+        $filepath   = __DIR__ . '/../../../resources/images/material-symbols/' . $name . '.svg';
+        if (!is_file($filepath)) {
+            // fall back to error icon if icon is missing
+            debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
+            $symbol_key = 'icon_error';
+            $filepath   = __DIR__ . '/../../../resources/images/icon_error.svg';
+        }
+
+        $symbol = self::_load_symbol_parts($symbol_key, $filepath);
+        if ($symbol === null) {
+            return '';
+        }
+
+        self::$_used_symbols[$symbol_key] = true;
+
+        // In AJAX fragments there is no page sprite emitted before </body>,
+        // and each fragment is injected into its own DOM node via innerHTML,
+        // so it must be self-contained. Emit the hidden <symbol> inline the
+        // first time an icon appears in this response; every later occurrence
+        // is just a <use>. Duplicate ids are ignored by the browser, so this
+        // is safe even when the page sprite already holds the same symbol.
+        $prefix = '';
+        if (defined('AJAX_INCLUDE') && !isset(self::$_emitted_symbols[$symbol_key])) {
+            self::$_emitted_symbols[$symbol_key] = true;
+            $viewbox                             = ($symbol['viewbox'] !== '')
+                ? ' viewBox="' . $symbol['viewbox'] . '"'
+                : '';
+            $prefix = '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">'
+                . '<symbol id="ms-' . scrub_out($symbol_key) . '"' . $viewbox . '>' . $symbol['inner'] . '</symbol></svg>';
+        }
+
+        $tag = $prefix . '<svg' . $symbol['attrs'];
+        if (!empty($id_attrib)) {
+            $tag .= ' id="' . scrub_out($id_attrib) . '"';
+        }
+        $tag .= ' class="material-symbol material-symbol-' . scrub_out($name) . ' ' . scrub_out((string) $class_attrib) . '">';
+        $tag .= '<title>' . scrub_out($title) . '</title>';
+        $tag .= '<desc>' . scrub_out($title) . '</desc>';
+        $tag .= '<use href="#ms-' . scrub_out($symbol_key) . '" xlink:href="#ms-' . scrub_out($symbol_key) . '"></use>';
+
+        return $tag . '</svg>';
+    }
+
+    /**
+     * This dumps out some html and an icon for the type of rss that we specify
+     *
+     * @param array<string, string>|null $params
+     */
+    public static function getRssLink(
+        RssFeedTypeEnum $type,
+        ?User $user = null,
+        string $title = '',
+        ?array $params = null,
+    ): string {
+        $strparams = "";
+        if (is_array($params)) {
+            foreach ($params as $key => $value) {
+                $strparams .= "&" . scrub_out($key) . "=" . scrub_out($value);
+            }
+        }
+
+        $rsstoken = '';
+        if ($user !== null) {
+            $rsstoken = "&rsstoken=" . $user->getRssToken();
+        }
+
+        $string = (
+            '<a class="nohtml" href="' . AmpConfig::get('web_path')
+            . '/rss.php?type=' . $type->value
+            . $rsstoken . $strparams . '" target="_blank">'
+            . self::get_material_symbol(
+                'rss_feed',
+                T_('RSS Feed')
+            )
+        );
+        if ($title !== '' && $title !== '0') {
+            $string .= '&nbsp;' . $title;
+        }
+
+        return $string . '</a>';
+    }
+
+    /**
+     * is_grid_view
+     */
+    public static function is_grid_view(string $type): bool
+    {
+        $name = 'browse_' . $type . '_grid_view';
+        if (isset($_COOKIE[$name])) {
+            return ($_COOKIE[$name] == 'true');
+        }
+
+        return false;
+    }
+
+    /**
+     * material_symbol_sprite
+     *
+     * Returns a single hidden <svg> sprite containing one <symbol> per
+     * material symbol rendered on the current page. Must be echoed once,
+     * right before </body>. Returns an empty string when no icon was used.
+     */
+    public static function material_symbol_sprite(): string
+    {
+        // Incremental: only emit symbols that were not part of a previous
+        // sprite. The main layout may call this more than once (e.g. at the
+        // end of the content block and again before </body>) to catch icons
+        // rendered after the first call (footer, web player controls).
+        $pending = array_diff_key(self::$_used_symbols, self::$_emitted_symbols);
+        if ($pending === []) {
+            return '';
+        }
+
+        $sprite = '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">';
+        foreach (array_keys($pending) as $symbol_key) {
+            self::$_emitted_symbols[$symbol_key] = true;
+            $symbol                              = self::$_symbol_cache[$symbol_key] ?? null;
+            if ($symbol === null) {
+                continue;
+            }
+            // The viewBox of the source file is carried by the <symbol>
+            // (see _load_symbol_parts for why it must not stay on the
+            // per-icon <svg> tag).
+            $viewbox = ($symbol['viewbox'] !== '')
+                ? ' viewBox="' . $symbol['viewbox'] . '"'
+                : '';
+            $sprite .= '<symbol id="ms-' . scrub_out((string) $symbol_key) . '"' . $viewbox . '>' . $symbol['inner'] . '</symbol>';
+        }
+
+        return $sprite . '</svg>';
+    }
+
+    /**
+     * This function takes a boolean value and then prints out a friendly text
+     * message.
+     */
+    public static function printBool(?bool $value = false): string
+    {
+        return $value ? '<span class="item_on">' . T_('On') . '</span>' : '<span class="item_off">' . T_('Off') . '</span>';
+    }
+
+    /**
+     * show_box_bottom
+     *
+     * This shows the bottom of the box
+     */
+    public static function show_box_bottom(): void
+    {
+        require self::find_template('show_box_bottom.inc.php');
+    }
+
+    /**
+     * show_box_top
+     *
+     * This shows the top of the box.
+     */
+    public static function show_box_top(string $title = '', string $class = ''): void
+    {
+        require self::find_template('show_box_top.inc.php');
+    }
+
+    public static function show_custom_style(): void
+    {
+        if (AmpConfig::get('custom_login_background', false)) {
+            echo "<style> body { background-position: center; background-size: cover; background-image: url('" . AmpConfig::get('custom_login_background') . "') !important; }</style>";
+        }
+
+        if (AmpConfig::get('custom_login_logo', false)) {
+            echo "<style>#loginPage #headerlogo, #registerPage #logo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
+        }
+
+        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path() . "/favicon.ico";
+        echo '<link rel="icon" href="' . $favicon . "\">\n";
+    }
+
+    /**
+     * show_footer
+     *
+     * Shows the footer template and possibly profiling info.
+     */
+    public static function show_footer(): void
+    {
+        if (!defined("TABLE_RENDERED")) {
+            show_table_render();
+        }
+
+        $user = Core::get_global('user');
+        if ($user instanceof User) {
+            $plugins = Plugin::get_plugins(PluginTypeEnum::FOOTER_WIDGET);
+            foreach ($plugins as $plugin_name) {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin instanceof PluginDisplayOnFooterInterface && $plugin->load($user)) {
+                    $plugin->_plugin->display_on_footer();
+                }
+            }
+        }
+
+        require_once self::find_template('footer.inc.php');
+        if (Core::get_request('profiling') !== '') {
+            Dba::show_profile();
+        }
     }
 
     /**
@@ -264,11 +581,11 @@ class Ui implements UiInterface
      */
     public static function unformat_bytes(int|string $value): string
     {
-        if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', (string)$value, $matches)) {
-            $value = (int)$matches[1];
+        if (preg_match('/^(\d+) *([[:alpha:]]+)$/', (string) $value, $matches)) {
+            $value = (int) $matches[1];
             $unit  = strtolower(substr($matches[2], 0, 1));
         } else {
-            return (string)$value;
+            return (string) $value;
         }
 
         switch ($unit) {
@@ -288,103 +605,41 @@ class Ui implements UiInterface
                 $value *= 1024;
         }
 
-        return (string)$value;
+        return (string) $value;
     }
 
     /**
-     * get_icon
+     * update_text
      *
-     * Returns an <img> or <svg> tag for the specified icon
+     * Convenience function that, if the output is going to a browser,
+     * blarfs JS to do a fancy update. Otherwise it just outputs the text.
      */
-    public static function get_icon(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
+    public static function update_text(string $field, int|string $value): void
     {
-        $title    = $title ?? T_(ucfirst($name));
-        $icon_url = self::_find_icon($name);
-        $icontype = pathinfo($icon_url, PATHINFO_EXTENSION);
-        $tag      = '';
-        if ($icontype == 'svg') {
-            // load svg file
-            $svgicon = simplexml_load_file($icon_url);
-            if ($svgicon !== false) {
-                if (empty($svgicon->title)) {
-                    $svgicon->addChild('title', $title);
-                } else {
-                    $svgicon->title = $title;
-                }
-                if (empty($svgicon->desc)) {
-                    $svgicon->addChild('desc', $title);
-                } else {
-                    $svgicon->desc = $title;
-                }
+        if (defined('API')) {
+            return;
+        }
 
-                if (!empty($id_attrib)) {
-                    $svgicon->addAttribute('id', $id_attrib);
-                }
-                if (empty($class_attrib)) {
-                    $class_attrib = 'icon icon-' . $name;
-                }
-                $svgicon->addAttribute('class', $class_attrib);
+        if (defined('CLI')) {
+            echo $value . "\n";
 
-                $tag = explode("\n", (string)$svgicon->asXML(), 2)[1];
-            }
+            return;
+        }
+
+        static $update_id = 1;
+
+        if (defined('SSE_OUTPUT')) {
+            echo "id: " . $update_id . "\n";
+            echo "data: " . json_encode(['fn' => 'displayNotification', 'args' => [$value, 5000]]) . "\n\n";
+        } elseif ($field !== '' && $field !== '0') {
+            echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
         } else {
-            // fall back to png
-            $tag = '<img src="' . $icon_url . '" ';
-            $tag .= 'alt="' . $title . '" ';
-            $tag .= 'title="' . $title . '" ';
-            if ($id_attrib !== null) {
-                $tag .= 'id="' . $id_attrib . '" ';
-            }
-            if ($class_attrib !== null) {
-                $tag .= 'class="' . $class_attrib . '" ';
-            }
-            $tag .= '/>';
+            echo "<br />" . $value . "<br /><br />\n";
         }
 
-        return $tag;
-    }
-
-    /**
-     * get_material_symbol
-     *
-     * Returns an <svg> tag for the specified Material Symbol
-     */
-    public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
-    {
-        $title    = $title ?? T_(ucfirst($name));
-        $filepath = __DIR__ . '/../../../resources/images/material-symbols/' . $name . '.svg';
-        if (!is_file($filepath)) {
-            // fall back to error icon if icon is missing
-            debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
-            $filepath = __DIR__ . '/../../../resources/images/icon_error.svg';
-        }
-        $tag = '';
-        // load svg file
-        $svgicon = simplexml_load_file($filepath);
-        if ($svgicon !== false) {
-            if (empty($svgicon->title)) {
-                $svgicon->addChild('title', $title);
-            } else {
-                $svgicon->title = $title;
-            }
-            if (empty($svgicon->desc)) {
-                $svgicon->addChild('desc', $title);
-            } else {
-                $svgicon->desc = $title;
-            }
-
-            if (!empty($id_attrib)) {
-                $svgicon->addAttribute('id', $id_attrib);
-            }
-            if (empty($class_attrib)) {
-                $class_attrib = '';
-            }
-            $svgicon->addAttribute('class', 'material-symbol material-symbol-' . $name . " " . $class_attrib);
-
-            $tag = explode("\n", (string)$svgicon->asXML(), 3)[1];
-        }
-
-        return $tag;
+        ob_flush();
+        flush();
+        $update_id++;
     }
 
     /**
@@ -405,12 +660,12 @@ class Ui implements UiInterface
             glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.png') ?: []
         );
 
-        if (empty($filesearch)) {
+        if ($filesearch === []) {
             // if the theme is missing an icon, fall back to default images folder
             $path = 'images/';
             // check private resources folder for svg files
             $filesearch = glob(__DIR__ . '/../../../resources/' . $path . 'icon_' . $name . '.svg');
-            if (empty($filesearch)) {
+            if ($filesearch === [] || $filesearch === false) {
                 // finally fall back to the public images folder
                 // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
                 $filesearch = array_merge(
@@ -420,7 +675,7 @@ class Ui implements UiInterface
             }
         }
 
-        if (!empty($filesearch) && is_file($filesearch[0])) {
+        if ($filesearch !== [] && is_file($filesearch[0])) {
             $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         } else {
             // fall back to error icon if icon is missing
@@ -428,67 +683,17 @@ class Ui implements UiInterface
 
             return __DIR__ . '/../../../resources/images/icon_error.svg';
         }
+
         if (pathinfo($filename, PATHINFO_EXTENSION) === 'svg') {
-            $url = (string)$filesearch[0];
+            $url = $filesearch[0];
         } else {
             $url = AmpConfig::get_web_path() . '/' . $path . $filename;
         }
+
         // cache the url so you don't need to keep searching
         self::$_icon_cache[$name] = $url;
 
         return $url;
-    }
-
-    /**
-     * get_image
-     *
-     * Returns an <img> or <svg> tag for the specified image
-     */
-    public static function get_image(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
-    {
-        $title     = $title ?? ucfirst($name);
-        $image_url = self::_find_image($name);
-        $imagetype = pathinfo($image_url, PATHINFO_EXTENSION);
-        $tag       = '';
-        if ($imagetype == 'svg') {
-            // load svg file
-            $svgimage = simplexml_load_file($image_url);
-            if ($svgimage !== false) {
-                if (empty($svgimage->title)) {
-                    $svgimage->addChild('title', $title);
-                } else {
-                    $svgimage->title = $title;
-                }
-                if (empty($svgimage->desc)) {
-                    $svgimage->addChild('desc', $title);
-                } else {
-                    $svgimage->desc = $title;
-                }
-
-                if (!empty($id_attrib)) {
-                    $svgimage->addAttribute('id', $id_attrib);
-                }
-
-                $class_attrib = ($class_attrib) ?? 'image image-' . $name;
-                $svgimage->addAttribute('class', $class_attrib);
-
-                $tag = explode("\n", (string)$svgimage->asXML(), 2)[1];
-            }
-        } else {
-            // fall back to png
-            $tag = '<img src="' . $image_url . '" ';
-            $tag .= 'alt="' . $title . '" ';
-            $tag .= 'title="' . $title . '" ';
-            if ($id_attrib !== null) {
-                $tag .= 'id="' . $id_attrib . '" ';
-            }
-            if ($class_attrib !== null) {
-                $tag .= 'class="' . $class_attrib . '" ';
-            }
-            $tag .= '/>';
-        }
-
-        return $tag;
     }
 
     /**
@@ -510,11 +715,11 @@ class Ui implements UiInterface
             glob(__DIR__ . '/../../../public/' . $path . $name . '.png') ?: []
         );
 
-        if (empty($filesearch)) {
+        if ($filesearch === []) {
             $path = 'images/';
             // check private resources folder for svg files
             $filesearch = glob(__DIR__ . '/../../../resources/' . $path . $name . '.svg') ?: [];
-            if (empty($filesearch)) {
+            if ($filesearch === []) {
                 // finally fall back to the public images folder
                 // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
                 $filesearch = array_merge(
@@ -523,21 +728,24 @@ class Ui implements UiInterface
                 );
             }
         }
-        if (empty($filesearch)) {
+
+        if ($filesearch === []) {
             // if the theme is missing an image. fall back to default images folder
             $filename = $name . '.png';
             $path     = 'images/';
         } else {
             $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         }
+
         if (
-            $filesearch &&
-            pathinfo($filename, PATHINFO_EXTENSION) === 'svg'
+            $filesearch
+            && pathinfo($filename, PATHINFO_EXTENSION) === 'svg'
         ) {
             $url = $filesearch[0];
         } else {
             $url = AmpConfig::get_web_path() . '/' . $path . $filename;
         }
+
         // cache the url so you don't need to keep searching
         self::$_image_cache[$name] = $url;
 
@@ -545,241 +753,51 @@ class Ui implements UiInterface
     }
 
     /**
-     * Show the requested template file
-     */
-    public function show(string $template, array $context = []): void
-    {
-        extract($context);
-
-        require_once self::find_template($template);
-    }
-
-    public function showFooter(): void
-    {
-        static::show_footer();
-    }
-
-    public function showHeader(): void
-    {
-        require_once self::find_template('header.inc.php');
-    }
-
-    /**
-     * show_footer
+     * _load_symbol_parts
      *
-     * Shows the footer template and possibly profiling info.
+     * Splits an svg icon file into: its root attributes without viewBox
+     * (kept on the per-icon <svg> tag), its viewBox (moved onto the
+     * <symbol> in the page sprite) and its inner content (moved once into
+     * the sprite).
      *
-     * @deprecated use non-static version
+     * The viewBox MUST be on the <symbol> and MUST NOT be on the outer
+     * <svg>: material symbols draw in "0 -960 960 960" (negative Y) and
+     * the nested viewport created by <use> lands in the 0..960 region of
+     * the outer coordinate system - with the original viewBox kept on the
+     * outer <svg>, the whole drawing sits outside the visible area.
+     *
+     * @return array{attrs: string, viewbox: string, inner: string}|null
      */
-    public static function show_footer(): void
+    private static function _load_symbol_parts(string $symbol_key, string $filepath): ?array
     {
-        if (!defined("TABLE_RENDERED")) {
-            show_table_render();
-        }
-        $user = Core::get_global('user');
-        if ($user instanceof User) {
-            $plugins = Plugin::get_plugins(PluginTypeEnum::FOOTER_WIDGET);
-            foreach ($plugins as $plugin_name) {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin instanceof PluginDisplayOnFooterInterface && $plugin->load($user)) {
-                    $plugin->_plugin->display_on_footer();
-                }
+        if (!array_key_exists($symbol_key, self::$_symbol_cache)) {
+            $content = file_get_contents($filepath);
+            if ($content !== false && preg_match('/<svg([^>]*)>(.*)<\/svg>/s', $content, $matches)) {
+                $viewbox = (preg_match('/\sviewBox="([^"]*)"/', $matches[1], $vb_match))
+                    ? $vb_match[1]
+                    : '';
+                self::$_symbol_cache[$symbol_key] = [
+                    'attrs' => rtrim((string) preg_replace('/\sviewBox="[^"]*"/', '', $matches[1])),
+                    'viewbox' => $viewbox,
+                    'inner' => trim($matches[2]),
+                ];
+            } else {
+                self::$_symbol_cache[$symbol_key] = null;
             }
         }
 
-        require_once self::find_template('footer.inc.php');
-        if (Core::get_request('profiling') !== '') {
-            Dba::show_profile();
-        }
-    }
-
-    public function showBoxTop(string $title = '', string $class = ''): void
-    {
-        static::show_box_top($title, $class);
-    }
-
-    public function showBoxBottom(): void
-    {
-        static::show_box_bottom();
+        return self::$_symbol_cache[$symbol_key];
     }
 
     /**
-     * show_box_top
-     *
-     * This shows the top of the box.
-     *
-     * @deprecated Use non-static version
+     * Displays the default error page
      */
-    public static function show_box_top(string $title = '', string $class = ''): void
+    public function accessDenied(string $error = 'Access Denied'): void
     {
-        require self::find_template('show_box_top.inc.php');
-    }
-
-    /**
-     * show_box_bottom
-     *
-     * This shows the bottom of the box
-     *
-     * @deprecated Use non-static version
-     */
-    public static function show_box_bottom(): void
-    {
-        require self::find_template('show_box_bottom.inc.php');
-    }
-
-    /**
-     * This shows the query stats
-     */
-    public function showQueryStats(): void
-    {
-        require self::find_template('show_query_stats.inc.php');
-    }
-
-    public static function show_custom_style(): void
-    {
-        if (AmpConfig::get('custom_login_background', false)) {
-            echo "<style> body { background-position: center; background-size: cover; background-image: url('" . AmpConfig::get('custom_login_background') . "') !important; }</style>";
-        }
-
-        if (AmpConfig::get('custom_login_logo', false)) {
-            echo "<style>#loginPage #headerlogo, #registerPage #logo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
-        }
-
-        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path() . "/favicon.ico";
-        echo "<link rel=\"icon\" href=\"" . $favicon . "\">\n";
-    }
-
-    /**
-     * update_text
-     *
-     * Convenience function that, if the output is going to a browser,
-     * blarfs JS to do a fancy update. Otherwise it just outputs the text.
-     */
-    public static function update_text(string $field, int|string $value): void
-    {
-        if (defined('API')) {
-            return;
-        }
-        if (defined('CLI')) {
-            echo $value . "\n";
-
-            return;
-        }
-
-        static $update_id = 1;
-
-        if (defined('SSE_OUTPUT')) {
-            echo "id: " . $update_id . "\n";
-            echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
-        } elseif (!empty($field)) {
-            echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
-        } else {
-            echo "<br />" . $value . "<br /><br />\n";
-        }
-
-        ob_flush();
-        flush();
-        $update_id++;
-    }
-
-    /**
-     * get_logo_url
-     *
-     * Get the custom logo or logo relating to your theme color
-     */
-    public static function get_logo_url(?string $color = null): string
-    {
-        if (AmpConfig::get('custom_logo')) {
-            return AmpConfig::get('custom_logo');
-        }
-        if ($color !== null) {
-            return AmpConfig::get_web_path() . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . $color . '.png';
-        }
-
-        return AmpConfig::get_web_path() . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . AmpConfig::get('theme_color', 'dark') . '.png';
-    }
-
-    /**
-     * is_grid_view
-     */
-    public static function is_grid_view(string $type): bool
-    {
-        $name = 'browse_' . $type . '_grid_view';
-        if (isset($_COOKIE[$name])) {
-            return ($_COOKIE[$name] == 'true');
-        }
-
-        return false;
-    }
-
-    /**
-     * shows a confirmation of an action
-     */
-    public function showConfirmation(
-        string $title,
-        string $text,
-        string $next_url,
-        ?int $cancel = 0,
-        ?string $form_name = 'confirmation',
-        ?bool $visible = true
-    ): void {
-        $webPath = $this->configContainer->getWebPath();
-
-        if (substr_count($next_url, $webPath)) {
-            $path = $next_url;
-        } else {
-            $path = sprintf('%s/%s', $webPath, $next_url);
-        }
-        $this->show(
-            'show_confirmation.inc.php',
-            [
-                'title' => $title,
-                'text' => $text,
-                'path' => $path,
-                'form_name' => $form_name,
-                'cancel' => $cancel
-            ]
-        );
-    }
-
-    /**
-     * shows a simple continue button after an action
-     */
-    public function showContinue(
-        string $title,
-        string $text,
-        string $next_url
-    ): void {
-        $webPath = $this->configContainer->getWebPath();
-
-        if (substr_count($next_url, $webPath)) {
-            $path = $next_url;
-        } else {
-            $path = sprintf('%s/%s', $webPath, $next_url);
-        }
-
-        $this->show(
-            'show_continue.inc.php',
-            [
-                'title' => $title,
-                'text' => $text,
-                'path' => $path
-            ]
-        );
-    }
-
-    /**
-     * This function is used to escape user data that is getting redisplayed
-     * onto the page, it htmlentities the mojo
-     * This is the inverse of the scrub_in function
-     */
-    public function scrubOut(?string $string): string
-    {
-        if ($string === null) {
-            return '';
-        }
-
-        return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
+        // Clear any buffered crap
+        ob_end_clean();
+        header('HTTP/1.1 403 ' . $error);
+        require_once self::find_template('show_denied.inc.php');
     }
 
     /**
@@ -787,7 +805,8 @@ class Ui implements UiInterface
      */
     public function createPreferenceInput(
         string $name,
-        $value
+        $value,
+        ?string $type = null,
     ): void {
         if (!Preference::has_access($name)) {
             if ($value == '1') {
@@ -803,10 +822,42 @@ class Ui implements UiInterface
             return;
         } // if we don't have access to it
 
+        // Transcoding-format preferences render as a capability-driven output-format picker.
+        // The available formats come from the configured `encode_args_<format>` keys.
+        if ($type === 'transcoding') {
+            $kind    = (str_contains($name, 'video')) ? 'video' : 'audio';
+            $formats = Stream::get_available_encode_formats($kind);
+            echo '<select name="' . $name . '">' . "\n";
+            $is_selected = (in_array($value, [null, '', '0'], true)) ? ' selected="selected"' : '';
+            echo '<option value=""' . $is_selected . '>' . T_('None') . "</option>\n";
+            foreach ($formats as $format) {
+                $is_selected = ((string) $value === $format) ? ' selected="selected"' : '';
+                echo '<option value="' . $format . '"' . $is_selected . '>' . $format . "</option>\n";
+            }
+            echo "</select>\n";
+
+            return;
+        }
+
         switch ($name) {
+            case 'transcode_bitrate_webplayer':
+            case 'transcode_bitrate_api':
+                // A player override left empty falls back to the default rate, shown here as the placeholder
+                echo '<input type="number" name="' . $name . '" value="' . (((int) $value > 0) ? (int) $value : '') . '" min="0" step="1000" placeholder="' . (int) AmpConfig::get('transcode_bitrate', 128000) . '" /> ' . T_('bps');
+                break;
+            case 'transcode_bitrate':
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1000" /> ' . T_('bps') . ' (' . T_('0 = use the source file rate') . ')';
+                break;
+            case 'max_bit_rate':
+            case 'min_bit_rate':
+                // Bitrate preferences are stored in bits per second (bps)
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1000" /> ' . T_('bps');
+                break;
+            case 'rate_limit':
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1024" /> ' . T_('KB/s') . ' (0 = ' . T_('Unlimited') . ')';
+                break;
             case 'access_control':
             case 'access_list':
-            case 'ajax_load':
             case 'album_group':
             case 'album_release_type':
             case 'allow_democratic_playback':
@@ -823,6 +874,7 @@ class Ui implements UiInterface
             case 'api_enable_4':
             case 'api_enable_5':
             case 'api_enable_6':
+            case 'api_enable_8':
             case 'api_hide_dupe_searches':
             case 'autoupdate_lastversion_new':
             case 'autoupdate':
@@ -878,6 +930,7 @@ class Ui implements UiInterface
             case 'libitem_contextmenu':
             case 'lock_songs':
             case 'mb_overwrite_name':
+            case 'mini_player':
             case 'no_symlinks':
             case 'notify_email':
             case 'now_playing_per_user':
@@ -892,8 +945,10 @@ class Ui implements UiInterface
             case 'share':
             case 'show_album_artist':
             case 'show_artist':
+            case 'show_collection':
             case 'show_donate':
             case 'show_header_login':
+            case 'show_folder':
             case 'show_license':
             case 'show_lyrics':
             case 'show_original_year':
@@ -931,28 +986,25 @@ class Ui implements UiInterface
             case 'upnp_backend':
             case 'use_auth':
             case 'use_original_year':
-            case 'use_play2':
             case 'webdav_backend':
-            case 'webplayer_aurora':
             case 'webplayer_confirmclose':
-            case 'webplayer_flash':
-            case 'webplayer_html5':
             case 'webplayer_pausetabs':
             case 'xml_rpc':
                 $is_true  = '';
                 $is_false = '';
                 if ($value == '1') {
-                    $is_true = "selected=\"selected\"";
+                    $is_true = 'selected="selected"';
                 } else {
-                    $is_false = "selected=\"selected\"";
+                    $is_false = 'selected="selected"';
                 }
-                echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"1\" $is_true>" . T_('On') . "</option>\n";
-                echo "\t<option value=\"0\" $is_false>" . T_('Off') . "</option>\n";
+
+                echo "<select name=\"{$name}\">\n";
+                echo sprintf('	<option value="1" %s>', $is_true) . T_('On') . "</option>\n";
+                echo sprintf('	<option value="0" %s>', $is_false) . T_('Off') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'upload_catalog':
-                show_catalog_select('upload_catalog', $value, '', true, 'music', 'local');
+                show_catalog_select('upload_catalog', (int) $value, '', true, 'music', 'local');
                 break;
             case 'play_type':
                 $is_stream     = '';
@@ -972,18 +1024,22 @@ class Ui implements UiInterface
                     default:
                         $is_stream = 'selected="selected"';
                 }
-                echo "<select name=\"$name\">\n";
+
+                echo "<select name=\"{$name}\">\n";
                 echo "\t<option value=\"\">" . T_('None') . "</option>\n";
                 if (AmpConfig::get('allow_stream_playback')) {
-                    echo "\t<option value=\"stream\" $is_stream>" . T_('Stream') . "</option>\n";
+                    echo sprintf('	<option value="stream" %s>', $is_stream) . T_('Stream') . "</option>\n";
                 }
+
                 if (AmpConfig::get('allow_democratic_playback')) {
-                    echo "\t<option value=\"democratic\" $is_democratic>" . T_('Democratic') . "</option>\n";
+                    echo sprintf('	<option value="democratic" %s>', $is_democratic) . T_('Democratic') . "</option>\n";
                 }
+
                 if (AmpConfig::get('allow_localplay_playback')) {
-                    echo "\t<option value=\"localplay\" $is_localplay>" . T_('Localplay') . "</option>\n";
+                    echo sprintf('	<option value="localplay" %s>', $is_localplay) . T_('Localplay') . "</option>\n";
                 }
-                echo "\t<option value=\"web_player\" $is_web_player>" . T_('Web Player') . "</option>\n";
+
+                echo sprintf('	<option value="web_player" %s>', $is_web_player) . T_('Web Player') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'playlist_type':
@@ -1013,13 +1069,14 @@ class Ui implements UiInterface
                     default:
                         $is_m3u = 'selected="selected"';
                 }
-                echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"m3u\" $is_m3u>" . T_('M3U') . "</option>\n";
-                echo "\t<option value=\"simple_m3u\" $is_simple_m3u>" . T_('Simple M3U') . "</option>\n";
-                echo "\t<option value=\"pls\" $is_pls>" . T_('PLS') . "</option>\n";
-                echo "\t<option value=\"asx\" $is_asx>" . T_('Asx') . "</option>\n";
-                echo "\t<option value=\"ram\" $is_ram>" . T_('RAM') . "</option>\n";
-                echo "\t<option value=\"xspf\" $is_xspf>" . T_('XSPF') . "</option>\n";
+
+                echo "<select name=\"{$name}\">\n";
+                echo sprintf('	<option value="m3u" %s>', $is_m3u) . T_('M3U') . "</option>\n";
+                echo sprintf('	<option value="simple_m3u" %s>', $is_simple_m3u) . T_('Simple M3U') . "</option>\n";
+                echo sprintf('	<option value="pls" %s>', $is_pls) . T_('PLS') . "</option>\n";
+                echo sprintf('	<option value="asx" %s>', $is_asx) . T_('Asx') . "</option>\n";
+                echo sprintf('	<option value="ram" %s>', $is_ram) . T_('RAM') . "</option>\n";
+                echo sprintf('	<option value="xspf" %s>', $is_xspf) . T_('XSPF') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'lang':
@@ -1027,24 +1084,28 @@ class Ui implements UiInterface
                 echo '<select name="' . $name . '">' . "\n";
                 foreach ($languages as $lang => $tongue) {
                     $selected = ($lang == $value) ? 'selected="selected"' : '';
-                    echo "\t<option value=\"$lang\" " . $selected . ">$tongue</option>\n";
-                } // end foreach
+                    echo sprintf('	<option value="%s" ', $lang) . $selected . ">{$tongue}</option>\n";
+                }
+
                 echo "</select>\n";
                 break;
             case 'localplay_controller':
                 $controllers = array_keys(LocalPlayTypeEnum::TYPE_MAPPING);
-                echo "<select name=\"$name\">\n";
+                echo "<select name=\"{$name}\">\n";
                 echo "\t<option value=\"\">" . T_('None') . "</option>\n";
                 foreach ($controllers as $controller) {
                     if (!LocalPlay::is_enabled($controller)) {
                         continue;
                     }
+
                     $is_selected = '';
                     if ($value == $controller) {
                         $is_selected = 'selected="selected"';
                     }
-                    echo "\t<option value=\"" . $controller . "\" $is_selected>" . ucfirst($controller) . "</option>\n";
-                } // end foreach
+
+                    echo "\t<option value=\"" . $controller . sprintf('" %s>', $is_selected) . ucfirst($controller) . "</option>\n";
+                }
+
                 echo "</select>\n";
                 break;
             case 'api_force_version':
@@ -1064,12 +1125,13 @@ class Ui implements UiInterface
                 } elseif ($value == 6) {
                     $is_6 = 'selected="selected"';
                 }
-                echo "<select name=\"$name\">\n";
-                echo "<option value=\"0\" $is_0>" . T_('Off') . "</option>\n";
-                echo "<option value=\"3\" $is_3>" . T_('Allow API3 Only') . "</option>\n";
-                echo "<option value=\"4\" $is_4>" . T_('Allow API4 Only') . "</option>\n";
-                echo "<option value=\"5\" $is_5>" . T_('Allow API5 Only') . "</option>\n";
-                echo "<option value=\"6\" $is_6>" . T_('Allow API6 Only') . "</option>\n";
+
+                echo "<select name=\"{$name}\">\n";
+                echo sprintf('<option value="0" %s>', $is_0) . T_('Off') . "</option>\n";
+                echo sprintf('<option value="3" %s>', $is_3) . T_('Allow API3 Only') . "</option>\n";
+                echo sprintf('<option value="4" %s>', $is_4) . T_('Allow API4 Only') . "</option>\n";
+                echo sprintf('<option value="5" %s>', $is_5) . T_('Allow API5 Only') . "</option>\n";
+                echo sprintf('<option value="6" %s>', $is_6) . T_('Allow API6 Only') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'jp_volume':
@@ -1107,18 +1169,19 @@ class Ui implements UiInterface
                 } elseif ($value == 1.0) {
                     $is_10 = 'selected="selected"';
                 }
-                echo "<select name=\"$name\">\n";
-                echo "<option value=0.00 $is_0>0%</option>\n";
-                echo "<option value=0.10 $is_1>10%</option>\n";
-                echo "<option value=0.20 $is_2>20%</option>\n";
-                echo "<option value=0.30 $is_3>30%</option>\n";
-                echo "<option value=0.40 $is_4>40%</option>\n";
-                echo "<option value=0.50 $is_5>50%</option>\n";
-                echo "<option value=0.60 $is_6>60%</option>\n";
-                echo "<option value=0.70 $is_7>70%</option>\n";
-                echo "<option value=0.80 $is_8>80%</option>\n";
-                echo "<option value=0.90 $is_9>90%</option>\n";
-                echo "<option value=1.00 $is_10>100%</option>\n";
+
+                echo "<select name=\"{$name}\">\n";
+                echo "<option value=0.00 {$is_0}>0%</option>\n";
+                echo "<option value=0.10 {$is_1}>10%</option>\n";
+                echo "<option value=0.20 {$is_2}>20%</option>\n";
+                echo "<option value=0.30 {$is_3}>30%</option>\n";
+                echo "<option value=0.40 {$is_4}>40%</option>\n";
+                echo "<option value=0.50 {$is_5}>50%</option>\n";
+                echo "<option value=0.60 {$is_6}>60%</option>\n";
+                echo "<option value=0.70 {$is_7}>70%</option>\n";
+                echo "<option value=0.80 {$is_8}>80%</option>\n";
+                echo "<option value=0.90 {$is_9}>90%</option>\n";
+                echo "<option value=1.00 {$is_10}>100%</option>\n";
                 echo "</select>\n";
                 break;
             case 'ratingmatch_stars':
@@ -1141,13 +1204,14 @@ class Ui implements UiInterface
                 } elseif ($value == 5) {
                     $is_5 = 'selected="selected"';
                 }
-                echo "<select name=\"$name\">\n";
-                echo "<option value=\"0\" $is_0>" . T_('Disabled') . "</option>\n";
-                echo "<option value=\"1\" $is_1>" . T_('1 Star') . "</option>\n";
-                echo "<option value=\"2\" $is_2>" . T_('2 Stars') . "</option>\n";
-                echo "<option value=\"3\" $is_3>" . T_('3 Stars') . "</option>\n";
-                echo "<option value=\"4\" $is_4>" . T_('4 Stars') . "</option>\n";
-                echo "<option value=\"5\" $is_5>" . T_('5 Stars') . "</option>\n";
+
+                echo "<select name=\"{$name}\">\n";
+                echo sprintf('<option value="0" %s>', $is_0) . T_('Disabled') . "</option>\n";
+                echo sprintf('<option value="1" %s>', $is_1) . T_('1 Star') . "</option>\n";
+                echo sprintf('<option value="2" %s>', $is_2) . T_('2 Stars') . "</option>\n";
+                echo sprintf('<option value="3" %s>', $is_3) . T_('3 Stars') . "</option>\n";
+                echo sprintf('<option value="4" %s>', $is_4) . T_('4 Stars') . "</option>\n";
+                echo sprintf('<option value="5" %s>', $is_5) . T_('5 Stars') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'localplay_level':
@@ -1165,12 +1229,13 @@ class Ui implements UiInterface
                 } elseif ($value == '100') {
                     $is_admin = 'selected="selected"';
                 }
-                echo "<select name=\"$name\">\n";
-                echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
-                echo "<option value=\"25\" $is_user>" . T_('User') . "</option>\n";
-                echo "<option value=\"50\" $is_content_manager>" . T_('Content Manager') . "</option>\n";
-                echo "<option value=\"75\" $is_catalog_manager>" . T_('Catalog Manager') . "</option>\n";
-                echo "<option value=\"100\" $is_admin>" . T_('Admin') . "</option>\n";
+
+                echo "<select name=\"{$name}\">\n";
+                echo '<option value="0">' . T_('Disabled') . "</option>\n";
+                echo sprintf('<option value="25" %s>', $is_user) . T_('User') . "</option>\n";
+                echo sprintf('<option value="50" %s>', $is_content_manager) . T_('Content Manager') . "</option>\n";
+                echo sprintf('<option value="75" %s>', $is_catalog_manager) . T_('Catalog Manager') . "</option>\n";
+                echo sprintf('<option value="100" %s>', $is_admin) . T_('Admin') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'webplayer_removeplayed':
@@ -1193,43 +1258,51 @@ class Ui implements UiInterface
                 } elseif ($value == '999') {
                     $is_all = 'selected="selected"';
                 }
-                echo "<select name=\"$name\">\n";
-                echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
-                echo "<option value=\"1\" $is_one>" . T_('Keep last played track') . "</option>\n";
+
+                echo "<select name=\"{$name}\">\n";
+                echo '<option value="0">' . T_('Disabled') . "</option>\n";
+                echo sprintf('<option value="1" %s>', $is_one) . T_('Keep last played track') . "</option>\n";
                 /* HINT: Keep (2|3|4|5|10) previous tracks */
-                echo "<option value=\"2\" $is_two>" . sprintf(T_('Keep %s previous tracks'), '2') . "</option>\n";
-                echo "<option value=\"3\" $is_three>" . sprintf(T_('Keep %s previous tracks'), '3') . "</option>\n";
-                echo "<option value=\"5\" $is_five>" . sprintf(T_('Keep %s previous tracks'), '5') . "</option>\n";
-                echo "<option value=\"10\" $is_ten>" . sprintf(T_('Keep %s previous tracks'), '10') . "</option>\n";
-                echo "<option value=\"999\" $is_all>" . T_('Remove all previous tracks') . "</option>\n";
+                echo sprintf('<option value="2" %s>', $is_two) . sprintf(T_('Keep %s previous tracks'), '2') . "</option>\n";
+                echo sprintf('<option value="3" %s>', $is_three) . sprintf(T_('Keep %s previous tracks'), '3') . "</option>\n";
+                echo sprintf('<option value="5" %s>', $is_five) . sprintf(T_('Keep %s previous tracks'), '5') . "</option>\n";
+                echo sprintf('<option value="10" %s>', $is_ten) . sprintf(T_('Keep %s previous tracks'), '10') . "</option>\n";
+                echo sprintf('<option value="999" %s>', $is_all) . T_('Remove all previous tracks') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'theme_name':
                 $themes = get_themes();
-                echo "<select name=\"$name\">\n";
+                echo "<select name=\"{$name}\">\n";
                 foreach ($themes as $theme) {
                     $is_selected = "";
                     if ($value == $theme['path']) {
-                        $is_selected = "selected=\"selected\"";
+                        $is_selected = 'selected="selected"';
                     }
-                    echo "\t<option value=\"" . $theme['path'] . "\" $is_selected>" . $theme['name'] . "</option>\n";
-                } // foreach themes
+
+                    echo "\t<option value=\"" . $theme['path'] . sprintf('" %s>', $is_selected) . $theme['name'] . "</option>\n";
+                }
+
+                // foreach themes
                 echo "</select>\n";
                 break;
             case 'theme_color':
                 // This include a two-step configuration (first change theme and save, then change theme color and save)
                 $theme_cfg = get_theme(AmpConfig::get('theme_name', 'reborn'));
                 if ($theme_cfg !== null) {
-                    echo "<select name=\"$name\">\n";
+                    echo "<select name=\"{$name}\">\n";
                     foreach ($theme_cfg['colors'] as $color) {
                         $is_selected = "";
                         if ($value == strtolower((string) $color)) {
-                            $is_selected = "selected=\"selected\"";
+                            $is_selected = 'selected="selected"';
                         }
-                        echo "\t<option value=\"" . strtolower((string) $color) . "\" $is_selected>" . $color . "</option>\n";
-                    } // foreach themes
+
+                        echo "\t<option value=\"" . strtolower((string) $color) . sprintf('" %s>', $is_selected) . $color . "</option>\n";
+                    }
+
+                    // foreach themes
                     echo "</select>\n";
                 }
+
                 break;
             case 'playlist_method':
                 $is_send       = '';
@@ -1245,11 +1318,12 @@ class Ui implements UiInterface
                 } elseif ($value == 'default') {
                     $is_default = 'selected="selected"';
                 }
-                echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"send\"$is_send>" . T_('Send on Add') . "</option>\n";
-                echo "\t<option value=\"send_clear\"$is_send_clear>" . T_('Send and Clear on Add') . "</option>\n";
-                echo "\t<option value=\"clear\"$is_clear>" . T_('Clear on Send') . "</option>\n";
-                echo "\t<option value=\"default\"$is_default>" . T_('Default') . "</option>\n";
+
+                echo "<select name=\"{$name}\">\n";
+                echo sprintf('	<option value="send"%s>', $is_send) . T_('Send on Add') . "</option>\n";
+                echo sprintf('	<option value="send_clear"%s>', $is_send_clear) . T_('Send and Clear on Add') . "</option>\n";
+                echo sprintf('	<option value="clear"%s>', $is_clear) . T_('Clear on Send') . "</option>\n";
+                echo sprintf('	<option value="default"%s>', $is_default) . T_('Default') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'transcode':
@@ -1263,10 +1337,11 @@ class Ui implements UiInterface
                 } elseif ($value == 'always') {
                     $is_always = 'selected="selected"';
                 }
-                echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"never\"$is_never>" . T_('Never') . "</option>\n";
-                echo "\t<option value=\"default\"$is_default>" . T_('Default') . "</option>\n";
-                echo "\t<option value=\"always\"$is_always>" . T_('Always') . "</option>\n";
+
+                echo "<select name=\"{$name}\">\n";
+                echo sprintf('	<option value="never"%s>', $is_never) . T_('Never') . "</option>\n";
+                echo sprintf('	<option value="default"%s>', $is_default) . T_('Default') . "</option>\n";
+                echo sprintf('	<option value="always"%s>', $is_always) . T_('Always') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'album_sort':
@@ -1287,37 +1362,42 @@ class Ui implements UiInterface
                     $is_sort_default = 'selected="selected"';
                 }
 
-                echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"default\" $is_sort_default>" . T_('Default') . "</option>\n";
-                echo "\t<option value=\"year_asc\" $is_sort_year_asc>" . T_('Year ascending') . "</option>\n";
-                echo "\t<option value=\"year_desc\" $is_sort_year_desc>" . T_('Year descending') . "</option>\n";
-                echo "\t<option value=\"name_asc\" $is_sort_name_asc>" . T_('Name ascending') . "</option>\n";
-                echo "\t<option value=\"name_desc\" $is_sort_name_desc>" . T_('Name descending') . "</option>\n";
+                echo "<select name=\"{$name}\">\n";
+                echo sprintf('	<option value="default" %s>', $is_sort_default) . T_('Default') . "</option>\n";
+                echo sprintf('	<option value="year_asc" %s>', $is_sort_year_asc) . T_('Year ascending') . "</option>\n";
+                echo sprintf('	<option value="year_desc" %s>', $is_sort_year_desc) . T_('Year descending') . "</option>\n";
+                echo sprintf('	<option value="name_asc" %s>', $is_sort_name_asc) . T_('Name ascending') . "</option>\n";
+                echo sprintf('	<option value="name_desc" %s>', $is_sort_name_desc) . T_('Name descending') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'disabled_custom_metadata_fields':
-                $ids     = explode(',', $value);
+                // array keys are cast to int by php so the stored comma separated string ids need the same treatment
+                $ids     = array_map('intval', array_filter(explode(',', (string) $value), 'is_numeric'));
                 $options = [];
                 foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
-                    $selected  = (in_array($propertyId, $ids)) ? ' selected="selected"' : '';
+                    $selected  = (in_array((int) $propertyId, $ids, true)) ? ' selected="selected"' : '';
                     $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . scrub_out($propertyName) . '</option>';
                 }
+
                 echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
                 break;
             case 'personalfav_playlist':
             case 'personalfav_smartlist':
-                $ids       = explode(',', $value);
+                // array keys are cast to int by php so the stored comma separated string ids need the same treatment
+                $ids       = array_map('intval', array_filter(explode(',', (string) $value), 'is_numeric'));
                 $options   = [];
-                $playlists = ($name == 'personalfav_smartlist')
+                $playlists = ($name === 'personalfav_smartlist')
                     ? Search::get_search_array()
                     : Playlist::get_playlist_array();
-                if (!empty($playlists)) {
+                if ($playlists !== []) {
                     foreach ($playlists as $list_id => $list_name) {
-                        $selected  = (in_array($list_id, $ids)) ? ' selected="selected"' : '';
+                        $selected  = (in_array((int) $list_id, $ids, true)) ? ' selected="selected"' : '';
                         $options[] = '<option value="' . $list_id . '"' . $selected . '>' . scrub_out($list_name) . '</option>';
                     }
+
                     echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
                 }
+
                 break;
             case 'lastfm_grant_link':
             case 'librefm_grant_link':
@@ -1326,11 +1406,12 @@ class Ui implements UiInterface
                 $plugin      = new Plugin($plugin_name);
                 if ($plugin->_plugin instanceof Ampachelibrefm || $plugin->_plugin instanceof AmpacheLastfm) {
                     $url      = $plugin->_plugin->url;
-                    $api_key  = rawurlencode((string)$plugin->_plugin->api_key);
+                    $api_key  = rawurlencode((string) $plugin->_plugin->api_key);
                     $callback = rawurlencode(AmpConfig::get_web_path() . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
                     /* HINT: Plugin Name */
-                    echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . self::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                    echo sprintf('<a href="%s/api/auth/?api_key=%s&cb=%s" target="_blank">', $url, $api_key, $callback) . self::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
                 }
+
                 break;
             case 'bandwidth':
             case 'features':
@@ -1367,16 +1448,174 @@ class Ui implements UiInterface
             case 'stream_control_hits_days':
             case 'stream_control_time_max':
             case 'stream_control_time_days':
-                echo '<input type="number" name="' . $name . '" value="' . (int)$value . '" />';
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" />';
                 break;
             default:
                 if (str_ends_with($name, '_pass')) {
                     echo '<input type="password" name="' . $name . '" value="******" />';
                 } else {
-                    echo '<input type="text" name="' . $name . '" value="' . strip_tags((string)$value) . '" />';
+                    echo '<input type="text" name="' . $name . '" value="' . strip_tags((string) $value) . '" />';
                 }
+
                 break;
         }
+    }
+
+    /**
+     * Displays an error page when you can't write the config
+     */
+    public function permissionDenied(string $fileName): void
+    {
+        // Clear any buffered crap
+        ob_end_clean();
+        header("HTTP/1.1 403 Permission Denied");
+        require_once self::find_template('show_denied_permission.inc.php');
+    }
+
+    /**
+     * This function is used to escape user data that is getting redisplayed
+     * onto the page, it htmlentities the mojo
+     * This is the inverse of the scrub_in function
+     */
+    public function scrubOut(?string $string): string
+    {
+        if ($string === null) {
+            return '';
+        }
+
+        return htmlentities($string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
+    }
+
+    /**
+     * Show the requested template file
+     */
+    public function show(string $template, array $context = []): void
+    {
+        extract($context);
+
+        require_once self::find_template($template);
+    }
+
+    public function showBoxBottom(): void
+    {
+        static::show_box_bottom();
+    }
+
+    public function showBoxTop(string $title = '', string $class = ''): void
+    {
+        static::show_box_top($title, $class);
+    }
+
+    /**
+     * shows a confirmation of an action
+     */
+    public function showConfirmation(
+        string $title,
+        string $text,
+        string $next_url,
+        ?int $cancel = 0,
+        ?string $form_name = 'confirmation',
+        ?bool $visible = true,
+    ): void {
+        $webPath = $this->configContainer->getWebPath();
+        $path    = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+
+        $this->show(
+            'show_confirmation.inc.php',
+            [
+                'title' => $title,
+                'text' => $text,
+                'path' => $path,
+                'form_name' => $form_name,
+                'cancel' => $cancel
+            ]
+        );
+    }
+
+    /**
+     * shows a confirmation of an action
+     */
+    public function showConfirmationWithReturn(
+        string $title,
+        string $text,
+        string $return_url,
+        string $cancel_url,
+        ?string $form_name = 'confirmation',
+        ?bool $visible = true,
+    ): void {
+        $webPath = $this->configContainer->getWebPath();
+        $return  = (substr_count($return_url, $webPath) !== 0) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
+        $cancel  = (substr_count($cancel_url, $webPath) !== 0) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
+
+        $this->show(
+            'show_confirmation_with_return.inc.php',
+            [
+                'title' => $title,
+                'text' => $text,
+                'form_name' => $form_name,
+                'return' => $return,
+                'cancel' => $cancel,
+            ]
+        );
+    }
+
+    /**
+     * shows a simple continue button after an action
+     */
+    public function showContinue(
+        string $title,
+        string $text,
+        string $next_url,
+    ): void {
+        $webPath = $this->configContainer->getWebPath();
+
+        // callers pass both absolute urls and bare page paths; only prefix the relative ones
+        $path = str_starts_with($next_url, $webPath) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+
+        $this->show(
+            'show_continue.inc.php',
+            [
+                'title' => $title,
+                'text' => $text,
+                'path' => $path
+            ]
+        );
+    }
+
+    public function showFooter(): void
+    {
+        static::show_footer();
+    }
+
+    public function showHeader(): void
+    {
+        // Users locked into the mini player never see the full interface. This is the only caller of
+        // header.inc.php so it covers every full page; ajax, stream, play, util, image and the API
+        // don't come through here, so playback and artwork are untouched. m.php builds its own header
+        // so there is no redirect loop. NOTE: this hides the interface, it does not replace access
+        // levels; they remain the thing that actually gates data.
+        $user = Core::get_global('user');
+        if (
+            $user instanceof User
+            && $user->getId() > 0
+            && !headers_sent()
+            && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            && Preference::get_by_user($user->getId(), 'mini_player')
+        ) {
+            header('Location: ' . AmpConfig::get_web_path() . '/m/');
+
+            exit;
+        }
+
+        require_once self::find_template('header.inc.php');
+    }
+
+    public function showObjectNotFound(): void
+    {
+        $this->showHeader();
+        echo T_('You have requested an object that does not exist');
+        $this->showQueryStats();
+        $this->showFooter();
     }
 
     /**
@@ -1396,18 +1635,11 @@ class Ui implements UiInterface
     }
 
     /**
-     * This function takes a boolean value and then prints out a friendly text
-     * message.
+     * This shows the query stats
      */
-    public static function printBool(?bool $value = false): string
+    public function showQueryStats(): void
     {
-        if ($value) {
-            $string = '<span class="item_on">' . T_('On') . '</span>';
-        } else {
-            $string = '<span class="item_off">' . T_('Off') . '</span>';
-        }
-
-        return $string;
+        require self::find_template('show_query_stats.inc.php');
     }
 
     /**

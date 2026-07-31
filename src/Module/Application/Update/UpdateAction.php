@@ -35,49 +35,32 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\AutoUpdate;
-use Ampache\Module\System\Update;
+use Ampache\Module\System\Update\Exception\UpdateFailedException;
+use Ampache\Module\System\Update\Exception\VersionNotUpdatableException;
+use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Repository\Model\Preference;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class UpdateAction implements ApplicationActionInterface
+final readonly class UpdateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update';
-
-    private TalFactoryInterface $talFactory;
-
-    private GuiFactoryInterface $guiFactory;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private StreamFactoryInterface $streamFactory;
-
-    private Update\UpdaterInterface $updater;
+    public const string REQUEST_KEY = 'update';
 
     public function __construct(
-        TalFactoryInterface $talFactory,
-        GuiFactoryInterface $guiFactory,
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer,
-        StreamFactoryInterface $streamFactory,
-        Update\UpdaterInterface $updater
-    ) {
-        $this->talFactory      = $talFactory;
-        $this->guiFactory      = $guiFactory;
-        $this->responseFactory = $responseFactory;
-        $this->configContainer = $configContainer;
-        $this->streamFactory   = $streamFactory;
-        $this->updater         = $updater;
-    }
+        private TalFactoryInterface $talFactory,
+        private GuiFactoryInterface $guiFactory,
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
+        private StreamFactoryInterface $streamFactory,
+        private UpdaterInterface $updater,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
-        if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'sources') {
+        if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) === 'sources') {
             if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
                 throw new AccessDeniedException();
             }
@@ -87,26 +70,37 @@ final class UpdateAction implements ApplicationActionInterface
             if ($success) {
                 $success = AutoUpdate::update_dependencies($this->configContainer);
             }
-            Preference::translate_db();
 
-            // a failed update has already printed the command output; redirecting away would discard the only
-            // explanation the admin gets, so stay on the page and let them read why it stopped
+            Preference::translate_db();
+            Preference::set_defaults();
+
+            // a failed update has already printed the command output, so stay on the page rather than redirect
             if (!$success) {
                 return $this->responseFactory->createResponse();
             }
 
+            $target = $this->getReturnPath($request);
+
+            // the commands flush their output as they run, so a Location header would be dropped
+            if (headers_sent()) {
+                echo '<script>window.location.href = ' . (string) json_encode(
+                    $target,
+                    JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+                ) . ';</script>';
+                echo '<p><a href="' . scrub_out($target) . '">' . T_('Continue') . '</a></p>';
+
+                return $this->responseFactory->createResponse();
+            }
+
             return $this->responseFactory
-                ->createResponse(StatusCode\RFC\RFC7231::FOUND)
-                ->withHeader(
-                    'Location',
-                    $this->configContainer->getWebPath()
-                );
+                ->createResponse(RFC7231::FOUND)
+                ->withHeader('Location', $target);
         } elseif ($this->updater->hasPendingUpdates()) {
             try {
                 $this->updater->update();
-            } catch (Update\Exception\UpdateFailedException) {
+            } catch (UpdateFailedException) {
                 AmpError::add('general', T_('Update failed. Please check the logs for further information.'));
-            } catch (Update\Exception\VersionNotUpdatableException) {
+            } catch (VersionNotUpdatableException) {
                 echo '<p class="database-update">Database version too old, please upgrade to <a href="https://github.com/ampache/ampache/releases/download/3.8.2/ampache-3.8.2_all.zip">Ampache-3.8.2</a> first</p>';
             }
         }
@@ -124,5 +118,29 @@ final class UpdateAction implements ApplicationActionInterface
             ->withBody(
                 $this->streamFactory->createStream($result)
             );
+    }
+
+    /**
+     * Return to the page the update was started from, falling back to the web root.
+     */
+    private function getReturnPath(ServerRequestInterface $request): string
+    {
+        $fallback = $this->configContainer->getWebPath();
+        $referer  = $request->getHeaderLine('Referer');
+        if ($referer === '') {
+            return $fallback;
+        }
+
+        $parts = parse_url($referer);
+        if (
+            $parts === false
+            || !isset($parts['path'])
+            || (isset($parts['host']) && $parts['host'] !== $request->getUri()->getHost())
+            || str_contains($parts['path'], 'update.php')
+        ) {
+            return $fallback;
+        }
+
+        return $parts['path'] . (isset($parts['query']) ? '?' . $parts['query'] : '');
     }
 }

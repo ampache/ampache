@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,25 +32,20 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class BroadcastAction implements ApplicationActionInterface
+final readonly class BroadcastAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'broadcast';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'broadcast';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui
-    ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
-    }
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(self::REQUEST_KEY);

@@ -36,26 +36,16 @@ use Psr\Log\LoggerInterface;
 /**
  * Provides functionality for downloading web-content
  */
-final class WebFetcher implements WebFetcherInterface
+final readonly class WebFetcher implements WebFetcherInterface
 {
     /** @var int Curl operation timeout in seconds */
-    private const TIMEOUT = 300;
-
-    private ConfigContainerInterface $config;
-
-    private UtilityFactoryInterface $utilityFactory;
-
-    private LoggerInterface $logger;
+    private const int TIMEOUT = 300;
 
     public function __construct(
-        ConfigContainerInterface $config,
-        UtilityFactoryInterface $utilityFactory,
-        LoggerInterface $logger
-    ) {
-        $this->config         = $config;
-        $this->utilityFactory = $utilityFactory;
-        $this->logger         = $logger;
-    }
+        private ConfigContainerInterface $config,
+        private UtilityFactoryInterface $utilityFactory,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Fetches and returns the uris content
@@ -75,7 +65,7 @@ final class WebFetcher implements WebFetcherInterface
         $curl->close();
 
         if ($curl->error) {
-            throw new Exception\FetchFailedException(
+            throw new FetchFailedException(
                 sprintf('Error fetching url: %s', $uri)
             );
         }
@@ -90,7 +80,7 @@ final class WebFetcher implements WebFetcherInterface
      */
     public function fetchToFile(
         string $uri,
-        string $destinationFilePath
+        string $destinationFilePath,
     ): void {
         $curl = $this->setupCurl();
         $curl->setReferer($uri);
@@ -104,7 +94,7 @@ final class WebFetcher implements WebFetcherInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         } else {
-            throw new Exception\FetchFailedException(
+            throw new FetchFailedException(
                 sprintf('Error downloading to file: %s. Reason: %s', $destinationFilePath, $curl->errorMessage)
             );
         }
@@ -129,9 +119,11 @@ final class WebFetcher implements WebFetcherInterface
             if ($proxyUser === '') {
                 $proxyUser = null;
             }
+
             if ($proxyPass === '') {
                 $proxyPass = null;
             }
+
             $curl->setProxy($proxyHost, $proxyPort, $proxyUser, $proxyPass);
         }
 

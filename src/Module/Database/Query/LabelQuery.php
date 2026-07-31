@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class LabelQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'alpha_match',
         'equal',
         'exact_match',
@@ -42,6 +42,9 @@ final class LabelQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
     ];
+
+    protected string $base   = "SELECT %%SELECT%% FROM `label` ";
+    protected string $select = "`label`.`id`";
 
     /** @var string[] $sorts */
     protected array $sorts = [
@@ -60,9 +63,15 @@ final class LabelQuery implements QueryInterface
         'userflag',
     ];
 
-    protected string $select = "`label`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `label` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -72,16 +81,6 @@ final class LabelQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**
@@ -107,8 +106,9 @@ final class LabelQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `label`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'equal':
@@ -126,11 +126,13 @@ final class LabelQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `label`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `label`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `label`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -147,11 +149,8 @@ final class LabelQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
         switch ($field) {
             case 'name':
@@ -165,30 +164,30 @@ final class LabelQuery implements QueryInterface
             case 'id':
             case 'mbid':
             case 'user':
-                $sql = "`label`.`$field`";
+                $sql = sprintf('`label`.`%s`', $field);
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`date`";
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`label`.`id`", "`rating`.`object_type`", "'label'", "`rating`.`user`", (string)$query->user_id, 100);
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`label`.`id`", "`rating`.`object_type`", "'label'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag':
             case 'userflag':
                 $sql = "`user_flag`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`label`.`id`", "`user_flag`.`object_type`", "'label'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`label`.`id`", "`user_flag`.`object_type`", "'label'", "`user_flag`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`label`.`id`", "`user_flag`.`object_type`", "'label'", "`user_flag`.`user`", (string)$query->user_id, 100);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`label`.`id`", "`rating`.`object_type`", "'label'", "`rating`.`user`", (string)$query->user_id, 100);
+                $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`label`.`id`", "`user_flag`.`object_type`", "'label'", "`user_flag`.`user`", (string) $query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`label`.`id`", "`rating`.`object_type`", "'label'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             default:
                 $sql = '';
         }
 
-        if (empty($sql)) {
+        if ($sql === '') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

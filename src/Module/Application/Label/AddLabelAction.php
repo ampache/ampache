@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -38,25 +38,15 @@ use Ampache\Repository\Model\Label;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class AddLabelAction implements ApplicationActionInterface
+final readonly class AddLabelAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_label';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'add_label';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -66,8 +56,8 @@ final class AddLabelAction implements ApplicationActionInterface
 
         // Must be at least a content manager or edit upload enabled
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false ||
-            !$this->requestParser->verifyForm('add_label')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
+            || !$this->requestParser->verifyForm('add_label')
         ) {
             throw new AccessDeniedException();
         }
@@ -78,6 +68,7 @@ final class AddLabelAction implements ApplicationActionInterface
         if (isset($_POST['user'])) {
             unset($_POST['user']);
         }
+
         if (isset($_POST['creation_date'])) {
             unset($_POST['creation_date']);
         }

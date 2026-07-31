@@ -39,29 +39,16 @@ use Ampache\Repository\Model\Song;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowPlaylistAction implements ApplicationActionInterface
+final readonly class ShowPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_playlist';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'show_playlist';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-    }
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -83,7 +70,7 @@ final class ShowPlaylistAction implements ApplicationActionInterface
 
         $democratic->set_parent();
 
-        $browse = $this->modelFactory->createBrowse((int)$this->requestParser->getFromRequest('browse_id'));
+        $browse = $this->modelFactory->createBrowse((int) $this->requestParser->getFromRequest('browse_id'));
 
         require_once Ui::find_template('show_democratic.inc.php');
 

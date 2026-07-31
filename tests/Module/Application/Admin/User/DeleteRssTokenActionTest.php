@@ -43,75 +43,13 @@ class DeleteRssTokenActionTest extends TestCase
 {
     use UserAdminAccessTestTrait;
 
-    private RequestParserInterface&MockObject $requestParser;
-
-    private UiInterface&MockObject $ui;
-
-    private ModelFactoryInterface&MockObject $modelFactory;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
+    private ModelFactoryInterface&MockObject $modelFactory;
     private ServerRequestInterface&MockObject $request;
-
+    private RequestParserInterface&MockObject $requestParser;
     private DeleteRssTokenAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->requestParser   = $this->createMock(RequestParserInterface::class);
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->gatekeeper      = $this->createMock(GuiGatekeeperInterface::class);
-        $this->request         = $this->createMock(ServerRequestInterface::class);
-
-        $this->subject = new DeleteRssTokenAction(
-            $this->requestParser,
-            $this->ui,
-            $this->modelFactory,
-            $this->configContainer,
-        );
-    }
-
-    public function testRunErrorsIfUserWasNotFound(): void
-    {
-        $userId = 666;
-
-        $user = $this->createMock(User::class);
-
-        static::expectException(ObjectNotFoundException::class);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->willReturn(true);
-
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->willReturn(false);
-
-        $this->requestParser->expects(static::once())
-            ->method('verifyForm')
-            ->with($this->getValidationFormName())
-            ->willReturn(true);
-
-        $this->request->expects(static::once())
-            ->method('getQueryParams')
-            ->willReturn(['user_id' => (string) $userId]);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createUser')
-            ->with($userId)
-            ->willReturn($user);
-
-        $user->expects(static::once())
-            ->method('isNew')
-            ->willReturn(true);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
+    private UiInterface&MockObject $ui;
 
     public function testRunDeletesRssToken(): void
     {
@@ -163,13 +101,69 @@ class DeleteRssTokenActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
+    }
+
+    public function testRunErrorsIfUserWasNotFound(): void
+    {
+        $userId = 666;
+
+        $user = $this->createMock(User::class);
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->willReturn(true);
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->willReturn(false);
+
+        $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with($this->getValidationFormName())
+            ->willReturn(true);
+
+        $this->request->expects(static::once())
+            ->method('getQueryParams')
+            ->willReturn(['user_id' => (string) $userId]);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createUser')
+            ->with($userId)
+            ->willReturn($user);
+
+        $user->expects(static::once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $this->subject->run($this->request, $this->gatekeeper);
     }
 
     protected function getValidationFormName(): string
     {
         return 'delete_rsstoken';
+    }
+
+    protected function setUp(): void
+    {
+        $this->requestParser   = $this->createMock(RequestParserInterface::class);
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->gatekeeper      = $this->createMock(GuiGatekeeperInterface::class);
+        $this->request         = $this->createMock(ServerRequestInterface::class);
+
+        $this->subject = new DeleteRssTokenAction(
+            $this->requestParser,
+            $this->ui,
+            $this->modelFactory,
+            $this->configContainer,
+        );
     }
 }

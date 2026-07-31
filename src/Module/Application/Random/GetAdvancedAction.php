@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,32 +36,26 @@ use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class GetAdvancedAction implements ApplicationActionInterface
+final readonly class GetAdvancedAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'get_advanced';
-
-    private UiInterface $ui;
-
-    private VideoRepositoryInterface $videoRepository;
+    public const string REQUEST_KEY = 'get_advanced';
 
     public function __construct(
-        UiInterface $ui,
-        VideoRepositoryInterface $videoRepository
-    ) {
-        $this->ui              = $ui;
-        $this->videoRepository = $videoRepository;
-    }
+        private UiInterface $ui,
+        private VideoRepositoryInterface $videoRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $objectIds  = [];
-        $objectType = LibraryItemEnum::from($_REQUEST['type'] ?? 'song');
+        $objectIds = [];
+        // The form posts an empty type when nothing is selected.
+        $objectType = LibraryItemEnum::tryFrom((string) ($_REQUEST['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
         $user = Core::get_global('user');
         if ($user instanceof User) {
             $user->load_playlist();
             $objectIds = Random::advanced($objectType->value, $_POST);
-            if (!empty($objectIds)) {
+            if ($objectIds !== []) {
                 // you need to add by the base child type song/video
                 $objectType = match ($objectType->value) {
                     'album', 'artist' => LibraryItemEnum::SONG,

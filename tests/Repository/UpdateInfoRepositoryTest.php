@@ -37,17 +37,7 @@ class UpdateInfoRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
-
     private UpdateInfoRepository $subject;
-
-    protected function setUp(): void
-    {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
-
-        $this->subject = new UpdateInfoRepository(
-            $this->connection,
-        );
-    }
 
     public function testGetValeByKeyReturnsNullIfNothingWasFound(): void
     {
@@ -61,7 +51,7 @@ class UpdateInfoRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->getValueByKey($key),
         );
     }
@@ -79,32 +69,10 @@ class UpdateInfoRepositoryTest extends TestCase
             )
             ->willReturn($value);
 
-        static::assertSame(
+        self::assertSame(
             (string) $value,
             $this->subject->getValueByKey($key),
         );
-    }
-
-    public function testSetValueUpdatesExistingValue(): void
-    {
-        $key   = UpdateInfoEnum::CRON_DATE;
-        $value = 'some-value';
-
-        $result = $this->createMock(PDOStatement::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'UPDATE `update_info` SET `value` = ? WHERE `key` = ?',
-                [$value, $key->value]
-            )
-            ->willReturn($result);
-
-        $result->expects(static::once())
-            ->method('rowCount')
-            ->willReturn(1);
-
-        $this->subject->setValue($key, $value);
     }
 
     public function testSetValueInsertIfUpdateFails(): void
@@ -135,5 +103,36 @@ class UpdateInfoRepositoryTest extends TestCase
             ->willReturn(0);
 
         $this->subject->setValue($key, $value);
+    }
+
+    public function testSetValueUpdatesExistingValue(): void
+    {
+        $key   = UpdateInfoEnum::CRON_DATE;
+        $value = 'some-value';
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `update_info` SET `value` = ? WHERE `key` = ?',
+                [$value, $key->value]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('rowCount')
+            ->willReturn(1);
+
+        $this->subject->setValue($key, $value);
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+
+        $this->subject = new UpdateInfoRepository(
+            $this->connection,
+        );
     }
 }

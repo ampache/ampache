@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -35,6 +37,7 @@ interface UpdateSingleCatalogFolderInterface
         bool $addMode,
         bool $cleanupMode,
         bool $searchArtMode,
+        bool $scanMode,
         ?string $moveDirPath,
     ): void;
 }

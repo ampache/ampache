@@ -42,53 +42,29 @@ final readonly class AccessRepository implements AccessRepositoryInterface
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
-        private ModelFactoryInterface $modelFactory
-    ) {
-    }
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
     /**
-     * Yields all available all access rules on this server
+     * Creates a new acl item
      *
-     * @return Generator<Access>
+     * @param string $startIp The start-ip in in-addr notation
+     * @param string $endIp The end-ip in in-addr notation
+     * @param string $name Name of the acl
+     * @param int $userId Designated user id (or -1 if none)
      */
-    public function getAccessLists(): Generator
-    {
-        $result = $this->connection->query('SELECT `id` FROM `access_list`');
-
-        while ($rowId = $result->fetchColumn()) {
-            yield $this->modelFactory->createAccess((int) $rowId);
-        }
-    }
-
-    /**
-     * Searches for certain ip and config. Returns true if a match was found
-     */
-    public function findByIp(
-        string $userIp,
+    public function create(
+        string $startIp,
+        string $endIp,
+        string $name,
+        int $userId,
         AccessLevelEnum $level,
         AccessTypeEnum $type,
-        ?int $userId
-    ): bool {
-        $sql = 'SELECT COUNT(`id`) FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ?';
-
-        $params = [inet_pton($userIp), inet_pton($userIp), $level->value, $type->value];
-
-        if (
-            $userId !== null &&
-            $userId !== User::INTERNAL_SYSTEM_USER_ID
-        ) {
-            $sql .= sprintf(' AND `user` IN (?, %d)', User::INTERNAL_SYSTEM_USER_ID);
-            $params[] = $userId;
-        } else {
-            $sql .= sprintf(' AND `user` = %d', User::INTERNAL_SYSTEM_USER_ID);
-        }
-
-        $result = (int) $this->connection->fetchOne(
-            $sql,
-            $params
+    ): void {
+        $this->connection->query(
+            'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, `user`, `type`) VALUES (?, ?, ?, ?, ?, ?)',
+            [$name, $level->value, $startIp, $endIp, $userId, $type->value]
         );
-
-        return $result > 0;
     }
 
     /**
@@ -110,7 +86,7 @@ final readonly class AccessRepository implements AccessRepositoryInterface
         string $inAddrStart,
         string $inAddrEnd,
         AccessTypeEnum $type,
-        int $userId
+        int $userId,
     ): bool {
         $result = (int) $this->connection->fetchOne(
             'SELECT COUNT(`id`) FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
@@ -121,25 +97,48 @@ final readonly class AccessRepository implements AccessRepositoryInterface
     }
 
     /**
-     * Creates a new acl item
-     *
-     * @param string $startIp The start-ip in in-addr notation
-     * @param string $endIp The end-ip in in-addr notation
-     * @param string $name Name of the acl
-     * @param int $userId Designated user id (or -1 if none)
+     * Searches for certain ip and config. Returns true if a match was found
      */
-    public function create(
-        string $startIp,
-        string $endIp,
-        string $name,
-        int $userId,
+    public function findByIp(
+        string $userIp,
         AccessLevelEnum $level,
-        AccessTypeEnum $type
-    ): void {
-        $this->connection->query(
-            'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, `user`, `type`) VALUES (?, ?, ?, ?, ?, ?)',
-            [$name, $level->value, $startIp, $endIp, $userId, $type->value]
+        AccessTypeEnum $type,
+        ?int $userId,
+    ): bool {
+        $sql = 'SELECT COUNT(`id`) FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ?';
+
+        $params = [inet_pton($userIp), inet_pton($userIp), $level->value, $type->value];
+
+        if (
+            $userId !== null
+            && $userId !== User::INTERNAL_SYSTEM_USER_ID
+        ) {
+            $sql .= sprintf(' AND `user` IN (?, %d)', User::INTERNAL_SYSTEM_USER_ID);
+            $params[] = $userId;
+        } else {
+            $sql .= sprintf(' AND `user` = %d', User::INTERNAL_SYSTEM_USER_ID);
+        }
+
+        $result = (int) $this->connection->fetchOne(
+            $sql,
+            $params
         );
+
+        return $result > 0;
+    }
+
+    /**
+     * Yields all available all access rules on this server
+     *
+     * @return Generator<Access>
+     */
+    public function getAccessLists(): Generator
+    {
+        $result = $this->connection->query('SELECT `id` FROM `access_list`');
+
+        while ($rowId = $result->fetchColumn()) {
+            yield $this->modelFactory->createAccess((int) $rowId);
+        }
     }
 
     /**
@@ -158,7 +157,7 @@ final readonly class AccessRepository implements AccessRepositoryInterface
         string $name,
         int $userId,
         AccessLevelEnum $level,
-        AccessTypeEnum $type
+        AccessTypeEnum $type,
     ): void {
         $this->connection->query(
             'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, `user` = ?, `name` = ?, `type` = ? WHERE `id` = ?',

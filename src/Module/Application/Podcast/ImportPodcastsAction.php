@@ -47,39 +47,23 @@ use Psr\Http\Message\UploadedFileInterface;
 /**
  * Loads and imports podcasts
  */
-final class ImportPodcastsAction implements ApplicationActionInterface
+final readonly class ImportPodcastsAction implements ApplicationActionInterface
 {
+    public const string REQUEST_KEY = 'import_podcasts';
+
     /** @var list<string> */
-    private const EXPECTED_MIME_TYPES = [
+    private const array EXPECTED_MIME_TYPES = [
         'text/x-opml+xml',
         'text/xml',
     ];
 
-    public const REQUEST_KEY = 'import_podcasts';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private RequestParserInterface $requestParser;
-
-    private CatalogLoaderInterface $catalogLoader;
-
-    private PodcastOpmlImporterInterface $podcastOpmlImporter;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        RequestParserInterface $requestParser,
-        CatalogLoaderInterface $catalogLoader,
-        PodcastOpmlImporterInterface $podcastOpmlImporter
-    ) {
-        $this->configContainer     = $configContainer;
-        $this->ui                  = $ui;
-        $this->requestParser       = $requestParser;
-        $this->catalogLoader       = $catalogLoader;
-        $this->podcastOpmlImporter = $podcastOpmlImporter;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private RequestParserInterface $requestParser,
+        private CatalogLoaderInterface $catalogLoader,
+        private PodcastOpmlImporterInterface $podcastOpmlImporter,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -88,14 +72,14 @@ final class ImportPodcastsAction implements ApplicationActionInterface
         }
 
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !$this->requestParser->verifyForm('import_podcasts')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || !$this->requestParser->verifyForm('import_podcasts')
         ) {
             throw new AccessDeniedException();
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
 
         $catalogId = (int) ($data['catalog'] ?? 0);
 
@@ -113,7 +97,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
         if (AmpError::occurred()) {
             $this->ui->show(
                 'show_import_podcasts.inc.php',
-                ['catalogId' => (int)($data['catalog'] ?? 0)]
+                ['catalogId' => (int) ($data['catalog'] ?? 0)]
             );
         } else {
             $this->ui->showConfirmation(
@@ -125,6 +109,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
                 )
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
@@ -136,7 +121,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
      */
     private function importPodcasts(
         ServerRequestInterface $request,
-        Catalog $catalog
+        Catalog $catalog,
     ): int {
         /** @var null|UploadedFileInterface $file */
         $file = $request->getUploadedFiles()['import_file'] ?? null;

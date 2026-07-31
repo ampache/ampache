@@ -25,80 +25,114 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api6;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Playlist;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class PlaylistAddSong6Method
- * @package Lib\Api6Methods
+ * Adds a song to a playlist
+ *
+ * This method is deprecated and will be removed in **API7** (Use playlist_add). It only exists in
+ * api version 6.
  */
-final class PlaylistAddSong6Method
+final class PlaylistAddSong6Method implements MethodInterface
 {
-    public const ACTION = 'playlist_add_song';
+    public const string ACTION = 'playlist_add_song';
 
-    public const REST_ACTION = 'playlist_add_song_edit';
+    public const string REST_ACTION = 'playlist_add_song_edit';
+
+    private ConfigContainerInterface $configContainer;
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory,
+    ) {
+        $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
+    }
 
     /**
-     * playlist_add_song
      * MINIMUM_API_VERSION=380001
      *
      * This adds a song to a playlist
      *
-     * This method is deprecated and will be removed in **API7** (Use playlist_add)
-     *
      * filter = (string) UID of playlist
-     * song = (string) UID of song to add to playlist
-     * check = (integer) 0,1 Check for duplicates //optional, default = 0
+     * song   = (string) UID of song to add to playlist
+     * check  = (integer) 0,1 Check for duplicates //optional, default = 0
      *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     song?: string,
      *     id?: string,
      *     check?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @throws AccessFailedException|RequestParamMissingException
      */
-    public static function playlist_add_song(array $input, User $user): bool
-    {
-        $input['song'] = $input['id'] ?? $input['song'] ?? null;
-        if (!Api6::check_parameter($input, ['filter', 'song'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('filter', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
         }
-        ob_end_clean();
-        $playlist = new Playlist((int) $input['filter']);
-        $song     = (int) $input['song'];
+
+        $song = $input['id'] ?? $input['song'] ?? null;
+        if ($song === null) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'song')
+            );
+        }
+
+        $playlist = $this->modelFactory->createPlaylist((int) $input['filter']);
+        $songId   = (int) $song;
+
         if (!$playlist->has_collaborate($user)) {
-            Api6::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 100', self::ACTION, 'account', $input['api_format']);
-
-            return false;
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
-        if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int) $input['check'] == 1)) && $playlist->has_item($song)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $song), self::ACTION, 'duplicate', $input['api_format']);
 
-            return false;
+        $checkDuplicates = $this->configContainer->get(ConfigurationKeyEnum::UNIQUE_PLAYLIST)
+            || (array_key_exists('check', $input) && (int) $input['check'] === 1);
+
+        if ($checkDuplicates && $playlist->has_item($songId)) {
+            $response->getBody()->write(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    sprintf('Bad Request: %s', $songId),
+                    self::ACTION,
+                    'duplicate'
+                )
+            );
+
+            return $response;
         }
-        $playlist->add_songs([$song]);
-        Api6::message('song added to playlist', $input['api_format']);
 
-        return true;
-    }
+        $playlist->add_songs([$songId]);
 
-    /**
-     * @param array{
-     *     filter: string,
-     *     song: string,
-     *     check?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function playlist_add_song_edit(array $input, User $user): bool
-    {
-        return self::playlist_add_song($input, $user);
+        $response->getBody()->write(
+            $output->success($apiVersion, 'song added to playlist')
+        );
+
+        return $response;
     }
 }

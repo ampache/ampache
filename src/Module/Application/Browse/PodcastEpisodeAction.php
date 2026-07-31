@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -34,29 +34,21 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class PodcastEpisodeAction implements ApplicationActionInterface
+final readonly class PodcastEpisodeAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'podcast_episode';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'podcast_episode';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-    }
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(self::REQUEST_KEY);
@@ -71,11 +63,13 @@ final class PodcastEpisodeAction implements ApplicationActionInterface
         $browse->set_update_session(true);
 
         if (array_key_exists('catalog', $_SESSION)) {
-            $browse->set_filter('catalog', (int)$_SESSION['catalog']);
+            $browse->set_filter('catalog', (int) $_SESSION['catalog']);
         }
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
             $browse->set_filter('catalog_enabled', '1');
         }
+
         $browse->update_browse_from_session();
         $browse->show_objects();
 

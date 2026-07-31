@@ -1,0 +1,30 @@
+{
+    "total_count": 10493,
+    "md5": "e636a6379eafed8249dc7783f232ad16",
+    "label": [
+        {
+            "id": "6258",
+            "name": ":e(m)r",
+            "artists": 1,
+            "summary": null,
+            "external_link": "https:\/\/music.com.au\/labels.php?action=show&label=6258",
+            "address": null,
+            "category": "tag_generated",
+            "email": null,
+            "website": null,
+            "user": ""
+        },
+        {
+            "id": "3211",
+            "name": ":retortae:",
+            "artists": 1,
+            "summary": null,
+            "external_link": "https:\/\/music.com.au\/labels.php?action=show&label=3211",
+            "address": null,
+            "category": "tag_generated",
+            "email": null,
+            "website": null,
+            "user": ""
+        }
+    ]
+}

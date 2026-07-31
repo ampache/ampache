@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -31,6 +31,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
@@ -38,42 +39,28 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmDeleteAction implements ApplicationActionInterface
+final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_delete';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private SongDeleterInterface $songDeleter;
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        SongDeleterInterface $songDeleter
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->songDeleter     = $songDeleter;
-    }
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private SongDeleterInterface $songDeleter,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
+    ) {}
 
     public function run(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
-        $song_id = (int)$this->requestParser->getFromRequest('song_id');
+
+        $song_id = (int) $this->requestParser->getFromRequest('song_id');
         $song    = $this->modelFactory->createSong($song_id);
         if (!Catalog::can_remove($song)) {
             throw new AccessDeniedException(
@@ -81,19 +68,32 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
+        $webPath   = $this->configContainer->getWebPath();
+        $parentUrl = ($song->album > 0)
+            ? sprintf('%s/albums.php?action=show&album=%d', $webPath, $song->album)
+            : '';
+        $burlParam   = (string) ($request->getQueryParams()['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'song_id',
+            $song_id,
+            $parentUrl,
+            $webPath
+        );
+
         $this->ui->showHeader();
         if ($this->songDeleter->delete($song)) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Song has been deleted'),
-                $this->configContainer->getWebPath()
+                $continueUrl
             );
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
-                sprintf(T_('Couldn\'t delete this %s'), T_('Song')),
-                $this->configContainer->getWebPath()
+                sprintf(T_("Couldn't delete this %s"), T_('Song')),
+                $continueUrl
             );
         }
 

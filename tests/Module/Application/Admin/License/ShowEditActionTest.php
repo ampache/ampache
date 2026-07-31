@@ -36,43 +36,38 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\License;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowEditActionTest extends MockeryTestCase
 {
+    private ConfigContainerInterface&MockObject $configContainer;
+    private LicenseRepositoryInterface&MockObject $licenseRepository;
+    private ShowEditAction $subject;
     private MockInterface&UiInterface $ui;
 
-    private LicenseRepositoryInterface&MockObject $licenseRepository;
-
-    private ConfigContainerInterface&MockObject $configContainer;
-
-    private ShowEditAction $subject;
-
-    protected function setUp(): void
+    public function testRunErrorsIfLicenseWasNotFound(): void
     {
-        $this->ui                = $this->mock(UiInterface::class);
-        $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
-        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new ShowEditAction(
-            $this->ui,
-            $this->licenseRepository,
-            $this->configContainer,
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        static::expectException(ObjectNotFoundException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
-            ->andReturnFalse();
+            ->andReturnTrue();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([]);
+
+        $this->licenseRepository->expects(static::once())
+            ->method('findById')
+            ->with(0)
+            ->willReturn(null);
 
         $this->subject->run(
             $request,
@@ -140,31 +135,35 @@ class ShowEditActionTest extends MockeryTestCase
         );
     }
 
-    public function testRunErrorsIfLicenseWasNotFound(): void
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
     {
+        $this->expectException(AccessDeniedException::class);
+
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        static::expectException(ObjectNotFoundException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn([]);
-
-        $this->licenseRepository->expects(static::once())
-            ->method('findById')
-            ->with(0)
-            ->willReturn(null);
+            ->andReturnFalse();
 
         $this->subject->run(
             $request,
             $gatekeeper
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new ShowEditAction(
+            $this->ui,
+            $this->licenseRepository,
+            $this->configContainer,
         );
     }
 }

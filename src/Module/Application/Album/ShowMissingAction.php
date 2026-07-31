@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -35,33 +35,17 @@ use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowMissingAction implements ApplicationActionInterface
+final readonly class ShowMissingAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_missing';
-
-    private RequestParserInterface $requestParser;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
-    private ArtCollectorInterface $artCollector;
-
-    private WantedRepositoryInterface $wantedRepository;
+    public const string REQUEST_KEY = 'show_missing';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        ArtCollectorInterface $artCollector,
-        WantedRepositoryInterface $wantedRepository
-    ) {
-        $this->requestParser    = $requestParser;
-        $this->modelFactory     = $modelFactory;
-        $this->ui               = $ui;
-        $this->artCollector     = $artCollector;
-        $this->wantedRepository = $wantedRepository;
-    }
+        private RequestParserInterface $requestParser,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private ArtCollectorInterface $artCollector,
+        private WantedRepositoryInterface $wantedRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -75,7 +59,7 @@ final class ShowMissingAction implements ApplicationActionInterface
             $walbum       = $this->wantedRepository->prototype();
             $walbum->mbid = $mbid;
             if (array_key_exists('artist', $_REQUEST)) {
-                $artist_id           = (int)$this->requestParser->getFromRequest('artist');
+                $artist_id           = (int) $this->requestParser->getFromRequest('artist');
                 $artist              = $this->modelFactory->createArtist($artist_id);
                 $walbum->artist      = $artist->id;
                 $walbum->artist_mbid = $artist->mbid;
@@ -83,6 +67,7 @@ final class ShowMissingAction implements ApplicationActionInterface
                 $walbum->artist_mbid = $this->requestParser->getFromRequest('artist_mbid');
             }
         }
+
         $walbum->load_all();
 
         // Title for this album
@@ -97,12 +82,17 @@ final class ShowMissingAction implements ApplicationActionInterface
         );
 
         // you might not send an artist name
-        $options = (isset($artist))
-            ? ['artist' => $artist->get_fullname(), 'album_name' => $walbum->name, 'keyword' => $artist->get_fullname() . " " . $walbum->name]
-            : ['album_name' => $walbum->name, 'keyword' => $walbum->name];
+        $options = [
+            'mb_albumid_group' => (string) $walbum->mbid,
+            'album' => (string) $walbum->name,
+            'keyword' => (string) $walbum->name,
+        ];
+        if (isset($artist)) {
+            $options['artist']  = $artist->get_fullname();
+            $options['keyword'] = $artist->get_fullname() . ' ' . $walbum->name;
+        }
 
-        // Attempt to find the art.
-        $art    = $this->modelFactory->createArt((int) $walbum->mbid);
+        $art    = $this->modelFactory->createArt(0);
         $images = $this->artCollector->collect(
             $art,
             $options,
@@ -111,7 +101,7 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         $imageList = '';
 
-        if (count($images) > 0 && !empty($images[0]['url'])) {
+        if ($images !== [] && !empty($images[0]['url'])) {
             $name = (isset($artist))
                 ? '[' . $artist->get_fullname() . '] ' . scrub_out($walbum->name)
                 : scrub_out($walbum->name);

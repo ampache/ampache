@@ -40,7 +40,7 @@ class Api3
      *
      * @var array<string, class-string<object>>
      */
-    public const METHOD_LIST = [
+    public const array METHOD_LIST = [
         'advanced_search' => Method\Api3\AdvancedSearch3Method::class,
         'album' => Method\Api3\Album3Method::class,
         'album_songs' => Method\Api3\AlbumSongs3Method::class,
@@ -95,7 +95,5 @@ class Api3
      * constructor
      * This really isn't anything to do here, so it's private
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 }

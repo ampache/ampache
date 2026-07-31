@@ -39,52 +39,37 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
 /**
  * Creates a new shout for an item
  */
-final class AddShoutAction implements ApplicationActionInterface
+final readonly class AddShoutAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_shout';
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ShoutCreatorInterface $shoutCreator;
-
-    private RequestParserInterface $requestParser;
-    private ShoutObjectLoaderInterface $shoutObjectLoader;
+    public const string REQUEST_KEY = 'add_shout';
 
     public function __construct(
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer,
-        ShoutCreatorInterface $shoutCreator,
-        RequestParserInterface $requestParser,
-        ShoutObjectLoaderInterface $shoutObjectLoader
-    ) {
-        $this->responseFactory   = $responseFactory;
-        $this->configContainer   = $configContainer;
-        $this->shoutCreator      = $shoutCreator;
-        $this->requestParser     = $requestParser;
-        $this->shoutObjectLoader = $shoutObjectLoader;
-    }
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
+        private ShoutCreatorInterface $shoutCreator,
+        private RequestParserInterface $requestParser,
+        private ShoutObjectLoaderInterface $shoutObjectLoader,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         $user = $gatekeeper->getUser();
 
         // Must be at least a user to do this
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-            !$this->requestParser->verifyForm('add_shout') ||
-            $user === null
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || !$this->requestParser->verifyForm('add_shout')
+            || $user === null
         ) {
             throw new AccessDeniedException();
         }
 
-        $body       = (array)$request->getParsedBody();
+        $body       = (array) $request->getParsedBody();
         $objectType = LibraryItemEnum::from($body['object_type'] ?? '');
         $objectId   = (int) ($body['object_id'] ?? 0);
         $text       = $body['comment'] ?? '';
@@ -108,7 +93,7 @@ final class AddShoutAction implements ApplicationActionInterface
         );
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(

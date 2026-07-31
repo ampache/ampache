@@ -35,7 +35,7 @@ use Ampache\Repository\ShareRepositoryInterface;
  */
 final class ShareEdit4Method
 {
-    public const ACTION = 'share_edit';
+    public const string ACTION = 'share_edit';
 
     /**
      * share_edit
@@ -62,7 +62,7 @@ final class ShareEdit4Method
     public static function share_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api4::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: sharing features are not enabled.', '400', $input['api_format']);
 
             return false;
         }

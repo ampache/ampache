@@ -25,86 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Module\Api\Api6;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractUserDeleteMethod;
 
 /**
- * Class UserDelete6Method
- * @package Lib\Api6Methods
+ * Deletes an existing user
+ *
+ * Api version 6 reports the user as `username` and accepts `filter` as an alias.
  */
-final class UserDelete6Method
+final class UserDelete6Method extends AbstractUserDeleteMethod
 {
-    public const ACTION = 'user_delete';
+    protected const string FILTER_ALIAS = 'filter';
 
-    public const REST_ACTION = 'users_delete';
-
-    /**
-     * user_delete
-     * MINIMUM_API_VERSION=400001
-     *
-     * Delete an existing user.
-     * Takes the username in parameter.
-     *
-     * filter = (integer|string) filter by user id OR username //optional
-     * username = (string) $username
-     *
-     * @param array{
-     *     filter?: int|string,
-     *     username?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function user_delete(array $input, User $user): bool
-    {
-        if (!Api6::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-
-        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
-        if (!Api6::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
-        }
-
-        $username = $input['username'];
-        $del_user = (is_numeric($username))
-            ? User::get_from_id((int) $username)
-            : User::get_from_username((string) $username);
-
-        if ($del_user === null) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $username), self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        // don't delete yourself or admins
-        if ($del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
-            Api6::message('successfully deleted: ' . $username, $input['api_format']);
-            Catalog::count_table('user');
-
-            return true;
-        }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $username), self::ACTION, 'system', $input['api_format']);
-
-        return false;
-    }
-
-    /**
-     * @param array{
-     *     filter?: int|string,
-     *     username?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function users_delete(array $input, User $user): bool
-    {
-        return self::user_delete($input, $user);
-    }
+    protected const string FILTER_KEY = 'username';
 }

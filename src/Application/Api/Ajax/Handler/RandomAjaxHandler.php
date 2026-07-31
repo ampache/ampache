@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -42,9 +42,8 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private AlbumRepositoryInterface $albumRepository,
-        private SongRepositoryInterface $songRepository
-    ) {
-    }
+        private SongRepositoryInterface $songRepository,
+    ) {}
 
     public function handle(User $user): void
     {
@@ -54,7 +53,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'song':
-                $songs = Random::get_default((int)AmpConfig::get('offset_limit', 50), $user);
+                $songs = Random::get_default((int) AmpConfig::get('offset_limit', 50), $user);
                 if ($songs === []) {
                     break;
                 }
@@ -112,7 +111,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
 
                 $user->load_playlist();
                 foreach ($items as $item) {
-                    $user->playlist?->add_object((int)$item['object_id'], $item['object_type']);
+                    $user->playlist?->add_object((int) $item['object_id'], $item['object_type']);
                 }
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -28,14 +30,14 @@ use Psr\Http\Message\ResponseInterface;
 interface ZipHandlerInterface
 {
     /**
-     * Check that an object type is allowed to be zipped.
-     */
-    public function isZipable(string $object_type): bool;
-
-    /**
      * Clean up the generated zip file
      */
     public static function destroyZip(?string $zipFile): void;
+
+    /**
+     * Check that an object type is allowed to be zipped.
+     */
+    public function isZipable(string $object_type): bool;
 
     /**
      * takes array of full paths to medias
@@ -49,6 +51,6 @@ interface ZipHandlerInterface
         ResponseInterface $response,
         string $name,
         array $files,
-        bool $flat_path
+        bool $flat_path,
     ): ResponseInterface;
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,26 +25,21 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util\OAuth;
 
+use Stringable;
+
 /**
  * Class OAuthToken
  */
-class OAuthToken
+class OAuthToken implements Stringable
 {
-    // access tokens and request tokens
-    public $key;
-    public $secret;
-
     /**
      * key = the token
      * secret = the token secret
      */
     public function __construct(
-        $key,
-        $secret
-    ) {
-        $this->key    = $key;
-        $this->secret = $secret;
-    }
+        public $key,
+        public $secret,
+    ) {}
 
     /**
      * generates the basic string serialization of a token that a server

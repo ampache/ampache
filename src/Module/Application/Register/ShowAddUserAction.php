@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,25 +36,15 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAddUserAction implements ApplicationActionInterface
+final readonly class ShowAddUserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_add_user';
-
-    private ConfigContainerInterface $configContainer;
-
-    private RegistrationAgreementRendererInterface $registrationAgreementRenderer;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'show_add_user';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        RegistrationAgreementRendererInterface $registrationAgreementRenderer,
-        UiInterface $ui
-    ) {
-        $this->configContainer               = $configContainer;
-        $this->registrationAgreementRenderer = $registrationAgreementRenderer;
-        $this->ui                            = $ui;
-    }
+        private ConfigContainerInterface $configContainer,
+        private RegistrationAgreementRendererInterface $registrationAgreementRenderer,
+        private UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -64,11 +54,11 @@ final class ShowAddUserAction implements ApplicationActionInterface
         ) {
             throw new AccessDeniedException('Error `allow_public_registration` disabled');
         }
+
         // Check for confirmation email requirements when mail is disabled
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === true &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false &&
-            !Mailer::is_mail_enabled()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false
+            && !Mailer::is_mail_enabled()
         ) {
             throw new AccessDeniedException('Error `mail_enable` failed. Enable `user_no_email_confirm` to disable mail requirements');
         }

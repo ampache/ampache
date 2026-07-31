@@ -29,53 +29,22 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private ?MockInterface $configContainer;
-
-    /** @var UiInterface|MockInterface|null */
-    private ?MockInterface $ui;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private DeletionUrlResolverInterface|MockInterface|null $deletionUrlResolver;
+    private LoggerInterface|MockInterface|null $logger;
     private ?DeleteAction $subject;
+    private UiInterface|MockInterface|null $ui;
 
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
-
-        $this->subject = new DeleteAction(
-            $this->configContainer,
-            $this->ui,
-            $this->logger
-        );
-    }
-
-    public function testRunReturnsNullInDemoMode(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
-    }
-
-    public function testRunDeletesAndReturnsNull(): void
+    public function testRunCancelsToTheVideoItselfWithoutAnOriginPage(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
@@ -98,6 +67,11 @@ class DeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['video_id' => (string) $videoId]);
 
+        $this->deletionUrlResolver->shouldReceive('resolveBurl')
+            ->with('')
+            ->once()
+            ->andReturn('');
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
@@ -107,22 +81,111 @@ class DeleteActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('showConfirmation')
+        $this->ui->shouldReceive('showConfirmationWithReturn')
             ->with(
                 'Are You Sure?',
                 'The Video will be deleted',
                 sprintf(
-                    '%s/video.php?action=confirm_delete&video_id=%d',
+                    '%s/video.php?action=confirm_delete&video_id=%d&burl=',
                     $webPath,
                     $videoId
                 ),
-                1,
+                sprintf('%s/video.php?action=show_video&video_id=%d', $webPath, $videoId),
                 'delete_video'
             )
             ->once();
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunDeletesAndReturnsNull(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $videoId    = 666;
+        $webPath    = 'some-path';
+        $burlParam  = 'aA+b/c=';
+        $originPage = 'some-path/browse.php?action=video';
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($webPath);
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['video_id' => (string) $videoId, 'burl' => $burlParam]);
+
+        $this->deletionUrlResolver->shouldReceive('resolveBurl')
+            ->with($burlParam)
+            ->once()
+            ->andReturn($originPage);
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showConfirmationWithReturn')
+            ->with(
+                'Are You Sure?',
+                'The Video will be deleted',
+                sprintf(
+                    '%s/video.php?action=confirm_delete&video_id=%d&burl=aA%%2Bb%%2Fc%%3D',
+                    $webPath,
+                    $videoId
+                ),
+                $originPage,
+                'delete_video'
+            )
+            ->once();
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunReturnsNullInDemoMode(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer     = $this->mock(ConfigContainerInterface::class);
+        $this->ui                  = $this->mock(UiInterface::class);
+        $this->logger              = $this->mock(LoggerInterface::class);
+        $this->deletionUrlResolver = $this->mock(DeletionUrlResolverInterface::class);
+
+        $this->subject = new DeleteAction(
+            $this->configContainer,
+            $this->ui,
+            $this->logger,
+            $this->deletionUrlResolver
         );
     }
 }

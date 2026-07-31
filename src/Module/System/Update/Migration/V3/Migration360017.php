@@ -35,22 +35,24 @@ final class Migration360017 extends AbstractMigration
 {
     protected array $changelog = ['Add user flags on objects'];
 
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 360017) {
+            yield 'user_flag' => "CREATE TABLE IF NOT EXISTS `user_flag` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `object_id` int(11) unsigned NOT NULL, `object_type` varchar(32) CHARACTER SET $charset DEFAULT NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_userflag` (`user`, `object_type`, `object_id`), KEY `object_id` (`object_id`)) ENGINE=$engine;";
+        }
+    }
+
     public function migrate(): void
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `user_flag` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `object_id` int(11) unsigned NOT NULL, `object_type` varchar(32) CHARACTER SET $charset DEFAULT NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_userflag` (`user`, `object_type`, `object_id`), KEY `object_id` (`object_id`)) ENGINE=$engine;");
-    }
-
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build
-    ): Generator {
-        if ($build > 360017) {
-            yield 'user_flag' => "CREATE TABLE IF NOT EXISTS `user_flag` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `object_id` int(11) unsigned NOT NULL, `object_type` varchar(32) CHARACTER SET $charset DEFAULT NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_userflag` (`user`, `object_type`, `object_id`), KEY `object_id` (`object_id`)) ENGINE=$engine;";
-        }
     }
 }

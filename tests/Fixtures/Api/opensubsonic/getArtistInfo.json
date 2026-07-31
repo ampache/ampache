@@ -1,0 +1,17 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "type": "ampache",
+        "serverVersion": "8.0.0",
+        "openSubsonic": true,
+        "artistInfo": {
+            "biography": "Jo\u00e3o and Ramiro Mendes were born in the small village of Palokon on Fogo Island, Cape Verde.  They emmigrated to the United States in 1978 and founded a group that played music in a typical of Cape Verde and Angola style. They have released 3 albums Bandera, Palonkon, and Torri Di Control.",
+            "musicBrainzId": "75799e53-f54d-419c-b269-f35301172f7e",
+            "smallImageUrl": "https://music.com.au/image.php?object_id=3&object_type=artist&id=2&name=art.jpg",
+            "mediumImageUrl": "https://music.com.au/image.php?object_id=3&object_type=artist&id=2&name=art.jpg",
+            "largeImageUrl": "https://music.com.au/image.php?object_id=3&object_type=artist&id=2&name=art.jpg",
+            "similarArtist": []
+        }
+    }
+}

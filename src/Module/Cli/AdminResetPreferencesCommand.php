@@ -27,18 +27,10 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Repository\Model\Preference;
+use Override;
 
 final class AdminResetPreferencesCommand extends Command
 {
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct()
     {
         parent::__construct('admin:resetPreferences', T_('Reset preference values for users'));
@@ -55,7 +47,7 @@ final class AdminResetPreferencesCommand extends Command
     }
 
     public function execute(
-        string $username
+        string $username,
     ): void {
         if ($this->app() === null) {
             return;
@@ -65,7 +57,7 @@ final class AdminResetPreferencesCommand extends Command
         $dryRun     = $this->values()['execute'] === false;
         $preset     = $this->values()['preset'];
 
-        if ($dryRun === true) {
+        if ($dryRun) {
             $interactor->info(
                 "\n" . T_('Running in Test Mode. Use -e|--execute to update'),
                 true
@@ -82,8 +74,8 @@ final class AdminResetPreferencesCommand extends Command
                 true
             );
         } elseif (
-            $preset &&
-            Preference::set_preset($username, $preset)
+            $preset
+            && Preference::set_preset($username, $preset)
         ) {
             $interactor->ok(
                 "\n" . T_('Updated'),
@@ -102,5 +94,15 @@ final class AdminResetPreferencesCommand extends Command
                 true
             );
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

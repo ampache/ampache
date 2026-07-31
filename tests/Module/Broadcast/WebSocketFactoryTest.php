@@ -26,20 +26,16 @@ declare(strict_types=1);
 namespace Ampache\Module\Broadcast;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Override;
 use Ratchet\Server\EchoServer;
 
 class WebSocketFactoryTest extends MockeryTestCase
 {
     private ?WebSocketFactory $subject;
 
-    protected function setUp(): void
-    {
-        $this->subject = new WebSocketFactory();
-    }
-
     public function testCreateBroadcastServerReturnsInstance(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             Broadcast_Server::class,
             $this->subject->createBroadcastServer()
         );
@@ -47,9 +43,15 @@ class WebSocketFactoryTest extends MockeryTestCase
 
     public function testCreateEchoServerReturnsInstance(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             EchoServer::class,
             $this->subject->createEchoServer()
         );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new WebSocketFactory();
     }
 }

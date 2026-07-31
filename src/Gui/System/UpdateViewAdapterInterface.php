@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -27,21 +29,17 @@ use Traversable;
 
 interface UpdateViewAdapterInterface
 {
-    public function getHtmlLanguage(): string;
-
     public function getCharset(): string;
-
-    public function getTitle(): string;
-
-    public function getLogoUrl(): string;
-
-    public function getInstallationTitle(): string;
-
-    public function getUpdateInfoText(): string;
 
     public function getErrorText(): string;
 
-    public function hasUpdate(): bool;
+    public function getHtmlLanguage(): string;
+
+    public function getInstallationTitle(): string;
+
+    public function getLogoUrl(): string;
+
+    public function getTitle(): string;
 
     public function getUpdateActionUrl(): string;
 
@@ -54,5 +52,9 @@ interface UpdateViewAdapterInterface
      */
     public function getUpdateInfo(): Traversable;
 
+    public function getUpdateInfoText(): string;
+
     public function getWebPath(?string $suffix = ''): string;
+
+    public function hasUpdate(): bool;
 }

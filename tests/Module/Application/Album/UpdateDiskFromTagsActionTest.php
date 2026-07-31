@@ -39,26 +39,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class UpdateDiskFromTagsActionTest extends TestCase
 {
-    private ModelFactoryInterface&MockObject $modelFactory;
-
-    private UiInterface&MockObject $ui;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private ModelFactoryInterface&MockObject $modelFactory;
     private UpdateDiskFromTagsAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new UpdateDiskFromTagsAction(
-            $this->modelFactory,
-            $this->ui,
-            $this->configContainer
-        );
-    }
+    private UiInterface&MockObject $ui;
 
     public function testRunErrorsIfAccessIsDenied(): void
     {
@@ -143,8 +127,21 @@ class UpdateDiskFromTagsActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new UpdateDiskFromTagsAction(
+            $this->modelFactory,
+            $this->ui,
+            $this->configContainer
         );
     }
 }

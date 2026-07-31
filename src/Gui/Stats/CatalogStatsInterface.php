@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -25,29 +27,29 @@ namespace Ampache\Gui\Stats;
 
 interface CatalogStatsInterface
 {
-    public function getConnectedCount(): int;
-
-    public function getUserCount(): int;
-
     public function getAlbumCount(): int;
 
     public function getAlbumDiskCount(): int;
 
     public function getArtistCount(): int;
 
-    public function getSongCount(): int;
+    public function getCatalogSize(): string;
+
+    public function getConnectedCount(): int;
+
+    public function getGenreCount(): int;
+
+    public function getItemCount(): int;
+
+    public function getPlayTime(): string;
 
     public function getPodcastCount(): int;
 
     public function getPodcastEpisodeCount(): int;
 
-    public function getGenreCount(): int;
+    public function getSongCount(): int;
 
-    public function getCatalogSize(): string;
-
-    public function getPlayTime(): string;
-
-    public function getItemCount(): int;
+    public function getUserCount(): int;
 
     public function getVideoCount(): int;
 }

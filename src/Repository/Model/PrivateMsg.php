@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,21 +33,15 @@ use Ampache\Config\AmpConfig;
  */
 class PrivateMsg extends database_object implements PrivateMessageInterface
 {
-    protected const DB_TABLENAME = 'user_pvmsg';
-
-    private int $id = 0;
-
-    private ?string $subject = null;
-
-    private ?string $message = null;
-
-    private int $from_user;
-
-    private int $to_user;
-
-    private bool $is_read;
+    protected const string DB_TABLENAME = 'user_pvmsg';
 
     private ?int $creation_date = null;
+    private int $from_user;
+    private int $id = 0;
+    private bool $is_read;
+    private ?string $message = null;
+    private ?string $subject = null;
+    private int $to_user;
 
     public function __construct(?int $pm_id = 0)
     {
@@ -55,35 +49,14 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
             return;
         }
 
-        $info = $this->get_info($pm_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
-    }
-
-    public function getId(): int
-    {
-        return (int)($this->id ?? 0);
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
-    public function getSenderUserLink(): string
-    {
-        return (new User($this->from_user))->get_f_link();
-    }
-
-    public function getRecipientUserLink(): string
-    {
-        $to_user = new User($this->to_user);
-        if ($to_user->isNew()) {
-            return '';
-        }
-
-        return $to_user->get_f_link();
+        $info                = $this->get_info($pm_id, static::DB_TABLENAME);
+        $this->creation_date = isset($info['creation_date']) ? (int) $info['creation_date'] : null;
+        $this->from_user     = (int) ($info['from_user'] ?? 0);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->is_read       = (bool) ($info['is_read'] ?? false);
+        $this->message       = $info['message'] ?? null;
+        $this->subject       = $info['subject'] ?? null;
+        $this->to_user       = (int) ($info['to_user'] ?? 0);
     }
 
     public function getCreationDate(): int
@@ -96,6 +69,11 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
         return get_datetime((int) $this->creation_date);
     }
 
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
     public function getLinkFormatted(): string
     {
         return sprintf(
@@ -106,14 +84,9 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
         );
     }
 
-    public function getSubjectFormatted(): string
+    public function getMessage(): string
     {
-        return scrub_out((string) $this->subject);
-    }
-
-    public function isRead(): bool
-    {
-        return (int) $this->is_read === 1;
+        return (string) $this->message;
     }
 
     public function getRecipientUserId(): int
@@ -121,18 +94,43 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
         return $this->to_user;
     }
 
+    public function getRecipientUserLink(): string
+    {
+        $to_user = new User($this->to_user);
+        if ($to_user->isNew()) {
+            return '';
+        }
+
+        return $to_user->get_f_link();
+    }
+
     public function getSenderUserId(): int
     {
         return $this->from_user;
     }
 
-    public function getMessage(): string
+    public function getSenderUserLink(): string
     {
-        return (string) $this->message;
+        return new User($this->from_user)->get_f_link();
     }
 
     public function getSubject(): string
     {
         return (string) $this->subject;
+    }
+
+    public function getSubjectFormatted(): string
+    {
+        return scrub_out((string) $this->subject);
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
+    public function isRead(): bool
+    {
+        return (int) $this->is_read === 1;
     }
 }

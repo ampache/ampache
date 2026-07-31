@@ -1,0 +1,30 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "type": "ampache",
+        "serverVersion": "8.0.0",
+        "openSubsonic": true,
+        "videos": {
+            "video": [
+                {
+                    "id": "vi-1",
+                    "parent": "2",
+                    "title": "Video Project.mp4",
+                    "isDir": false,
+                    "isVideo": true,
+                    "type": "video",
+                    "duration": 12,
+                    "bitRate": 187,
+                    "playCount": 1,
+                    "played": "2026-07-24T08:11:53Z",
+                    "created": "2026-07-15T06:42:40Z",
+                    "size": 3180005,
+                    "suffix": "mp4",
+                    "contentType": "video/mp4",
+                    "path": "Video Project.mp4"
+                }
+            ]
+        }
+    }
+}

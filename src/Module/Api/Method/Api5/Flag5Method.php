@@ -25,20 +25,36 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Flag5Method
+ * Flags a library item as a favorite.
+ *
+ * Version 5 reads the object id from `id` only, knows nothing about the `date` parameter the later
+ * versions accept and never remaps smart playlists, so it keeps a method of its own.
  */
-final class Flag5Method
+final class Flag5Method implements MethodInterface
 {
-    public const ACTION = 'flag';
+    public const string ACTION = 'flag';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * flag
@@ -60,50 +76,94 @@ final class Flag5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function flag(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('ratings')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: ratings'), self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::RATINGS)) {
+            throw new AccessDeniedException(
+                'Enable: ratings'
+            );
+        }
 
-            return false;
+        foreach (['type', 'id', 'flag'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
-        if (!Api5::check_parameter($input, ['type', 'id', 'flag'], self::ACTION)) {
-            return false;
-        }
-        ob_end_clean();
+
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
         $flag      = make_bool($input['flag']);
+
         // confirm the correct data
         if (!Userflag::is_valid(strtolower($type))) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
+            return $this->writeTypeError($response, $output, $apiVersion, $type);
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
         if (!$className || !$object_id) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-        } else {
-            /** @var library_item $item */
-            $item = new $className($object_id);
-            if ($item->isNew()) {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'id', $input['api_format']);
-
-                return false;
-            }
-            $userflag = new Userflag($object_id, $type);
-            if ($userflag->set_flag($flag, $user->id)) {
-                $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
-                Api5::message($message . $object_id, $input['api_format']);
-
-                return true;
-            }
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, 'flag failed ' . $object_id, self::ACTION, 'system', $input['api_format']);
+            return $this->writeTypeError($response, $output, $apiVersion, $type);
         }
 
-        return true;
+        /** @var library_item $item */
+        $item = new $className($object_id);
+        if ($item->isNew()) {
+            throw new ResultEmptyException(
+                (string) $object_id,
+                'id'
+            );
+        }
+
+        $userflag = new Userflag($object_id, $type);
+        if (!$userflag->set_flag($flag, $user->id)) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        'flag failed ' . $object_id,
+                        self::ACTION,
+                        'system'
+                    )
+                )
+            );
+        }
+
+        $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success($apiVersion, $message . $object_id)
+            )
+        );
+    }
+
+    private function writeTypeError(
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        int $apiVersion,
+        string $type,
+    ): ResponseInterface {
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    sprintf('Bad Request: %s', $type),
+                    self::ACTION,
+                    'type'
+                )
+            )
+        );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,35 +43,19 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AddUserAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'add_user';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UserRepositoryInterface $userRepository;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'add_user';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        UserRepositoryInterface $userRepository,
-        RequestParserInterface $requestParser
-    ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->userRepository  = $userRepository;
-        $this->requestParser   = $requestParser;
-    }
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly RequestParserInterface $requestParser,
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
@@ -79,7 +63,7 @@ final class AddUserAction extends AbstractUserAction
             throw new AccessDeniedException();
         }
 
-        $body = (array)$request->getParsedBody();
+        $body = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
         $user_id  = 0;
@@ -106,13 +90,13 @@ final class AddUserAction extends AbstractUserAction
 
         /* make sure the username doesn't already exist */
         if ($this->userRepository->idByUsername($username) > 0) {
-            AmpError::add('username', T_('That Username already exists'));
+            AmpError::add('username', T_('That name already exists'));
         }
 
         // Check the mail for correct address formation and if it already exists
         if (
-            !Mailer::validate_address($email) ||
-            $this->userRepository->idByEmail($email) > 0
+            !Mailer::validate_address($email)
+            || $this->userRepository->idByEmail($email) > 0
         ) {
             AmpError::add('email', T_('You entered an invalid e-mail address'));
         }
@@ -127,8 +111,8 @@ final class AddUserAction extends AbstractUserAction
 
         /* If we've got an error then show add form! */
         if (
-            AmpError::occurred() ||
-            $user_id < 1
+            AmpError::occurred()
+            || $user_id < 1
         ) {
             require_once Ui::find_template('show_add_user.inc.php');
 

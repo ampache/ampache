@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -50,9 +50,8 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private MissingArtistFinderInterface $missingArtistFinder,
-        private LabelRepositoryInterface $labelRepository
-    ) {
-    }
+        private LabelRepositoryInterface $labelRepository,
+    ) {}
 
     public function handle(User $user): void
     {
@@ -94,7 +93,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($artist->get_fullname()),
                             'value' => scrub_out($artist->get_fullname()),
                             'rels' => '',
-                            'image' => (string)Art::url($artist->id, 'artist', null, 10),
+                            'image' => (string) Art::url($artist->id, 'artist', null, 10),
                         ];
                     }
                 }
@@ -124,7 +123,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($album->get_fullname()),
                             'value' => scrub_out($album->get_fullname()),
                             'rels' => scrub_out($album->get_parent_fullname()),
-                            'image' => (string)Art::url($album->id, 'album', null, 10),
+                            'image' => (string) Art::url($album->id, 'album', null, 10),
                         ];
                     }
                 }
@@ -154,7 +153,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($albumdisk->get_fullname()),
                             'value' => scrub_out($albumdisk->get_fullname()),
                             'rels' => scrub_out($albumdisk->get_parent_fullname()),
-                            'image' => (string)Art::url($albumdisk->album_id, 'album', null, 10),
+                            'image' => (string) Art::url($albumdisk->album_id, 'album', null, 10),
                         ];
                     }
                 }
@@ -188,7 +187,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($song->title),
                             'value' => scrub_out($song->title),
                             'rels' => scrub_out($song->get_parent_fullname()),
-                            'image' => (string)Art::url($art_object, $art_type, null, 10),
+                            'image' => (string) Art::url($art_object, $art_type, null, 10),
                             'album' => $song->get_album_fullname(),
                         ];
                     }
@@ -252,7 +251,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                                 'label' => $label->name,
                                 'value' => $label->name,
                                 'rels' => '',
-                                'image' => (string)Art::url($label->getId(), 'label', null, 10),
+                                'image' => (string) Art::url($label->getId(), 'label', null, 10),
                             ];
                         }
                     }
@@ -316,11 +315,11 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
 
-                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=search_random&search_id=' . scrub_out($_REQUEST['playlist_id']);
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=search_random&search_id=' . scrub_out($_REQUEST['playlist_id'] ?? '');
                 $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
         } // switch on action;
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

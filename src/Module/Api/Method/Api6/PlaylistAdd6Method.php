@@ -25,126 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Module\Api\Api6;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractPlaylistAddMethod;
 
 /**
- * Class PlaylistAdd6Method
- * @package Lib\Api6Methods
+ * Adds an object and its songs to a playlist
+ *
+ * Api version 6 insists on a `type`; version 8 defaults it to `song`.
  */
-final class PlaylistAdd6Method
+final class PlaylistAdd6Method extends AbstractPlaylistAddMethod
 {
-    public const ACTION = 'playlist_add';
-
-    public const REST_ACTION = 'playlist_add_edit';
-
-    /**
-     * playlist_add
-     * MINIMUM_API_VERSION=6.3.0
-     *
-     * This adds a song to a playlist, allowing different song parent types
-     *
-     * filter = (string) UID of playlist
-     * id = (string) $object_id
-     * type = (string) 'song', 'album', 'artist', 'playlist'
-     *
-     * @param array{
-     *     filter: string,
-     *     id?: string,
-     *     song?: string,
-     *     type: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function playlist_add(array $input, User $user): bool
-    {
-        $input['id'] = $input['song'] ?? $input['id'] ?? null;
-        if (!Api6::check_parameter($input, ['filter', 'id', 'type'], self::ACTION)) {
-            return false;
-        }
-        ob_end_clean();
-        $playlist    = new Playlist((int) $input['filter']);
-        $object_id   = $input['id'];
-        $object_type = $input['type'];
-
-        // confirm the correct data
-        if (!$playlist->has_collaborate($user)) {
-            Api6::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 100', self::ACTION, 'account', $input['api_format']);
-
-            return false;
-        }
-
-        if (!in_array(strtolower($object_type), ['song', 'album', 'artist', 'playlist'])) {
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
-        }
-
-        if ($object_type === 'playlist' && ((int) $object_id) === 0) {
-            $object_id   = str_replace('smart_', '', (string) $object_id);
-            $object_type = 'search';
-        }
-
-        $className = ObjectTypeToClassNameMapper::map($object_type);
-        /** @var Artist|Album|Song|Playlist|Search $item */
-        $item = new $className((int) $object_id);
-        if ($item->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
-
-            return false;
-        }
-
-        $results = [];
-        switch ($object_type) {
-            case 'song':
-                /** @var Song $item */
-                $results = [$item->getId()];
-                break;
-            case 'album':
-            case 'artist':
-            case 'playlist':
-            case 'search':
-                /** @var Artist|Album|Playlist|Search $item */
-                $results = $item->get_songs();
-                break;
-        }
-        if ($results === []) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_id), self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        if ($playlist->add_songs($results)) {
-            Api6::message('songs added to playlist', $input['api_format']);
-
-            return true;
-        }
-        Api6::message('nothing was added to the playlist', $input['api_format']);
-
-        return false;
-    }
-
-    /**
-     * @param array{
-     *     filter: string,
-     *     id: string,
-     *     type: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function playlist_add_edit(array $input, User $user): bool
-    {
-        return self::playlist_add($input, $user);
-    }
+    protected const bool TYPE_REQUIRED = true;
 }

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Filter;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -37,37 +36,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends TestCase
 {
-    private UiInterface&MockObject $ui;
-
-    private MockObject&ConfigContainerInterface $configContainer;
-
     protected ShowAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->ui,
-            $this->configContainer
-        );
-    }
-
-    public function testRunThrowsIfAccessIsDenied(): void
-    {
-        static::expectException(AccessDeniedException::class);
-
-        $request    = $this->createMock(ServerRequestInterface::class);
-        $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->willReturn(false);
-
-        $this->subject->run($request, $gatekeeper);
-    }
+    private UiInterface&MockObject $ui;
 
     public function testRunRenders(): void
     {
@@ -90,8 +60,32 @@ class ShowActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showQueryStats');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunThrowsIfAccessIsDenied(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $request    = $this->createMock(ServerRequestInterface::class);
+        $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->willReturn(false);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui = $this->createMock(UiInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->ui
         );
     }
 }

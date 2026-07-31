@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_edit_playlist_row.inc.php
 
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
@@ -68,7 +70,7 @@ if (!empty($users)) {
                     <?php echo T_('Collaborate'); ?><br />
                 </td>
                 <td>
-<?php $ids = explode(',', (string)$libitem->collaborate);
+<?php $ids = explode(',', (string) $libitem->collaborate);
 $options   = [];
 $users     = User::getValidArray();
 if (!empty($users)) {

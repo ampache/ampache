@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -39,21 +39,14 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Renders the podcast creation dialogue
  */
-final class ShowCreateAction implements ApplicationActionInterface
+final readonly class ShowCreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_create';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'show_create';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -65,13 +58,13 @@ final class ShowCreateAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
         $this->ui->show(
             'show_add_podcast.inc.php',
             [
-                'catalog_id' => (int)($data['catalog'] ?? 0),
+                'catalog_id' => (int) ($data['catalog'] ?? 0),
                 'feed' => ($data['feed'] ?? '')
             ]
         );

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_album_disk.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -67,7 +69,7 @@ $access50          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::C
 $access25          = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = $access25;
-$directplay_limit  = AmpConfig::get('direct_play_limit');
+$directplay_limit  = AmpConfig::get('direct_play_limit', 500);
 $hide_array        = (AmpConfig::get('hide_single_artist') && $albumDisk->get_artist_count() == 1)
     ? ['cel_artist', 'cel_album', 'cel_year', 'cel_drag']
     : ['cel_album', 'cel_year', 'cel_drag'];
@@ -98,7 +100,7 @@ if (AmpConfig::get('external_links_bandcamp')) {
     echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode((string) $albumDisk->get_parent_fullname()) . "+" . rawurlencode($simple) . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_discogs')) {
-    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode(($albumDisk->get_parent_fullname() == 'Various Artists') ? 'Various' : (string)$albumDisk->get_parent_fullname()) . "+" . rawurlencode($simple) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
+    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode(($albumDisk->get_parent_fullname() == 'Various Artists') ? 'Various' : (string) $albumDisk->get_parent_fullname()) . "+" . rawurlencode($simple) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_musicbrainz')) {
     if ($albumDisk->mbid) {
@@ -122,9 +124,9 @@ Art::display('album', $albumDisk->album_id, $name, ['width' => 384, 'height' => 
 <?php if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;">
-    <?php echo T_('Played') . ' ' .
+    <?php echo T_('Played') . ' '
 /* HINT: Number of times an object has been played */
-sprintf(nT_('%d time', '%d times', $albumDisk->total_count), $albumDisk->total_count); ?>
+. sprintf(nT_('%d time', '%d times', $albumDisk->total_count), $albumDisk->total_count); ?>
 </div>
 <?php } ?>
 
@@ -164,7 +166,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
         <?php if ($show_playlist_add) {
             $addtotemp  = T_('Add to Temporary Playlist');
             $randtotemp = T_('Random to Temporary Playlist');
-            $addtoexist = T_('Add to playlist'); ?>
+            $addtoexist = Ui::get_add_to_list_label(); ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album_disk&id=' . $albumDisk->id, 'add_circle', $addtotemp, 'play_full_' . $albumDisk->id); ?>
         </li>
@@ -185,7 +187,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                ['object_type' => 'album_disk', 'object_id' => (string)$albumDisk->id]
+                ['object_type' => 'album_disk', 'object_id' => (string) $albumDisk->id]
             ); ?>
         </li>
         <?php } ?>
@@ -215,7 +217,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
         </li>
     <?php } ?>
         <?php if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || $access50) {
-            if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+            if (AmpConfig::get('statistical_graphs')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album_disk&object_id=<?php echo $albumDisk->id; ?>">
                     <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));
@@ -224,7 +226,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
             </li>
         <?php } ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_disk_from_tags&album_disk=<?php echo $albumDisk->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_disk_from_tags&album_disk=<?php echo $albumDisk->id; ?>');" data-confirm="<?php echo T_('Do you really want to update from tags?'); ?>">
                 <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags'));
             echo "&nbsp;" . T_('Update from tags'); ?>
             </a>

@@ -26,10 +26,13 @@ declare(strict_types=1);
 namespace Ampache\Module\Label;
 
 use Ampache\Module\Label\Deletion\LabelDeleter;
+use Ampache\Module\Label\Deletion\LabelDeleterInterface;
 
 use function DI\autowire;
 
 return [
     LabelListUpdaterInterface::class => autowire(LabelListUpdater::class),
-    Deletion\LabelDeleterInterface::class => autowire(LabelDeleter::class),
+    LabelDeleterInterface::class => autowire(LabelDeleter::class),
+    LabelNameFilterInterface::class => autowire(LabelNameFilter::class),
+    LabelGarbageCollectorInterface::class => autowire(LabelGarbageCollector::class),
 ];

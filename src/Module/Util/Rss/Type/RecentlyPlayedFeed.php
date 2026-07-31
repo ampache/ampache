@@ -33,14 +33,8 @@ use Generator;
 final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
 {
     public function __construct(
-        private ?User $user
-    ) {
-    }
-
-    protected function getTitle(): string
-    {
-        return T_('Recently Played');
-    }
+        private ?User $user,
+    ) {}
 
     /**
      * @return Generator<array{
@@ -65,7 +59,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
             $row_id = ($item['user'] > 0) ? (int) $item['user'] : -1;
 
             $has_allowed_recent = (bool) $item['user_recent'];
-            $is_allowed_recent  = ($userId > 0 && $userId == $row_id) || $has_allowed_recent;
+            $is_allowed_recent  = ($userId > 0 && $userId === $row_id) || $has_allowed_recent;
             if ($song->enabled && $is_allowed_recent) {
                 yield [
                     'title' => sprintf(
@@ -89,15 +83,20 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                         get_datetime($item['date'])
                     ),
                     'comments' => $client->get_link(),
-                    'pubDate' => date("r", (int)$item['date']),
-                    'guid' => (isset($song->mbid))
+                    'pubDate' => date("r", (int) $item['date']),
+                    'guid' => ($song->mbid !== null)
                         ? 'https://musicbrainz.org/recording/' . $song->mbid
                         : $item['date'] . '-' . $client->getId() . '-' . $song->getId(),
-                    'isPermaLink' => (isset($song->mbid))
+                    'isPermaLink' => ($song->mbid !== null)
                         ? 'true'
                         : 'false',
                 ];
             }
         }
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Recently Played');
     }
 }

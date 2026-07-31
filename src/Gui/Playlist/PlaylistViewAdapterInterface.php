@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -25,71 +27,71 @@ namespace Ampache\Gui\Playlist;
 
 interface PlaylistViewAdapterInterface
 {
-    public function getId(): int;
-
-    public function getRating(): string;
-
-    public function getAverageRating(): string;
-
-    public function getUserFlags(): string;
-
-    public function getArt(): void;
+    public function canAppendNext(): bool;
 
     public function canAutoplayNext(): bool;
 
-    public function canAppendNext(): bool;
+    public function canBatchDownload(): bool;
 
-    public function getDirectplayButton(): string;
+    public function canBeDeleted(): bool;
 
-    public function getAutoplayNextButton(): string;
-
-    public function getAppendNextButton(): string;
-
-    public function getAddToTemporaryPlaylistButton(): string;
-
-    public function getRandomToTemporaryPlaylistButton(): string;
-
-    public function getRandomPlayPlaylistButton(): string;
+    public function canBeRefreshed(): bool;
 
     public function canShare(): bool;
 
-    public function getShareUi(): string;
+    public function getAddToPlaylistIcon(): string;
 
-    public function canBatchDownload(): bool;
+    public function getAddToTemporaryPlaylistButton(): string;
 
-    public function getBatchDownloadUrl(): string;
+    public function getAppendNextButton(): string;
+
+    public function getArt(): void;
+
+    public function getAutoplayNextButton(): string;
+
+    public function getAverageRating(): string;
 
     public function getBatchDownloadIcon(): string;
 
-    public function isEditable(): bool;
+    public function getBatchDownloadUrl(): string;
+
+    public function getDeletionButton(): string;
+
+    public function getDirectplayButton(): string;
 
     public function getEditButtonTitle(): string;
 
     public function getEditIcon(): string;
 
-    public function canBeDeleted(): bool;
-
-    public function getDeletionButton(): string;
-
-    public function canBeRefreshed(): bool;
-
-    public function getRefreshUrl(): string;
-
-    public function getRefreshIcon(): string;
-
-    public function getAddToPlaylistIcon(): string;
-
     public function getFullname(): string;
 
-    public function getPlaylistUrl(): string;
-
-    public function getPlaylistLink(): string;
-
-    public function getUsername(): string;
+    public function getId(): int;
 
     public function getLastUpdate(): string;
 
+    public function getMediaCount(): int;
+
+    public function getPlaylistLink(): string;
+
+    public function getPlaylistUrl(): string;
+
+    public function getRandomPlayPlaylistButton(): string;
+
+    public function getRandomToTemporaryPlaylistButton(): string;
+
+    public function getRating(): string;
+
+    public function getRefreshIcon(): string;
+
+    public function getRefreshUrl(): string;
+
+    public function getShareUi(): string;
+
     public function getType(): string;
 
-    public function getMediaCount(): int;
+    public function getUserFlags(): string;
+
+    public function getUsername(): string;
+
+    public function isEditable(): bool;
 }

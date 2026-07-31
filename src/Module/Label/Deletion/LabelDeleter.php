@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Label\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Rating;
@@ -33,30 +34,18 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-final class LabelDeleter implements LabelDeleterInterface
+final readonly class LabelDeleter implements LabelDeleterInterface
 {
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private LabelRepositoryInterface $labelRepository;
-
-    private UserActivityRepositoryInterface $useractivityRepository;
-
-    private ArtCleanupInterface $artCleanup;
-
     public function __construct(
-        ShoutRepositoryInterface $shoutRepository,
-        LabelRepositoryInterface $labelRepository,
-        UserActivityRepositoryInterface $useractivityRepository,
-        ArtCleanupInterface $artCleanup
-    ) {
-        $this->shoutRepository        = $shoutRepository;
-        $this->labelRepository        = $labelRepository;
-        $this->useractivityRepository = $useractivityRepository;
-        $this->artCleanup             = $artCleanup;
-    }
+        private ShoutRepositoryInterface $shoutRepository,
+        private LabelRepositoryInterface $labelRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
+        private ArtCleanupInterface $artCleanup,
+        private FolderRepositoryInterface $folderRepository,
+    ) {}
 
     public function delete(
-        Label $label
+        Label $label,
     ): void {
         $labelId = $label->getId();
 
@@ -65,6 +54,7 @@ final class LabelDeleter implements LabelDeleterInterface
         Userflag::garbage_collection('label', $labelId);
         Rating::garbage_collection('label', $labelId);
         $this->shoutRepository->collectGarbage('label', $labelId);
-        $this->useractivityRepository->collectGarbage('label', $labelId);
+        $this->userActivityRepository->collectGarbage('label', $labelId);
+        $this->folderRepository->collectGarbage();
     }
 }

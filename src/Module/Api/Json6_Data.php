@@ -445,9 +445,9 @@ class Json6_Data
      *
      * This takes a name array of objects and return the data in JSON browse object
      *
-     * @param array<int|string>|array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array<int, array{id: int|string, name: string}> $objects Name array from `Catalog::get_name_array()`
      */
-    public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
+    public static function browses(array $objects, string $parent_type, string $child_type, ?int $parent_id = null, ?int $catalog_id = null): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
@@ -967,8 +967,7 @@ class Json6_Data
             return $output;
         }
 
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+        return self::error('4710', sprintf('Bad Request: %s', $type), 'indexes', 'type');
     }
 
     /**
@@ -1020,8 +1019,7 @@ class Json6_Data
                 $results = self::live_streams($objects);
                 break;
             default:
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                $results = self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+                $results = self::error('4710', sprintf('Bad Request: %s', $type), 'indexes', 'type');
         }
 
         return $results;

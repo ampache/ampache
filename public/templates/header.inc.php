@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// header.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -35,7 +37,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
@@ -50,29 +51,24 @@ $access25          = ($access100 || Access::check(AccessTypeEnum::INTERFACE, Acc
 $site_lang         = AmpConfig::get('lang', 'en_US');
 $site_title        = scrub_out(AmpConfig::get('site_title'));
 $site_social       = AmpConfig::get('sociable');
-$site_ajax         = AmpConfig::get('ajax_load');
 $htmllang          = str_replace("_", "-", $site_lang);
 $ui_fixed          = AmpConfig::get('ui_fixed');
 $_SESSION['login'] = false;
 $current_user      = Core::get_global('user');
-$logo_url          = ($current_user instanceof User && Preference::get_by_user($current_user->getId(), 'custom_logo_user'))
+$current_user_id   = $current_user?->getId();
+$logo_url          = ($current_user instanceof User && $current_user_id && Preference::get_by_user($current_user_id, 'custom_logo_user'))
     ? $current_user->get_avatar()['url_medium'] ?? Ui::get_logo_url()
     : Ui::get_logo_url();
-$is_session   = (User::is_registered() && !empty($current_user) && ($current_user->id ?? 0) > 0);
+$is_session   = (User::is_registered() && ($current_user_id ?? 0) > 0);
 $allow_upload = $access25 && Upload::can_upload($current_user);
 
-$count_temp_playlist = (!empty($current_user->playlist) && $current_user->playlist instanceof Tmp_Playlist)
-    ? count($current_user->playlist->get_items())
-    : 0;
+// Only ever asked as a yes/no here, so it never counts a play queue it isn't going to show
+$has_temp_playlist = ($current_user instanceof User && !empty($current_user->playlist))
+    && $current_user->playlist->has_items();
 // strings for the main page and templates
-$t_home      = T_('Home');
-$t_play      = T_('Play');
 $t_artists   = T_('Artists');
 $t_albums    = T_('Albums');
 $t_playlists = T_('Playlists');
-$t_genres    = T_('Genres');
-$t_favorites = T_('Favorites');
-$t_upload    = T_('Upload');
 $albumString = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
@@ -99,10 +95,8 @@ $albumString = (AmpConfig::get('album_group'))
         <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
         <?php require_once Ui::find_template('scripts.inc.php'); ?>
 
-        <?php if ($site_ajax) {
-            $iframed = true;
-            require_once Ui::find_template('show_html5_player_headers.inc.php');
-        } ?>
+        <?php $iframed = true;
+require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
     </head>
     <body id="main-page">
         <div id="aslideshow">
@@ -118,6 +112,7 @@ $albumString = (AmpConfig::get('album_group'))
         <div id="notification" class="notification-out"><?php echo Ui::get_material_symbol('info', T_('Information')); ?><span id="notification-content"></span></div>
         <div id="maincontainer">
             <div id="header" class="header-<?php echo ($ui_fixed) ? 'fixed' : 'float'; ?>"><!-- This is the header -->
+                <a id="mobile-menu-toggle" href="javascript:ToggleMobileSidebar();" aria-label="<?php echo T_('Menu'); ?>"><?php echo Ui::get_material_symbol('menu', T_('Menu')); ?></a>
                 <h1 id="headerlogo">
                   <a href="<?php echo $web_path; ?>/index.php">
                     <img src="<?php echo $logo_url; ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
@@ -129,7 +124,7 @@ require_once Ui::find_template('show_search_bar.inc.php');
 if ($is_session) {
     require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $current_user?->getId(); ?>"><?php echo $current_user?->fullname; ?></a>
+                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $current_user_id; ?>"><?php echo $current_user?->fullname; ?></a>
                         <?php if ($site_social) { ?>
                             <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php
                                 echo $dic->get(PrivateMessageRepositoryInterface::class)->getUnreadCount($current_user); ?>)</a>
@@ -144,70 +139,27 @@ if ($is_session) {
                         <?php } ?>
                         </span>
 <?php } ?>
-<?php if ($site_ajax) { ?>
                         <div id="rightbar-minimize">
                             <a href="javascript:ToggleRightbarVisibility();"><?php echo Ui::get_material_symbol('dock_to_left', T_('Show/Hide Playlist')); ?></a>
                         </div>
-<?php } ?>
 <?php Ui::show_box_bottom(); ?>
                 </div> <!-- End headerbox -->
                 <?php echo ($ui_fixed) ? '<div id="ajax-loading">' . T_('Loading') . ' . . .</div>' : ''; ?>
             </div><!-- End header -->
 
-<?php if (AmpConfig::get('topmenu')) { ?>
-            <div id="topmenu_container" class="topmenu_container-<?php echo ($ui_fixed) ? 'fixed' : 'float'; ?>">
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/index.php">
-                        <?php echo Ui::get_image('topmenu-home', $t_home); ?>
-                        <span><?php echo $t_home; ?></span>
-                    </a>
-                </div>
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=album_artist">
-                        <?php echo Ui::get_image('topmenu-artist', $t_artists); ?>
-                        <span><?php echo $t_artists; ?></span>
-                    </a>
-                </div>
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=playlist">
-                        <?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?>
-                        <span><?php echo $t_playlists; ?></span>
-                    </a>
-                </div>
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist">
-                        <?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?>
-                        <span><?php echo $t_genres; ?></span>
-                    </a>
-                </div>
-
-                <?php if (AmpConfig::get('ratings') && $access25) { ?>
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/stats.php?action=userflag_<?php echo $albumString; ?>">
-                        <?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?>
-                        <span><?php echo $t_favorites; ?></span>
-                    </a>
-                </div>
-                <?php } ?>
-                <?php if ($allow_upload) { ?>
-                <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/upload.php">
-                        <?php echo Ui::get_image('topmenu-upload', $t_upload); ?>
-                        <span><?php echo $t_upload; ?></span>
-                    </a>
-                </div>
-                <?php } ?>
-            </div>
-<?php }
+<?php if (AmpConfig::get('topmenu')) {
+    require_once Ui::find_template('show_topmenu.inc.php');
+}
 $sidebarLight = AmpConfig::get('sidebar_light');
 $hideSwitcher = AmpConfig::get('sidebar_hide_switcher', false);
 $isCollapsed  = (
-    ($sidebarLight && $hideSwitcher) ||
-    ($sidebarLight && (!isset($_COOKIE['sidebar_state']))) ||
-    ($sidebarLight && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) ||
-    (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")
+    ($sidebarLight && $hideSwitcher)
+    || ($sidebarLight && (!isset($_COOKIE['sidebar_state'])))
+    || ($sidebarLight && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded"))
+    || (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")
 ); ?>
             <div id="sidebar" class="sidebar-<?php echo ($ui_fixed) ? 'fixed' : 'float'; ?>">
+                <a id="mobile-drawer-close" href="javascript:CloseMobileNav();" aria-label="<?php echo T_('Close'); ?>"><?php echo Ui::get_material_symbol('close', T_('Close')); ?></a>
             <?php if (!$hideSwitcher) {
                 echo '<div id="sidebar-header" class="' . (($isCollapsed) ? 'sidebar-header-collapsed' : '') . '" >';
                 echo '<span id="sidebar-header-content"></span>';
@@ -230,7 +182,7 @@ $isCollapsed  = (
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 
-            <div id="content" class="content-<?php echo ($ui_fixed) ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (!$count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild';
+            <div id="content" class="content-<?php echo ($ui_fixed) ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (!$has_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild';
 echo ($isCollapsed) ? ' content-left-wild' : ''; ?>">
 
                 <?php if ($access100) {
@@ -243,13 +195,12 @@ echo ($isCollapsed) ? ' content-left-wild' : ''; ?>">
                         $latest_version  = AutoUpdate::get_latest_version();
                         if (
                             (
-                                !empty($latest_version) &&
-                                $current_version !== $latest_version
-                            ) ||
-                            AutoUpdate::is_update_available()
+                                !empty($latest_version)
+                                && $current_version !== $latest_version
+                            )
+                            || AutoUpdate::is_update_available()
                         ) {
                             AutoUpdate::show_new_version();
-                            echo '<br />';
                         }
                     }
 
@@ -269,7 +220,5 @@ echo ($isCollapsed) ? ' content-left-wild' : ''; ?>">
                 <?php }
                     echo '</div>';
                 }
-if ($site_ajax) {
-    require Ui::find_template('show_web_player_embedded.inc.php');
-} ?>
+require Ui::find_template('show_web_player_embedded.inc.php'); ?>
                 <div id="guts">

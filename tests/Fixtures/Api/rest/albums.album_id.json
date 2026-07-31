@@ -1,0 +1,43 @@
+{
+    "id": "214923",
+    "name": "TANZNEID (24-bit HD audio)",
+    "prefix": null,
+    "basename": "TANZNEID (24-bit HD audio)",
+    "artist": {
+        "id": "17771",
+        "name": "Electric Callboy",
+        "prefix": null,
+        "basename": "Electric Callboy"
+    },
+    "artists": [
+        {
+            "id": "17771",
+            "name": "Electric Callboy",
+            "prefix": null,
+            "basename": "Electric Callboy"
+        }
+    ],
+    "songartists": [
+        {
+            "id": "17771",
+            "name": "Electric Callboy",
+            "prefix": null,
+            "basename": "Electric Callboy"
+        }
+    ],
+    "time": 1333,
+    "year": 2026,
+    "tracks": [],
+    "songcount": 7,
+    "diskcount": 1,
+    "type": null,
+    "genre": [],
+    "art": "https:\/\/music.com.au\/image.php?object_id=214923&object_type=album&name=art.jpg",
+    "has_art": false,
+    "flag": false,
+    "rating": null,
+    "averagerating": null,
+    "mbid": null,
+    "mbid_group": null,
+    "catalog": "32"
+}

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -38,21 +38,20 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class PopularVideoAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'popular_video';
+    public const string REQUEST_KEY = 'popular_video';
 
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private ConfigContainerInterface $configContainer,
-        private VideoRepositoryInterface $videoRepository
-    ) {
-    }
+        private VideoRepositoryInterface $videoRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
-        $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
+        $by_user = ((int) filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 
         $this->ui->showHeader();
         $this->ui->show(
@@ -67,8 +66,8 @@ final readonly class PopularVideoAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO)
+            && $this->videoRepository->getItemCount()
         ) {
             $objects = Stats::get_top('video', -1, $thresh_value, 0, $gatekeeper->getUser(), false, 0, 0, $by_user);
             $browse  = $this->modelFactory->createBrowse();

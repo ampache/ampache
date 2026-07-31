@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -34,47 +34,43 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateUserAction implements ApplicationActionInterface
+final readonly class UpdateUserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_user';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'update_user';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+        private SymmetricEncrypterInterface $symmetricEncrypter,
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             (
-                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false &&
-                (int)(Core::get_global('user')?->getId()) > 0
-            ) ||
-            !$this->requestParser->verifyForm('update_user')
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+                && (int) (Core::get_global('user')?->getId()) > 0
+            )
+            || !$this->requestParser->verifyForm('update_user')
         ) {
             throw new AccessDeniedException();
         }
+
         // block updates from simple users
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SIMPLE_USER_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SIMPLE_USER_MODE)) {
             throw new AccessDeniedException();
         }
+
         $user = Core::get_global('user');
         if (!$user instanceof User) {
             $this->ui->showQueryStats();
@@ -94,14 +90,24 @@ final class UpdateUserAction implements ApplicationActionInterface
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
             AmpError::add('fullname', T_("Please fill in your full name (first name, last name)"));
         }
+
         if (in_array('website', $mandatory_fields) && !$_POST['website']) {
             AmpError::add('website', T_("Please fill in your website"));
         }
+
         if (in_array('state', $mandatory_fields) && !$_POST['state']) {
             AmpError::add('state', T_("Please fill in your state"));
         }
+
         if (in_array('city', $mandatory_fields) && !$_POST['city']) {
             AmpError::add('city', T_("Please fill in your city"));
+        }
+
+        // The Subsonic password is stored reversibly encrypted rather than sha256 hashed, so it never goes through
+        // User::update() with the login password and is applied separately once the rest of the form has been accepted.
+        $subsonicPassword = (string) ($_POST['subsonic_password1'] ?? '');
+        if ($subsonicPassword !== '' && $subsonicPassword !== (string) ($_POST['subsonic_password2'] ?? '')) {
+            AmpError::add('subsonic_password', T_("Passwords do not match"));
         }
 
         $this->ui->showHeader();
@@ -110,11 +116,12 @@ final class UpdateUserAction implements ApplicationActionInterface
             AmpError::add('general', T_('Update failed'));
         } else {
             $user->upload_avatar();
+            $this->updateSubsonicSecret($user, $subsonicPassword);
             display_notification(T_('User updated successfully'));
         }
 
         $user = $gatekeeper->getUser();
-        if ($user) {
+        if ($user instanceof User) {
             $this->ui->show(
                 'show_preferences.inc.php',
                 [
@@ -124,9 +131,30 @@ final class UpdateUserAction implements ApplicationActionInterface
                 ]
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
         return null;
+    }
+
+    /**
+     * Encrypts and stores a newly chosen Subsonic password. An empty value leaves the existing secret alone; clearing
+     * it is a separate, confirmed admin action so a blank field can never silently revoke Subsonic access.
+     */
+    private function updateSubsonicSecret(User $user, string $subsonicPassword): void
+    {
+        if ($subsonicPassword === '') {
+            return;
+        }
+
+        $secret = $this->symmetricEncrypter->encrypt($subsonicPassword);
+        if ($secret === null) {
+            display_notification(T_('Could not store the Subsonic password. Check that secret_key is set in your Ampache config'));
+
+            return;
+        }
+
+        $this->userRepository->updateSubsonicSecret($user->getId(), $secret);
     }
 }

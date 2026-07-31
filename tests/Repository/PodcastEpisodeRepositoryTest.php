@@ -41,96 +41,20 @@ class PodcastEpisodeRepositoryTest extends TestCase
 {
     use ConsecutiveParams;
 
-    private ModelFactoryInterface&MockObject $modelFactory;
-
-    private DatabaseConnectionInterface&MockObject $connection;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private DatabaseConnectionInterface&MockObject $connection;
+    private ModelFactoryInterface&MockObject $modelFactory;
     private PodcastEpisodeRepository $subject;
 
-    protected function setUp(): void
+    public function testCollectGarbageCollects(): void
     {
-        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
-        $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new PodcastEpisodeRepository(
-            $this->modelFactory,
-            $this->connection,
-            $this->configContainer,
-        );
-    }
-
-    public function testGetEpisodesReturnsEpisodesWithoutStateFilterAndDisabledCatalogs(): void
-    {
-        $podcast = $this->createMock(Podcast::class);
-        $result  = $this->createMock(PDOStatement::class);
-
-        $podcastId = 666;
-        $episodeId = 42;
-
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::CATALOG_DISABLE)
-            ->willReturn('1');
-
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `podcast_episode`.`id` FROM `podcast_episode` LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` WHERE `podcast_episode`.`podcast` = ? AND `catalog`.`enabled` = \'1\' ORDER BY `podcast_episode`.`pubdate` DESC',
-                [$podcastId],
-            )
-            ->willReturn($result);
+                'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
+            );
 
-        $podcast->expects(static::once())
-            ->method('getId')
-            ->willReturn($podcastId);
-
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $episodeId, false);
-
-        static::assertSame(
-            [$episodeId],
-            $this->subject->getEpisodes($podcast),
-        );
-    }
-
-    public function testGetEpisodesReturnsEpisodesWithStateFilter(): void
-    {
-        $podcast = $this->createMock(Podcast::class);
-        $result  = $this->createMock(PDOStatement::class);
-
-        $stateFilter = PodcastEpisodeStateEnum::COMPLETED;
-        $podcastId   = 666;
-        $episodeId   = 42;
-
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::CATALOG_DISABLE)
-            ->willReturn('');
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? AND `podcast_episode`.`state` = ? ORDER BY `podcast_episode`.`pubdate` DESC',
-                [$podcastId, $stateFilter->value],
-            )
-            ->willReturn($result);
-
-        $podcast->expects(static::once())
-            ->method('getId')
-            ->willReturn($podcastId);
-
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $episodeId, false);
-
-        static::assertSame(
-            [$episodeId],
-            $this->subject->getEpisodes($podcast, $stateFilter),
-        );
+        $this->subject->collectGarbage();
     }
 
     public function testDeleteEpisodeDeletes(): void
@@ -165,6 +89,31 @@ class PodcastEpisodeRepositoryTest extends TestCase
         $this->subject->deleteEpisode($episode);
     }
 
+    public function testGetEpisodeCountReturnsValue(): void
+    {
+        $podcastId = 666;
+        $result    = 42;
+
+        $podcast = $this->createMock(Podcast::class);
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT COUNT(id) from `podcast_episode` where `podcast` = ?',
+                [$podcastId]
+            )
+            ->willReturn((string) $result);
+
+        self::assertSame(
+            $result,
+            $this->subject->getEpisodeCount($podcast)
+        );
+    }
+
     public function testGetEpisodeEligibleForDeletionReturnsNothingIfDisabled(): void
     {
         $this->configContainer->expects(static::once())
@@ -172,7 +121,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST_KEEP)
             ->willReturn('');
 
-        static::assertSame(
+        self::assertSame(
             [],
             iterator_to_array($this->subject->getEpisodesEligibleForDeletion($this->createMock(Podcast::class)))
         );
@@ -217,70 +166,9 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->with($episodeId)
             ->willReturn($episode);
 
-        static::assertSame(
+        self::assertSame(
             [$episode],
             iterator_to_array($this->subject->getEpisodesEligibleForDeletion($podcast))
-        );
-    }
-
-    public function testGetEpisodeEligibleForDownloadYieldsEpisodesWithoutLimit(): void
-    {
-        $episodeId    = 42;
-        $podcastId    = 21;
-        $lastSyncDate = new DateTime();
-
-        $podcast = $this->createMock(Podcast::class);
-        $result  = $this->createMock(PDOStatement::class);
-        $episode = $this->createMock(Podcast_Episode::class);
-
-        $query = <<<SQL
-            SELECT
-                `id`
-            FROM
-                `podcast_episode`
-            WHERE
-                `podcast` = ?
-                AND
-                (`addition_time` > ? OR `state` = ?)
-            ORDER BY
-                `pubdate`
-            DESC%s
-            SQL;
-
-        $podcast->expects(static::once())
-            ->method('getId')
-            ->willReturn($podcastId);
-        $podcast->expects(static::once())
-            ->method('getLastSyncDate')
-            ->willReturn($lastSyncDate);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                sprintf(
-                    $query,
-                    ''
-                ),
-                [
-                    $podcastId,
-                    $lastSyncDate->getTimestamp(),
-                    PodcastEpisodeStateEnum::PENDING->value
-                ]
-            )
-            ->willReturn($result);
-
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $episodeId, false);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcastEpisode')
-            ->with($episodeId)
-            ->willReturn($episode);
-
-        static::assertSame(
-            [$episode],
-            iterator_to_array($this->subject->getEpisodesEligibleForDownload($podcast, null))
         );
     }
 
@@ -340,35 +228,169 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->with($episodeId)
             ->willReturn($episode);
 
-        static::assertSame(
+        self::assertSame(
             [$episode],
             iterator_to_array($this->subject->getEpisodesEligibleForDownload($podcast, $downloadLimit))
         );
     }
 
-    public function testGetEpisodeCountReturnsValue(): void
+    public function testGetEpisodeEligibleForDownloadYieldsEpisodesWithoutLimit(): void
     {
-        $podcastId = 666;
-        $result    = 42;
+        $episodeId    = 42;
+        $podcastId    = 21;
+        $lastSyncDate = new DateTime();
 
         $podcast = $this->createMock(Podcast::class);
+        $result  = $this->createMock(PDOStatement::class);
+        $episode = $this->createMock(Podcast_Episode::class);
+
+        $query = <<<SQL
+            SELECT
+                `id`
+            FROM
+                `podcast_episode`
+            WHERE
+                `podcast` = ?
+                AND
+                (`addition_time` > ? OR `state` = ?)
+            ORDER BY
+                `pubdate`
+            DESC%s
+            SQL;
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+        $podcast->expects(static::once())
+            ->method('getLastSyncDate')
+            ->willReturn($lastSyncDate);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                sprintf(
+                    $query,
+                    ''
+                ),
+                [
+                    $podcastId,
+                    $lastSyncDate->getTimestamp(),
+                    PodcastEpisodeStateEnum::PENDING->value
+                ]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $episodeId, false);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPodcastEpisode')
+            ->with($episodeId)
+            ->willReturn($episode);
+
+        self::assertSame(
+            [$episode],
+            iterator_to_array($this->subject->getEpisodesEligibleForDownload($podcast, null))
+        );
+    }
+
+    public function testGetEpisodesReturnsEpisodesWithoutStateFilterAndDisabledCatalogs(): void
+    {
+        $podcast = $this->createMock(Podcast::class);
+        $result  = $this->createMock(PDOStatement::class);
+
+        $podcastId = 666;
+        $episodeId = 42;
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::CATALOG_DISABLE)
+            ->willReturn('1');
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                "SELECT `podcast_episode`.`id` FROM `podcast_episode` LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` WHERE `podcast_episode`.`podcast` = ? AND `catalog`.`enabled` = '1' ORDER BY `podcast_episode`.`pubdate` DESC",
+                [$podcastId],
+            )
+            ->willReturn($result);
 
         $podcast->expects(static::once())
             ->method('getId')
             ->willReturn($podcastId);
 
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT COUNT(id) from `podcast_episode` where `podcast` = ?',
-                [$podcastId]
-            )
-            ->willReturn((string) $result);
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $episodeId, false);
 
-        static::assertSame(
-            $result,
-            $this->subject->getEpisodeCount($podcast)
+        self::assertSame(
+            [$episodeId],
+            $this->subject->getEpisodes($podcast),
         );
+    }
+
+    public function testGetEpisodesReturnsEpisodesWithStateFilter(): void
+    {
+        $podcast = $this->createMock(Podcast::class);
+        $result  = $this->createMock(PDOStatement::class);
+
+        $stateFilter = PodcastEpisodeStateEnum::COMPLETED;
+        $podcastId   = 666;
+        $episodeId   = 42;
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::CATALOG_DISABLE)
+            ->willReturn('');
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? AND `podcast_episode`.`state` = ? ORDER BY `podcast_episode`.`pubdate` DESC',
+                [$podcastId, $stateFilter->value],
+            )
+            ->willReturn($result);
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $episodeId, false);
+
+        self::assertSame(
+            [$episodeId],
+            $this->subject->getEpisodes($podcast, $stateFilter),
+        );
+    }
+
+    public function testSetFileStoresThePath(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `podcast_episode` SET `file` = ? WHERE `id` = ?', ['/some/path.mp3', 666]);
+
+        $this->subject->setFile(666, '/some/path.mp3');
+    }
+
+    public function testSetPlayedFlagsTheEpisode(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `podcast_episode` SET `played` = 1 WHERE `id` = ?', [666]);
+
+        $this->subject->setPlayed(666);
+    }
+
+    public function testSetUpdateTimeStampsTheEpisode(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `podcast_episode` SET `update_time` = ? WHERE `id` = ?;', [1234, 666]);
+
+        $this->subject->setUpdateTime(666, 1234);
     }
 
     public function testUpdateStateUpdates(): void
@@ -392,14 +414,37 @@ class PodcastEpisodeRepositoryTest extends TestCase
         $this->subject->updateState($episode, $state);
     }
 
-    public function testCollectGarbageCollects(): void
+    public function testUpdateWritesTheEditableProperties(): void
     {
+        $episode = new Podcast_Episode();
+
+        $episode->id          = 666;
+        $episode->title       = 'some-title';
+        $episode->website     = 'https://some-site';
+        $episode->description = 'some-description';
+        $episode->author      = 'some-author';
+        $episode->category    = 'some-category';
+
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
+                'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?',
+                ['some-title', 'https://some-site', 'some-description', 'some-author', 'some-category', 666]
             );
 
-        $this->subject->collectGarbage();
+        $this->subject->update($episode);
+    }
+
+    protected function setUp(): void
+    {
+        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
+        $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new PodcastEpisodeRepository(
+            $this->modelFactory,
+            $this->connection,
+            $this->configContainer,
+        );
     }
 }

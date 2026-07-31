@@ -37,50 +37,11 @@ use Psr\SimpleCache\CacheInterface;
 #[RunTestsInSeparateProcesses]
 class MissingArtistFromMusicBrainzRetrieverTest extends TestCase
 {
-    private MusicBrainz&MockObject $musicBrainz;
-
     private CacheInterface&MockObject $cache;
-
     private LoggerInterface&MockObject $logger;
-
-    private MissingArtistFromMusicBrainzRetriever $subject;
-
     private string $mbid = '12345-foobar';
-
-    protected function setup(): void
-    {
-        $this->musicBrainz = $this->createMock(MusicBrainz::class);
-        $this->cache       = $this->createMock(CacheInterface::class);
-        $this->logger      = $this->createMock(LoggerInterface::class);
-
-        $this->subject = new MissingArtistFromMusicBrainzRetriever(
-            $this->musicBrainz,
-            $this->cache,
-            $this->logger,
-        );
-    }
-
-    public function testRetrieveReturnsNullIfMbidIsInvalid(): void
-    {
-        static::assertNull(
-            $this->subject->retrieve(' ')
-        );
-    }
-
-    public function testRetrieveReturnsCachedItem(): void
-    {
-        $item = ['some-item'];
-
-        $this->cache->expects(static::once())
-            ->method('get')
-            ->with(sprintf('wanted:artist:%s', $this->mbid))
-            ->willReturn($item);
-
-        static::assertSame(
-            $item,
-            $this->subject->retrieve($this->mbid)
-        );
-    }
+    private MusicBrainz&MockObject $musicBrainz;
+    private MissingArtistFromMusicBrainzRetriever $subject;
 
     public function testRetrieveCatchesServiceErrorAndReturnsDefaultResult(): void
     {
@@ -107,12 +68,27 @@ class MissingArtistFromMusicBrainzRetrieverTest extends TestCase
                 [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
             );
 
-        static::assertSame(
+        self::assertSame(
             [
                 'mbid' => $this->mbid,
                 'name' => 'Unknown Artist',
                 'link' => '',
             ],
+            $this->subject->retrieve($this->mbid)
+        );
+    }
+
+    public function testRetrieveReturnsCachedItem(): void
+    {
+        $item = ['some-item'];
+
+        $this->cache->expects(static::once())
+            ->method('get')
+            ->with(sprintf('wanted:artist:%s', $this->mbid))
+            ->willReturn($item);
+
+        self::assertSame(
+            $item,
             $this->subject->retrieve($this->mbid)
         );
     }
@@ -138,9 +114,16 @@ class MissingArtistFromMusicBrainzRetrieverTest extends TestCase
             ->with('artist', $this->mbid)
             ->willReturn((object) ['error' => 'some-error']);
 
-        static::assertSame(
+        self::assertSame(
             $defaultItem,
             $this->subject->retrieve($this->mbid)
+        );
+    }
+
+    public function testRetrieveReturnsNullIfMbidIsInvalid(): void
+    {
+        self::assertNull(
+            $this->subject->retrieve(' ')
         );
     }
 
@@ -172,9 +155,22 @@ class MissingArtistFromMusicBrainzRetrieverTest extends TestCase
             ->with('artist', $this->mbid)
             ->willReturn((object) ['name' => $artistName]);
 
-        static::assertSame(
+        self::assertSame(
             $defaultItem,
             $this->subject->retrieve($this->mbid)
+        );
+    }
+
+    protected function setup(): void
+    {
+        $this->musicBrainz = $this->createMock(MusicBrainz::class);
+        $this->cache       = $this->createMock(CacheInterface::class);
+        $this->logger      = $this->createMock(LoggerInterface::class);
+
+        $this->subject = new MissingArtistFromMusicBrainzRetriever(
+            $this->musicBrainz,
+            $this->cache,
+            $this->logger,
         );
     }
 }

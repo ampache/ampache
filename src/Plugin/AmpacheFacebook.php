@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,22 +26,30 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheFacebook extends AmpachePlugin implements PluginExternalShareInterface
 {
-    public string $name = 'Facebook';
-
+    #[Override]
     public string $categories = 'share';
 
+    #[Override]
     public string $description = 'Facebook share';
 
-    public string $url = 'https://facebook.com';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000001';
-
+    #[Override]
     public string $min_ampache = '370027';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'Facebook';
+
+    #[Override]
+    public string $url = 'https://facebook.com';
+
+    #[Override]
+    public string $version = '000001';
 
     /**
      * Constructor
@@ -52,11 +60,32 @@ class AmpacheFacebook extends AmpachePlugin implements PluginExternalShareInterf
     }
 
     /**
+     * external_share
+     */
+    public function external_share(string $url, string $text): string
+    {
+        unset($text);
+
+        return "https://www.facebook.com/sharer/sharer.php?u=" . rawurlencode($url);
+    }
+
+    /**
      * install
      * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
+        return true;
+    }
+
+    /**
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
+     */
+    public function load(User $user): bool
+    {
+        unset($user);
+
         return true;
     }
 
@@ -75,27 +104,6 @@ class AmpacheFacebook extends AmpachePlugin implements PluginExternalShareInterf
      */
     public function upgrade(): bool
     {
-        return true;
-    }
-
-    /**
-     * external_share
-     */
-    public function external_share(string $url, string $text): string
-    {
-        unset($text);
-
-        return "https://www.facebook.com/sharer/sharer.php?u=" . rawurlencode($url);
-    }
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool
-    {
-        unset($user);
-
         return true;
     }
 }

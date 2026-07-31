@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistAddSong4Method
 {
-    public const ACTION = 'playlist_add_song';
+    public const string ACTION = 'playlist_add_song';
 
     /**
      * playlist_add_song
@@ -64,12 +64,12 @@ final class PlaylistAddSong4Method
         $playlist = new Playlist((int) $input['filter']);
         $song     = (int) $input['song'];
         if (!$playlist->has_collaborate($user)) {
-            Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
+            Api4::message('error', 'Access denied to this playlist', '401', $input['api_format']);
 
             return false;
         }
         if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int) $input['check'] == 1)) && $playlist->has_item($song)) {
-            Api4::message('error', T_("Can't add a duplicate item when check is enabled"), '400', $input['api_format']);
+            Api4::message('error', "Can't add a duplicate item when check is enabled", '400', $input['api_format']);
 
             return false;
         }

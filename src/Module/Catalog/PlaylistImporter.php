@@ -39,20 +39,24 @@ final class PlaylistImporter
      * @return null|array{
      *     count: int,
      *     id: int,
-     *     results: list<array{track: int, file: string, found: int}>
+     *     results: array<int, array{
+     *         track: int,
+     *         file: string,
+     *         found: int
+     *     }>
      * }
      */
     public static function import_playlist(string $playlist_file, int $user_id, string $playlist_type): ?array
     {
         $data = (string) file_get_contents($playlist_file);
-        if (substr($playlist_file, -3, 3) === 'm3u' || substr($playlist_file, -4, 4) === 'm3u8') {
-            $files = self::parse_m3u($data);
-        } elseif (substr($playlist_file, -3, 3) === 'pls') {
-            $files = self::parse_pls($data);
-        } elseif (substr($playlist_file, -3, 3) === 'asx') {
-            $files = self::parse_asx($data);
-        } elseif (substr($playlist_file, -4, 4) === 'xspf') {
-            $files = self::parse_xspf($data);
+        if (str_ends_with($playlist_file, 'm3u') || str_ends_with($playlist_file, 'm3u8')) {
+            $files = self::_parse_m3u($data);
+        } elseif (str_ends_with($playlist_file, 'pls')) {
+            $files = self::_parse_pls($data);
+        } elseif (str_ends_with($playlist_file, 'asx')) {
+            $files = self::_parse_asx($data);
+        } elseif (str_ends_with($playlist_file, 'xspf')) {
+            $files = self::_parse_xspf($data);
         }
 
         $web_path = AmpConfig::get_web_path();
@@ -64,28 +68,29 @@ final class PlaylistImporter
         if (isset($files)) {
             foreach ($files as $file) {
                 $found    = false;
-                $file     = trim((string)$file);
+                $file     = trim((string) $file);
                 $orig     = $file;
                 $url_data = Stream_Url::parse($file);
                 // Check to see if it's a url from this ampache instance
-                if (array_key_exists('id', $url_data) && !empty($web_path) && substr($file, 0, strlen($web_path)) == $web_path) {
+                if (array_key_exists('id', $url_data) && ($web_path !== '' && $web_path !== '0') && str_starts_with($file, $web_path)) {
                     $sql        = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
                     $db_results = Dba::read($sql, [$url_data['id']]);
-                    if (Dba::num_rows($db_results) && (int)$url_data['id'] > 0) {
+                    if (Dba::num_rows($db_results) && (int) $url_data['id'] > 0) {
                         debug_event(self::class, "import_playlist identified: {" . $url_data['id'] . "}", 5);
-                        $songs[$track] = (int)$url_data['id'];
+                        $songs[$track] = (int) $url_data['id'];
                         $track++;
                         $found = true;
                     }
                 } else {
                     // Remove file:// prefix if any
-                    if (strpos($file, "file://") !== false) {
+                    if (str_contains($file, "file://")) {
                         $file = urldecode(substr($file, 7));
                         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                             // Removing starting / on Windows OS.
-                            if (substr($file, 0, 1) == '/') {
+                            if (str_starts_with($file, '/')) {
                                 $file = substr($file, 1);
                             }
+
                             // Restore real directory separator
                             $file = str_replace("/", DIRECTORY_SEPARATOR, $file);
                         }
@@ -96,9 +101,9 @@ final class PlaylistImporter
                     $db_results = Dba::read($sql, [$file]);
                     $results    = Dba::fetch_assoc($db_results);
 
-                    if (array_key_exists('id', $results) && (int)($results['id'] ?? 0) > 0) {
-                        debug_event(self::class, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
-                        $songs[$track] = (int)$results['id'];
+                    if (array_key_exists('id', $results) && (int) ($results['id'] ?? 0) > 0) {
+                        debug_event(self::class, "import_playlist identified: {" . (int) $results['id'] . "}", 5);
+                        $songs[$track] = (int) $results['id'];
                         $track++;
                         $found = true;
                     } else {
@@ -110,32 +115,35 @@ final class PlaylistImporter
                             $db_results = Dba::read($sql, [$file]);
                             $results    = Dba::fetch_assoc($db_results);
 
-                            if (array_key_exists('id', $results) && (int)($results['id'] ?? 0) > 0) {
-                                debug_event(self::class, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
-                                $songs[$track] = (int)$results['id'];
+                            if (array_key_exists('id', $results) && (int) ($results['id'] ?? 0) > 0) {
+                                debug_event(self::class, "import_playlist identified: {" . (int) $results['id'] . "}", 5);
+                                $songs[$track] = (int) $results['id'];
                                 $track++;
                                 $found = true;
                             }
                         }
                     }
-                } // if it's a file
-                if (!$found) {
-                    debug_event(self::class, "import_playlist skipped: {{$orig}}", 5);
                 }
+
+                // if it's a file
+                if (!$found) {
+                    debug_event(self::class, sprintf('import_playlist skipped: {%s}', $orig), 5);
+                }
+
                 // add the results to an array to display after
                 $import[] = [
                     'track' => $track - 1,
                     'file' => $orig,
-                    'found' => (int)$found
+                    'found' => (int) $found
                 ];
             }
         }
 
         debug_event(self::class, "import_playlist Parsed " . $playlist_file . ", found " . count($songs) . " songs", 5);
 
-        if (count($songs)) {
+        if ($songs !== []) {
             $name        = $pinfo['filename'];
-            $playlist_id = (int)Playlist::create($name, $playlist_type, $user_id);
+            $playlist_id = (int) Playlist::create($name, $playlist_type, $user_id);
 
             if ($playlist_id < 1) {
                 return null;
@@ -156,17 +164,36 @@ final class PlaylistImporter
     }
 
     /**
+     * this takes asx filename and then attempts to found song filenames listed in the asx
+     *
+     * @return Generator<string>
+     */
+    private static function _parse_asx(string $data): Generator
+    {
+        $xml = simplexml_load_string($data);
+
+        if ($xml) {
+            foreach ($xml->entry as $entry) {
+                $file = trim((string) $entry->ref['href']);
+                if ($file !== '' && $file !== '0') {
+                    yield $file;
+                }
+            }
+        }
+    }
+
+    /**
      * this takes m3u filename and then attempts to found song filenames listed in the m3u
      *
      * @return Generator<string>
      */
-    private static function parse_m3u(string $data): Generator
+    private static function _parse_m3u(string $data): Generator
     {
         $results = explode("\n", $data);
 
         foreach ($results as $value) {
             $value = trim($value);
-            if (!empty($value) && substr($value, 0, 1) != '#') {
+            if ($value !== '' && $value !== '0' && !str_starts_with($value, '#')) {
                 yield $value;
             }
         }
@@ -177,7 +204,7 @@ final class PlaylistImporter
      *
      * @return Generator<string>
      */
-    private static function parse_pls(string $data): Generator
+    private static function _parse_pls(string $data): Generator
     {
         $results = explode("\n", $data);
 
@@ -185,26 +212,7 @@ final class PlaylistImporter
             $value = trim($value);
             if (preg_match("/file[0-9]+[\s]*\=(.*)/i", $value, $matches)) {
                 $file = trim($matches[1]);
-                if (!empty($file)) {
-                    yield $file;
-                }
-            }
-        }
-    }
-
-    /**
-     * this takes asx filename and then attempts to found song filenames listed in the asx
-     *
-     * @return Generator<string>
-     */
-    private static function parse_asx(string $data): Generator
-    {
-        $xml = simplexml_load_string($data);
-
-        if ($xml) {
-            foreach ($xml->entry as $entry) {
-                $file = trim((string)$entry->ref['href']);
-                if (!empty($file)) {
+                if ($file !== '' && $file !== '0') {
                     yield $file;
                 }
             }
@@ -217,13 +225,13 @@ final class PlaylistImporter
      *
      * @return Generator<string>
      */
-    private static function parse_xspf(string $data): Generator
+    private static function _parse_xspf(string $data): Generator
     {
         $xml = simplexml_load_string($data);
         if ($xml) {
             foreach ($xml->trackList->track as $track) {
-                $file = trim((string)$track->location);
-                if (!empty($file)) {
+                $file = trim((string) $track->location);
+                if ($file !== '' && $file !== '0') {
                     yield $file;
                 }
             }

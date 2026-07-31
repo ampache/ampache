@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_edit_catalog.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
@@ -59,7 +61,7 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), scrub_out($catalog->nam
         </tr>
         <tr>
             <td><?php echo T_('Catalog Type'); ?></td>
-            <td><?php echo scrub_out(ucfirst((string)$catalog->catalog_type)); ?></td>
+            <td><?php echo scrub_out(ucfirst((string) $catalog->catalog_type)); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Catalog Media Type'); ?></td>
@@ -75,7 +77,7 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), scrub_out($catalog->nam
         </tr>
     </table>
     <div class="formValidation">
-        <input type="hidden" name="catalog_id" value="<?php echo scrub_out((string)$catalog->id); ?>" />
+        <input type="hidden" name="catalog_id" value="<?php echo scrub_out((string) $catalog->id); ?>" />
         <input type="hidden" name="action" value="update_catalog_settings" />
         <input class="button" type="submit" value="<?php echo T_('Save Catalog Settings'); ?>" />
     </div>

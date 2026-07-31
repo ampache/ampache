@@ -25,15 +25,25 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class UserUpdate6Method
+ * Updates an existing user.
+ *
+ * Version 5 is an alias of `user_update` and hands the request straight over to it.
  */
-final class UserEdit5Method
+final class UserEdit5Method implements MethodInterface
 {
-    public const ACTION = 'user_edit';
+    public const string ACTION = 'user_edit';
+
+    public function __construct(
+        private UserUpdate5Method $userUpdateMethod,
+    ) {}
 
     /**
      * user_edit
@@ -51,14 +61,14 @@ final class UserEdit5Method
      * city = (string) $city //optional
      * disable = (integer) 0,1 true to disable, false to enable //optional
      * group = (integer) Catalog filter group for the new user //optional, default = 0
-     * maxbitrate = (integer) $maxbitrate //optional
+     * maxbitrate = (integer) $maxbitrate in kbps //optional
      * fullname_public = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
      * reset_apikey = (integer) 0,1 true to reset a user Api Key //optional
      * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional
      * clear_stats = (integer) 0,1 true reset all stats for this user //optional
      *
      * @param array{
-     *     username: string,
+     *     username?: string,
      *     fullname?: string,
      *     password?: string,
      *     email?: string,
@@ -75,13 +85,30 @@ final class UserEdit5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws RequestParamMissingException
      */
-    public static function user_edit(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('username', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'username')
+            );
         }
 
-        return UserUpdate5Method::user_update($input, $user);
+        return $this->userUpdateMethod->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            $input,
+            $user,
+            $apiVersion
+        );
     }
 }

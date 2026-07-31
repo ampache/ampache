@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -27,15 +29,15 @@ use Ampache\Gui\Stats\CatalogStatsInterface;
 
 interface CatalogDetailsInterface
 {
-    public function getName(): string;
+    public function getCatalogStats(): CatalogStatsInterface;
 
     public function getFullInfo(): string;
-
-    public function getLastUpdateDate(): string;
 
     public function getLastAddDate(): string;
 
     public function getLastCleanDate(): string;
 
-    public function getCatalogStats(): CatalogStatsInterface;
+    public function getLastUpdateDate(): string;
+
+    public function getName(): string;
 }

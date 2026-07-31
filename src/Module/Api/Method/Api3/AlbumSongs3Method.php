@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
  */
 class AlbumSongs3Method
 {
-    public const ACTION = 'album_songs';
+    public const string ACTION = 'album_songs';
 
     /**
      * album_songs

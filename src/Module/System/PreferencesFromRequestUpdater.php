@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,15 +33,9 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\Preference;
 use DateTimeZone;
 
-final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdaterInterface
+final readonly class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdaterInterface
 {
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    public function __construct(
-        PrivilegeCheckerInterface $privilegeChecker
-    ) {
-        $this->privilegeChecker = $privilegeChecker;
-    }
+    public function __construct(private PrivilegeCheckerInterface $privilegeChecker) {}
 
     /**
      * grabs the current keys that should be added and then runs
@@ -70,7 +64,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                 'name' => $row['name'],
                 'type' => $row['type']
             ];
-        } // end collecting keys
+        }
 
         // Foreach through possible keys and assign them
         foreach ($results as $data) {
@@ -78,10 +72,10 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             $name         = (string) $data['name'];
             $apply_to_all = 'check_' . $data['name'];
             $new_level    = 'level_' . $data['name'];
-            $pref_id      = (string)$data['id'];
+            $pref_id      = (string) $data['id'];
             $value        = (isset($_REQUEST[$name]) && is_array($_REQUEST[$name]))
                 ? implode(',', $_REQUEST[$name])
-                : (string)scrub_in((string)($_REQUEST[$name] ?? ''));
+                : (string) scrub_in((string) ($_REQUEST[$name] ?? ''));
 
             // Some preferences require some extra checks to be performed
             switch ($name) {
@@ -91,19 +85,40 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                 case 'custom_login_logo':
                 case 'custom_logo':
                     $value = urldecode($value);
-                    if (!empty($value) && !str_starts_with($value, 'http')) {
+                    if ($value !== '' && $value !== '0' && !str_starts_with($value, 'http')) {
                         $value = AmpConfig::get_web_path() . '/' . ltrim($value, '/');
                     }
+
                     $value = filter_var(urldecode($value), FILTER_VALIDATE_URL) ?: null;
                     break;
                 case 'transcode_bitrate':
-                    $value = (string) Stream::validate_bitrate((int)$value);
+                case 'transcode_bitrate_webplayer':
+                case 'transcode_bitrate_api':
+                case 'max_bit_rate':
+                case 'min_bit_rate':
+                    // Bitrate preferences are stored in bits per second (bps)
+                    $value = (string) Stream::validate_bitrate((int) $value);
+                    break;
+                case 'encode_target':
+                case 'encode_player_webplayer_target':
+                case 'encode_player_api_target':
+                    if ($value !== '' && !in_array($value, Stream::get_available_encode_formats('audio'), true)) {
+                        $value = '';
+                    }
+
+                    break;
+                case 'encode_video_target':
+                    if ($value !== '' && !in_array($value, Stream::get_available_encode_formats('video'), true)) {
+                        $value = '';
+                    }
+
                     break;
                 case 'custom_timezone':
                     $listIdentifiers = DateTimeZone::listIdentifiers() ?: [];
                     if (!in_array($value, $listIdentifiers)) {
                         $value = '';
                     }
+
                     break;
             }
 
@@ -116,15 +131,15 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             }
 
             // Run the update for this preference only if it's set
-            if (array_key_exists($name, $_REQUEST) || in_array($name, $null_allowed)) {
-                $applyToAll = $_REQUEST[$apply_to_all] ?? null;
+            if (array_key_exists($name, $_REQUEST) || in_array($name, $null_allowed, true)) {
+                $applyToAll = (isset($_REQUEST[$apply_to_all])) ? (bool) $_REQUEST[$apply_to_all] : null;
                 Preference::update($pref_id, $user_id, $value, $applyToAll);
             }
 
             if ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) && array_key_exists($new_level, $_REQUEST)) {
-                Preference::update_level($pref_id, (int)$_REQUEST[$new_level]);
+                Preference::update_level($pref_id, (int) $_REQUEST[$new_level]);
             }
-        } // end foreach preferences
+        }
 
         // Now that we've done that we need to invalidate the cached preferences
         Preference::clear_from_session();

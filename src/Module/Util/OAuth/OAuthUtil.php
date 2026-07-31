@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,69 +33,51 @@ use Ampache\Module\System\Core;
 class OAuthUtil
 {
     /**
-     * @return array|string|string[]
+     * @param array<string, string|string[]> $params
      */
-    public static function urlencode_rfc3986($input)
+    public static function build_http_query(array $params): string
     {
-        if (is_array($input)) {
-            return array_map(
-                static function ($value) {
-                    return OAuthUtil::urlencode_rfc3986($value);
-                },
-                $input
-            );
-        } elseif (is_scalar($input)) {
-            return str_replace('+', ' ', str_replace('%7E', '~', rawurlencode($input)));
-        } else {
+        if (!$params) {
             return '';
         }
-    }
 
-    // This decode function isn't taking into consideration the above
-    // modifications to the encoding process. However, this method doesn't
-    // seem to be used anywhere so leaving it as is.
-    /**
-     * @param string $string
-     */
-    public static function urldecode_rfc3986($string): string
-    {
-        return urldecode($string);
-    }
+        // Urlencode both keys and values
+        $params = OAuthUtil::urlencode_rfc3986($params);
+        if (is_string($params)) {
+            return $params;
+        }
 
-    /**
-     * Utility function for turning the Authorization: header into parameters.
-     * Has to do some unescaping and can filter out any non-oauth parameters if needed (default behaviour)
-     * May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
-     * see http://code.google.com/p/oauth/issues/detail?id=163
-     * @param string $header
-     * @param bool $oauth_parameters
-     * @return array
-     */
-    public static function split_header($header, $oauth_parameters = true)
-    {
-        $params = [];
-        if (preg_match_all('/(' . (($oauth_parameters) ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
-            foreach ($matches[1] as $key => $value) {
-                $params[$value] = OAuthUtil::urldecode_rfc3986(
-                    (empty($matches[3][$key]))
-                        ? $matches[4][$key]
-                        : $matches[3][$key]
-                );
+
+        // Parameters are sorted by name, using lexicographical byte value ordering.
+        // Ref: Spec: 9.1.1 (1)
+        uksort($params, strcmp(...));
+
+        $pairs = [];
+        /** @var array<string, string|string[]> $params */
+        foreach ($params as $parameter => $value) {
+            if (!is_array($value)) {
+                $pairs[] = $parameter . '=' . $value;
+                continue;
             }
-            if (isset($params['realm'])) {
-                unset($params['realm']);
+
+            sort($value, SORT_STRING);
+
+            foreach ($value as $duplicate_value) {
+                $pairs[] = $parameter . '=' . $duplicate_value;
             }
         }
 
-        return $params;
+        // For each parameter, the name is separated from the corresponding value by an '=' character (ASCII code 61)
+        // Each name-value pair is separated by an '&' character (ASCII code 38)
+        return implode('&', $pairs);
     }
 
     // helper to try to sort out headers for people who aren't running apache
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public static function get_headers()
+    public static function get_headers(): array
     {
         if (function_exists('apache_request_headers')) {
             // we need this to get the actual Authorization: header
@@ -118,12 +100,13 @@ class OAuthUtil
             if (isset($_SERVER['CONTENT_TYPE'])) {
                 $out['Content-Type'] = Core::get_server('CONTENT_TYPE');
             }
+
             if (isset($_ENV['CONTENT_TYPE'])) {
                 $out['Content-Type'] = $_ENV['CONTENT_TYPE'];
             }
 
             foreach ($_SERVER as $key => $value) {
-                if (substr($key, 0, 5) == "HTTP_") {
+                if (is_string($key) && str_starts_with($key, "HTTP_")) {
                     // this is chaos, basically it is just there to capitalize the first
                     // letter of every word that is not an initial HTTP and strip HTTP
                     // code from przemek
@@ -136,23 +119,23 @@ class OAuthUtil
         return $out;
     }
 
-    // This function takes a input like a=b&a=c&d=e and returns the parsed
-    // parameters like this
-    // array('a' => array('b', 'c'), 'd' => 'e')
     /**
-     * @return array
+     * This function takes a input like a=b&a=c&d=e and returns the parsed
+     * parameters like this
+     * array('a' => array('b', 'c'), 'd' => 'e')
+     * @return array<string, string|string[]>
      */
-    public static function parse_parameters($input)
+    public static function parse_parameters($input = null): array
     {
         if (!isset($input) || !$input) {
             return [];
         }
 
-        $pairs = explode('&', $input);
+        $pairs = explode('&', (string) $input);
 
         $parsed_parameters = [];
         foreach ($pairs as $pair) {
-            if (strpos((string)$pair, '=')) {
+            if (strpos($pair, '=')) {
                 $split     = explode('=', $pair, 2);
                 $parameter = OAuthUtil::urldecode_rfc3986($split[0]);
                 $value     = (isset($split[1])) ? OAuthUtil::urldecode_rfc3986($split[1]) : '';
@@ -177,38 +160,58 @@ class OAuthUtil
         return $parsed_parameters;
     }
 
-    public static function build_http_query($params): string
+    /**
+     * Utility function for turning the Authorization: header into parameters.
+     * Has to do some unescaping and can filter out any non-oauth parameters if needed (default behaviour)
+     * May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
+     * see http://code.google.com/p/oauth/issues/detail?id=163
+     * @return array<string, string>
+     */
+    public static function split_header(string $header, bool $oauth_parameters = true): array
     {
-        if (!$params) {
-            return '';
-        }
+        $params = [];
+        if (preg_match_all('/(' . (($oauth_parameters) ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
+            foreach ($matches[1] as $key => $value) {
+                $params[$value] = OAuthUtil::urldecode_rfc3986(
+                    (empty($matches[3][$key]))
+                        ? $matches[4][$key]
+                        : $matches[3][$key]
+                );
+            }
 
-        // Urlencode both keys and values
-        $keys   = OAuthUtil::urlencode_rfc3986(array_keys($params));
-        $values = OAuthUtil::urlencode_rfc3986(array_values($params));
-        $params = array_combine($keys, $values);
-
-        // Parameters are sorted by name, using lexicographical byte value ordering.
-        // Ref: Spec: 9.1.1 (1)
-        uksort($params, 'strcmp');
-
-        $pairs = [];
-        foreach ($params as $parameter => $value) {
-            if (is_array($value)) {
-                // If two or more parameters share the same name, they are sorted by their value
-                // Ref: Spec: 9.1.1 (1)
-                // June 12th, 2010 - changed to sort because of issue 164 by hidetaka
-                sort($value, SORT_STRING);
-                foreach ($value as $duplicate_value) {
-                    $pairs[] = $parameter . '=' . $duplicate_value;
-                }
-            } else {
-                $pairs[] = $parameter . '=' . $value;
+            if (isset($params['realm'])) {
+                unset($params['realm']);
             }
         }
 
-        // For each parameter, the name is separated from the corresponding value by an '=' character (ASCII code 61)
-        // Each name-value pair is separated by an '&' character (ASCII code 38)
-        return implode('&', $pairs);
+        return $params;
+    }
+
+    // This decode function isn't taking into consideration the above
+    // modifications to the encoding process. However, this method doesn't
+    // seem to be used anywhere so leaving it as is.
+    /**
+     */
+    public static function urldecode_rfc3986(string $string): string
+    {
+        return urldecode($string);
+    }
+
+    /**
+     * @return array<string, string|string[]>|string|string[]
+     */
+    public static function urlencode_rfc3986($input): array|string
+    {
+        if (is_array($input)) {
+            return array_map(
+                OAuthUtil::urlencode_rfc3986(...),
+                $input
+            );
+        } elseif (is_scalar($input)) {
+            return str_replace('+', ' ', str_replace('%7E', '~', rawurlencode((string) $input)));
+        }
+
+        return '';
+
     }
 }

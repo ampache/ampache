@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_add_upload.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -186,16 +188,17 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
     function deleteNode() {
         if (getActiveNode().key === "/") return;
 
-        let confirmed = window.confirm("Do you want to proceed with this action?");
-
-        if (confirmed) {
+        window.ampacheConfirm("Do you want to proceed with this action?").then(function (confirmed) {
+            if (!confirmed) {
+                return;
+            }
             fetch('<?php echo $ajaxfs; ?>?operation=delete_node&id=' + encodeURIComponent(getActiveNode().key))
                 .then(() => {
                     let parent = getActiveNode().parent;
                     getActiveNode().remove();
                     parent.setActive();
                 })
-        }
+        });
     }
 
     function getActiveNode() {

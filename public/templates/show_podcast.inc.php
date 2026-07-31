@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_podcast.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -38,7 +40,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\Podcast $podcast */
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 /** @var string $object_type */
 /** @var User $current_user */
 
@@ -50,12 +52,12 @@ $browse   = new Browse();
 $browse->set_type($object_type);
 $browse->set_use_filters(false);
 $browse->set_skip_catalog_check(true);
-Ui::show_box_top((string)$podcast->get_fullname(), 'info-box'); ?>
+Ui::show_box_top((string) $podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">
 <?php $size = Ui::is_grid_view('album')
     ? ['width' => 150, 'height' => 150]
     : ['width' => 384, 'height' => 384];
-Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $size, null, true, false); ?>
+Art::display('podcast', $podcast->getId(), (string) $podcast->get_fullname(), $size, null, true, false); ?>
 </div>
 <?php if ($podcast->get_description()) { ?>
 <div id="item_summary">
@@ -88,8 +90,19 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $si
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->getId() . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_podcast_' . $podcast->getId()); ?>
         </li>
         <?php } ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+        <li>
+            <?php echo Ajax::button_with_text('?action=basket&type=podcast&id=' . $podcast->getId(), 'new_window', T_('Add All to Temporary Playlist'), 'add_podcast_' . $podcast->getId()); ?>
+        </li>
+        <li>
+            <a id="<?php echo 'add_to_playlist_podcast_' . $podcast->getId(); ?>" onclick="showPlaylistDialog(event, 'podcast', '<?php echo $podcast->getId(); ?>')">
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+                <?php echo Ui::get_add_to_list_label(); ?>
+            </a>
+        </li>
+        <?php } ?>
         <?php if ($access50) { ?>
-        <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+        <?php if (AmpConfig::get('statistical_graphs')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->getId(); ?>">
                     <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?>
@@ -103,7 +116,7 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $si
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                ['object_type' => 'podcast', 'object_id' => (string)$podcast->getId()]
+                ['object_type' => 'podcast', 'object_id' => (string) $podcast->getId()]
             ); ?>
         </li>
         <?php } ?>

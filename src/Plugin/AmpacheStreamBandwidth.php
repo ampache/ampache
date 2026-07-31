@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,29 +32,36 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamControlInterface
 {
-    public string $name = 'Stream Bandwidth';
-
+    #[Override]
     public string $categories = 'stream_control';
 
+    #[Override]
     public string $description = 'Control bandwidth per user';
 
-    public string $url = '';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000001';
-
+    #[Override]
     public string $min_ampache = '370024';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'Stream Bandwidth';
+
+    #[Override]
+    public string $url = '';
+
+    #[Override]
+    public string $version = '000001';
+
+    private int $bandwidth_days = 30;
+    private int $bandwidth_max  = 1024;
 
     // These are internal settings used by this class, run this->load to fill them out
     private int $user_id = 0;
-
-    private int $bandwidth_days = 30;
-
-    private int $bandwidth_max = 1024;
 
     /**
      * Constructor
@@ -78,23 +85,23 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function uninstall(): bool
+    public function load(User $user): bool
     {
-        return (
-            Preference::delete('stream_control_bandwidth_max') &&
-            Preference::delete('stream_control_bandwidth_days')
-        );
-    }
+        $user->set_preferences();
+        $data = $user->prefs;
 
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
+        $this->user_id       = $user->id;
+        $this->bandwidth_max = (int) ($data['stream_control_bandwidth_max']) ?: 1024;
+
+        if ((int) ($data['stream_control_bandwidth_days']) > 0) {
+            $this->bandwidth_days = (int) ($data['stream_control_bandwidth_days']);
+        } else {
+            $this->bandwidth_days = 30;
+        }
+
         return true;
     }
 
@@ -109,7 +116,7 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
         }
 
         // if using free software only you can't use this plugin
-        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
+        if (AmpConfig::get('statistical_graphs')) {
             // Calculate all media size
             $next_total = 0;
             foreach ($media_ids as $media_id) {
@@ -137,23 +144,23 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
     }
 
     /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
      */
-    public function load(User $user): bool
+    public function uninstall(): bool
     {
-        $user->set_preferences();
-        $data = $user->prefs;
+        return (
+            Preference::delete('stream_control_bandwidth_max')
+            && Preference::delete('stream_control_bandwidth_days')
+        );
+    }
 
-        $this->user_id       = $user->id;
-        $this->bandwidth_max = (int)($data['stream_control_bandwidth_max']) ?: 1024;
-
-        if ((int)($data['stream_control_bandwidth_days']) > 0) {
-            $this->bandwidth_days = (int)($data['stream_control_bandwidth_days']);
-        } else {
-            $this->bandwidth_days = 30;
-        }
-
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

@@ -49,8 +49,7 @@ final readonly class ShoutCreator implements ShoutCreatorInterface
         private ShoutRepositoryInterface $shoutRepository,
         private UtilityFactoryInterface $utilityFactory,
         private UserRepositoryInterface $userRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * Creates a new shout item
@@ -65,7 +64,7 @@ final readonly class ShoutCreator implements ShoutCreatorInterface
         LibraryItemEnum $objectType,
         string $text,
         bool $isSticky,
-        int $offset
+        int $offset,
     ): void {
         $date     = new DateTime();
         $objectId = $libItem->getId();
@@ -96,7 +95,7 @@ final readonly class ShoutCreator implements ShoutCreatorInterface
             if ($itemOwner?->getPreferenceValue(ConfigurationKeyEnum::NOTIFY_EMAIL)) {
                 $emailAddress = $itemOwner->email;
 
-                if (!empty($emailAddress) && Mailer::is_mail_enabled()) {
+                if (!in_array($emailAddress, [null, '', '0'], true) && Mailer::is_mail_enabled()) {
                     /* HINT: %1 username %2 item name being commented on */
                     $message = sprintf(
                         T_('You just received a new shout from %1$s on your content %2$s'),

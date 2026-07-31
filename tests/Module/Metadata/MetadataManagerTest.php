@@ -39,123 +39,10 @@ class MetadataManagerTest extends TestCase
 {
     use ConsecutiveParams;
 
-    private MetadataRepositoryInterface&MockObject $metadataRepository;
-
-    private MetadataFieldRepositoryInterface&MockObject $metadataFieldRepository;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private MetadataFieldRepositoryInterface&MockObject $metadataFieldRepository;
+    private MetadataRepositoryInterface&MockObject $metadataRepository;
     private MetadataManager $subject;
-
-    protected function setUp(): void
-    {
-        $this->metadataRepository      = $this->createMock(MetadataRepositoryInterface::class);
-        $this->metadataFieldRepository = $this->createMock(MetadataFieldRepositoryInterface::class);
-        $this->configContainer         = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new MetadataManager(
-            $this->metadataRepository,
-            $this->metadataFieldRepository,
-            $this->configContainer
-        );
-    }
-
-    public function testGetMetadataReturnsEmptyResultIfDisabled(): void
-    {
-        $item = $this->createMock(MetadataEnabledInterface::class);
-
-        static::assertSame(
-            [],
-            iterator_to_array($this->subject->getMetadata($item))
-        );
-    }
-
-    public function testGetMetadataReturnsMetadata(): void
-    {
-        $item     = $this->createMock(MetadataEnabledInterface::class);
-        $metadata = $this->createMock(Metadata::class);
-
-        $result   = new ArrayIterator([$metadata]);
-        $itemId   = 666;
-        $itemType = 'some-type';
-
-        $item->expects(static::once())
-            ->method('getId')
-            ->willReturn($itemId);
-        $item->expects(static::once())
-            ->method('getMetadataItemType')
-            ->willReturn($itemType);
-
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)
-            ->willReturn(true);
-
-        $this->metadataRepository->expects(static::once())
-            ->method('findByObjectIdAndType')
-            ->with($itemId, $itemType)
-            ->willReturn($result);
-
-        static::assertSame(
-            [$metadata],
-            iterator_to_array($this->subject->getMetadata($item))
-        );
-    }
-
-    public function testDeleteMetadataDeletes(): void
-    {
-        $item = $this->createMock(Metadata::class);
-
-        $this->metadataRepository->expects(static::once())
-            ->method('remove')
-            ->with($item);
-
-        $this->subject->deleteMetadata($item);
-    }
-
-    public function testGetDisabledMetadataFieldsReturnsData(): void
-    {
-        $fieldId1 = 666;
-        $fieldId2 = 42;
-        $name1    = 'some-name1';
-        $name2    = 'some-name2';
-        $name3    = 'some-name3';
-
-        $field = $this->createMock(MetadataField::class);
-
-        $this->configContainer->expects(static::exactly(2))
-            ->method('get')
-            ->with(...self::withConsecutive(
-                [ConfigurationKeyEnum::DISABLED_CUSTOM_METADATA_FIELDS],
-                [ConfigurationKeyEnum::DISABLED_CUSTOM_METADATA_FIELDS_INPUT],
-            ))
-            ->willReturn(
-                $fieldId1 . ',' . $fieldId2,
-                $name2 . ',' . $name3,
-            );
-
-        $this->metadataFieldRepository->expects(static::exactly(2))
-            ->method('findById')
-            ->with(...self::withConsecutive(
-                [$fieldId1],
-                [$fieldId2]
-            ))
-            ->willReturn($field, null);
-
-        $field->expects(static::once())
-            ->method('getName')
-            ->willReturn($name1);
-
-        static::assertSame(
-            [$name1, $name2, $name3],
-            $this->subject->getDisabledMetadataFields()
-        );
-        // test caching
-        static::assertSame(
-            [$name1, $name2, $name3],
-            $this->subject->getDisabledMetadataFields()
-        );
-    }
 
     public function testAddMetadataCreatesNewItem(): void
     {
@@ -215,6 +102,114 @@ class MetadataManagerTest extends TestCase
             $item,
             $name,
             $data
+        );
+    }
+
+    public function testCollectGarbageCollects(): void
+    {
+        $this->metadataRepository->expects(static::once())
+            ->method('collectGarbage');
+
+        $this->metadataFieldRepository->expects(static::once())
+            ->method('collectGarbage');
+
+        $this->subject->collectGarbage();
+    }
+
+    public function testDeleteMetadataDeletes(): void
+    {
+        $item = $this->createMock(Metadata::class);
+
+        $this->metadataRepository->expects(static::once())
+            ->method('remove')
+            ->with($item);
+
+        $this->subject->deleteMetadata($item);
+    }
+
+    public function testGetDisabledMetadataFieldsReturnsData(): void
+    {
+        $fieldId1 = 666;
+        $fieldId2 = 42;
+        $name1    = 'some-name1';
+        $name2    = 'some-name2';
+        $name3    = 'some-name3';
+
+        $field = $this->createMock(MetadataField::class);
+
+        $this->configContainer->expects(static::exactly(2))
+            ->method('get')
+            ->with(...self::withConsecutive(
+                [ConfigurationKeyEnum::DISABLED_CUSTOM_METADATA_FIELDS],
+                [ConfigurationKeyEnum::DISABLED_CUSTOM_METADATA_FIELDS_INPUT],
+            ))
+            ->willReturn(
+                $fieldId1 . ',' . $fieldId2,
+                $name2 . ',' . $name3,
+            );
+
+        $this->metadataFieldRepository->expects(static::exactly(2))
+            ->method('findById')
+            ->with(...self::withConsecutive(
+                [$fieldId1],
+                [$fieldId2]
+            ))
+            ->willReturn($field, null);
+
+        $field->expects(static::once())
+            ->method('getName')
+            ->willReturn($name1);
+
+        self::assertSame(
+            [$name1, $name2, $name3],
+            $this->subject->getDisabledMetadataFields()
+        );
+        // test caching
+        self::assertSame(
+            [$name1, $name2, $name3],
+            $this->subject->getDisabledMetadataFields()
+        );
+    }
+
+    public function testGetMetadataReturnsEmptyResultIfDisabled(): void
+    {
+        $item = $this->createMock(MetadataEnabledInterface::class);
+
+        self::assertSame(
+            [],
+            iterator_to_array($this->subject->getMetadata($item))
+        );
+    }
+
+    public function testGetMetadataReturnsMetadata(): void
+    {
+        $item     = $this->createMock(MetadataEnabledInterface::class);
+        $metadata = $this->createMock(Metadata::class);
+
+        $result   = new ArrayIterator([$metadata]);
+        $itemId   = 666;
+        $itemType = 'some-type';
+
+        $item->expects(static::once())
+            ->method('getId')
+            ->willReturn($itemId);
+        $item->expects(static::once())
+            ->method('getMetadataItemType')
+            ->willReturn($itemType);
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)
+            ->willReturn(true);
+
+        $this->metadataRepository->expects(static::once())
+            ->method('findByObjectIdAndType')
+            ->with($itemId, $itemType)
+            ->willReturn($result);
+
+        self::assertSame(
+            [$metadata],
+            iterator_to_array($this->subject->getMetadata($item))
         );
     }
 
@@ -308,14 +303,16 @@ class MetadataManagerTest extends TestCase
         $this->subject->updateOrAddMetadata($item, $name, $data);
     }
 
-    public function testCollectGarbageCollects(): void
+    protected function setUp(): void
     {
-        $this->metadataRepository->expects(static::once())
-            ->method('collectGarbage');
+        $this->metadataRepository      = $this->createMock(MetadataRepositoryInterface::class);
+        $this->metadataFieldRepository = $this->createMock(MetadataFieldRepositoryInterface::class);
+        $this->configContainer         = $this->createMock(ConfigContainerInterface::class);
 
-        $this->metadataFieldRepository->expects(static::once())
-            ->method('collectGarbage');
-
-        $this->subject->collectGarbage();
+        $this->subject = new MetadataManager(
+            $this->metadataRepository,
+            $this->metadataFieldRepository,
+            $this->configContainer
+        );
     }
 }

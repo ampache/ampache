@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,44 +32,31 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class InstallPluginAction implements ApplicationActionInterface
+final readonly class InstallPluginAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'install_plugin';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
+    public const string REQUEST_KEY = 'install_plugin';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
-    }
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
+        private PluginManagerInterface $pluginManager,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            !$this->requestParser->verifyForm('install_plugin')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || !$this->requestParser->verifyForm('install_plugin')
         ) {
             throw new AccessDeniedException();
         }
@@ -91,8 +78,10 @@ final class InstallPluginAction implements ApplicationActionInterface
 
             return null;
         }
-        $plugin = new Plugin($plugin_name);
-        if ($plugin->_plugin === null || !$plugin->install()) {
+
+        // Existence is confirmed above, so a false result here is an install failure; the manager also runs the
+        // post-install preference rebuild that must never be skipped
+        if (!$this->pluginManager->installPlugin($plugin_name)) {
             $this->logger->error(
                 sprintf('Error: Plugin Install Failed, %s', $plugin_name),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -108,11 +97,6 @@ final class InstallPluginAction implements ApplicationActionInterface
 
             return null;
         }
-
-        Preference::clear_from_session();
-
-        // Don't trust the plugin to this stuff
-        User::rebuild_all_preferences();
 
         /* Show Confirmation */
         $url   = sprintf('%s/modules.php?action=show_plugins', $this->configContainer->getWebPath('/admin'));

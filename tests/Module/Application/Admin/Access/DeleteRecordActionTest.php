@@ -39,66 +39,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class DeleteRecordActionTest extends TestCase
 {
-    private UiInterface&MockObject $ui;
-
     private AccessRepositoryInterface&MockObject $accessRepository;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private RequestParserInterface&MockObject $requestParser;
-
-    private DeleteRecordAction $subject;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
     private ServerRequestInterface&MockObject $request;
-
-    protected function setUp(): void
-    {
-        $this->ui               = $this->createMock(UiInterface::class);
-        $this->requestParser    = $this->createMock(RequestParserInterface::class);
-        $this->accessRepository = $this->createMock(AccessRepositoryInterface::class);
-        $this->configContainer  = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new DeleteRecordAction(
-            $this->ui,
-            $this->accessRepository,
-            $this->configContainer,
-            $this->requestParser
-        );
-
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-    }
-
-    public function testRunThrowsIfAccessIsDenied(): void
-    {
-        static::expectException(AccessDeniedException::class);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->willReturn(false);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
-
-    public function testRunThrowsIfFormVerificationFails(): void
-    {
-        static::expectException(AccessDeniedException::class);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->willReturn(true);
-
-        $this->requestParser->expects(static::once())
-            ->method('verifyForm')
-            ->with('delete_access')
-            ->willReturn(false);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
+    private RequestParserInterface&MockObject $requestParser;
+    private DeleteRecordAction $subject;
+    private UiInterface&MockObject $ui;
 
     public function testRunDeletes(): void
     {
@@ -136,8 +83,55 @@ class DeleteRecordActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
+    }
+
+    public function testRunThrowsIfAccessIsDenied(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->willReturn(false);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    public function testRunThrowsIfFormVerificationFails(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->willReturn(true);
+
+        $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with('delete_access')
+            ->willReturn(false);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui               = $this->createMock(UiInterface::class);
+        $this->requestParser    = $this->createMock(RequestParserInterface::class);
+        $this->accessRepository = $this->createMock(AccessRepositoryInterface::class);
+        $this->configContainer  = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new DeleteRecordAction(
+            $this->ui,
+            $this->accessRepository,
+            $this->configContainer,
+            $this->requestParser
+        );
+
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+        $this->request    = $this->createMock(ServerRequestInterface::class);
     }
 }

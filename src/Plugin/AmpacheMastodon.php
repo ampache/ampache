@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -27,20 +27,27 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheMastodon extends AmpachePlugin implements PluginExternalShareInterface
 {
-    public string $name = 'Mastodon';
-
+    #[Override]
     public string $categories = 'share';
 
+    #[Override]
     public string $description = 'Mastodon share';
 
-    public string $version = '000001';
+    #[Override]
+    public string $max_ampache = '999999';
 
+    #[Override]
     public string $min_ampache = '370027';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'Mastodon';
+
+    #[Override]
+    public string $version = '000001';
 
     /**
      * Constructor
@@ -51,11 +58,30 @@ class AmpacheMastodon extends AmpachePlugin implements PluginExternalShareInterf
     }
 
     /**
+     * external_share
+     */
+    public function external_share(string $url, string $text): string
+    {
+        return AmpConfig::get_web_path() . "/tootpick.html#text=" . rawurlencode($text) . " " . rawurlencode($url);
+    }
+
+    /**
      * install
      * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
+        return true;
+    }
+
+    /**
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
+     */
+    public function load(User $user): bool
+    {
+        unset($user);
+
         return true;
     }
 
@@ -74,25 +100,6 @@ class AmpacheMastodon extends AmpachePlugin implements PluginExternalShareInterf
      */
     public function upgrade(): bool
     {
-        return true;
-    }
-
-    /**
-     * external_share
-     */
-    public function external_share(string $url, string $text): string
-    {
-        return AmpConfig::get_web_path() . "/tootpick.html#text=" . rawurlencode($text) . " " . rawurlencode($url);
-    }
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool
-    {
-        unset($user);
-
         return true;
     }
 }

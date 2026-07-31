@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -30,7 +32,7 @@ interface TalFactoryInterface
 {
     public function createPhpTal(): PhpTalInterface;
 
-    public function createTalView(): TalViewInterface;
-
     public function createTalTranslationService(): TranslationServiceInterface;
+
+    public function createTalView(): TalViewInterface;
 }

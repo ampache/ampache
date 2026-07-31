@@ -35,22 +35,24 @@ final class Migration370040 extends AbstractMigration
 {
     protected array $changelog = ['Add user_activity table'];
 
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 370040) {
+            yield 'user_activity' => "CREATE TABLE IF NOT EXISTS `user_activity` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` INT(11) NOT NULL, `action` varchar(20) NOT NULL, `object_id` INT(11) UNSIGNED NOT NULL, `object_type` varchar(32) NOT NULL, `activity_date` INT(11) UNSIGNED NOT NULL) ENGINE=$engine;";
+        }
+    }
+
     public function migrate(): void
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `user_activity` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` INT(11) NOT NULL, `action` varchar(20) NOT NULL, `object_id` INT(11) UNSIGNED NOT NULL, `object_type` varchar(32) NOT NULL, `activity_date` INT(11) UNSIGNED NOT NULL) ENGINE=$engine;");
-    }
-
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build
-    ): Generator {
-        if ($build > 370040) {
-            yield 'user_activity' => "CREATE TABLE IF NOT EXISTS `user_activity` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` INT(11) NOT NULL, `action` varchar(20) NOT NULL, `object_id` INT(11) UNSIGNED NOT NULL, `object_type` varchar(32) NOT NULL, `activity_date` INT(11) UNSIGNED NOT NULL) ENGINE=$engine;";
-        }
     }
 }

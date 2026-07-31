@@ -30,19 +30,18 @@ use PHPUnit\Framework\TestCase;
 class ObjectNotFoundExceptionTest extends TestCase
 {
     private int $objectId = 666;
-
     private ObjectNotFoundException $subject;
+
+    public function testGetObjectIdReturnsValue(): void
+    {
+        self::assertSame(
+            $this->objectId,
+            $this->subject->getObjectId()
+        );
+    }
 
     protected function setUp(): void
     {
         $this->subject = new ObjectNotFoundException($this->objectId);
-    }
-
-    public function testGetObjectIdReturnsValue(): void
-    {
-        static::assertSame(
-            $this->objectId,
-            $this->subject->getObjectId()
-        );
     }
 }

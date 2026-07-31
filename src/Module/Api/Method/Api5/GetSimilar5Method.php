@@ -25,19 +25,29 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class GetSimilar5Method
+ * Returns similar artist or song ids compared to the input filter.
+ *
+ * Version 5 renders the result as an index of ids instead of full objects, so it keeps a method of
+ * its own.
  */
-final class GetSimilar5Method
+final class GetSimilar5Method implements MethodInterface
 {
-    public const ACTION = 'get_similar';
+    public const string ACTION = 'get_similar';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * get_similar
@@ -51,60 +61,79 @@ final class GetSimilar5Method
      * limit = (integer) //optional
      *
      * @param array{
-     *     filter: string,
-     *     type: string,
+     *     filter?: string,
+     *     type?: string,
      *     offset?: int,
      *     limit?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     *
+     * @throws RequestParamMissingException
      */
-    public static function get_similar(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['type', 'filter'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        foreach (['type', 'filter'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
-        $type      = strtolower((string) $input['type']);
-        $object_id = (int) $input['filter'];
+
+        // the type is matched case insensitively, so everything below works on the normalized name
+        $requestedType = (string) $input['type'];
+        $type          = strtolower($requestedType);
+
+        $objectId = (int) $input['filter'];
+
         // confirm the correct data
         if (!in_array($type, ['song', 'artist'])) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        sprintf('Bad Request: %s', $requestedType),
+                        self::ACTION,
+                        'type'
+                    )
+                )
+            );
         }
+
+        $similar = match ($type) {
+            'artist' => Recommendation::get_artists_like($objectId),
+            'song' => Recommendation::get_songs_like($objectId),
+        };
 
         $results = [];
-        $similar = [];
-        switch ($type) {
-            case 'artist':
-                $similar = Recommendation::get_artists_like($object_id);
-                break;
-            case 'song':
-                $similar = Recommendation::get_songs_like($object_id);
-        }
         foreach ($similar as $child) {
             $results[] = (int) $child['id'];
         }
-        if (empty($results)) {
-            Api5::empty($type, $input['api_format']);
 
-            return false;
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, $type)
+                )
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::indexes($results, $type, $user, $input['auth']);
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::indexes($results, $type, $user, $input['auth']);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->indexes($apiVersion, $results, $type, $user, $input['auth'])
+            )
+        );
     }
 }

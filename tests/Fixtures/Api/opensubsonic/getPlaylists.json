@@ -1,0 +1,193 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "type": "ampache",
+        "serverVersion": "8.0.0",
+        "openSubsonic": true,
+        "playlists": {
+            "playlist": [
+                {
+                    "id": "sp-14",
+                    "name": "Album 1*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-13",
+                    "name": "Album 2*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-12",
+                    "name": "Album 3*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-11",
+                    "name": "Album 4*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-10",
+                    "name": "Album 5*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-9",
+                    "name": "Artist 1*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-8",
+                    "name": "Artist 2*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-7",
+                    "name": "Artist 3*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-6",
+                    "name": "Artist 4*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-5",
+                    "name": "Artist 5*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-19",
+                    "name": "Song 1*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-18",
+                    "name": "Song 2*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-17",
+                    "name": "Song 3*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-16",
+                    "name": "Song 4*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 0,
+                    "duration": 0,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                },
+                {
+                    "id": "sp-15",
+                    "name": "Song 5*",
+                    "owner": "System",
+                    "public": true,
+                    "songCount": 1,
+                    "duration": 266,
+                    "created": "1970-01-01T00:00:00+00:00",
+                    "changed": "2026-07-19T05:13:30+00:00",
+                    "readonly": false,
+                    "validUntil": "2026-07-19T05:18:30+00:00"
+                }
+            ]
+        }
+    }
+}

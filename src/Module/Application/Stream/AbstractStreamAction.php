@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,32 +45,23 @@ use Psr\Log\LoggerInterface;
 
 abstract class AbstractStreamAction implements ApplicationActionInterface
 {
-    protected function __construct(
+    public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly ConfigContainerInterface $configContainer
-    ) {
-    }
+        private readonly ConfigContainerInterface $configContainer,
+    ) {}
 
     /**
      * @throws ApplicationException
      */
     protected function preCheck(
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): bool {
-        if (!defined('NO_SESSION')) {
-            /* If we are running a demo, quit while you still can! */
-            if (
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-                (
-                    $this->configContainer->isAuthenticationEnabled() &&
-                    $gatekeeper->mayAccess(
-                        AccessTypeEnum::INTERFACE,
-                        AccessLevelEnum::fromTextual(($this->configContainer->get('webplayer_level') ?? 'user'))
-                    ) === false
-                )
-            ) {
-                throw new AccessDeniedException();
-            }
+        /* If we are running a demo, quit while you still can! */
+        if (!defined('NO_SESSION') && ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) || $this->configContainer->isAuthenticationEnabled() && $gatekeeper->mayAccess(
+            AccessTypeEnum::INTERFACE,
+            AccessLevelEnum::fromTextual(($this->configContainer->get('webplayer_level') ?? 'user'))
+        ) === false)) {
+            throw new AccessDeniedException();
         }
 
         return true;
@@ -79,15 +70,16 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
     /**
      * @throws ApplicationException
      *
-     * @param list<array{object_type: LibraryItemEnum, object_id: int}> $mediaIds
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int, client?: string, player?: string, cache?: string, format?: string, transcode_to?: string}> $mediaIds
+     * @param list<string> $urls
      */
     protected function stream(
         array $mediaIds,
         array $urls,
         string $streamType = '',
-        ?string $fileName = null
+        ?string $fileName = null,
     ): ?ResponseInterface {
-        if ($streamType == 'stream') {
+        if ($streamType === 'stream') {
             $streamType = $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_TYPE);
         }
 
@@ -97,18 +89,16 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
         );
         if ($mediaIds !== [] || $urls !== []) {
             $user = Core::get_global('user');
-            if (!defined('NO_SESSION') && $streamType != 'democratic') {
-                if (!User::stream_control($mediaIds)) {
-                    $this->logger->warning(
-                        'Stream control failed for user ' . $user?->username,
-                        [LegacyLogger::CONTEXT_TYPE => self::class]
-                    );
-                    throw new AccessDeniedException();
-                }
+            if (!defined('NO_SESSION') && $streamType != 'democratic' && !User::stream_control($mediaIds)) {
+                $this->logger->warning(
+                    'Stream control failed for user ' . $user?->username,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+                throw new AccessDeniedException();
             }
 
             if ($user instanceof User && $user->getId() > -1) {
-                Session::update_username(Stream::get_session(), (string)$user->username);
+                Session::update_username(Stream::get_session(), (string) $user->username);
             }
 
             $playlist = new Stream_Playlist();
@@ -121,7 +111,8 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
                 );
                 $playlist->add($mediaIds);
             }
-            if (!empty($urls)) {
+
+            if ($urls !== []) {
                 $this->logger->debug(
                     sprintf('Stream Type: %s Loading URL: %s', $streamType, $urls[0]),
                     [LegacyLogger::CONTEXT_TYPE => self::class]

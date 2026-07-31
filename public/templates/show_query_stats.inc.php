@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_query_stats.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
@@ -31,11 +33,11 @@ use Ampache\Repository\Model\database_object;
 if (AmpConfig::get('show_footer_statistics')) {
     $load_time_end = microtime(true);
     $load_time     = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4);
-    echo '<br />' .
-        '<span class="query-count">' .
-        T_('Queries: ') . Dba::$stats['query'] . ' | ' .
-        T_('Cache Hits: ') . database_object::$cache_hit . ' | ' .
-        T_('Load Time: ') . $load_time . ' | ' .
-        Ui::format_bytes(memory_get_peak_usage(true)) .
-        '</span>'; ?>
+    echo '<br />'
+        . '<span class="query-count">'
+        . T_('Queries: ') . Dba::$stats['query'] . ' | '
+        . T_('Cache Hits: ') . database_object::$cache_hit . ' | '
+        . T_('Load Time: ') . $load_time . ' | '
+        . Ui::format_bytes(memory_get_peak_usage(true))
+        . '</span>'; ?>
 <?php } ?>

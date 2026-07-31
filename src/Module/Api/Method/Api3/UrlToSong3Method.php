@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
  */
 final class UrlToSong3Method
 {
-    public const ACTION = 'url_to_song';
+    public const string ACTION = 'url_to_song';
 
     /**
      * url_to_song

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -42,126 +42,121 @@ use Ampache\Repository\Model\Video;
 
 class Stream
 {
+    /**
+     * Players that get a `transcode_bitrate_<player>` preference of their own, matching the players that
+     * already have an `encode_player_<player>_target` format override. Anything else uses the default rate.
+     *
+     * @var list<string>
+     */
+    public const array BITRATE_OVERRIDE_PLAYERS = ['webplayer', 'api'];
+
+    /**
+     * The highest bitrate each lossy target can actually encode, in bps. A rate above the ceiling is meaningless to
+     * the encoder and libmp3lame simply refuses it, so a lossless source rate has to be clamped before it reaches a
+     * lossy target. Lossless outputs are absent because their rate follows the sample format rather than a setting.
+     *
+     * @var array<string, int>
+     */
+    public const array FORMAT_MAX_BITRATE = [
+        'mp3' => 320000,
+        'ogg' => 500000,
+        'opus' => 512000,
+        'm4a' => 512000,
+    ];
+
+    /**
+     * Output formats that must never be served from or written to the transcode cache.
+     * Their loudness normalisation is applied per-source at stream time, so a cached copy
+     * (keyed only by object + target extension) would be wrong for every other request.
+     *
+     * @var list<string>
+     */
+    public const array NON_CACHEABLE_FORMATS = ['mp3_rg', 'mp3_car', 'opus_rg', 'opus_car'];
+
+    /**
+     * Classification of the transcode output formats offered in the preferences picker.
+     * A format is only actually available when a matching `encode_args_<format>` config key exists.
+     *
+     * @var array<string, list<string>>
+     */
+    private const array ENCODE_FORMAT_KINDS = [
+        'audio' => ['mp3', 'ogg', 'opus', 'm4a', 'wav', 'mp3_rg', 'mp3_car', 'opus_rg', 'opus_car'],
+        'video' => ['flv', 'webm', 'ts', 'ogv'],
+    ];
+
     private static string $session = '';
 
     /**
-     * set_session
+     * check_lock_media
      *
-     * This overrides the normal session value, without adding another session into the database, should be called with care
+     * This checks to see if the media is already being played.
      */
-    public static function set_session(int|string $sid): void
+    public static function check_lock_media(int $media_id, string $type): bool
     {
-        if (!empty($sid)) {
-            self::$session = (string)$sid;
+        $sql        = "SELECT `object_id` FROM `now_playing` WHERE `object_id` = ? AND `object_type` = ?";
+        $db_results = Dba::read($sql, [$media_id, $type]);
+
+        if (Dba::num_rows($db_results) !== 0) {
+            debug_event(self::class, 'Unable to play media currently locked by another user', 3);
+
+            return false;
         }
+
+        return true;
     }
 
     /**
-     * get_session
+     * clear_now_playing
+     *
+     * There really isn't anywhere else for this function, shouldn't have
+     * deleted it in the first place.
      */
-    public static function get_session(): string
+    public static function clear_now_playing(): bool
     {
-        if (!self::$session) {
-            // Generate the session ID.  This is slightly wasteful.
-            $data         = [];
-            $data['type'] = 'stream';
-            // This shouldn't be done here but at backend endpoint side
-            if (Core::get_request('client') !== '') {
-                $data['agent'] = Core::get_request('client');
-            }
+        $sql = 'TRUNCATE `now_playing`';
+        Dba::write($sql);
 
-            // Copy session geolocation
-            // Same thing, should be done elsewhere
-            $sid = session_id();
-            if ($sid) {
-                $location = Session::get_geolocation($sid);
-                if (isset($location['latitude'])) {
-                    $data['geo_latitude'] = $location['latitude'];
-                }
-                if (isset($location['longitude'])) {
-                    $data['geo_longitude'] = $location['longitude'];
-                }
-                if (isset($location['name'])) {
-                    $data['geo_name'] = $location['name'];
-                }
-            }
-
-            self::$session = Session::create($data);
-        }
-
-        return self::$session;
+        return true;
     }
 
     /**
-     * Get transcode format for media based on config settings
+     * delete_now_playing
+     *
+     * This will delete the Now Playing data.
      */
-    public static function get_transcode_format(
-        string $source,
-        ?string $target = null,
-        ?string $player = null,
-        string $media_type = 'song'
-    ): ?string {
-        // check if we've done this before
-        $format = self::get_output_cache($source, $target, $player, $media_type);
-        if (!empty($format)) {
-            return $format;
-        }
-        $input_target = $target;
-        // default target for songs
-        $setting_target = 'encode_target';
-        // default target for video
-        if ($media_type != 'song') {
-            $setting_target = 'encode_' . $media_type . '_target';
-        }
-        if (!$player && in_array($media_type, ['song', 'podcast_episode'])) {
-            $player = 'webplayer';
-        }
-        // webplayer / api transcode actions
-        $has_player_target = false;
-        if ($player) {
-            // encode target for songs in webplayer/api
-            $encode_target = 'encode_player_' . $player . '_target';
-            if ($media_type != 'song') {
-                // encode target for video in webplayer/api
-                $encode_target = 'encode_' . $media_type . '_player_' . $player . '_target';
-            }
-            $has_player_target = AmpConfig::get($encode_target);
-        }
-        $has_default_target = AmpConfig::get($setting_target);
-        $has_codec_target   = AmpConfig::get('encode_target_' . $source);
+    public static function delete_now_playing(string $sid, int $object_id, string $type, int $uid): void
+    {
+        // Clear the now playing entry for this item
+        $sql = "DELETE FROM `now_playing` WHERE `id` = ? AND `object_id` = ? AND `object_type` = ? AND `user` = ?;";
+        Dba::write($sql, [$sid, $object_id, strtolower($type), $uid]);
+    }
 
-        // Fall backwards from the specific transcode formats to default
-        // TARGET > PLAYER > CODEC > DEFAULT
-        if ($target) {
-            return $target;
-        } elseif ($has_player_target && $source !== $has_player_target) {
-            $target = $has_player_target;
-            debug_event(self::class, 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_codec_target && $source !== $has_codec_target) {
-            $target = $has_codec_target;
-            debug_event(self::class, 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_default_target && $source !== $has_default_target) {
-            $target = $has_default_target;
-            debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
-        }
-        // fall back to resampling if no default
-        if (!$target) {
-            $target = $source;
-        }
-        self::set_output_cache($target, $source, $input_target, $player, $media_type);
-
-        return $target;
+    /**
+     * garbage_collection
+     *
+     * This will garbage collect the Now Playing data,
+     * this is done on every play start.
+     */
+    public static function garbage_collection(): void
+    {
+        // Remove any Now Playing entries for sessions that have been GC'd
+        $sql = "DELETE FROM `now_playing` USING `now_playing` LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` WHERE (`session`.`id` IS NULL AND `now_playing`.`id` NOT IN (SELECT `username` FROM `user`)) OR `now_playing`.`expire` < '" . time() . "'";
+        Dba::write($sql);
     }
 
     /**
      * get_allowed_bitrate
+     *
+     * Work out the bitrate this user is allowed for the given player, after the site-wide dynamic downsampling
+     * constraints. Passing null, or a player with no override of its own, uses the default `transcode_bitrate`.
      */
-    public static function get_allowed_bitrate(): int
+    public static function get_allowed_bitrate(?string $player = null): int
     {
-        $max_bitrate = AmpConfig::get('max_bit_rate');
-        $min_bitrate = AmpConfig::get('min_bit_rate', 8);
-        // FIXME: This should be configurable for each output type
-        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
+        // All bitrate values (transcode_bitrate, max_bit_rate, min_bit_rate) are stored and
+        // handled in bits per second (bps). max_bit_rate/min_bit_rate are per-user preferences.
+        $max_bitrate   = (int) AmpConfig::get('max_bit_rate', 0);
+        $min_bitrate   = (int) AmpConfig::get('min_bit_rate', 8000);
+        $user_bit_rate = self::get_player_bitrate($player);
 
         // If the user's crazy, that's no skin off our back
         if ($user_bit_rate < $min_bitrate) {
@@ -183,7 +178,7 @@ class Stream
             $bit_rate = floor($max_bitrate / $active_streams);
 
             // Exit if this would be insane
-            if ($bit_rate < ($min_bitrate ?? 8)) {
+            if ($bit_rate < ($min_bitrate ?: 8000)) {
                 debug_event(self::class, 'Max transcode bandwidth already allocated. Active streams: ' . $active_streams, 2);
                 header('HTTP/1.1 503 Service Temporarily Unavailable');
 
@@ -198,7 +193,358 @@ class Stream
             $bit_rate = $user_bit_rate;
         }
 
-        return (int)$bit_rate;
+        return (int) $bit_rate;
+    }
+
+    /**
+     * get_available_encode_formats
+     *
+     * Return the transcode output formats of a given kind ('audio'|'video') that are actually
+     * configured (a matching `encode_args_<format>` exists). Used to populate the preference pickers
+     * so the list reflects real server capabilities, including the ReplayGain (_rg/_car) profiles.
+     *
+     * @return list<string>
+     */
+    public static function get_available_encode_formats(string $kind): array
+    {
+        $formats = self::ENCODE_FORMAT_KINDS[$kind] ?? [];
+
+        return array_values(
+            array_filter(
+                $formats,
+                static fn(string $format): bool => !empty(AmpConfig::get('encode_args_' . $format))
+            )
+        );
+    }
+
+    /**
+     * get_base_format
+     *
+     * The container behind a transcode target. The ReplayGain and car profiles are the same encoder with extra
+     * loudness filters, so `mp3_rg` still produces an mp3 and must be named, typed and measured as one.
+     */
+    public static function get_base_format(?string $format): string
+    {
+        if (in_array($format, [null, '', '0'], true)) {
+            return '';
+        }
+
+        return (string) preg_replace('/_(rg|car)$/', '', $format);
+    }
+
+    /**
+     * get_base_url
+     * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
+     */
+    public static function get_base_url(bool $local = false, ?string $streamToken = null): string
+    {
+        $base_url = '/play/index.php?';
+
+        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+            $session_id = (in_array($streamToken, [null, '', '0'], true))
+                ? self::get_session()
+                : $streamToken;
+            $base_url .= 'ssid=' . $session_id . '&';
+        }
+
+        $web_path = ($local)
+            ? AmpConfig::get('local_web_path')
+            : AmpConfig::get_web_path();
+        if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
+            $web_path = rtrim((string) AmpConfig::get('fallback_url'), '/');
+        }
+
+        if (AmpConfig::get('force_http_play')) {
+            $web_path = str_replace("https://", "http://", $web_path);
+        }
+
+        $http_port = ($local && preg_match("/:(\d+)/", (string) $web_path, $matches))
+            ? $matches[1]
+            : AmpConfig::get('http_port');
+        if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
+            if (preg_match("/:(\d+)/", (string) $web_path, $matches)) {
+                $web_path = str_replace(':' . $matches[1], ':' . $http_port, (string) $web_path);
+            } else {
+                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string) $web_path);
+            }
+        }
+
+        return $web_path . $base_url;
+    }
+
+    /**
+     * get_format_max_bitrate
+     *
+     * The ceiling a transcode target can encode at, or 0 when the format has no meaningful limit.
+     */
+    public static function get_format_max_bitrate(?string $format): int
+    {
+        return self::FORMAT_MAX_BITRATE[self::get_base_format($format)] ?? 0;
+    }
+
+    /**
+     * get_image_preview
+     */
+    public static function get_image_preview(Video $media): ?string
+    {
+        $image = null;
+        $sec   = mt_rand((int) ($media->time * 0.2), (int) ($media->time * 0.8));
+        $frame = gmdate("H:i:s", $sec);
+
+        if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
+            $command    = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
+            $string_map = [
+                '%FILE%' => self::_scrub_arg($media->file),
+                '%TIME%' => $frame
+            ];
+            foreach ($string_map as $search => $replace) {
+                $command = str_replace($search, $replace, $command, $ret);
+                if ($ret === 0) {
+                    debug_event(self::class, $search . ' not in transcode command', 5);
+                }
+            }
+
+            $proc = self::_start_process($command);
+
+            if (is_resource($proc['handle'])) {
+                $image = '';
+                do {
+                    $image .= fread($proc['handle'], 1024);
+                } while (!feof($proc['handle']));
+
+                fclose($proc['handle']);
+            }
+        } else {
+            debug_event(self::class, 'Missing transcode_cmd / encode_get_image parameters to generate media preview.', 3);
+        }
+
+        return $image;
+    }
+
+    /**
+     * get_latest_now_playing
+     *
+     * Return the most recently registered now-playing song/video for one of the given streaming session keys.
+     * Used by the web player to resolve the real internal media that a random or democratic stream is actually playing
+     * (those items only carry a placeholder in the client playlist).
+     *
+     * @param list<string> $session_ids
+     * @return array{object_id: int, object_type: string}|null
+     */
+    public static function get_latest_now_playing(array $session_ids): ?array
+    {
+        $session_ids = array_values(array_filter($session_ids, static fn(string $sid): bool => $sid !== ''));
+        if ($session_ids === []) {
+            return null;
+        }
+
+        $placeholders = implode(', ', array_fill(0, count($session_ids), '?'));
+        $sql          = "SELECT `object_id`, `object_type` FROM `now_playing` WHERE `id` IN ($placeholders) AND `object_type` IN ('song', 'video') ORDER BY `insertion` DESC LIMIT 1";
+        $db_results   = Dba::read($sql, $session_ids);
+        $row          = Dba::fetch_assoc($db_results);
+        if ($row === []) {
+            return null;
+        }
+
+        return [
+            'object_id' => (int) $row['object_id'],
+            'object_type' => (string) $row['object_type'],
+        ];
+    }
+
+    /**
+     * get_max_bitrate
+     *
+     * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
+     * @param array{format?: string, command?: string} $transcode_settings
+     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
+     */
+    public static function get_max_bitrate(
+        Podcast_Episode|Video|Song $media,
+        array $transcode_settings,
+        array $options,
+        ?string $player = null,
+    ): int {
+        // don't ignore user bitrates
+        $bit_rate = self::get_allowed_bitrate($player);
+        if (!array_key_exists('bitrate', $options)) {
+            // Validate the bitrate
+            $bit_rate = self::validate_bitrate($bit_rate);
+        } elseif ($bit_rate > ((int) $options['bitrate']) || $bit_rate === 0) {
+            // use the file bitrate if lower than the gathered
+            $bit_rate = $options['bitrate'];
+        }
+
+        // No limit set means stream at whatever the file already carries. Left at zero it reads as an unknown rate
+        // everywhere downstream, so the transcoder gets no target and the content-length guess is dropped entirely.
+        if ($bit_rate <= 0 && isset($media->bitrate) && $media->bitrate > 0) {
+            $bit_rate = self::validate_bitrate((int) $media->bitrate);
+            debug_event(self::class, 'No bitrate limit configured, using the source rate ' . $bit_rate, 5);
+        }
+
+        debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
+
+        // Never upsample a media ($media->bitrate and $bit_rate are both bps)
+        if (
+            isset($media->bitrate)
+            && isset($transcode_settings['format'])
+            && $media->type == $transcode_settings['format']
+            && $bit_rate > $media->bitrate
+            && $media->bitrate > 0
+        ) {
+            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $media->bitrate, 5);
+            $bit_rate = self::validate_bitrate((int) $media->bitrate);
+        }
+
+        // Whatever the rate came from, the target format has to be able to carry it. Without this a lossless source
+        // rate reaches a lossy encoder unchanged, which is how a flac at ~1000 kbps ends up asking mp3 for 1000 kbps.
+        $target_format = $transcode_settings['format'] ?? null;
+        $format_max    = self::get_format_max_bitrate($target_format);
+        if ($format_max > 0 && $bit_rate > $format_max) {
+            debug_event(self::class, 'Clamping bitrate to the ' . $target_format . ' maximum of ' . $format_max, 5);
+            $bit_rate = $format_max;
+        }
+
+        return (int) $bit_rate;
+    }
+
+    /**
+     * get_now_playing
+     *
+     * This returns the Now Playing information
+     * @return array<int, array{
+     *     media: library_item,
+     *     client: User,
+     *     agent: string,
+     *     expire: int,
+     *     position_ms: ?int,
+     *     playback_rate: ?float,
+     *     state: ?string
+     * }>
+     */
+    public static function get_now_playing(int $user_id = 0): array
+    {
+        $sql    = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
+        $params = [];
+
+        if (AmpConfig::get('now_playing_per_user')) {
+            $sql .= "INNER JOIN (SELECT MAX(`insertion`) AS `max_insertion`, `user` FROM `now_playing` GROUP BY `user`) `np2` ON `np`.`user` = `np2`.`user` AND `np`.`insertion` = `np2`.`max_insertion` ";
+        }
+
+        $sql .= "WHERE `np`.`object_type` IN ('song', 'video') ";
+
+        // We need to check only for users which have allowed view of personal info
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) && Core::get_global('user') instanceof User) {
+            $current_user = Core::get_global('user')->getId();
+            $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`name`='allow_personal_info_now' AND `value`='1') OR `user` = ?))) ";
+            $params[] = $current_user;
+        }
+
+        $sql .= "ORDER BY `np`.`expire` DESC";
+        //debug_event(self::class, 'get_now_playing ' . $sql, 5);
+
+        $db_results = Dba::read($sql, $params);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $className = ObjectTypeToClassNameMapper::map($row['object_type']);
+            /** @var Song|Video $media */
+            $media = new $className($row['object_id']);
+            if ($media->isNew()) {
+                continue;
+            }
+
+            if (($user_id === 0 || (int) $row['user'] === $user_id) && Catalog::has_access($media->getCatalogId(), (int) $row['user'])) {
+                $client = new User($row['user']);
+                if ($client->isNew()) {
+                    continue;
+                }
+
+                $results[] = [
+                    'media' => $media,
+                    'client' => $client,
+                    'agent' => $row['agent'],
+                    'expire' => (int) $row['expire'],
+                    'position_ms' => (isset($row['position_ms'])) ? (int) $row['position_ms'] : null,
+                    'playback_rate' => (isset($row['playback_rate'])) ? (float) $row['playback_rate'] : null,
+                    'state' => (isset($row['state'])) ? (string) $row['state'] : null,
+                ];
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_output_cache
+     */
+    public static function get_output_cache(
+        string $source,
+        ?string $target = null,
+        ?string $player = null,
+        string $media_type = 'song',
+    ): string {
+        if (!empty($GLOBALS['transcode'])) {
+            return $GLOBALS['transcode'][$source][$target ?? ''][$player ?? ''][$media_type] ?? '';
+        }
+
+        return '';
+    }
+
+    /**
+     * get_player_bitrate
+     *
+     * Return the bitrate (bps) this user wants for a given player, falling back to their default rate whenever
+     * that player carries no override of its own; an override stored as 0 counts as unset. Only the web player
+     * and the API can be overridden, so every other caller takes `transcode_bitrate` as it stands.
+     */
+    public static function get_player_bitrate(?string $player = null): int
+    {
+        if ($player !== null && in_array($player, self::BITRATE_OVERRIDE_PLAYERS, true)) {
+            $override = (int) AmpConfig::get('transcode_bitrate_' . $player, 0);
+            if ($override > 0) {
+                return $override;
+            }
+        }
+
+        return (int) AmpConfig::get('transcode_bitrate', 128000);
+    }
+
+    /**
+     * get_session
+     */
+    public static function get_session(): string
+    {
+        if (self::$session === '' || self::$session === '0') {
+            // Generate the session ID.  This is slightly wasteful.
+            $data         = [];
+            $data['type'] = 'stream';
+            // This shouldn't be done here but at backend endpoint side
+            if (Core::get_request('client') !== '') {
+                $data['agent'] = Core::get_request('client');
+            }
+
+            // Copy session geolocation
+            // Same thing, should be done elsewhere
+            $sid = session_id();
+            if ($sid) {
+                $location = Session::get_geolocation($sid);
+                if (isset($location['latitude'])) {
+                    $data['geo_latitude'] = $location['latitude'];
+                }
+
+                if (isset($location['longitude'])) {
+                    $data['geo_longitude'] = $location['longitude'];
+                }
+
+                if (isset($location['name'])) {
+                    $data['geo_name'] = $location['name'];
+                }
+            }
+
+            self::$session = Session::create($data);
+        }
+
+        return self::$session;
     }
 
     /**
@@ -226,11 +572,110 @@ class Stream
         if ($transcode != 'required') {
             $types[] = 'native';
         }
+
         if (make_bool($transcode)) {
             $types[] = 'transcode';
         }
 
         return $types;
+    }
+
+    /**
+     * get_transcode_bitrate
+     *
+     * The rate a transcode will actually be encoded at. A rate asked for by name takes precedence over the user's
+     * allowance, but the target format's ceiling applies either way, so callers that only want to describe the
+     * stream (a content length, say) resolve the same number the encoder is handed.
+     *
+     * @param array{format?: string, command?: string} $transcode_settings
+     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
+     */
+    public static function get_transcode_bitrate(
+        Podcast_Episode|Video|Song $media,
+        array $transcode_settings,
+        array $options = [],
+        ?string $player = null,
+    ): int {
+        $bit_rate = isset($options['bitrate'])
+            ? (int) $options['bitrate']
+            : self::get_max_bitrate($media, $transcode_settings, $options, $player);
+
+        // A named rate never reaches get_max_bitrate, so its ceiling check has to be repeated here.
+        $format_max = self::get_format_max_bitrate($transcode_settings['format'] ?? null);
+        if ($format_max > 0 && $bit_rate > $format_max) {
+            debug_event(self::class, 'Clamping requested bitrate to the format maximum of ' . $format_max, 5);
+            $bit_rate = $format_max;
+        }
+
+        return $bit_rate;
+    }
+
+    /**
+     * Get transcode format for media based on config settings
+     */
+    public static function get_transcode_format(
+        string $source,
+        ?string $target = null,
+        ?string $player = null,
+        string $media_type = 'song',
+    ): ?string {
+        // check if we've done this before
+        $format = self::get_output_cache($source, $target, $player, $media_type);
+        if ($format !== '' && $format !== '0') {
+            return $format;
+        }
+
+        $input_target = $target;
+        // default target for songs
+        $setting_target = 'encode_target';
+        // default target for video
+        if ($media_type !== 'song') {
+            $setting_target = 'encode_' . $media_type . '_target';
+        }
+
+        if (!$player && in_array($media_type, ['song', 'podcast_episode'], true)) {
+            $player = 'webplayer';
+        }
+
+        // webplayer / api transcode actions
+        $has_player_target = false;
+        if ($player) {
+            // encode target for songs in webplayer/api
+            $encode_target = 'encode_player_' . $player . '_target';
+            if ($media_type !== 'song') {
+                // encode target for video in webplayer/api
+                $encode_target = 'encode_' . $media_type . '_player_' . $player . '_target';
+            }
+
+            $has_player_target = AmpConfig::get($encode_target);
+        }
+
+        $has_default_target = AmpConfig::get($setting_target);
+        $has_codec_target   = AmpConfig::get('encode_target_' . $source);
+
+        // Fall backwards from the specific transcode formats to default
+        // TARGET > PLAYER > CODEC > DEFAULT
+        if ($target) {
+            return $target;
+        } elseif ($has_player_target && $source !== $has_player_target) {
+            $target = $has_player_target;
+            debug_event(self::class, 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
+        } elseif ($has_codec_target && $source !== $has_codec_target) {
+            $target = $has_codec_target;
+            debug_event(self::class, 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
+        } elseif ($has_default_target && $source !== $has_default_target) {
+            $target = $has_default_target;
+            debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
+        }
+
+        // fall back to resampling if no default
+        if (!$target) {
+            $target = $source;
+        }
+
+        self::set_output_cache($target, $source, $input_target, $player, $media_type);
+
+        return $target;
     }
 
     /**
@@ -245,7 +690,7 @@ class Stream
         ?string $target = null,
         ?string $player = null,
         string $media_type = 'song',
-        array $options = []
+        array $options = [],
     ): array {
         $target = self::get_transcode_format($source, $target, $player, $media_type);
         $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?? AmpConfig::get('transcode_cmd');
@@ -259,9 +704,11 @@ class Stream
         if (AmpConfig::get('encode_ss_frame') && array_key_exists('frame', $options)) {
             $args .= ' ' . AmpConfig::get('encode_ss_frame');
         }
+
         if (AmpConfig::get('encode_ss_duration') && array_key_exists('duration', $options)) {
             $args .= ' ' . AmpConfig::get('encode_ss_duration');
         }
+
         $args .= ' ' . AmpConfig::get('transcode_input');
 
         if (AmpConfig::get('encode_srt') && array_key_exists('subtitle', $options)) {
@@ -271,13 +718,14 @@ class Stream
 
         $argst = AmpConfig::get('encode_args_' . $target);
         if (
-            !$argst ||
-            !$target
+            !$argst
+            || !$target
         ) {
             debug_event(self::class, 'Target format ' . $target . ' is not properly configured', 2);
 
             return [];
         }
+
         $args .= ' ' . $argst;
 
         debug_event(self::class, 'Command: ' . $cmd . ' Arguments:' . $args, 5);
@@ -289,19 +737,82 @@ class Stream
     }
 
     /**
-     * get_output_cache
+     * insert_now_playing
+     *
+     * This will insert the Now Playing data.
      */
-    public static function get_output_cache(
-        string $source,
-        ?string $target = null,
-        ?string $player = null,
-        string $media_type = 'song'
-    ): string {
-        if (!empty($GLOBALS['transcode'])) {
-            return $GLOBALS['transcode'][$source][$target ?? ''][$player ?? ''][$media_type] ?? '';
+    public static function insert_now_playing(
+        int $object_id,
+        int $uid,
+        int $length,
+        string $sid,
+        string $type,
+        ?int $previous = null,
+        ?int $position_ms = null,
+        ?float $playback_rate = null,
+        ?string $state = null,
+    ): void {
+        if (!$previous) {
+            $previous = time();
         }
 
-        return '';
+        // Ensure that this client only has a single row; the last three are null unless `reportPlayback` sent them
+        $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`, `position_ms`, `playback_rate`, `state`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, [$sid, $object_id, strtolower($type), $uid, time() + $length, $previous, $position_ms, $playback_rate, $state]);
+    }
+
+    /**
+     * kill_process
+     */
+    public static function kill_process(array $transcoder): void
+    {
+        $status = proc_get_status($transcoder['process']);
+        if ($status['running']) {
+            $pid = $status['pid'];
+            debug_event(self::class, 'WARNING Stream is probably being killed early! pid:' . $pid, 1);
+
+            (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec('kill -9 ' . $pid) : exec('taskkill /F /T /PID ' . $pid);
+
+            proc_close($transcoder['process']);
+        } else {
+            debug_event(self::class, 'Process is not running, kill skipped.', 5);
+        }
+    }
+
+    /**
+     * run_playlist_method
+     *
+     * This takes care of the different types of 'playlist methods'. The
+     * reason this is here is because it deals with streaming rather than
+     * playlist mojo. If something needs to happen this will echo the
+     * javascript required to cause a reload of the iframe.
+     */
+    public static function run_playlist_method(): bool
+    {
+        // If this wasn't ajax included run away
+        if (!defined('AJAX_INCLUDE')) {
+            return false;
+        }
+
+        switch (AmpConfig::get('playlist_method')) {
+            case 'send':
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket';
+                break;
+            case 'send_clear':
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket&playlist_method=clear';
+                break;
+            case 'clear':
+            case 'default':
+            default:
+                return true;
+        }
+
+        // Load our javascript
+        echo "<script>";
+        echo Core::get_reloadutil() . "('" . $_SESSION['iframe']['target'] . "');";
+        echo "</script>";
+
+        return true;
     }
 
     /**
@@ -312,12 +823,66 @@ class Stream
         string $source,
         ?string $target = null,
         ?string $player = null,
-        string $media_type = 'song'
+        string $media_type = 'song',
     ): void {
         if (empty($GLOBALS['transcode']) || !is_array($GLOBALS['transcode'])) {
             $GLOBALS['transcode'] = [];
         }
+
         $GLOBALS['transcode'][$source][$target ?? ''][$player ?? ''][$media_type] = $output;
+    }
+
+    /**
+     * set_session
+     *
+     * This overrides the normal session value, without adding another session into the database, should be called with care
+     */
+    public static function set_session(int|string $sid): void
+    {
+        if ($sid !== 0 && ($sid !== '' && $sid !== '0')) {
+            self::$session = (string) $sid;
+        }
+    }
+
+    /**
+     * skip_transcode
+     * True when a transcode would hand back the source format at (or above) the rate it already has, which can only
+     * lose quality, so the original file is the better stream. Rates are bps and 0 means "not requested"; an unknown
+     * source rate or a different output format never skips because that conversion is the point of the transcode.
+     */
+    public static function skip_transcode(
+        ?string $output_format,
+        string $source_format,
+        int $source_rate,
+        int $requested_rate = 0,
+        int $max_rate = 0,
+        ?string $player = null,
+    ): bool {
+        if ($output_format !== $source_format || $source_rate <= 0) {
+            return false;
+        }
+
+        $target_rate = ($requested_rate > 0)
+            ? $requested_rate
+            : self::get_allowed_bitrate($player);
+
+        // With no limit configured the target is the source rate, so there is nothing to downsample towards and
+        // re-encoding the file into its own format would only cost quality.
+        if ($target_rate <= 0) {
+            $target_rate = $source_rate;
+        }
+
+        if ($max_rate > 0 && $max_rate < $target_rate) {
+            $target_rate = $max_rate;
+        }
+
+        if ($target_rate < $source_rate) {
+            return false;
+        }
+
+        debug_event(self::class, 'Not transcoding ' . $source_format . ' to itself; target ' . $target_rate . ' is not below the source bitrate ' . $source_rate, 4);
+
+        return true;
     }
 
     /**
@@ -337,65 +902,75 @@ class Stream
     public static function start_transcode(
         Podcast_Episode|Video|Song $media,
         array $transcode_settings,
-        array|string $options = []
+        array|string $options = [],
+        ?string $player = null,
     ): array {
         $out_file = false;
         if (is_string($options)) {
             $out_file = $options;
             $options  = [];
         }
+
         // Bail out early if we're unutterably broken
-        if (empty($transcode_settings)) {
+        if ($transcode_settings === [] || !array_key_exists('command', $transcode_settings) || !array_key_exists('format', $transcode_settings)) {
             debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
 
             return [];
         }
-        $song_file = self::scrub_arg($media->file);
-        $bit_rate  = (isset($options['bitrate']))
-            ? $options['bitrate']
-            : self::get_max_bitrate($media, $transcode_settings, $options);
+
+        $song_file = self::_scrub_arg($media->file);
+        $bit_rate  = self::get_transcode_bitrate($media, $transcode_settings, $options, $player);
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
+        // Both %BITRATE% and %MAXBITRATE% are substituted as plain bps values
+        $max_bit_rate = (int) ($options['maxbitrate'] ?? 8000000);
+
         // Finalise the command line
-        $command    = (string)$transcode_settings['command'];
+        $command    = $transcode_settings['command'];
         $string_map = [
             '%FILE%' => $song_file,
-            '%SAMPLE%' => $bit_rate, // Deprecated
-            '%BITRATE%' => $bit_rate
         ];
-        $string_map['%MAXBITRATE%'] = (isset($options['maxbitrate']))
-            ? $options['maxbitrate']
-            : 8000;
         if ($media instanceof Video) {
-            $string_map['%RESOLUTION%'] = (isset($options['resolution']))
-                ? $options['resolution']
-                : $media->get_f_resolution() ?? '1280x720';
-            $string_map['%QUALITY%'] = (isset($options['quality']))
+            $string_map['%RESOLUTION%'] = $options['resolution'] ?? $media->get_f_resolution() ?? '1280x720';
+            $string_map['%QUALITY%']    = (isset($options['quality']))
                 ? (31 * (101 - $options['quality'])) / 100
                 : 10;
         }
+
         if (isset($options['frame'])) {
-            $frame                = gmdate("H:i:s", (int)$options['frame']);
+            $frame                = gmdate("H:i:s", (int) $options['frame']);
             $string_map['%TIME%'] = $frame;
         }
+
         if (isset($options['duration'])) {
-            $duration                 = gmdate("H:i:s", (int)$options['duration']);
+            $duration                 = gmdate("H:i:s", (int) $options['duration']);
             $string_map['%DURATION%'] = $duration;
         }
+
         if (!empty($options['subtitle'])) {
             // This is too specific to ffmpeg/avconv
-            $string_map['%SRTFILE%'] = str_replace(':', '\:', self::scrub_arg($options['subtitle']));
+            $string_map['%SRTFILE%'] = str_replace(':', '\:', self::_scrub_arg($options['subtitle']));
         }
 
         foreach ($string_map as $search => $replace) {
-            $command = (string)str_replace($search, (string)$replace, $command, $ret);
-            if (!$ret) {
-                debug_event(self::class, "$search not in transcode command", 5);
+            $command = str_replace($search, (string) $replace, $command, $ret);
+            if ($ret === 0) {
+                debug_event(self::class, $search . ' not in transcode command', 5);
             }
         }
+
+        $command = self::_replace_bitrates(
+            (string) $command,
+            [
+                '%SAMPLE%' => $bit_rate,
+                '%BITRATE%' => $bit_rate,
+                '%MAXBITRATE%' => $max_bit_rate,
+            ]
+        );
+
         if ($out_file) {
             // when running cache_catalog_proc redirect to the file path instead of piping
-            $command = (string)str_replace("pipe:1", $out_file, (string)$command);
+            $command = str_replace("pipe:1", $out_file, (string) $command);
             debug_event(self::class, 'Final command is ' . $command, 4);
             $process = proc_open($command, [], $pipes);
             if (is_resource($process)) {
@@ -405,95 +980,48 @@ class Stream
             return [];
         }
 
-        return self::start_process($command, ['format' => $transcode_settings['format']]);
+        return self::_start_process($command, ['format' => (string) $transcode_settings['format']]);
+    }
+
+    /**
+     * validate_bitrate
+     * this function takes a bitrate (in bps) and returns a valid one rounded to the nearest kbps
+     */
+    public static function validate_bitrate(int $bitrate): int
+    {
+        /* Round to standard bitrates (values are bps, round to 1 kbps steps) */
+        return (int) (1000 * (floor($bitrate / 1000)));
+    }
+
+    /**
+     * _replace_bitrates
+     * Substitute the rate placeholders in a transcode command. Rates are plain bits per second now, so a
+     * trailing `k` or `K` left over from a pre-8.0.0 config (`%BITRATE%k`) is consumed with the placeholder.
+     * @param array<string, int> $bitrate_map
+     */
+    private static function _replace_bitrates(string $command, array $bitrate_map): string
+    {
+        foreach ($bitrate_map as $search => $replace) {
+            $count   = 0;
+            $command = (string) preg_replace('/' . preg_quote($search, '/') . '[kK]?/', (string) $replace, $command, -1, $count);
+            if ($count === 0) {
+                debug_event(self::class, $search . ' not in transcode command', 5);
+            }
+        }
+
+        return $command;
     }
 
     /**
      * This function behaves like escapeshellarg, but isn't broken
      */
-    private static function scrub_arg(?string $arg): string
+    private static function _scrub_arg(?string $arg): string
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            return '"' . str_replace(['"', '%'], ['', ''], (string)$arg) . '"';
+            return '"' . str_replace(['"', '%'], ['', ''], (string) $arg) . '"';
         }
 
-        return "'" . str_replace("'", "'\\''", (string)$arg) . "'";
-    }
-
-    /**
-     * get_max_bitrate
-     *
-     * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
-     * @param array{format?: string, command?: string} $transcode_settings
-     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
-     */
-    public static function get_max_bitrate(
-        Podcast_Episode|Video|Song $media,
-        array $transcode_settings,
-        array $options,
-    ): int {
-        // don't ignore user bitrates
-        $bit_rate = (int)self::get_allowed_bitrate();
-        if (!array_key_exists('bitrate', $options)) {
-            // Validate the bitrate
-            $bit_rate = self::validate_bitrate($bit_rate);
-        } elseif ($bit_rate > ((int)$options['bitrate']) || $bit_rate == 0) {
-            // use the file bitrate if lower than the gathered
-            $bit_rate = $options['bitrate'];
-        }
-        debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
-
-        // Never upsample a media
-        if (
-            isset($media->bitrate) &&
-            isset($transcode_settings['format']) &&
-            $media->type == $transcode_settings['format'] &&
-            ($bit_rate * 1024) > $media->bitrate &&
-            $media->bitrate > 0
-        ) {
-            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
-            $bit_rate = self::validate_bitrate((int)($media->bitrate / 1024));
-        }
-
-        return (int)$bit_rate;
-    }
-
-    /**
-     * get_image_preview
-     * @param Video $media
-     */
-    public static function get_image_preview($media): ?string
-    {
-        $image = null;
-        $sec   = mt_rand((int)($media->time * 0.2), (int)($media->time * 0.8));
-        $frame = gmdate("H:i:s", $sec);
-
-        if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
-            $command    = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
-            $string_map = [
-                '%FILE%' => self::scrub_arg($media->file),
-                '%TIME%' => $frame
-            ];
-            foreach ($string_map as $search => $replace) {
-                $command = (string)str_replace($search, $replace, $command, $ret);
-                if (!$ret) {
-                    debug_event(self::class, "$search not in transcode command", 5);
-                }
-            }
-            $proc = self::start_process($command);
-
-            if (is_resource($proc['handle'])) {
-                $image = '';
-                do {
-                    $image .= fread($proc['handle'], 1024);
-                } while (!feof($proc['handle']));
-                fclose($proc['handle']);
-            }
-        } else {
-            debug_event(self::class, 'Missing transcode_cmd / encode_get_image parameters to generate media preview.', 3);
-        }
-
-        return $image;
+        return "'" . str_replace("'", "'\\''", (string) $arg) . "'";
     }
 
     /**
@@ -506,7 +1034,7 @@ class Stream
      *     format?: string
      * }
      */
-    private static function start_process(string $command, array $settings = []): array
+    private static function _start_process(string $command, array $settings = []): array
     {
         debug_event(self::class, "Transcode command: " . $command, 3);
 
@@ -538,249 +1066,5 @@ class Stream
         }
 
         return array_merge($parray, $settings);
-    }
-
-    /**
-     * kill_process
-     */
-    public static function kill_process(array $transcoder): void
-    {
-        $status = proc_get_status($transcoder['process']);
-        if ($status['running']) {
-            $pid = $status['pid'];
-            debug_event(self::class, 'WARNING Stream is probably being killed early! pid:' . $pid, 1);
-
-            (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("kill -9 $pid") : exec("taskkill /F /T /PID $pid");
-
-            proc_close($transcoder['process']);
-        } else {
-            debug_event(self::class, 'Process is not running, kill skipped.', 5);
-        }
-    }
-
-    /**
-     * validate_bitrate
-     * this function takes a bitrate and returns a valid one
-     */
-    public static function validate_bitrate(int $bitrate): int
-    {
-        /* Round to standard bitrates */
-        return (int) (16 * (floor((int) $bitrate / 16)));
-    }
-
-    /**
-     * garbage_collection
-     *
-     * This will garbage collect the Now Playing data,
-     * this is done on every play start.
-     */
-    public static function garbage_collection(): void
-    {
-        // Remove any Now Playing entries for sessions that have been GC'd
-        $sql = "DELETE FROM `now_playing` USING `now_playing` LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` WHERE (`session`.`id` IS NULL AND `now_playing`.`id` NOT IN (SELECT `username` FROM `user`)) OR `now_playing`.`expire` < '" . time() . "'";
-        Dba::write($sql);
-    }
-
-    /**
-     * insert_now_playing
-     *
-     * This will insert the Now Playing data.
-     */
-    public static function insert_now_playing(
-        int $object_id,
-        int $uid,
-        int $length,
-        string $sid,
-        string $type,
-        ?int $previous = null
-    ): void {
-        if (!$previous) {
-            $previous = time();
-        }
-        // Ensure that this client only has a single row
-        $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) VALUES (?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), $previous]);
-    }
-
-    /**
-     * delete_now_playing
-     *
-     * This will delete the Now Playing data.
-     */
-    public static function delete_now_playing(string $sid, int $object_id, string $type, int $uid): void
-    {
-        // Clear the now playing entry for this item
-        $sql = "DELETE FROM `now_playing` WHERE `id` = ? AND `object_id` = ? AND `object_type` = ? AND `user` = ?;";
-        Dba::write($sql, [$sid, $object_id, strtolower((string) $type), $uid]);
-    }
-
-    /**
-     * clear_now_playing
-     *
-     * There really isn't anywhere else for this function, shouldn't have
-     * deleted it in the first place.
-     */
-    public static function clear_now_playing(): bool
-    {
-        $sql = 'TRUNCATE `now_playing`';
-        Dba::write($sql);
-
-        return true;
-    }
-
-    /**
-     * get_now_playing
-     *
-     * This returns the Now Playing information
-     * @return list<array{
-     *     media: library_item,
-     *     client: User,
-     *     agent: string,
-     *     expire: int
-     * }>
-     */
-    public static function get_now_playing(int $user_id = 0): array
-    {
-        $sql    = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
-        $params = [];
-
-        if (AmpConfig::get('now_playing_per_user')) {
-            $sql .= "INNER JOIN (SELECT MAX(`insertion`) AS `max_insertion`, `user` FROM `now_playing` GROUP BY `user`) `np2` ON `np`.`user` = `np2`.`user` AND `np`.`insertion` = `np2`.`max_insertion` ";
-        }
-        $sql .= "WHERE `np`.`object_type` IN ('song', 'video') ";
-
-        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
-            // We need to check only for users which have allowed view of personal info
-            if (Core::get_global('user') instanceof User) {
-                $current_user = Core::get_global('user')->getId();
-                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`name`='allow_personal_info_now' AND `value`='1') OR `user` = ?))) ";
-                $params[] = $current_user;
-            }
-        }
-        $sql .= "ORDER BY `np`.`expire` DESC";
-        //debug_event(self::class, 'get_now_playing ' . $sql, 5);
-
-        $db_results = Dba::read($sql, $params);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $className = ObjectTypeToClassNameMapper::map($row['object_type']);
-            /** @var Song|Video $media */
-            $media = new $className($row['object_id']);
-            if ($media->isNew()) {
-                continue;
-            }
-            if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access($media->getCatalogId(), (int)$row['user'])) {
-                $client = new User($row['user']);
-                if ($client->isNew()) {
-                    continue;
-                }
-
-                $results[] = [
-                    'media' => $media,
-                    'client' => $client,
-                    'agent' => $row['agent'],
-                    'expire' => (int) $row['expire']
-                ];
-            }
-        } // end while
-
-        return $results;
-    }
-
-    /**
-     * check_lock_media
-     *
-     * This checks to see if the media is already being played.
-     */
-    public static function check_lock_media(int $media_id, string $type): bool
-    {
-        $sql        = "SELECT `object_id` FROM `now_playing` WHERE `object_id` = ? AND `object_type` = ?";
-        $db_results = Dba::read($sql, [$media_id, $type]);
-
-        if (Dba::num_rows($db_results)) {
-            debug_event(self::class, 'Unable to play media currently locked by another user', 3);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * run_playlist_method
-     *
-     * This takes care of the different types of 'playlist methods'. The
-     * reason this is here is because it deals with streaming rather than
-     * playlist mojo. If something needs to happen this will echo the
-     * javascript required to cause a reload of the iframe.
-     */
-    public static function run_playlist_method(): bool
-    {
-        // If this wasn't ajax included run away
-        if (!defined('AJAX_INCLUDE')) {
-            return false;
-        }
-
-        switch (AmpConfig::get('playlist_method')) {
-            case 'send':
-                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket';
-                break;
-            case 'send_clear':
-                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket&playlist_method=clear';
-                break;
-            case 'clear':
-            case 'default':
-            default:
-                return true;
-        } // end switch on method
-
-        // Load our javascript
-        echo "<script>";
-        echo Core::get_reloadutil() . "('" . $_SESSION['iframe']['target'] . "');";
-        echo "</script>";
-
-        return true;
-    }
-
-    /**
-     * get_base_url
-     * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
-     */
-    public static function get_base_url(bool $local = false, ?string $streamToken = null): string
-    {
-        $base_url = '/play/index.php?';
-        if (AmpConfig::get('use_play2')) {
-            $base_url .= 'action=play2&';
-        }
-        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $session_id = (!empty($streamToken))
-                ? $streamToken
-                : self::get_session();
-            $base_url .= 'ssid=' . $session_id . '&';
-        }
-
-        $web_path = ($local)
-            ? AmpConfig::get('local_web_path')
-            : AmpConfig::get_web_path();
-        if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
-            $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
-        }
-
-        if (AmpConfig::get('force_http_play')) {
-            $web_path = str_replace("https://", "http://", $web_path);
-        }
-
-        $http_port = ($local && preg_match("/:(\d+)/", (string)$web_path, $matches))
-            ? $matches[1]
-            : AmpConfig::get('http_port');
-        if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
-            if (preg_match("/:(\d+)/", $web_path, $matches)) {
-                $web_path = str_replace(':' . $matches[1], ':' . $http_port, (string)$web_path);
-            } else {
-                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string)$web_path);
-            }
-        }
-
-        return $web_path . $base_url;
     }
 }

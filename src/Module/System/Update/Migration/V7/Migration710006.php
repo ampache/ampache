@@ -33,8 +33,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration710006 extends AbstractMigration
 {
     protected array $changelog = ['Add preferences to force Grid View on browse pages. (Set on login)'];
-
-    protected bool $warning = true;
+    protected bool $warning    = true;
 
     public function migrate(): void
     {

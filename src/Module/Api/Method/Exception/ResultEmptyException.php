@@ -32,7 +32,7 @@ final class ResultEmptyException extends ApiMethodException
     /**
      * most lookups fail on the object the `filter` asked for, so that is the type unless told otherwise
      */
-    private const DEFAULT_TYPE = 'filter';
+    private const string DEFAULT_TYPE = 'filter';
 
     /** @var int $code */
     protected $code = ErrorCodeEnum::NOT_FOUND;

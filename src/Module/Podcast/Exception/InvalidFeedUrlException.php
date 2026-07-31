@@ -25,6 +25,4 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast\Exception;
 
-final class InvalidFeedUrlException extends PodcastCreationException
-{
-}
+final class InvalidFeedUrlException extends PodcastCreationException {}

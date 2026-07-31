@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -50,38 +50,12 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         private ZipHandlerInterface $zipHandler,
         private FunctionCheckerInterface $functionChecker,
         private GuiGatekeeperInterface $gatekeeper,
-        private Playlist $playlist
-    ) {
-    }
+        private Playlist $playlist,
+    ) {}
 
-    public function getId(): int
+    public function canAppendNext(): bool
     {
-        return $this->playlist->getId();
-    }
-
-    public function getRating(): string
-    {
-        return Rating::show($this->playlist->getId(), 'playlist');
-    }
-
-    public function getAverageRating(): string
-    {
-        $rating = $this->modelFactory->createRating(
-            $this->playlist->getId(),
-            'playlist'
-        );
-
-        return (string) $rating->get_average_rating();
-    }
-
-    public function getUserFlags(): string
-    {
-        return Userflag::show($this->playlist->getId(), 'playlist');
-    }
-
-    public function getArt(): void
-    {
-        $this->playlist->display_art(['width' => 128, 'height' => 128], true);
+        return Stream_Playlist::check_autoplay_append();
     }
 
     public function canAutoplayNext(): bool
@@ -89,32 +63,46 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return Stream_Playlist::check_autoplay_next();
     }
 
-    public function canAppendNext(): bool
+    public function canBatchDownload(): bool
     {
-        return Stream_Playlist::check_autoplay_append();
+        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
+            && $this->zipHandler->isZipable('playlist');
     }
 
-    public function getDirectplayButton(): string
+    public function canBeDeleted(): bool
+    {
+        return $this->playlist->has_access();
+    }
+
+    public function canBeRefreshed(): bool
+    {
+        $search_id = $this->playlist->has_search((int) $this->playlist->user);
+
+        return $this->playlist->has_access()
+            && $search_id > 0;
+    }
+
+    public function canShare(): bool
+    {
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
+    }
+
+    public function getAddToPlaylistIcon(): string
+    {
+        return Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label());
+    }
+
+    public function getAddToTemporaryPlaylistButton(): string
     {
         $playlistId = $this->playlist->getId();
 
         return Ajax::button(
-            '?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId,
-            'play_circle',
-            T_('Play'),
-            'play_playlist_' . $playlistId
-        );
-    }
-
-    public function getAutoplayNextButton(): string
-    {
-        $playlistId = $this->playlist->getId();
-
-        return Ajax::button(
-            '?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId . '&playnext=true',
-            'menu_open',
-            T_('Play next'),
-            'nextplay_playlist_' . $playlistId
+            '?action=basket&type=playlist&id=' . $playlistId,
+            'new_window',
+            T_('Add to Temporary Playlist'),
+            'add_playlist_' . $playlistId
         );
     }
 
@@ -130,67 +118,31 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         );
     }
 
-    public function getAddToTemporaryPlaylistButton(): string
+    public function getArt(): void
+    {
+        $this->playlist->display_art(['width' => 128, 'height' => 128], true);
+    }
+
+    public function getAutoplayNextButton(): string
     {
         $playlistId = $this->playlist->getId();
 
         return Ajax::button(
-            '?action=basket&type=playlist&id=' . $playlistId,
-            'new_window',
-            T_('Add to Temporary Playlist'),
-            'add_playlist_' . $playlistId
+            '?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId . '&playnext=true',
+            'menu_open',
+            T_('Play next'),
+            'nextplay_playlist_' . $playlistId
         );
     }
 
-    public function getRandomToTemporaryPlaylistButton(): string
+    public function getAverageRating(): string
     {
-        $playlistId = $this->playlist->getId();
-
-        return Ajax::button(
-            '?action=basket&type=playlist_random&id=' . $playlistId,
-            'shuffle',
-            T_('Random to Temporary Playlist'),
-            'random_playlist_' . $playlistId
+        $rating = $this->modelFactory->createRating(
+            $this->playlist->getId(),
+            'playlist'
         );
-    }
 
-    public function getRandomPlayPlaylistButton(): string
-    {
-        $playlistId = $this->playlist->getId();
-
-        return Ajax::button(
-            '?page=random&action=send_playlist&random_type=playlist&random_id=' . $playlistId,
-            'autorenew',
-            T_('Random Play'),
-            'play_random_' . $playlistId
-        );
-    }
-
-    public function canShare(): bool
-    {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
-    }
-
-    public function getShareUi(): string
-    {
-        return Share::display_ui('playlist', $this->playlist->getId(), false);
-    }
-
-    public function canBatchDownload(): bool
-    {
-        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
-            $this->zipHandler->isZipable('playlist');
-    }
-
-    public function getBatchDownloadUrl(): string
-    {
-        return sprintf(
-            '%s/batch.php?action=playlist&id=%d',
-            $this->configContainer->getWebPath(),
-            $this->playlist->getId()
-        );
+        return (string) $rating->get_average_rating();
     }
 
     public function getBatchDownloadIcon(): string
@@ -198,30 +150,11 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return Ui::get_material_symbol('folder_zip', T_('Batch download'));
     }
 
-    public function isEditable(): bool
-    {
-        return $this->playlist->has_access();
-    }
-
-    public function getEditButtonTitle(): string
-    {
-        return T_('Playlist Edit');
-    }
-
-    public function getEditIcon(): string
-    {
-        return Ui::get_material_symbol('edit', T_('Edit'));
-    }
-
-    public function canBeDeleted(): bool
-    {
-        return $this->playlist->has_access();
-    }
-
-    public function getDeletionUrl(): string
+    public function getBatchDownloadUrl(): string
     {
         return sprintf(
-            '?page=browse&action=delete_object&type=playlist&id=%d',
+            '%s/batch.php?action=playlist&id=%d',
+            $this->configContainer->getWebPath(),
             $this->playlist->getId()
         );
     }
@@ -241,17 +174,103 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         );
     }
 
-    public function canBeRefreshed(): bool
+    public function getDeletionUrl(): string
     {
-        $search_id = $this->playlist->has_search((int)$this->playlist->user);
+        return sprintf(
+            '?page=browse&action=delete_object&type=playlist&id=%d',
+            $this->playlist->getId()
+        );
+    }
 
-        return $this->playlist->has_access() &&
-            $search_id > 0;
+    public function getDirectplayButton(): string
+    {
+        $playlistId = $this->playlist->getId();
+
+        return Ajax::button(
+            '?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId,
+            'play_circle',
+            T_('Play'),
+            'play_playlist_' . $playlistId
+        );
+    }
+
+    public function getEditButtonTitle(): string
+    {
+        return T_('Playlist Edit');
+    }
+
+    public function getEditIcon(): string
+    {
+        return Ui::get_material_symbol('edit', T_('Edit'));
+    }
+
+    public function getFullname(): string
+    {
+        return scrub_out($this->playlist->get_fullname());
+    }
+
+    public function getId(): int
+    {
+        return $this->playlist->getId();
+    }
+
+    public function getLastUpdate(): string
+    {
+        return $this->playlist->get_f_last_update();
+    }
+
+    public function getMediaCount(): int
+    {
+        return (int) $this->playlist->last_count;
+    }
+
+    public function getPlaylistLink(): string
+    {
+        return $this->playlist->get_f_link();
+    }
+
+    public function getPlaylistUrl(): string
+    {
+        return $this->playlist->get_link();
+    }
+
+    public function getRandomPlayPlaylistButton(): string
+    {
+        $playlistId = $this->playlist->getId();
+
+        return Ajax::button(
+            '?page=random&action=send_playlist&random_type=playlist&random_id=' . $playlistId,
+            'autorenew',
+            T_('Random Play'),
+            'play_random_' . $playlistId
+        );
+    }
+
+    public function getRandomToTemporaryPlaylistButton(): string
+    {
+        $playlistId = $this->playlist->getId();
+
+        return Ajax::button(
+            '?action=basket&type=playlist_random&id=' . $playlistId,
+            'shuffle',
+            T_('Random to Temporary Playlist'),
+            'random_playlist_' . $playlistId
+        );
+    }
+
+    public function getRating(): string
+    {
+        return Rating::show($this->playlist->getId(), 'playlist');
+    }
+
+    public function getRefreshIcon(): string
+    {
+        return Ui::get_material_symbol('sync_alt', T_('Refresh from Smartlist'));
     }
 
     public function getRefreshUrl(): string
     {
-        $search_id = $this->playlist->has_search((int)$this->playlist->user);
+        $search_id = $this->playlist->has_search((int) $this->playlist->user);
 
         return sprintf(
             '%s/playlist.php?action=refresh_playlist&type=playlist&user_id=%d&playlist_id=%d&search_id=%d',
@@ -262,39 +281,9 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         );
     }
 
-    public function getRefreshIcon(): string
+    public function getShareUi(): string
     {
-        return Ui::get_material_symbol('sync_alt', T_('Refresh from Smartlist'));
-    }
-
-    public function getAddToPlaylistIcon(): string
-    {
-        return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
-    }
-
-    public function getFullname(): string
-    {
-        return scrub_out($this->playlist->get_fullname());
-    }
-
-    public function getPlaylistUrl(): string
-    {
-        return $this->playlist->get_link();
-    }
-
-    public function getPlaylistLink(): string
-    {
-        return $this->playlist->get_f_link();
-    }
-
-    public function getUsername(): string
-    {
-        return (string)$this->playlist->username;
-    }
-
-    public function getLastUpdate(): string
-    {
-        return $this->playlist->get_f_last_update();
+        return Share::display_ui('playlist', $this->playlist->getId(), false);
     }
 
     public function getType(): string
@@ -302,8 +291,18 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return $this->playlist->get_f_type();
     }
 
-    public function getMediaCount(): int
+    public function getUserFlags(): string
     {
-        return (int)$this->playlist->last_count;
+        return Userflag::show($this->playlist->getId(), 'playlist');
+    }
+
+    public function getUsername(): string
+    {
+        return (string) $this->playlist->username;
+    }
+
+    public function isEditable(): bool
+    {
+        return $this->playlist->has_access();
     }
 }

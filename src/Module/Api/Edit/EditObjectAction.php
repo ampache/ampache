@@ -31,33 +31,43 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Share;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\ShareRepositoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
 final class EditObjectAction extends AbstractEditAction
 {
-    public const REQUEST_KEY = 'edit_object';
+    public const string REQUEST_KEY = 'edit_object';
 
     private LabelRepositoryInterface $labelRepository;
     private LoggerInterface $logger;
+    private ResponseFactoryInterface $responseFactory;
+    private StreamFactoryInterface $streamFactory;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         LabelRepositoryInterface $labelRepository,
+        LibraryItemLoaderInterface $libraryItemLoader,
         LoggerInterface $logger,
+        ResponseFactoryInterface $responseFactory,
+        ShareRepositoryInterface $shareRepository,
+        StreamFactoryInterface $streamFactory,
     ) {
-        parent::__construct($configContainer, $logger);
+        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository);
         $this->labelRepository = $labelRepository;
         $this->logger          = $logger;
+        $this->responseFactory = $responseFactory;
+        $this->streamFactory   = $streamFactory;
     }
 
     protected function handle(
@@ -68,18 +78,8 @@ final class EditObjectAction extends AbstractEditAction
         int $object_id,
         ?Browse $browse = null,
     ): ?ResponseInterface {
-        // Scrub the data, walk recursive through array
-        $entities = function (&$data) use (&$entities) {
-            foreach ($data as $key => $value) {
-                $data[$key] = (is_array($value))
-                    ? $entities($value)
-                    : unhtmlentities((string) scrub_in((string) $value));
-            }
-
-            return $data;
-        };
-
-        if (!isset($_POST['id'])) {
+        $data = (array) $request->getParsedBody();
+        if (!isset($data['id'])) {
             return null;
         }
 
@@ -88,55 +88,31 @@ final class EditObjectAction extends AbstractEditAction
             ? $user->getId()
             : null;
 
-        $entities($_POST);
-        if (empty($object_type)) {
-            $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
-        } else {
-            $object_type = implode('_', explode('_', $object_type, -1));
-        }
+        $data = $this->scrub($data);
         $this->logger->debug(
             'edit_object: {' . $object_type . '} {' . $object_id . '}',
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
-        $className = ObjectTypeToClassNameMapper::map((string) $object_type);
-        /** @var library_item|Share $libitem */
-        $libitem = new $className($_POST['id']);
         if (
             $libitem->get_user_owner() === $userId
             && AmpConfig::get('upload_allow_edit')
             && !$gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) {
+            // an uploader editing their own item may not re-file it, so the ownership and parent keys are dropped
             // TODO: improve this uniqueness check
-            if (isset($_POST['user'])) {
-                unset($_POST['user']);
+            unset($data['user'], $data['artist'], $data['artist_name'], $data['album'], $data['album_name']);
+            if (isset($data['edit_tags'])) {
+                $data['edit_tags'] = Tag::clean_to_existing($data['edit_tags']);
             }
-            if (isset($_POST['artist'])) {
-                unset($_POST['artist']);
-            }
-            if (isset($_POST['artist_name'])) {
-                unset($_POST['artist_name']);
-            }
-            if (isset($_POST['album'])) {
-                unset($_POST['album']);
-            }
-            if (isset($_POST['album_name'])) {
-                unset($_POST['album_name']);
-            }
-            if (isset($_POST['artist_name'])) {
-                unset($_POST['artist_name']);
-            }
-            if (isset($_POST['edit_tags'])) {
-                $_POST['edit_tags'] = Tag::clean_to_existing($_POST['edit_tags']);
-            }
-            if (isset($_POST['edit_labels'])) {
-                $_POST['edit_labels'] = $this->clean_to_existing($_POST['edit_labels']);
+            if (isset($data['edit_labels'])) {
+                $data['edit_labels'] = $this->clean_to_existing($data['edit_labels']);
             }
             // Check mbid and *_mbid match as it is used as identifier
-            if (isset($_POST['mbid']) && isset($libitem->mbid)) {
-                $_POST['mbid'] = $libitem->mbid;
+            if (isset($data['mbid']) && isset($libitem->mbid)) {
+                $data['mbid'] = $libitem->mbid;
             }
-            if (isset($_POST['mbid_group']) && isset($libitem->mbid_group)) {
-                $_POST['mbid_group'] = $libitem->mbid_group;
+            if (isset($data['mbid_group']) && isset($libitem->mbid_group)) {
+                $data['mbid_group'] = $libitem->mbid_group;
             }
         }
 
@@ -144,33 +120,29 @@ final class EditObjectAction extends AbstractEditAction
          * @todo updating must be separated by item type - this is ugly as hell
          */
         if ($libitem instanceof Share && $user !== null) {
-            $libitem->update($_POST, $user);
+            $libitem->update($data, $user);
         } elseif ($libitem instanceof Podcast) {
-            $feedUrl = $_POST['feed'] ?? '';
+            $feedUrl = $data['feed'] ?? '';
 
             if (filter_var($feedUrl, FILTER_VALIDATE_URL)) {
-                $libitem->setTitle($_POST['title'] ?? $libitem->getTitle())
+                $libitem->setTitle($data['title'] ?? $libitem->getTitle())
                     ->setFeedUrl($feedUrl)
-                    ->setWebsite(filter_var(urldecode($_POST['website']), FILTER_VALIDATE_URL) ?: $libitem->getWebsite())
-                    ->setDescription($_POST['description'] ?? $libitem->getDescription())
-                    ->setLanguage($_POST['language'] ?? $libitem->getLanguage())
-                    ->setGenerator($_POST['generator'] ?? $libitem->getGenerator())
-                    ->setCopyright($_POST['copyright'] ?? $libitem->getCopyright())
+                    ->setWebsite(filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: $libitem->getWebsite())
+                    ->setDescription($data['description'] ?? $libitem->getDescription())
+                    ->setLanguage($data['language'] ?? $libitem->getLanguage())
+                    ->setGenerator($data['generator'] ?? $libitem->getGenerator())
+                    ->setCopyright($data['copyright'] ?? $libitem->getCopyright())
                     ->save();
             }
         } else {
-            // @todo: is it really necessary to call format before updating the object?
-            if ($libitem instanceof Song) {
-                $libitem->fill_ext_info();
-            }
-            $libitem->update($_POST);
+            $libitem->update($data);
         }
 
-        xoutput_headers();
-
-        echo xoutput_from_array(['id' => $object_id]);
-
-        return null;
+        // the dialog reads the id back out of the response body to know which row it has to reload afterwards
+        return $this->createOutputResponse(
+            $this->readString($data, 'xoutput') ?: $this->readString($request->getQueryParams(), 'xoutput'),
+            xoutput_from_array(['id' => $object_id])
+        );
     }
 
     /**
@@ -197,5 +169,53 @@ final class EditObjectAction extends AbstractEditAction
         return (is_array($labels)
             ? $ret
             : implode(",", $ret));
+    }
+
+    /**
+     * Builds the ajax response, mirroring the header set `xoutput_headers()` writes for the same payload.
+     */
+    private function createOutputResponse(string $format, string $body): ResponseInterface
+    {
+        $charset  = AmpConfig::get('site_charset', 'UTF-8');
+        $response = $this->responseFactory->createResponse()
+            ->withHeader('Expires', 'Tuesday, 27 Mar 1984 05:00:00 GMT')
+            ->withHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT')
+            ->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
+            ->withHeader('Pragma', 'no-cache');
+
+        $response = ($format === '' || $format === 'xml')
+            ? $response
+                ->withHeader('Content-Type', 'text/xml; charset=' . $charset)
+                ->withHeader('Content-Disposition', 'attachment; filename=ajax.xml')
+            : $response->withHeader('Content-Type', 'application/json; charset=' . $charset);
+
+        return $response->withBody($this->streamFactory->createStream($body));
+    }
+
+    /**
+     * @param array<array-key, mixed> $source
+     */
+    private function readString(array $source, string $key): string
+    {
+        $value = $source[$key] ?? '';
+
+        return (is_string($value)) ? $value : '';
+    }
+
+    /**
+     * Recursively strips markup out of a posted value tree, leaving what the models are willing to store.
+     *
+     * @param array<array-key, mixed> $data
+     * @return array<array-key, mixed>
+     */
+    private function scrub(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            $data[$key] = (is_array($value))
+                ? $this->scrub($value)
+                : unhtmlentities((string) scrub_in((string) $value));
+        }
+
+        return $data;
     }
 }

@@ -30,36 +30,22 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Smartlist;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class UpdatePlaylistActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface */
-    private MockInterface $ui;
-
-    /** @var ModelFactoryInterface|MockInterface */
-    private MockInterface $modelFactory;
-
+    private ModelFactoryInterface|MockInterface $modelFactory;
     private UpdatePlaylistAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new UpdatePlaylistAction(
-            $this->ui,
-            $this->modelFactory
-        );
-    }
+    private UiInterface|MockInterface $ui;
 
     public function testRunThrowsExceptionIfAccessDenied(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $search     = $this->mock(Search::class);
+        $search     = $this->mock(Smartlist::class);
 
         $playlistId = 666;
 
@@ -75,7 +61,7 @@ class UpdatePlaylistActionTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
-        $this->modelFactory->shouldReceive('createSearch')
+        $this->modelFactory->shouldReceive('createSmartlist')
             ->with($playlistId)
             ->once()
             ->andReturn($search);
@@ -88,6 +74,18 @@ class UpdatePlaylistActionTest extends MockeryTestCase
         $this->subject->run(
             $request,
             $gatekeeper
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui           = $this->mock(UiInterface::class);
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+
+        $this->subject = new UpdatePlaylistAction(
+            $this->ui,
+            $this->modelFactory
         );
     }
 }

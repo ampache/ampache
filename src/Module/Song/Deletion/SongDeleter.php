@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -25,6 +27,7 @@ namespace Ampache\Module\Song\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Userflag;
@@ -33,40 +36,22 @@ use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
-final class SongDeleter implements SongDeleterInterface
+final readonly class SongDeleter implements SongDeleterInterface
 {
-    private LoggerInterface $logger;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private SongRepositoryInterface $songRepository;
-
-    private UserActivityRepositoryInterface $useractivityRepository;
-
-    private ArtCleanupInterface $artCleanup;
-
     public function __construct(
-        LoggerInterface $logger,
-        ShoutRepositoryInterface $shoutRepository,
-        SongRepositoryInterface $songRepository,
-        UserActivityRepositoryInterface $useractivityRepository,
-        ArtCleanupInterface $artCleanup
-    ) {
-        $this->logger                 = $logger;
-        $this->shoutRepository        = $shoutRepository;
-        $this->songRepository         = $songRepository;
-        $this->useractivityRepository = $useractivityRepository;
-        $this->artCleanup             = $artCleanup;
-    }
+        private LoggerInterface $logger,
+        private ShoutRepositoryInterface $shoutRepository,
+        private SongRepositoryInterface $songRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
+        private ArtCleanupInterface $artCleanup,
+        private FolderRepositoryInterface $folderRepository,
+    ) {}
 
     public function delete(Song $song, bool $parent = false): bool
     {
-        if (!empty($song->file) && file_exists($song->file)) {
-            $deleted = unlink($song->file);
-        } else {
-            $deleted = true;
-        }
-        if ($deleted === true) {
+        $deleted = !(!in_array($song->file, [null, '', '0'], true) && file_exists($song->file)) || unlink($song->file);
+
+        if ($deleted) {
             $songId  = $song->getId();
             $deleted = $this->songRepository->delete($songId);
             if ($deleted) {
@@ -75,8 +60,9 @@ final class SongDeleter implements SongDeleterInterface
                     Userflag::garbage_collection('song', $songId);
                     Rating::garbage_collection('song', $songId);
                     $this->shoutRepository->collectGarbage('song', $songId);
-                    $this->useractivityRepository->collectGarbage('song', $songId);
+                    $this->userActivityRepository->collectGarbage('song', $songId);
                     $this->songRepository->collectGarbage($song);
+                    $this->folderRepository->collectGarbage();
                 }
             }
         } else {

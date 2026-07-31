@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_podcast_episodes.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
@@ -34,11 +36,11 @@ use Ampache\Repository\Model\Userflag;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */
 
-$thcount            = 6;
-$show_ratings       = User::is_registered() && (AmpConfig::get('ratings'));
-$show_played_times  = AmpConfig::get('show_played_times');
-$is_mashup          = $browse->is_mashup();
-$is_table           = !$browse->is_grid_view();
+$thcount           = 6;
+$show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
+$show_played_times = AmpConfig::get('show_played_times');
+$is_mashup         = $browse->is_mashup();
+$is_table          = !$browse->is_grid_view();
 // translate once
 $count_text  = T_('Played');
 $rating_text = T_('Rating');
@@ -86,7 +88,7 @@ foreach ($object_ids as $episode_id) {
     if ($libitem->isNew()) {
         continue;
     } ?>
-        <tr id="podcast_episode_<?php echo $libitem->id; ?>">
+        <tr id="podcast_episode_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="podcast_episode" data-object-id="<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_podcast_episode_row.inc.php'); ?>
         </tr>
         <?php } ?>

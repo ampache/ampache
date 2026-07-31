@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -27,6 +29,11 @@ use Curl\Curl;
 
 interface UtilityFactoryInterface
 {
+    /**
+     * Returns a new Curl instance
+     */
+    public function createCurl(): Curl;
+
     public function createMailer(): MailerInterface;
 
     /**
@@ -41,11 +48,6 @@ interface UtilityFactoryInterface
         ?string $encodingId3v1 = null,
         string $dirPattern = '',
         string $filePattern = '',
-        bool $isLocal = true
+        bool $isLocal = true,
     ): VaInfo;
-
-    /**
-     * Returns a new Curl instance
-     */
-    public function createCurl(): Curl;
 }

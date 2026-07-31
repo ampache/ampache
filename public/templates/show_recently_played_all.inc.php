@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_recently_played_all.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -37,13 +39,13 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
-/** @var list<array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
+/** @var array<int, array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
 /** @var User $user */
 
 $web_path = AmpConfig::get_web_path();
 
 $ajax_page = $ajax_page ?? 'index';
-$user_id   = $user_id ?? $user->id ?? -1;
+$user_id   = $user_id ?? $user->id ?: -1;
 $user_only = (isset($user_only) && $user_only);
 $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)
@@ -144,7 +146,7 @@ foreach ($data as $row) {
                 <span class="cel_item_add">
                     <?php echo Ajax::button('?action=basket&type=' . $row['object_type'] . '&id=' . $media->getId(), 'new_window', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $media->getId()); ?>
                     <a id="<?php echo 'add_to_playlist_' . $count . '_' . $media->getId(); ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $media->getId(); ?>')">
-                        <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+                        <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
                     </a>
                 </span>
                 </td>

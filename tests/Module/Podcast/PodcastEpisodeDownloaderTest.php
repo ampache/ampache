@@ -37,30 +37,11 @@ use Psr\Log\LoggerInterface;
 
 class PodcastEpisodeDownloaderTest extends TestCase
 {
-    private PodcastFolderProviderInterface&MockObject $podcastFolderProvider;
-
-    private WebFetcherInterface&MockObject $webFetcher;
-
     private LoggerInterface&MockObject $logger;
-
-    private PodcastEpisodeDownloader $subject;
-
+    private PodcastFolderProviderInterface&MockObject $podcastFolderProvider;
     private PodcastRepositoryInterface&MockObject $podcastRepository;
-
-    protected function setUp(): void
-    {
-        $this->podcastFolderProvider = $this->createMock(PodcastFolderProviderInterface::class);
-        $this->webFetcher            = $this->createMock(WebFetcherInterface::class);
-        $this->logger                = $this->createMock(LoggerInterface::class);
-        $this->podcastRepository     = $this->createMock(PodcastRepositoryInterface::class);
-
-        $this->subject = new PodcastEpisodeDownloader(
-            $this->podcastFolderProvider,
-            $this->webFetcher,
-            $this->podcastRepository,
-            $this->logger,
-        );
-    }
+    private PodcastEpisodeDownloader $subject;
+    private WebFetcherInterface&MockObject $webFetcher;
 
     public function testFetchFailsIfEpisodeHasNoSourceUrl(): void
     {
@@ -123,5 +104,20 @@ class PodcastEpisodeDownloaderTest extends TestCase
             ->willThrowException(new PodcastFolderException($errorMessage));
 
         $this->subject->fetch($episode);
+    }
+
+    protected function setUp(): void
+    {
+        $this->podcastFolderProvider = $this->createMock(PodcastFolderProviderInterface::class);
+        $this->webFetcher            = $this->createMock(WebFetcherInterface::class);
+        $this->logger                = $this->createMock(LoggerInterface::class);
+        $this->podcastRepository     = $this->createMock(PodcastRepositoryInterface::class);
+
+        $this->subject = new PodcastEpisodeDownloader(
+            $this->podcastFolderProvider,
+            $this->webFetcher,
+            $this->podcastRepository,
+            $this->logger,
+        );
     }
 }

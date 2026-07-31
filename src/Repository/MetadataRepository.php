@@ -41,9 +41,8 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
-        private MetadataFieldRepositoryInterface $metadataFieldRepository
-    ) {
-    }
+        private MetadataFieldRepositoryInterface $metadataFieldRepository,
+    ) {}
 
     /**
      * Remove metadata for songs which don't exist anymore
@@ -55,21 +54,6 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);
         }
-    }
-
-    /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
-    {
-        $this->connection->query(
-            'UPDATE IGNORE `metadata` SET `object_id` = ? WHERE `object_id` = ? AND `type` = ?',
-            [
-                $newObjectId,
-                $oldObjectId,
-                ucfirst($objectType),
-            ],
-        );
     }
 
     /**
@@ -99,7 +83,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
     public function findByObjectIdAndFieldAndType(
         int $objectId,
         MetadataField $field,
-        string $objectType
+        string $objectType,
     ): ?Metadata {
         $result = $this->connection->query(
             'SELECT * FROM `metadata` WHERE `object_id` = ? AND `type` = ? AND `field` = ? LIMIT 1',
@@ -128,7 +112,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
      */
     public function findByObjectIdAndType(
         int $objectId,
-        string $objectType
+        string $objectType,
     ): Generator {
         $result = $this->connection->query(
             'SELECT * FROM `metadata` WHERE `object_id` = ? AND `type` = ?',
@@ -146,24 +130,17 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
     }
 
     /**
-     * Deletes the `metadata` item
+     * Migrate an object associate stats to a new object
      */
-    public function remove(Metadata $metadata): void
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
     {
         $this->connection->query(
-            'DELETE FROM `metadata` where `id` = ?',
-            [$metadata->getId()]
-        );
-    }
-
-    /**
-     * Creates a new `metadata` item
-     */
-    public function prototype(): Metadata
-    {
-        return new Metadata(
-            $this,
-            $this->metadataFieldRepository
+            'UPDATE IGNORE `metadata` SET `object_id` = ? WHERE `object_id` = ? AND `type` = ?',
+            [
+                $newObjectId,
+                $oldObjectId,
+                ucfirst($objectType),
+            ],
         );
     }
 
@@ -177,9 +154,9 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
     {
         // check that metadata value exists
         if (
-            $metadata->getObjectId() === 0 ||
-            $metadata->getFieldId() === 0 ||
-            in_array($metadata->getData(), ['', '0'], true)
+            $metadata->getObjectId() === 0
+            || $metadata->getFieldId() === 0
+            || in_array($metadata->getData(), ['', '0'], true)
         ) {
             return null;
         }
@@ -211,5 +188,27 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Creates a new `metadata` item
+     */
+    public function prototype(): Metadata
+    {
+        return new Metadata(
+            $this,
+            $this->metadataFieldRepository
+        );
+    }
+
+    /**
+     * Deletes the `metadata` item
+     */
+    public function remove(Metadata $metadata): void
+    {
+        $this->connection->query(
+            'DELETE FROM `metadata` where `id` = ?',
+            [$metadata->getId()]
+        );
     }
 }

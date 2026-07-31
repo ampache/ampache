@@ -44,7 +44,7 @@ class Api4
      *
      * @var array<string, class-string<object>>
      */
-    public const METHOD_LIST = [
+    public const array METHOD_LIST = [
         'advanced_search' => Method\Api4\AdvancedSearch4Method::class,
         'album' => Method\Api4\Album4Method::class,
         'albums' => Method\Api4\Albums4Method::class,
@@ -138,9 +138,7 @@ class Api4
      * constructor
      * This really isn't anything to do here, so it's private
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * check_access
@@ -177,7 +175,7 @@ class Api4
         }
 
         debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
-        self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['api_format']);
+        self::message('error', 'Missing mandatory parameter' . " '" . $parameter . "'", '401', $input['api_format']);
 
         return false;
     }

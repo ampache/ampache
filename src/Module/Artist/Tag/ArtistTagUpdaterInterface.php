@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -35,6 +37,6 @@ interface ArtistTagUpdaterInterface
         string $tags_comma,
         bool $override_childs,
         bool $add_to_childs = false,
-        bool $force_update = false
+        bool $force_update = false,
     ): void;
 }

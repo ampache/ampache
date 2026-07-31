@@ -27,23 +27,19 @@ namespace Ampache\Module\Authentication;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authentication\Authenticator\AuthenticatorInterface;
-use Ampache\Module\System\Dba;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\System\Session;
 
 final class AuthenticationManager implements AuthenticationManagerInterface
 {
-    /** @var AuthenticatorInterface[] $authenticatorList */
-    private array $authenticatorList;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        array $authenticatorList
-    ) {
-        $this->configContainer   = $configContainer;
-        $this->authenticatorList = $authenticatorList;
-    }
+        private readonly ConfigContainerInterface $configContainer,
+        /** @var AuthenticatorInterface[] $authenticatorList */
+        private array $authenticatorList,
+        private readonly SymmetricEncrypterInterface $symmetricEncrypter,
+        private readonly DatabaseConnectionInterface $databaseConnection,
+    ) {}
 
     /**
      * @return array{
@@ -58,7 +54,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
     public function login(
         string $username,
         string $password,
-        bool $allow_ui = false
+        bool $allow_ui = false,
     ): array {
         $result = [];
 
@@ -77,6 +73,43 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         }
 
         return $result;
+    }
+
+    /**
+     * This is called when you want to log out and nuke your session.
+     * This is the function used for the Ajax logouts, if no id is passed
+     * it tries to find one from the session,
+     */
+    public function logout(string $key = '', bool $relogin = true): void
+    {
+        // If no key is passed try to find the session id
+        $key = ($key === '' || $key === '0')
+            ? session_id()
+            : $key;
+
+        // Nuke the cookie before all else
+        Session::destroy((string) $key);
+        if ((!$relogin) && $this->configContainer->get('logout_redirect')) {
+            $target = $this->configContainer->get('logout_redirect');
+        } else {
+            $target = $this->configContainer->getWebPath() . '/login.php';
+        }
+
+        // Do a quick check to see if this is an AJAXed logout request
+        // if so use the iframe to redirect
+        if (defined('AJAX_INCLUDE')) {
+            ob_end_clean();
+            ob_start();
+
+            xoutput_headers();
+
+            $results             = [];
+            $results['reloader'] = '<script>reloadRedirect("' . $target . '")</script>';
+            echo xoutput_from_array($results);
+        } else {
+            /* Redirect them to the login page */
+            header('Location: ' . $target);
+        }
     }
 
     public function postAuth(string $method): ?array
@@ -104,62 +137,41 @@ final class AuthenticationManager implements AuthenticationManagerInterface
     public function tokenLogin(
         string $username,
         string $token,
-        string $salt
+        string $salt,
     ): array {
-        // subsonic token auth with apikey
-        if (strlen((string)$token) && strlen((string)$salt) && strlen((string)$username)) {
-            $sql        = 'SELECT `apikey`, `username` FROM `user` WHERE `username` = ?';
-            $db_results = Dba::read($sql, [$username]);
-            $row        = Dba::fetch_assoc($db_results);
-            if (isset($row['apikey'])) {
-                $hash_token = hash('md5', ($row['apikey'] . $salt));
-                if ($token === $hash_token && $row['username'] === $username) {
-                    return [
-                        'success' => true,
-                        'type' => 'api',
-                        'username' => $username
-                    ];
-                }
+        if ($token === '' || $salt === '' || $username === '') {
+            return [];
+        }
+
+        $row = $this->databaseConnection->fetchRow(
+            'SELECT `apikey`, `subsonic_secret`, `username` FROM `user` WHERE `username` = ?',
+            [$username]
+        );
+        if (!is_array($row) || ($row['username'] ?? null) !== $username) {
+            return [];
+        }
+
+        // The dedicated Subsonic password is preferred; the api key remains accepted so clients configured before the
+        // secret existed keep working. Both are reversible values, which is what md5(secret . salt) requires.
+        $candidates = [];
+        if (!empty($row['subsonic_secret'])) {
+            $candidates[] = $this->symmetricEncrypter->decrypt((string) $row['subsonic_secret']);
+        }
+
+        if (!empty($row['apikey'])) {
+            $candidates[] = (string) $row['apikey'];
+        }
+
+        foreach ($candidates as $candidate) {
+            if ($candidate !== null && hash_equals(hash('md5', $candidate . $salt), $token)) {
+                return [
+                    'success' => true,
+                    'type' => 'api',
+                    'username' => $username
+                ];
             }
         }
 
         return [];
-    }
-
-    /**
-     * This is called when you want to log out and nuke your session.
-     * This is the function used for the Ajax logouts, if no id is passed
-     * it tries to find one from the session,
-     */
-    public function logout(string $key = '', bool $relogin = true): void
-    {
-        // If no key is passed try to find the session id
-        $key = (empty($key))
-            ? session_id()
-            : $key;
-
-        // Nuke the cookie before all else
-        Session::destroy((string)$key);
-        if ((!$relogin) && $this->configContainer->get('logout_redirect')) {
-            $target = $this->configContainer->get('logout_redirect');
-        } else {
-            $target = $this->configContainer->getWebPath() . '/login.php';
-        }
-
-        // Do a quick check to see if this is an AJAXed logout request
-        // if so use the iframe to redirect
-        if (defined('AJAX_INCLUDE')) {
-            ob_end_clean();
-            ob_start();
-
-            xoutput_headers();
-
-            $results             = [];
-            $results['reloader'] = '<script>reloadRedirect("' . $target . '")</script>';
-            echo (string)xoutput_from_array($results);
-        } else {
-            /* Redirect them to the login page */
-            header('Location: ' . $target);
-        }
     }
 }

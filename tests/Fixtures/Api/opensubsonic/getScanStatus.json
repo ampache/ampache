@@ -1,0 +1,13 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "type": "ampache",
+        "serverVersion": "8.0.0",
+        "openSubsonic": true,
+        "scanStatus": {
+            "scanning": false,
+            "count": 0
+        }
+    }
+}

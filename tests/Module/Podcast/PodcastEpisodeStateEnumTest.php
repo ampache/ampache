@@ -31,15 +31,6 @@ use PHPUnit\Framework\TestCase;
 
 class PodcastEpisodeStateEnumTest extends TestCase
 {
-    #[DataProvider(methodName: 'descriptionDataProvider')]
-    public function testToDescriptionReturnsLabel(PodcastEpisodeStateEnum $state, string $label): void
-    {
-        static::assertSame(
-            $label,
-            $state->toDescription()
-        );
-    }
-
     public static function descriptionDataProvider(): Generator
     {
         yield [PodcastEpisodeStateEnum::SKIPPED, 'skipped'];
@@ -47,5 +38,14 @@ class PodcastEpisodeStateEnumTest extends TestCase
         yield [PodcastEpisodeStateEnum::PENDING, 'pending'];
 
         yield [PodcastEpisodeStateEnum::COMPLETED, 'completed'];
+    }
+
+    #[DataProvider(methodName: 'descriptionDataProvider')]
+    public function testToDescriptionReturnsLabel(PodcastEpisodeStateEnum $state, string $label): void
+    {
+        self::assertSame(
+            $label,
+            $state->toDescription()
+        );
     }
 }

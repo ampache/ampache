@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -33,19 +35,16 @@ use Psr\Log\LoggerInterface;
 
 final class SearchRandomAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'search_random';
+    public const string REQUEST_KEY = 'search_random';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
+    private readonly ConfigContainerInterface $configContainer;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
+        private readonly ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($logger, $configContainer);
-        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
 
@@ -55,7 +54,7 @@ final class SearchRandomAction extends AbstractStreamAction
             return null;
         }
 
-        $search   = $this->modelFactory->createSearch((int) $_REQUEST['search_id']);
+        $search   = $this->modelFactory->createSmartlist((int) $_REQUEST['search_id']);
         $mediaIds = $search->get_random_items();
 
         return $this->stream(

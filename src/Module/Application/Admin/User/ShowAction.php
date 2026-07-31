@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,19 +32,12 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'show';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
-    }
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {

@@ -41,7 +41,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class Ping4Method
 {
-    public const ACTION = 'ping';
+    public const string ACTION = 'ping';
 
     /**
      * ping

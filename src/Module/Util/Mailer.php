@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,105 +36,12 @@ use PHPMailer\PHPMailer\PHPMailer;
  */
 final class Mailer implements MailerInterface
 {
-    private ?string $message = null;
-
-    private ?string $subject = null;
-
-    private ?string $recipient = null;
-
+    private ?string $message        = null;
+    private ?string $recipient      = null;
     private ?string $recipient_name = null;
-
-    private ?string $sender = null;
-
-    private ?string $sender_name = null;
-
-    /**
-     * Set the actual mail body/message
-     */
-    public function setMessage(string $message): MailerInterface
-    {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    /**
-     * Set the mail subject
-     */
-    public function setSubject(string $subject): MailerInterface
-    {
-        $this->subject = $subject;
-
-        return $this;
-    }
-
-    /**
-     * Set recipient email and -name
-     */
-    public function setRecipient(string $recipientEmail, string $recipientName = ''): MailerInterface
-    {
-        $this->recipient      = $recipientEmail;
-        $this->recipient_name = $recipientName;
-
-        return $this;
-    }
-
-    /**
-     * Set sender email and -name
-     */
-    public function setSender(string $senderEmail, string $senderName = ''): MailerInterface
-    {
-        $this->sender      = $senderEmail;
-        $this->sender_name = $senderName;
-
-        return $this;
-    }
-
-    /**
-     * is_mail_enabled
-     *
-     * Check that the mail feature is enabled. By default, you people to configure their mail settings first
-     */
-    public static function is_mail_enabled(): bool
-    {
-        return (bool)(AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode'));
-    }
-
-    /**
-     * Check that the mail feature is enabled
-     */
-    public function isMailEnabled(): bool
-    {
-        return self::is_mail_enabled();
-    }
-
-    /**
-     * validate_address
-     *
-     * Checks whether what we have looks like a valid address.
-     */
-    public static function validate_address(string $address): bool
-    {
-        return PHPMailer::validateAddress($address);
-    }
-
-    /**
-     * set_default_sender
-     *
-     * Does the config magic to figure out the "system" email sender and
-     * sets it as the sender.
-     */
-    public function set_default_sender(): MailerInterface
-    {
-        $user     = AmpConfig::get('mail_user', 'info');
-        $domain   = AmpConfig::get('mail_domain', 'example.com');
-        $fromname = AmpConfig::get('mail_name', 'Ampache');
-
-        $this->sender      = $user . '@' . $domain;
-        $this->sender_name = $fromname;
-
-        return $this;
-    }
+    private ?string $sender         = null;
+    private ?string $sender_name    = null;
+    private ?string $subject        = null;
 
     /**
      * get_users
@@ -162,7 +69,7 @@ final class Mailer implements MailerInterface
             default:
                 $sql = "SELECT * FROM `user` WHERE `email` IS NOT NULL";
                 break;
-        } // end filter switch
+        }
 
         $db_results = Dba::read($sql, $params);
 
@@ -178,6 +85,34 @@ final class Mailer implements MailerInterface
         }
 
         return $results;
+    }
+
+    /**
+     * is_mail_enabled
+     *
+     * Check that the mail feature is enabled. By default, you people to configure their mail settings first
+     */
+    public static function is_mail_enabled(): bool
+    {
+        return AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode');
+    }
+
+    /**
+     * validate_address
+     *
+     * Checks whether what we have looks like a valid address.
+     */
+    public static function validate_address(string $address): bool
+    {
+        return PHPMailer::validateAddress($address);
+    }
+
+    /**
+     * Check that the mail feature is enabled
+     */
+    public function isMailEnabled(): bool
+    {
+        return self::is_mail_enabled();
     }
 
     /**
@@ -215,6 +150,7 @@ final class Mailer implements MailerInterface
         if (function_exists('mb_eregi_replace')) {
             $this->message = (string) mb_eregi_replace("\r\n", "\n", (string) $this->message);
         }
+
         $mail->Body = (string) $this->message;
 
         $sendmail = AmpConfig::get('sendmail_path', '/usr/sbin/sendmail');
@@ -236,9 +172,11 @@ final class Mailer implements MailerInterface
                     $mail->Username = $mailuser;
                     $mail->Password = $mailpass;
                 }
+
                 if ($mailsecure = AmpConfig::get('mail_secure_smtp')) {
                     $mail->SMTPSecure = ($mailsecure == 'ssl') ? 'ssl' : 'tls';
                 }
+
                 break;
             case 'sendmail':
                 $mail->isSendmail();
@@ -254,6 +192,7 @@ final class Mailer implements MailerInterface
         if ($retval === true) {
             return true;
         }
+
         debug_event(self::class, 'Did not send mail. ErrorInfo: ' . $mail->ErrorInfo, 5);
 
         return false;
@@ -267,7 +206,7 @@ final class Mailer implements MailerInterface
         $mail = new PHPMailer();
 
         foreach (self::get_users($group_name) as $member) {
-            $recipient_name = (string)($member['fullname'] ?? $member['username']);
+            $recipient_name = (string) ($member['fullname'] ?? $member['username']);
             if (function_exists('mb_encode_mimeheader')) {
                 $recipient_name = mb_encode_mimeheader($recipient_name);
             }
@@ -276,5 +215,65 @@ final class Mailer implements MailerInterface
         }
 
         return $this->send($mail);
+    }
+
+    /**
+     * set_default_sender
+     *
+     * Does the config magic to figure out the "system" email sender and
+     * sets it as the sender.
+     */
+    public function set_default_sender(): MailerInterface
+    {
+        $user     = AmpConfig::get('mail_user', 'info');
+        $domain   = AmpConfig::get('mail_domain', 'example.com');
+        $fromname = AmpConfig::get('mail_name', 'Ampache');
+
+        $this->sender      = $user . '@' . $domain;
+        $this->sender_name = $fromname;
+
+        return $this;
+    }
+
+    /**
+     * Set the actual mail body/message
+     */
+    public function setMessage(string $message): MailerInterface
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    /**
+     * Set recipient email and -name
+     */
+    public function setRecipient(string $recipientEmail, string $recipientName = ''): MailerInterface
+    {
+        $this->recipient      = $recipientEmail;
+        $this->recipient_name = $recipientName;
+
+        return $this;
+    }
+
+    /**
+     * Set sender email and -name
+     */
+    public function setSender(string $senderEmail, string $senderName = ''): MailerInterface
+    {
+        $this->sender      = $senderEmail;
+        $this->sender_name = $senderName;
+
+        return $this;
+    }
+
+    /**
+     * Set the mail subject
+     */
+    public function setSubject(string $subject): MailerInterface
+    {
+        $this->subject = $subject;
+
+        return $this;
     }
 }

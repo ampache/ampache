@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -28,6 +28,7 @@ namespace Ampache\Application\Api\Ajax;
 use Ampache\Application\Api\Ajax\Handler\AjaxHandlerInterface;
 use Ampache\Application\Api\Ajax\Handler\BrowseAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\CatalogAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\CollectionAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\DefaultAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\IndexAjaxHandler;
@@ -50,9 +51,10 @@ use Psr\Container\ContainerInterface;
 final readonly class AjaxApplication implements ApplicationInterface
 {
     /** @var array<string, class-string> */
-    private const HANDLER_LIST = [
+    private const array HANDLER_LIST = [
         'browse' => BrowseAjaxHandler::class,
         'catalog' => CatalogAjaxHandler::class,
+        'collection' => CollectionAjaxHandler::class,
         'democratic' => DemocraticPlaybackAjaxHandler::class,
         'index' => IndexAjaxHandler::class,
         'localplay' => LocalPlayAjaxHandler::class,
@@ -69,9 +71,8 @@ final readonly class AjaxApplication implements ApplicationInterface
     ];
 
     public function __construct(
-        private ContainerInterface $dic
-    ) {
-    }
+        private ContainerInterface $dic,
+    ) {}
 
     public function run(): void
     {
@@ -87,7 +88,9 @@ final readonly class AjaxApplication implements ApplicationInterface
             throw new AccessDeniedException();
         }
 
-        $handlerClassName = self::HANDLER_LIST[$page] ?? DefaultAjaxHandler::class;
+        $handlerClassName = ($page)
+            ? self::HANDLER_LIST[$page]
+            : DefaultAjaxHandler::class;
 
         /** @var AjaxHandlerInterface $handler */
         $handler = $this->dic->get($handlerClassName);

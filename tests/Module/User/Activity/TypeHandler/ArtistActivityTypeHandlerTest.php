@@ -28,22 +28,12 @@ namespace Ampache\Module\User\Activity\TypeHandler;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 
 class ArtistActivityTypeHandlerTest extends MockeryTestCase
 {
-    /** @var UserActivityRepositoryInterface|MockInterface|null */
-    private MockInterface $useractivityRepository;
-
     private ?ArtistActivityTypeHandler $subject;
-
-    protected function setUp(): void
-    {
-        $this->useractivityRepository = $this->mock(UserActivityRepositoryInterface::class);
-
-        $this->subject = new ArtistActivityTypeHandler(
-            $this->useractivityRepository
-        );
-    }
+    private UserActivityRepositoryInterface|MockInterface|null $userActivityRepository;
 
     public function testRegisterActivityRegisterArtistActivity(): void
     {
@@ -53,7 +43,7 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
         $userId     = 42;
         $date       = 123;
 
-        $this->useractivityRepository->shouldReceive('registerGenericEntry')
+        $this->userActivityRepository->shouldReceive('registerGenericEntry')
             ->with(
                 $userId,
                 $action,
@@ -80,7 +70,7 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
         $userId     = 42;
         $date       = 123;
 
-        $this->useractivityRepository->shouldReceive('registerGenericEntry')
+        $this->userActivityRepository->shouldReceive('registerGenericEntry')
             ->with(
                 $userId,
                 $action,
@@ -96,6 +86,16 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
             $action,
             $userId,
             $date
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
+
+        $this->subject = new ArtistActivityTypeHandler(
+            $this->userActivityRepository
         );
     }
 }

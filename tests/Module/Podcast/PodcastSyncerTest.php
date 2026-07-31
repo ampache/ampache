@@ -25,28 +25,203 @@ declare(strict_types=1);
 namespace Ampache\Module\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
+use ArrayIterator;
+use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 
 class PodcastSyncerTest extends TestCase
 {
-    private PodcastRepositoryInterface&MockObject $podcastRepository;
-
-    private ModelFactoryInterface&MockObject $modelFactory;
-
-    private PodcastEpisodeDownloaderInterface&MockObject $podcastEpisodeDownloader;
-
-    private PodcastDeleterInterface&MockObject $podcastDeleter;
-
-    private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private ModelFactoryInterface&MockObject $modelFactory;
+    private PodcastDeleterInterface&MockObject $podcastDeleter;
+    private PodcastEpisodeDownloaderInterface&MockObject $podcastEpisodeDownloader;
+    private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
     private PodcastSyncer $subject;
+
+    public function testAddEpisodesDownloadsAndCleansUpEligibleEpisodes(): void
+    {
+        $podcast          = $this->createMock(Podcast::class);
+        $episodes         = new SimpleXMLElement('<items></items>');
+        $episode          = $this->createMock(Podcast_Episode::class);
+        $eligibleDeletion = new ArrayIterator([]);
+
+        $this->configContainer->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
+            ->willReturn(5);
+
+        $this->podcastEpisodeRepository->expects(static::once())
+            ->method('getEpisodesEligibleForDownload')
+            ->with($podcast, 5)
+            ->willReturn(new ArrayIterator([$episode]));
+
+        $episode->expects(static::once())
+            ->method('change_state')
+            ->with(PodcastEpisodeStateEnum::PENDING);
+
+        $this->podcastEpisodeDownloader->expects(static::once())
+            ->method('fetch')
+            ->with($episode);
+
+        $this->podcastEpisodeRepository->expects(static::once())
+            ->method('getEpisodesEligibleForDeletion')
+            ->with($podcast)
+            ->willReturn($eligibleDeletion);
+
+        $this->podcastDeleter->expects(static::once())
+            ->method('deleteEpisode')
+            ->with($eligibleDeletion);
+
+        $this->podcastEpisodeRepository->expects(static::once())
+            ->method('getEpisodeCount')
+            ->with($podcast)
+            ->willReturn(3);
+
+        $podcast->expects(static::once())
+            ->method('setEpisodeCount')
+            ->with(3);
+        $podcast->expects(static::once())
+            ->method('setLastSyncDate');
+        $podcast->expects(static::once())
+            ->method('save');
+
+        $this->subject->addEpisodes($podcast, $episodes, null, true);
+    }
+
+    public function testAddEpisodesSkipsDownloadWhenDownloadLimitIsNegative(): void
+    {
+        $podcast  = $this->createMock(Podcast::class);
+        $episodes = new SimpleXMLElement('<items></items>');
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
+            ->willReturn(-1);
+
+        $this->podcastEpisodeRepository->expects(static::never())
+            ->method('getEpisodesEligibleForDownload');
+
+        $this->podcastDeleter->expects(static::never())
+            ->method('deleteEpisode');
+
+        $podcast->expects(static::once())
+            ->method('setLastSyncDate');
+        $podcast->expects(static::once())
+            ->method('save');
+
+        $this->subject->addEpisodes($podcast, $episodes);
+    }
+
+    public function testSyncEpisodeFetches(): void
+    {
+        $episode = $this->createMock(Podcast_Episode::class);
+
+        $this->podcastEpisodeDownloader->expects(static::once())
+            ->method('fetch')
+            ->with($episode);
+
+        $this->subject->syncEpisode($episode);
+    }
+
+    public function testSyncForCatalogsDownloadsUpToTheConfiguredLimit(): void
+    {
+        $catalog = $this->createMock(Catalog::class);
+        $catalog->method('get_podcast_ids')->willReturn([30]);
+
+        $podcast = $this->createMock(Podcast::class);
+        $podcast->method('getFeedUrl')->willReturn('');
+        $podcast->method('getEpisodeIds')
+            ->with(PodcastEpisodeStateEnum::PENDING)
+            ->willReturn([100, 101, 102]);
+
+        $this->podcastRepository->method('findById')
+            ->with(30)
+            ->willReturn($podcast);
+
+        $this->configContainer->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
+            ->willReturn(2);
+
+        $episode100 = $this->createMock(Podcast_Episode::class);
+        $episode101 = $this->createMock(Podcast_Episode::class);
+
+        $this->modelFactory->expects(static::exactly(2))
+            ->method('createPodcastEpisode')
+            ->willReturnMap([
+                [100, $episode100],
+                [101, $episode101],
+            ]);
+
+        $this->podcastEpisodeDownloader->expects(static::exactly(2))
+            ->method('fetch');
+
+        static::assertSame(3, $this->subject->syncForCatalogs([$catalog]));
+    }
+
+    public function testSyncForCatalogsSkipsMissingPodcastsAndCountsPendingEpisodes(): void
+    {
+        $catalog = $this->createMock(Catalog::class);
+        $catalog->method('get_podcast_ids')->willReturn([10, 20]);
+
+        $podcast = $this->createMock(Podcast::class);
+        $podcast->method('getFeedUrl')->willReturn('');
+        $podcast->method('getEpisodeIds')
+            ->with(PodcastEpisodeStateEnum::PENDING)
+            ->willReturn([1, 2, 3]);
+
+        $this->podcastRepository->method('findById')
+            ->willReturnMap([
+                [10, null],
+                [20, $podcast],
+            ]);
+
+        $this->configContainer->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
+            ->willReturn(-1);
+
+        $this->podcastEpisodeDownloader->expects(static::never())
+            ->method('fetch');
+
+        static::assertSame(3, $this->subject->syncForCatalogs([$catalog]));
+    }
+
+    public function testSyncParsesFeedAndDelegatesToAddEpisodes(): void
+    {
+        $podcast = $this->createMock(Podcast::class);
+        $podcast->method('getFeedUrl')->willReturn('data://text/plain,<rss><channel></channel></rss>');
+        $podcast->method('getLastSyncDate')->willReturn(new DateTimeImmutable());
+
+        $this->configContainer->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
+            ->willReturn(-1);
+
+        $podcast->expects(static::once())
+            ->method('setLastSyncDate');
+        $podcast->expects(static::once())
+            ->method('save');
+
+        static::assertTrue($this->subject->sync($podcast));
+    }
+
+    public function testSyncReturnsFalseForEmptyFeedUrl(): void
+    {
+        $podcast = $this->createMock(Podcast::class);
+        $podcast->method('getFeedUrl')->willReturn('');
+
+        $this->configContainer->expects(static::never())
+            ->method('get');
+
+        static::assertFalse($this->subject->sync($podcast));
+    }
 
     protected function setUp(): void
     {
@@ -65,16 +240,5 @@ class PodcastSyncerTest extends TestCase
             $this->podcastEpisodeRepository,
             $this->configContainer
         );
-    }
-
-    public function testSyncEpisodeFetches(): void
-    {
-        $episode = $this->createMock(Podcast_Episode::class);
-
-        $this->podcastEpisodeDownloader->expects(static::once())
-            ->method('fetch')
-            ->with($episode);
-
-        $this->subject->syncEpisode($episode);
     }
 }

@@ -30,38 +30,32 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class DeleteAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->logger          = $logger;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
-        $videoId = (int)($request->getQueryParams()['video_id'] ?? 0);
+        $queryParams = $request->getQueryParams();
+        $videoId     = (int) ($queryParams['video_id'] ?? 0);
+        $burlParam   = (string) ($queryParams['burl'] ?? '');
 
         $this->ui->showHeader();
         if ($videoId < 1) {
@@ -71,18 +65,26 @@ final class DeleteAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->showConfirmation(
+            $webPath = $this->configContainer->getWebPath();
+
+            $this->ui->showConfirmationWithReturn(
                 T_('Are You Sure?'),
                 T_('The Video will be deleted'),
                 sprintf(
-                    '%s/video.php?action=confirm_delete&video_id=%d',
-                    $this->configContainer->getWebPath(),
+                    '%s/video.php?action=confirm_delete&video_id=%d&burl=%s',
+                    $webPath,
+                    $videoId,
+                    rawurlencode($burlParam)
+                ),
+                $this->deletionUrlResolver->resolveBurl($burlParam) ?: sprintf(
+                    '%s/video.php?action=show_video&video_id=%d',
+                    $webPath,
                     $videoId
                 ),
-                1,
                 'delete_video'
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

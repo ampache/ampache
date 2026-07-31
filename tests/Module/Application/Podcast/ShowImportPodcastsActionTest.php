@@ -38,57 +38,10 @@ use Psr\Http\Message\ServerRequestInterface;
 class ShowImportPodcastsActionTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private UiInterface&MockObject $ui;
-
-    private ShowImportPodcastsAction $subject;
-
-    private ServerRequestInterface&MockObject $request;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->ui              = $this->createMock(UiInterface::class);
-
-        $this->subject = new ShowImportPodcastsAction(
-            $this->configContainer,
-            $this->ui
-        );
-
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-    }
-
-    public function testRunReturnsNullIfPodcastsAreDisabled(): void
-    {
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn(false);
-
-        static::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
-        );
-    }
-
-    public function testRunThrowsIsAccessIsDenied(): void
-    {
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn(true);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->willReturn(false);
-
-        static::expectException(AccessDeniedException::class);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
+    private ServerRequestInterface&MockObject $request;
+    private ShowImportPodcastsAction $subject;
+    private UiInterface&MockObject $ui;
 
     public function testRunRenders(): void
     {
@@ -122,8 +75,51 @@ class ShowImportPodcastsActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
+    }
+
+    public function testRunReturnsNullIfPodcastsAreDisabled(): void
+    {
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->run($this->request, $this->gatekeeper)
+        );
+    }
+
+    public function testRunThrowsIsAccessIsDenied(): void
+    {
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn(true);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->willReturn(false);
+
+        static::expectException(AccessDeniedException::class);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    protected function setUp(): void
+    {
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->ui              = $this->createMock(UiInterface::class);
+
+        $this->subject = new ShowImportPodcastsAction(
+            $this->configContainer,
+            $this->ui
+        );
+
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
     }
 }

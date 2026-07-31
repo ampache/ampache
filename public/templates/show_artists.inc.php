@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_artists.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -35,18 +37,18 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 /** @var string $limit_threshold */
 
 session_start();
 
 $web_path = AmpConfig::get_web_path();
 
-$thcount            = 8;
-$show_ratings       = User::is_registered() && (AmpConfig::get('ratings'));
-$show_played_times  = AmpConfig::get('show_played_times');
-$hide_genres        = AmpConfig::get('hide_genres');
-$is_table           = !$browse->is_grid_view();
+$thcount           = 8;
+$show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
+$show_played_times = AmpConfig::get('show_played_times');
+$hide_genres       = AmpConfig::get('hide_genres');
+$is_table          = !$browse->is_grid_view();
 // translate depending on the browse type
 if ($browse->is_album_artist()) {
     $artist_text = T_('Album Artist');
@@ -101,7 +103,7 @@ if ($browse->is_show_header()) {
                 }
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
-$directplay_limit     = AmpConfig::get('direct_play_limit');
+$directplay_limit     = AmpConfig::get('direct_play_limit', 500);
 
 /* Foreach through every artist that has been passed to us */
 foreach ($object_ids as $artist_id) {
@@ -118,7 +120,7 @@ foreach ($object_ids as $artist_id) {
             $show_direct_play = $show_playlist_add;
         }
     } ?>
-        <tr id="artist_<?php echo $libitem->id; ?>" class="libitem_menu">
+        <tr id="artist_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="artist" data-object-id="<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php

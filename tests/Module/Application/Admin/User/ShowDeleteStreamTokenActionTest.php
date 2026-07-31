@@ -34,22 +34,9 @@ class ShowDeleteStreamTokenActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
 
-    private MockObject&UiInterface $ui;
-
     private MockObject&ConfigContainerInterface $configContainer;
-
     private ShowDeleteStreamTokenAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new ShowDeleteStreamTokenAction(
-            $this->ui,
-            $this->configContainer,
-        );
-    }
+    private MockObject&UiInterface $ui;
 
     public function testHandleRendersConfirmation(): void
     {
@@ -69,6 +56,17 @@ class ShowDeleteStreamTokenActionTest extends TestCase
                         'delete_streamtoken'
                     );
             }
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new ShowDeleteStreamTokenAction(
+            $this->ui,
+            $this->configContainer,
         );
     }
 }

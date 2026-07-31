@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,28 +30,36 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
 use Exception;
+use Override;
 use WpOrg\Requests\Requests;
 
 class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInterface
 {
-    public string $name = 'Headphones';
-
+    #[Override]
     public string $categories = 'wanted';
 
+    #[Override]
     public string $description = 'Automatically download accepted Wanted List albums with Headphones';
 
-    public string $url = 'https://github.com/rembo10/headphones/';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000001';
-
+    #[Override]
     public string $min_ampache = '360030';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'Headphones';
+
+    #[Override]
+    public string $url = 'https://github.com/rembo10/headphones/';
+
+    #[Override]
+    public string $version = '000001';
+
+    private string $api_key;
 
     // These are internal settings used by this class, run this->load to fill them out
     private string $api_url;
-
-    private string $api_key;
 
     /**
      * Constructor
@@ -72,79 +80,6 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
         }
 
         return Preference::insert('headphones_api_key', T_('Headphones API key'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('headphones_api_url') &&
-            Preference::delete('headphones_api_key')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
-     * process_wanted
-     * This takes care of auto-download accepted Wanted List albums
-     */
-    public function process_wanted(Wanted $wanted): bool
-    {
-        set_time_limit(0);
-
-        $headartist = json_decode(
-            $this->headphones_call('getArtist', ['id' => $wanted->artist_mbid])
-        );
-
-        // No artist info, need to add artist to Headphones first. Can be long!
-        if (!$headartist->artist) {
-            $this->headphones_call('addArtist', ['id' => $wanted->artist_mbid]);
-        }
-
-        return ($this->headphones_call('queueAlbum', ['id' => $wanted->mbid]) === 'OK');
-    }
-
-    /**
-     * @param array<string, null|string> $params
-     */
-    protected function headphones_call(string $command, array $params): string
-    {
-        if (
-            (!isset($this->api_url) || ($this->api_url === '' || $this->api_url === '0')) ||
-            (!isset($this->api_key) || ($this->api_key === '' || $this->api_key === '0'))
-        ) {
-            debug_event(self::class, 'Headphones url or api key missing', 3);
-
-            return '';
-        }
-
-        $url = $this->api_url . '/api?apikey=' . $this->api_key . '&cmd=' . $command;
-        foreach ($params as $key => $value) {
-            $url .= '&' . $key . '=' . urlencode((string) $value);
-        }
-
-        debug_event(self::class, 'Headphones api call: ' . $url, 5);
-        try {
-            // We assume Headphone server is local, don't use proxy here
-            $request = Requests::get($url, [], ['timeout' => 600]);
-        } catch (Exception $exception) {
-            debug_event(self::class, 'Headphones api http exception: ' . $exception->getMessage(), 1);
-
-            return '';
-        }
-
-        return $request->body;
     }
 
     /**
@@ -179,5 +114,78 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
         }
 
         return true;
+    }
+
+    /**
+     * process_wanted
+     * This takes care of auto-download accepted Wanted List albums
+     */
+    public function process_wanted(Wanted $wanted): bool
+    {
+        set_time_limit(0);
+
+        $headartist = json_decode(
+            $this->headphones_call('getArtist', ['id' => $wanted->artist_mbid])
+        );
+
+        // No artist info, need to add artist to Headphones first. Can be long!
+        if (!$headartist->artist) {
+            $this->headphones_call('addArtist', ['id' => $wanted->artist_mbid]);
+        }
+
+        return ($this->headphones_call('queueAlbum', ['id' => $wanted->mbid]) === 'OK');
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('headphones_api_url')
+            && Preference::delete('headphones_api_key')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @param array<string, null|string> $params
+     */
+    protected function headphones_call(string $command, array $params): string
+    {
+        if (
+            (!isset($this->api_url) || ($this->api_url === '' || $this->api_url === '0'))
+            || (!isset($this->api_key) || ($this->api_key === '' || $this->api_key === '0'))
+        ) {
+            debug_event(self::class, 'Headphones url or api key missing', 3);
+
+            return '';
+        }
+
+        $url = $this->api_url . '/api?apikey=' . $this->api_key . '&cmd=' . $command;
+        foreach ($params as $key => $value) {
+            $url .= '&' . $key . '=' . urlencode((string) $value);
+        }
+
+        debug_event(self::class, 'Headphones api call: ' . $url, 5);
+        try {
+            // We assume Headphone server is local, don't use proxy here
+            $request = Requests::get($url, [], ['timeout' => 600]);
+        } catch (Exception $exception) {
+            debug_event(self::class, 'Headphones api http exception: ' . $exception->getMessage(), 1);
+
+            return '';
+        }
+
+        return $request->body;
     }
 }

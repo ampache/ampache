@@ -25,19 +25,28 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
-use Ampache\Repository\Model\Album;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * Class Album5Method
+ * @package Lib\Api5Methods
  */
-final class Album5Method
+final class Album5Method implements MethodInterface
 {
-    public const ACTION = 'album';
+    public const string ACTION = 'album';
+
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * album
@@ -56,26 +65,31 @@ final class Album5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function album(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $objectId = $input['filter'] ?? null;
 
         if ($objectId === null || $objectId === '') {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), 'filter'), self::ACTION, 'system', $input['api_format']);
-
-            return false;
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
         }
 
-        $album = new Album((int) $objectId);
-
+        $album = $this->modelFactory->createAlbum((int) $objectId);
         if ($album->isNew()) {
-            Api5::empty('album', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException((string) $objectId);
         }
 
-        ob_end_clean();
         $include = [];
         if (array_key_exists('include', $input)) {
             if (is_array($input['include'])) {
@@ -89,18 +103,21 @@ final class Album5Method
             }
         }
 
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::albums([$album->getId()], $include, $user, $input['auth']);
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::albums([$album->getId()], $include, $user, $input['auth']);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
+        $result = $output->albums(
+            $apiVersion,
+            [$album->getId()],
+            $include,
+            $user,
+            $input['auth'],
+        );
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $result
+            )
+        );
     }
 }

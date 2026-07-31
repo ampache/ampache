@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,25 +36,15 @@ use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ValidateAction implements ApplicationActionInterface
+final readonly class ValidateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'validate';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private UserRepositoryInterface $userRepository;
+    public const string REQUEST_KEY = 'validate';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        UserRepositoryInterface $userRepository
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->userRepository  = $userRepository;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

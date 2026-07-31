@@ -33,26 +33,47 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowAddLabelActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
     private ?ShowAddLabelAction $subject;
+    private UiInterface|MockInterface|null $ui;
 
-    protected function setUp(): void
+    public function testRunShowsErrorMessage(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
-        $this->subject = new ShowAddLabelAction(
-            $this->configContainer,
-            $this->ui
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::CONTENT_MANAGER
+            )
+            ->once()
+            ->andReturnFalse();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::LABEL)
+            ->once()
+            ->andReturnTrue();
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+
+        $this->expectOutputString('The Label cannot be found');
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
         );
     }
 
@@ -92,38 +113,15 @@ class ShowAddLabelActionTest extends MockeryTestCase
         );
     }
 
-    public function testRunShowsErrorMessage(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(
-                AccessTypeEnum::INTERFACE,
-                AccessLevelEnum::CONTENT_MANAGER
-            )
-            ->once()
-            ->andReturnFalse();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::LABEL)
-            ->once()
-            ->andReturnTrue();
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        $this->expectOutputString('The Label cannot be found');
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
+        $this->subject = new ShowAddLabelAction(
+            $this->configContainer,
+            $this->ui
         );
     }
 }

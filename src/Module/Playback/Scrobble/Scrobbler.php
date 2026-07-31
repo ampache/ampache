@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,61 +30,22 @@ use SimpleXMLElement;
 
 class Scrobbler
 {
-    public string $api_key;
-
-    public string $error_msg;
-
-    public ?string $challenge;
-
-    public ?string $host;
-
-    public ?string $scheme;
+    public string $error_msg = '';
 
     /** @var array<int, array{artist: string, album: string, title: string, track: int, length: int, time: int}> $queued_tracks */
-    public array $queued_tracks;
-
-    private ?string $secret = null;
+    public array $queued_tracks = [];
 
     /**
      * Constructor
      * This is the constructer it takes a username and password
      */
     public function __construct(
-        string  $api_key,
-        ?string $scheme = 'https',
-        ?string $host = '',
-        ?string $challenge = '',
-        ?string $secret = ''
-    ) {
-        $this->error_msg     = '';
-        $this->challenge     = $challenge;
-        $this->host          = $host;
-        $this->scheme        = $scheme;
-        $this->api_key       = $api_key;
-        $this->secret        = $secret;
-        $this->queued_tracks = [];
-    }
-
-    /**
-     * get_api_sig
-     * Provide the API signature for calling Last.fm / Libre.fm services
-     * It is the md5 of the <name><value> of all parameter plus API's secret
-     * @param null|array<string, string> $vars
-     */
-    public function get_api_sig(?array $vars = []): string
-    {
-        if (!$vars) {
-            return '';
-        }
-        ksort($vars);
-        $sig = '';
-        foreach ($vars as $name => $value) {
-            $sig .= $name . $value;
-        }
-        $sig .= $this->secret;
-
-        return md5($sig);
-    }
+        public string  $api_key,
+        public ?string $scheme = 'https',
+        public ?string $host = '',
+        public ?string $challenge = '',
+        private readonly ?string $secret = '',
+    ) {}
 
     /**
      * call_url
@@ -106,17 +67,19 @@ class Scrobbler
             ]
         ];
         // POST request need parameters in body and additional headers
-        if ($method == 'POST') {
+        if ($method === 'POST') {
             $opts['http']['content']  = $params;
             $opts['http']['header'][] = 'Content-type: application/x-www-form-urlencoded';
-            $opts['http']['header'][] = 'Content-length: ' . strlen((string)$params);
+            $opts['http']['header'][] = 'Content-length: ' . strlen($params);
             $params                   = '';
         }
+
         $context = stream_context_create($opts);
-        if ($params != '') {
+        if ($params !== '') {
             // If there are parameters for GET request, adding the "?" character before
             $params = '?' . $params;
         }
+
         $target   = $this->scheme . '://' . $this->host . $url . $params;
         $filepath = @fopen($target, 'r', false, $context);
         if (!$filepath) {
@@ -124,6 +87,7 @@ class Scrobbler
 
             return null;
         }
+
         ob_start();
         fpassthru($filepath);
         $buffer = ob_get_contents();
@@ -131,6 +95,29 @@ class Scrobbler
         fclose($filepath);
 
         return $buffer ?: null;
+    }
+
+    /**
+     * get_api_sig
+     * Provide the API signature for calling Last.fm / Libre.fm services
+     * It is the md5 of the <name><value> of all parameter plus API's secret
+     * @param null|array<string, string> $vars
+     */
+    public function get_api_sig(?array $vars = []): string
+    {
+        if (!$vars) {
+            return '';
+        }
+
+        ksort($vars);
+        $sig = '';
+        foreach ($vars as $name => $value) {
+            $sig .= $name . $value;
+        }
+
+        $sig .= $this->secret;
+
+        return md5($sig);
     }
 
     /**
@@ -171,26 +158,70 @@ class Scrobbler
                 ? simplexml_load_string($response)
                 : false;
             if ($xml) {
-                $status = (string)$xml['status'];
-                if ($status == 'ok') {
+                $status = (string) $xml['status'];
+                if ($status === 'ok') {
                     if ($xml->session && $xml->session->key) {
                         return $xml->session->key;
                     }
+
                     $this->error_msg = 'Did not receive a valid response';
 
                     return null;
                 }
-                $this->error_msg = $xml->error;
+
+                $this->error_msg = (string) $xml->error;
 
                 return null;
             }
+
             $this->error_msg = 'Did not receive a valid response';
 
             return null;
         }
+
         $this->error_msg = 'Need a token to call getSession';
 
         return null;
+    }
+
+    /**
+     * love
+     * This takes care of spreading your love to the world
+     * If passed the API key, session key combined with the signature
+     */
+    public function love(bool $is_loved, string $artist = '', string $title = ''): bool
+    {
+        $vars           = [];
+        $vars['track']  = $title;
+        $vars['artist'] = $artist;
+        // Add the method, API and session keys
+        $vars['method']  = ($is_loved) ? 'track.love' : 'track.unlove';
+        $vars['api_key'] = $this->api_key;
+        $vars['sk']      = (string) $this->challenge;
+
+        // Sign the call
+        $sig             = $this->get_api_sig($vars);
+        $vars['api_sig'] = $sig;
+
+        // Call the method and parse response
+        $response = $this->call_url('/2.0/', 'POST', $vars);
+        $xml      = ($response)
+            ? simplexml_load_string($response)
+            : false;
+        if ($xml) {
+            $status = (string) $xml['status'];
+            if ($status === 'ok') {
+                return true;
+            }
+
+            $this->error_msg = (string) $xml->error;
+
+            return false;
+        }
+
+        $this->error_msg = 'Did not receive a valid response';
+
+        return false;
     }
 
     /**
@@ -205,7 +236,7 @@ class Scrobbler
         string $title,
         int    $timestamp,
         int    $length,
-        int    $track
+        int    $track,
     ): bool {
         if ($length < 30) {
             debug_event(self::class, "Not queuing track, too short", 3);
@@ -234,7 +265,7 @@ class Scrobbler
     public function submit_tracks(): bool
     {
         // Check and make sure that we've got some queued tracks
-        if (!count($this->queued_tracks)) {
+        if ($this->queued_tracks === []) {
             $this->error_msg = "No tracks to submit";
 
             return false;
@@ -248,18 +279,19 @@ class Scrobbler
         $vars  = [];
         foreach ($this->queued_tracks as $track) {
             // construct array of parameters for each song
-            $vars["artist[$count]"]      = (string)$track['artist'];
-            $vars["track[$count]"]       = (string)$track['title'];
-            $vars["timestamp[$count]"]   = (string)$track['time'];
-            $vars["album[$count]"]       = (string)$track['album'];
-            $vars["trackNumber[$count]"] = (string)$track['track'];
-            $vars["duration[$count]"]    = (string)$track['length'];
+            $vars[sprintf('artist[%d]', $count)]      = (string) $track['artist'];
+            $vars[sprintf('track[%d]', $count)]       = (string) $track['title'];
+            $vars[sprintf('timestamp[%d]', $count)]   = (string) $track['time'];
+            $vars[sprintf('album[%d]', $count)]       = (string) $track['album'];
+            $vars[sprintf('trackNumber[%d]', $count)] = (string) $track['track'];
+            $vars[sprintf('duration[%d]', $count)]    = (string) $track['length'];
             $count++;
         }
+
         // Add the method, API and session keys
         $vars['method']  = 'track.scrobble';
         $vars['api_key'] = $this->api_key;
-        $vars['sk']      = (string)$this->challenge;
+        $vars['sk']      = (string) $this->challenge;
 
         // Sign the call
         $sig             = $this->get_api_sig($vars);
@@ -271,52 +303,16 @@ class Scrobbler
             ? simplexml_load_string($response)
             : false;
         if ($xml) {
-            $status = (string)$xml['status'];
-            if ($status == 'ok') {
+            $status = (string) $xml['status'];
+            if ($status === 'ok') {
                 return true;
             }
-            $this->error_msg = $xml->error;
+
+            $this->error_msg = (string) $xml->error;
 
             return false;
         }
-        $this->error_msg = 'Did not receive a valid response';
 
-        return false;
-    }
-
-    /**
-     * love
-     * This takes care of spreading your love to the world
-     * If passed the API key, session key combined with the signature
-     */
-    public function love(bool $is_loved, string $artist = '', string $title = ''): bool
-    {
-        $vars           = [];
-        $vars['track']  = $title;
-        $vars['artist'] = $artist;
-        // Add the method, API and session keys
-        $vars['method']  = ($is_loved) ? 'track.love' : 'track.unlove';
-        $vars['api_key'] = $this->api_key;
-        $vars['sk']      = (string)$this->challenge;
-
-        // Sign the call
-        $sig             = $this->get_api_sig($vars);
-        $vars['api_sig'] = $sig;
-
-        // Call the method and parse response
-        $response = $this->call_url('/2.0/', 'POST', $vars);
-        $xml      = ($response)
-            ? simplexml_load_string($response)
-            : false;
-        if ($xml) {
-            $status = (string)$xml['status'];
-            if ($status == 'ok') {
-                return true;
-            }
-            $this->error_msg = $xml->error;
-
-            return false;
-        }
         $this->error_msg = 'Did not receive a valid response';
 
         return false;

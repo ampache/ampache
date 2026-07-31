@@ -34,6 +34,17 @@ use Iterator;
 interface UpdaterInterface
 {
     /**
+     * Checks for missing database tables
+     *
+     * @param bool $migrate Set to `true` if the system should try to create the missing tables
+     * @param int $build Current Ampache database build number
+     * @return Iterator<string> The names of the missing database tables
+     *
+     * @throws UpdateFailedException
+     */
+    public function checkTables(bool $migrate = false, int $build = 0): Iterator;
+
+    /**
      * This yields a list of the needed updates to the database
      *
      * @return Generator<array{
@@ -45,14 +56,14 @@ interface UpdaterInterface
     public function getPendingUpdates(): Iterator;
 
     /**
-     * Checks to see if we need to update Ampache at all.
-     */
-    public function hasPendingUpdates(): bool;
-
-    /**
      * Checks to see if the database db_version is higher than the code db_version
      */
     public function hasOverUpdated(): bool;
+
+    /**
+     * Checks to see if we need to update Ampache at all.
+     */
+    public function hasPendingUpdates(): bool;
 
     /**
      * Rollback the database to the required version
@@ -60,7 +71,7 @@ interface UpdaterInterface
      * @throws UpdateFailedException
      */
     public function rollback(
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void;
 
     /**
@@ -69,18 +80,6 @@ interface UpdaterInterface
      * @throws UpdateException
      */
     public function update(
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void;
-
-    /**
-     * Checks for missing database tables
-     *
-     * @param bool $migrate Set to `true` if the system should try to create the missing tables
-     * @param int $build Current Ampache database build number
-     *
-     * @return Iterator<string> The names of the missing database tables
-     *
-     * @throws UpdateFailedException
-     */
-    public function checkTables(bool $migrate = false, int $build = 0): Iterator;
 }

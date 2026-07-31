@@ -30,39 +30,14 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class AccessListItemTest extends MockeryTestCase
 {
     private MockInterface&Access $access;
-
     private MockInterface&ModelFactoryInterface $modelFactory;
-
     private AccessListItem $subject;
-
-    protected function setUp(): void
-    {
-        $this->access       = $this->mock(Access::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new AccessListItem(
-            $this->modelFactory,
-            $this->access
-        );
-    }
-
-    #[DataProvider(methodName: 'levelNameDataProvider')]
-    public function testGetLevelNameReturnsLabel(
-        int $level,
-        string $label
-    ): void {
-        $this->access->level = $level;
-
-        $this->assertSame(
-            $label,
-            $this->subject->getLevelName()
-        );
-    }
 
     public static function levelNameDataProvider(): array
     {
@@ -75,11 +50,152 @@ class AccessListItemTest extends MockeryTestCase
         ];
     }
 
+    public static function typeNameDataProvider(): array
+    {
+        return [
+            ['rpc', 'API/RPC'],
+            ['network', 'Local Network Definition'],
+            ['interface', 'Web Interface'],
+            ['stream', 'Stream Access'],
+            ['foobar', 'Stream Access'],
+        ];
+    }
+
+    public function testGetEndIpReturnsEmptyStringIfConversionFails(): void
+    {
+        $this->access->end = 'foobar';
+
+        $this->assertSame(
+            '',
+            $this->subject->getEndIp()
+        );
+    }
+
+    public function testGetEndIpReturnsIpReadable(): void
+    {
+        $ip = '1.2.3.4';
+
+        $this->access->end = inet_pton($ip);
+
+        $this->assertSame(
+            $ip,
+            $this->subject->getEndIp()
+        );
+    }
+
+    public function testGetIdReturnsValue(): void
+    {
+        $value = 42;
+
+        $this->access->id = $value;
+
+        $this->assertSame(
+            $value,
+            $this->subject->getId()
+        );
+    }
+
+    #[DataProvider(methodName: 'levelNameDataProvider')]
+    public function testGetLevelNameReturnsLabel(
+        int $level,
+        string $label,
+    ): void {
+        $this->access->level = $level;
+
+        $this->assertSame(
+            $label,
+            $this->subject->getLevelName()
+        );
+    }
+
+    public function testGetLevelReturnsValue(): void
+    {
+        $value = 42;
+
+        $this->access->level = $value;
+
+        $this->assertSame(
+            $value,
+            $this->subject->getLevel()
+        );
+    }
+
+    public function testGetNameReturnsValue(): void
+    {
+        $value = 'some-value';
+
+        $this->access->name = $value;
+
+        $this->assertSame(
+            $value,
+            $this->subject->getName()
+        );
+    }
+
+    public function testGetStartIpReturnsEmptyStringIfConversionFails(): void
+    {
+        $this->access->start = 'foobar';
+
+        $this->assertSame(
+            '',
+            $this->subject->getStartIp()
+        );
+    }
+
+    public function testGetStartIpReturnsIpReadable(): void
+    {
+        $ip = '1.2.3.4';
+
+        $this->access->start = inet_pton($ip);
+
+        $this->assertSame(
+            $ip,
+            $this->subject->getStartIp()
+        );
+    }
+
+    #[DataProvider(methodName: 'typeNameDataProvider')]
+    public function testGetTypeNameReturnLabel(
+        string $typeId,
+        string $label,
+    ): void {
+        $this->access->type = $typeId;
+
+        $this->assertSame(
+            $label,
+            $this->subject->getTypeName()
+        );
+    }
+
+    public function testGetTypeReturnsValue(): void
+    {
+        $value = 'some-value';
+
+        $this->access->type = $value;
+
+        $this->assertSame(
+            $value,
+            $this->subject->getType()
+        );
+    }
+
+    public function testGetUserIdReturnsValue(): void
+    {
+        $value = 42;
+
+        $this->access->user = $value;
+
+        $this->assertSame(
+            $value,
+            $this->subject->getUserId()
+        );
+    }
+
     public function testGetUserNameReturnsDefault(): void
     {
         $userId = -1;
 
-        $this->access->user = (string)$userId;
+        $this->access->user = $userId;
 
         $this->assertSame(
             'All',
@@ -115,131 +231,15 @@ class AccessListItemTest extends MockeryTestCase
         );
     }
 
-    #[DataProvider(methodName: 'typeNameDataProvider')]
-    public function testGetTypeNameReturnLabel(
-        string $typeId,
-        string $label
-    ): void {
-        $this->access->type = $typeId;
-
-        $this->assertSame(
-            $label,
-            $this->subject->getTypeName()
-        );
-    }
-
-    public static function typeNameDataProvider(): array
+    #[Override]
+    protected function setUp(): void
     {
-        return [
-            ['rpc', 'API/RPC'],
-            ['network', 'Local Network Definition'],
-            ['interface', 'Web Interface'],
-            ['stream', 'Stream Access'],
-            ['foobar', 'Stream Access'],
-        ];
-    }
+        $this->access       = $this->mock(Access::class);
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
 
-    public function testGetStartIpReturnsEmptyStringIfConversionFails(): void
-    {
-        $this->access->start = 'foobar';
-
-        $this->assertSame(
-            '',
-            $this->subject->getStartIp()
-        );
-    }
-
-    public function testGetStartIpReturnsIpReadable(): void
-    {
-        $ip = '1.2.3.4';
-
-        $this->access->start = inet_pton($ip);
-
-        $this->assertSame(
-            $ip,
-            $this->subject->getStartIp()
-        );
-    }
-
-    public function testGetEndIpReturnsEmptyStringIfConversionFails(): void
-    {
-        $this->access->end = 'foobar';
-
-        $this->assertSame(
-            '',
-            $this->subject->getEndIp()
-        );
-    }
-
-    public function testGetEndIpReturnsIpReadable(): void
-    {
-        $ip = '1.2.3.4';
-
-        $this->access->end = inet_pton($ip);
-
-        $this->assertSame(
-            $ip,
-            $this->subject->getEndIp()
-        );
-    }
-
-    public function testGetNameReturnsValue(): void
-    {
-        $value = 'some-value';
-
-        $this->access->name = $value;
-
-        $this->assertSame(
-            $value,
-            $this->subject->getName()
-        );
-    }
-
-    public function testGetIdReturnsValue(): void
-    {
-        $value = 42;
-
-        $this->access->id = $value;
-
-        $this->assertSame(
-            $value,
-            $this->subject->getId()
-        );
-    }
-
-    public function testGetLevelReturnsValue(): void
-    {
-        $value = 42;
-
-        $this->access->level = $value;
-
-        $this->assertSame(
-            $value,
-            $this->subject->getLevel()
-        );
-    }
-
-    public function testGetTypeReturnsValue(): void
-    {
-        $value = 'some-value';
-
-        $this->access->type = $value;
-
-        $this->assertSame(
-            $value,
-            $this->subject->getType()
-        );
-    }
-
-    public function testGetUserIdReturnsValue(): void
-    {
-        $value = 42;
-
-        $this->access->user = $value;
-
-        $this->assertSame(
-            $value,
-            $this->subject->getUserId()
+        $this->subject = new AccessListItem(
+            $this->modelFactory,
+            $this->access
         );
     }
 }

@@ -25,24 +25,38 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class BookmarkCreate5Method
+ * Creates a placeholder for the current media that can be returned to later.
+ *
+ * Version 5 defaults the client comment to `AmpacheAPI` and never includes the bookmarked object,
+ * so it keeps a method of its own.
  */
-final class BookmarkCreate5Method
+final class BookmarkCreate5Method implements MethodInterface
 {
-    public const ACTION = 'bookmark_create';
+    public const string ACTION = 'bookmark_create';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * bookmark_create
@@ -66,72 +80,104 @@ final class BookmarkCreate5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function bookmark_create(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['filter', 'type', 'position'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        foreach (['filter', 'type', 'position'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
-        $object_id = (string) $input['filter'];
-        $type      = strtolower((string) $input['type']);
+
+        $object_id = $input['filter'];
+        $type      = $input['type'];
         $position  = $input['position'];
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : 'AmpacheAPI';
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
-        if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
 
-            return false;
+        // the type is matched case insensitively, so resolve the object from the normalized name
+        $item_type = strtolower((string) $type);
+
+        if (
+            !$this->configContainer->get(ConfigurationKeyEnum::ALLOW_VIDEO)
+            && $item_type == 'video'
+        ) {
+            throw new AccessDeniedException(
+                'Enable: video'
+            );
         }
+
         // confirm the correct data
-        if (!in_array($type, ['song', 'video', 'podcast_episode'])) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
+        if (!in_array($item_type, ['song', 'video', 'podcast_episode'])) {
+            return $this->writeTypeError($response, $output, $apiVersion, $type);
         }
 
-        $className = ObjectTypeToClassNameMapper::map($type);
-        if ($className === $type || !$object_id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
+        $className = ObjectTypeToClassNameMapper::map($item_type);
+        if ($className === $item_type || !$object_id) {
+            return $this->writeTypeError($response, $output, $apiVersion, $type);
         }
 
         /** @var Song|Podcast_Episode|Video $item */
         $item = new $className((int) $object_id);
         if ($item->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                (string) $object_id
+            );
         }
+
         $object = [
             'user' => $user->getId(),
             'object_id' => (int) $object_id,
-            'object_type' => $type,
+            'object_type' => $item_type,
             'comment' => $comment,
             'position' => (int) $position,
         ];
 
         // create it then retrieve it
         Bookmark::create($object, $user->getId(), $time);
+
         $results = Bookmark::getBookmarks($object);
-        if (empty($results)) {
-            Api5::empty('bookmark', $input['api_format']);
-
-            return false;
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'bookmark')
+                )
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json5_Data::bookmarks($results);
-                break;
-            default:
-                echo Xml5_Data::bookmarks($results);
-        }
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->bookmarks($apiVersion, $results, $input['auth'])
+            )
+        );
+    }
 
-        return true;
+    private function writeTypeError(
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        int $apiVersion,
+        string $type,
+    ): ResponseInterface {
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    sprintf('Bad Request: %s', $type),
+                    self::ACTION,
+                    'type'
+                )
+            )
+        );
     }
 }

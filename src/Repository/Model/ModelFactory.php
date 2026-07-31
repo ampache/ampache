@@ -32,15 +32,47 @@ use Ampache\Module\Authorization\Access;
  */
 final class ModelFactory implements ModelFactoryInterface
 {
-    public function createPlaylist(
-        int $id
-    ): Playlist {
-        return new Playlist($id);
+    public function createAccess(
+        int $accessId,
+    ): Access {
+        return new Access($accessId);
+    }
+
+    public function createAlbum(
+        ?int $albumId = null,
+    ): Album {
+        return new Album((int) $albumId);
+    }
+
+    public function createAlbumDisk(
+        ?int $albumDiskId = null,
+    ): AlbumDisk {
+        return new AlbumDisk((int) $albumDiskId);
+    }
+
+    public function createArt(
+        ?int $artId = null,
+        string $type = 'album',
+        string $kind = 'default',
+    ): Art {
+        return new Art((int) $artId, $type, $kind);
+    }
+
+    public function createArtist(
+        ?int $artistId = null,
+    ): Artist {
+        return new Artist((int) $artistId);
+    }
+
+    public function createBroadcast(
+        int $broadcastId,
+    ): Broadcast {
+        return new Broadcast($broadcastId);
     }
 
     public function createBrowse(
         ?int $browse_id = null,
-        bool $cached = true
+        bool $cached = true,
     ): Browse {
         return new Browse(
             (int) $browse_id,
@@ -48,17 +80,45 @@ final class ModelFactory implements ModelFactoryInterface
         );
     }
 
-    public function createSong(
-        ?int $songId = null
-    ): Song {
-        return new Song(
-            (int) $songId
-        );
+    public function createDemocratic(
+        int $democraticId,
+    ): Democratic {
+        return new Democratic($democraticId);
+    }
+
+    public function createLiveStream(
+        int $liveStreamId,
+    ): Live_Stream {
+        return new Live_Stream($liveStreamId);
+    }
+
+    public function createPlaylist(
+        int $id,
+    ): Playlist {
+        return new Playlist($id);
+    }
+
+    public function createPodcast(
+        int $podcastId,
+    ): Podcast {
+        return new Podcast($podcastId);
+    }
+
+    public function createPodcastEpisode(
+        int $podcastEpisodeId,
+    ): Podcast_Episode {
+        return new Podcast_Episode($podcastEpisodeId);
+    }
+
+    public function createPrivateMsg(
+        int $privateMessageId,
+    ): PrivateMessageInterface {
+        return new PrivateMsg($privateMessageId);
     }
 
     public function createRating(
         int $objectId,
-        string $typeId
+        string $typeId,
     ): Rating {
         return new Rating(
             $objectId,
@@ -66,103 +126,50 @@ final class ModelFactory implements ModelFactoryInterface
         );
     }
 
-    public function createUser(
-        ?int $userId = null
-    ): User {
-        return new User((int) $userId);
-    }
-
-    public function createAlbum(
-        ?int $albumId = null
-    ): Album {
-        return new Album((int) $albumId);
-    }
-
-    public function createAlbumDisk(
-        ?int $albumDiskId = null
-    ): AlbumDisk {
-        return new AlbumDisk((int) $albumDiskId);
-    }
-
-    public function createArtist(
-        ?int $artistId = null
-    ): Artist {
-        return new Artist((int) $artistId);
-    }
-
-    public function createWanted(
-        ?int $wantedId = null
-    ): Wanted {
-        return new Wanted((int) $wantedId);
-    }
-
-    public function createArt(
-        ?int $artId = null,
-        string $type = 'album',
-        string $kind = 'default'
-    ): Art {
-        return new Art((int) $artId, $type, $kind);
-    }
-
-    public function createBroadcast(
-        int $broadcastId
-    ): Broadcast {
-        return new Broadcast($broadcastId);
-    }
-
-    public function createLiveStream(
-        int $liveStreamId
-    ): Live_Stream {
-        return new Live_Stream($liveStreamId);
-    }
-
-    public function createPodcast(
-        int $podcastId
-    ): Podcast {
-        return new Podcast($podcastId);
-    }
-
-    public function createPodcastEpisode(
-        int $podcastEpisodeId
-    ): Podcast_Episode {
-        return new Podcast_Episode($podcastEpisodeId);
-    }
-
-    public function createPrivateMsg(
-        int $privateMessageId
-    ): PrivateMessageInterface {
-        return new PrivateMsg($privateMessageId);
-    }
-
-    public function createDemocratic(
-        int $democraticId
-    ): Democratic {
-        return new Democratic($democraticId);
-    }
-
-    public function createTmpPlaylist(
-        int $tmpPlaylistId
-    ): Tmp_Playlist {
-        return new Tmp_Playlist($tmpPlaylistId);
-    }
-
     public function createSearch(
         ?int $searchId = 0,
         string $searchType = 'song',
-        ?User $user = null
+        ?User $user = null,
     ): Search {
         return new Search((int) $searchId, $searchType, $user);
     }
 
-    public function createAccess(
-        int $accessId
-    ): Access {
-        return new Access($accessId);
+    public function createSmartlist(
+        ?int $searchId = 0,
+        ?User $user = null,
+    ): Smartlist {
+        return new Smartlist((int) $searchId, $user);
+    }
+
+    public function createSong(
+        ?int $songId = null,
+    ): Song {
+        return new Song(
+            (int) $songId
+        );
+    }
+
+    public function createTmpPlaylist(
+        int $tmpPlaylistId,
+    ): Tmp_Playlist {
+        return new Tmp_Playlist($tmpPlaylistId);
+    }
+
+    public function createUser(
+        ?int $userId = null,
+    ): User {
+        return new User((int) $userId);
     }
 
     public function createVideo(
-        int $videoId
+        int $videoId,
     ): Video {
         return new Video($videoId);
+    }
+
+    public function createWanted(
+        ?int $wantedId = null,
+    ): Wanted {
+        return new Wanted((int) $wantedId);
     }
 }

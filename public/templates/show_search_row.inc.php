@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_search_row.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -58,7 +60,7 @@ use Ampache\Repository\Model\Userflag;
         <?php echo Ajax::button('?page=random&action=send_playlist&random_type=search&random_id=' . $libitem->id, 'autorenew', T_('Random Play'), 'play_random_' . $libitem->id); ?>
         <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_playlist_' . $libitem->id); ?>
         <a id="<?php echo 'add_to_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $libitem->id; ?>')">
-            <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
         </a>
     </span>
 </td>
@@ -92,6 +94,6 @@ if ($libitem->has_access()) { ?>
                 <a id="<?php echo 'edit_playlist_' . $libitem->id; ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_playlist_' . $libitem->id; ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', 'smartplaylist_row_')">
                     <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                 </a>
-    <?php echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id, 'close', T_('Delete'), 'delete_playlist_' . $libitem->id);
+    <?php echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id, 'close', T_('Delete'), 'delete_playlist_' . $libitem->id, '', '', T_('Are you sure?'));
 } ?>
 </td>

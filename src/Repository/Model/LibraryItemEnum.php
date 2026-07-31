@@ -32,6 +32,9 @@ enum LibraryItemEnum: string
     case ART             = 'art';
     case ARTIST          = 'artist';
     case BROADCAST       = 'broadcast';
+    case COLLECTION      = 'collection';
+    case DEMOCRATIC      = 'democratic';
+    case FOLDER          = 'folder';
     case LABEL           = 'label';
     case LIVE_STREAM     = 'live_stream';
     case PLAYLIST        = 'playlist';
@@ -40,7 +43,7 @@ enum LibraryItemEnum: string
     case SEARCH          = 'search';
     case SONG            = 'song';
     case SONG_PREVIEW    = 'song_preview';
-    case TAG_HIDDEN      = 'tag_hidden';
     case TAG             = 'tag';
+    case TAG_HIDDEN      = 'tag_hidden';
     case VIDEO           = 'video';
 }

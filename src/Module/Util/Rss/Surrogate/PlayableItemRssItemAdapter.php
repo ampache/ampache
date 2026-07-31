@@ -26,9 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Util\Rss\Surrogate;
 
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\container_item;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -42,50 +43,9 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     public function __construct(
         private LibraryItemLoaderInterface $libraryItemLoader,
         private ModelFactoryInterface $modelFactory,
-        private playable_item $playable,
-        private ?User $user
-    ) {
-    }
-
-    /**
-     * Returns the item title
-     */
-    public function getTitle(): string
-    {
-        return (string)$this->playable->get_fullname();
-    }
-
-    /**
-     * Returns `true` if the item provides an image
-     */
-    public function hasImage(): bool
-    {
-        return $this->playable->has_art();
-    }
-
-    /**
-     * Returns the items image-url
-     */
-    public function getImageUrl(): string
-    {
-        return (string)Art::url($this->playable->getId(), 'album');
-    }
-
-    /**
-     * Returns `true` if the item provides a summary/description text
-     */
-    public function hasSummary(): bool
-    {
-        return $this->playable->get_description() !== '';
-    }
-
-    /**
-     * Returns the items summary/description text
-     */
-    public function getSummary(): string
-    {
-        return $this->playable->get_description();
-    }
+        private library_item $playable,
+        private ?User $user,
+    ) {}
 
     /**
      * Returns the itunes category of the item
@@ -97,39 +57,19 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
+     * Returns the items image-url
+     */
+    public function getImageUrl(): string
+    {
+        return (string) Art::url($this->playable->getId(), 'album');
+    }
+
+    /**
      * Returns a link to the item
      */
     public function getLink(): string
     {
         return $this->playable->get_link();
-    }
-
-    /**
-     * Returns a link to the feed url
-     */
-    public function getRssLink(): string
-    {
-        return ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING'];
-    }
-
-    /**
-     * Returns `true` if an item-owner is set
-     */
-    public function hasOwner(): bool
-    {
-        return ($this->playable->get_user_owner() ?? 0) > 0;
-    }
-
-    /**
-     * Returns the name of the owner
-     */
-    public function getOwnerName(): string
-    {
-        $user = $this->modelFactory->createUser(
-            (int) $this->playable->get_user_owner()
-        );
-
-        return (string) $user->get_fullname();
     }
 
     /**
@@ -148,6 +88,10 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getMedias(): Generator
     {
+        if (!$this->playable instanceof container_item) {
+            return;
+        }
+
         foreach ($this->playable->get_medias() as $media_info) {
             /** @var Song|Podcast_Episode|null $media */
             $media = $this->libraryItemLoader->load(
@@ -166,7 +110,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                     ? 'https://musicbrainz.org/recording/' . $media->mbid
                     : $media->get_link(),
                 'isPermaLink' => 'true',
-                'length' => (string)$media->get_f_time(),
+                'length' => $media->get_f_time(),
                 'author' => $media->get_parent_fullname(),
                 'pubDate' => null,
                 'type' => null,
@@ -177,6 +121,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
             if ($media->addition_time > 0) {
                 $data['pubDate'] = date("r", $media->addition_time);
             }
+
             if ($media->mime) {
                 $data['type'] = $media->mime;
                 $data['size'] = (string) $media->size;
@@ -187,5 +132,65 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
 
             yield $data;
         }
+    }
+
+    /**
+     * Returns the name of the owner
+     */
+    public function getOwnerName(): string
+    {
+        $user = $this->modelFactory->createUser(
+            (int) $this->playable->get_user_owner()
+        );
+
+        return (string) $user->get_fullname();
+    }
+
+    /**
+     * Returns a link to the feed url
+     */
+    public function getRssLink(): string
+    {
+        return ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING'];
+    }
+
+    /**
+     * Returns the items summary/description text
+     */
+    public function getSummary(): string
+    {
+        return $this->playable->get_description();
+    }
+
+    /**
+     * Returns the item title
+     */
+    public function getTitle(): string
+    {
+        return (string) $this->playable->get_fullname();
+    }
+
+    /**
+     * Returns `true` if the item provides an image
+     */
+    public function hasImage(): bool
+    {
+        return $this->playable->has_art();
+    }
+
+    /**
+     * Returns `true` if an item-owner is set
+     */
+    public function hasOwner(): bool
+    {
+        return ($this->playable->get_user_owner() ?? 0) > 0;
+    }
+
+    /**
+     * Returns `true` if the item provides a summary/description text
+     */
+    public function hasSummary(): bool
+    {
+        return $this->playable->get_description() !== '';
     }
 }

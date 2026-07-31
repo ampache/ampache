@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,9 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_share_row.inc.php
+
 use Ampache\Repository\Model\Share;
 
 /** @var Share $libitem */
@@ -37,7 +40,8 @@ use Ampache\Repository\Model\Share;
 <td class="cel_allow_stream"><?php echo $libitem->allow_stream; ?></td>
 <td class="cel_allow_download"><?php echo $libitem->allow_download; ?></td>
 <td class="cel_expire"><?php echo $libitem->expire_days; ?></td>
-<td class="cel_public_url"><?php if (!empty($libitem->public_url)) { ?><a href="<?php echo scrub_out($libitem->public_url); ?>" target="_blank" rel="noopener"><?php echo scrub_out($libitem->public_url); ?></a><?php } ?></td>
+<td class="cel_public_url"><?php $publicUrl = $libitem->getPublicUrl();
+if ($publicUrl !== '') { ?><a href="<?php echo scrub_out($publicUrl); ?>" target="_blank" rel="noopener"><?php echo scrub_out($publicUrl); ?></a><?php } ?></td>
 <td class="cel_action">
     <div id="share_action_<?php echo $libitem->id; ?>">
     <?php $libitem->show_action_buttons(); ?>

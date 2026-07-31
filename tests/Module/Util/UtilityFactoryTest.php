@@ -30,28 +30,21 @@ use Ampache\MockeryTestCase;
 use Ampache\Repository\UserRepositoryInterface;
 use Curl\Curl;
 use Mockery\MockInterface;
+use Override;
 use Psr\Log\LoggerInterface;
 
 class UtilityFactoryTest extends MockeryTestCase
 {
+    private MockInterface&ConfigContainerInterface $configContainer;
+    private MockInterface&LoggerInterface $logger;
+    private UtilityFactory $subject;
     private MockInterface&UserRepositoryInterface $userRepository;
 
-    private MockInterface&ConfigContainerInterface $configContainer;
-
-    private MockInterface&LoggerInterface $logger;
-
-    private UtilityFactory $subject;
-
-    protected function setUp(): void
+    public function testCreateCurlReturnsNewInstance(): void
     {
-        $this->userRepository  = $this->mock(UserRepositoryInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
-
-        $this->subject = new UtilityFactory(
-            $this->userRepository,
-            $this->configContainer,
-            $this->logger
+        self::assertInstanceOf(
+            Curl::class,
+            $this->subject->createCurl()
         );
     }
 
@@ -63,11 +56,17 @@ class UtilityFactoryTest extends MockeryTestCase
         );
     }
 
-    public function testCreateCurlReturnsNewInstance(): void
+    #[Override]
+    protected function setUp(): void
     {
-        static::assertInstanceOf(
-            Curl::class,
-            $this->subject->createCurl()
+        $this->userRepository  = $this->mock(UserRepositoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->logger          = $this->mock(LoggerInterface::class);
+
+        $this->subject = new UtilityFactory(
+            $this->userRepository,
+            $this->configContainer,
+            $this->logger
         );
     }
 }

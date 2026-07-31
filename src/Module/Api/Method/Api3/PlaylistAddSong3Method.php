@@ -34,7 +34,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistAddSong3Method
 {
-    public const ACTION = 'playlist_add_song';
+    public const string ACTION = 'playlist_add_song';
 
     /**
      * playlist_add_song
@@ -55,10 +55,10 @@ final class PlaylistAddSong3Method
         $playlist = new Playlist((int) $input['filter']);
         $song     = (int) $input['song'];
         if (!$playlist->has_collaborate()) {
-            echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
+            echo Xml3_Data::error(401, 'Access denied to this playlist.');
         } else {
             $playlist->add_songs([$song]);
-            echo Xml3_Data::single_string('success');
+            echo Xml3_Data::success();
         }
     }
 }

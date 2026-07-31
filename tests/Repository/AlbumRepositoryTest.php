@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumFieldEnum;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -37,16 +39,63 @@ class AlbumRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
-
     private AlbumRepository $subject;
 
-    protected function setUp(): void
+    public function testAddAlbumMapInsertsIgnoringDuplicates(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);',
+                [666, 'album', 42]
+            );
 
-        $this->subject = new AlbumRepository(
-            $this->connection
-        );
+        $this->subject->addAlbumMap(666, 'album', 42);
+    }
+
+    public function testCollectGarbageDeletes(): void
+    {
+        $this->connection->expects(static::exactly(7))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    ["DELETE FROM `album_map` WHERE `object_type` = 'album' AND `album_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL)"],
+                    ['DELETE FROM `album_map` WHERE `object_id` NOT IN (SELECT `id` FROM `artist`)'],
+                    ['DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`)'],
+                    ["DELETE FROM `album_map` WHERE `album_map`.`album_id` IN (SELECT `album_id` FROM (SELECT DISTINCT `album_map`.`album_id` FROM `album_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `album_map`.`object_type` AND `artist_map`.`artist_id` = `album_map`.`object_id` AND `artist_map`.`object_id` = `album_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `album_map`.`object_type` = 'album') AS `null_album`)"],
+                    ['DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`) AND `album`.`id` NOT IN (SELECT DISTINCT `album_id` FROM `album_map`)'],
+                    ['DELETE FROM `album_disk` WHERE `album_id` NOT IN (SELECT `id` FROM `album`)'],
+                    ["SELECT `id` FROM `album_disk` WHERE CONCAT(`album_id`, '_', `disk`) NOT IN (SELECT CONCAT(`album`, '_', `disk`) AS `id` FROM `song`);"],
+                )
+            );
+
+        $this->subject->collectGarbage();
+    }
+
+    public function testCreateReturnsTheNewId(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `version`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                ['some-album', 'The', 1999, null, null, null, null, 42, null, null, null, null, 7, 123456]
+            );
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(666);
+
+        static::assertSame(666, $this->subject->create($this->createProperties(), 123456));
+    }
+
+    public function testCreateReturnsZeroWhenTheInsertFailed(): void
+    {
+        // the caller reads 0 as "no album" and carries on, so the exception must not escape
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        static::assertSame(0, $this->subject->create($this->createProperties(), 123456));
     }
 
     public function testDeleteDeletes(): void
@@ -69,73 +118,60 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->delete($album);
     }
 
-    public function testCollectGarbageDeletes(): void
+    public function testFindByPropertiesMatchesUnsetPropertiesAgainstNull(): void
     {
-        $this->connection->expects(static::exactly(7))
-            ->method('query')
+        // an unset property has to be matched as NULL, or a partially tagged release collides with a fully tagged one
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
             ->with(
-                ...self::withConsecutive(
-                    ['DELETE FROM `album_map` WHERE `object_type` = \'album\' AND `album_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL)'],
-                    ['DELETE FROM `album_map` WHERE `object_id` NOT IN (SELECT `id` FROM `artist`)'],
-                    ['DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`)'],
-                    ['DELETE FROM `album_map` WHERE `album_map`.`album_id` IN (SELECT `album_id` FROM (SELECT DISTINCT `album_map`.`album_id` FROM `album_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `album_map`.`object_type` AND `artist_map`.`artist_id` = `album_map`.`object_id` AND `artist_map`.`object_id` = `album_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `album_map`.`object_type` = \'album\') AS `null_album`)'],
-                    ['DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`) AND `album`.`id` NOT IN (SELECT DISTINCT `album_id` FROM `album_map`)'],
-                    ['DELETE FROM `album_disk` WHERE `album_id` NOT IN (SELECT `id` FROM `album`)'],
-                    ['SELECT `id` FROM `album_disk` WHERE CONCAT(`album_id`, \'_\', `disk`) NOT IN (SELECT CONCAT(`album`, \'_\', `disk`) AS `id` FROM `song`);'],
-                )
-            );
+                "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? AND `album`.`prefix` = ? AND `album`.`mbid` IS NULL AND `album`.`mbid_group` IS NULL AND `album`.`album_artist` = ? AND `album`.`release_type` IS NULL AND `album`.`release_status` IS NULL AND `album`.`original_year` IS NULL AND `album`.`barcode` IS NULL AND `album`.`catalog_number` IS NULL AND `album`.`version` IS NULL AND `album`.`catalog` = ?;",
+                ['some-album', 'some-album', 1999, 'The', 42, 7]
+            )
+            ->willReturn('666');
 
-        $this->subject->collectGarbage();
+        static::assertSame(666, $this->subject->findByProperties($this->createProperties()));
     }
 
-    public function testGetByName(): void
+    public function testFindByPropertiesReturnsNullWhenNothingMatched(): void
     {
-        $albumId  = 666;
-        $name     = 'some-name';
-        $artistId = 1234;
+        $this->connection->method('fetchOne')->willReturn(false);
 
-        $result = $this->createMock(PDOStatement::class);
+        static::assertNull($this->subject->findByProperties($this->createProperties()));
+    }
+
+    public function testGetAlbumArtistIdReturnsAlbumArtistId(): void
+    {
+        $albumId = 666;
+        $result  = 42;
 
         $this->connection->expects(static::once())
-            ->method('query')
+            ->method('fetchOne')
             ->with(
-                'SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, \'\'), \' \', `album`.`name`)) = ?) AND `album`.`album_artist` = ?',
-                [$name, $name, $artistId]
+                'SELECT DISTINCT `album_artist` FROM `album` WHERE `id` = ?;',
+                [$albumId]
             )
-            ->willReturn($result);
+            ->willReturn((string) $result);
 
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $albumId, false);
-
-        static::assertSame(
-            [$albumId],
-            $this->subject->getByName($name, $artistId)
+        self::assertSame(
+            $result,
+            $this->subject->getAlbumArtistId($albumId)
         );
     }
 
-    public function testGetByMbidGroupReturnsData(): void
+    public function testGetAlbumArtistIdReturnsNullIfNotFound(): void
     {
-        $musicBrainzId = '1234';
-        $albumId       = 666;
-
-        $result = $this->createMock(PDOStatement::class);
+        $albumId = 666;
 
         $this->connection->expects(static::once())
-            ->method('query')
+            ->method('fetchOne')
             ->with(
-                'SELECT `album`.`id` FROM `album` WHERE `album`.`mbid_group` = ?',
-                [$musicBrainzId]
+                'SELECT DISTINCT `album_artist` FROM `album` WHERE `id` = ?;',
+                [$albumId]
             )
-            ->willReturn($result);
+            ->willReturn(false);
 
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $albumId, false);
-
-        static::assertSame(
-            [$albumId],
-            $this->subject->getByMbidGroup($musicBrainzId)
+        self::assertNull(
+            $this->subject->getAlbumArtistId($albumId)
         );
     }
 
@@ -164,45 +200,60 @@ class AlbumRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $artistId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$artistId],
             $this->subject->getArtistMap($album, $objectType)
         );
     }
 
-    public function testGetAlbumArtistIdReturnsNullIfNotFound(): void
+    public function testGetByMbidGroupReturnsData(): void
     {
-        $albumId = 666;
+        $musicBrainzId = '1234';
+        $albumId       = 666;
+
+        $result = $this->createMock(PDOStatement::class);
 
         $this->connection->expects(static::once())
-            ->method('fetchOne')
+            ->method('query')
             ->with(
-                'SELECT DISTINCT `album_artist` FROM `album` WHERE `id` = ?;',
-                [$albumId]
+                'SELECT `album`.`id` FROM `album` WHERE `album`.`mbid_group` = ?',
+                [$musicBrainzId]
             )
-            ->willReturn(false);
+            ->willReturn($result);
 
-        static::assertNull(
-            $this->subject->getAlbumArtistId($albumId)
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $albumId, false);
+
+        self::assertSame(
+            [$albumId],
+            $this->subject->getByMbidGroup($musicBrainzId)
         );
     }
 
-    public function testGetAlbumArtistIdReturnsAlbumArtistId(): void
+    public function testGetByName(): void
     {
-        $albumId = 666;
-        $result  = 42;
+        $albumId  = 666;
+        $name     = 'some-name';
+        $artistId = 1234;
+
+        $result = $this->createMock(PDOStatement::class);
 
         $this->connection->expects(static::once())
-            ->method('fetchOne')
+            ->method('query')
             ->with(
-                'SELECT DISTINCT `album_artist` FROM `album` WHERE `id` = ?;',
-                [$albumId]
+                "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`album_artist` = ?",
+                [$name, $name, $artistId]
             )
-            ->willReturn((string) $result);
+            ->willReturn($result);
 
-        static::assertSame(
-            $result,
-            $this->subject->getAlbumArtistId($albumId)
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $albumId, false);
+
+        self::assertSame(
+            [$albumId],
+            $this->subject->getByName($name, $artistId)
         );
     }
 
@@ -213,12 +264,12 @@ class AlbumRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('fetchRow')
             ->with(
-                'SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, \'\'), \' \', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?',
+                "SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?",
                 [$albumId]
             )
             ->willReturn(false);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'prefix' => '',
                 'basename' => '',
@@ -236,14 +287,169 @@ class AlbumRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('fetchRow')
             ->with(
-                'SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, \'\'), \' \', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?',
+                "SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?",
                 [$albumId]
             )
             ->willReturn($data);
 
-        static::assertSame(
+        self::assertSame(
             $data,
             $this->subject->getNames($albumId)
         );
+    }
+
+    public function testIsOrphanMatchesTheUntranslatedPlaceholderToo(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                "SELECT `id` FROM `album` WHERE `id` = ? AND (`name` = 'Unknown (Orphaned)' OR `name` = ?);",
+                [666, T_('Unknown (Orphaned)')]
+            )
+            ->willReturn('666');
+
+        static::assertTrue($this->subject->isOrphan(666));
+    }
+
+    public function testIsOrphanReturnsFalseWhenNothingMatched(): void
+    {
+        $this->connection->method('fetchOne')->willReturn(false);
+
+        static::assertFalse($this->subject->isOrphan(666));
+    }
+
+    public function testRemoveAlbumMapDeletes(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `album_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;',
+                [666, 'song', 42]
+            );
+
+        $this->subject->removeAlbumMap(666, 'song', 42);
+    }
+
+    public function testRemoveUnusedAlbumMapKeepsTheRowWhileTheArtistMapBacksIt(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `artist_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_id` = ? AND `object_type` = ?;',
+                [42, 666, 'album']
+            )
+            ->willReturn('42');
+
+        $this->connection->expects(static::never())->method('query');
+
+        static::assertFalse($this->subject->removeUnusedAlbumMap(666, 'album', 42));
+    }
+
+    public function testRemoveUnusedAlbumMapLooksThroughTheSongsForATrackArtist(): void
+    {
+        // a `song` mapping survives while any track on the album still credits the artist, hence the subquery
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `artist_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_id` IN (SELECT `id` FROM `song` WHERE `album` = ?) AND `object_type` = ?;',
+                [42, 666, 'song']
+            )
+            ->willReturn(false);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `album_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;',
+                [666, 'song', 42]
+            );
+
+        static::assertTrue($this->subject->removeUnusedAlbumMap(666, 'song', 42));
+    }
+
+    public function testSetFieldReturnsFalseWhenTheWriteFailed(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        static::assertFalse($this->subject->setField(666, AlbumFieldEnum::NAME, 'some-name'));
+    }
+
+    public function testSetFieldWritesNullWithoutASpecialStatement(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `album` SET `original_year` = ? WHERE `id` = ?', [null, 666]);
+
+        static::assertTrue($this->subject->setField(666, AlbumFieldEnum::ORIGINAL_YEAR, null));
+    }
+
+    public function testSetFieldWritesTheColumnFromTheEnum(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `album` SET `catalog_number` = ? WHERE `id` = ?', ['some-number', 666]);
+
+        static::assertTrue($this->subject->setField(666, AlbumFieldEnum::CATALOG_NUMBER, 'some-number'));
+    }
+
+    public function testUpdateAllCountsRunsTheWholeSweepEvenWhenOneStatementFails(): void
+    {
+        // a maintenance statement that dies must not take the rest of the sweep with it, as `Dba::write()` did not
+        $this->connection->expects(static::exactly(14))
+            ->method('query')
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        $this->subject->updateAllCounts();
+    }
+
+    public function testUpdateCountsBindsTheAlbumIntoEveryStatement(): void
+    {
+        $bound = [];
+
+        $this->connection->expects(static::exactly(13))
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params) use (&$bound): PDOStatement {
+                $bound[] = $params;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateCounts(666);
+
+        foreach ($bound as $params) {
+            static::assertSame([666], array_unique($params));
+        }
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+
+        $this->subject = new AlbumRepository(
+            $this->connection
+        );
+    }
+
+    /**
+     * @return array{name: string, prefix: ?string, year: int, mbid: ?string, mbid_group: ?string, release_type: ?string, release_status: ?string, album_artist: ?int, original_year: ?string, barcode: ?string, catalog_number: ?string, version: ?string, catalog: int}
+     */
+    private function createProperties(): array
+    {
+        return [
+            'name' => 'some-album',
+            'prefix' => 'The',
+            'year' => 1999,
+            'mbid' => null,
+            'mbid_group' => null,
+            'release_type' => null,
+            'release_status' => null,
+            'album_artist' => 42,
+            'original_year' => null,
+            'barcode' => null,
+            'catalog_number' => null,
+            'version' => null,
+            'catalog' => 7,
+        ];
     }
 }

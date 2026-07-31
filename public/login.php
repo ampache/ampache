@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Login\DefaultAction;
+use Ampache\Module\Application\Login\OidcAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
@@ -35,6 +36,9 @@ $dic = require __DIR__ . '/../src/Config/Init.php';
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [DefaultAction::REQUEST_KEY => DefaultAction::class],
+    [
+        DefaultAction::REQUEST_KEY => DefaultAction::class,
+        OidcAction::REQUEST_KEY => OidcAction::class,
+    ],
     DefaultAction::REQUEST_KEY
 );

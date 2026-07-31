@@ -27,6 +27,4 @@ namespace Ampache\Module\LastFm\Exception;
 
 use Exception;
 
-final class LastFmQueryFailedException extends Exception
-{
-}
+final class LastFmQueryFailedException extends Exception {}

@@ -1,0 +1,60 @@
+{
+    "user": [
+        {
+            "id": "1",
+            "username": "admin"
+        },
+        {
+            "id": "2",
+            "username": "apiuser"
+        },
+        {
+            "id": "4",
+            "username": "generic"
+        },
+        {
+            "id": "5",
+            "username": "nyssa"
+        },
+        {
+            "id": "7",
+            "username": "tom"
+        },
+        {
+            "id": "8",
+            "username": "demo"
+        },
+        {
+            "id": "9",
+            "username": "sam"
+        },
+        {
+            "id": "10",
+            "username": "glen"
+        },
+        {
+            "id": "143",
+            "username": "tdewa"
+        },
+        {
+            "id": "468",
+            "username": "hudson"
+        },
+        {
+            "id": "679",
+            "username": "powerampache"
+        },
+        {
+            "id": "681",
+            "username": "jose"
+        },
+        {
+            "id": "682",
+            "username": "dan"
+        },
+        {
+            "id": "686",
+            "username": "user@music.com.au"
+        }
+    ]
+}

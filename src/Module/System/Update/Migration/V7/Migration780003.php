@@ -32,8 +32,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration780003 extends AbstractMigration
 {
     protected array $changelog = ['Add preference to only select Album Artists when making Subsonic Artist calls'];
-
-    protected bool $warning = true;
+    protected bool $warning    = true;
 
     public function migrate(): void
     {

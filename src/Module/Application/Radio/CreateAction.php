@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -39,33 +39,23 @@ use Ampache\Repository\Model\Live_Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class CreateAction implements ApplicationActionInterface
+final readonly class CreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'create';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'create';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        RequestParserInterface $requestParser
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->requestParser   = $requestParser;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RADIO) === false ||
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !$this->requestParser->verifyForm('add_radio')
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RADIO) === false
+            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || !$this->requestParser->verifyForm('add_radio')
         ) {
             throw new AccessDeniedException();
         }

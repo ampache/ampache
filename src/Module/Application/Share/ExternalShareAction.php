@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,41 +43,22 @@ use Ampache\Repository\Model\Share;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class ExternalShareAction implements ApplicationActionInterface
+final readonly class ExternalShareAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'external_share';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private PasswordGeneratorInterface $passwordGenerator;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private FunctionCheckerInterface $functionChecker;
-
-    private ShareCreatorInterface $shareCreator;
+    public const string REQUEST_KEY = 'external_share';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        PasswordGeneratorInterface $passwordGenerator,
-        ResponseFactoryInterface $responseFactory,
-        FunctionCheckerInterface $functionChecker,
-        ShareCreatorInterface $shareCreator
-    ) {
-        $this->requestParser     = $requestParser;
-        $this->configContainer   = $configContainer;
-        $this->passwordGenerator = $passwordGenerator;
-        $this->responseFactory   = $responseFactory;
-        $this->functionChecker   = $functionChecker;
-        $this->shareCreator      = $shareCreator;
-    }
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private PasswordGeneratorInterface $passwordGenerator,
+        private ResponseFactoryInterface $responseFactory,
+        private FunctionCheckerInterface $functionChecker,
+        private ShareCreatorInterface $shareCreator,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)) {
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
@@ -86,28 +67,34 @@ final class ExternalShareAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            $user === null
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || $user === null
         ) {
             throw new AccessDeniedException();
         }
 
-        $plugin = new Plugin(Core::get_get('plugin'));
+        $pluginName = Core::get_get('plugin');
+        if ($pluginName === '') {
+            throw new AccessDeniedException('Access Denied - Unknown external share plugin');
+        }
+
+        $plugin = new Plugin($pluginName);
         if (!$plugin->_plugin instanceof PluginExternalShareInterface) {
             throw new AccessDeniedException('Access Denied - Unknown external share plugin');
         }
+
         $plugin->load($user);
 
         $type           = LibraryItemEnum::from($this->requestParser->getFromRequest('type'));
         $share_id       = $this->requestParser->getFromRequest('id');
         $secret         = $this->passwordGenerator->generate_token();
-        $allow_download = ($type === LibraryItemEnum::SONG && $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD)) ||
-            $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
+        $allow_download = ($type === LibraryItemEnum::SONG && $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD))
+            || $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 
         $share_id = $this->shareCreator->create(
             $user,
             $type,
-            (int)$share_id,
+            (int) $share_id,
             true,
             $allow_download,
             $this->configContainer->get(ConfigurationKeyEnum::SHARE_EXPIRE) ?? 7,
@@ -120,7 +107,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         }
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 $plugin->_plugin->external_share($share->public_url, $share->getObjectName())

@@ -30,67 +30,20 @@ class ArrayCacheDriverTest extends TestCase
 {
     private ArrayCacheDriver $subject;
 
-    protected function setUp(): void
+    public function testGetMultipleReturnsPartialDataAfterDeletion(): void
     {
-        $this->subject = new ArrayCacheDriver();
-    }
+        $key1 = 'snafu';
+        $key2 = 'foobar';
 
-    public function testGetReturnsDefaultIfNotSet(): void
-    {
-        $default = 'snafu';
+        $value1 = 'foo';
+        $value2 = 'baz';
 
-        static::assertSame(
-            $default,
-            $this->subject->get('booh', $default)
-        );
-    }
+        $this->subject->setMultiple([$key1 => $value1, $key2 => $value2]);
+        $this->subject->deleteMultiple([$key1]);
 
-    public function testGetReturnsSetValue(): void
-    {
-        $value = 'some-value';
-        $key   = 'some-key';
-
-        $this->subject->set($key, $value);
-
-        static::assertTrue(
-            $this->subject->has($key)
-        );
-
-        static::assertSame(
-            $value,
-            $this->subject->get($key)
-        );
-    }
-
-    public function testGetReturnsDefaultAfterClear(): void
-    {
-        $value = 'some-value';
-        $key   = 'some-key';
-
-        $this->subject->set($key, $value);
-
-        $this->subject->clear();
-
-        static::assertFalse(
-            $this->subject->has($key)
-        );
-
-        static::assertNull(
-            $this->subject->get($key)
-        );
-    }
-
-    public function testGetReturnsDefaultAfterDeletion(): void
-    {
-        $value = 'some-value';
-        $key   = 'some-key';
-
-        $this->subject->set($key, $value);
-
-        $this->subject->delete($key);
-
-        static::assertNull(
-            $this->subject->get($key)
+        self::assertSame(
+            [$key1 => null, $key2 => $value2],
+            iterator_to_array($this->subject->getMultiple([$key1, $key2]))
         );
     }
 
@@ -104,26 +57,73 @@ class ArrayCacheDriverTest extends TestCase
 
         $this->subject->setMultiple([$key1 => $value1, $key2 => $value2]);
 
-        static::assertSame(
+        self::assertSame(
             [$key1 => $value1, $key2 => $value2],
             iterator_to_array($this->subject->getMultiple([$key1, $key2]))
         );
     }
 
-    public function testGetMultipleReturnsPartialDataAfterDeletion(): void
+    public function testGetReturnsDefaultAfterClear(): void
     {
-        $key1 = 'snafu';
-        $key2 = 'foobar';
+        $value = 'some-value';
+        $key   = 'some-key';
 
-        $value1 = 'foo';
-        $value2 = 'baz';
+        $this->subject->set($key, $value);
 
-        $this->subject->setMultiple([$key1 => $value1, $key2 => $value2]);
-        $this->subject->deleteMultiple([$key1]);
+        $this->subject->clear();
 
-        static::assertSame(
-            [$key1 => null, $key2 => $value2],
-            iterator_to_array($this->subject->getMultiple([$key1, $key2]))
+        self::assertFalse(
+            $this->subject->has($key)
         );
+
+        self::assertNull(
+            $this->subject->get($key)
+        );
+    }
+
+    public function testGetReturnsDefaultAfterDeletion(): void
+    {
+        $value = 'some-value';
+        $key   = 'some-key';
+
+        $this->subject->set($key, $value);
+
+        $this->subject->delete($key);
+
+        self::assertNull(
+            $this->subject->get($key)
+        );
+    }
+
+    public function testGetReturnsDefaultIfNotSet(): void
+    {
+        $default = 'snafu';
+
+        self::assertSame(
+            $default,
+            $this->subject->get('booh', $default)
+        );
+    }
+
+    public function testGetReturnsSetValue(): void
+    {
+        $value = 'some-value';
+        $key   = 'some-key';
+
+        $this->subject->set($key, $value);
+
+        self::assertTrue(
+            $this->subject->has($key)
+        );
+
+        self::assertSame(
+            $value,
+            $this->subject->get($key)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->subject = new ArrayCacheDriver();
     }
 }

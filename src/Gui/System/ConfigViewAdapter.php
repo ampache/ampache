@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -28,14 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 
 final readonly class ConfigViewAdapter implements ConfigViewAdapterInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
-
-    public function isWaveformEnabled(): bool
-    {
-        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WAVEFORM);
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     public function isDirectplayEnabled(): bool
     {
@@ -47,14 +42,14 @@ final readonly class ConfigViewAdapter implements ConfigViewAdapterInterface
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LICENSING);
     }
 
+    public function isRatingEnabled(): bool
+    {
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS);
+    }
+
     public function isShowLicenseEnabled(): bool
     {
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LICENSE);
-    }
-
-    public function isShowSkippedTimesEnabled(): bool
-    {
-        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES);
     }
 
     public function isShowPlayedTimesEnabled(): bool
@@ -62,8 +57,13 @@ final readonly class ConfigViewAdapter implements ConfigViewAdapterInterface
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_PLAYED_TIMES);
     }
 
-    public function isRatingEnabled(): bool
+    public function isShowSkippedTimesEnabled(): bool
     {
-        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS);
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES);
+    }
+
+    public function isWaveformEnabled(): bool
+    {
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WAVEFORM);
     }
 }

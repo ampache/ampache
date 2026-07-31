@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,10 +32,6 @@ namespace Ampache\Module\Playback\Localplay\Vlc;
  */
 class VlcPlayer
 {
-    public string $host;
-    public int $port;
-    public string $password;
-
     /**
      * VlcPlayer
      * This is the constructor, it defaults to localhost
@@ -43,22 +39,16 @@ class VlcPlayer
      * i would change this to another value then standard 8080, it gets used by more things
      */
     public function __construct(
-        string $host = 'localhost',
-        string $password = '',
-        int $port = 8080
-    ) {
-        $this->host     = $host;
-        $this->port     = $port;
-        $this->password = $password;
-    }
+        public string $host = 'localhost',
+        public string $password = '',
+        public int $port = 8080,
+    ) {}
 
     /**
      * add
      * append a song to the playlist
-     * @param string $name // Name to be shown in the playlist
-     * @param string $url // URL of the song
      */
-    public function add($name, $url): bool
+    public function add(string $name, string $url): bool
     {
         $aurl = urlencode($url);
         $aurl .= "&";
@@ -66,18 +56,6 @@ class VlcPlayer
 
         $args    = ['command' => 'in_enqueue', '&input' => $aurl];
         $results = $this->sendCommand('status.xml?', $args);
-
-        return (!($results === null));
-    }
-
-    /**
-     * version
-     * No version returned in the standard xml file, just need to check for xml returned
-     */
-    public function version(): bool
-    {
-        $args    = [];
-        $results = $this->sendCommand('status.xml', $args);
 
         return ($results !== null);
     }
@@ -99,108 +77,15 @@ class VlcPlayer
     }
 
     /**
-     * next
-     * go to next song
+     * clear_playlist
+     * this flushes the playlist cache (I hope this means clear)
      */
-    public function next(): bool
+    public function clear_playlist(): bool
     {
-        $args    = ['command' => 'pl_next'];
+        $args    = ['command' => 'pl_empty'];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
-    }
-
-    /**
-     * prev
-     * go to previous song
-     */
-    public function prev(): ?bool
-    {
-        $args    = ['command' => 'pl_previous'];
-        $results = $this->sendCommand("status.xml?", $args);
-        if ($results === null) {
-            return null;
-        }
-
-        return true;
-    }
-
-    /**
-     * skip
-     * This skips to POS in the playlist
-     */
-    public function skip(int $track_id): bool
-    {
-        $args = [
-            'command' => 'pl_play',
-            '&id' => $track_id,
-        ];
-        $results = $this->sendCommand('status.xml?', $args);
-
-        return (!($results === null));
-    }
-
-    /**
-     * play
-     * play the current song
-     */
-    public function play(): bool
-    {
-        $args    = ['command' => 'pl_play'];
-        $results = $this->sendCommand("status.xml?", $args);
-
-        return (!($results === null));
-    }
-
-    /**
-     * pause
-     * toggle pause mode on current song
-     */
-    public function pause(): ?bool
-    {
-        $args    = ['command' => 'pl_pause'];
-        $results = $this->sendCommand("status.xml?", $args);
-        if ($results === null) {
-            return null;
-        }
-
-        return true;
-    }
-
-    /**
-     * stop
-     * stops the current song amazing!
-     */
-    public function stop(): bool
-    {
-        $args    = ['command' => 'pl_stop'];
-        $results = $this->sendCommand('status.xml?', $args);
-
-        return (!($results === null));
-    }
-
-    /**
-     * repeat
-     * This toggles the repeat state of VLC
-     */
-    public function repeat(bool $state): bool
-    {
-        $args    = ['command' => 'pl_repeat'];
-        $results = $this->sendCommand('status.xml?', $args);
-
-        return (!($results === null));
-    }
-
-    /**
-     * random
-     * this toggles the random state of VLC
-     */
-    public function random(bool $state): bool
-    {
-        $args    = ['command' => 'pl_random'];
-        $results = $this->sendCommand('status.xml?', $args);
-
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -212,32 +97,7 @@ class VlcPlayer
         $args    = ['command' => 'pl_delete', '&id' => $track];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
-    }
-
-    /**
-     * state
-     * This returns the current state of the VLC player
-     */
-    public function state(): string
-    {
-        $args = [];
-
-        $state       = 'unknown';
-        $results     = $this->sendCommand('status.xml', $args);
-        $currentstat = $results['root']['state']['value'] ?? $state;
-
-        if ($currentstat == 'playing') {
-            $state = 'play';
-        }
-        if ($currentstat == 'stop') {
-            $state = 'stop';
-        }
-        if ($currentstat == 'paused') {
-            $state = 'pause';
-        }
-
-        return $state;
+        return ($results !== null);
     }
 
     /**
@@ -256,15 +116,174 @@ class VlcPlayer
     }
 
     /**
-     * volume_up
-     * This increases the volume of VLC, set to +20 can be changed to your preference
+     * get_tracks
+     * This returns a delimited string of all of the filenames
+     * current in your playlist, only urls at the moment,normal files put in the playlist with VLC wil not show'
      */
-    public function volume_up(): bool
+    public function get_tracks(): ?array
     {
-        $args    = ['command' => 'volume', '&val' => '%2B20'];
+        // Gets complete playlist + medialib in VLC's case, needs to be looked at
+        $args = [];
+
+        return $this->sendCommand('playlist.xml', $args);
+    }
+
+    /**
+     * next
+     * go to next song
+     */
+    public function next(): bool
+    {
+        $args    = ['command' => 'pl_next'];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
+    }
+
+    /**
+     * pause
+     * toggle pause mode on current song
+     */
+    public function pause(): ?bool
+    {
+        $args    = ['command' => 'pl_pause'];
+        $results = $this->sendCommand("status.xml?", $args);
+        if ($results === null) {
+            return null;
+        }
+
+        return true;
+    }
+
+    /**
+     * play
+     * play the current song
+     */
+    public function play(): bool
+    {
+        $args    = ['command' => 'pl_play'];
+        $results = $this->sendCommand("status.xml?", $args);
+
+        return ($results !== null);
+    }
+
+    /**
+     * prev
+     * go to previous song
+     */
+    public function prev(): ?bool
+    {
+        $args    = ['command' => 'pl_previous'];
+        $results = $this->sendCommand("status.xml?", $args);
+        if ($results === null) {
+            return null;
+        }
+
+        return true;
+    }
+
+    /**
+     * random
+     * this toggles the random state of VLC
+     */
+    public function random(bool $state): bool
+    {
+        $args    = ['command' => 'pl_random'];
+        $results = $this->sendCommand('status.xml?', $args);
+
+        return ($results !== null);
+    }
+
+    /**
+     * repeat
+     * This toggles the repeat state of VLC
+     */
+    public function repeat(bool $state): bool
+    {
+        $args    = ['command' => 'pl_repeat'];
+        $results = $this->sendCommand('status.xml?', $args);
+
+        return ($results !== null);
+    }
+
+    /**
+     * set_volume
+     * This sets the volume as best it can, i think it's from 0 to 400, need more testing'
+     */
+    public function set_volume(int $value): bool
+    {
+        // Convert it to base 400
+        $value *= 4;
+        $args    = ['command' => 'volume', '&val' => $value];
+        $results = $this->sendCommand('status.xml?', $args);
+
+        return ($results !== null);
+    }
+
+    /**
+     * skip
+     * This skips to POS in the playlist
+     */
+    public function skip(int $track_id): bool
+    {
+        $args = [
+            'command' => 'pl_play',
+            '&id' => $track_id,
+        ];
+        $results = $this->sendCommand('status.xml?', $args);
+
+        return ($results !== null);
+    }
+
+    /**
+     * state
+     * This returns the current state of the VLC player
+     */
+    public function state(): string
+    {
+        $args = [];
+
+        $state       = 'unknown';
+        $results     = $this->sendCommand('status.xml', $args);
+        $currentstat = $results['root']['state']['value'] ?? $state;
+
+        if ($currentstat == 'playing') {
+            $state = 'play';
+        }
+
+        if ($currentstat == 'stop') {
+            $state = 'stop';
+        }
+
+        if ($currentstat == 'paused') {
+            $state = 'pause';
+        }
+
+        return $state;
+    }
+
+    /**
+     * stop
+     * stops the current song amazing!
+     */
+    public function stop(): bool
+    {
+        $args    = ['command' => 'pl_stop'];
+        $results = $this->sendCommand('status.xml?', $args);
+
+        return ($results !== null);
+    }
+
+    /**
+     * version
+     * No version returned in the standard xml file, just need to check for xml returned
+     */
+    public function version(): bool
+    {
+        $args    = [];
+        $results = $this->sendCommand('status.xml', $args);
+
+        return ($results !== null);
     }
 
     /**
@@ -276,51 +295,19 @@ class VlcPlayer
         $args    = ['command' => 'volume', '&val' => '-20'];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
-     * set_volume
-     * This sets the volume as best it can, i think it's from 0 to 400, need more testing'
+     * volume_up
+     * This increases the volume of VLC, set to +20 can be changed to your preference
      */
-    public function set_volume(int $value): bool
+    public function volume_up(): bool
     {
-        // Convert it to base 400
-        $value   = $value * 4;
-        $args    = ['command' => 'volume', '&val' => $value];
+        $args    = ['command' => 'volume', '&val' => '%2B20'];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
-    }
-
-    /**
-     * clear_playlist
-     * this flushes the playlist cache (I hope this means clear)
-     */
-    public function clear_playlist(): bool
-    {
-        $args    = ['command' => 'pl_empty'];
-        $results = $this->sendCommand('status.xml?', $args);
-
-        return (!($results === null));
-    }
-
-    /**
-     * get_tracks
-     * This returns a delimited string of all of the filenames
-     * current in your playlist, only urls at the moment,normal files put in the playlist with VLC wil not show'
-     */
-    public function get_tracks(): ?array
-    {
-        // Gets complete playlist + medialib in VLC's case, needs to be looked at
-        $args = [];
-
-        $results = $this->sendCommand('playlist.xml', $args);
-        if ($results === null) {
-            return null;
-        }
-
-        return $results;
+        return ($results !== null);
     }
 
     /**
@@ -331,33 +318,34 @@ class VlcPlayer
      */
     private function sendCommand(string $cmd, array $args): ?array
     {
-        $fsock = fsockopen($this->host, (int)$this->port, $errno, $errstr);
+        // suppressed because an unreachable host is expected and logged below, not raised as a php warning
+        $fsock = @fsockopen($this->host, $this->port, $errno, $errstr);
 
         if (!$fsock) {
-            debug_event(self::class, "VLCPlayer: $errstr ($errno)", 1);
+            debug_event(self::class, sprintf('VLCPlayer: %s (%d)', $errstr, $errno), 1);
 
             return null;
         }
 
         // Define the base message
-        $msg = "GET /requests/$cmd";
+        $msg = 'GET /requests/' . $cmd;
 
         // Foreach our arguments
         foreach ($args as $key => $val) {
-            $msg .= "$key=$val";
+            $msg .= sprintf('%s=%s', $key, $val);
         }
 
         $msg .= " HTTP/1.0\r\n";
 
         // Basic authentication
-        if (!empty($this->password)) {
+        if ($this->password !== '' && $this->password !== '0') {
             $b64pwd = base64_encode(':' . $this->password);
             $msg .= "Authorization: Basic " . $b64pwd . "\r\n";
         }
 
         $msg .= "\r\n";
 
-        fputs($fsock, $msg);
+        fwrite($fsock, $msg);
         $data   = '';
         $header = '';
         // here the header is split from the xml to avoid problems
@@ -365,7 +353,7 @@ class VlcPlayer
             // loop until the end of the header
 
             $header .= fgets($fsock);
-        } while (strpos($header, "\r\n\r\n") === false);
+        } while (!str_contains($header, "\r\n\r\n"));
 
         // now put the body in variable $data
         while (!feof($fsock)) {
@@ -382,13 +370,11 @@ class VlcPlayer
      * xmltoarray
      * this function parses the xml page into an array thx to bin-co
      * warning VLC returns it's complete media lib if asked for playlist
-     * @param int $get_attributes
-     * @param string $priority
      * @return array<string, mixed>
      */
-    private function xmltoarray($contents, $get_attributes = 1, $priority = 'attribute'): array
+    private function xmltoarray(string $contents, int $get_attributes = 1, string $priority = 'attribute'): array
     {
-        if (!$contents) {
+        if ($contents === '' || $contents === '0') {
             return [];
         }
 
@@ -407,7 +393,6 @@ class VlcPlayer
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
         xml_parse_into_struct($parser, trim($contents), $xml_values);
-        xml_parser_free($parser);
 
         if (!$xml_values) {
             return [];
@@ -427,9 +412,9 @@ class VlcPlayer
             unset($attributes, $value);
 
             // tag(string), type(string), level(int), attributes(array)
-            $tag        = (string)$data['tag'];
-            $type       = (string)$data['type'];
-            $level      = (int)$data['level'];
+            $tag        = (string) $data['tag'];
+            $type       = (string) $data['type'];
+            $level      = (int) $data['level'];
             $value      = $data['value'] ?? null;
             $attributes = $data['attributes'] ?? null;
 
@@ -437,7 +422,7 @@ class VlcPlayer
             $attributes_data = [];
 
             if ($value !== null) {
-                if ($priority == 'tag') {
+                if ($priority === 'tag') {
                     $result = $value;
                 } else {
                     // Put the value in a assoc array if we are in the 'Attribute' mode
@@ -448,7 +433,7 @@ class VlcPlayer
             // Set the attributes too.
             if ($attributes !== null && $get_attributes) {
                 foreach ($attributes as $attr => $val) {
-                    if ($priority == 'tag') {
+                    if ($priority === 'tag') {
                         $attributes_data[$attr] = $val;
                     } else {
                         // Set all the attributes in a array called 'attr'
@@ -458,15 +443,16 @@ class VlcPlayer
             }
 
             // See tag status and do the needed.
-            if ($type == "open") {
+            if ($type === "open") {
                 // The starting of the tag '<tag>'
                 $parent[$level - 1] = &$current;
                 // Insert New tag
                 if (!is_array($current) || (!in_array($tag, array_keys($current)))) {
                     $current[$tag] = $result;
-                    if ($attributes_data) {
+                    if ($attributes_data !== []) {
                         $current[$tag . '_attr'] = $attributes_data;
                     }
+
                     $repeated_tag_index[$tag . '_' . $level] = 1;
 
                     $current = &$current[$tag];
@@ -490,26 +476,28 @@ class VlcPlayer
                             unset($current[$tag . '_attr']);
                         }
                     }
+
                     $last_item_index = $repeated_tag_index[$tag . '_' . $level] - 1;
                     $current         = &$current[$tag][$last_item_index];
                 }
-            } elseif ($type == "complete") {
+            } elseif ($type === "complete") {
                 // Tags that ends in 1 line '<tag />'
                 // See if the key is already taken.
                 if (!isset($current[$tag])) {
                     //New Key
                     $current[$tag]                           = $result;
                     $repeated_tag_index[$tag . '_' . $level] = 1;
-                    if ($priority == 'tag' && $attributes_data) {
+                    if ($priority === 'tag' && $attributes_data) {
                         $current[$tag . '_attr'] = $attributes_data;
                     }
                 } elseif (isset($current[$tag][0]) && is_array($current[$tag])) {
                     // If it is already an array push the new element into that array.
                     $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
 
-                    if ($priority == 'tag' && $get_attributes && $attributes_data) {
+                    if ($priority === 'tag' && $get_attributes && $attributes_data) {
                         $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                     }
+
                     $repeated_tag_index[$tag . '_' . $level]++;
                 } else {
                     // If it is not an array... Make it an array using using the existing value and the new value
@@ -518,20 +506,21 @@ class VlcPlayer
                         $result
                     ];
                     $repeated_tag_index[$tag . '_' . $level] = 1;
-                    if ($priority == 'tag' && $get_attributes) {
+                    if ($priority === 'tag' && $get_attributes) {
                         if (isset($current[$tag . '_attr'])) {
                             // The attribute of the last(0th) tag must be moved as well
                             $current[$tag]['0_attr'] = $current[$tag . '_attr'];
                             unset($current[$tag . '_attr']);
                         }
 
-                        if ($attributes_data) {
+                        if ($attributes_data !== []) {
                             $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                         }
                     }
+
                     $repeated_tag_index[$tag . '_' . $level]++; // 0 and 1 index is already taken
                 }
-            } elseif ($type == 'close') {
+            } elseif ($type === 'close') {
                 // End of tag '</tag>'
                 $current = &$parent[$level - 1];
             }

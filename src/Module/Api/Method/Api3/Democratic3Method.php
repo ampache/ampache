@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
  */
 final class Democratic3Method
 {
-    public const ACTION = 'democratic';
+    public const string ACTION = 'democratic';
 
     /**
      * democratic
@@ -59,7 +59,7 @@ final class Democratic3Method
             case 'vote':
                 $media = new Song($input['oid'] ?? 0);
                 if ($media->isNew()) {
-                    echo Xml3_Data::error(400, T_('Media Object Invalid or Not Specified'));
+                    echo Xml3_Data::error(400, 'Media Object Invalid or Not Specified');
                     break;
                 }
                 $democratic->add_vote(
@@ -81,7 +81,7 @@ final class Democratic3Method
             case 'devote':
                 $media = new Song($input['oid'] ?? 0);
                 if ($media->isNew()) {
-                    echo Xml3_Data::error(400, T_('Media Object Invalid or Not Specified'));
+                    echo Xml3_Data::error(400, 'Media Object Invalid or Not Specified');
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id);
@@ -108,7 +108,7 @@ final class Democratic3Method
                 echo Api::keyed_array($results);
                 break;
             default:
-                echo Xml3_Data::error(405, T_('Invalid Request'));
+                echo Xml3_Data::error(405, 'Invalid Request');
                 break;
         } // switch on method
     }

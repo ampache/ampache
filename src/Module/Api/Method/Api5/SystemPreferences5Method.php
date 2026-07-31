@@ -25,19 +25,32 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PreferenceRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class SystemPreferences5Method
+ * Returns the system preferences.
+ *
+ * Version 5 wraps the json payload in a `preference` array, so it keeps a method of its own.
  */
-final class SystemPreferences5Method
+final class SystemPreferences5Method implements MethodInterface
 {
-    public const ACTION = 'system_preferences';
+    public const string ACTION = 'system_preferences';
+
+    public function __construct(
+        private PreferenceRepositoryInterface $preferenceRepository,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * system_preferences
@@ -49,33 +62,35 @@ final class SystemPreferences5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException
      */
-    public static function system_preferences(array $input, User $user): bool
-    {
-        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (
+            !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::ADMIN,
+                $user->id
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
 
-        $results = ['preference' => self::getPreferenceRepository()->getAll()];
+        $results = ['preference' => $this->preferenceRepository->getAll()];
 
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($results, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Api::object_array($results['preference'], 'preference');
-        }
-
-        return true;
-    }
-
-    /**
-     * @todo Replace by constructor injection
-     */
-    private static function getPreferenceRepository(): PreferenceRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PreferenceRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->objectArray($apiVersion, $results, $results['preference'], 'preference')
+            )
+        );
     }
 }

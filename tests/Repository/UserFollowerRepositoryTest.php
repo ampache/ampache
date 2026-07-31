@@ -34,106 +34,7 @@ use PHPUnit\Framework\TestCase;
 class UserFollowerRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
-
     private UserFollowerRepository $subject;
-
-    protected function setUp(): void
-    {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
-
-        $this->subject = new UserFollowerRepository(
-            $this->connection
-        );
-    }
-
-    public function testGetFollowersReturnsData(): void
-    {
-        $user   = $this->createMock(User::class);
-        $result = $this->createMock(PDOStatement::class);
-
-        $userId = 666;
-        $itemId = 42;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT `user` FROM `user_follower` WHERE `follow_user` = ?',
-                [$userId]
-            )
-            ->willReturn($result);
-
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $itemId, false);
-
-        static::assertSame(
-            [$itemId],
-            $this->subject->getFollowers($user)
-        );
-    }
-
-    public function testGetFollowingReturnsData(): void
-    {
-        $user   = $this->createMock(User::class);
-        $result = $this->createMock(PDOStatement::class);
-
-        $userId = 666;
-        $itemId = 42;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT `follow_user` FROM `user_follower` WHERE `user` = ?',
-                [$userId]
-            )
-            ->willReturn($result);
-
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $itemId, false);
-
-        static::assertSame(
-            [$itemId],
-            $this->subject->getFollowing($user)
-        );
-    }
-
-    public function testIsFollowedByReturnsTrueIfSo(): void
-    {
-        $user          = $this->createMock(User::class);
-        $followingUser = $this->createMock(User::class);
-
-        $userId          = 666;
-        $followingUserId = 42;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $followingUser->expects(static::once())
-            ->method('getId')
-            ->willReturn($followingUserId);
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT count(`id`) FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',
-                [$followingUserId, $userId]
-            )
-            ->willReturn(123);
-
-        static::assertTrue(
-            $this->subject->isFollowedBy($user, $followingUser)
-        );
-    }
 
     public function testAddAddsEntry(): void
     {
@@ -191,5 +92,103 @@ class UserFollowerRepositoryTest extends TestCase
             );
 
         $this->subject->delete($user, $followingUser);
+    }
+
+    public function testGetFollowersReturnsData(): void
+    {
+        $user   = $this->createMock(User::class);
+        $result = $this->createMock(PDOStatement::class);
+
+        $userId = 666;
+        $itemId = 42;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `user` FROM `user_follower` WHERE `follow_user` = ?',
+                [$userId]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $itemId, false);
+
+        self::assertSame(
+            [$itemId],
+            $this->subject->getFollowers($user)
+        );
+    }
+
+    public function testGetFollowingReturnsData(): void
+    {
+        $user   = $this->createMock(User::class);
+        $result = $this->createMock(PDOStatement::class);
+
+        $userId = 666;
+        $itemId = 42;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `follow_user` FROM `user_follower` WHERE `user` = ?',
+                [$userId]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $itemId, false);
+
+        self::assertSame(
+            [$itemId],
+            $this->subject->getFollowing($user)
+        );
+    }
+
+    public function testIsFollowedByReturnsTrueIfSo(): void
+    {
+        $user          = $this->createMock(User::class);
+        $followingUser = $this->createMock(User::class);
+
+        $userId          = 666;
+        $followingUserId = 42;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $followingUser->expects(static::once())
+            ->method('getId')
+            ->willReturn($followingUserId);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT count(`id`) FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',
+                [$followingUserId, $userId]
+            )
+            ->willReturn(123);
+
+        self::assertTrue(
+            $this->subject->isFollowedBy($user, $followingUser)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+
+        $this->subject = new UserFollowerRepository(
+            $this->connection
+        );
     }
 }

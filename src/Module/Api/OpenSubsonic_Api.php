@@ -43,9 +43,11 @@ use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Plugin\PluginSonicAnalysisInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
@@ -60,6 +62,7 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
@@ -68,6 +71,7 @@ use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
@@ -95,88 +99,88 @@ use WpOrg\Requests\Requests;
  */
 class OpenSubsonic_Api
 {
-    public const API_VERSION = "1.16.1";
+    public const string API_VERSION = "1.16.1";
 
     /**
      * Ampache doesn't have a global unique id but items are unique per category. We use id prefixes to identify item category.
      * TODO remove old subsonic ids in Ampache 8.0
      */
 
-    public const OLD_SUBID_ALBUM = 200000000;
+    public const int OLD_SUBID_ALBUM = 200000000;
 
-    public const OLD_SUBID_ARTIST = 100000000;
+    public const int OLD_SUBID_ARTIST = 100000000;
 
-    public const OLD_SUBID_PLAYLIST = 800000000;
+    public const int OLD_SUBID_PLAYLIST = 800000000;
 
-    public const OLD_SUBID_PODCAST = 600000000;
+    public const int OLD_SUBID_PODCAST = 600000000;
 
-    public const OLD_SUBID_PODCASTEP = 700000000;
+    public const int OLD_SUBID_PODCASTEP = 700000000;
 
-    public const OLD_SUBID_SMARTPL = 400000000;
+    public const int OLD_SUBID_SMARTPL = 400000000;
 
-    public const OLD_SUBID_SONG = 300000000;
+    public const int OLD_SUBID_SONG = 300000000;
 
-    public const OLD_SUBID_VIDEO = 500000000;
+    public const int OLD_SUBID_VIDEO = 500000000;
 
-    public const SSERROR_APIVERSION_CLIENT = 20; // Incompatible Subsonic REST protocol version. Client must upgrade.
+    public const int SSERROR_APIVERSION_CLIENT = 20; // Incompatible Subsonic REST protocol version. Client must upgrade.
 
-    public const SSERROR_APIVERSION_SERVER = 30; // Incompatible Subsonic REST protocol version. Server must upgrade.
+    public const int SSERROR_APIVERSION_SERVER = 30; // Incompatible Subsonic REST protocol version. Server must upgrade.
 
-    public const SSERROR_AUTHMETHODCONFLICT = 43; // [OPENSUBSONIC] Multiple conflicting authentication mechanisms provided.
+    public const int SSERROR_AUTHMETHODCONFLICT = 43; // [OPENSUBSONIC] Multiple conflicting authentication mechanisms provided.
 
-    public const SSERROR_AUTHMETHODNOTSUPPORTED = 42; // [OPENSUBSONIC] Provided authentication mechanism not supported.
+    public const int SSERROR_AUTHMETHODNOTSUPPORTED = 42; // [OPENSUBSONIC] Provided authentication mechanism not supported.
 
-    public const SSERROR_BADAPIKEY = 44; // [OPENSUBSONIC] Invalid API key.
+    public const int SSERROR_BADAPIKEY = 44; // [OPENSUBSONIC] Invalid API key.
 
-    public const SSERROR_BADAUTH = 40; // Wrong username or password.
+    public const int SSERROR_BADAUTH = 40; // Wrong username or password.
 
-    public const SSERROR_DATA_NOTFOUND = 70; // The requested data was not found.
+    public const int SSERROR_DATA_NOTFOUND = 70; // The requested data was not found.
 
-    public const SSERROR_GENERIC = 0; // A generic error.
+    public const int SSERROR_GENERIC = 0; // A generic error.
 
-    public const SSERROR_MISSINGPARAM = 10; // Required parameter is missing.
+    public const int SSERROR_MISSINGPARAM = 10; // Required parameter is missing.
 
-    public const SSERROR_TOKENAUTHNOTSUPPORTED = 41; // Token authentication not supported for LDAP users.
+    public const int SSERROR_TOKENAUTHNOTSUPPORTED = 41; // Token authentication not supported for LDAP users.
 
-    public const SSERROR_TRIAL = 60; // The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.
+    public const int SSERROR_TRIAL = 60; // The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.
 
-    public const SSERROR_UNAUTHORIZED = 50; // User is not authorized for the given operation.
+    public const int SSERROR_UNAUTHORIZED = 50; // User is not authorized for the given operation.
 
-    public const SUBID_ALBUM = 'al-';
+    public const string SUBID_ALBUM = 'al-';
 
-    public const SUBID_ARTIST = 'ar-';
+    public const string SUBID_ARTIST = 'ar-';
 
-    public const SUBID_BOOKMARK = 'bo-';
+    public const string SUBID_BOOKMARK = 'bo-';
 
-    public const SUBID_CATALOG = 'mf-';
+    public const string SUBID_CATALOG = 'mf-';
 
-    public const SUBID_CHAT = 'pm-';
+    public const string SUBID_CHAT = 'pm-';
 
-    public const SUBID_GENRE = 'ta-';
+    public const string SUBID_GENRE = 'ta-';
 
-    public const SUBID_LIVESTREAM = 'li-';
+    public const string SUBID_LIVESTREAM = 'li-';
 
-    public const SUBID_PLAYLIST = 'pl-';
+    public const string SUBID_PLAYLIST = 'pl-';
 
-    public const SUBID_PODCAST = 'po-';
+    public const string SUBID_PODCAST = 'po-';
 
-    public const SUBID_PODCASTEP = 'pe-';
+    public const string SUBID_PODCASTEP = 'pe-';
 
-    public const SUBID_SHARE = 'sh-';
+    public const string SUBID_SHARE = 'sh-';
 
-    public const SUBID_SMARTPL = 'sp-';
+    public const string SUBID_SMARTPL = 'sp-';
 
-    public const SUBID_SONG = 'so-';
+    public const string SUBID_SONG = 'so-';
 
-    public const SUBID_USER = 'us-';
+    public const string SUBID_USER = 'us-';
 
-    public const SUBID_VIDEO = 'vi-';
+    public const string SUBID_VIDEO = 'vi-';
 
     /**
      * List of internal functions that should be skipped when called from SubsonicApiApplication
      * @var string[]
      */
-    public const SYSTEM_LIST = [
+    public const array SYSTEM_LIST = [
         '_addJsonResponse',
         '_addXmlResponse',
         '_albumList',
@@ -186,6 +190,8 @@ class OpenSubsonic_Api
         '_getAmpacheIdArrays',
         '_jsonOutput',
         '_jsonpOutput',
+        '_musicFolderId',
+        '_musicFolders',
         '_output_body',
         '_output_header',
         '_responseOutput',
@@ -899,9 +905,48 @@ class OpenSubsonic_Api
      */
     public static function findSonicPath(array $input, User $user): void
     {
-        unset($user);
+        $plugin = self::_getSonicAnalysisPlugin($user);
+        if ($plugin === null) {
+            self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
 
-        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+            return;
+        }
+
+        $start_id = self::_check_parameter($input, 'startSongId', __FUNCTION__);
+        if ($start_id === false) {
+            return;
+        }
+
+        $end_id = self::_check_parameter($input, 'endSongId', __FUNCTION__);
+        if ($end_id === false) {
+            return;
+        }
+
+        $start = self::getAmpacheObject((string) $start_id);
+        $end   = self::getAmpacheObject((string) $end_id);
+        if (
+            !$start instanceof Song
+            || !$end instanceof Song
+            || $start->isNew()
+            || $end->isNew()
+        ) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $count   = self::_sonicCount($input);
+        $matches = $plugin->get_sonic_path($start, $end, $count);
+
+        $format = (string) ($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addSonicMatches($response, $matches);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addSonicMatches($response, $matches);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1092,6 +1137,8 @@ class OpenSubsonic_Api
             if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
                 return $int_id - self::OLD_SUBID_PLAYLIST;
             }
+
+            return $int_id;
         }
 
         // everything else is a string prefix
@@ -1141,7 +1188,7 @@ class OpenSubsonic_Api
                 return new Song($int_id - self::OLD_SUBID_SONG);
             }
             if ($int_id >= self::OLD_SUBID_SMARTPL && $int_id < self::OLD_SUBID_VIDEO) {
-                return new Search($int_id - self::OLD_SUBID_SMARTPL);
+                return new Smartlist($int_id - self::OLD_SUBID_SMARTPL);
             }
             if ($int_id >= self::OLD_SUBID_VIDEO && $int_id < self::OLD_SUBID_PODCAST) {
                 return new Video($int_id - self::OLD_SUBID_VIDEO);
@@ -1155,6 +1202,8 @@ class OpenSubsonic_Api
             if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
                 return new Playlist($int_id - self::OLD_SUBID_PLAYLIST);
             }
+
+            return Catalog::create_from_id($int_id);
         }
 
         // everything else is a string prefix
@@ -1188,7 +1237,7 @@ class OpenSubsonic_Api
             case self::SUBID_SHARE:
                 return new Share($ampache_id);
             case self::SUBID_SMARTPL:
-                return new Search($ampache_id);
+                return new Smartlist($ampache_id);
             case self::SUBID_SONG:
                 return new Song($ampache_id);
             case self::SUBID_USER:
@@ -1233,6 +1282,8 @@ class OpenSubsonic_Api
             if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
                 return "playlist";
             }
+
+            return "catalog";
         }
 
         // everything else is a string prefix
@@ -1302,7 +1353,7 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addArtist($response, $artist, true);
+            $response = OpenSubsonic_Xml_Data::addArtistID3($response, $artist, true);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
             $response = OpenSubsonic_Json_Data::addArtistWithAlbumsID3($response, $artist);
@@ -1395,14 +1446,13 @@ class OpenSubsonic_Api
      */
     public static function getartists(array $input, User $user): void
     {
-        $musicFolderId = (isset($input['musicFolderId'])) ? (int) self::getAmpacheId($input['musicFolderId']) : 0;
-        $catalogs      = [];
-        if ($musicFolderId) {
-            $catalogs[] = $musicFolderId;
-        }
+        $catalogs = self::_musicFolders($input, $user);
 
         $user_id = $user->id;
-        $artists = Artist::get_id_arrays($catalogs, ((bool) Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
+        // an empty catalog list makes get_id_arrays return everything, so only ask when there is something to ask for
+        $artists = ($catalogs === [])
+            ? []
+            : Artist::get_id_arrays($catalogs, ((bool) Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
@@ -1665,15 +1715,8 @@ class OpenSubsonic_Api
     {
         set_time_limit(300);
 
-        $musicFolderId   = (isset($input['musicFolderId'])) ? (int) self::getAmpacheId($input['musicFolderId']) : 0;
         $ifModifiedSince = $input['ifModifiedSince'] ?? '';
-
-        $catalogs = [];
-        if ($musicFolderId) {
-            $catalogs[] = $musicFolderId;
-        } else {
-            $catalogs = $user->get_catalogs('music');
-        }
+        $catalogs        = self::_musicFolders($input, $user);
 
         $lastmodified = 0;
         $fcatalogs    = [];
@@ -1845,13 +1888,19 @@ class OpenSubsonic_Api
             return;
         }
 
+        // [OPENSUBSONIC] `songLyrics`: `enhanced` adds the word-level cueLine layer, if the lyrics carry LRC timings.
+        $enhanced = (
+            array_key_exists('enhanced', $input)
+            && (strtolower((string) $input['enhanced']) === 'true' || $input['enhanced'] === '1')
+        );
+
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addLyricsList($response, $song);
+            $response = OpenSubsonic_Xml_Data::addLyricsList($response, $song, $enhanced);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addLyricsList($response, $song);
+            $response = OpenSubsonic_Json_Data::addLyricsList($response, $song, $enhanced);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1981,16 +2030,26 @@ class OpenSubsonic_Api
      */
     public static function getopensubsonicextensions(array $input, User $user): void
     {
-        unset($user);
-
+        // Clients match these names literally, so they stay exactly as the spec writes them. `template` is a doc
+        // placeholder rather than a capability, so it is deliberately absent.
         $extensions = [
             'apiKeyAuthentication' => [1],
             'getPodcastEpisode' => [1],
             'indexBasedQueue' => [1],
             'formPost' => [1],
+            'playbackReport' => [1],
             'songLyrics' => [1],
+            'topSongsByArtistId' => [1],
             'transcodeOffset' => [1],
+            'transcoding' => [1],
         ];
+
+        // sonicSimilarity needs an audio-analysis backend, so it is only claimed while a plugin can actually answer.
+        if (self::_getSonicAnalysisPlugin($user) instanceof PluginSonicAnalysisInterface) {
+            $extensions['sonicSimilarity'] = [1];
+        }
+
+        ksort($extensions);
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
@@ -2277,7 +2336,8 @@ class OpenSubsonic_Api
                 $operator = 4;
                 $ftype    = "artist";
             } else {
-                $finput   = $musicFolderId;
+                // a real music folder must be one the user can browse
+                $finput   = self::_musicFolderId($input, $user);
                 $operator = 0;
                 $ftype    = "catalog";
             }
@@ -2501,20 +2561,20 @@ class OpenSubsonic_Api
      */
     public static function getsongsbygenre(array $input, User $user): void
     {
-        unset($user);
         $genre = self::_check_parameter($input, 'genre', __FUNCTION__);
         if ($genre === false) {
             return;
         }
 
-        $count  = (int) ($input['count'] ?? 0);
-        $offset = (int) ($input['offset'] ?? 0);
+        $count         = (int) ($input['count'] ?? 0);
+        $offset        = (int) ($input['offset'] ?? 0);
+        $musicFolderId = self::_musicFolderId($input, $user);
 
         $tag = Tag::construct_from_name($genre);
         if ($tag->isNew()) {
             $songs = [];
         } else {
-            $songs = Tag::get_tag_objects("song", $tag->id, $count, $offset);
+            $songs = Tag::get_tag_objects("song", $tag->id, $count, $offset, $musicFolderId);
         }
 
         $format = (string) ($input['f'] ?? 'xml');
@@ -2540,9 +2600,37 @@ class OpenSubsonic_Api
      */
     public static function getSonicSimilarTracks(array $input, User $user): void
     {
-        unset($user);
+        $plugin = self::_getSonicAnalysisPlugin($user);
+        if ($plugin === null) {
+            self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
 
-        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+            return;
+        }
+
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if ($sub_id === false) {
+            return;
+        }
+
+        $song = self::getAmpacheObject((string) $sub_id);
+        if (!$song instanceof Song || $song->isNew()) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $count   = self::_sonicCount($input);
+        $matches = $plugin->get_sonic_similar_songs($song, $count);
+
+        $format = (string) ($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addSonicMatches($response, $matches);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addSonicMatches($response, $matches);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2560,47 +2648,22 @@ class OpenSubsonic_Api
             ? $user
             : null;
 
+        $musicFolderId = self::_musicFolderId($input, $user);
+        $artists       = Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user, $musicFolderId);
+        $albums        = Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user, $musicFolderId);
+        $songs         = Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user, $musicFolderId);
+
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            switch ($elementName) {
-                case 'starred':
-                    $response = OpenSubsonic_Xml_Data::addStarred(
-                        $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
-                    );
-                    break;
-                case 'starred2':
-                    $response = OpenSubsonic_Xml_Data::addStarred2(
-                        $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
-                    );
-                    break;
-            }
+            $response = ($elementName === 'starred2')
+                ? OpenSubsonic_Xml_Data::addStarred2($response, $artists, $albums, $songs)
+                : OpenSubsonic_Xml_Data::addStarred($response, $artists, $albums, $songs);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            switch ($elementName) {
-                case 'starred':
-                    $response = OpenSubsonic_Json_Data::addStarred(
-                        $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
-                    );
-                    break;
-                case 'starred2':
-                    $response = OpenSubsonic_Json_Data::addStarred2(
-                        $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
-                    );
-                    break;
-            }
+            $response = ($elementName === 'starred2')
+                ? OpenSubsonic_Json_Data::addStarred2($response, $artists, $albums, $songs)
+                : OpenSubsonic_Json_Data::addStarred($response, $artists, $albums, $songs);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2627,12 +2690,26 @@ class OpenSubsonic_Api
     public static function gettopsongs(array $input, User $user): void
     {
         unset($user);
-        $name = self::_check_parameter($input, 'artist', __FUNCTION__);
-        if ($name === false) {
+        // [OPENSUBSONIC] `topSongsByArtistId`: an id may stand in for the name and wins when both are given.
+        $sub_id = $input['id'] ?? null;
+        $name   = $input['artist'] ?? null;
+        if ($sub_id === null && $name === null) {
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
             return;
         }
 
-        $artist = self::getArtistRepository()->findByName(urldecode((string) $name));
+        if ($sub_id !== null) {
+            $artist = self::getAmpacheObject((string) $sub_id);
+            if (!$artist instanceof Artist || $artist->isNew()) {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+        } else {
+            $artist = self::getArtistRepository()->findByName(urldecode((string) $name));
+        }
+
         $count  = (int) ($input['count'] ?? 50);
         $songs  = [];
         if ($count < 1) {
@@ -2654,6 +2731,99 @@ class OpenSubsonic_Api
             $response = OpenSubsonic_Json_Data::addTopSongs($response, $songs);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getTranscodeDecision [OS]
+     *
+     * OpenSubsonic extension `transcoding`. Reports whether a client can play a media item as it stands, and what it
+     * would be given instead. POST only, because the client capabilities arrive as a JSON body.
+     * https://opensubsonic.netlify.app/docs/endpoints/gettranscodedecision/
+     * @param array<string, mixed> $input
+     */
+    public static function getTranscodeDecision(array $input, User $user): void
+    {
+        unset($user);
+        $sub_id = self::_check_parameter($input, 'mediaId', __FUNCTION__);
+        if ($sub_id === false) {
+            return;
+        }
+
+        $media = self::getAmpacheObject($sub_id);
+        if (
+            (!($media instanceof Song || $media instanceof Podcast_Episode))
+            || $media->isNew()
+        ) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        // SubsonicApiApplication decodes the JSON body here; an empty one means no declared limits, not a bad request.
+        $clientInfo = (is_array($input['_body'] ?? null)) ? $input['_body'] : [];
+        $decision   = OpenSubsonic_Transcode::decide($media, $clientInfo);
+
+        $format = (string) ($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addTranscodeDecision($response, $decision);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addTranscodeDecision($response, $decision);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getTranscodeStream [OS]
+     *
+     * OpenSubsonic extension `transcoding`. Streams a media item using the settings getTranscodeDecision resolved,
+     * carried in the opaque `transcodeParams` token.
+     * https://opensubsonic.netlify.app/docs/endpoints/gettranscodestream/
+     * @param array<string, mixed> $input
+     */
+    public static function getTranscodeStream(array $input, User $user): void
+    {
+        $sub_id = self::_check_parameter($input, 'mediaId', __FUNCTION__);
+        if ($sub_id === false) {
+            return;
+        }
+
+        $token = self::_check_parameter($input, 'transcodeParams', __FUNCTION__);
+        if ($token === false) {
+            return;
+        }
+
+        $media = self::getAmpacheObject($sub_id);
+        if (
+            (!($media instanceof Song || $media instanceof Podcast_Episode))
+            || $media->isNew()
+        ) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        // A token failing its signature is refused outright, or a client could pick its own output by sending rubbish.
+        $settings = OpenSubsonic_Transcode::decodeParams((string) $token);
+        if ($settings === null) {
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
+            return;
+        }
+
+        $client = scrub_in((string) ($input['c'] ?? 'Subsonic'));
+        $params = '&client=' . rawurlencode($client)
+            . '&transcode_to=' . $settings['format']
+            . '&bitrate=' . $settings['bitrate']
+            . '&cache=1';
+
+        $offset = (int) ($input['offset'] ?? 0);
+        if ($offset > 0) {
+            $params .= '&frame=' . $offset;
+        }
+
+        self::_follow_stream($media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken));
     }
 
     /**
@@ -2868,7 +3038,8 @@ class OpenSubsonic_Api
         $stream             = new Stream_Playlist();
         $additional_params  = '';
         if ($bitRate) {
-            $additional_params .= '&bitrate=' . $bitRate;
+            // OpenSubsonic bitRate is kbps, convert to bps
+            $additional_params .= '&bitrate=' . ($bitRate * 1000);
         }
 
         $stream->add($medias, $additional_params);
@@ -3046,9 +3217,62 @@ class OpenSubsonic_Api
      */
     public static function reportPlayback(array $input, User $user): void
     {
-        unset($user);
+        $sub_id = self::_check_parameter($input, 'mediaId', __FUNCTION__);
+        if ($sub_id === false) {
+            return;
+        }
 
-        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+        $state = strtolower((string) ($input['state'] ?? ''));
+        if (!in_array($state, ['starting', 'playing', 'paused', 'stopped'], true)) {
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
+            return;
+        }
+
+        $media       = self::getAmpacheObject((string) $sub_id);
+        $object_type = self::getAmpacheType((string) $sub_id);
+        if (
+            $object_type === ''
+            || !$media instanceof Media
+            || $media->isNew()
+            || !isset($media->id, $media->time)
+        ) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $client = scrub_in((string) ($input['c'] ?? 'Subsonic'));
+
+        Stream::garbage_collection();
+        if ($state === 'stopped') {
+            Stream::delete_now_playing((string) $user->username, (int) $media->id, $object_type, $user->id);
+
+            self::_responseOutput($input, __FUNCTION__);
+
+            return;
+        }
+
+        // The reported position is stored verbatim: the spec derives `positionMs` from the last report received
+        $position_ms = (array_key_exists('positionMs', $input)) ? (int) $input['positionMs'] : null;
+        $position    = (int) round(($position_ms ?? 0) / 1000);
+        $started     = time() - $position;
+        $rate        = (array_key_exists('playbackRate', $input)) ? (float) $input['playbackRate'] : null;
+        Stream::insert_now_playing((int) $media->id, $user->id, $media->time, (string) $user->username, $object_type, $started, $position_ms, $rate, $state);
+
+        // ignoreScrobble asks for display state only, so the play count and scrobble plugins are left alone.
+        $ignoreScrobble = (
+            array_key_exists('ignoreScrobble', $input)
+            && (strtolower((string) $input['ignoreScrobble']) === 'true' || $input['ignoreScrobble'] === '1')
+        );
+        if (!$ignoreScrobble && $state === 'playing') {
+            $previous = Stats::get_last_play($user->id, $client, $started);
+            if (((int) ($previous['object_id'] ?? 0)) !== (int) $media->id && ($started - (int) $previous['date']) > 5) {
+                $media->set_played($user->id, $client, [], $started);
+            }
+        }
+
+        self::_responseOutput($input, __FUNCTION__);
     }
 
     /**
@@ -3278,11 +3502,13 @@ class OpenSubsonic_Api
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
                 Stream::insert_now_playing((int) $media->id, $user->id, $media->time, (string) $user->username, $type, $time);
-                // submission is true: go to scrobble plugins (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
-                if ($submission && get_class($media) == Song::class && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
-                    // stream has finished
+                // submission is true: stream finished. Record the play locally
+                // (set_played is dedup-guarded) and notify scrobble plugins.
+                if ($submission && $media->id && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
                     debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
-                    User::save_mediaplay($user, $media);
+                    if ($media->set_played($user->id, $client, [], $time) && get_class($media) == Song::class) {
+                        User::save_mediaplay($user, $media);
+                    }
                 }
                 // Submission is false and not a repeat. let repeats go through to saveplayqueue
                 if ((!$submission) && $media->id && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
@@ -3749,7 +3975,8 @@ class OpenSubsonic_Api
                     Preference::update('share', $user_id, 1);
                 }
                 if ($maxbitrate > 0) {
-                    Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+                    // Subsonic maxBitRate is kbps; transcode_bitrate is stored in bps
+                    Preference::update('transcode_bitrate', $user_id, $maxbitrate * 1000);
                 }
                 self::_responseOutput($input, __FUNCTION__);
             } else {
@@ -3792,7 +4019,7 @@ class OpenSubsonic_Api
     {
         $size          = (int) ($input['size'] ?? 10);
         $offset        = (int) ($input['offset'] ?? 0);
-        $musicFolderId = (isset($input['musicFolderId'])) ? (int) self::getAmpacheId($input['musicFolderId']) : 0;
+        $musicFolderId = self::_musicFolderId($input, $user);
         $catalogFilter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
 
         // hide ratings and flags for other users if single user data is enabled
@@ -3801,13 +4028,12 @@ class OpenSubsonic_Api
             ? $user
             : null;
 
-        // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
+        // Get albums from all catalogs by default
         $catalogs = ($catalogFilter)
             ? $user->get_catalogs('music')
             : null;
-        if ($musicFolderId > 0) {
-            $catalogs   = [];
-            $catalogs[] = $musicFolderId;
+        if ($musicFolderId !== 0) {
+            $catalogs = self::_musicFolders($input, $user);
         }
 
         $albums = null;
@@ -3815,31 +4041,33 @@ class OpenSubsonic_Api
             case 'random':
                 $albums = self::getAlbumRepository()->getRandom(
                     $user->id,
-                    $size
+                    $size,
+                    $musicFolderId
                 );
                 break;
             case 'newest':
                 $albums = Stats::get_newest('album', $size, $offset, $musicFolderId, $user);
                 break;
             case 'highest':
-                $albums = Rating::get_highest('album', $size, $offset, $output_user?->id, $by_user);
+                $albums = Rating::get_highest('album', $size, $offset, $output_user?->id, $by_user, $musicFolderId);
                 break;
             case 'frequent':
-                $albums = Stats::get_top('album', $size, 0, $offset, $output_user, false, 0, 0, $by_user);
+                $albums = Stats::get_top('album', $size, 0, $offset, $output_user, false, 0, 0, $by_user, $musicFolderId);
                 break;
             case 'recent':
-                $albums = Stats::get_recent('album', $size, $offset, $output_user);
+                $albums = Stats::get_recent('album', $size, $offset, $output_user, true, $musicFolderId);
                 break;
             case 'starred':
-                $albums = Userflag::get_latest('album', $output_user, $size, $offset, 0, 0, $by_user);
+                $albums = Userflag::get_latest('album', $output_user, $size, $offset, 0, 0, $by_user, $musicFolderId);
                 break;
             case 'alphabeticalByName':
-                $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
+                // an empty catalog list means everything to these calls, so a filtered request must bail out first
+                $albums = (empty($catalogs) && ($catalogFilter || $musicFolderId !== 0))
                     ? []
                     : Catalog::get_albums($size, $offset, $catalogs);
                 break;
             case 'alphabeticalByArtist':
-                $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
+                $albums = (empty($catalogs) && ($catalogFilter || $musicFolderId !== 0))
                     ? []
                     : Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
@@ -3848,7 +4076,11 @@ class OpenSubsonic_Api
                 $toYear   = (int) max(($input['fromYear'] ?? 0), ($input['toYear'] ?? 0));
 
                 if ($fromYear || $toYear) {
-                    $data   = Search::year_search($fromYear, $toYear, $size, $offset);
+                    $data = Search::year_search($fromYear, $toYear, $size, $offset);
+                    if ($musicFolderId !== 0) {
+                        $data['catalog_id'] = $musicFolderId;
+                    }
+
                     $albums = Search::run($data, $user);
                 }
                 break;
@@ -3856,7 +4088,7 @@ class OpenSubsonic_Api
                 $genre  = $input['genre'];
                 $tag_id = Tag::tag_exists($genre);
                 if ($tag_id > 0) {
-                    $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
+                    $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset, $musicFolderId);
                 }
                 break;
         }
@@ -3995,6 +4227,28 @@ class OpenSubsonic_Api
     }
 
     /**
+     * _getSonicAnalysisPlugin
+     *
+     * The first installed and enabled sonic-analysis plugin for this user, or null when none is available. Sonic
+     * similarity comes from analysing the audio, which Ampache cannot do itself, so with no plugin the endpoints
+     * report the feature as unsupported rather than answering with metadata similarity instead.
+     */
+    private static function _getSonicAnalysisPlugin(User $user): ?PluginSonicAnalysisInterface
+    {
+        foreach (Plugin::get_plugins(PluginTypeEnum::SONIC_ANALYSER) as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if (
+                $plugin->_plugin instanceof PluginSonicAnalysisInterface
+                && $plugin->load($user)
+            ) {
+                return $plugin->_plugin;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * _jsonOutput
      * @param array{'subsonic-response': array<string, mixed>} $json
      */
@@ -4024,6 +4278,43 @@ class OpenSubsonic_Api
         header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
         header("Access-Control-Allow-Origin: *");
         echo $callback . '(' . $output . ')';
+    }
+
+    /**
+     * _musicFolderId
+     *
+     * Resolve a requested musicFolderId into a single catalog id to filter on.
+     * 0 means no folder was requested; -1 can never match a catalog so a folder the user can't browse returns
+     * nothing instead of everything.
+     * @param array<string, mixed> $input
+     */
+    private static function _musicFolderId(array $input, User $user): int
+    {
+        $sub_id = $input['musicFolderId'] ?? null;
+        if ($sub_id === null || $sub_id === '') {
+            return 0;
+        }
+
+        return self::_musicFolders($input, $user)[0] ?? -1;
+    }
+
+    /**
+     * _musicFolders
+     *
+     * Resolve the catalogs a browse request should be limited to.
+     * A requested musicFolderId is always intersected with the catalogs the user may browse.
+     * @param array<string, mixed> $input
+     * @return int[]
+     */
+    private static function _musicFolders(array $input, User $user): array
+    {
+        $catalogs = $user->get_catalogs('music');
+        $sub_id   = $input['musicFolderId'] ?? null;
+        if ($sub_id === null || $sub_id === '') {
+            return $catalogs;
+        }
+
+        return array_values(array_intersect($catalogs, [(int) self::getAmpacheId((string) $sub_id)]));
     }
 
     /**
@@ -4108,7 +4399,7 @@ class OpenSubsonic_Api
         $albumOffset   = $input['albumOffset'] ?? 0;
         $songCount     = $input['songCount'] ?? 20;
         $songOffset    = $input['songOffset'] ?? 0;
-        $musicFolderId = (isset($input['musicFolderId'])) ? (int) self::getAmpacheId($input['musicFolderId']) : 0;
+        $musicFolderId = self::_musicFolderId($input, $user);
 
         $original = unhtmlentities($query);
         $query    = SubsonicApiApplication::parseSearchQuery($original);
@@ -4125,7 +4416,7 @@ class OpenSubsonic_Api
                 $data['rule_' . $ruleCount]               = 'title';
                 $ruleCount++;
             }
-            if ($musicFolderId > 0) {
+            if ($musicFolderId !== 0) {
                 $data['catalog_id'] = $musicFolderId;
             }
             $artists = Search::run($data, $user);
@@ -4144,7 +4435,7 @@ class OpenSubsonic_Api
                 $data['rule_' . $ruleCount]               = 'title';
                 $ruleCount++;
             }
-            if ($musicFolderId > 0) {
+            if ($musicFolderId !== 0) {
                 $data['catalog_id'] = $musicFolderId;
             }
             $albums = Search::run($data, $user);
@@ -4163,7 +4454,7 @@ class OpenSubsonic_Api
                 $data['rule_' . $ruleCount]               = 'title';
                 $ruleCount++;
             }
-            if ($musicFolderId > 0) {
+            if ($musicFolderId !== 0) {
                 $data['catalog_id'] = $musicFolderId;
             }
             $songs = Search::run($data, $user);
@@ -4235,6 +4526,21 @@ class OpenSubsonic_Api
         }
 
         self::_responseOutput($input, __FUNCTION__);
+    }
+
+    /**
+     * _sonicCount
+     *
+     * The result ceiling shared by the two sonic endpoints. The spec allows 0, which asks for nothing at all, so
+     * only a negative value falls back to the default.
+     *
+     * @param array<string, mixed> $input
+     */
+    private static function _sonicCount(array $input): int
+    {
+        $count = (int) ($input['count'] ?? 50);
+
+        return ($count < 0) ? 50 : $count;
     }
 
     /**

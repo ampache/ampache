@@ -25,20 +25,34 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserFollowerRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Following5Method
+ * Returns the users a user follows.
+ *
+ * Version 5 requires the `username` and only ever looks a user up by name, so it keeps a method
+ * of its own.
  */
-final class Following5Method
+final class Following5Method implements MethodInterface
 {
-    public const ACTION = 'following';
+    public const string ACTION = 'following';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private StreamFactoryInterface $streamFactory,
+        private UserFollowerRepositoryInterface $userFollowerRepository,
+    ) {}
 
     /**
      * following
@@ -51,58 +65,54 @@ final class Following5Method
      * username = (string) $username
      *
      * @param array{
-     *     username: string,
+     *     username?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function following(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: sociable'), self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::SOCIABLE)) {
+            throw new AccessDeniedException(
+                'Enable: sociable'
+            );
+        }
 
-            return false;
+        if (!array_key_exists('username', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'username')
+            );
         }
-        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
-        }
-        unset($user);
+
         $username = $input['username'];
         $leader   = User::get_from_username($username);
         if (!$leader instanceof User || $leader->id < 1) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $username), self::ACTION, 'username', $input['api_format']);
 
-            return false;
+            throw new ResultEmptyException($username, 'username');
         }
 
-        $results = self::getUserFollowerRepository()->getFollowing($leader);
-        if (empty($results)) {
-            Api5::empty('user', $input['api_format']);
-
-            return false;
+        $results = $this->userFollowerRepository->getFollowing($leader);
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'user')
+                )
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json5_Data::users($results);
-                break;
-            default:
-                echo Xml5_Data::users($results);
-        }
-
-        return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getUserFollowerRepository(): UserFollowerRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserFollowerRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->users($apiVersion, $results)
+            )
+        );
     }
 }

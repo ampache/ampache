@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
  */
 final class Videos4Method
 {
-    public const ACTION = 'videos';
+    public const string ACTION = 'videos';
 
     /**
      * videos

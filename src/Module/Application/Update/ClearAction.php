@@ -35,27 +35,20 @@ use Ampache\Module\System\AutoUpdate;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class ClearAction implements ApplicationActionInterface
+final readonly class ClearAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'clear';
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'clear';
 
     public function __construct(
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer,
-    ) {
-        $this->responseFactory = $responseFactory;
-        $this->configContainer = $configContainer;
-    }
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
-        if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'sources') {
+        if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) === 'sources') {
             if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
                 throw new AccessDeniedException();
             }
@@ -64,7 +57,7 @@ final class ClearAction implements ApplicationActionInterface
         }
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 $this->configContainer->getWebPath()

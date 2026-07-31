@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -31,37 +31,28 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UninstallLocalplayAction implements ApplicationActionInterface
+final readonly class UninstallLocalplayAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'uninstall_localplay';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'uninstall_localplay';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+        private PluginManagerInterface $pluginManager,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            !$this->requestParser->verifyForm('uninstall_localplay')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || !$this->requestParser->verifyForm('uninstall_localplay')
         ) {
             throw new AccessDeniedException();
         }
@@ -70,8 +61,7 @@ final class UninstallLocalplayAction implements ApplicationActionInterface
 
         $type = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
-        $localplay = new LocalPlay($type);
-        $localplay->uninstall();
+        $this->pluginManager->uninstallLocalplay($type);
 
         /* Show Confirmation */
         $url   = sprintf('%s/modules.php?action=show_localplay', $this->configContainer->getWebPath('/admin'));

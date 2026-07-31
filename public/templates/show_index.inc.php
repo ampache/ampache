@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_index.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -87,7 +89,7 @@ if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
 <div id="recently_played">
 <?php
     $user      = Core::get_global('user');
-    $user_id   = $user?->id ?? -1;
+    $user_id   = $user->id ?? -1;
     $ajax_page = 'index';
     if (AmpConfig::get('home_recently_played_all')) {
         $data = Stats::get_recently_played($user_id);

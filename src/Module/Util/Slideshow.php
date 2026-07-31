@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,19 +33,12 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-final class Slideshow implements SlideshowInterface
+final readonly class Slideshow implements SlideshowInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    private PluginRetrieverInterface $pluginRetriever;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        PluginRetrieverInterface $pluginRetriever
-    ) {
-        $this->modelFactory    = $modelFactory;
-        $this->pluginRetriever = $pluginRetriever;
-    }
+        private ModelFactoryInterface $modelFactory,
+        private PluginRetrieverInterface $pluginRetriever,
+    ) {}
 
     public function getCurrentSlideshow(User $user): array
     {

@@ -31,47 +31,10 @@ namespace Ampache\Config;
 interface ConfigContainerInterface
 {
     /**
-     * Replaces the internal config container
-     */
-    public function updateConfig(array $configuration): ConfigContainerInterface;
-
-    /**
      * Compatibility accessor for direct access to the config array
      * Please use single methods for common keys
      */
-    public function get(string $configKey);
-
-    /**
-     * Returns the name of the PHP session
-     */
-    public function getSessionName(): string;
-
-    /**
-     * Returns the webdav config state
-     */
-    public function isWebDavBackendEnabled(): bool;
-
-    /**
-     * Returns the authentication config state
-     */
-    public function isAuthenticationEnabled(): bool;
-
-    /**
-     * Returns the raw web path
-     */
-    public function getRawWebPath(): string;
-
-    /**
-     * Returns the web path
-     */
-    public function getWebPath(?string $suffix = ''): string;
-
-    /**
-     * Return a list of types which are zip-able
-     *
-     * @return list<string>
-     */
-    public function getTypesAllowedForZip(): array;
+    public function get(string $configKey): mixed;
 
     /**
      * Return the path to the composer binary
@@ -84,19 +47,51 @@ interface ConfigContainerInterface
     public function getComposerParameters(): string;
 
     /**
+     * Returns the path to the ampache config file
+     */
+    public function getConfigFilePath(): string;
+
+    /**
      * Return the path to the npm binary
      */
     public function getNpmBinaryPath(): string;
 
     /**
-     * Check if a certain feature is enabled
+     * Returns the raw web path
      */
-    public function isFeatureEnabled(string $feature): bool;
+    public function getRawWebPath(): string;
+
+    /**
+     * Returns the name of the PHP session
+     */
+    public function getSessionName(): string;
 
     /**
      * Returns the path to the files of the selected theme
      */
     public function getThemePath(): string;
+
+    /**
+     * Return a list of types which are zip-able
+     *
+     * @return array<string>
+     */
+    public function getTypesAllowedForZip(): array;
+
+    /**
+     * Returns the current Ampache version
+     */
+    public function getVersion(): string;
+
+    /**
+     * Returns the web path
+     */
+    public function getWebPath(?string $suffix = ''): string;
+
+    /**
+     * Returns the authentication config state
+     */
+    public function isAuthenticationEnabled(): bool;
 
     /**
      * Returns the debug mode state
@@ -109,12 +104,17 @@ interface ConfigContainerInterface
     public function isDemoMode(): bool;
 
     /**
-     * Returns the current Ampache version
+     * Check if a certain feature is enabled
      */
-    public function getVersion(): string;
+    public function isFeatureEnabled(string $feature): bool;
 
     /**
-     * Returns the path to the ampache config file
+     * Returns the webdav config state
      */
-    public function getConfigFilePath(): string;
+    public function isWebDavBackendEnabled(): bool;
+
+    /**
+     * Replaces the internal config container
+     */
+    public function updateConfig(array $configuration): ConfigContainerInterface;
 }

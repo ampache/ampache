@@ -47,7 +47,7 @@ final class Migration400001 extends AbstractMigration
             "UPDATE `preference` SET `preference`.`subcatagory` = 'feature' WHERE `preference`.`name` in ('download', 'allow_stream_playback', 'allow_democratic_playback', 'share', 'allow_video', 'geolocation') AND `preference`.`subcatagory` IS NULL;",
             "UPDATE `preference` SET `preference`.`subcatagory` = 'home' WHERE `preference`.`name` in ('now_playing_per_user', 'home_moment_albums', 'home_moment_videos', 'home_recently_played', 'home_now_playing') AND `preference`.`subcatagory` IS NULL;",
             "UPDATE `preference` SET `preference`.`subcatagory` = 'httpq' WHERE `preference`.`name` = 'httpq_active' AND `preference`.`subcatagory` IS NULL;",
-            "UPDATE `preference` SET `preference`.`subcatagory` = 'lastfm' WHERE `preference`.`name` in ('lastfm_grant_link', 'lastfm_challenge') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'last.fm' WHERE `preference`.`name` in ('lastfm_grant_link', 'lastfm_challenge') AND `preference`.`subcatagory` IS NULL;",
             "UPDATE `preference` SET `preference`.`subcatagory` = 'localplay' WHERE `preference`.`name` in ('localplay_controller', 'localplay_level', 'allow_localplay_playback') AND `preference`.`subcatagory` IS NULL;",
             "UPDATE `preference` SET `preference`.`subcatagory` = 'metadata' WHERE `preference`.`name` in ('disabled_custom_metadata_fields', 'disabled_custom_metadata_fields_input') AND `preference`.`subcatagory` IS NULL;",
             "UPDATE `preference` SET `preference`.`subcatagory` = 'mpd' WHERE `preference`.`name` = 'mpd_active' AND `preference`.`subcatagory` IS NULL;",

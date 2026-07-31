@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_podcasts.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -39,11 +41,11 @@ use Ampache\Repository\PodcastRepositoryInterface;
 /** @var list<int> $object_ids */
 /** @var PodcastRepositoryInterface $podcastRepository */
 
-$webPath            = AmpConfig::get_web_path();
-$thcount            = 7;
-$show_ratings       = User::is_registered() && (AmpConfig::get('ratings'));
-$show_played_times  = AmpConfig::get('show_played_times');
-$is_table           = !$browse->is_grid_view();
+$webPath           = AmpConfig::get_web_path();
+$thcount           = 8;
+$show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
+$show_played_times = AmpConfig::get('show_played_times');
+$is_table          = !$browse->is_grid_view();
 // translate once
 $count_text  = T_('Played');
 $rating_text = T_('Rating');
@@ -85,6 +87,7 @@ $css_class   = ($is_table) ? '' : ' gridview'; ?>
             <th class="cel_play essential"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title'); ?></th>
+            <th class="cel_add essential"></th>
             <th class="cel_siteurl"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=website', T_('Website'), 'podcast_sort_website'); ?></th>
             <th class="cel_episodes optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=episodes', T_('Episodes'), 'podcast_sort_episodes'); ?></th>
             <?php if ($show_played_times) {
@@ -112,7 +115,7 @@ foreach ($object_ids as $podcastId) {
     if ($libitem === null) {
         continue;
     } ?>
-        <tr id="podcast_<?php echo $libitem->getId(); ?>">
+        <tr id="podcast_<?php echo $libitem->getId(); ?>" class="libitem_menu" data-object-type="podcast" data-object-id="<?php echo $libitem->getId(); ?>">
             <?php require Ui::find_template('show_podcast_row.inc.php'); ?>
         </tr>
         <?php
@@ -128,6 +131,7 @@ foreach ($object_ids as $podcastId) {
             <th class="cel_play"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title_bottom'); ?></th>
+            <th class="cel_add"></th>
             <th class="cel_siteurl"><?php echo T_('Website'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
             <?php if ($show_played_times) { ?>

@@ -43,72 +43,10 @@ use Psr\Http\Message\ServerRequestInterface;
 class ExportActionTest extends TestCase
 {
     private CatalogExportFactoryInterface&MockObject $catalogExportFactory;
-
     private CatalogLoaderInterface&MockObject $catalogLoader;
-
-    private ExportAction $subject;
-
-    private ServerRequestInterface&MockObject $request;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
-    protected function setUp(): void
-    {
-        $this->catalogExportFactory = $this->createMock(CatalogExportFactoryInterface::class);
-        $this->catalogLoader        = $this->createMock(CatalogLoaderInterface::class);
-        $this->request              = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper           = $this->createMock(GuiGatekeeperInterface::class);
-
-        $this->subject = new ExportAction(
-            $this->catalogExportFactory,
-            $this->catalogLoader,
-        );
-    }
-
-    public function testRunFailsIfAccessIsDenied(): void
-    {
-        static::expectException(AccessDeniedException::class);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->willReturn(false);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
-
-    #[RunInSeparateProcess]
-    public function testRunExportsEverythingIfCatalogIsNotDefined(): void
-    {
-        $exporter = $this->createMock(CatalogExporterInterface::class);
-
-        ob_start();
-
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->willReturn(true);
-
-        $this->catalogLoader->expects(static::once())
-            ->method('getById')
-            ->with(0)
-            ->willThrowException(new CatalogLoadingException());
-
-        $this->catalogExportFactory->expects(static::once())
-            ->method('createFromExportType')
-            ->with(CatalogExportTypeEnum::CSV)
-            ->willReturn($exporter);
-
-        $exporter->expects(static::once())
-            ->method('sendHeaders');
-        $exporter->expects(static::once())
-            ->method('export')
-            ->with(null);
-
-        static::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
-        );
-    }
+    private ServerRequestInterface&MockObject $request;
+    private ExportAction $subject;
 
     #[RunInSeparateProcess]
     public function testRunExportsCatalog(): void
@@ -149,8 +87,66 @@ class ExportActionTest extends TestCase
             ->method('export')
             ->with($catalog);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
+        );
+    }
+
+    #[RunInSeparateProcess]
+    public function testRunExportsEverythingIfCatalogIsNotDefined(): void
+    {
+        $exporter = $this->createMock(CatalogExporterInterface::class);
+
+        ob_start();
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->willReturn(true);
+
+        $this->catalogLoader->expects(static::once())
+            ->method('getById')
+            ->with(0)
+            ->willThrowException(new CatalogLoadingException());
+
+        $this->catalogExportFactory->expects(static::once())
+            ->method('createFromExportType')
+            ->with(CatalogExportTypeEnum::CSV)
+            ->willReturn($exporter);
+
+        $exporter->expects(static::once())
+            ->method('sendHeaders');
+        $exporter->expects(static::once())
+            ->method('export')
+            ->with(null);
+
+        self::assertNull(
+            $this->subject->run($this->request, $this->gatekeeper)
+        );
+    }
+
+    public function testRunFailsIfAccessIsDenied(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->willReturn(false);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    protected function setUp(): void
+    {
+        $this->catalogExportFactory = $this->createMock(CatalogExportFactoryInterface::class);
+        $this->catalogLoader        = $this->createMock(CatalogLoaderInterface::class);
+        $this->request              = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper           = $this->createMock(GuiGatekeeperInterface::class);
+
+        $this->subject = new ExportAction(
+            $this->catalogExportFactory,
+            $this->catalogLoader,
         );
     }
 }

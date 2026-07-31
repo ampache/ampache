@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_edit_tag_hidden_row.inc.php
+
 use Ampache\Repository\Model\Tag;
 
 /** @var Tag $libitem */
@@ -36,7 +38,7 @@ use Ampache\Repository\Model\Tag;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Hidden'); ?></td>
-                <td><input type="checkbox" <?php echo $string = ((int)$libitem->is_hidden == 1) ? 'checked="checked"' : ''; ?> name="is_hidden" value="1" /></td>
+                <td><input type="checkbox" <?php echo $string = ((int) $libitem->is_hidden == 1) ? 'checked="checked"' : ''; ?> name="is_hidden" value="1" /></td>
             </tr>
             <tr><td>&nbsp;</td></tr>
             <tr>

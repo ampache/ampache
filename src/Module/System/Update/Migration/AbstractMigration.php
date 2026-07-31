@@ -33,10 +33,6 @@ use Traversable;
 
 abstract class AbstractMigration implements MigrationInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private ?Interactor $interactor = null;
-
     /** @var list<non-empty-string> */
     protected array $changelog = [];
 
@@ -45,10 +41,37 @@ abstract class AbstractMigration implements MigrationInterface
      */
     protected bool $warning = false;
 
+    private DatabaseConnectionInterface $connection;
+    private ?Interactor $interactor = null;
+
     public function __construct(
-        DatabaseConnectionInterface $connection
+        DatabaseConnectionInterface $connection,
     ) {
         $this->connection = $connection;
+    }
+
+    /**
+     * Returns a list of changelog-strings
+     *
+     * @return list<non-empty-string>
+     */
+    public function getChangelog(): array
+    {
+        return $this->changelog;
+    }
+
+    /**
+     * Returns the sql-statements used for migrating the database tables
+     *
+     * @return Traversable<string, string> Dictionary with the key being the table name and value the sql-statements
+     */
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Traversable {
+        return new ArrayIterator();
     }
 
     /**
@@ -68,19 +91,9 @@ abstract class AbstractMigration implements MigrationInterface
     }
 
     /**
-     * Returns a list of changelog-strings
-     *
-     * @return list<non-empty-string>
-     */
-    public function getChangelog(): array
-    {
-        return $this->changelog;
-    }
-
-    /**
      * Performs database migrations
      *
-     * @param array<mixed> $params
+     * @param list<mixed> $params
      * @throws DatabaseException
      */
     protected function updateDatabase(string $sql, array $params = []): void
@@ -94,17 +107,15 @@ abstract class AbstractMigration implements MigrationInterface
 
     /**
      * Add preferences and print update errors for preference inserts on failure
-     *
-     * @param float|int|string $default
      */
     protected function updatePreferences(
-        string $name,
-        string $description,
-        $default,
-        int $level,
-        string $type,
-        string $category,
-        ?string $subcategory = null
+        string           $name,
+        string           $description,
+        float|int|string $default,
+        int              $level,
+        string           $type,
+        string           $category,
+        ?string          $subcategory = null,
     ): void {
         Preference::insert($name, $description, $default, $level, $type, $category, $subcategory, true);
 
@@ -113,19 +124,5 @@ abstract class AbstractMigration implements MigrationInterface
             sprintf(T_('Updated: %s'), $name),
             true
         );
-    }
-
-    /**
-     * Returns the sql-statements used for migrating the database tables
-     *
-     * @return Traversable<string, string> Dictionary with the key being the table name and value the sql-statements
-     */
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build
-    ): Traversable {
-        return new ArrayIterator();
     }
 }

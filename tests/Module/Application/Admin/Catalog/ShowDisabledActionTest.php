@@ -40,67 +40,12 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowDisabledActionTest extends TestCase
 {
-    private UiInterface&MockObject $ui;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private SongRepositoryInterface&MockObject $songRepository;
-
-    private ShowDisabledAction $subject;
-
-    private ServerRequestInterface&MockObject $request;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
-    protected function setUp(): void
-    {
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->songRepository  = $this->createMock(SongRepositoryInterface::class);
-
-        $this->subject = new ShowDisabledAction(
-            $this->ui,
-            $this->configContainer,
-            $this->songRepository,
-        );
-
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-    }
-
-    public function testRunThrowsIfAccessIsDenied(): void
-    {
-        static::expectException(AccessDeniedException::class);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->willReturn(false);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
-
-    public function testRunShowsEmptyContentOnDemoMode(): void
-    {
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->willReturn(true);
-
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->willReturn(true);
-
-        $this->ui->expects(static::once())
-            ->method('showHeader');
-        $this->ui->expects(static::once())
-            ->method('showFooter');
-        $this->ui->expects(static::once())
-            ->method('showQueryStats');
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
+    private ServerRequestInterface&MockObject $request;
+    private SongRepositoryInterface&MockObject $songRepository;
+    private ShowDisabledAction $subject;
+    private UiInterface&MockObject $ui;
 
     public function testRunRendersDisabledSongs(): void
     {
@@ -134,5 +79,55 @@ class ShowDisabledActionTest extends TestCase
             ->method('showQueryStats');
 
         $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    public function testRunShowsEmptyContentOnDemoMode(): void
+    {
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->willReturn(true);
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->willReturn(true);
+
+        $this->ui->expects(static::once())
+            ->method('showHeader');
+        $this->ui->expects(static::once())
+            ->method('showFooter');
+        $this->ui->expects(static::once())
+            ->method('showQueryStats');
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    public function testRunThrowsIfAccessIsDenied(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->willReturn(false);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->songRepository  = $this->createMock(SongRepositoryInterface::class);
+
+        $this->subject = new ShowDisabledAction(
+            $this->ui,
+            $this->configContainer,
+            $this->songRepository,
+        );
+
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
     }
 }

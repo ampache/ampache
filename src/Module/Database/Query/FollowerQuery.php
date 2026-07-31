@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -29,10 +29,13 @@ use Ampache\Repository\Model\Query;
 
 final class FollowerQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'follow_user',
         'user',
     ];
+
+    protected string $base   = "SELECT %%SELECT%% FROM `user_follower` ";
+    protected string $select = "`user_follower`.`id`";
 
     /** @var string[] $sorts */
     protected array $sorts = [
@@ -40,20 +43,6 @@ final class FollowerQuery implements QueryInterface
         'follow_user',
         'user',
     ];
-
-    protected string $select = "`user_follower`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `user_follower` ";
-
-    /**
-     * get_select
-     *
-     * This method returns the columns a query will user for SELECT
-     */
-    public function get_select(): string
-    {
-        return $this->select;
-    }
 
     /**
      * get_base_sql
@@ -63,6 +52,16 @@ final class FollowerQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_select
+     *
+     * This method returns the columns a query will user for SELECT
+     */
+    public function get_select(): string
+    {
+        return $this->select;
     }
 
     /**
@@ -84,40 +83,29 @@ final class FollowerQuery implements QueryInterface
     public function get_sql_filter(Query $query, string $filter, mixed $value): string
     {
         $filter_sql = '';
-        switch ($filter) {
-            case 'follow_user':
-            case 'user':
-                $filter_sql = " `user_follower`.`$filter` = '" . (int)$value . "' AND ";
-                break;
-        }
 
-        return $filter_sql;
+        return match ($filter) {
+            'follow_user', 'user' => sprintf(" `user_follower`.`%s` = '", $filter) . (int) $value . "' AND ",
+            default => $filter_sql,
+        };
     }
 
     /**
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
-        switch ($field) {
-            case 'user':
-            case 'follow_user':
-            case 'follow_date':
-                $sql = "`user_follower`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'user', 'follow_user', 'follow_date' => sprintf('`user_follower`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

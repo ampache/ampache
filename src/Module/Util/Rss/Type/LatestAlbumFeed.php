@@ -34,25 +34,16 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
 {
-    private ServerRequestInterface $request;
-
     public function __construct(
         private ?User $user,
-        ServerRequestInterface $request,
-    ) {
-        $this->request = $request;
-    }
-
-    protected function getTitle(): string
-    {
-        return T_('Newest Albums');
-    }
+        private ServerRequestInterface $request,
+    ) {}
 
     protected function getItems(): Generator
     {
         $queryParams = $this->request->getQueryParams();
-        $count       = (int)($queryParams['count'] ?? 10);
-        $offset      = (int)($queryParams['offset'] ?? 0);
+        $count       = (int) ($queryParams['count'] ?? 10);
+        $offset      = (int) ($queryParams['offset'] ?? 0);
         $ids         = Stats::get_newest('album', $count, $offset, 0, $this->user);
 
         foreach ($ids as $albumid) {
@@ -64,12 +55,17 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
                 'description' => $album->get_parent_fullname() . ' - ' . $album->get_fullname(true),
                 'comments' => '',
                 'pubDate' => date(DATE_RFC2822, $album->addition_time),
-                'guid' => (isset($album->mbid)) ? 'https://musicbrainz.org/release/' . $album->mbid : (isset($album->mbid_group) ? 'https://musicbrainz.org/release-group/' . $album->mbid_group : 'album-' . $album->id),
-                'isPermaLink' => (isset($album->mbid) || isset($album->mbid_group))
+                'guid' => ($album->mbid !== null) ? 'https://musicbrainz.org/release/' . $album->mbid : ($album->mbid_group !== null ? 'https://musicbrainz.org/release-group/' . $album->mbid_group : 'album-' . $album->id),
+                'isPermaLink' => ($album->mbid !== null || $album->mbid_group !== null)
                     ? 'true'
                     : 'false',
-                'image' => (string)Art::url($album->id, 'album', null, 2),
+                'image' => (string) Art::url($album->id, 'album', null, 2),
             ];
         }
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Newest Albums');
     }
 }

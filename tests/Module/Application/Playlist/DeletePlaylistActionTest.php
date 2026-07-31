@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,72 +40,10 @@ use Teapot\StatusCode\RFC\RFC7231;
 
 class DeletePlaylistActionTest extends MockeryTestCase
 {
-    /** @var ResponseFactoryInterface|MockInterface|null */
-    private ?MockInterface $responseFactory;
-
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private ?MockInterface $configContainer;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private ?MockInterface $modelFactory;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private ResponseFactoryInterface|MockInterface|null $responseFactory;
     private ?DeletePlaylistAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->responseFactory = $this->mock(ResponseFactoryInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new DeletePlaylistAction(
-            $this->modelFactory,
-            $this->responseFactory,
-            $this->configContainer
-        );
-    }
-
-    public function testRunThrowsExceptionIfIdIsMissing(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn([]);
-
-        $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testRunThrowsExceptionIfNotAccessible(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $playlist   = $this->mock(Playlist::class);
-
-        $playlistId = 666;
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['playlist_id' => (string) $playlistId]);
-
-        $this->modelFactory->shouldReceive('createPlaylist')
-            ->with($playlistId)
-            ->once()
-            ->andReturn($playlist);
-
-        $playlist->shouldReceive('has_access')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
 
     public function testRunDeletesAndReturnsResponse(): void
     {
@@ -158,6 +97,63 @@ class DeletePlaylistActionTest extends MockeryTestCase
         $this->assertSame(
             $respone,
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunThrowsExceptionIfIdIsMissing(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([]);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsExceptionIfNotAccessible(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $playlist   = $this->mock(Playlist::class);
+
+        $playlistId = 666;
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['playlist_id' => (string) $playlistId]);
+
+        $this->modelFactory->shouldReceive('createPlaylist')
+            ->with($playlistId)
+            ->once()
+            ->andReturn($playlist);
+
+        $playlist->shouldReceive('has_access')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->responseFactory = $this->mock(ResponseFactoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+
+        $this->subject = new DeletePlaylistAction(
+            $this->modelFactory,
+            $this->responseFactory,
+            $this->configContainer
         );
     }
 }

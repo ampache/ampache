@@ -41,7 +41,7 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastCreate4Method
 {
-    public const ACTION = 'podcast_create';
+    public const string ACTION = 'podcast_create';
 
     /**
      * podcast_create
@@ -62,7 +62,7 @@ final class PodcastCreate4Method
     public static function podcast_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: podcast features are not enabled.', '400', $input['api_format']);
 
             return false;
         }
@@ -76,7 +76,7 @@ final class PodcastCreate4Method
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog === null) {
-            Api4::message('error', T_('Catalog not found'), '401', $input['api_format']);
+            Api4::message('error', 'Catalog not found', '401', $input['api_format']);
 
             return false;
         }
@@ -87,7 +87,7 @@ final class PodcastCreate4Method
                 $catalog
             );
         } catch (PodcastCreationException) {
-            Api4::message('error', T_('Bad Request'), '401', $input['api_format']);
+            Api4::message('error', 'Bad Request', '401', $input['api_format']);
 
             return false;
         }

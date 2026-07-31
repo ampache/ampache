@@ -25,17 +25,32 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Playlist;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class PlaylistEdit5Method
+ * Modifies the name, type, owner and track order of a playlist.
+ *
+ * Version 5 knows nothing about the smart playlists the later versions accept, so it keeps a
+ * method of its own.
  */
-final class PlaylistEdit5Method
+final class PlaylistEdit5Method implements MethodInterface
 {
-    public const ACTION = 'playlist_edit';
+    public const string ACTION = 'playlist_edit';
+
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * playlist_edit
@@ -54,7 +69,7 @@ final class PlaylistEdit5Method
      * sort = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     name?: string,
      *     type?: string,
      *     owner?: int|string,
@@ -64,38 +79,49 @@ final class PlaylistEdit5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function playlist_edit(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('filter', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
         }
+
         $items = explode(',', html_entity_decode((string) ($input['items'] ?? '')));
         $order = explode(',', html_entity_decode((string) ($input['tracks'] ?? '')));
         $sort  = (int) ($input['sort'] ?? 0);
+
         // calculate whether we are editing the track order too
         $playlist_edit = [];
         if (count($items) == count($order)) {
             $playlist_edit = array_combine($order, $items);
         }
 
-        ob_end_clean();
         $object_id = (int) $input['filter'];
-        $playlist  = new Playlist($object_id);
+        $playlist  = $this->modelFactory->createPlaylist($object_id);
 
         if ($playlist->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                (string) $object_id
+            );
         }
 
         // don't continue if you didn't actually get a playlist or the access level
         if (!$playlist->has_access($user)) {
-            Api5::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, T_('Require: 100'), self::ACTION, 'account', $input['api_format']);
-
-            return false;
+            throw new AccessFailedException(
+                'Require: 100'
+            );
         }
+
         $name  = $input['name'] ?? $playlist->name;
         $type  = $input['type'] ?? $playlist->type;
         $owner = $input['owner'] ?? $playlist->user;
@@ -103,6 +129,7 @@ final class PlaylistEdit5Method
             $lookup = User::get_from_username((string) $owner);
             $owner  = $lookup->id ?? $playlist->user;
         }
+
         // update name/type
         if ($name !== $playlist->name || $type !== $playlist->type || $owner !== $playlist->user) {
             $array = [
@@ -112,6 +139,7 @@ final class PlaylistEdit5Method
             ];
             $playlist->update($array);
         }
+
         $change_made = false;
         // update track order with new id's
         if (!empty($playlist_edit)) {
@@ -122,18 +150,31 @@ final class PlaylistEdit5Method
                 }
             }
         }
+
         if ($sort > 0) {
             $playlist->sort_tracks();
             $change_made = true;
         }
+
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'input', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        'Bad Request',
+                        self::ACTION,
+                        'input'
+                    )
+                )
+            );
         }
-        Api5::message('playlist changes saved', $input['api_format']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success($apiVersion, 'playlist changes saved')
+            )
+        );
     }
 }

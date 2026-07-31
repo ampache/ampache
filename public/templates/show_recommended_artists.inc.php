@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_recommended_artists.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -33,8 +35,8 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
-/** @var int[] $object_ids */
-/** @var array $missing_objects */
+/** @var list<int> $object_ids */
+/** @var array<int, array{mbid: string, name: string}> $missing_objects */
 /** @var string $limit_threshold */
 
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
@@ -73,14 +75,14 @@ $cel_counter = "cel_counter"; ?>
         </tr>
     </thead>
     <tbody>
-<?php if (AmpConfig::get('ratings')) {
+<?php if ($show_ratings) {
     // Cache the ratings we are going to use
     Rating::build_cache('artist', $object_ids);
     // Cache the userflags we are going to use
     Userflag::build_cache('artist', $object_ids);
 }
 $show_direct_play_cfg = AmpConfig::get('directplay');
-$directplay_limit     = AmpConfig::get('direct_play_limit');
+$directplay_limit     = AmpConfig::get('direct_play_limit', 500);
 
 /* Foreach through every artist that has been passed to us */
 foreach ($object_ids as $artist_id) {

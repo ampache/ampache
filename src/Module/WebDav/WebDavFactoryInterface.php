@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -31,13 +33,13 @@ use Sabre\DAV\Server;
 
 interface WebDavFactoryInterface
 {
-    public function createWebDavAuth(): BackendInterface;
-
-    public function createWebDavCatalog(int $catalog_id = 0): ICollection;
-
-    public function createServer(ICollection $node): Server;
+    public function createBrowserPlugin(bool $enablePost): BrowserPlugin;
 
     public function createPlugin(?BackendInterface $backend): Plugin;
 
-    public function createBrowserPlugin(bool $enablePost): BrowserPlugin;
+    public function createServer(ICollection $node): Server;
+
+    public function createWebDavAuth(): BackendInterface;
+
+    public function createWebDavCatalog(): ICollection;
 }

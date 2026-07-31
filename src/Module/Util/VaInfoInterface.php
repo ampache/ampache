@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,11 +25,46 @@
 
 namespace Ampache\Module\Util;
 
+use Exception;
+
 /**
  * This class handles the retrieval of media tags
  */
 interface VaInfoInterface
 {
+    /**
+     * clean_tag_info
+     *
+     * This function takes the array from vainfo along with the
+     * key we've decided on and the filename and returns it in a
+     * sanitized format that Ampache can actually use
+     * @return array<string, mixed>
+     */
+    public static function clean_tag_info(array $results, array $keys, ?string $filename = null): array;
+
+    /**
+     * get_tag_type
+     *
+     * This takes the result set and the tag_order defined in your config
+     * file and tries to figure out which tag type(s) it should use. If your
+     * tag_order doesn't match anything then it throws up its hands and uses
+     * everything in random order.
+     * @return string[]
+     */
+    public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array;
+
+    /**
+     * parse_pattern
+     * @return array<string, mixed>
+     */
+    public static function parse_pattern(string $filepath, string $dirPattern, string $filePattern): array;
+
+    /**
+     * check_time
+     * check a cached file is close to the expected time
+     */
+    public function check_time(int $time): bool;
+
     /**
      * forceSize
      */
@@ -39,19 +76,6 @@ interface VaInfoInterface
      * This function runs the various steps to gathering the metadata. Filling $this->tags
      */
     public function gather_tags(): void;
-
-    /**
-     * check_time
-     * check a cached file is close to the expected time
-     */
-    public function check_time(int $time): bool;
-
-    /**
-     * write_id3
-     * This function runs the various steps to gathering the metadata
-     * @throws \Exception
-     */
-    public function write_id3(array $tagData): void;
 
     /**
      * prepare_metadata_for_writing
@@ -67,33 +91,6 @@ interface VaInfoInterface
     public function read_id3(): array;
 
     /**
-     * get_tag_type
-     *
-     * This takes the result set and the tag_order defined in your config
-     * file and tries to figure out which tag type(s) it should use. If your
-     * tag_order doesn't match anything then it throws up its hands and uses
-     * everything in random order.
-     * @return string[]
-     */
-    public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array;
-
-    /**
-     * clean_tag_info
-     *
-     * This function takes the array from vainfo along with the
-     * key we've decided on and the filename and returns it in a
-     * sanitized format that Ampache can actually use
-     * @return array<string, mixed>
-     */
-    public static function clean_tag_info(array $results, array $keys, ?string $filename = null): array;
-
-    /**
-     * parse_pattern
-     * @return array<string, mixed>
-     */
-    public static function parse_pattern(string $filepath, string $dirPattern, string $filePattern): array;
-
-    /**
      * set_broken
      *
      * This fills all tag types with Unknown (Broken)
@@ -101,4 +98,11 @@ interface VaInfoInterface
      * @return array<string, array<string, string>> Return broken title, album, artist
      */
     public function set_broken(): array;
+
+    /**
+     * write_id3
+     * This function runs the various steps to gathering the metadata
+     * @throws Exception
+     */
+    public function write_id3(array $tagData): void;
 }

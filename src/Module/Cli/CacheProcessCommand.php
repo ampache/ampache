@@ -28,28 +28,14 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\Catalog;
+use Override;
 
 final class CacheProcessCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    protected function defaults(): self
-    {
-        $this
-            ->option('-h, --help', T_('Help'))->on([$this, 'showHelp'])
-            ->option('-c|--cleanup', T_('Clean'), 'boolval', false);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct('run:cacheProcess', T_('Run the cache process'));
-
-        $this->configContainer = $configContainer;
     }
 
     public function execute(): void
@@ -69,7 +55,7 @@ final class CacheProcessCommand extends Command
          * Pre-cache any new files
          */
         if ($this->configContainer->get('cache_path') && $this->configContainer->get('cache_target')) {
-            Catalog::cache_catalogs($interactor, (bool)$values['cleanup']);
+            Catalog::cache_catalogs($interactor, (bool) $values['cleanup']);
         }
 
         debug_event('cache', 'finished cache process', 4);
@@ -77,5 +63,17 @@ final class CacheProcessCommand extends Command
             T_('Completed cache process'),
             true
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this
+            ->option('-h, --help', T_('Help'))->on($this->showHelp(...))
+            ->option('-c|--cleanup', T_('Clean'), 'boolval', false);
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

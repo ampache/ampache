@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_podcast_episode.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -78,6 +80,11 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 
             <?php } ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'new_window', T_('Add to Temporary Playlist'), 'add_podcast_episode_' . $episode->id); ?>
+            <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+            <a id="<?php echo 'add_to_playlist_' . $episode->id; ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $episode->id; ?>')">
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+            </a>
+            <?php } ?>
         <?php } ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
@@ -102,7 +109,7 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 
             <a class="nohtml" rel="nofollow" href="<?php echo $web_path; ?>/stream.php?action=download&podcast_episode_id=<?php echo $episode->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
-            <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+            <?php if (AmpConfig::get('statistical_graphs')) { ?>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?></a>
             <?php } ?>
             <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id; ?>', '<?php echo 'edit_podcast_episode_' . $episode->id; ?>', '<?php echo addslashes(T_('Podcast Episode Edit')); ?>', '')">
@@ -131,7 +138,7 @@ if (!empty($episode->file)) {
     $songprops[T_('File')]     = $episode->file;
     $songprops[T_('Size')]     = $episode->getSizeFormatted();
     $songprops[T_('Bitrate')]  = scrub_out($episode->getBitrateFormatted());
-    $songprops[T_('Channels')] = scrub_out((string)$episode->channels);
+    $songprops[T_('Channels')] = scrub_out((string) $episode->channels);
 }
 
 foreach ($songprops as $key => $value) {

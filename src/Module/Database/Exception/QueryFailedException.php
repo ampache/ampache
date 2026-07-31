@@ -28,6 +28,4 @@ namespace Ampache\Module\Database\Exception;
 /**
  * This exception indicates a failure in a database query execution
  */
-final class QueryFailedException extends DatabaseException
-{
-}
+final class QueryFailedException extends DatabaseException {}

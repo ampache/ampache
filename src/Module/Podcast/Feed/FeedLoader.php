@@ -35,15 +35,9 @@ use SimpleXMLElement;
 /**
  * Loads podcast feeds
  */
-final class FeedLoader implements FeedLoaderInterface
+final readonly class FeedLoader implements FeedLoaderInterface
 {
-    private WebFetcherInterface $webFetcher;
-
-    public function __construct(
-        WebFetcherInterface $webFetcher
-    ) {
-        $this->webFetcher = $webFetcher;
-    }
+    public function __construct(private WebFetcherInterface $webFetcher) {}
 
     /**
      * Load the podcast content by its feed-url
@@ -63,15 +57,15 @@ final class FeedLoader implements FeedLoaderInterface
      * @throws FeedLoadingException
      */
     public function load(
-        string $feedUrl
+        string $feedUrl,
     ): array {
         $lastBuildDate = null;
         $artUrl        = null;
 
         try {
             $xmlstr = $this->webFetcher->fetch($feedUrl);
-        } catch (FetchFailedException $error) {
-            throw new FeedLoadingException($error->getMessage());
+        } catch (FetchFailedException $fetchFailedException) {
+            throw new FeedLoadingException($fetchFailedException->getMessage(), $fetchFailedException->getCode(), $fetchFailedException);
         }
 
         $xml = simplexml_load_string($xmlstr);
@@ -80,26 +74,27 @@ final class FeedLoader implements FeedLoaderInterface
             // I've seems some &'s in feeds that screw up
             $xml = simplexml_load_string(str_replace('&', '&amp;', $xmlstr));
         }
+
         if ($xml === false) {
             throw new FeedLoadingException();
         }
 
-        $lastbuilddatestr = (string)$xml->channel->lastBuildDate;
+        $lastbuilddatestr = (string) $xml->channel->lastBuildDate;
         if ($lastbuilddatestr !== '') {
             $lastBuildDate = new DateTime($lastbuilddatestr);
         }
 
         if ($xml->channel->image) {
-            $artUrl = (string)$xml->channel->image->url;
+            $artUrl = (string) $xml->channel->image->url;
         }
 
         return [
-            'title' => html_entity_decode((string)$xml->channel->title),
-            'website' => (string)$xml->channel->link,
-            'description' => html_entity_decode((string)$xml->channel->description),
-            'language' => (string)$xml->channel->language,
-            'copyright' => html_entity_decode((string)$xml->channel->copyright),
-            'generator' => html_entity_decode((string)$xml->channel->generator),
+            'title' => html_entity_decode((string) $xml->channel->title),
+            'website' => (string) $xml->channel->link,
+            'description' => html_entity_decode((string) $xml->channel->description),
+            'language' => (string) $xml->channel->language,
+            'copyright' => html_entity_decode((string) $xml->channel->copyright),
+            'generator' => html_entity_decode((string) $xml->channel->generator),
             'episodes' => $xml->channel->item,
             'artUrl' => $artUrl,
             'lastBuildDate' => $lastBuildDate,

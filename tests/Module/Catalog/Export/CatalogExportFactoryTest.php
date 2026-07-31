@@ -35,12 +35,10 @@ class CatalogExportFactoryTest extends TestCase
 {
     private CatalogExportFactory $subject;
 
-    protected function setUp(): void
+    public static function exportTypeDataProvider(): Generator
     {
-        $this->subject = new CatalogExportFactory(
-            $this->createMock(SongRepositoryInterface::class),
-            $this->createMock(ModelFactoryInterface::class)
-        );
+        yield [CatalogExportTypeEnum::ITUNES, ItunesExporter::class];
+        yield [CatalogExportTypeEnum::CSV, CsvExporter::class];
     }
 
     /**
@@ -49,17 +47,19 @@ class CatalogExportFactoryTest extends TestCase
     #[DataProvider(methodName: 'exportTypeDataProvider')]
     public function testCreateFromExportTypeReturnsInstance(
         CatalogExportTypeEnum $exportType,
-        string $exporterClass
+        string $exporterClass,
     ): void {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             $exporterClass,
             $this->subject->createFromExportType($exportType)
         );
     }
 
-    public static function exportTypeDataProvider(): Generator
+    protected function setUp(): void
     {
-        yield [CatalogExportTypeEnum::ITUNES, ItunesExporter::class];
-        yield [CatalogExportTypeEnum::CSV, CsvExporter::class];
+        $this->subject = new CatalogExportFactory(
+            $this->createMock(SongRepositoryInterface::class),
+            $this->createMock(ModelFactoryInterface::class)
+        );
     }
 }

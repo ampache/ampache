@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,11 +32,12 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\User;
 
 final class PlaylistExporter implements PlaylistExporterInterface
 {
-    public const VALID_FILE_EXTENSIONS = [
+    public const array VALID_FILE_EXTENSIONS = [
         'm3u',
         'xspf',
         'pls',
@@ -49,15 +50,16 @@ final class PlaylistExporter implements PlaylistExporterInterface
         string $ext,
         string $playlistId,
         int $userId,
-        string $urltype
+        string $urltype,
     ): void {
         // Make sure the output dir is valid and writeable
-        if (!is_writeable($dirname)) {
+        if (!is_writable($dirname)) {
             $interactor->error(
                 sprintf(T_('There was a problem creating this directory: %s'), $dirname),
                 true
             );
         }
+
         $user = new User($userId);
 
         // Switch on the type of playlist dump we want to do here
@@ -68,12 +70,13 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 foreach ($ids as $albumid) {
                     $items[] = new Album($albumid);
                 }
+
                 break;
             case 'artists':
                 $items = Catalog::get_artists();
                 break;
             case 'smartlists':
-                if ((int)$playlistId < 1) {
+                if ((int) $playlistId < 1) {
                     $browse = new Browse(null, false);
                     $browse->set_type('smartplaylist');
                     if ($userId > 0) {
@@ -84,19 +87,21 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 } else {
                     $ids = [$playlistId];
                 }
+
                 $items = [];
                 foreach ($ids as $playlist_id) {
-                    $playlist = ($user->id)
-                        ? new Search((int)$playlist_id, 'song', $user)
-                        : new Search((int)$playlist_id);
+                    $playlist = ($user->id !== 0)
+                        ? new Search((int) $playlist_id, 'song', $user)
+                        : new Smartlist((int) $playlist_id);
                     if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
                 }
+
                 break;
             case 'playlists':
             default:
-                if ((int)$playlistId < 1) {
+                if ((int) $playlistId < 1) {
                     $browse = new Browse(null, false);
                     $browse->set_type('playlist');
                     $browse->set_sort('name', 'ASC');
@@ -106,21 +111,24 @@ final class PlaylistExporter implements PlaylistExporterInterface
 
                     $ids = $browse->get_objects();
                 } else {
-                    $ids = [(int)$playlistId];
+                    $ids = [(int) $playlistId];
                 }
+
                 $items = [];
                 foreach ($ids as $playlist_id) {
-                    $playlist = new Playlist((int)$playlist_id);
+                    $playlist = new Playlist((int) $playlist_id);
                     if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
                 }
+
                 break;
         }
+
         $dirname = rtrim($dirname, "/");
 
         foreach ($items as $item) {
-            $name = (string)$item->get_fullname();
+            $name = (string) $item->get_fullname();
             // We don't know about file system encoding / specificity
             // For now, we only keep simple characters to be sure it will work everywhere
             $name            = (string) preg_replace('/[:]/', '.', $name);
@@ -129,7 +137,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
             $medias          = $item->get_medias();
             $playlist        = new Stream_Playlist($userId);
             $playlist->title = $item->get_fullname();
-            $media_path      = ($urltype == 'web')
+            $media_path      = ($urltype === 'web')
                 ? ''
                 : $dirname;
             foreach ($medias as $media) {

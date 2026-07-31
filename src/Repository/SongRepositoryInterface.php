@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -26,12 +28,38 @@ namespace Ampache\Repository;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\SongDataFieldEnum;
+use Ampache\Repository\Model\SongFieldEnum;
 use Ampache\Repository\Model\Tag;
 use Iterator;
 use Traversable;
 
 interface SongRepositoryInterface
 {
+    public function collectGarbage(Song $song): void;
+
+    /**
+     * @param int[] $songIds
+     */
+    public function collectGarbageForSongs(array $songIds): void;
+
+    public function delete(int $songId): bool;
+
+    /**
+     * The uploader of the song: an id, null when it was not user-uploaded, false when there is no
+     * such song
+     */
+    public function findOwnerId(int $songId): int|false|null;
+
+    /**
+     * gets the songs (including songs where they are the album artist) for this artist
+     *
+     * @return list<int>
+     */
+    public function getAllByArtist(
+        int $artistId,
+    ): array;
+
     /**
      * gets the songs for an album takes an optional limit
      *
@@ -42,80 +70,18 @@ interface SongRepositoryInterface
     /**
      * gets the songs for an album for a single disk takes an optional limit
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByAlbumDisk(int $albumDiskId, int $limit = 0): array;
 
     /**
-     * gets the songs for a label, based on label name
-     *
-     * @return int[]
-     */
-    public function getByLabel(
-        string $labelName
-    ): array;
-
-    /**
-     * Gets the songs from the artist in a random order
-     *
-     * @return int[]
-     */
-    public function getRandomByArtist(
-        Artist $artist
-    ): array;
-
-    /**
-     * Gets the songs from a genre in a random order
-     *
-     * @return int[]
-     */
-    public function getRandomByGenre(
-        Tag $genre
-    ): array;
-
-    /**
      * gets the songs for this artist
      *
-     * @return int[]
-     */
-    public function getTopSongsByArtist(
-        Artist $artist,
-        int $count = 50
-    ): array;
-
-    /**
-     * gets the songs for this artist
-     *
-     * @return int[]
+     * @return list<int>
      */
     public function getByArtist(
-        int $artistId
+        int $artistId,
     ): array;
-
-    /**
-     * gets the songs (including songs where they are the album artist) for this artist
-     *
-     * @return int[]
-     */
-    public function getAllByArtist(
-        int $artistId
-    ): array;
-
-    /**
-     * Returns a list of song ID's attached to a license ID.
-     *
-     * @return int[]
-     */
-    public function getByLicense(int $licenseId): array;
-
-    public function delete(int $songId): bool;
-
-    public function collectGarbage(Song $song): void;
-
-    /**
-     * @param int[] $songIds
-     */
-    public function collectGarbageForSongs(array $songIds): void;
 
     /**
      * Returns all song ids linked to the provided catalog (or all)
@@ -125,9 +91,72 @@ interface SongRepositoryInterface
     public function getByCatalog(?Catalog $catalog = null): Traversable;
 
     /**
+     * gets the songs for a label, based on label name
+     *
+     * @return list<int>
+     */
+    public function getByFolder(
+        string $folderName,
+    ): array;
+
+    /**
+     * gets the songs for a label, based on label name
+     *
+     * @return list<int>
+     */
+    public function getByLabel(
+        string $labelName,
+    ): array;
+
+    /**
+     * Returns a list of song ID's attached to a license ID.
+     *
+     * @return list<int>
+     */
+    public function getByLicense(int $licenseId): array;
+
+    /**
      * Gets a list of the disabled songs for and returns an array of Songs
      *
      * @return Iterator<Song>
      */
     public function getDisabled(): Iterator;
+
+    /**
+     * Gets the songs from the artist in a random order
+     *
+     * @return list<int>
+     */
+    public function getRandomByArtist(
+        Artist $artist,
+    ): array;
+
+    /**
+     * Gets the songs from a genre in a random order
+     *
+     * @return list<int>
+     */
+    public function getRandomByGenre(
+        Tag $genre,
+    ): array;
+
+    /**
+     * gets the songs for this artist
+     *
+     * @return list<int>
+     */
+    public function getTopSongsByArtist(
+        Artist $artist,
+        int $count = 50,
+    ): array;
+
+    /**
+     * Writes a single `song_data` column, returning false when the write failed
+     */
+    public function setDataField(int $songId, SongDataFieldEnum $field, string $value): bool;
+
+    /**
+     * Writes a single `song` column, returning false when the write failed
+     */
+    public function setField(int $songId, SongFieldEnum $field, int|string|null $value): bool;
 }

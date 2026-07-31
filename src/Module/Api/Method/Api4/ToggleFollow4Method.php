@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
  */
 final class ToggleFollow4Method
 {
-    public const ACTION = 'toggle_follow';
+    public const string ACTION = 'toggle_follow';
 
     /**
      * toggle_follow
@@ -54,7 +54,7 @@ final class ToggleFollow4Method
     public static function toggle_follow(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api4::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: social features are not enabled.', '400', $input['api_format']);
 
             return false;
         }
@@ -81,7 +81,7 @@ final class ToggleFollow4Method
             return false;
         }
 
-        Api4::message('error', T_('Invalid request'), '405', $input['api_format']);
+        Api4::message('error', 'Invalid request', '405', $input['api_format']);
 
         return false;
     }

@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
@@ -37,7 +36,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistCreate4Method
 {
-    public const ACTION = 'playlist_create';
+    public const string ACTION = 'playlist_create';
 
     /**
      * playlist_create
@@ -67,7 +66,6 @@ final class PlaylistCreate4Method
         }
 
         $uid = Playlist::create($name, $type, $user->id);
-        Catalog::count_table('playlist');
         switch ($input['api_format']) {
             case 'json':
                 echo Json4_Data::playlists([(int) $uid], $user, $input['auth']);

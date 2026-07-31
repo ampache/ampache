@@ -26,6 +26,4 @@ namespace Ampache\Module\System\Update\Exception;
 
 use Exception;
 
-abstract class UpdateException extends Exception
-{
-}
+abstract class UpdateException extends Exception {}

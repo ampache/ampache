@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -35,29 +35,26 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
 final class AddInstanceAction extends AbstractLocalPlayAction
 {
-    public const REQUEST_KEY = 'add_instance';
+    public const string REQUEST_KEY = 'add_instance';
 
-    private ConfigContainerInterface $configContainer;
-
-    private ResponseFactoryInterface $responseFactory;
+    private readonly ConfigContainerInterface $configContainer;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory
+        private readonly ResponseFactoryInterface $responseFactory,
     ) {
         parent::__construct($configContainer);
         $this->configContainer = $configContainer;
-        $this->responseFactory = $responseFactory;
     }
 
     protected function handle(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
-    ): ?ResponseInterface {
+        GuiGatekeeperInterface $gatekeeper,
+    ): ResponseInterface {
         // This requires 75 or better!
         if ($gatekeeper->mayAccess(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
@@ -68,7 +65,7 @@ final class AddInstanceAction extends AbstractLocalPlayAction
         $localplay->add_instance($_POST);
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf('%s/localplay.php?action=show_instances', $this->configContainer->getWebPath())

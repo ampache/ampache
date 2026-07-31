@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,37 +32,29 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UninstallCatalogTypeAction implements ApplicationActionInterface
+final readonly class UninstallCatalogTypeAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'uninstall_catalog_type';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'uninstall_catalog_type';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+        private PluginManagerInterface $pluginManager,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            !$this->requestParser->verifyForm('uninstall_catalog_type')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || !$this->requestParser->verifyForm('uninstall_catalog_type')
         ) {
             throw new AccessDeniedException();
         }
@@ -81,7 +73,8 @@ final class UninstallCatalogTypeAction implements ApplicationActionInterface
 
             return null;
         }
-        $catalog->uninstall();
+
+        $this->pluginManager->uninstallCatalogType($type);
 
         /* Show Confirmation */
         $url   = sprintf('%s/modules.php?action=show_catalog_types', $this->configContainer->getWebPath('/admin'));

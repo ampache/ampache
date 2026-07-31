@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -39,31 +39,37 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
+use Override;
 
 class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {
-    public string $name = 'Catalog Favorites';
-
+    #[Override]
     public string $categories = 'home';
 
+    #[Override]
     public string $description = 'Catalog favorites on homepage';
 
-    public string $url = '';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000004';
-
+    #[Override]
     public string $min_ampache = '370021';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'Catalog Favorites';
+
+    #[Override]
+    public string $url = '';
+
+    #[Override]
+    public string $version = '000004';
+
+    private bool $compact  = false;
+    private bool $gridview = false;
 
     // These are internal settings used by this class, run this->load to fill them out
     private int $maxitems = 5;
-
-    private bool $gridview = false;
-
-    private bool $compact = false;
-
-    private int $order = 0;
+    private int $order    = 0;
 
     /**
      * Constructor
@@ -71,64 +77,6 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
     public function __construct()
     {
         $this->description = T_('Catalog favorites on homepage');
-    }
-
-    /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        if (!Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return Preference::insert('catalogfav_compact', T_('Catalog favorites media row display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('catalogfav_max_items') &&
-            Preference::delete('catalogfav_gridview') &&
-            Preference::delete('catalogfav_order') &&
-            Preference::delete('catalogfav_compact')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
-            return false;
-        }
-
-        if ($from_version < 3) {
-            Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
-            Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
-        }
-
-        if ($from_version < (int)$this->version) {
-            Preference::insert('catalogfav_compact', T_('Catalog favorites media row display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
-        }
-
-        return true;
     }
 
     /**
@@ -143,8 +91,8 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
 
         $userflags = Userflag::get_latest('song', null, $this->maxitems);
         if (
-            AmpConfig::get('ratings') &&
-            $userflags !== []
+            AmpConfig::get('ratings')
+            && $userflags !== []
         ) {
             $divString = ($this->order > 0)
                 ? '<div class="catalogfav" style="order: ' . $this->order . '">'
@@ -204,7 +152,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                                 <span class="cel_item_add">
                                     <?php echo Ajax::button('?action=basket&type=song&id=' . $item->id, 'new_window', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $item->id); ?>
                                     <a id="<?php echo 'add_to_playlist_' . $count . '_' . $item->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $item->id; ?>')">
-                                        <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+                                        <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
                                     </a>
                                 </span>
                             </td>
@@ -279,7 +227,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
     foreach ($userflags as $userflag) {
         $item = new Song($userflag);
         if ($item->isNew() === false) {
-            echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
+            echo '<tr id="song_' . $userflag . '" class="libitem_menu" data-object-type="song" data-object-id="' . $userflag . '">';
             if (!$this->gridview) {
                 echo '<td class="grid_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
                 echo '<span style="margin-right: 10px;">';
@@ -340,6 +288,27 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
     }
 
     /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        if (!Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('catalogfav_compact', T_('Catalog favorites media row display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+    }
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
@@ -348,14 +317,51 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->maxitems = (int)($data['catalogfav_max_items']);
+        $this->maxitems = (int) ($data['catalogfav_max_items']);
         if ($this->maxitems === 0) {
             $this->maxitems = 5;
         }
 
         $this->gridview = ($data['catalogfav_gridview'] == '1');
         $this->compact  = ($data['catalogfav_compact'] == '1');
-        $this->order    = (int)($data['catalogfav_order'] ?? 0);
+        $this->order    = (int) ($data['catalogfav_order'] ?? 0);
+
+        return true;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('catalogfav_max_items')
+            && Preference::delete('catalogfav_gridview')
+            && Preference::delete('catalogfav_order')
+            && Preference::delete('catalogfav_compact')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version === 0) {
+            return false;
+        }
+
+        if ($from_version < 3) {
+            Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+            Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+        }
+
+        if ($from_version < (int) $this->version) {
+            Preference::insert('catalogfav_compact', T_('Catalog favorites media row display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+        }
 
         return true;
     }

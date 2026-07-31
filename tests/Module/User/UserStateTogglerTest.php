@@ -33,27 +33,26 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 
 class UserStateTogglerTest extends MockeryTestCase
 {
     private MockInterface&ConfigContainerInterface $configContainer;
-
+    private UserStateToggler $subject;
+    private MockInterface&UserRepositoryInterface $userRepository;
     private MockInterface&UtilityFactoryInterface $utilityFactory;
 
-    private MockInterface&UserRepositoryInterface $userRepository;
-
-    private UserStateToggler $subject;
-
-    protected function setUp(): void
+    public function testDisableDisablesAndReturnsValue(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->utilityFactory  = $this->mock(UtilityFactoryInterface::class);
-        $this->userRepository  = $this->mock(UserRepositoryInterface::class);
+        $user = $this->mock(User::class);
 
-        $this->subject = new UserStateToggler(
-            $this->configContainer,
-            $this->utilityFactory,
-            $this->userRepository
+        $user->shouldReceive('disable')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->disable($user)
         );
     }
 
@@ -98,9 +97,9 @@ class UserStateTogglerTest extends MockeryTestCase
         $fullName  = 'some-fullname';
         $siteTitle = 'some-title';
         $webPath   = 'some-path';
-        $message   = sprintf('A new user has been enabled. %s', $userName) .
-            "\n\n" .
-            sprintf(
+        $message   = sprintf('A new user has been enabled. %s', $userName)
+            . "\n\n"
+            . sprintf(
                 'You can log in at the following address %s',
                 $webPath
             );
@@ -169,17 +168,17 @@ class UserStateTogglerTest extends MockeryTestCase
         );
     }
 
-    public function testDisableDisablesAndReturnsValue(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $user = $this->mock(User::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->utilityFactory  = $this->mock(UtilityFactoryInterface::class);
+        $this->userRepository  = $this->mock(UserRepositoryInterface::class);
 
-        $user->shouldReceive('disable')
-            ->withNoArgs()
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertTrue(
-            $this->subject->disable($user)
+        $this->subject = new UserStateToggler(
+            $this->configContainer,
+            $this->utilityFactory,
+            $this->userRepository
         );
     }
 }

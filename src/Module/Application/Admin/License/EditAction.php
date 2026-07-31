@@ -40,25 +40,15 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Actually updates or creates a license
  */
-final class EditAction implements ApplicationActionInterface
+final readonly class EditAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'edit';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private LicenseRepositoryInterface $licenseRepository;
+    public const string REQUEST_KEY = 'edit';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        LicenseRepositoryInterface $licenseRepository
-    ) {
-        $this->ui                = $ui;
-        $this->configContainer   = $configContainer;
-        $this->licenseRepository = $licenseRepository;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private LicenseRepositoryInterface $licenseRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -66,12 +56,12 @@ final class EditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $data        = (array)$request->getParsedBody();
+        $data        = (array) $request->getParsedBody();
         $licenseId   = (int) ($data['license_id'] ?? 0);
         $name        = (string) ($data['name'] ?? '');
         $description = (string) ($data['description'] ?? '');
         $order       = (isset($data['order']) && is_numeric($data['order']))
-            ? (int)$data['order']
+            ? (int) $data['order']
             : null;
 
         $url = (string) filter_var($data['external_link'] ?? '', FILTER_SANITIZE_URL);

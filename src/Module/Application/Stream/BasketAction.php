@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,11 +36,11 @@ use Psr\Log\LoggerInterface;
 
 final class BasketAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'basket';
+    public const string REQUEST_KEY = 'basket';
 
     public function __construct(
         LoggerInterface $logger,
-        private readonly ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($logger, $configContainer);
     }
@@ -59,8 +59,8 @@ final class BasketAction extends AbstractStreamAction
 
         // Check to see if 'clear' was passed if it was then we need to reset the basket
         if (
-            array_key_exists('playlist_method', $_REQUEST) && $_REQUEST['playlist_method'] == 'clear' ||
-            $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_METHOD) === 'clear'
+            array_key_exists('playlist_method', $_REQUEST) && $_REQUEST['playlist_method'] == 'clear'
+            || $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_METHOD) === 'clear'
         ) {
             $user->playlist?->clear() ?? [];
         }

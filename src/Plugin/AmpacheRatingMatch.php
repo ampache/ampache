@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,29 +36,38 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
+use Override;
 
 class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
-    public string $name = 'RatingMatch';
-
+    #[Override]
     public string $categories = 'save_rating';
 
+    #[Override]
     public string $description = 'Raise the album and artist rating to match the highest song rating';
 
-    public string $url = '';
-
-    public string $version = '000004';
-
-    public string $min_ampache = '360003';
-
+    #[Override]
     public string $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to fill them out
-    private int $min_stars;
+    #[Override]
+    public string $min_ampache = '360003';
+
+    #[Override]
+    public string $name = 'RatingMatch';
+
+    #[Override]
+    public string $url = '';
+
+    #[Override]
+    public string $version = '000004';
+
+    /** @var string[] $flag_rule */
+    private array $flag_rule = [];
 
     private bool $match_flags;
 
-    private User $user;
+    // These are internal settings used by this class, run this->load to fill them out
+    private int $min_stars;
 
     /** @var string[] $star1_rule */
     private array $star1_rule = [];
@@ -75,9 +84,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     /** @var string[] $star5_rule */
     private array $star5_rule = [];
 
-    /** @var string[] $flag_rule */
-    private array $flag_rule = [];
-
+    private User $user;
     private bool $write_tags;
 
     /**
@@ -130,152 +137,75 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function uninstall(): bool
+    public function load(User $user): bool
     {
-        return (
-            Preference::delete('ratingmatch_stars') &&
-            Preference::delete('ratingmatch_flags') &&
-            Preference::delete('ratingmatch_star1_rule') &&
-            Preference::delete('ratingmatch_star2_rule') &&
-            Preference::delete('ratingmatch_star3_rule') &&
-            Preference::delete('ratingmatch_star4_rule') &&
-            Preference::delete('ratingmatch_star5_rule') &&
-            Preference::delete('ratingmatch_flag_rule') &&
-            Preference::delete('ratingmatch_write_tags')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
-            return false;
-        }
-
-        if ($from_version < 2) {
-            Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
-        }
-
-        if ($from_version < 3) {
-            Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star3_rule', T_('Match rule for 3 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star4_rule', T_('Match rule for 4 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-        }
-
-        if ($from_version < 4) {
-            Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
-        }
+        $user->set_preferences();
+        $data              = $user->prefs;
+        $this->user        = $user;
+        $this->min_stars   = (int) $data['ratingmatch_stars'];
+        $this->match_flags = (bool) $data['ratingmatch_flags'];
+        $this->star1_rule  = (isset($data['ratingmatch_star1_rule'])) ? explode(',', (string) $data['ratingmatch_star1_rule']) : [];
+        $this->star2_rule  = (isset($data['ratingmatch_star2_rule'])) ? explode(',', (string) $data['ratingmatch_star2_rule']) : [];
+        $this->star3_rule  = (isset($data['ratingmatch_star3_rule'])) ? explode(',', (string) $data['ratingmatch_star3_rule']) : [];
+        $this->star4_rule  = (isset($data['ratingmatch_star4_rule'])) ? explode(',', (string) $data['ratingmatch_star4_rule']) : [];
+        $this->star5_rule  = (isset($data['ratingmatch_star5_rule'])) ? explode(',', (string) $data['ratingmatch_star5_rule']) : [];
+        $this->flag_rule   = (isset($data['ratingmatch_flag_rule'])) ? explode(',', (string) $data['ratingmatch_flag_rule']) : [];
+        $this->write_tags  = ($data['ratingmatch_write_tags'] == '1');
 
         return true;
     }
 
     /**
-     * save_rating
-     * Rate an artist and album after rating the song
+     * rule_process
+     * process the rule array and rate/flag depending on the outcome
+     * @param string[] $rule_array
      */
-    public function save_rating(Rating $rating, int $new_rating): void
+    public function rule_process(array $rule_array, int $play_count, int $skip_count): bool
     {
-        if ($this->min_stars > 0 && $new_rating >= $this->min_stars) {
-            if ($rating->type === 'song') {
-                $song = new Song($rating->id);
-
-                $rAlbum       = new Rating($song->album, 'album');
-                $rating_album = (int)$rAlbum->get_user_rating($this->user->id);
-                if ($rating_album < $new_rating) {
-                    $rAlbum->set_rating($new_rating, $this->user->id);
+        switch (count($rule_array)) {
+            case 1:
+                $play = (int) $rule_array[0];
+                // play count only
+                if (
+                    $play > 0
+                    && $play_count >= $play
+                ) {
+                    return true;
                 }
 
-                // rate all the song artists (If there are more than one)
-                foreach (Song::get_parent_array($song->id) as $artist_id) {
-                    $rArtist       = new Rating($artist_id, 'artist');
-                    $rating_artist = (int)$rArtist->get_user_rating($this->user->id);
-                    if ($rating_artist < $new_rating) {
-                        $rArtist->set_rating($new_rating, $this->user->id);
-                    }
+                break;
+            case 2:
+                $play = (int) $rule_array[0];
+                $skip = (int) $rule_array[1];
+                // play rule and no skip
+                if (
+                    (
+                        $play > 0
+                        && $play_count >= $play
+                        && $skip === 0
+                    )
+                    || (
+                        $skip > 0
+                        && $skip_count >= $skip
+                        && $play === 0
+                    )
+                    || (
+                        $play > 0
+                        && $play_count >= $play
+                        && $skip > 0
+                        && $skip_count >= $skip
+                    )
+                ) {
+                    return true;
                 }
 
-                // write to tags
-                if ($this->write_tags) {
-                    global $dic;
-
-                    $songTagWriter = $dic->get(SongTagWriterInterface::class);
-                    $songTagWriter->writeRating($song, $this->user, $rating);
-                }
-            }
-
-            if ($rating->type === 'album_disk') {
-                $album_disk = new AlbumDisk($rating->id);
-                // rate the album when the disk count is 1
-                if ($album_disk->disk_count == 1) {
-                    $rAlbum       = new Rating($album_disk->album_id, 'album');
-                    $rating_album = (int)$rAlbum->get_user_rating($this->user->id);
-                    if ($rating_album < $new_rating) {
-                        $rAlbum->set_rating($new_rating, $this->user->id);
-                    }
-                }
-
-                if ($album_disk->album_artist) {
-                    // rate all the album artists (If there are more than one)
-                    foreach (Album::get_parent_array($album_disk->album_id, $album_disk->album_artist) as $artist_id) {
-                        $rArtist       = new Rating($artist_id, 'artist');
-                        $rating_artist = (int)$rArtist->get_user_rating($this->user->id);
-                        if ($rating_artist < $new_rating) {
-                            $rArtist->set_rating($new_rating, $this->user->id);
-                        }
-                    }
-                }
-            }
-
-            if ($rating->type === 'album') {
-                $album = new Album($rating->id);
-                if ($album->findAlbumArtist()) {
-                    // rate all the album artists (If there are more than one)
-                    foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
-                        $rArtist       = new Rating($artist_id, 'artist');
-                        $rating_artist = (int)$rArtist->get_user_rating($this->user->id);
-                        if ($rating_artist < $new_rating) {
-                            $rArtist->set_rating($new_rating, $this->user->id);
-                        }
-                    }
-                }
-            }
+                break;
         }
-    }
 
-    /**
-     * set_flag
-     * If you love a song you probably love the artist and the album right?
-     */
-    public function set_flag(Song $song, bool $flagged): void
-    {
-        if ($this->match_flags > 0 && $flagged) {
-            $album = new Album($song->album);
-            // flag the album
-            $fAlbum = new Userflag($song->album, 'album');
-            $fAlbum->set_flag(true, $this->user->id);
-            // and individual disks (if set)
-            $fAlbumDisk = new Userflag($song->album_disk, 'album_disk');
-            $fAlbumDisk->set_flag(true, $this->user->id);
-            // rate all the album artists (If there are more than one)
-            if (((int)$album->findAlbumArtist()) > 0) {
-                foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
-                    $fArtist = new Userflag($artist_id, 'artist');
-                    if (!$fArtist->get_flag($this->user->id)) {
-                        $fArtist->set_flag(true, $this->user->id);
-                    }
-                }
-            }
-        }
+        return false;
     }
 
     /**
@@ -295,19 +225,19 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
             return false;
         }
 
-        $sql = "SELECT COUNT(*) AS `counting` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = ? AND `object_id` = ? AND `user` = ?;";
+        $sql = "SELECT ((SELECT COUNT(*) FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = ? AND `object_id` = ? AND `user` = ?) + (SELECT IFNULL(SUM(`count`), 0) FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = ? AND `object_id` = ? AND `user` = ?)) AS `counting`;";
 
         // get the plays for your user
-        $db_results  = Dba::read($sql, ['stream', $song->id, $this->user->id]);
+        $db_results  = Dba::read($sql, ['stream', $song->id, $this->user->id, 'stream', $song->id, $this->user->id]);
         $play_result = Dba::fetch_assoc($db_results);
         $play_count  = (int) $play_result['counting'];
 
         // get the skips for your user
-        $db_results  = Dba::read($sql, ['skip', $song->id, $this->user->id]);
+        $db_results  = Dba::read($sql, ['skip', $song->id, $this->user->id, 'skip', $song->id, $this->user->id]);
         $skip_result = Dba::fetch_assoc($db_results);
         $skip_count  = (int) $skip_result['counting'];
 
-        if ($play_count == 0 && $skip_count == 0) {
+        if ($play_count === 0 && $skip_count === 0) {
             return false;
         }
 
@@ -342,73 +272,150 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     }
 
     /**
-     * rule_process
-     * process the rule array and rate/flag depending on the outcome
-     * @param string[] $rule_array
+     * save_rating
+     * Rate an artist and album after rating the song
      */
-    public function rule_process(array $rule_array, int $play_count, int $skip_count): bool
+    public function save_rating(Rating $rating, int $new_rating): void
     {
-        switch (count($rule_array)) {
-            case 1:
-                $play = (int) $rule_array[0];
-                // play count only
-                if (
-                    $play > 0 &&
-                    $play_count >= $play
-                ) {
-                    return true;
+        if ($this->min_stars > 0 && $new_rating >= $this->min_stars) {
+            if ($rating->type === 'song') {
+                $song = new Song($rating->id);
+
+                $rAlbum       = new Rating($song->album, 'album');
+                $rating_album = (int) $rAlbum->get_user_rating($this->user->id);
+                if ($rating_album < $new_rating) {
+                    $rAlbum->set_rating($new_rating, $this->user->id);
                 }
 
-                break;
-            case 2:
-                $play = (int) $rule_array[0];
-                $skip = (int) $rule_array[1];
-                // play rule and no skip
-                if (
-                    (
-                        $play > 0 &&
-                        $play_count >= $play &&
-                        $skip == 0
-                    ) ||
-                    (
-                        $skip > 0 &&
-                        $skip_count >= $skip &&
-                        $play == 0
-                    ) ||
-                    (
-                        $play > 0 &&
-                        $play_count >= $play &&
-                        $skip > 0 &&
-                        $skip_count >= $skip
-                    )
-                ) {
-                    return true;
+                // rate all the song artists (If there are more than one)
+                foreach (Song::get_parent_array($song->id) as $artist_id) {
+                    $rArtist       = new Rating($artist_id, 'artist');
+                    $rating_artist = (int) $rArtist->get_user_rating($this->user->id);
+                    if ($rating_artist < $new_rating) {
+                        $rArtist->set_rating($new_rating, $this->user->id);
+                    }
                 }
 
-                break;
+                // write to tags
+                if ($this->write_tags) {
+                    global $dic;
+
+                    $songTagWriter = $dic->get(SongTagWriterInterface::class);
+                    $songTagWriter->writeRating($song, $this->user, $rating);
+                }
+            }
+
+            if ($rating->type === 'album_disk') {
+                $album_disk = new AlbumDisk($rating->id);
+                // rate the album when the disk count is 1
+                if ($album_disk->disk_count === 1) {
+                    $rAlbum       = new Rating($album_disk->album_id, 'album');
+                    $rating_album = (int) $rAlbum->get_user_rating($this->user->id);
+                    if ($rating_album < $new_rating) {
+                        $rAlbum->set_rating($new_rating, $this->user->id);
+                    }
+                }
+
+                if ($album_disk->album_artist) {
+                    // rate all the album artists (If there are more than one)
+                    foreach (Album::get_parent_array($album_disk->album_id, $album_disk->album_artist) as $artist_id) {
+                        $rArtist       = new Rating($artist_id, 'artist');
+                        $rating_artist = (int) $rArtist->get_user_rating($this->user->id);
+                        if ($rating_artist < $new_rating) {
+                            $rArtist->set_rating($new_rating, $this->user->id);
+                        }
+                    }
+                }
+            }
+
+            if ($rating->type === 'album') {
+                $album = new Album($rating->id);
+                if ($album->findAlbumArtist()) {
+                    // rate all the album artists (If there are more than one)
+                    foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
+                        $rArtist       = new Rating($artist_id, 'artist');
+                        $rating_artist = (int) $rArtist->get_user_rating($this->user->id);
+                        if ($rating_artist < $new_rating) {
+                            $rArtist->set_rating($new_rating, $this->user->id);
+                        }
+                    }
+                }
+            }
         }
-
-        return false;
     }
 
     /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
+     * set_flag
+     * If you love a song you probably love the artist and the album right?
      */
-    public function load(User $user): bool
+    public function set_flag(Song $song, bool $flagged): void
     {
-        $user->set_preferences();
-        $data              = $user->prefs;
-        $this->user        = $user;
-        $this->min_stars   = (int) $data['ratingmatch_stars'];
-        $this->match_flags = (bool) $data['ratingmatch_flags'];
-        $this->star1_rule  = (isset($data['ratingmatch_star1_rule'])) ? explode(',', (string) $data['ratingmatch_star1_rule']) : [];
-        $this->star2_rule  = (isset($data['ratingmatch_star2_rule'])) ? explode(',', (string) $data['ratingmatch_star2_rule']) : [];
-        $this->star3_rule  = (isset($data['ratingmatch_star3_rule'])) ? explode(',', (string) $data['ratingmatch_star3_rule']) : [];
-        $this->star4_rule  = (isset($data['ratingmatch_star4_rule'])) ? explode(',', (string) $data['ratingmatch_star4_rule']) : [];
-        $this->star5_rule  = (isset($data['ratingmatch_star5_rule'])) ? explode(',', (string) $data['ratingmatch_star5_rule']) : [];
-        $this->flag_rule   = (isset($data['ratingmatch_flag_rule'])) ? explode(',', (string) $data['ratingmatch_flag_rule']) : [];
-        $this->write_tags  = ($data['ratingmatch_write_tags'] == '1');
+        if ($this->match_flags > 0 && $flagged) {
+            $album = new Album($song->album);
+            // flag the album
+            $fAlbum = new Userflag($song->album, 'album');
+            $fAlbum->set_flag(true, $this->user->id);
+            // and individual disks (if set)
+            $fAlbumDisk = new Userflag($song->album_disk, 'album_disk');
+            $fAlbumDisk->set_flag(true, $this->user->id);
+            // rate all the album artists (If there are more than one)
+            if (((int) $album->findAlbumArtist()) > 0) {
+                foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
+                    $fArtist = new Userflag($artist_id, 'artist');
+                    if (!$fArtist->get_flag($this->user->id)) {
+                        $fArtist->set_flag(true, $this->user->id);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('ratingmatch_stars')
+            && Preference::delete('ratingmatch_flags')
+            && Preference::delete('ratingmatch_star1_rule')
+            && Preference::delete('ratingmatch_star2_rule')
+            && Preference::delete('ratingmatch_star3_rule')
+            && Preference::delete('ratingmatch_star4_rule')
+            && Preference::delete('ratingmatch_star5_rule')
+            && Preference::delete('ratingmatch_flag_rule')
+            && Preference::delete('ratingmatch_write_tags')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version === 0) {
+            return false;
+        }
+
+        if ($from_version < 2) {
+            Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+        }
+
+        if ($from_version < 3) {
+            Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star3_rule', T_('Match rule for 3 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star4_rule', T_('Match rule for 4 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+        }
+
+        if ($from_version < 4) {
+            Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+        }
 
         return true;
     }

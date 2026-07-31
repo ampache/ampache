@@ -34,33 +34,15 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class UpdateFromTagsActionTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?UpdateFromTagsAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-
-        $this->subject = new UpdateFromTagsAction(
-            $this->modelFactory,
-            $this->configContainer,
-            $this->ui
-        );
-    }
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunRenders(): void
     {
@@ -123,6 +105,20 @@ class UpdateFromTagsActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+
+        $this->subject = new UpdateFromTagsAction(
+            $this->modelFactory,
+            $this->configContainer,
+            $this->ui
         );
     }
 }

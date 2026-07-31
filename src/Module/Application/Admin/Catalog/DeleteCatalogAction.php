@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -36,45 +38,36 @@ use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class DeleteCatalogAction implements ApplicationActionInterface
+final readonly class DeleteCatalogAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete_catalog';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'delete_catalog';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            check_http_referer() === false ||
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !$this->requestParser->verifyForm('delete_catalog')
+            check_http_referer() === false
+            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || !$this->requestParser->verifyForm('delete_catalog')
         ) {
             throw new AccessDeniedException();
         }
+
         $deleted  = false;
         $catalogs = (isset($_REQUEST['catalogs']))
             ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT)
             : [];
-        if (is_array($catalogs) && !empty($catalogs)) {
+        if (!empty($catalogs)) {
             $deleted = true;
             // Delete the sucker, we don't need to check perms as that's done above
             foreach ($catalogs as $catalog_id) {
-                $deleted = Catalog::delete((int)$catalog_id);
+                $deleted = Catalog::delete((int) $catalog_id);
                 if (!$deleted) {
                     break;
                 }
@@ -94,7 +87,7 @@ final class DeleteCatalogAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
-                sprintf(T_('Couldn\'t delete this %s'), T_('Catalog')),
+                sprintf(T_("Couldn't delete this %s"), T_('Catalog')),
                 $next_url
             );
         }

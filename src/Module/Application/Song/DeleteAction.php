@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -29,46 +29,49 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class DeleteAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
+    ) {}
 
     public function run(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
-        $songId = (int) ($request->getQueryParams()['song_id'] ?? 0);
+        $queryParams = $request->getQueryParams();
+        $songId      = (int) ($queryParams['song_id'] ?? 0);
+        $burlParam   = (string) ($queryParams['burl'] ?? '');
+        $webPath     = $this->configContainer->getWebPath();
 
         $this->ui->showHeader();
-        $this->ui->showConfirmation(
+        $this->ui->showConfirmationWithReturn(
             T_('Are You Sure?'),
             T_('The Song will be deleted'),
             sprintf(
-                '%s/song.php?action=confirm_delete&song_id=%d',
-                $this->configContainer->getWebPath(),
+                '%s/song.php?action=confirm_delete&song_id=%d&burl=%s',
+                $webPath,
+                $songId,
+                rawurlencode($burlParam)
+            ),
+            $this->deletionUrlResolver->resolveBurl($burlParam) ?: sprintf(
+                '%s/song.php?action=show_song&song_id=%d',
+                $webPath,
                 $songId
             ),
-            1,
             'delete_song'
         );
 

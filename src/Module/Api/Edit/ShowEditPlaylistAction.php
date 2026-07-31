@@ -31,6 +31,9 @@ use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,7 +42,7 @@ use Psr\Log\LoggerInterface;
 
 final class ShowEditPlaylistAction extends AbstractEditAction
 {
-    public const REQUEST_KEY = 'show_edit_playlist';
+    public const string REQUEST_KEY = 'show_edit_playlist';
 
     private GuiFactoryInterface $guiFactory;
     private ResponseFactoryInterface $responseFactory;
@@ -50,11 +53,13 @@ final class ShowEditPlaylistAction extends AbstractEditAction
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
+        LibraryItemLoaderInterface $libraryItemLoader,
         LoggerInterface $logger,
+        ShareRepositoryInterface $shareRepository,
         TalFactoryInterface $talFactory,
         GuiFactoryInterface $guiFactory,
     ) {
-        parent::__construct($configContainer, $logger);
+        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->talFactory      = $talFactory;
@@ -65,7 +70,7 @@ final class ShowEditPlaylistAction extends AbstractEditAction
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        library_item $libitem,
+        library_item|Share $libitem,
         int $object_id,
         ?Browse $browse = null,
     ): ResponseInterface {
@@ -83,7 +88,10 @@ final class ShowEditPlaylistAction extends AbstractEditAction
                 $this->guiFactory->createNewPlaylistDialogAdapter(
                     $gatekeeper,
                     $object_type,
-                    $request->getQueryParams()['id']
+                    $request->getQueryParams()['id'],
+                    // a multi-select spanning types sends every group; the access check above still runs
+                    // against `object_type`, which carries the first of them
+                    (string) ($request->getQueryParams()['groups'] ?? '')
                 )
             )
             ->render();

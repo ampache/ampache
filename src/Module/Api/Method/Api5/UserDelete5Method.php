@@ -25,19 +25,34 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class UserDelete5Method
+ * Deletes an existing user.
+ *
+ * Version 5 requires the `username` and only ever looks a user up by name, so it keeps a method
+ * of its own.
  */
-final class UserDelete5Method
+final class UserDelete5Method implements MethodInterface
 {
-    public const ACTION = 'user_delete';
+    public const string ACTION = 'user_delete';
+
+    public function __construct(
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * user_delete
@@ -49,31 +64,62 @@ final class UserDelete5Method
      * username = (string) $username)
      *
      * @param array{
-     *     username: string,
+     *     username?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException|RequestParamMissingException
      */
-    public static function user_delete(array $input, User $user): bool
-    {
-        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (
+            !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::ADMIN,
+                $user->id
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
-        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
+
+        if (!array_key_exists('username', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'username')
+            );
         }
+
         $username = $input['username'];
         $del_user = User::get_from_username($username);
         // don't delete yourself or admins
         if ($del_user !== null && $del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
-            Api5::message('successfully deleted: ' . $username, $input['api_format']);
+            $result = $output->success($apiVersion, 'successfully deleted: ' . $username);
+
             Catalog::count_table('user');
 
-            return true;
+            return $response->withBody(
+                $this->streamFactory->createStream($result)
+            );
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'system', $input['api_format']);
 
-        return false;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    sprintf('Bad Request: %s', $username),
+                    self::ACTION,
+                    'system'
+                )
+            )
+        );
     }
 }

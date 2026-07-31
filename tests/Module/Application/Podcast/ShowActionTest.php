@@ -41,93 +41,12 @@ use Psr\Log\LoggerInterface;
 class ShowActionTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private UiInterface&MockObject $ui;
-
-    private LoggerInterface&MockObject $logger;
-
-    private ServerRequestInterface&MockObject $request;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
+    private LoggerInterface&MockObject $logger;
     private PodcastRepositoryInterface&MockObject $podcastRepository;
-
+    private ServerRequestInterface&MockObject $request;
     private ShowAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
-        $this->ui                = $this->createMock(UiInterface::class);
-        $this->logger            = $this->createMock(LoggerInterface::class);
-        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
-
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->configContainer,
-            $this->ui,
-            $this->logger,
-            $this->podcastRepository,
-        );
-    }
-
-    public function testRunReturnsNullIfPodcastIsDisabled(): void
-    {
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn(false);
-
-        static::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
-        );
-    }
-
-    public function testRunShowErrorIfPodcastDoesNotExist(): void
-    {
-        $user = $this->createMock(User::class);
-
-        $user->catalogs['podcast'] = [1];
-
-        $this->request->expects(static::once())
-            ->method('getQueryParams')
-            ->willReturn([]);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('getUser')
-            ->willReturn($user);
-
-        $this->podcastRepository->expects(static::once())
-            ->method('findById')
-            ->with(0)
-            ->willReturn(null);
-
-        $this->ui->expects(static::once())
-            ->method('showHeader');
-        $this->ui->expects(static::once())
-            ->method('showQueryStats');
-        $this->ui->expects(static::once())
-            ->method('showFooter');
-
-        $this->logger->expects(static::once())
-            ->method('warning')
-            ->with(
-                'Requested a podcast that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
-            );
-
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn(true);
-
-        static::expectOutputString('You have requested an object that does not exist');
-
-        static::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
-        );
-    }
+    private UiInterface&MockObject $ui;
 
     public function testRunRenders(): void
     {
@@ -182,8 +101,83 @@ class ShowActionTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST)
             ->willReturn(true);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
+        );
+    }
+
+    public function testRunReturnsNullIfPodcastIsDisabled(): void
+    {
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->run($this->request, $this->gatekeeper)
+        );
+    }
+
+    public function testRunShowErrorIfPodcastDoesNotExist(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $user->catalogs['podcast'] = [1];
+
+        $this->request->expects(static::once())
+            ->method('getQueryParams')
+            ->willReturn([]);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('getUser')
+            ->willReturn($user);
+
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
+            ->with(0)
+            ->willReturn(null);
+
+        $this->ui->expects(static::once())
+            ->method('showHeader');
+        $this->ui->expects(static::once())
+            ->method('showQueryStats');
+        $this->ui->expects(static::once())
+            ->method('showFooter');
+
+        $this->logger->expects(static::once())
+            ->method('warning')
+            ->with(
+                'Requested a podcast that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
+            );
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn(true);
+
+        static::expectOutputString('You have requested an object that does not exist');
+
+        self::assertNull(
+            $this->subject->run($this->request, $this->gatekeeper)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->ui                = $this->createMock(UiInterface::class);
+        $this->logger            = $this->createMock(LoggerInterface::class);
+        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
+
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->configContainer,
+            $this->ui,
+            $this->logger,
+            $this->podcastRepository,
         );
     }
 }

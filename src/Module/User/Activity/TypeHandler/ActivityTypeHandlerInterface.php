@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -30,6 +32,6 @@ interface ActivityTypeHandlerInterface
         string $objectType,
         string $action,
         int $userId,
-        int $date
+        int $date,
     ): void;
 }

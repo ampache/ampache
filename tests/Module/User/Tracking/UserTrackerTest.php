@@ -29,22 +29,75 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\IpHistoryRepositoryInterface;
 use Ampache\Repository\Model\User;
+use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-/**
- * @todo extend tests once the static calls are gone
- */
 class UserTrackerTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
-
     private IpHistoryRepositoryInterface&MockObject $ipHistoryRepository;
-
     private LoggerInterface&MockObject $logger;
-
+    private ?string $previousRemoteAddr;
+    private ?string $previousUserAgent;
     private UserTracker $subject;
+
+    public function testTrackIpAddressDoesNothingIfFeatureIsDisabled(): void
+    {
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::TRACK_USER_IP)
+            ->willReturn(false);
+
+        $this->ipHistoryRepository->expects(static::never())
+            ->method('create');
+
+        $this->subject->trackIpAddress(
+            $this->createMock(User::class),
+            'login'
+        );
+    }
+
+    // NOTE: Core::get_user_ip() reads REMOTE_ADDR/HTTP_X_FORWARDED_FOR via
+    // filter_has_var(INPUT_SERVER, ...), which reflects a snapshot taken by
+    // the SAPI at request start, not live writes to the $_SERVER superglobal
+    // (confirmed: filter_has_var(INPUT_SERVER, 'REMOTE_ADDR') returns false
+    // even immediately after assigning $_SERVER['REMOTE_ADDR'] in the same
+    // process). Under the PHPUnit CLI runner this means get_user_ip() always
+    // returns '', so the ip-stripping branch (parse_url()/IPv6 bracket
+    // handling) cannot be exercised by mutating $_SERVER in a test. This
+    // test asserts the real, observable behaviour instead: an empty ip is
+    // recorded, while the user agent -- read via Core::get_server(), which
+    // does use plain $_SERVER access -- is picked up correctly.
+    public function testTrackIpAddressRecordsEmptyIpAndConfiguredUserAgent(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $_SERVER['REMOTE_ADDR']     = '203.0.113.42';
+        $_SERVER['HTTP_USER_AGENT'] = 'SomeTestAgent/1.0';
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::TRACK_USER_IP)
+            ->willReturn(true);
+
+        $this->logger->expects(static::once())
+            ->method('warning')
+            ->with(static::stringContains('Login from IP address:'));
+
+        $this->ipHistoryRepository->expects(static::once())
+            ->method('create')
+            ->with(
+                $user,
+                '',
+                'SomeTestAgent/1.0',
+                static::isInstanceOf(DateTimeImmutable::class),
+                'login',
+            );
+
+        $this->subject->trackIpAddress($user, 'login');
+    }
 
     protected function setUp(): void
     {
@@ -57,18 +110,23 @@ class UserTrackerTest extends TestCase
             $this->ipHistoryRepository,
             $this->logger
         );
+
+        $this->previousRemoteAddr = $_SERVER['REMOTE_ADDR'] ?? null;
+        $this->previousUserAgent  = $_SERVER['HTTP_USER_AGENT'] ?? null;
     }
 
-    public function testTrackIpAddressDoesNothingIfFeatureIsDisabled(): void
+    protected function tearDown(): void
     {
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::TRACK_USER_IP)
-            ->willReturn(false);
+        if ($this->previousRemoteAddr === null) {
+            unset($_SERVER['REMOTE_ADDR']);
+        } else {
+            $_SERVER['REMOTE_ADDR'] = $this->previousRemoteAddr;
+        }
 
-        $this->subject->trackIpAddress(
-            $this->createMock(User::class),
-            'login'
-        );
+        if ($this->previousUserAgent === null) {
+            unset($_SERVER['HTTP_USER_AGENT']);
+        } else {
+            $_SERVER['HTTP_USER_AGENT'] = $this->previousUserAgent;
+        }
     }
 }

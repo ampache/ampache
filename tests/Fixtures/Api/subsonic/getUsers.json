@@ -1,0 +1,27 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "users": {
+            "user": [
+                {
+                    "username": "admin",
+                    "email": "admin@example.com",
+                    "scrobblingEnabled": true,
+                    "adminRole": true,
+                    "settingsRole": true,
+                    "downloadRole": true,
+                    "uploadRole": false,
+                    "playlistRole": true,
+                    "coverArtRole": true,
+                    "commentRole": false,
+                    "podcastRole": true,
+                    "streamRole": true,
+                    "jukeboxRole": true,
+                    "shareRole": false,
+                    "videoConversionRole": false
+                }
+            ]
+        }
+    }
+}

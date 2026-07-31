@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -38,31 +38,21 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Cleans up expired share items
  */
-final class CleanAction implements ApplicationActionInterface
+final readonly class CleanAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'clean';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private ShareRepositoryInterface $shareRepository;
+    public const string REQUEST_KEY = 'clean';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        ShareRepositoryInterface $shareRepository
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->shareRepository = $shareRepository;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ShareRepositoryInterface $shareRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            !$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE) ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            !$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             throw new AccessDeniedException('Access Denied: sharing not available.');
         }

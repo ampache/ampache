@@ -40,36 +40,23 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Deletes an ACL item by its id
  */
-final class DeleteRecordAction implements ApplicationActionInterface
+final readonly class DeleteRecordAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete_record';
-
-    private UiInterface $ui;
-
-    private AccessRepositoryInterface $accessRepository;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'delete_record';
 
     public function __construct(
-        UiInterface $ui,
-        AccessRepositoryInterface $accessRepository,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
-    ) {
-        $this->ui               = $ui;
-        $this->accessRepository = $accessRepository;
-        $this->configContainer  = $configContainer;
-        $this->requestParser    = $requestParser;
-    }
+        private UiInterface $ui,
+        private AccessRepositoryInterface $accessRepository,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            check_http_referer() === false ||
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            $this->requestParser->verifyForm('delete_access') === false
+            check_http_referer() === false
+            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || $this->requestParser->verifyForm('delete_access') === false
         ) {
             throw new AccessDeniedException();
         }

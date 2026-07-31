@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_artist.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -46,8 +48,8 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Artist $artist */
-/** @var array $multi_object_ids */
-/** @var int[] $object_ids */
+/** @var array<string, int[]>|null $multi_object_ids */
+/** @var list<int> $object_ids */
 /** @var string $object_type */
 /** @var GuiGatekeeperInterface $gatekeeper */
 
@@ -56,7 +58,7 @@ $web_path = AmpConfig::get_web_path();
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_similar      = AmpConfig::get('show_similar');
-$directplay_limit  = (int)AmpConfig::get('direct_play_limit', 0);
+$directplay_limit  = (int) AmpConfig::get('direct_play_limit', 500);
 $use_label         = AmpConfig::get('label');
 $use_wanted        = AmpConfig::get('wanted');
 $is_album_type     = $object_type == 'album' || $object_type == 'album_disk';
@@ -69,7 +71,7 @@ if ($directplay_limit > 0) {
 }
 
 $current_user = Core::get_global('user');
-$f_name       = (string)$artist->get_fullname();
+$f_name       = (string) $artist->get_fullname();
 $url_f_name   = rawurlencode($f_name);
 $title        = scrub_out($f_name);
 Ui::show_box_top($title, 'info-box'); ?>
@@ -120,9 +122,9 @@ if (AmpConfig::get('external_links_musicbrainz')) {
 <?php }
 if (AmpConfig::get('show_played_times')) { ?>
 <br />
-<div style="display:inline;"><?php echo T_('Played') . ' ' .
+<div style="display:inline;"><?php echo T_('Played') . ' '
             /* HINT: Number of times an object has been played */
-            sprintf(nT_('%d time', '%d times', $artist->total_count), $artist->total_count); ?>
+            . sprintf(nT_('%d time', '%d times', $artist->total_count), $artist->total_count); ?>
 </div>
 <?php }
 $owner_id = $artist->get_user_owner();
@@ -202,17 +204,23 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=artist_random&id=' . $artist->id, 'shuffle', T_('Random All to Temporary Playlist'), 'random_' . $artist->id); ?>
         </li>
+        <li>
+            <a id="<?php echo 'add_to_playlist_' . $artist->id; ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $artist->id; ?>')">
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+                <?php echo Ui::get_add_to_list_label(); ?>
+            </a>
+        </li>
 <?php } ?>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&artist=<?php echo $artist->id; ?>');" data-confirm="<?php echo T_('Do you really want to update from tags?'); ?>">
                 <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags'));
     echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
     <?php if (!empty($artist->mbid) && $current_user && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&artist=<?php echo $artist->id; ?>');" data-confirm="<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>">
                 <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>
                 <?php echo T_('Update details from MusicBrainz'); ?>
             </a>
@@ -225,7 +233,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                ['object_type' => 'artist', 'object_id' => (string)$artist->id]
+                ['object_type' => 'artist', 'object_id' => (string) $artist->id]
             ); ?>
         </li>
 <?php } ?>
@@ -252,7 +260,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         </li>
 <?php }
 if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
-            <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+            <?php if (AmpConfig::get('statistical_graphs')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">
                         <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?>

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,25 +33,15 @@ use Ampache\Repository\Model\Art;
 use Exception;
 use Psr\Log\LoggerInterface;
 
-final class LastFmCollectorModule implements CollectorModuleInterface
+final readonly class LastFmCollectorModule implements CollectorModuleInterface
 {
-    private const API_URL = 'http://ws.audioscrobbler.com/2.0/';
-
-    private ConfigContainerInterface $configContainer;
-
-    private LastFmQueryInterface $lastFmQuery;
-
-    private LoggerInterface $logger;
+    private const string API_URL = 'http://ws.audioscrobbler.com/2.0/';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        LastFmQueryInterface $lastFmQuery,
-        LoggerInterface $logger
-    ) {
-        $this->configContainer = $configContainer;
-        $this->lastFmQuery     = $lastFmQuery;
-        $this->logger          = $logger;
-    }
+        private ConfigContainerInterface $configContainer,
+        private LastFmQueryInterface $lastFmQuery,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * This returns the art from lastfm. It doesn't currently require an
@@ -71,7 +61,7 @@ final class LastFmCollectorModule implements CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array {
         $images = [];
 
@@ -94,27 +84,32 @@ final class LastFmCollectorModule implements CollectorModuleInterface
                 } catch (LastFmQueryFailedException) {
                     return [];
                 }
+
                 if (!$xmldata->album->image) {
                     return [];
                 }
+
                 foreach ($xmldata->album->image as $albumart) {
-                    $coverart[] = (string)$albumart;
+                    $coverart[] = (string) $albumart;
                 }
             }
+
             // Albums only for last FM
-            if (empty($coverart)) {
+            if ($coverart === []) {
                 return [];
             }
+
             ksort($coverart);
             foreach ($coverart as $url) {
                 // We need to check the URL for the /noimage/ stuff
-                if (is_array($url) || strpos($url, '/noimage/') !== false) {
+                if (str_contains($url, '/noimage/')) {
                     $this->logger->notice(
                         'LastFM: Detected as noimage, skipped',
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     continue;
                 }
+
                 $this->logger->notice(
                     'LastFM: found image ' . $url,
                     [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -122,7 +117,11 @@ final class LastFmCollectorModule implements CollectorModuleInterface
 
                 // HACK: we shouldn't rely on the extension to determine file type
                 $results = pathinfo($url);
-                if (is_array($results) && array_key_exists('extension', $results) && !empty($results['extension'])) {
+                if (
+                    array_key_exists('extension', $results)
+                    && $results['extension'] !== ''
+                    && $results['extension'] !== '0'
+                ) {
                     $mime     = 'image/' . $results['extension'];
                     $images[] = [
                         'url' => $url,
@@ -133,16 +132,16 @@ final class LastFmCollectorModule implements CollectorModuleInterface
                         return $images;
                     }
                 }
-            } // end foreach
-        } catch (Exception $error) {
+            }
+        } catch (Exception $exception) {
             $this->logger->error(
-                'LastFM error: ' . $error->getMessage(),
+                'LastFM error: ' . $exception->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
 
         // Drop any duplicates
-        $images = array_map("unserialize", array_unique(array_map("serialize", $images)));
+        $images = array_map(unserialize(...), array_unique(array_map(serialize(...), $images)));
 
         // Order is smallest to largest so reverse it
         return array_reverse($images);

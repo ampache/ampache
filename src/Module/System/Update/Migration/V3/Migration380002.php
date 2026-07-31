@@ -35,22 +35,24 @@ final class Migration380002 extends AbstractMigration
 {
     protected array $changelog = ['Add bookmarks'];
 
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 380002) {
+            yield 'bookmark' => "CREATE TABLE IF NOT EXISTS `bookmark` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` int(11) UNSIGNED NOT NULL, `position` int(11) UNSIGNED DEFAULT '0' NOT NULL, `comment` varchar(255) CHARACTER SET $charset NOT NULL, `object_type` varchar(64) NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `creation_date` int(11) UNSIGNED DEFAULT '0' NOT NULL, `update_date` int(11) UNSIGNED DEFAULT '0' NOT NULL) ENGINE=$engine;";
+        }
+    }
+
     public function migrate(): void
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `bookmark` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` int(11) UNSIGNED NOT NULL, `position` int(11) UNSIGNED DEFAULT '0' NOT NULL, `comment` varchar(255) CHARACTER SET $charset NOT NULL, `object_type` varchar(64) NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `creation_date` int(11) UNSIGNED DEFAULT '0' NOT NULL, `update_date` int(11) UNSIGNED DEFAULT '0' NOT NULL) ENGINE=$engine;");
-    }
-
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build
-    ): Generator {
-        if ($build > 380002) {
-            yield 'bookmark' => "CREATE TABLE IF NOT EXISTS `bookmark` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` int(11) UNSIGNED NOT NULL, `position` int(11) UNSIGNED DEFAULT '0' NOT NULL, `comment` varchar(255) CHARACTER SET $charset NOT NULL, `object_type` varchar(64) NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `creation_date` int(11) UNSIGNED DEFAULT '0' NOT NULL, `update_date` int(11) UNSIGNED DEFAULT '0' NOT NULL) ENGINE=$engine;";
-        }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -28,23 +28,31 @@ namespace Ampache\Plugin;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Override;
 use WpOrg\Requests\Requests;
 
 class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
-    public string $name = 'ChartLyrics';
-
+    #[Override]
     public string $categories = 'lyrics';
 
+    #[Override]
     public string $description = 'Get lyrics from ChartLyrics';
 
-    public string $url = 'http://www.chartlyrics.com';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000001';
-
+    #[Override]
     public string $min_ampache = '360022';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'ChartLyrics';
+
+    #[Override]
+    public string $url = 'http://www.chartlyrics.com';
+
+    #[Override]
+    public string $version = '000001';
 
     /**
      * Constructor
@@ -55,11 +63,49 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
     }
 
     /**
+     * get_lyrics
+     * This will look web services for a song lyrics.
+     * @return null|array{'text': string, 'url': string}
+     */
+    public function get_lyrics(Song $song): ?array
+    {
+        $base    = 'http://api.chartlyrics.com/apiv1.asmx/';
+        $uri     = $base . 'SearchLyricDirect?artist=' . urlencode($song->get_parent_fullname()) . '&song=' . urlencode((string) $song->title);
+        $request = Requests::get($uri, [], Core::requests_options());
+        if ($request->status_code == 200) {
+            $xml = simplexml_load_string($request->body);
+            if (
+                $xml
+                && !empty($xml->Lyric)
+            ) {
+                return [
+                    'text' => nl2br((string) $xml->Lyric),
+                    'url' => (string) $xml->LyricUrl
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * install
      * This is a required plugin function
      */
     public function install(): bool
     {
+        return true;
+    }
+
+    /**
+     * load
+     * This is a required plugin function; here it populates the prefs we
+     * need for this object.
+     */
+    public function load(User $user): bool
+    {
+        unset($user);
+
         return true;
     }
 
@@ -79,43 +125,5 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
     public function upgrade(): bool
     {
         return true;
-    }
-
-    /**
-     * load
-     * This is a required plugin function; here it populates the prefs we
-     * need for this object.
-     */
-    public function load(User $user): bool
-    {
-        unset($user);
-
-        return true;
-    }
-
-    /**
-     * get_lyrics
-     * This will look web services for a song lyrics.
-     * @return null|array{'text': string, 'url': string}
-     */
-    public function get_lyrics(Song $song): ?array
-    {
-        $base    = 'http://api.chartlyrics.com/apiv1.asmx/';
-        $uri     = $base . 'SearchLyricDirect?artist=' . urlencode($song->get_parent_fullname()) . '&song=' . urlencode((string)$song->title);
-        $request = Requests::get($uri, [], Core::requests_options());
-        if ($request->status_code == 200) {
-            $xml = simplexml_load_string($request->body);
-            if (
-                $xml &&
-                !empty($xml->Lyric)
-            ) {
-                return [
-                    'text' => nl2br((string)$xml->Lyric),
-                    'url' => (string)$xml->LyricUrl
-                ];
-            }
-        }
-
-        return null;
     }
 }

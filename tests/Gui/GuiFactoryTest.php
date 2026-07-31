@@ -42,6 +42,7 @@ use Ampache\Module\System\Update\UpdateHelperInterface;
 use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
@@ -56,33 +57,6 @@ class GuiFactoryTest extends TestCase
 {
     private GuiFactory $subject;
 
-    protected function setUp(): void
-    {
-        $this->subject = new GuiFactory(
-            $this->createMock(ConfigContainerInterface::class),
-            $this->createMock(ModelFactoryInterface::class),
-            $this->createMock(ZipHandlerInterface::class),
-            $this->createMock(FunctionCheckerInterface::class),
-            $this->createMock(AjaxUriRetrieverInterface::class),
-            $this->createMock(PlaylistLoaderInterface::class),
-            $this->createMock(VideoRepositoryInterface::class),
-            $this->createMock(UpdateInfoRepositoryInterface::class),
-            $this->createMock(UpdateHelperInterface::class),
-            $this->createMock(UpdaterInterface::class)
-        );
-    }
-
-    public function testCreateSongViewAdapterReturnsInstance(): void
-    {
-        $this->assertInstanceOf(
-            SongViewAdapter::class,
-            $this->subject->createSongViewAdapter(
-                $this->createMock(GuiGatekeeperInterface::class),
-                $this->createMock(Song::class)
-            )
-        );
-    }
-
     public function testCreateAlbumViewAdapterReturnsInstance(): void
     {
         $this->assertInstanceOf(
@@ -92,33 +66,6 @@ class GuiFactoryTest extends TestCase
                 $this->createMock(Browse::class),
                 $this->createMock(Album::class)
             )
-        );
-    }
-
-    public function testCreatePlaylistViewAdapterReturnsInstance(): void
-    {
-        $this->assertInstanceOf(
-            PlaylistViewAdapter::class,
-            $this->subject->createPlaylistViewAdapter(
-                $this->createMock(GuiGatekeeperInterface::class),
-                $this->createMock(Playlist::class)
-            )
-        );
-    }
-
-    public function testCreateConfigViewAdapterReturnsInstance(): void
-    {
-        $this->assertInstanceOf(
-            ConfigViewAdapter::class,
-            $this->subject->createConfigViewAdapter()
-        );
-    }
-
-    public function testCreateStatsViewAdapterReturnsInstance(): void
-    {
-        $this->assertInstanceOf(
-            StatsViewAdapter::class,
-            $this->subject->createStatsViewAdapter()
         );
     }
 
@@ -140,11 +87,11 @@ class GuiFactoryTest extends TestCase
         );
     }
 
-    public function testCreateUpdateViewAdapterReturnsInstance(): void
+    public function testCreateConfigViewAdapterReturnsInstance(): void
     {
         $this->assertInstanceOf(
-            UpdateViewAdapter::class,
-            $this->subject->createUpdateViewAdapter()
+            ConfigViewAdapter::class,
+            $this->subject->createConfigViewAdapter()
         );
     }
 
@@ -157,6 +104,61 @@ class GuiFactoryTest extends TestCase
                 'some-type',
                 '666'
             )
+        );
+    }
+
+    public function testCreatePlaylistViewAdapterReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            PlaylistViewAdapter::class,
+            $this->subject->createPlaylistViewAdapter(
+                $this->createMock(GuiGatekeeperInterface::class),
+                $this->createMock(Playlist::class)
+            )
+        );
+    }
+
+    public function testCreateSongViewAdapterReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            SongViewAdapter::class,
+            $this->subject->createSongViewAdapter(
+                $this->createMock(GuiGatekeeperInterface::class),
+                $this->createMock(Song::class)
+            )
+        );
+    }
+
+    public function testCreateStatsViewAdapterReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            StatsViewAdapter::class,
+            $this->subject->createStatsViewAdapter()
+        );
+    }
+
+    public function testCreateUpdateViewAdapterReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            UpdateViewAdapter::class,
+            $this->subject->createUpdateViewAdapter()
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->subject = new GuiFactory(
+            $this->createMock(ConfigContainerInterface::class),
+            $this->createMock(ModelFactoryInterface::class),
+            $this->createMock(ZipHandlerInterface::class),
+            $this->createMock(FunctionCheckerInterface::class),
+            $this->createMock(AjaxUriRetrieverInterface::class),
+            $this->createMock(PlaylistLoaderInterface::class),
+            $this->createMock(CollectionRepositoryInterface::class),
+            $this->createMock(VideoRepositoryInterface::class),
+            $this->createMock(UpdateInfoRepositoryInterface::class),
+            $this->createMock(UpdateHelperInterface::class),
+            $this->createMock(UpdaterInterface::class)
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -40,25 +40,341 @@ use SimpleXMLElement;
  */
 class UPnPPlayer
 {
-    private ?UPnPPlaylist $_playlist = null;
-
+    private readonly string $_description_url;
     private ?UPnPDevice $_device = null;
+    private int $_intState       = 0;
 
-    private string $_description_url = "http://localhost";
-
-    private int $_intState = 0; // 0 - stopped, 1 - playing
-
-    private bool $_shuffle = false; // 0 - stopped, 1 - playing
+    // 0 - stopped, 1 - playing
+    private ?UPnPPlaylist $_playlist = null;
+    private bool $_shuffle           = false; // 0 - stopped, 1 - playing
 
     public function __construct(
         string $name = "noname",
-        string $description_url = "http://localhost"
+        string $description_url = "http://localhost",
     ) {
         debug_event(self::class, 'constructor: ' . $name . ' | ' . $description_url, 5);
 
         $this->_description_url = $description_url;
 
         $this->ReadIndState();
+    }
+
+    /**
+     *
+     */
+    public function FullState(): string
+    {
+        //!! TODO not implemented yet
+        return "";
+    }
+
+    /**
+     * @return array{name?: string, link?: string}
+     */
+    public function GetCurrentItem(): array
+    {
+        return $this->Playlist()->CurrentItem();
+    }
+
+    /**
+     * GetPlayListItems
+     * This returns a delimited string of all of the filenames
+     * current in your playlist, only urls at the moment
+     */
+    public function GetPlaylistItems(): array
+    {
+        return $this->Playlist()->AllItems();
+    }
+
+    /**
+     * GetState
+     */
+    public function GetState(): SimpleXMLElement|string
+    {
+        $state       = '';
+        $response    = $this->Device()->instanceOnly('GetTransportInfo');
+        $responseXML = simplexml_load_string($response);
+
+        if ($responseXML instanceof SimpleXMLElement) {
+            $xpath = $responseXML->xpath('//CurrentTransportState');
+            if (is_array($xpath)) {
+                [$state] = $xpath;
+            }
+        }
+
+        debug_event(self::class, 'GetState = ' . $state, 5);
+
+        return $state;
+    }
+
+    /**
+     * GetVolume
+     */
+    public function GetVolume(): int
+    {
+        $instanceId = 0;
+        $channel    = 'Master';
+        $arguments  = [
+            'InstanceID' => $instanceId,
+            'Channel' => $channel,
+        ];
+
+        $volume      = 0;
+        $response    = $this->Device()->sendRequestToDevice('GetVolume', $arguments);
+        $responseXML = simplexml_load_string($response);
+
+        if ($responseXML instanceof SimpleXMLElement) {
+            $xpath = $responseXML->xpath('//CurrentVolume');
+            if (is_array($xpath) && isset($xpath[0])) {
+                $volume = (int) (string) $xpath[0];
+            }
+        }
+
+        debug_event(self::class, 'GetVolume:' . $volume, 5);
+
+        return $volume;
+    }
+
+    /**
+     * next
+     * go to next song
+     */
+    public function Next(bool $forcePlay = true): bool
+    {
+        // get current internal play state, for case if someone has changed it
+        if (!$forcePlay) {
+            $this->ReadIndState();
+        }
+
+        if (($forcePlay || ($this->_intState === 1)) && ($this->Playlist()->Next())) {
+            $this->Play();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * pause
+     * toggle pause mode on current song
+     */
+    public function Pause(): bool
+    {
+        $state = $this->GetState();
+        debug_event(self::class, 'Pause. prev state = ' . $state, 5);
+
+        if ($state == 'PLAYING') {
+            $response = $this->Device()->instanceOnly('Pause');
+        } else {
+            $args = [
+                'InstanceID' => 0,
+                'Speed' => 1
+            ];
+            $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
+        }
+
+        return true;
+    }
+
+    /**
+     * play
+     * play the current song
+     */
+    public function Play(): bool
+    {
+        //!!$this->Stop();
+
+        $this->SetIntState(1);
+
+        if ($this->_shuffle) {
+            $items = $this->Playlist()->AllItems();
+            $item  = $items[array_rand($items)];
+        } else {
+            $item = $this->Playlist()->CurrentItem();
+        }
+
+        $currentSongArgs = $this->prepareURIRequest($item) ?? [];
+        $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
+
+        $args = [
+            'InstanceID' => 0,
+            'Speed' => 1,
+        ];
+        $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
+
+        //!! UPNP subscription work not for all renderers, and works strange
+        //!! so now is not used
+        //$sid = $this->Device()->Subscribe();
+        //$_SESSION['upnp_SID'] = $sid;
+
+        // launch special page in background for periodically check play status
+        $url = AmpConfig::get('local_web_path') . "/upnp/playstatus.php";
+        $this->CallAsyncURL($url);
+
+        return true;
+    }
+
+    /**
+     * add
+     * append a song to the playlist
+     * $name Name to be shown in the playlist
+     * $link URL of the song
+     */
+    public function PlayListAdd(string $name, string $link): bool
+    {
+        $this->Playlist()->Add($name, $link);
+
+        return true;
+    }
+
+    /**
+     * PlaylistClear
+     */
+    public function PlaylistClear(): bool
+    {
+        $this->Playlist()->Clear();
+
+        return true;
+    }
+
+    /**
+     * delete_pos
+     * This deletes a specific track
+     */
+    public function PlaylistRemove(int $track): bool
+    {
+        $this->Playlist()->RemoveTrack($track);
+
+        return true;
+    }
+
+    /**
+     * play
+     * play a random song
+     */
+    public function PlayShuffle(bool $state): bool
+    {
+        return $this->_shuffle = $state;
+    }
+
+    /**
+     * prev
+     * go to previous song
+     */
+    public function Prev(): bool
+    {
+        if ($this->Playlist()->Prev()) {
+            $this->Play();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Random
+     * this toggles the random state
+     */
+    public function Random(bool $state): bool
+    {
+        //!! TODO not implemented yet
+        return true;
+    }
+
+    /**
+     * Repeat
+     * This toggles the repeat state
+     */
+    public function repeat(bool $state): bool
+    {
+        //!! TODO not implemented yet
+        return true;
+    }
+
+    public function SetVolume(int $value): bool
+    {
+        $desiredVolume = max(0, min(100, $value));
+        $instanceId    = 0;
+        $channel       = 'Master';
+
+        $this->Device()->sendRequestToDevice('SetVolume', [
+            'InstanceID' => $instanceId,
+            'Channel' => $channel,
+            'DesiredVolume' => $desiredVolume,
+        ]);
+
+        return true;
+    }
+
+    /**
+     * skip
+     * This skips to POS in the playlist
+     */
+    public function skip(int $track_id): bool
+    {
+        if ($this->Playlist()->skip($track_id)) {
+            $this->Play();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Stop
+     * stops the current song amazing!
+     */
+    public function Stop(): bool
+    {
+        $this->SetIntState(0);
+        $this->Device()->instanceOnly('Stop');
+
+        //!! UPNP subscription work not for all renderers, and works strange
+        //!! so now is not used
+        //$sid = $_SESSION['upnp_SID'];
+        //$_SESSION['upnp_SID'] = "";
+        //$this->Device()->UnSubscribe($sid);
+
+        return true;
+    }
+
+    /**
+     * VolumeDown
+     * decreases the volume
+     */
+    public function VolumeDown(): bool
+    {
+        $volume = $this->GetVolume() - 2;
+
+        return $this->SetVolume($volume);
+    }
+
+    /**
+     * VolumeUp
+     * increases the volume
+     */
+    public function VolumeUp(): bool
+    {
+        $volume = $this->GetVolume() + 2;
+
+        return $this->SetVolume($volume);
+    }
+
+    /**
+     * CallAsyncURL
+     */
+    private function CallAsyncURL(string $url): void
+    {
+        $curl = curl_init();
+        if ($curl && ($url !== '' && $url !== '0')) {
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
+            curl_setopt($curl, CURLOPT_HEADER, false);
+            curl_exec($curl);
+        }
     }
 
     /**
@@ -86,345 +402,37 @@ class UPnPPlayer
     }
 
     /**
-     * add
-     * append a song to the playlist
-     * $name Name to be shown in the playlist
-     * $link URL of the song
+     * @param array{name?: string, link?: string} $song
+     * @return array{InstanceID: int, CurrentURI: string, CurrentURIMetaData: string}|null
      */
-    public function PlayListAdd(string $name, string $link): bool
+    private function prepareURIRequest(array $song): ?array
     {
-        $this->Playlist()->Add($name, $link);
-
-        return true;
-    }
-
-    /**
-     * delete_pos
-     * This deletes a specific track
-     */
-    public function PlaylistRemove(int $track): bool
-    {
-        $this->Playlist()->RemoveTrack($track);
-
-        return true;
-    }
-
-    /**
-     * PlaylistClear
-     */
-    public function PlaylistClear(): bool
-    {
-        $this->Playlist()->Clear();
-
-        return true;
-    }
-
-    /**
-     * GetPlayListItems
-     * This returns a delimited string of all of the filenames
-     * current in your playlist, only urls at the moment
-     */
-    public function GetPlaylistItems(): array
-    {
-        return $this->Playlist()->AllItems();
-    }
-
-    /**
-     * @return array{name?: string, link?: string}
-     */
-    public function GetCurrentItem(): array
-    {
-        return $this->Playlist()->CurrentItem();
-    }
-
-    /**
-     * GetState
-     *
-     * @return SimpleXMLElement|string
-     */
-    public function GetState()
-    {
-        $state       = '';
-        $response    = $this->Device()->instanceOnly('GetTransportInfo');
-        $responseXML = simplexml_load_string($response);
-
-        if ($responseXML instanceof SimpleXMLElement) {
-            $xpath = $responseXML->xpath('//CurrentTransportState');
-            if (is_array($xpath)) {
-                list($state) = $xpath;
-            }
-        }
-
-        debug_event(self::class, 'GetState = ' . $state, 5);
-
-        return $state;
-    }
-
-    /**
-     * next
-     * go to next song
-     * @param bool $forcePlay
-     */
-    public function Next($forcePlay = true): bool
-    {
-        // get current internal play state, for case if someone has changed it
-        if (!$forcePlay) {
-            $this->ReadIndState();
-        }
-        if (($forcePlay || ($this->_intState == 1)) && ($this->Playlist()->Next())) {
-            $this->Play();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * prev
-     * go to previous song
-     */
-    public function Prev(): bool
-    {
-        if ($this->Playlist()->Prev()) {
-            $this->Play();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * skip
-     * This skips to POS in the playlist
-     */
-    public function skip(int $track_id): bool
-    {
-        if ($this->Playlist()->skip($track_id)) {
-            $this->Play();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private function prepareURIRequest($song, $prefix): ?array
-    {
-        if ($song == null) {
+        if ($song == [] || !isset($song['link']) || !isset($song['name']) || $song['link'] == '' || $song['name'] == '') {
             return null;
         }
 
-        $songUrl = $song['link'];
-        $songId  = (int)preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
+        $songUrl = (string) $song['link'];
+        $songId  = (int) preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
 
         $song     = new Song($songId);
         $songItem = Upnp_Api::_itemSong($song, '');
         $domDIDL  = Upnp_Api::createDIDL($songItem, '');
-        $xmlDIDL  = $domDIDL->saveXML();
+        $xmlDIDL  = $domDIDL->saveXML() ?: '';
 
         return [
             'InstanceID' => 0,
-            $prefix . 'URI' => $songUrl,
-            $prefix . 'URIMetaData' => htmlentities($xmlDIDL),
+            'CurrentURI' => $songUrl,
+            'CurrentURIMetaData' => htmlentities($xmlDIDL),
         ];
     }
 
-    /**
-     * CallAsyncURL
-     */
-    private function CallAsyncURL(string $url): void
+    private function ReadIndState(): void
     {
-        $curl = curl_init();
-        if ($curl) {
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
-            curl_setopt($curl, CURLOPT_HEADER, false);
-            curl_exec($curl);
-        }
-    }
+        $sid  = 'upnp_ply_' . $this->_description_url;
+        $data = Session::read($sid);
 
-    /**
-     * play
-     * play a random song
-     */
-    public function PlayShuffle(bool $state): bool
-    {
-        return $this->_shuffle = $state;
-    }
-
-    /**
-     * play
-     * play the current song
-     */
-    public function Play(): bool
-    {
-        //!!$this->Stop();
-
-        $this->SetIntState(1);
-
-        if ($this->_shuffle) {
-            $items = $this->Playlist()->AllItems();
-            $item  = $items[array_rand($items)];
-        } else {
-            $item = $this->Playlist()->CurrentItem();
-        }
-        $currentSongArgs = $this->prepareURIRequest($item, "Current") ?? [];
-        $response        = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
-
-        $args = [
-            'InstanceID' => 0,
-            'Speed' => 1,
-        ];
-        $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
-
-        //!! UPNP subscription work not for all renderers, and works strange
-        //!! so now is not used
-        //$sid = $this->Device()->Subscribe();
-        //$_SESSION['upnp_SID'] = $sid;
-
-        // launch special page in background for periodically check play status
-        $url = AmpConfig::get('local_web_path') . "/upnp/playstatus.php";
-        $this->CallAsyncURL($url);
-
-        return true;
-    }
-
-    /**
-     * Stop
-     * stops the current song amazing!
-     */
-    public function Stop(): bool
-    {
-        $this->SetIntState(0);
-        $response = $this->Device()->instanceOnly('Stop');
-
-        //!! UPNP subscription work not for all renderers, and works strange
-        //!! so now is not used
-        //$sid = $_SESSION['upnp_SID'];
-        //$_SESSION['upnp_SID'] = "";
-        //$this->Device()->UnSubscribe($sid);
-
-        return true;
-    }
-
-    /**
-     * pause
-     * toggle pause mode on current song
-     */
-    public function Pause(): bool
-    {
-        $state = $this->GetState();
-        debug_event(self::class, 'Pause. prev state = ' . $state, 5);
-
-        if ($state == 'PLAYING') {
-            $response = $this->Device()->instanceOnly('Pause');
-        } else {
-            $args = [
-                'InstanceID' => 0,
-                'Speed' => 1
-            ];
-            $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
-        }
-
-        return true;
-    }
-
-    /**
-     * Repeat
-     * This toggles the repeat state
-     */
-    public function repeat(bool $state): bool
-    {
-        //!! TODO not implemented yet
-        return true;
-    }
-
-    /**
-     * Random
-     * this toggles the random state
-     */
-    public function Random(bool $state): bool
-    {
-        //!! TODO not implemented yet
-        return true;
-    }
-
-    /**
-     *
-     */
-    public function FullState(): string
-    {
-        //!! TODO not implemented yet
-        return "";
-    }
-
-    /**
-     * VolumeUp
-     * increases the volume
-     */
-    public function VolumeUp(): bool
-    {
-        $volume = $this->GetVolume() + 2;
-
-        return $this->SetVolume($volume);
-    }
-
-    /**
-     * VolumeDown
-     * decreases the volume
-     */
-    public function VolumeDown(): bool
-    {
-        $volume = $this->GetVolume() - 2;
-
-        return $this->SetVolume($volume);
-    }
-
-    public function SetVolume(int $value): bool
-    {
-        $desiredVolume = max(0, min(100, $value));
-        $instanceId    = 0;
-        $channel       = 'Master';
-
-        $this->Device()->sendRequestToDevice('SetVolume', [
-            'InstanceID' => $instanceId,
-            'Channel' => $channel,
-            'DesiredVolume' => $desiredVolume,
-        ]);
-
-        return true;
-    }
-
-    /**
-     * GetVolume
-     *
-     * @return SimpleXMLElement|string
-     */
-    public function GetVolume()
-    {
-        $instanceId = 0;
-        $channel    = 'Master';
-        $arguments  = [
-            'InstanceID' => $instanceId,
-            'Channel' => $channel,
-        ];
-
-        $volume      = '';
-        $response    = $this->Device()->sendRequestToDevice('GetVolume', $arguments);
-        $responseXML = simplexml_load_string($response);
-
-        if ($responseXML instanceof SimpleXMLElement) {
-            $xpath = $responseXML->xpath('//CurrentVolume');
-            if (is_array($xpath)) {
-                list($volume) = $xpath;
-            }
-        }
-
-        debug_event(self::class, 'GetVolume:' . $volume, 5);
-
-        return $volume;
+        $this->_intState = json_decode($data, true) ?? 0;
+        debug_event(self::class, 'ReadIndState:' . $this->_intState, 5);
     }
 
     private function SetIntState(int $state): void
@@ -438,15 +446,7 @@ class UPnPPlayer
         } else {
             Session::write($sid, $data);
         }
+
         debug_event(self::class, 'SetIntState:' . $this->_intState, 5);
-    }
-
-    private function ReadIndState(): void
-    {
-        $sid  = 'upnp_ply_' . $this->_description_url;
-        $data = Session::read($sid);
-
-        $this->_intState = json_decode($data, true) ?? 0;
-        debug_event(self::class, 'ReadIndState:' . $this->_intState, 5);
     }
 }

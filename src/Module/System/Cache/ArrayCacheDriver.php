@@ -39,14 +39,9 @@ final class ArrayCacheDriver implements CacheInterface
     /** @var array<string, scalar> */
     private array $cache = [];
 
-    public function get(string $key, mixed $default = null): mixed
+    public function clear(): bool
     {
-        return $this->cache[$key] ?? $default;
-    }
-
-    public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
-    {
-        $this->cache[$key] = $value;
+        $this->cache = [];
 
         return true;
     }
@@ -55,37 +50,6 @@ final class ArrayCacheDriver implements CacheInterface
     {
         if ($this->has($key)) {
             unset($this->cache[$key]);
-        }
-
-        return true;
-    }
-
-    public function clear(): bool
-    {
-        $this->cache = [];
-
-        return true;
-    }
-
-    /**
-     * @param iterable<string> $keys
-     *
-     * @return Generator<string, scalar>
-     */
-    public function getMultiple(iterable $keys, mixed $default = null): Generator
-    {
-        foreach ($keys as $key) {
-            yield $key => $this->cache[$key] ?? $default;
-        }
-    }
-
-    /**
-     * @param iterable<string, scalar> $values
-     */
-    public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
-    {
-        foreach ($values as $key => $value) {
-            $this->cache[$key] = $value;
         }
 
         return true;
@@ -107,8 +71,43 @@ final class ArrayCacheDriver implements CacheInterface
         return true;
     }
 
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return $this->cache[$key] ?? $default;
+    }
+
+    /**
+     * @param iterable<string> $keys
+     * @return Generator<string, scalar>
+     */
+    public function getMultiple(iterable $keys, mixed $default = null): Generator
+    {
+        foreach ($keys as $key) {
+            yield $key => $this->cache[$key] ?? $default;
+        }
+    }
+
     public function has(string $key): bool
     {
         return array_key_exists($key, $this->cache);
+    }
+
+    public function set(string $key, mixed $value, int|DateInterval|null $ttl = null): bool
+    {
+        $this->cache[$key] = $value;
+
+        return true;
+    }
+
+    /**
+     * @param iterable<string, scalar> $values
+     */
+    public function setMultiple(iterable $values, int|DateInterval|null $ttl = null): bool
+    {
+        foreach ($values as $key => $value) {
+            $this->cache[$key] = $value;
+        }
+
+        return true;
     }
 }

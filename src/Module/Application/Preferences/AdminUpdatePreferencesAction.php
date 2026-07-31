@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,37 +37,24 @@ use Ampache\Module\Util\RequestParserInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class AdminUpdatePreferencesAction implements ApplicationActionInterface
+final readonly class AdminUpdatePreferencesAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'admin_update_preferences';
-
-    private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'admin_update_preferences';
 
     public function __construct(
-        PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
-    ) {
-        $this->preferencesFromRequestUpdater = $preferencesFromRequestUpdater;
-        $this->responseFactory               = $responseFactory;
-        $this->configContainer               = $configContainer;
-        $this->requestParser                 = $requestParser;
-    }
+        private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            !$this->requestParser->verifyForm('update_preference')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || !$this->requestParser->verifyForm('update_preference')
         ) {
             throw new AccessDeniedException();
         }
@@ -75,7 +62,7 @@ final class AdminUpdatePreferencesAction implements ApplicationActionInterface
         $this->preferencesFromRequestUpdater->update((int) Core::get_post('user_id'));
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(

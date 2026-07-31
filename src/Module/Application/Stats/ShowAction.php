@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -39,14 +39,14 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class ShowAction extends AbstractGraphRendererAction
 {
-    public const REQUEST_KEY = 'show';
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private GuiFactoryInterface $guiFactory,
         private TalFactoryInterface $talFactory,
-        LibraryItemLoaderInterface $libraryItemLoader
+        LibraryItemLoaderInterface $libraryItemLoader,
     ) {
         parent::__construct(
             $libraryItemLoader,
@@ -62,7 +62,7 @@ final readonly class ShowAction extends AbstractGraphRendererAction
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             $this->ui->showBoxTop(T_('Statistics'), 'box box_stats');
 
             echo $this->talFactory
@@ -73,10 +73,7 @@ final readonly class ShowAction extends AbstractGraphRendererAction
 
             $this->ui->showBoxBottom();
 
-            if (
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
-                is_dir(__DIR__ . '/../../../../vendor/szymach/c-pchart/src/Chart/')
-            ) {
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS)) {
                 $this->renderGraph($gatekeeper);
             }
         }

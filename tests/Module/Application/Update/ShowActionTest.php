@@ -32,6 +32,7 @@ use Ampache\Gui\TalViewInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,34 +41,11 @@ use Psr\Http\Message\StreamInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var TalFactoryInterface|MockInterface|null */
-    private ?MockInterface $talFactory;
-
-    /** @var GuiFactoryInterface|MockInterface|null */
-    private ?MockInterface $guiFactory;
-
-    /** @var ResponseFactoryInterface|MockInterface|null */
-    private ?MockInterface $responseFactory;
-
-    /** @var StreamFactoryInterface|MockInterface|null */
-    private ?MockInterface $streamFactory;
-
+    private GuiFactoryInterface|MockInterface|null $guiFactory;
+    private ResponseFactoryInterface|MockInterface|null $responseFactory;
+    private StreamFactoryInterface|MockInterface|null $streamFactory;
     private ?ShowAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->talFactory      = $this->mock(TalFactoryInterface::class);
-        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
-        $this->responseFactory = $this->mock(ResponseFactoryInterface::class);
-        $this->streamFactory   = $this->mock(StreamFactoryInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->talFactory,
-            $this->guiFactory,
-            $this->responseFactory,
-            $this->streamFactory
-        );
-    }
+    private TalFactoryInterface|MockInterface|null $talFactory;
 
     public function testRunReturnsRenderedResponse(): void
     {
@@ -112,6 +90,22 @@ class ShowActionTest extends MockeryTestCase
         $this->assertSame(
             $response,
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->talFactory      = $this->mock(TalFactoryInterface::class);
+        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
+        $this->responseFactory = $this->mock(ResponseFactoryInterface::class);
+        $this->streamFactory   = $this->mock(StreamFactoryInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->talFactory,
+            $this->guiFactory,
+            $this->responseFactory,
+            $this->streamFactory
         );
     }
 }

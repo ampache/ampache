@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
@@ -37,26 +38,9 @@ use DateTimeInterface;
 interface ShareRepositoryInterface
 {
     /**
-     * Migrate a share associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
-
-    /**
-     * Finds a single item by its id
-     */
-    public function findById(int $itemId): ?Share;
-
-    /**
      * Cleanup old shares
      */
     public function collectGarbage(): void;
-
-    /**
-     * Returns the ids of all items the user has access to
-     *
-     * @return list<int>
-     */
-    public function getIdsByUser(User $user): array;
 
     /**
      * Deletes a single item
@@ -64,7 +48,33 @@ interface ShareRepositoryInterface
     public function delete(Share $item): void;
 
     /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Share;
+
+    /**
+     * Returns the ids of all items the user has access to
+     *
+     * @return int[]
+     */
+    public function getIdsByUser(User $user): array;
+
+    /**
+     * Migrate a share associate stats to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
+
+    /**
      * Sets the last access-date and raises the counter
      */
     public function registerAccess(Share $share, DateTimeInterface $date): void;
+
+    /**
+     * Writes the editable properties of an existing share
+     *
+     * Users below MANAGER are scoped to their own shares by the statement itself
+     *
+     * @throws DatabaseException
+     */
+    public function update(Share $share, User $user): void;
 }

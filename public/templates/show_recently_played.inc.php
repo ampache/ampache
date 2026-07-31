@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_recently_played.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -34,13 +36,13 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-/** @var list<array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
+/** @var array<int, array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
 /** @var User $user */
 
 $web_path = AmpConfig::get_web_path();
 
 $ajax_page = $ajax_page ?? 'index';
-$user_id   = $user_id ?? $user->id ?? -1;
+$user_id   = $user_id ?? $user->id ?: -1;
 $user_only = (isset($user_only) && $user_only);
 $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)
@@ -98,25 +100,25 @@ foreach ($data as $row) {
             if ($interval < 60) {
                 $time_string = sprintf(nT_('%d second ago', '%d seconds ago', $interval), $interval);
             } elseif ($interval < 3600) {
-                $interval    = (int)floor($interval / 60);
+                $interval    = (int) floor($interval / 60);
                 $time_string = sprintf(nT_('%d minute ago', '%d minutes ago', $interval), $interval);
             } elseif ($interval < 86400) {
-                $interval    = (int)floor($interval / 3600);
+                $interval    = (int) floor($interval / 3600);
                 $time_string = sprintf(nT_('%d hour ago', '%d hours ago', $interval), $interval);
             } elseif ($interval < 604800) {
-                $interval    = (int)floor($interval / 86400);
+                $interval    = (int) floor($interval / 86400);
                 $time_string = sprintf(nT_('%d day ago', '%d days ago', $interval), $interval);
             } elseif ($interval < 2592000) {
-                $interval    = (int)floor($interval / 604800);
+                $interval    = (int) floor($interval / 604800);
                 $time_string = sprintf(nT_('%d week ago', '%d weeks ago', $interval), $interval);
             } elseif ($interval < 31556926) {
-                $interval    = (int)floor($interval / 2592000);
+                $interval    = (int) floor($interval / 2592000);
                 $time_string = sprintf(nT_('%d month ago', '%d months ago', $interval), $interval);
             } elseif ($interval < 631138519) {
-                $interval    = (int)floor($interval / 31556926);
+                $interval    = (int) floor($interval / 31556926);
                 $time_string = sprintf(nT_('%d year ago', '%d years ago', $interval), $interval);
             } else {
-                $interval    = (int)floor($interval / 315569260);
+                $interval    = (int) floor($interval / 315569260);
                 $time_string = sprintf(nT_('%d decade ago', '%d decades ago', $interval), $interval);
             }
         } ?>
@@ -140,7 +142,7 @@ foreach ($data as $row) {
                 <span class="cel_item_add">
                     <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'new_window', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $song->id); ?>
                     <a id="<?php echo 'add_to_playlist_' . $count . '_' . $song->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id; ?>')">
-                        <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+                        <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
                     </a>
                 </span>
                 </td>
@@ -200,7 +202,7 @@ foreach ($data as $row) {
     <?php
 $user_id_a = '';
 if ($user_id > 0) {
-    $user_id_a = "&user_id=" . scrub_out($user_id);
+    $user_id_a = "&user_id=" . $user_id;
 } ?>
     <a href="<?php echo $web_path; ?>/stats.php?action=recent_song<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_albums.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
@@ -38,7 +40,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 /** @var string $limit_threshold */
 /** @var bool $group_release */
 
@@ -47,7 +49,7 @@ $web_path = AmpConfig::get_web_path();
 $access25          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_playlist_add = $access25;
 $show_direct_play  = AmpConfig::get('directplay');
-$directplay_limit  = AmpConfig::get('direct_play_limit', 0);
+$directplay_limit  = AmpConfig::get('direct_play_limit', 500);
 // album_row data and options
 $thcount           = 9;
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
@@ -85,10 +87,8 @@ if ($browse->is_show_header()) {
 <table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="album">
     <thead>
         <tr class="th-top">
-        <div class="libitem_menu">
             <th class="cel_play essential"></th>
             <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
-</div>
             <th class="<?php echo $cel_album; ?> essential persist"><?php echo $album_link; ?></th>
             <th class="cel_add essential"></th>
             <th class="<?php echo $cel_artist; ?> essential"><?php echo $artist_link; ?></th>
@@ -121,6 +121,9 @@ if (AmpConfig::get('ratings')) {
     Userflag::build_cache('album', $object_ids);
 }
 /* Foreach through the albums */
+// One TAL view reused for all rows
+$albumRowView = $talFactory->createTalView()->setTemplate('album_row.xhtml');
+
 foreach ($object_ids as $album_id) {
     $libitem = new Album($album_id);
     if ($libitem->isNew()) {
@@ -130,12 +133,14 @@ foreach ($object_ids as $album_id) {
     if ($directplay_limit > 0) {
         $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
     } ?>
-        <tr id="album_<?php echo $libitem->id; ?>" class="libitem_menu">
-            <?php $content = $talFactory->createTalView()
+        <tr id="album_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="album" data-object-id="<?php echo $libitem->id; ?>">
+            <?php
+            // Reassign EVERY key each row. Prev row's value sticks otherwise.
+            // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
+            $content = $albumRowView
             ->setContext('USER_IS_REGISTERED', User::is_registered())
             ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
             ->setContext('ALBUM', $guiFactory->createAlbumViewAdapter($gatekeeper, $browse, $libitem))
-            ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
             ->setContext('IS_TABLE_VIEW', $is_table)
             ->setContext('IS_HIDE_GENRE', $hide_genres)
             ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
@@ -145,7 +150,6 @@ foreach ($object_ids as $album_id) {
             ->setContext('CLASS_ARTIST', $cel_artist)
             ->setContext('CLASS_TAGS', $cel_tags)
             ->setContext('CLASS_COUNTER', $cel_counter)
-            ->setTemplate('album_row.xhtml')
             ->render();
 
     echo $content; ?>

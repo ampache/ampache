@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -28,16 +30,32 @@ use Ampache\Repository\Model\User;
 interface UserFollowerRepositoryInterface
 {
     /**
+     * Adds an entry for a user following another user
+     */
+    public function add(
+        User $user,
+        User $followingUser,
+    ): void;
+
+    /**
+     * Deletes a user follow-entry
+     */
+    public function delete(
+        User $user,
+        User $followingUser,
+    ): void;
+
+    /**
      * Get users following the user
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getFollowers(User $user): array;
 
     /**
      * Get users followed by this user
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getFollowing(User $user): array;
 
@@ -48,20 +66,4 @@ interface UserFollowerRepositoryInterface
         User $user,
         User $followingUser,
     ): bool;
-
-    /**
-     * Adds an entry for a user following another user
-     */
-    public function add(
-        User $user,
-        User $followingUser
-    ): void;
-
-    /**
-     * Deletes a user follow-entry
-     */
-    public function delete(
-        User $user,
-        User $followingUser
-    ): void;
 }

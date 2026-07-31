@@ -34,17 +34,11 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class AdminAction implements ApplicationActionInterface
+final readonly class AdminAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'admin';
+    public const string REQUEST_KEY = 'admin';
 
-    private UiInterface $ui;
-
-    public function __construct(
-        UiInterface $ui
-    ) {
-        $this->ui = $ui;
-    }
+    public function __construct(private UiInterface $ui) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -66,6 +60,7 @@ final class AdminAction implements ApplicationActionInterface
                 ]
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

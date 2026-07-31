@@ -26,15 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\User;
 
 use Ampache\MockeryTestCase;
+use Override;
 
 class PasswordGeneratorTest extends MockeryTestCase
 {
     private ?PasswordGenerator $subject;
-
-    protected function setUp(): void
-    {
-        $this->subject = new PasswordGenerator();
-    }
 
     public function testGenerateReturnsRandomPasswordsWithFixedLength(): void
     {
@@ -43,12 +39,12 @@ class PasswordGeneratorTest extends MockeryTestCase
         $result  = $this->subject->generate($length);
         $result2 = $this->subject->generate($length);
 
-        static::assertSame(
+        self::assertSame(
             $length,
             mb_strlen($result)
         );
 
-        static::assertNotSame(
+        self::assertNotSame(
             $result,
             $result2
         );
@@ -58,11 +54,18 @@ class PasswordGeneratorTest extends MockeryTestCase
     {
         $result = $this->subject->generate();
 
-        static::assertTrue(
+        self::assertTrue(
             in_array(
                 mb_strlen(($result)),
-                range(14, 20)
+                range(14, 20),
+                true
             )
         );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new PasswordGenerator();
     }
 }

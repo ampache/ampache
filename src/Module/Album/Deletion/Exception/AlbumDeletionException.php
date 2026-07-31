@@ -27,6 +27,4 @@ namespace Ampache\Module\Album\Deletion\Exception;
 
 use Exception;
 
-final class AlbumDeletionException extends Exception
-{
-}
+final class AlbumDeletionException extends Exception {}

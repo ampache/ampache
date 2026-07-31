@@ -36,28 +36,12 @@ use Psr\Log\LoggerInterface;
 
 class PodcastOpmlImporterTest extends TestCase
 {
-    private PodcastOpmlLoaderInterface&MockObject $podcastOpmlLoader;
-
-    private PodcastCreatorInterface&MockObject $podcastCreator;
-
     private LoggerInterface&MockObject $logger;
-
+    private PodcastCreatorInterface&MockObject $podcastCreator;
+    private PodcastOpmlLoaderInterface&MockObject $podcastOpmlLoader;
     private PodcastOpmlImporter $subject;
 
-    protected function setUp(): void
-    {
-        $this->podcastOpmlLoader = $this->createMock(PodcastOpmlLoaderInterface::class);
-        $this->podcastCreator    = $this->createMock(PodcastCreatorInterface::class);
-        $this->logger            = $this->createMock(LoggerInterface::class);
-
-        $this->subject = new PodcastOpmlImporter(
-            $this->podcastOpmlLoader,
-            $this->podcastCreator,
-            $this->logger
-        );
-    }
-
-    public function testImportSkipsIfUrlIsInvalid(): void
+    public function testImportReturnsCountOfImportedFeeds(): void
     {
         $catalog = $this->createMock(Catalog::class);
 
@@ -71,8 +55,7 @@ class PodcastOpmlImporterTest extends TestCase
 
         $this->podcastCreator->expects(static::once())
             ->method('create')
-            ->with($feedUrl, $catalog)
-            ->willThrowException(new InvalidFeedUrlException());
+            ->with($feedUrl, $catalog);
 
         $this->logger->expects(static::once())
             ->method('debug')
@@ -80,14 +63,11 @@ class PodcastOpmlImporterTest extends TestCase
                 sprintf('Importing feed: %s', $feedUrl),
                 [LegacyLogger::CONTEXT_TYPE => PodcastOpmlImporter::class]
             );
-        $this->logger->expects(static::once())
-            ->method('warning')
-            ->with(
-                sprintf('Feed-url invalid: %s', $feedUrl),
-                [LegacyLogger::CONTEXT_TYPE => PodcastOpmlImporter::class]
-            );
 
-        $this->subject->import($catalog, $xml);
+        self::assertSame(
+            1,
+            $this->subject->import($catalog, $xml)
+        );
     }
 
     public function testImportSkipsIfFeedUrlIsNotLoadable(): void
@@ -123,7 +103,7 @@ class PodcastOpmlImporterTest extends TestCase
         $this->subject->import($catalog, $xml);
     }
 
-    public function testImportReturnsCountOfImportedFeeds(): void
+    public function testImportSkipsIfUrlIsInvalid(): void
     {
         $catalog = $this->createMock(Catalog::class);
 
@@ -137,7 +117,8 @@ class PodcastOpmlImporterTest extends TestCase
 
         $this->podcastCreator->expects(static::once())
             ->method('create')
-            ->with($feedUrl, $catalog);
+            ->with($feedUrl, $catalog)
+            ->willThrowException(new InvalidFeedUrlException());
 
         $this->logger->expects(static::once())
             ->method('debug')
@@ -145,10 +126,26 @@ class PodcastOpmlImporterTest extends TestCase
                 sprintf('Importing feed: %s', $feedUrl),
                 [LegacyLogger::CONTEXT_TYPE => PodcastOpmlImporter::class]
             );
+        $this->logger->expects(static::once())
+            ->method('warning')
+            ->with(
+                sprintf('Feed-url invalid: %s', $feedUrl),
+                [LegacyLogger::CONTEXT_TYPE => PodcastOpmlImporter::class]
+            );
 
-        static::assertSame(
-            1,
-            $this->subject->import($catalog, $xml)
+        $this->subject->import($catalog, $xml);
+    }
+
+    protected function setUp(): void
+    {
+        $this->podcastOpmlLoader = $this->createMock(PodcastOpmlLoaderInterface::class);
+        $this->podcastCreator    = $this->createMock(PodcastCreatorInterface::class);
+        $this->logger            = $this->createMock(LoggerInterface::class);
+
+        $this->subject = new PodcastOpmlImporter(
+            $this->podcastOpmlLoader,
+            $this->podcastCreator,
+            $this->logger
         );
     }
 }

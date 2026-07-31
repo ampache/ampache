@@ -25,18 +25,34 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class ToggleFollow5Method
+ * Follows or unfollows a user.
+ *
+ * Version 5 requires the `username` and only ever looks a user up by name, so it keeps a method
+ * of its own.
  */
-final class ToggleFollow5Method
+final class ToggleFollow5Method implements MethodInterface
 {
-    public const ACTION = 'toggle_follow';
+    public const string ACTION = 'toggle_follow';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private StreamFactoryInterface $streamFactory,
+        private UserFollowTogglerInterface $userFollowToggler,
+    ) {}
 
     /**
      * toggle_follow
@@ -47,51 +63,72 @@ final class ToggleFollow5Method
      * username = (string) $username
      *
      * @param array{
-     *     username: string,
+     *     username?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessDeniedException|RequestParamMissingException
      */
-    public static function toggle_follow(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: sociable'), self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::SOCIABLE)) {
+            throw new AccessDeniedException(
+                'Enable: sociable'
+            );
+        }
 
-            return false;
+        if (!array_key_exists('username', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'username')
+            );
         }
-        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
-        }
+
         $username = $input['username'];
         if (!empty($username)) {
             $leader = User::get_from_username($username);
             if ($leader instanceof User) {
-                self::getUserFollowToggler()->toggle(
+                $this->userFollowToggler->toggle(
                     $leader,
                     $user
                 );
-                ob_end_clean();
-                Api5::message('follow toggled for: ' . $user->id, $input['api_format']);
 
-                return true;
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->success($apiVersion, 'follow toggled for: ' . $user->id)
+                    )
+                );
             }
 
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $username), self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::NOT_FOUND,
+                        sprintf('Not Found: %s', $username),
+                        self::ACTION,
+                        'filter'
+                    )
+                )
+            );
         }
 
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), 'username'), self::ACTION, 'username', $input['api_format']);
-
-        return false;
-    }
-
-    private static function getUserFollowToggler(): UserFollowTogglerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserFollowTogglerInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    sprintf('Bad Request: %s', 'username'),
+                    self::ACTION,
+                    'username'
+                )
+            )
+        );
     }
 }

@@ -29,19 +29,12 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\Activity\TypeHandler\ActivityTypeHandlerMapperInterface;
 use Psr\Log\LoggerInterface;
 
-final class UserActivityPoster implements UserActivityPosterInterface
+final readonly class UserActivityPoster implements UserActivityPosterInterface
 {
-    private ActivityTypeHandlerMapperInterface $activityTypeHandlerMapper;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        ActivityTypeHandlerMapperInterface $activityTypeHandlerMapper,
-        LoggerInterface $logger
-    ) {
-        $this->activityTypeHandlerMapper = $activityTypeHandlerMapper;
-        $this->logger                    = $logger;
-    }
+        private ActivityTypeHandlerMapperInterface $activityTypeHandlerMapper,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Registers a certain user action for certain object types
@@ -51,7 +44,7 @@ final class UserActivityPoster implements UserActivityPosterInterface
         string $action,
         string $objectType,
         int $objectId,
-        int $date
+        int $date,
     ): void {
         $this->logger->debug(
             sprintf('post_activity: %s %s by user: %d: {%d}', $action, $objectType, $userId, $objectId),

@@ -27,26 +27,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
+use Override;
 
 final class UpdateCatalogCommand extends Command
 {
-    private UpdateCatalogInterface $updateCatalog;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        UpdateCatalogInterface $updateCatalog
+        private readonly UpdateCatalogInterface $updateCatalog,
     ) {
         parent::__construct('run:updateCatalog', T_('Perform catalog actions for all files of a catalog. If no options are given, the defaults actions -ceagt are assumed'));
-
-        $this->updateCatalog = $updateCatalog;
 
         $this
             ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
@@ -58,6 +46,7 @@ final class UpdateCatalogCommand extends Command
             ->option('-i|--import', T_('Adds new media files and imports playlist files'), 'boolval', false)
             ->option('-o|--optimize', T_('Optimizes database tables'), 'boolval', false)
             ->option('-t|--garbage', T_('Update table mapping, counts and delete garbage data'), 'boolval', false)
+            ->option('-s|--scan', T_('Scan Local Catalog folders for folder browsing'), 'boolval', false)
             ->option('-l|--limit', T_('Item Limit') . ' (' . T_('Verify') . ')', 'intval', 0)
             ->option('-m|--memorylimit', T_('Temporarily deactivates PHP memory limit'), 'boolval', false)
             ->argument('[catalogName]', T_('Name of Catalog (optional)'))
@@ -67,23 +56,24 @@ final class UpdateCatalogCommand extends Command
 
     public function execute(
         ?string $catalogName,
-        string $catalogType
+        string $catalogType,
     ): void {
         $values = $this->values();
         // do a default list of actions if you don't have anything set
         if (
-            empty($values['cleanup']) &&
-            empty($values['add']) &&
-            empty($values['art']) &&
-            empty($values['verify']) &&
-            empty($values['find']) &&
-            empty($values['update']) &&
-            empty($values['import']) &&
-            empty($values['optimize']) &&
-            empty($values['garbage']) &&
-            empty($values['memorylimit']) &&
-            empty($values['catalogName']) &&
-            $values['catalogType'] === 'local'
+            empty($values['cleanup'])
+            && empty($values['add'])
+            && empty($values['art'])
+            && empty($values['verify'])
+            && empty($values['find'])
+            && empty($values['update'])
+            && empty($values['import'])
+            && empty($values['optimize'])
+            && empty($values['garbage'])
+            && empty($values['scan'])
+            && empty($values['memorylimit'])
+            && empty($values['catalogName'])
+            && $values['catalogType'] === 'local'
         ) {
             $values['cleanup'] = true;
             $values['add']     = true;
@@ -104,9 +94,20 @@ final class UpdateCatalogCommand extends Command
             $values['update'],
             $values['optimize'],
             $values['garbage'],
+            $values['scan'],
             $catalogType,
             $catalogName,
             $values['limit']
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

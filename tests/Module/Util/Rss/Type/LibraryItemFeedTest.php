@@ -26,9 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Module\Util\Rss\Surrogate\PlayableItemRssItemAdapter;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 use PhpTal\PhpTalInterface;
 use PHPUnit\Framework\TestCase;
@@ -36,16 +36,6 @@ use PHPUnit\Framework\TestCase;
 class LibraryItemFeedTest extends TestCase
 {
     private LibraryItemFeed $subject;
-
-    protected function setUp(): void
-    {
-        $this->subject = new LibraryItemFeed(
-            $this->createMock(ModelFactoryInterface::class),
-            $this->createMock(LibraryItemLoaderInterface::class),
-            $this->createMock(User::class),
-            $this->createMock(playable_item::class)
-        );
-    }
 
     public function testConfigureTemplatesConfigures(): void
     {
@@ -62,5 +52,15 @@ class LibraryItemFeedTest extends TestCase
             );
 
         $this->subject->configureTemplate($tal);
+    }
+
+    protected function setUp(): void
+    {
+        $this->subject = new LibraryItemFeed(
+            $this->createMock(ModelFactoryInterface::class),
+            $this->createMock(LibraryItemLoaderInterface::class),
+            $this->createMock(User::class),
+            $this->createMock(library_item::class)
+        );
     }
 }

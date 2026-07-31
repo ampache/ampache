@@ -36,15 +36,6 @@ interface MetadataFieldRepositoryInterface
     public function collectGarbage(): void;
 
     /**
-     * Returns the list of available fields
-     *
-     * Key is the primary key, value the name
-     *
-     * @return Traversable<int, string>
-     */
-    public function getPropertyList(): Traversable;
-
-    /**
      * Finds a single `metadata-field` item by its id
      */
     public function findById(int $fieldId): ?MetadataField;
@@ -53,6 +44,15 @@ interface MetadataFieldRepositoryInterface
      * Finds a single `metadata-field` item by its name
      */
     public function findByName(string $name): ?MetadataField;
+
+    /**
+     * Returns the list of available fields
+     *
+     * Key is the primary key, value the name
+     *
+     * @return Traversable<int, string>
+     */
+    public function getPropertyList(): Traversable;
 
     /**
      * Saves the item

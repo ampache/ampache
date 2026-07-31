@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,8 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Label\LabelNameFilterInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
@@ -35,42 +35,36 @@ use Ampache\Repository\SongRepositoryInterface;
  * This is the class responsible for handling the Label object
  * it is related to the label table in the database.
  */
-class Label extends database_object implements library_item
+class Label extends database_object implements
+    library_item,
+    container_item,
+    displayable_item
 {
-    protected const DB_TABLENAME = 'label';
+    protected const string DB_TABLENAME = 'label';
 
-    public int $id = 0;
-
-    public ?string $name = null;
-
-    public ?string $category = null;
-
-    public ?string $summary = null;
-
+    public bool $active     = true;
     public ?string $address = null;
 
-    public ?string $email = null;
-
-    public ?string $website = null;
-
-    public ?int $user = null;
-
-    public ?int $creation_date = null;
-
-    public ?string $mbid = null; // MusicBrainz ID
-
-    public ?string $country = null;
-
-    public bool $active;
-
-    public ?string $link = null;
+    /** @var int[] $albums */
+    public array $albums = [];
 
     /** @var int[] $artists */
     public array $artists = [];
 
+    public ?string $category   = null;
+    public ?string $country    = null;
+    public ?int $creation_date = null;
+    public ?string $email      = null;
+    public int $id             = 0;
+    public ?string $link       = null;
+    public ?string $mbid       = null; // MusicBrainz ID
+    public ?string $name       = null;
+    public ?string $summary    = null;
+    public ?int $user          = null;
+    public ?string $website    = null;
+    private ?int $album_count  = null;
     private ?int $artist_count = null;
-
-    private ?string $f_link = null;
+    private ?string $f_link    = null;
 
     /**
      * __construct
@@ -81,242 +75,19 @@ class Label extends database_object implements library_item
             return;
         }
 
-        $info = $this->get_info($label_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
-    }
-
-    public function getId(): int
-    {
-        return (int)($this->id ?? 0);
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
-    /**
-     * display_art
-     * @param array{width: int, height: int} $size
-     */
-    public function display_art(array $size, bool $force = false): void
-    {
-        if ($this->has_art() || $force) {
-            Art::display('label', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
-        }
-    }
-
-    public function has_art(): bool
-    {
-        return Art::has_db($this->id, 'label');
-    }
-
-    /**
-     * @return array{artist: list<array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        $medias  = [];
-        $artists = $this->get_artists();
-        foreach ($artists as $artist_id) {
-            $medias[] = [
-                'object_type' => LibraryItemEnum::ARTIST,
-                'object_id' => $artist_id
-            ];
-        }
-
-        return ['artist' => $medias];
-    }
-
-    public function get_default_art_kind(): string
-    {
-        return 'default';
-    }
-
-    /**
-     * get_description
-     */
-    public function get_description(): string
-    {
-        return $this->summary ?? '';
-    }
-
-    /**
-     * get_fullname
-     */
-    public function get_fullname(): ?string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get item link.
-     */
-    public function get_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->link === null) {
-            $web_path = AmpConfig::get_web_path();
-
-            $this->link = $web_path . '/labels.php?action=show&label=' . $this->id;
-        }
-
-        return $this->link ?? '';
-    }
-
-    /**
-     * Get item f_link.
-     */
-    public function get_f_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
-        }
-
-        return $this->f_link;
-    }
-
-    /**
-     * Return a formatted link to the parent object (if appliccable)
-     */
-    public function get_f_parent_link(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * Get item f_time or f_time_h.
-     */
-    public function get_f_time(): string
-    {
-        return '';
-    }
-
-    /**
-     * Get item keywords for metadata searches.
-     * @return array<string, array{important: bool, label: string, value: string}>
-     */
-    public function get_keywords(): array
-    {
-        return [
-            'label' => [
-                'important' => true,
-                'label' => T_('Label'),
-                'value' => (string)$this->get_fullname()
-            ]
-        ];
-    }
-
-    /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_medias(?string $filter_type = null): array
-    {
-        $medias = [];
-        if ($filter_type === null || $filter_type === 'song') {
-            $songs = $this->getSongRepository()->getByLabel((string)$this->name);
-            foreach ($songs as $song_id) {
-                $medias[] = ['object_type' => LibraryItemEnum::SONG, 'object_id' => $song_id];
-            }
-        }
-
-        return $medias;
-    }
-
-    /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
-     */
-    public function get_parent(): ?array
-    {
-        return null;
-    }
-
-    /**
-     * get_user_owner
-     */
-    public function get_user_owner(): ?int
-    {
-        return $this->user;
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        $search                    = [];
-        $search['type']            = "artist";
-        $search['rule_0_input']    = $name;
-        $search['rule_0_operator'] = 4;
-        $search['rule_0']          = "title";
-        $artists                   = Search::run($search);
-
-        $childrens = [];
-        foreach ($artists as $artist_id) {
-            $childrens[] = [
-                'object_type' => LibraryItemEnum::ARTIST,
-                'object_id' => $artist_id
-            ];
-        }
-
-        return $childrens;
-    }
-
-    /**
-     * update
-     */
-    public function update(array $data): ?int
-    {
-        // duplicate name check
-        if (self::getLabelRepository()->lookup($data['name'], $this->id) !== 0) {
-            return null;
-        }
-
-        $name     = $data['name'] ?? $this->name;
-        $mbid     = $data['mbid'] ?? null;
-        $category = $data['category'] ?? null;
-        $summary  = $data['summary'] ?? null;
-        $address  = $data['address'] ?? null;
-        $country  = $data['country'] ?? null;
-        $email    = $data['email'] ?? null;
-        $website  = (isset($data['website']))
-            ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
-            : null;
-        $active = (isset($data['active']))
-            ? (bool)$data['active']
-            : $this->active;
-
-        $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";
-        Dba::write($sql, [$name, $mbid, strtolower((string) $category), $summary, $address, $country, $email, $website, $active, $this->id]);
-
-        return $this->id;
-    }
-
-    /**
-     * helper
-     */
-    public static function helper(string $name): ?int
-    {
-        $label_data = [
-            'name' => $name,
-            'mbid' => null,
-            'category' => 'tag_generated',
-            'summary' => null,
-            'address' => null,
-            'country' => null,
-            'email' => null,
-            'website' => null,
-            'active' => 1,
-            'user' => 0,
-            'creation_date' => time(),
-        ];
-
-        return self::create($label_data);
+        $info                = $this->get_info($label_id, static::DB_TABLENAME);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->name          = $info['name'] ?? null;
+        $this->mbid          = $info['mbid'] ?? null;
+        $this->category      = $info['category'] ?? null;
+        $this->summary       = $info['summary'] ?? null;
+        $this->address       = $info['address'] ?? null;
+        $this->country       = $info['country'] ?? null;
+        $this->email         = $info['email'] ?? null;
+        $this->website       = $info['website'] ?? null;
+        $this->active        = (bool) ($info['active'] ?? true);
+        $this->user          = isset($info['user']) ? (int) $info['user'] : null;
+        $this->creation_date = isset($info['creation_date']) ? (int) $info['creation_date'] : null;
     }
 
     /**
@@ -328,59 +99,21 @@ class Label extends database_object implements library_item
             return null;
         }
 
-        $name          = $data['name'];
-        $mbid          = $data['mbid'];
-        $category      = $data['category'];
-        $summary       = $data['summary'];
-        $address       = $data['address'];
-        $country       = $data['country'];
-        $email         = $data['email'];
-        $website       = $data['website'];
-        $user          = $data['user'] ?? Core::get_global('user')?->getId();
-        $active        = $data['active'];
-        $creation_date = $data['creation_date'] ?? time();
+        // the add form only posts the fields it renders, so every key is optional here
+        $label                = new Label();
+        $label->name          = $data['name'];
+        $label->mbid          = $data['mbid'] ?? null;
+        $label->category      = $data['category'] ?? null;
+        $label->summary       = $data['summary'] ?? null;
+        $label->address       = $data['address'] ?? null;
+        $label->country       = $data['country'] ?? null;
+        $label->email         = $data['email'] ?? null;
+        $label->website       = $data['website'] ?? null;
+        $label->user          = $data['user'] ?? Core::get_global('user')?->getId();
+        $label->active        = (bool) ($data['active'] ?? true);
+        $label->creation_date = $data['creation_date'] ?? time();
 
-        $sql = "INSERT INTO `label` (`name`, `mbid`, `category`, `summary`, `address`, `country`, `email`, `website`, `user`, `active`, `creation_date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$name, $mbid, $category, $summary, $address, $country, $email, $website, $user, $active, $creation_date]);
-
-        $label_id = Dba::insert_id();
-        if (!$label_id) {
-            return null;
-        }
-
-        return (int)$label_id;
-    }
-
-    /**
-     * get_artists
-     * @return int[]
-     */
-    public function get_artists(): array
-    {
-        if (empty($this->artists)) {
-            $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
-            $db_results = Dba::read($sql, [$this->id]);
-            $results    = [];
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = (int)$row['artist'];
-            }
-
-            $this->artists = $results;
-        }
-
-        return $this->artists;
-    }
-
-    /**
-     * get_artist_count
-     */
-    public function get_artist_count(): int
-    {
-        if ($this->artist_count === null) {
-            $this->artist_count = count($this->get_artists());
-        }
-
-        return $this->artist_count;
+        return self::getLabelRepository()->persist($label);
     }
 
     /**
@@ -415,21 +148,52 @@ class Label extends database_object implements library_item
     }
 
     /**
+     * helper
+     */
+    public static function helper(string $name): ?int
+    {
+        // tags carry placeholders like `[no label]` for releases that never had a publisher
+        if (self::getLabelNameFilter()->isIgnored($name)) {
+            return null;
+        }
+
+        $label_data = [
+            'name' => $name,
+            'mbid' => null,
+            'category' => 'tag_generated',
+            'summary' => null,
+            'address' => null,
+            'country' => null,
+            'email' => null,
+            'website' => null,
+            'active' => 1,
+            'user' => 0,
+            'creation_date' => time(),
+        ];
+
+        return self::create($label_data);
+    }
+
+    /**
      * Migrate an object associate stats to a new object
      */
     public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         if ($object_type == 'artist') {
-            $sql    = "UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?";
-            $params = [$new_object_id, $old_object_id];
-
-            Dba::write($sql, $params);
+            self::getLabelRepository()->migrateArtist($old_object_id, $new_object_id);
+        } elseif ($object_type == 'album') {
+            self::getLabelRepository()->migrateAlbum($old_object_id, $new_object_id);
         }
     }
 
-    public function getMediaType(): LibraryItemEnum
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getLabelNameFilter(): LabelNameFilterInterface
     {
-        return LibraryItemEnum::LABEL;
+        global $dic;
+
+        return $dic->get(LabelNameFilterInterface::class);
     }
 
     /**
@@ -440,6 +204,234 @@ class Label extends database_object implements library_item
         global $dic;
 
         return $dic->get(LabelRepositoryInterface::class);
+    }
+
+    /**
+     * display_art
+     * @param array{width: int, height: int} $size
+     */
+    public function display_art(array $size, bool $force = false): void
+    {
+        if ($this->has_art() || $force) {
+            Art::display('label', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
+        }
+    }
+
+    /**
+     * get_album_count
+     */
+    public function get_album_count(): int
+    {
+        if ($this->album_count === null) {
+            $this->album_count = count($this->get_albums());
+        }
+
+        return $this->album_count;
+    }
+
+    /**
+     * get_albums
+     * @return int[]
+     */
+    public function get_albums(): array
+    {
+        if (empty($this->albums)) {
+            $this->albums = self::getLabelRepository()->getAlbums($this);
+        }
+
+        return $this->albums;
+    }
+
+    /**
+     * get_artist_count
+     */
+    public function get_artist_count(): int
+    {
+        if ($this->artist_count === null) {
+            $this->artist_count = count($this->get_artists());
+        }
+
+        return $this->artist_count;
+    }
+
+    /**
+     * get_artists
+     * @return int[]
+     */
+    public function get_artists(): array
+    {
+        if (empty($this->artists)) {
+            $this->artists = self::getLabelRepository()->getArtists($this);
+        }
+
+        return $this->artists;
+    }
+
+    public function get_default_art_kind(): string
+    {
+        return 'default';
+    }
+
+    /**
+     * get_description
+     */
+    public function get_description(): string
+    {
+        return $this->summary ?? '';
+    }
+
+    /**
+     * Get item f_link.
+     */
+    public function get_f_link(?string $title = null): string
+    {
+        // don't do anything if it's formatted
+        if ($this->f_link === null) {
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($title ?? $this->get_fullname());
+        }
+
+        return $this->f_link;
+    }
+
+    /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
+    }
+
+    /**
+     * get_fullname
+     */
+    public function get_fullname(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
+     */
+    public function get_keywords(): array
+    {
+        return [
+            'label' => [
+                'important' => true,
+                'label' => T_('Label'),
+                'value' => (string) $this->get_fullname()
+            ]
+        ];
+    }
+
+    /**
+     * Get item link.
+     */
+    public function get_link(): string
+    {
+        // don't do anything if it's formatted
+        if ($this->link === null) {
+            $web_path = AmpConfig::get_web_path();
+
+            $this->link = $web_path . '/labels.php?action=show&label=' . $this->id;
+        }
+
+        return $this->link ?? '';
+    }
+
+    /**
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function get_medias(?string $filter_type = null): array
+    {
+        $medias = [];
+        if ($filter_type === null || $filter_type === 'song') {
+            $songs = $this->getSongRepository()->getByLabel((string) $this->name);
+            foreach ($songs as $song_id) {
+                $medias[] = ['object_type' => LibraryItemEnum::SONG, 'object_id' => $song_id];
+            }
+        }
+
+        return $medias;
+    }
+
+    /**
+     * get_parent
+     * Return parent `object_type`, `object_id`; null otherwise.
+     */
+    public function get_parent(): ?array
+    {
+        return null;
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return '';
+    }
+
+    /**
+     * get_user_owner
+     */
+    public function get_user_owner(): ?int
+    {
+        return $this->user;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::LABEL;
+    }
+
+    public function has_art(): bool
+    {
+        return Art::has_db($this->id, 'label');
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
+    /**
+     * update
+     */
+    public function update(array $data): ?int
+    {
+        // duplicate name check
+        if (self::getLabelRepository()->lookup($data['name'], $this->id) !== 0) {
+            return null;
+        }
+
+        $this->name     = $data['name'] ?? $this->name;
+        $this->mbid     = $data['mbid'] ?? null;
+        $this->category = strtolower((string) ($data['category'] ?? null));
+        $this->summary  = $data['summary'] ?? null;
+        $this->address  = $data['address'] ?? null;
+        $this->country  = $data['country'] ?? null;
+        $this->email    = $data['email'] ?? null;
+        $this->website  = (isset($data['website']))
+            ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
+            : null;
+        $this->active = (isset($data['active']))
+            ? (bool) $data['active']
+            : $this->active;
+
+        self::getLabelRepository()->persist($this);
+
+        return $this->id;
     }
 
     /**

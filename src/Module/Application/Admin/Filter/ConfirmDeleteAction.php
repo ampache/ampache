@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -34,23 +34,16 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ConfirmDeleteAction extends AbstractFilterAction
 {
-    public const REQUEST_KEY = 'confirm_delete';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-    }
+        private readonly UiInterface $ui,
+        private readonly ConfigContainerInterface $configContainer,
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
@@ -59,9 +52,9 @@ final class ConfirmDeleteAction extends AbstractFilterAction
         // }
         $this->ui->showHeader();
 
-        $filter_id   = (int)($request->getQueryParams()['filter_id'] ?? 0);
+        $filter_id   = (int) ($request->getQueryParams()['filter_id'] ?? 0);
         $filter_name = $request->getQueryParams()['filter_name'];
-        if (Catalog::delete_catalog_filter($filter_id) !== false) {
+        if (Catalog::delete_catalog_filter($filter_id)) {
             Catalog::reset_user_filter($filter_id);
             $this->ui->showConfirmation(
                 T_('No Problem'),
@@ -72,7 +65,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
-                sprintf(T_('Couldn\'t delete this %s'), T_('Catalog Filter')),
+                sprintf(T_("Couldn't delete this %s"), T_('Catalog Filter')),
                 sprintf('%s/filter.php', $this->configContainer->getWebPath('/admin'))
             );
         }

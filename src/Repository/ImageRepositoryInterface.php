@@ -30,14 +30,9 @@ use Traversable;
 interface ImageRepositoryInterface
 {
     /**
-     * Get the object details for the art table
+     * Clear the image column (if you have the image on disk)
      */
-    public function getRawImage(
-        int $objectId,
-        string $objectType,
-        string $size,
-        string $mimeType
-    ): ?string;
+    public function deleteImage(int $imageId): void;
 
     /**
      * Get the object details for the art table
@@ -47,7 +42,12 @@ interface ImageRepositoryInterface
     public function findAllImage(): Traversable;
 
     /**
-     * Clear the image column (if you have the image on disk)
+     * Get the object details for the art table
      */
-    public function deleteImage(int $imageId): void;
+    public function getRawImage(
+        int $objectId,
+        string $objectType,
+        string $size,
+        string $mimeType,
+    ): ?string;
 }

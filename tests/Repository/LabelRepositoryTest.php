@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\Label;
 use DateTime;
 use PDO;
 use PDOStatement;
@@ -38,16 +39,115 @@ class LabelRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
-
     private LabelRepository $subject;
 
-    protected function setUp(): void
+    public function testAddArtistAssocAdds(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $labelId  = 666;
+        $artistId = 42;
+        $date     = new DateTime();
 
-        $this->subject = new LabelRepository(
-            $this->connection,
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)',
+                [$labelId, $artistId, $date->getTimestamp()]
+            );
+
+        $this->subject->addArtistAssoc($labelId, $artistId, $date);
+    }
+
+    public function testCollectGarbageDeletes(): void
+    {
+        // an association row names either an artist or an album, so each side is swept against its own table
+        $this->connection->expects(static::exactly(4))
+            ->method('query')
+            ->with(...self::withConsecutive(
+                ['DELETE FROM `label_asso` WHERE `label_asso`.`artist` IS NOT NULL AND `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'],
+                ['DELETE FROM `label_asso` WHERE `label_asso`.`album` IS NOT NULL AND `label_asso`.`album` NOT IN (SELECT `album`.`id` FROM `album`)'],
+                ['DELETE FROM `label_asso` WHERE `label_asso`.`label` NOT IN (SELECT `label`.`id` FROM `label`)'],
+                ['DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL'],
+            ));
+
+        $this->subject->collectGarbage();
+    }
+
+    public function testDeleteDeletes(): void
+    {
+        $labelId = 666;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `label` WHERE `id` = ?',
+                [$labelId]
+            );
+
+        $this->subject->delete($labelId);
+    }
+
+    public function testGetAlbumsReturnsTheAssociatedIds(): void
+    {
+        $label  = $this->createMock(Label::class);
+        $result = $this->createMock(PDOStatement::class);
+
+        $label->method('getId')
+            ->willReturn(666);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `album` FROM `label_asso` WHERE `label` = ? AND `album` IS NOT NULL', [666])
+            ->willReturn($result);
+
+        $result->expects(static::exactly(3))
+            ->method('fetchColumn')
+            ->willReturnOnConsecutiveCalls(1, 2, false);
+
+        static::assertSame([1, 2], $this->subject->getAlbums($label));
+    }
+
+    public function testGetAllReturnsData(): void
+    {
+        $labelId   = 42;
+        $labelName = 'some-label';
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `id`, `name` FROM `label`')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(['id' => (string) $labelId, 'name' => $labelName], false);
+
+        self::assertSame(
+            $this->subject->getAll(),
+            [$labelId => $labelName]
         );
+    }
+
+    public function testGetArtistsReturnsTheAssociatedIds(): void
+    {
+        $label  = $this->createMock(Label::class);
+        $result = $this->createMock(PDOStatement::class);
+
+        $label->method('getId')
+            ->willReturn(666);
+
+        // an album row has a null artist, and fetching it would end the loop before the real ids arrive
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `artist` FROM `label_asso` WHERE `label` = ? AND `artist` IS NOT NULL', [666])
+            ->willReturn($result);
+
+        $result->expects(static::exactly(3))
+            ->method('fetchColumn')
+            ->willReturnOnConsecutiveCalls(1, 2, false);
+
+        static::assertSame([1, 2], $this->subject->getArtists($label));
     }
 
     public function testGetByArtistReturnsData(): void
@@ -71,38 +171,15 @@ class LabelRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => (string) $labelId, 'name' => $labelName], false);
 
-        static::assertSame(
+        self::assertSame(
             $this->subject->getByArtist($artistId),
-            [$labelId => $labelName]
-        );
-    }
-
-    public function testGetAllReturnsData(): void
-    {
-        $labelId   = 42;
-        $labelName = 'some-label';
-
-        $result = $this->createMock(PDOStatement::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with('SELECT `id`, `name` FROM `label`')
-            ->willReturn($result);
-
-        $result->expects(static::exactly(2))
-            ->method('fetch')
-            ->with(PDO::FETCH_ASSOC)
-            ->willReturn(['id' => (string) $labelId, 'name' => $labelName], false);
-
-        static::assertSame(
-            $this->subject->getAll(),
             [$labelId => $labelName]
         );
     }
 
     public function testLookupReturnsNegativeValueOnEmptyName(): void
     {
-        static::assertSame(
+        self::assertSame(
             -1,
             $this->subject->lookup(' ')
         );
@@ -118,7 +195,7 @@ class LabelRepositoryTest extends TestCase
             ->with('SELECT `id` FROM `label` WHERE `name` = ?', [$labelName])
             ->willReturn((string) $rowId);
 
-        static::assertSame(
+        self::assertSame(
             $rowId,
             $this->subject->lookup($labelName)
         );
@@ -134,10 +211,117 @@ class LabelRepositoryTest extends TestCase
             ->with('SELECT `id` FROM `label` WHERE `name` = ? AND `id` != ?', [$labelName, $labelId])
             ->willReturn(false);
 
-        static::assertSame(
+        self::assertSame(
             0,
             $this->subject->lookup($labelName, $labelId)
         );
+    }
+
+    public function testMigrateAlbumMovesTheAssociationsAndDropsPairingsTheTargetAlreadyHas(): void
+    {
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->with(...self::withConsecutive(
+                [
+                    'DELETE FROM `label_asso` WHERE `album` = ? AND `label` IN (SELECT `label` FROM (SELECT `label` FROM `label_asso` WHERE `album` = ?) AS `existing`)',
+                    [21, 33],
+                ],
+                [
+                    'UPDATE `label_asso` SET `album` = ? WHERE `album` = ?',
+                    [33, 21],
+                ],
+            ));
+
+        $this->subject->migrateAlbum(21, 33);
+    }
+
+    public function testMigrateArtistMovesTheAssociations(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?', [33, 21]);
+
+        $this->subject->migrateArtist(21, 33);
+    }
+
+    public function testPersistBindsAnInactiveLabelAsZeroRatherThanFalse(): void
+    {
+        $label = new Label();
+
+        $label->id     = 666;
+        $label->active = false;
+
+        // PDO binds a bool false as '' and MySQL rejects that for the tinyint column, taking the
+        // whole statement with it, so the flag has to reach the driver as an int
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::anything(),
+                static::callback(static fn(array $params): bool => $params[8] === 0)
+            );
+
+        $this->subject->persist($label);
+    }
+
+    public function testPersistInsertsANewLabelAndReturnsTheId(): void
+    {
+        $label = new Label();
+
+        $label->name          = 'some-name';
+        $label->user          = 42;
+        $label->active        = true;
+        $label->creation_date = 1234;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::stringContains('INSERT INTO `label`'),
+                ['some-name', null, null, null, null, null, null, null, 42, 1, 1234]
+            );
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(666);
+
+        static::assertSame(666, $this->subject->persist($label));
+    }
+
+    public function testPersistReturnsNullIfTheInsertYieldedNoId(): void
+    {
+        $label = new Label();
+
+        $label->active = false;
+
+        $this->connection->expects(static::once())
+            ->method('query');
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(0);
+
+        static::assertNull($this->subject->persist($label));
+    }
+
+    public function testPersistUpdatesAnExistingLabelAndReturnsNull(): void
+    {
+        $label = new Label();
+
+        $label->id       = 666;
+        $label->name     = 'some-name';
+        $label->category = 'some-category';
+        $label->active   = true;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::stringContains('UPDATE `label` SET `name` = ?'),
+                ['some-name', null, 'some-category', null, null, null, null, null, 1, 666]
+            );
+
+        $this->connection->expects(static::never())
+            ->method('getLastInsertedId');
+
+        static::assertNull($this->subject->persist($label));
     }
 
     public function testRemoveArtistAssocDeletes(): void
@@ -155,45 +339,12 @@ class LabelRepositoryTest extends TestCase
         $this->subject->removeArtistAssoc($labelId, $artistId);
     }
 
-    public function testAddArtistAssocAdds(): void
+    protected function setUp(): void
     {
-        $labelId  = 666;
-        $artistId = 42;
-        $date     = new DateTime();
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
 
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)',
-                [$labelId, $artistId, $date->getTimestamp()]
-            );
-
-        $this->subject->addArtistAssoc($labelId, $artistId, $date);
-    }
-
-    public function testDeleteDeletes(): void
-    {
-        $labelId = 666;
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `label` WHERE `id` = ?',
-                [$labelId]
-            );
-
-        $this->subject->delete($labelId);
-    }
-
-    public function testCollectGarbageDeletes(): void
-    {
-        $this->connection->expects(static::exactly(2))
-            ->method('query')
-            ->with(...self::withConsecutive(
-                ['DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'],
-                ['DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL'],
-            ));
-
-        $this->subject->collectGarbage();
+        $this->subject = new LabelRepository(
+            $this->connection,
+        );
     }
 }

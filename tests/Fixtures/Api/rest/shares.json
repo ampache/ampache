@@ -1,0 +1,40 @@
+{
+    "total_count": 10,
+    "md5": "eb0b4323f66032013490aeca80aea6f5",
+    "share": [
+        {
+            "id": "129",
+            "name": "kids",
+            "owner": "apiuser",
+            "allow_stream": true,
+            "allow_download": true,
+            "creation_date": 1598223988,
+            "lastvisit_date": 1731460205,
+            "object_type": "playlist",
+            "object_id": "2069",
+            "expire_days": 0,
+            "max_counter": 0,
+            "counter": 4,
+            "secret": "ur9N4IUl",
+            "public_url": null,
+            "description": "Playlist - hudson"
+        },
+        {
+            "id": "189",
+            "name": "Drugfuck",
+            "owner": "apiuser",
+            "allow_stream": true,
+            "allow_download": true,
+            "creation_date": 1606090048,
+            "lastvisit_date": 1711069344,
+            "object_type": "song",
+            "object_id": "956909",
+            "expire_days": 0,
+            "max_counter": 0,
+            "counter": 21,
+            "secret": "k7145JmO",
+            "public_url": null,
+            "description": "Drugfuck"
+        }
+    ]
+}

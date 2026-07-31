@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class PvmsgQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'alpha_match',
         'not_starts_with',
         'regex_match',
@@ -40,6 +40,9 @@ final class PvmsgQuery implements QueryInterface
         'user',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `user_pvmsg` ";
+    protected string $select = "`user_pvmsg`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'creation_date',
@@ -47,20 +50,6 @@ final class PvmsgQuery implements QueryInterface
         'subject',
         'to_user',
     ];
-
-    protected string $select = "`user_pvmsg`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `user_pvmsg` ";
-
-    /**
-     * get_select
-     *
-     * This method returns the columns a query will user for SELECT
-     */
-    public function get_select(): string
-    {
-        return $this->select;
-    }
 
     /**
      * get_base_sql
@@ -70,6 +59,16 @@ final class PvmsgQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_select
+     *
+     * This method returns the columns a query will user for SELECT
+     */
+    public function get_select(): string
+    {
+        return $this->select;
     }
 
     /**
@@ -103,11 +102,13 @@ final class PvmsgQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `user_pvmsg`.`subject` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `user_pvmsg`.`subject` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `user_pvmsg`.`subject` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -130,28 +131,18 @@ final class PvmsgQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
-        switch ($field) {
-            case 'creation_date':
-            case 'id':
-            case 'is_read':
-            case 'subject':
-            case 'to_user':
-                $sql = "`user_pvmsg`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'creation_date', 'id', 'is_read', 'subject', 'to_user' => sprintf('`user_pvmsg`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

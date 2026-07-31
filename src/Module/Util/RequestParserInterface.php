@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -26,14 +28,14 @@ namespace Ampache\Module\Util;
 interface RequestParserInterface
 {
     /**
-     * Return a $_REQUEST variable instead of calling directly
-     */
-    public function getFromRequest(string $variable): string;
-
-    /**
      * Return a $_POST variable instead of calling directly
      */
     public function getFromPost(string $variable): string;
+
+    /**
+     * Return a $_REQUEST variable instead of calling directly
+     */
+    public function getFromRequest(string $variable): string;
 
     /**
      * Check if the form-submit is valid

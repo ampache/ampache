@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,29 +36,16 @@ use Ampache\Repository\Model\Search;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SearchAction implements ApplicationActionInterface
+final readonly class SearchAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'search';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private MissingArtistFinderInterface $missingArtistFinder;
+    public const string REQUEST_KEY = 'search';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        MissingArtistFinderInterface $missingArtistFinder
-    ) {
-        $this->requestParser       = $requestParser;
-        $this->ui                  = $ui;
-        $this->modelFactory        = $modelFactory;
-        $this->missingArtistFinder = $missingArtistFinder;
-    }
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private MissingArtistFinderInterface $missingArtistFinder,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -67,8 +54,8 @@ final class SearchAction implements ApplicationActionInterface
         // set the browse type BEFORE running the search (for the search bar)
         $searchType = $this->requestParser->getFromRequest('type');
         $rule_1     = $this->requestParser->getFromRequest('rule_1');
-        if (empty($searchType)) {
-            $searchType = (in_array($rule_1, Search::VALID_TYPES))
+        if ($searchType === '' || $searchType === '0') {
+            $searchType = (in_array($rule_1, Search::VALID_TYPES, true))
                 ? str_replace('_name', ' ', $rule_1)
                 : 'song';
             // set the search type when you don't set one.
@@ -78,7 +65,7 @@ final class SearchAction implements ApplicationActionInterface
             }
         }
 
-        if ($rule_1 != 'missing_artist') {
+        if ($rule_1 !== 'missing_artist') {
             $browse = $this->modelFactory->createBrowse();
             require_once Ui::find_template('show_form_search.inc.php');
             require_once Ui::find_template('show_search_options.inc.php');

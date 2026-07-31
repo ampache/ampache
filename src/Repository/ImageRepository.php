@@ -36,34 +36,17 @@ use PDO;
  */
 final readonly class ImageRepository implements ImageRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
-     * Get the object details for the art table
+     * Clear the image column (if you have the image on disk)
      */
-    public function getRawImage(
-        int $objectId,
-        string $objectType,
-        string $size,
-        string $mimeType
-    ): ?string {
-        $result = $this->connection->fetchOne(
-            'SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?',
-            [
-                $objectId,
-                $objectType,
-                $size,
-                $mimeType
-            ]
+    public function deleteImage(int $imageId): void
+    {
+        $this->connection->query(
+            'UPDATE `image` SET `image` = NULL WHERE `id` = ?',
+            [$imageId]
         );
-
-        if ($result === false) {
-            return null;
-        }
-
-        return (string) $result;
     }
 
     /**
@@ -89,13 +72,28 @@ final readonly class ImageRepository implements ImageRepositoryInterface
     }
 
     /**
-     * Clear the image column (if you have the image on disk)
+     * Get the object details for the art table
      */
-    public function deleteImage(int $imageId): void
-    {
-        $this->connection->query(
-            'UPDATE `image` SET `image` = NULL WHERE `id` = ?',
-            [$imageId]
+    public function getRawImage(
+        int $objectId,
+        string $objectType,
+        string $size,
+        string $mimeType,
+    ): ?string {
+        $result = $this->connection->fetchOne(
+            'SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?',
+            [
+                $objectId,
+                $objectType,
+                $size,
+                $mimeType
+            ]
         );
+
+        if ($result === false) {
+            return null;
+        }
+
+        return (string) $result;
     }
 }

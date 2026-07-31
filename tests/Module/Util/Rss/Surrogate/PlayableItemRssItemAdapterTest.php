@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Surrogate;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,123 +35,10 @@ use PHPUnit\Framework\TestCase;
 class PlayableItemRssItemAdapterTest extends TestCase
 {
     private LibraryItemLoaderInterface&MockObject $libraryItemLoader;
-
     private ModelFactoryInterface&MockObject $modelFactory;
-
-    private playable_item&MockObject $playable;
-
-    private User&MockObject $user;
-
+    private library_item&MockObject $playable;
     private PlayableItemRssItemAdapter $subject;
-
-    protected function setUp(): void
-    {
-        $this->libraryItemLoader = $this->createMock(LibraryItemLoaderInterface::class);
-        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
-        $this->playable          = $this->createMock(playable_item::class);
-        $this->user              = $this->createMock(User::class);
-
-        $this->subject = new PlayableItemRssItemAdapter(
-            $this->libraryItemLoader,
-            $this->modelFactory,
-            $this->playable,
-            $this->user,
-        );
-    }
-
-    public function testGetTitleReturnsValue(): void
-    {
-        $title = 'some-title';
-
-        $this->playable->expects(static::once())
-            ->method('get_fullname')
-            ->willReturn($title);
-
-        static::assertSame(
-            $title,
-            $this->subject->getTitle()
-        );
-    }
-
-    public function testHasImageReturnsFalseIfNotAvailable(): void
-    {
-        $this->playable->expects(static::once())
-            ->method('has_art')
-            ->willReturn(false);
-
-        static::assertFalse(
-            $this->subject->hasImage()
-        );
-    }
-
-    public function testHasImageReturnsTrueIfAvailable(): void
-    {
-        $this->playable->expects(static::once())
-            ->method('has_art')
-            ->willReturn(true);
-
-        static::assertTrue(
-            $this->subject->hasImage()
-        );
-    }
-
-    public function testHasSummaryReturnsTrueIfAvailable(): void
-    {
-        $this->playable->expects(static::once())
-            ->method('get_description')
-            ->willReturn('snafu');
-
-        static::assertTrue(
-            $this->subject->hasSummary()
-        );
-    }
-
-    public function testHasSummaryReturnsFalseIfNotAvailable(): void
-    {
-        $this->playable->expects(static::once())
-            ->method('get_description')
-            ->willReturn('');
-
-        static::assertFalse(
-            $this->subject->hasSummary()
-        );
-    }
-
-    public function testGetSummaryReturnsValue(): void
-    {
-        $value = 'snafu';
-
-        $this->playable->expects(static::once())
-            ->method('get_description')
-            ->willReturn($value);
-
-        static::assertSame(
-            $value,
-            $this->subject->getSummary()
-        );
-    }
-
-    public function testHasOwnerReturnsTrueIfAvailable(): void
-    {
-        $this->playable->expects(static::once())
-            ->method('get_user_owner')
-            ->willReturn(666);
-
-        static::assertTrue(
-            $this->subject->hasOwner()
-        );
-    }
-
-    public function testHasOwnerReturnsFalseIfNotAvailable(): void
-    {
-        $this->playable->expects(static::once())
-            ->method('get_user_owner')
-            ->willReturn(null);
-
-        static::assertFalse(
-            $this->subject->hasOwner()
-        );
-    }
+    private User&MockObject $user;
 
     public function testGetOwnerNameReturnsValue(): void
     {
@@ -173,9 +60,118 @@ class PlayableItemRssItemAdapterTest extends TestCase
             ->method('get_fullname')
             ->willReturn($name);
 
-        static::assertSame(
+        self::assertSame(
             $name,
             $this->subject->getOwnerName()
+        );
+    }
+
+    public function testGetSummaryReturnsValue(): void
+    {
+        $value = 'snafu';
+
+        $this->playable->expects(static::once())
+            ->method('get_description')
+            ->willReturn($value);
+
+        self::assertSame(
+            $value,
+            $this->subject->getSummary()
+        );
+    }
+
+    public function testGetTitleReturnsValue(): void
+    {
+        $title = 'some-title';
+
+        $this->playable->expects(static::once())
+            ->method('get_fullname')
+            ->willReturn($title);
+
+        self::assertSame(
+            $title,
+            $this->subject->getTitle()
+        );
+    }
+
+    public function testHasImageReturnsFalseIfNotAvailable(): void
+    {
+        $this->playable->expects(static::once())
+            ->method('has_art')
+            ->willReturn(false);
+
+        self::assertFalse(
+            $this->subject->hasImage()
+        );
+    }
+
+    public function testHasImageReturnsTrueIfAvailable(): void
+    {
+        $this->playable->expects(static::once())
+            ->method('has_art')
+            ->willReturn(true);
+
+        self::assertTrue(
+            $this->subject->hasImage()
+        );
+    }
+
+    public function testHasOwnerReturnsFalseIfNotAvailable(): void
+    {
+        $this->playable->expects(static::once())
+            ->method('get_user_owner')
+            ->willReturn(null);
+
+        self::assertFalse(
+            $this->subject->hasOwner()
+        );
+    }
+
+    public function testHasOwnerReturnsTrueIfAvailable(): void
+    {
+        $this->playable->expects(static::once())
+            ->method('get_user_owner')
+            ->willReturn(666);
+
+        self::assertTrue(
+            $this->subject->hasOwner()
+        );
+    }
+
+    public function testHasSummaryReturnsFalseIfNotAvailable(): void
+    {
+        $this->playable->expects(static::once())
+            ->method('get_description')
+            ->willReturn('');
+
+        self::assertFalse(
+            $this->subject->hasSummary()
+        );
+    }
+
+    public function testHasSummaryReturnsTrueIfAvailable(): void
+    {
+        $this->playable->expects(static::once())
+            ->method('get_description')
+            ->willReturn('snafu');
+
+        self::assertTrue(
+            $this->subject->hasSummary()
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->libraryItemLoader = $this->createMock(LibraryItemLoaderInterface::class);
+        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
+        $this->playable          = $this->createMock(library_item::class);
+        $this->user              = $this->createMock(User::class);
+
+        $this->subject = new PlayableItemRssItemAdapter(
+            $this->libraryItemLoader,
+            $this->modelFactory,
+            $this->playable,
+            $this->user,
         );
     }
 }

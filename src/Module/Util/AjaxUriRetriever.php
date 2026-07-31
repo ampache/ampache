@@ -27,14 +27,13 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
 
-final class AjaxUriRetriever implements AjaxUriRetrieverInterface
+final readonly class AjaxUriRetriever implements AjaxUriRetrieverInterface
 {
-    private ConfigContainerInterface $configContainer;
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
+    public function getAjaxServerUri(): string
+    {
+        return $this->configContainer->getWebPath('/server');
     }
 
     public function getAjaxUri(): string
@@ -43,10 +42,5 @@ final class AjaxUriRetriever implements AjaxUriRetrieverInterface
             '%s/ajax.server.php',
             $this->getAjaxServerUri()
         );
-    }
-
-    public function getAjaxServerUri(): string
-    {
-        return $this->configContainer->getWebPath('/server');
     }
 }

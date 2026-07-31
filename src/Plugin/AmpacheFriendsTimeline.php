@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -35,27 +35,34 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Override;
 
 class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeInterface
 {
-    public string $name = 'Friends Timeline';
-
+    #[Override]
     public string $categories = 'home';
 
+    #[Override]
     public string $description = 'Friends Timeline on homepage';
 
-    public string $url = '';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000002';
-
+    #[Override]
     public string $min_ampache = '370040';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'Friends Timeline';
+
+    #[Override]
+    public string $url = '';
+
+    #[Override]
+    public string $version = '000002';
 
     // These are internal settings used by this class, run this->load to fill them out
     private int $maxitems = 10;
-
-    private int $order = 0;
+    private int $order    = 0;
 
     /**
      * Constructor
@@ -66,49 +73,6 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
     }
 
     /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        if (!Preference::insert('ftl_max_items', T_('Friends timeline max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return Preference::insert('ftl_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('ftl_max_items') &&
-            Preference::delete('ftl_order')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
-            return false;
-        }
-
-        if ($from_version < (int)$this->version) {
-            Preference::insert('ftl_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
-        }
-
-        return true;
-    }
-
-    /**
      * display_home
      * This display the module in home page
      */
@@ -116,7 +80,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
     {
         if (AmpConfig::get('sociable')) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
             if ($user_id !== 0) {
                 $divString = ($this->order > 0)
                     ? '<div class="ftl" style="order: ' . $this->order . '">'
@@ -147,6 +111,19 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
     }
 
     /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        if (!Preference::insert('ftl_max_items', T_('Friends timeline max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('ftl_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+    }
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
@@ -155,33 +132,57 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->maxitems = (int)($data['ftl_max_items']);
+        $this->maxitems = (int) ($data['ftl_max_items']);
         if ($this->maxitems < 1) {
             $this->maxitems = 10;
         }
 
-        $this->order = (int)($data['ftl_order'] ?? 0);
+        $this->order = (int) ($data['ftl_order'] ?? 0);
 
         return true;
     }
 
     /**
-     * @deprecated
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
      */
-    private function getUseractivityRepository(): UserActivityRepositoryInterface
+    public function uninstall(): bool
     {
-        global $dic;
-
-        return $dic->get(UserActivityRepositoryInterface::class);
+        return (
+            Preference::delete('ftl_max_items')
+            && Preference::delete('ftl_order')
+        );
     }
 
     /**
-     * @deprecated
+     * upgrade
+     * This is a recommended plugin function
      */
+    public function upgrade(): bool
+    {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version === 0) {
+            return false;
+        }
+
+        if ($from_version < (int) $this->version) {
+            Preference::insert('ftl_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+        }
+
+        return true;
+    }
+
     private function getUserActivityRenderer(): UserActivityRendererInterface
     {
         global $dic;
 
         return $dic->get(UserActivityRendererInterface::class);
+    }
+
+    private function getUseractivityRepository(): UserActivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityRepositoryInterface::class);
     }
 }

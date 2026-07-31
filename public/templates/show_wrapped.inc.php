@@ -21,6 +21,8 @@
  *
  */
 
+// show_wrapped.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
@@ -35,7 +37,7 @@ use Ampache\Repository\Model\Userflag;
 /** @var string $year */
 
 $threshold      = AmpConfig::get('stats_threshold', 7);
-$limit          = (int)AmpConfig::get('popular_threshold', 10);
+$limit          = (int) AmpConfig::get('popular_threshold', 10);
 $catalog_filter = AmpConfig::get('catalog_filter'); ?>
 <h3 class="box-title"><?php echo T_('Ampache Wrapped') . '&nbsp;(' . $year . ')'; ?></h3>
 <dl class="media_details">

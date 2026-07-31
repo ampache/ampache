@@ -43,27 +43,27 @@ final readonly class WantedManager implements WantedManagerInterface
     public function __construct(
         private WantedRepositoryInterface $wantedRepository,
         private MusicBrainz $musicBrainz,
-        private PluginRetrieverInterface $pluginRetriever
-    ) {
-    }
+        private PluginRetrieverInterface $pluginRetriever,
+    ) {}
 
     /**
-     * Delete a wanted release by mbid.
-     * @throws Exception
+     * Accept a wanted request.
      */
-    public function delete(
-        string $mbid,
-        ?User $user = null
+    public function accept(
+        Wanted $wanted,
+        User $user,
     ): void {
-        if ($this->wantedRepository->getAcceptedCount() > 0) {
-            /** @var object{error?: string, release-group: string} $album */
-            $album = $this->musicBrainz->lookup('release', $mbid, ['release-groups']);
+        if ($user->has_access(AccessLevelEnum::MANAGER)) {
+            $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
+            Dba::write($sql, [$wanted->getMusicBrainzId()]);
+            $wanted->accepted = 1;
 
-            if ($album !== null && $album->{'release-group'}) {
-                $this->wantedRepository->deleteByMusicbrainzId(
-                    print_r($album->{'release-group'}, true),
-                    $user
-                );
+            foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::WANTED_LOOKUP, $user) as $plugin) {
+                debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin::class, 5);
+
+                if ($plugin->_plugin instanceof PluginProcessWantedInterface) {
+                    $plugin->_plugin->process_wanted($wanted);
+                }
             }
         }
     }
@@ -77,7 +77,7 @@ final readonly class WantedManager implements WantedManagerInterface
         ?int $artist,
         ?string $artist_mbid,
         string $name,
-        int $year
+        int $year,
     ): void {
         Dba::write(
             "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -85,7 +85,7 @@ final readonly class WantedManager implements WantedManagerInterface
         );
 
         if (AmpConfig::get('wanted_auto_accept', false)) {
-            $wanted_id = (int)Dba::insert_id();
+            $wanted_id = (int) Dba::insert_id();
             $wanted    = new Wanted($wanted_id);
 
             $this->accept($wanted, $user);
@@ -95,23 +95,22 @@ final readonly class WantedManager implements WantedManagerInterface
     }
 
     /**
-     * Accept a wanted request.
+     * Delete a wanted release by mbid.
+     * @throws Exception
      */
-    public function accept(
-        Wanted $wanted,
-        User $user
+    public function delete(
+        string $mbid,
+        ?User $user = null,
     ): void {
-        if ($user->has_access(AccessLevelEnum::MANAGER)) {
-            $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
-            Dba::write($sql, [$wanted->getMusicBrainzId()]);
-            $wanted->accepted = 1;
+        if ($this->wantedRepository->getAcceptedCount() > 0) {
+            /** @var object{error?: string, release-group: string} $album */
+            $album = $this->musicBrainz->lookup('release', $mbid, ['release-groups']);
 
-            foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::WANTED_LOOKUP, $user) as $plugin) {
-                debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin::class, 5);
-
-                if ($plugin->_plugin instanceof PluginProcessWantedInterface) {
-                    $plugin->_plugin->process_wanted($wanted);
-                }
+            if ($album->{'release-group'}) {
+                $this->wantedRepository->deleteByMusicbrainzId(
+                    print_r($album->{'release-group'}, true),
+                    $user
+                );
             }
         }
     }

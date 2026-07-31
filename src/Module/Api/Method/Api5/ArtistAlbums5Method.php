@@ -25,17 +25,32 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-final class ArtistAlbums5Method
+/**
+ * Returns the albums of a single artist.
+ *
+ * Version 5 reads the albums straight from the album repository and ignores the `sort` and `cond`
+ * parameters that the later versions browse with, so it keeps a method of its own.
+ */
+final class ArtistAlbums5Method implements MethodInterface
 {
-    public const ACTION = 'artist_albums';
+    public const string ACTION = 'artist_albums';
+
+    public function __construct(
+        private AlbumRepositoryInterface $albumRepository,
+        private ModelFactoryInterface $modelFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * artist_albums
@@ -48,59 +63,55 @@ final class ArtistAlbums5Method
      * limit = (integer) //optional
      *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     album_artist?: int,
      *     offset?: int,
      *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function artist_albums(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('filter', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
         }
-        $object_id = (int) $input['filter'];
-        $artist    = new Artist($object_id);
+
+        $objectId = (int) $input['filter'];
+
+        $artist = $this->modelFactory->createArtist($objectId);
         if ($artist->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
-
-            return false;
-        }
-        $results = self::getAlbumRepository()->getAlbumByArtist($object_id);
-        if (empty($results)) {
-            Api5::empty('album', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException((string) $objectId);
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::albums($results, [], $user, $input['auth']);
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::albums($results, [], $user, $input['auth']);
+        $results = $this->albumRepository->getAlbumByArtist($objectId);
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'album')
+                )
+            );
         }
 
-        return true;
-    }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->albums($apiVersion, $results, [], $user, $input['auth'])
+            )
+        );
     }
 }

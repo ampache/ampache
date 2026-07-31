@@ -42,33 +42,12 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowEditActionTest extends TestCase
 {
-    private UiInterface&MockObject $ui;
-
-    private ShoutObjectLoaderInterface&MockObject $shoutObjectLoader;
-
-    private ShoutRepositoryInterface&MockObject $shoutRepository;
-
-    private ShowEditAction $subject;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
     private ServerRequestInterface&MockObject $request;
-
-    protected function setUp(): void
-    {
-        $this->ui                = $this->createMock(UiInterface::class);
-        $this->shoutObjectLoader = $this->createMock(ShoutObjectLoaderInterface::class);
-        $this->shoutRepository   = $this->createMock(ShoutRepositoryInterface::class);
-
-        $this->subject = new ShowEditAction(
-            $this->ui,
-            $this->shoutObjectLoader,
-            $this->shoutRepository,
-        );
-
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-    }
+    private ShoutObjectLoaderInterface&MockObject $shoutObjectLoader;
+    private ShoutRepositoryInterface&MockObject $shoutRepository;
+    private ShowEditAction $subject;
+    private UiInterface&MockObject $ui;
 
     public function testRunErrorsIfAccessItDenied(): void
     {
@@ -78,18 +57,6 @@ class ShowEditActionTest extends TestCase
             ->method('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(false);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
-
-    public function testRunErrorsIfShoutWasNotFound(): void
-    {
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->willReturn(true);
-
-        static::expectException(ObjectNotFoundException::class);
 
         $this->subject->run($this->request, $this->gatekeeper);
     }
@@ -154,6 +121,18 @@ class ShowEditActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
+    public function testRunErrorsIfShoutWasNotFound(): void
+    {
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->willReturn(true);
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
     public function testRunRenders(): void
     {
         $shoutId = 666;
@@ -203,5 +182,21 @@ class ShowEditActionTest extends TestCase
             ->method('showFooter');
 
         $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui                = $this->createMock(UiInterface::class);
+        $this->shoutObjectLoader = $this->createMock(ShoutObjectLoaderInterface::class);
+        $this->shoutRepository   = $this->createMock(ShoutRepositoryInterface::class);
+
+        $this->subject = new ShowEditAction(
+            $this->ui,
+            $this->shoutObjectLoader,
+            $this->shoutRepository,
+        );
+
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
     }
 }

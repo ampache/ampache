@@ -29,45 +29,30 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Smartlist;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class ShowPlaylistActionTest extends MockeryTestCase
 {
-    private UiInterface&MockInterface $ui;
-
-    private ModelFactoryInterface&MockInterface $modelFactory;
-
     private LoggerInterface&MockObject $logger;
-
+    private ModelFactoryInterface&MockInterface $modelFactory;
     private ?ShowAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->logger       = $this->createMock(LoggerInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->ui,
-            $this->logger,
-            $this->modelFactory
-        );
-    }
+    private UiInterface&MockInterface $ui;
 
     public function testRunDisplaysPlaylistSearchView(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $search     = $this->mock(Search::class);
+        $search     = $this->mock(Smartlist::class);
 
         $playlistId = 666;
         $objectIds  = [1, 2, 3];
 
-        $this->modelFactory->shouldReceive('createSearch')
+        $this->modelFactory->shouldReceive('createSmartlist')
             ->with($playlistId)
             ->once()
             ->andReturn($search);
@@ -107,6 +92,20 @@ class ShowPlaylistActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui           = $this->mock(UiInterface::class);
+        $this->logger       = $this->createMock(LoggerInterface::class);
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->ui,
+            $this->logger,
+            $this->modelFactory
         );
     }
 }

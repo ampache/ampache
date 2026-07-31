@@ -36,48 +36,41 @@ class BookmarkRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface $connection;
-
     private BookmarkRepository $subject;
 
-    protected function setUp(): void
+    public function testCollectGarbageCollects(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->connection->expects(static::exactly(3))
+            ->method('query')
+            ->with(...self::withConsecutive(
+                [
+                    "DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `song` ON `song`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = 'song' AND `song`.`id` IS NULL;",
+                ],
+                [
+                    "DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `video` ON `video`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = 'video' AND `video`.`id` IS NULL;",
+                ],
+                [
+                    "DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = 'podcast_episode' AND `podcast_episode`.`id` IS NULL;",
+                ]
+            ));
 
-        $this->subject = new BookmarkRepository(
-            $this->connection
-        );
+        $this->subject->collectGarbage();
     }
 
-    public function testGetByUserReturnsListOfValues(): void
+    public function testDeleteDeletesBookmark(): void
     {
-        $user   = $this->createMock(User::class);
-        $result = $this->createMock(PDOStatement::class);
-
-        $userId     = 666;
-        $bookmarkId = 42;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
+        $bookmarkId = 666;
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `id` FROM `bookmark` WHERE `user` = ?',
+                'DELETE FROM `bookmark` WHERE `id` = ?',
                 [
-                    $userId
+                    $bookmarkId
                 ]
-            )
-            ->willReturn($result);
+            );
 
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $bookmarkId, false);
-
-        static::assertSame(
-            [$bookmarkId],
-            $this->subject->getByUser($user)
-        );
+        $this->subject->delete($bookmarkId);
     }
 
     public function testGetByUserAndCommentReturnsValue(): void
@@ -108,45 +101,58 @@ class BookmarkRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $bookmarkId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$bookmarkId],
             $this->subject->getByUserAndComment($user, $comment)
         );
     }
 
-    public function testDeleteDeletesBookmark(): void
+    public function testGetByUserReturnsListOfValues(): void
     {
-        $bookmarkId = 666;
+        $user   = $this->createMock(User::class);
+        $result = $this->createMock(PDOStatement::class);
+
+        $userId     = 666;
+        $bookmarkId = 42;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'DELETE FROM `bookmark` WHERE `id` = ?',
+                'SELECT `id` FROM `bookmark` WHERE `user` = ?',
                 [
-                    $bookmarkId
+                    $userId
                 ]
-            );
+            )
+            ->willReturn($result);
 
-        $this->subject->delete($bookmarkId);
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $bookmarkId, false);
+
+        self::assertSame(
+            [$bookmarkId],
+            $this->subject->getByUser($user)
+        );
     }
 
-    public function testCollectGarbageCollects(): void
+    public function testMigrateMigrates(): void
     {
-        $this->connection->expects(static::exactly(3))
-            ->method('query')
-            ->with(...self::withConsecutive(
-                [
-                    'DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `song` ON `song`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = \'song\' AND `song`.`id` IS NULL;',
-                ],
-                [
-                    'DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `video` ON `video`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = \'video\' AND `video`.`id` IS NULL;',
-                ],
-                [
-                    'DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = \'podcast_episode\' AND `podcast_episode`.`id` IS NULL;',
-                ]
-            ));
+        $objectType  = 'some-type';
+        $oldObjectId = 666;
+        $newObjectId = 42;
 
-        $this->subject->collectGarbage();
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE IGNORE `bookmark` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?',
+                [$newObjectId, $oldObjectId, ucfirst($objectType)]
+            );
+
+        $this->subject->migrate($objectType, $oldObjectId, $newObjectId);
     }
 
     public function testUpdateUpdates(): void
@@ -169,19 +175,12 @@ class BookmarkRepositoryTest extends TestCase
         );
     }
 
-    public function testMigrateMigrates(): void
+    protected function setUp(): void
     {
-        $objectType  = 'some-type';
-        $oldObjectId = 666;
-        $newObjectId = 42;
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
 
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'UPDATE IGNORE `bookmark` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?',
-                [$newObjectId, $oldObjectId, ucfirst($objectType)]
-            );
-
-        $this->subject->migrate($objectType, $oldObjectId, $newObjectId);
+        $this->subject = new BookmarkRepository(
+            $this->connection
+        );
     }
 }

@@ -695,6 +695,18 @@ class Xml5_Data
     }
 
     /**
+     * set_count
+     *
+     * This sets the total count for any ampache transactions
+     *
+     * @param int|string $count Set the total count of your results
+     */
+    public static function set_count(int|string $count): void
+    {
+        self::$count = (int) $count;
+    }
+
+    /**
      * set_limit
      *
      * This sets the limit for any ampache transactions

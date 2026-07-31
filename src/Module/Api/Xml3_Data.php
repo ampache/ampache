@@ -62,9 +62,7 @@ class Xml3_Data
      *
      * We don't use this, as its really a static class
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * albums
@@ -309,24 +307,6 @@ class Xml3_Data
     }
 
     /**
-     * single_string
-     *
-     * This takes two values, first the key second the string
-     */
-    public static function single_string(string $key, string $string = ''): string
-    {
-        $final = Api::header();
-        if (!empty($string)) {
-            $final .= "\t<$key><![CDATA[" . $string . "]]></$key>";
-        } else {
-            $final .= "\t<$key />";
-        }
-        $final .= Api::footer();
-
-        return $final;
-    }
-
-    /**
      * songs
      *
      * This returns an xml document from an array of song ids
@@ -384,6 +364,16 @@ class Xml3_Data
         }
 
         return Api::output_xml($string, $full_xml);
+    }
+
+    /**
+     * success
+     *
+     * Return xml success with optional message
+     */
+    public static function success(): string
+    {
+        return Api::output_xml("\t<success />");
     }
 
     /**

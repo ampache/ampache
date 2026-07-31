@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,31 +37,23 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SendAction implements ApplicationActionInterface
+final readonly class SendAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'send';
-
-    private ConfigContainerInterface $configContainer;
-
-    private NewPasswordSenderInterface $newPasswordSender;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'send';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        NewPasswordSenderInterface $newPasswordSender,
-        UiInterface $ui
-    ) {
-        $this->configContainer   = $configContainer;
-        $this->newPasswordSender = $newPasswordSender;
-        $this->ui                = $ui;
-    }
+        private ConfigContainerInterface $configContainer,
+        private NewPasswordSenderInterface $newPasswordSender,
+        private UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $allowLostPassword = $this->configContainer->get(ConfigurationKeyEnum::ALLOW_LOST_PASSWORD);
         if (
-            !Mailer::is_mail_enabled() ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            !Mailer::is_mail_enabled()
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || ($allowLostPassword !== null && !make_bool($allowLostPassword))
         ) {
             throw new AccessDeniedException();
         }
@@ -72,6 +64,7 @@ final class SendAction implements ApplicationActionInterface
             $current_ip = Core::get_user_ip();
             $this->newPasswordSender->send($email, $current_ip);
         }
+
         // Do not acknowledge a password has been sent or failed and go back to login
         $this->ui->show('show_login_form.inc.php');
 

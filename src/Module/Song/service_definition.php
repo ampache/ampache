@@ -25,11 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Song;
 
+use Ampache\Module\Song\Deletion\SongDeleter;
+use Ampache\Module\Song\Deletion\SongDeleterInterface;
+use Ampache\Module\Song\Tag\SongTagWriter;
+use Ampache\Module\Song\Tag\SongTagWriterInterface;
+
 use function DI\autowire;
 
 return [
     SongFilesystemCleanupInterface::class => autowire(SongFilesystemCleanup::class),
     SongSorterInterface::class => autowire(SongSorter::class),
-    Tag\SongTagWriterInterface::class => autowire(Tag\SongTagWriter::class),
-    Deletion\SongDeleterInterface::class => autowire(Deletion\SongDeleter::class),
+    SongTagWriterInterface::class => autowire(SongTagWriter::class),
+    SongDeleterInterface::class => autowire(SongDeleter::class),
 ];

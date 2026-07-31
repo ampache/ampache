@@ -25,23 +25,40 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Localplay5Method
+ * Controls the localplay instance.
+ *
+ * Version 5 gates on the interface access type and does not know the `filter` aliases of the later
+ * versions, so it keeps a method of its own.
  */
-final class Localplay5Method
+final class Localplay5Method implements MethodInterface
 {
-    public const ACTION = 'localplay';
+    public const string ACTION = 'localplay';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * localplay
@@ -57,7 +74,7 @@ final class Localplay5Method
      * track = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) //optional
      *
      * @param array{
-     *     command: string,
+     *     command?: string,
      *     oid?: string,
      *     type?: string,
      *     clear?: int,
@@ -65,23 +82,38 @@ final class Localplay5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessDeniedException|AccessFailedException|RequestParamMissingException
      */
-    public static function localplay(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['command'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('command', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'command')
+            );
         }
-        // localplay is actually meant to be behind permissions
-        $level = AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value));
-        if (!Api5::check_access(AccessTypeEnum::INTERFACE, $level, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-        // Load their Localplay instance
-        $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
-        if (empty($localplay->type) || !$localplay->connect()) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Unable to connect to localplay controller'), self::ACTION, 'account', $input['api_format']);
 
-            return false;
+        // localplay is actually meant to be behind permissions
+        $level = AccessLevelEnum::from(
+            (int) ($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) ?? AccessLevelEnum::ADMIN->value)
+        );
+
+        if (!$this->privilegeChecker->check(AccessTypeEnum::LOCALPLAY, $level, $user->id)) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', $level->value)
+            );
+        }
+
+        // Load their Localplay instance
+        $localplay = new LocalPlay((string) ($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_CONTROLLER) ?? ''));
+        if (empty($localplay->type) || !$localplay->connect()) {
+            return $this->writeNoController($response, $output, $apiVersion);
         }
 
         $result  = false;
@@ -93,10 +125,13 @@ final class Localplay5Method
                 $object_id = (int) ($input['oid'] ?? 0);
                 $type      = LibraryItemEnum::tryFrom(strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
-                if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
-                    Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
-
-                    return false;
+                if (
+                    !$this->configContainer->get(ConfigurationKeyEnum::ALLOW_VIDEO)
+                    && $type === LibraryItemEnum::VIDEO
+                ) {
+                    throw new AccessDeniedException(
+                        'Enable: video'
+                    );
                 }
 
                 $clear = (int) ($input['clear'] ?? 0);
@@ -108,6 +143,7 @@ final class Localplay5Method
                 if ($clear === 1) {
                     $localplay->delete_all();
                 }
+
                 $media = [
                     'object_type' => $type,
                     'object_id' => $object_id,
@@ -154,28 +190,52 @@ final class Localplay5Method
                 break;
             default:
                 // They are doing it wrong
-                Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'command', $input['api_format']);
-
-                return false;
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->error(
+                            $apiVersion,
+                            ErrorCodeEnum::BAD_REQUEST,
+                            'Bad Request',
+                            self::ACTION,
+                            'command'
+                        )
+                    )
+                );
         }
 
         if ($command === 'status' && empty($status)) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Unable to connect to localplay controller'), self::ACTION, 'account', $input['api_format']);
-
-            return false;
+            return $this->writeNoController($response, $output, $apiVersion);
         }
 
-        $results = (!empty($status))
-            ? ['localplay' => ['command' => [$input['command'] => $status]]]
-            : ['localplay' => ['command' => [$input['command'] => $result]]];
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($results, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Api::keyed_array($results);
-        }
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->localplayResult(
+                    $apiVersion,
+                    $input['command'],
+                    (!empty($status)) ? $status : $result
+                )
+            )
+        );
+    }
 
-        return true;
+    /**
+     * @param 5 $apiVersion
+     */
+    private function writeNoController(
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        int $apiVersion,
+    ): ResponseInterface {
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    'Unable to connect to localplay controller',
+                    self::ACTION,
+                    'account'
+                )
+            )
+        );
     }
 }

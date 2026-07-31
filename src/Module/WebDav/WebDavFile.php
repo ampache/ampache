@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -28,30 +28,15 @@ namespace Ampache\Module\WebDav;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
-use Sabre\DAV;
+use Override;
+use Sabre\DAV\File;
 
 /**
  * This class wrap Ampache songs to WebDAV files.
  */
-class WebDavFile extends DAV\File
+class WebDavFile extends File
 {
-    private Media $libitem;
-
-    public function __construct(Media $libitem)
-    {
-        $this->libitem = $libitem;
-    }
-
-    public function getName(): string
-    {
-        if (isset($this->libitem->file)) {
-            $nameinfo = pathinfo($this->libitem->file);
-
-            return htmlentities($nameinfo['filename'] . '.' . ($nameinfo['extension'] ?? ''));
-        }
-
-        return '';
-    }
+    public function __construct(private readonly Media $libitem) {}
 
     /**
      * @return resource|null
@@ -60,12 +45,12 @@ class WebDavFile extends DAV\File
     {
         //debug_event(self::class, 'File get ' . $this->libitem->file, 5);
         // Only media associated to a local catalog is supported
-        if (isset($this->libitem->catalog)) {
+        if (property_exists($this->libitem, 'catalog') && $this->libitem->catalog !== null) {
             $catalog = Catalog::create_from_id($this->libitem->catalog);
             if (
-                $catalog !== null &&
-                $catalog->get_type() === 'local' &&
-                isset($this->libitem->file)
+                $catalog !== null
+                && $catalog->get_type() === 'local'
+                && (property_exists($this->libitem, 'file') && $this->libitem->file !== null)
             ) {
                 $filepointer = fopen(Core::conv_lc_file($this->libitem->file), 'r');
 
@@ -86,13 +71,23 @@ class WebDavFile extends DAV\File
         return null;
     }
 
-    public function getSize(): int
-    {
-        return $this->libitem->size ?? 0;
-    }
-
     public function getETag(): string
     {
         return md5($this->libitem->getMediaType()->value . "_" . ($this->libitem->id ?? 0) . "_" . ($this->libitem->update_time ?? time()));
+    }
+
+    public function getName(): string
+    {
+        if (property_exists($this->libitem, 'file')) {
+            return pathinfo((string) $this->libitem->file, PATHINFO_BASENAME);
+        }
+
+        return '';
+    }
+
+    #[Override]
+    public function getSize(): int
+    {
+        return $this->libitem->size ?? 0;
     }
 }

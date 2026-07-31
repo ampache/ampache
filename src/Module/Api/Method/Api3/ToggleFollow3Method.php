@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
  */
 final class ToggleFollow3Method
 {
-    public const ACTION = 'toggle_follow';
+    public const string ACTION = 'toggle_follow';
 
     /**
      * toggle_follow
@@ -59,7 +59,7 @@ final class ToggleFollow3Method
                         $user
                     );
                     ob_end_clean();
-                    echo Xml3_Data::single_string('success');
+                    echo Xml3_Data::success();
                 }
             } else {
                 debug_event(self::class, 'Username to toggle required on follow function call.', 1);

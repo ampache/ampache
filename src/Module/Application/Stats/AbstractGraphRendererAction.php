@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,6 +25,7 @@
 
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ApplicationException;
@@ -31,6 +34,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\User;
@@ -38,18 +42,23 @@ use Ampache\Repository\Model\User;
 abstract readonly class AbstractGraphRendererAction implements ApplicationActionInterface
 {
     protected function __construct(
-        private LibraryItemLoaderInterface $libraryItemLoader
-    ) {
-    }
+        private LibraryItemLoaderInterface $libraryItemLoader,
+    ) {}
 
     /**
      * @throws ApplicationException
      */
     protected function renderGraph(
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): void {
+        if (!AmpConfig::get('statistical_graphs')) {
+            return;
+        }
+
+        // the date/zoom form posts back, so these have to come from the request and not the query
+        // string; reading the query alone dropped the object the graphs were scoped to
         $object_type = Core::get_request('object_type');
-        $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+        $object_id   = (int) Core::get_request('object_id');
 
         $libitem  = null;
         $owner_id = 0;
@@ -67,46 +76,54 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
 
         if (
             (
-                $owner_id < 1 ||
-                $owner_id != Core::get_global('user')?->getId()
-            ) &&
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
+                $owner_id < 1
+                || $owner_id != Core::get_global('user')?->getId()
+            )
+            && $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
         ) {
             throw new AccessDeniedException();
         }
 
-        $user_id = (int)Core::get_request('user_id');
-        $zoom    = (string)($_REQUEST['zoom'] ?? 'day');
+        $user_id = (int) Core::get_request('user_id');
+        $zoom    = (string) ($_REQUEST['zoom'] ?? 'day');
 
         $end_date = (isset($_REQUEST['end_date']))
-            ? (int)strtotime((string)$_REQUEST['end_date'])
+            ? (int) strtotime((string) $_REQUEST['end_date'])
             : time();
-        $start_date = (isset($_REQUEST['start_date']))
-            ? (int)strtotime((string)$_REQUEST['start_date'])
-            : ($end_date - 864000);
+        // scale the default window to the zoom bucket so a fresh year/month graph spans enough buckets to be readable
+        $default_span = match ($zoom) {
+            'hour' => 86400,
+            'month' => 31536000,
+            'year' => 315360000,
+            default => 864000,
+        };
+        $zoom_changed = (($_REQUEST['rendered_zoom'] ?? $zoom) !== $zoom);
+        $start_date   = (isset($_REQUEST['start_date']) && !$zoom_changed)
+            ? (int) strtotime((string) $_REQUEST['start_date'])
+            : ($end_date - $default_span);
 
-        $f_end_date   = get_datetime((int)$end_date);
-        $f_start_date = get_datetime((int)$start_date);
+        // format for the datetimepicker inputs (Y-m-d H:i) so the field, the picker and strtotime all round-trip
+        $f_end_date   = date('Y-m-d H:i', $end_date);
+        $f_start_date = date('Y-m-d H:i', $start_date);
 
         $gtypes   = [];
         $gtypes[] = 'user_hits';
         if (
-            $object_type == null ||
-            $object_type == 'song' ||
-            $object_type == 'video'
+            in_array($object_type, [null, 'song', 'video'])
         ) {
             $gtypes[] = 'user_bandwidth';
         }
 
         if (!$user_id && !$object_id) {
             $gtypes[] = 'catalog_files';
+            // used within the template
             $gtypes[] = 'catalog_size';
         }
 
         $blink = '';
-        if ($libitem !== null) {
+        if ($libitem instanceof displayable_item) {
             $f_link = $libitem->get_f_link();
-            if (!empty($f_link)) {
+            if ($f_link !== '' && $f_link !== '0') {
                 $blink = $f_link;
             }
         } elseif ($user_id > 0) {

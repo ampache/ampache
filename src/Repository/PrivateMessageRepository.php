@@ -39,41 +39,8 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
 {
     public function __construct(
         private ModelFactoryInterface $modelFactory,
-        private DatabaseConnectionInterface $connection
-    ) {
-    }
-
-    /**
-     * Get the user received private messages.
-     */
-    public function getUnreadCount(
-        User $user
-    ): int {
-        return (int) $this->connection->fetchOne(
-            'SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = \'0\'',
-            [$user->getId()]
-        );
-    }
-
-    /**
-     * Get the subsonic chat messages.
-     *
-     * @return list<int>
-     */
-    public function getChatMessages(int $since = 0): array
-    {
-        $result = $this->connection->query(
-            'SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0  AND `user_pvmsg`.`creation_date` > ? ORDER BY `user_pvmsg`.`creation_date` DESC',
-            [$since]
-        );
-
-        $ids = [];
-        while ($rowId = $result->fetchColumn()) {
-            $ids[] = (int) $rowId;
-        }
-
-        return $ids;
-    }
+        private DatabaseConnectionInterface $connection,
+    ) {}
 
     /**
      * Clear old messages from the subsonic chat message list.
@@ -88,22 +55,6 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
         );
     }
 
-    public function setIsRead(PrivateMessageInterface $message, int $state): void
-    {
-        $this->connection->query(
-            'UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?',
-            [$state, $message->getId()]
-        );
-    }
-
-    public function delete(PrivateMessageInterface $message): void
-    {
-        $this->connection->query(
-            'DELETE FROM `user_pvmsg` WHERE `id` = ?',
-            [$message->getId()]
-        );
-    }
-
     /**
      * Creates a private message and returns the id of the newly created object
      */
@@ -111,7 +62,7 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
         ?User $recipient,
         User $sender,
         string $subject,
-        string $message
+        string $message,
     ): int {
         $toUserId = 0;
 
@@ -132,8 +83,16 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
         return $this->connection->getLastInsertedId();
     }
 
+    public function delete(PrivateMessageInterface $message): void
+    {
+        $this->connection->query(
+            'DELETE FROM `user_pvmsg` WHERE `id` = ?',
+            [$message->getId()]
+        );
+    }
+
     public function findById(
-        int $privateMessageId
+        int $privateMessageId,
     ): ?PrivateMessageInterface {
         $item = $this->modelFactory->createPrivateMsg($privateMessageId);
         if ($item->isNew()) {
@@ -141,5 +100,45 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
         }
 
         return $item;
+    }
+
+    /**
+     * Get the subsonic chat messages.
+     *
+     * @return int[]
+     */
+    public function getChatMessages(int $since = 0): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0  AND `user_pvmsg`.`creation_date` > ? ORDER BY `user_pvmsg`.`creation_date` DESC',
+            [$since]
+        );
+
+        $ids = [];
+        while ($rowId = $result->fetchColumn()) {
+            $ids[] = (int) $rowId;
+        }
+
+        return $ids;
+    }
+
+    /**
+     * Get the user received private messages.
+     */
+    public function getUnreadCount(
+        User $user,
+    ): int {
+        return (int) $this->connection->fetchOne(
+            "SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'",
+            [$user->getId()]
+        );
+    }
+
+    public function setIsRead(PrivateMessageInterface $message, int $state): void
+    {
+        $this->connection->query(
+            'UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?',
+            [$state, $message->getId()]
+        );
     }
 }

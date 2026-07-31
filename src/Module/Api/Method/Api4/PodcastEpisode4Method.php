@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastEpisode4Method
 {
-    public const ACTION = 'podcast_episode';
+    public const string ACTION = 'podcast_episode';
 
     /**
      * podcast_episode
@@ -56,7 +56,7 @@ final class PodcastEpisode4Method
     public static function podcast_episode(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: podcast features are not enabled.', '400', $input['api_format']);
 
             return false;
         }

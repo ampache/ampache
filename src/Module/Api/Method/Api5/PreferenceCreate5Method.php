@@ -25,20 +25,34 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class PreferenceCreate5Method
+ * Adds a new preference to the server.
+ *
+ * Version 5 returns the whole preference list in the json payload, so it keeps a method of its own.
  */
-final class PreferenceCreate5Method
+final class PreferenceCreate5Method implements MethodInterface
 {
-    public const ACTION = 'preference_create';
+    public const string ACTION = 'preference_create';
+
+    public function __construct(
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * preference_create
@@ -67,36 +81,59 @@ final class PreferenceCreate5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function preference_create(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['filter', 'type', 'default', 'category'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        foreach (['filter', 'type', 'default', 'category'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
-        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+
+        if (
+            !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::ADMIN,
+                $user->id
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
+
         $pref_name = (string) $input['filter'];
         $pref_list = Preference::get($pref_name, -1);
-        // if you found the preference or it's a system preference; don't add it.
-        if (!empty($pref_list) || in_array($pref_name, array_merge(Preference::SYSTEM_LIST, Preference::PLUGIN_LIST))) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $pref_name), self::ACTION, 'filter', $input['api_format']);
 
-            return false;
+        // if you found the preference or it's a system preference; don't add it.
+        if (
+            !empty($pref_list)
+            || in_array($pref_name, array_merge(Preference::SYSTEM_LIST, Preference::PLUGIN_LIST))
+        ) {
+            return $this->writeBadRequest($response, $output, $apiVersion, $pref_name, 'filter');
         }
+
         $type = (string) $input['type'];
         if (!in_array(strtolower($type), ['boolean', 'integer', 'string', 'special'])) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
+            return $this->writeBadRequest($response, $output, $apiVersion, $type, 'type');
         }
+
         $category = (string) $input['category'];
         if (!in_array($category, ['interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'])) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'category', $input['api_format']);
-
-            return false;
+            // the legacy code reports the type here, not the category
+            return $this->writeBadRequest($response, $output, $apiVersion, $type, 'category');
         }
+
         $level       = (isset($input['level'])) ? (int) $input['level'] : 100;
         $default     = ($type == 'boolean' || $type == 'integer') ? (int) $input['default'] : (string) $input['default'];
         $description = (string) ($input['description'] ?? '');
@@ -104,23 +141,44 @@ final class PreferenceCreate5Method
 
         // insert and return the new preference
         Preference::insert($pref_name, $description, $default, $level, $type, $category, $subcategory);
+
         $results = Preference::get($pref_name, -1);
-        if (empty($results)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $pref_name), self::ACTION, 'system', $input['api_format']);
+        if ($results === []) {
+            throw new ResultEmptyException(
+                $pref_name,
+                'system'
+            );
+        }
 
-            return false;
-        }
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($results, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Api::object_array($results, 'preference');
-        }
+        $result = $response->withBody(
+            $this->streamFactory->createStream(
+                $output->objectArray($apiVersion, $results, $results, 'preference')
+            )
+        );
+
         // fix preferences that are missing for user
-        User::fix_preferences($user->id);
+        Preference::fix_user_preferences($user->id);
 
-        return true;
+        return $result;
+    }
+
+    private function writeBadRequest(
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        int $apiVersion,
+        string $value,
+        string $type,
+    ): ResponseInterface {
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    sprintf('Bad Request: %s', $value),
+                    self::ACTION,
+                    $type
+                )
+            )
+        );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -44,7 +44,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowAction extends AbstractShowAction
 {
-    public const REQUEST_ACTION = 'show';
+    public const string REQUEST_ACTION = 'show';
 
     public function __construct(
         RequestParserInterface $requestParser,
@@ -54,7 +54,7 @@ final readonly class ShowAction extends AbstractShowAction
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct(
             $requestParser,
@@ -82,15 +82,15 @@ final readonly class ShowAction extends AbstractShowAction
         /**
          * @deprecated FIXME: Legacy stuff - should be removed after a version or so
          */
-        $objectType = (string)($queryParams['object_type'] ?? ($this->configContainer->get(ConfigurationKeyEnum::SHOW_SONG_ART) ? 'song' : 'album'));
+        $objectType = (string) ($queryParams['object_type'] ?? ($this->configContainer->get(ConfigurationKeyEnum::SHOW_SONG_ART) ? 'song' : 'album'));
 
         if (!Art::is_valid_type($objectType)) {
             return null;
         }
 
-        $objectId = (int)($queryParams['object_id'] ?? 0);
+        $objectId = (int) ($queryParams['object_id'] ?? 0);
 
-        if (!$objectId) {
+        if ($objectId === 0) {
             return null;
         }
 
@@ -104,7 +104,7 @@ final readonly class ShowAction extends AbstractShowAction
         } elseif ($item instanceof Podcast) {
             $filename = $item->getTitle();
         } else {
-            // Album || Artist || Broadcast || Label || License || Live_Stream || Wanted
+            // Album || Artist || Broadcast || Folder || Label || License || Live_Stream || Wanted
             $filename = $item->name ?? '';
         }
 

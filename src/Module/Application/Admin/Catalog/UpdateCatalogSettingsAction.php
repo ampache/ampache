@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -34,19 +34,16 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdateCatalogSettingsAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'update_catalog_settings';
+    public const string REQUEST_KEY = 'update_catalog_settings';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    private readonly UiInterface $ui;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->ui = $ui;
     }
 
     /**
@@ -54,25 +51,25 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
      */
     protected function handle(
         ServerRequestInterface $request,
-        array $catalogIds
+        array $catalogIds,
     ): ?ResponseInterface {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
         if (
-            empty($data) ||
-            (!isset($data['catalog_id']) || !isset($data['name']) || !isset($data['rename_pattern']) || !isset($data['sort_pattern']))
+            $data === []
+            || (!isset($data['catalog_id']) || !isset($data['name']) || !isset($data['rename_pattern']) || !isset($data['sort_pattern']))
         ) {
             return null;
         }
 
         Catalog::update_settings([
-            'name' => $data['name'],
-            'rename_pattern' => $data['rename_pattern'],
-            'sort_pattern' => $data['sort_pattern'],
-            'catalog_id' => (int)$data['catalog_id'],
+            'name' => (string) $data['name'],
+            'rename_pattern' => (string) $data['rename_pattern'],
+            'sort_pattern' => (string) $data['sort_pattern'],
+            'catalog_id' => (int) $data['catalog_id'],
         ]);
 
         $url   = sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin'));

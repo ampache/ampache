@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -38,45 +38,68 @@ use Ampache\Module\System\Dba;
  */
 class Access
 {
-    protected const DB_TABLENAME = 'access_list';
+    protected const string DB_TABLENAME = 'access_list';
 
-    /** @var int $id */
-    public $id;
-
-    /** @var string $name */
-    public $name;
-
-    /** @var string $start */
-    public $start;
-
-    /** @var string $end */
-    public $end;
-
-    /** @var int $level */
-    public $level;
-
-    /** @var int $user */
-    public $user;
-
-    /** @var string $type */
-    public $type;
-
-    /** @var bool $enabled
+    /**
      *
      * @deprecated seems not to be in use
      */
-    public $enabled;
+    public ?bool $enabled = null;
+
+    public string $end;
+    public int $id     = 0;
+    public ?int $level = null;
+    public string $name;
+    public string $start;
+    public string $type;
+    public ?int $user = null;
 
     public function __construct(?int $access_id)
     {
         if (!$access_id) {
             return;
         }
+
         $info = $this->has_info($access_id);
         if (!$info) {
             return;
         }
-        $this->id = (int)$access_id;
+
+        $this->id = $access_id;
+    }
+
+    /**
+     * check
+     *
+     * This is the global 'has_access' function. it can check for any 'type'
+     * of object.
+     *
+     * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
+     * always used.
+     */
+    public static function check(AccessTypeEnum $type, AccessLevelEnum $level, ?int $user_id = null): bool
+    {
+        global $dic;
+
+        return $dic->get(PrivilegeCheckerInterface::class)->check(
+            $type,
+            $level,
+            $user_id
+        );
+    }
+
+    /**
+     * check_function
+     *
+     * This checks if specific functionality is enabled.
+     */
+    public static function check_function(AccessFunctionEnum $type): bool
+    {
+        global $dic;
+
+        return $dic->get(FunctionCheckerInterface::class)->check(
+            $type
+        );
     }
 
     /**
@@ -89,49 +112,19 @@ class Access
         $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
         $db_results = Dba::read($sql, [$access_id]);
         $data       = Dba::fetch_assoc($db_results);
-        if (empty($data)) {
+        if ($data === []) {
             return false;
         }
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
+
+        $this->id      = (int) ($data['id'] ?? 0);
+        $this->name    = (string) ($data['name'] ?? '');
+        $this->type    = (string) ($data['type'] ?? '');
+        $this->start   = (string) ($data['start'] ?? '');
+        $this->end     = (string) ($data['end'] ?? '');
+        $this->level   = isset($data['level']) ? (int) $data['level'] : null;
+        $this->user    = isset($data['user']) ? (int) $data['user'] : null;
+        $this->enabled = isset($data['enabled']) ? (bool) $data['enabled'] : null;
 
         return true;
-    }
-
-    /**
-     * check_function
-     *
-     * This checks if specific functionality is enabled.
-     * @deprecated See FunctionChecker::check
-     */
-    public static function check_function(AccessFunctionEnum $type): bool
-    {
-        global $dic;
-
-        return $dic->get(FunctionCheckerInterface::class)->check(
-            $type
-        );
-    }
-
-    /**
-     * check
-     *
-     * This is the global 'has_access' function. it can check for any 'type'
-     * of object.
-     *
-     * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
-     * always used.
-     * @deprecated See PrivilegeChecker::check
-     */
-    public static function check(AccessTypeEnum $type, AccessLevelEnum $level, ?int $user_id = null): bool
-    {
-        global $dic;
-
-        return $dic->get(PrivilegeCheckerInterface::class)->check(
-            $type,
-            $level,
-            $user_id
-        );
     }
 }

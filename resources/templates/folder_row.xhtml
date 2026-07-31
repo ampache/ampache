@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <td class="cel_play">
+        <span class="cel_play_content"> </span>
+        <div class="cel_play_hover">
+            <tal:block tal:condition="FOLDER/canDirectplay">
+                <tal:block tal:replace="structure FOLDER/getDirectplayButton">DIRECTPLAY</tal:block>
+                <tal:block tal:condition="FOLDER/canAutoplayNext" tal:replace="structure FOLDER/getAutoplayNextButton">PLAY NEXT</tal:block>
+                <tal:block tal:condition="FOLDER/canAppendNext" tal:replace="structure FOLDER/getAppendNextButton">APPEND NEXT</tal:block>
+            </tal:block>
+        </div>
+    </td>
+    <td class="${CLASS_COVER}" tal:content="structure FOLDER/getArt">COVER</td>
+    <td class="${CLASS_FOLDER}" tal:content="structure FOLDER/getFolderLink">FOLDER NAME</td>
+    <td class="cel_add">
+        <span class="cel_item_add">
+            <tal:block tal:condition="IS_SHOW_PLAYLIST_ADD">
+                <tal:block tal:replace="structure FOLDER/getAddToTemporaryPlaylistButton">ADD TO TEMPORARY PLAYLIST</tal:block>
+                <tal:block tal:replace="structure FOLDER/getRandomToTemporaryPlaylistButton">RANDOM TO TEMPORARY PLAYLIST</tal:block>
+            </tal:block>
+            <a
+                    tal:condition="IS_SHOW_LIST_ADD"
+                    id="add_to_playlist_${FOLDER/getId}"
+                    onclick="showPlaylistDialog(event, '${FOLDER/getObjectType}', '${FOLDER/getId}')"
+                    tal:content="structure FOLDER/getAddToPlaylistIcon"
+            >ADD TO PLAYLIST</a>
+        </span>
+    </td>
+    <td class="cel_songs optional" tal:content="structure FOLDER/getSongCount">SONG COUNT</td>
+    <td class="${CLASS_COUNTER} optional" tal:condition="IS_SHOW_PLAYED_TIMES" tal:content="structure FOLDER/getPlayedTimes">PLAYED TIMES</td>
+    <td class="cel_ratings" tal:condition="USING_RATINGS">
+        <div class="rating">
+            <span class="cel_rating" id="rating_${FOLDER/getId}_folder" tal:content="structure FOLDER/getRating">RATING</span>
+            <span class="cel_userflag" id="userflag_${FOLDER/getId}_folder" tal:content="structure FOLDER/getUserFlags">USERFLAGS</span>
+        </div>
+    </td>
+    <td class="cel_action">
+        <a
+                tal:condition="FOLDER/canPostShout"
+                tal:attributes="href FOLDER/getPostShoutUrl"
+                tal:content="structure FOLDER/getPostShoutIcon"
+        >POST SHOUT</a>
+
+        <tal:block tal:condition="FOLDER/canShare" tal:replace="structure FOLDER/getShareUi">SHARE</tal:block>
+
+        <a
+                class="nohtml" rel="nofollow"
+                tal:condition="FOLDER/canBatchDownload"
+                tal:attributes="href FOLDER/getBatchDownloadUrl"
+                tal:content="structure FOLDER/getBatchDownloadIcon"
+        >BATCH DOWNLOAD</a>
+
+        <a
+                tal:condition="FOLDER/isEditable"
+                id="edit_folder_${FOLDER/getId}"
+                onclick="showEditDialog('folder_row', '${FOLDER/getId}', 'edit_folder_${FOLDER/getId}', '${FOLDER/getEditButtonTitle}', 'folder_')"
+                tal:content="structure FOLDER/getEditIcon"
+        >EDIT</a>
+
+        <a
+                tal:condition="FOLDER/canBeDeleted"
+                id="delete_folder_${FOLDER/getId}"
+                tal:attributes="href FOLDER/getDeletionUrl"
+                tal:content="structure FOLDER/getDeletionIcon"
+        >DELETION</a>
+    </td>
+</html>

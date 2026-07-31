@@ -40,31 +40,18 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ConfirmDeleteAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'confirm_delete';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-    }
+        private readonly RequestParserInterface $requestParser,
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly ConfigContainerInterface $configContainer,
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 

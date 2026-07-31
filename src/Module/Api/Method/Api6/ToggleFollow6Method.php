@@ -25,81 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api6;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\User\Following\UserFollowTogglerInterface;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractToggleFollowMethod;
 
 /**
- * Class ToggleFollow6Method
- * @package Lib\Api6Methods
+ * Follows or unfollows a user
+ *
+ * Api version 6 reports the user as `username` and accepts `filter` as an alias.
  */
-final class ToggleFollow6Method
+final class ToggleFollow6Method extends AbstractToggleFollowMethod
 {
-    public const ACTION = 'toggle_follow';
+    protected const string FILTER_ALIAS = 'filter';
 
-    /**
-     * toggle_follow
-     * MINIMUM_API_VERSION=380001
-     *
-     * This will follow/unfollow a user
-     *
-     * filter = (integer|string) filter by user id OR username //optional
-     * username = (string) $username
-     *
-     * @param array{
-     *     filter?: int|string,
-     *     username?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function toggle_follow(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
-        if (!Api6::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
-        }
-
-        $username = $input['username'];
-        if (empty($username)) {
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', 'username'), self::ACTION, 'username', $input['api_format']);
-
-            return false;
-        }
-
-        $leader = (is_numeric($username))
-            ? User::get_from_id((int) $username)
-            : User::get_from_username((string) $username);
-
-        if ($leader instanceof User) {
-            self::getUserFollowToggler()->toggle(
-                $leader,
-                $user
-            );
-            ob_end_clean();
-            Api6::message('follow toggled for: ' . $user->id, $input['api_format']);
-
-            return true;
-        }
-
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $username), self::ACTION, 'filter', $input['api_format']);
-
-        return false;
-    }
-
-    private static function getUserFollowToggler(): UserFollowTogglerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserFollowTogglerInterface::class);
-    }
+    protected const string FILTER_KEY = 'username';
 }

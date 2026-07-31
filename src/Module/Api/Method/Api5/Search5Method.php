@@ -25,18 +25,31 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Searchh5Method
+ * Alias of advanced_search; returns the objects matching the passed rules.
+ *
+ * Version 5 checks the rules and the type itself (so the failure reports this action) before it
+ * hands over to the version 5 advanced_search, so it keeps a method of its own.
  */
-final class Search5Method
+final class Search5Method implements MethodInterface
 {
-    public const ACTION = 'search';
+    public const string ACTION = 'search';
+
+    public function __construct(
+        private AdvancedSearch5Method $advancedSearchMethod,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * search
@@ -66,27 +79,59 @@ final class Search5Method
      * offset = (integer) //optional
      * limit = (integer) //optional
      *
-     * @param array<string, mixed> $input
+     * @param array{
+     *     operator?: string,
+     *     rule_1?: string,
+     *     rule_1_operator?: int,
+     *     rule_1_input?: mixed,
+     *     type?: string,
+     *     random?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param 5 $apiVersion
+     *
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
-    public static function search(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['rule_1', 'rule_1_operator', 'rule_1_input'], self::ACTION)) {
-            return false;
-        }
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $this->advancedSearchMethod->checkRules($input);
 
         $type = (isset($input['type'])) ? (string) $input['type'] : 'song';
-        if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
 
-            return false;
-        }
+        $this->advancedSearchMethod->checkType($type);
+
         // confirm the correct data
         if (!in_array(strtolower($type), Search::VALID_TYPES)) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        sprintf('Bad Request: %s', $type),
+                        self::ACTION,
+                        'type'
+                    )
+                )
+            );
         }
 
-        return AdvancedSearch5Method::advanced_search($input, $user);
+        return $this->advancedSearchMethod->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            $input,
+            $user,
+            $apiVersion
+        );
     }
 }

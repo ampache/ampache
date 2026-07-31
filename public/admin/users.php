@@ -31,6 +31,7 @@ use Ampache\Module\Application\Admin\User\DeleteApiKeyAction;
 use Ampache\Module\Application\Admin\User\DeleteAvatarAction;
 use Ampache\Module\Application\Admin\User\DeleteRssTokenAction;
 use Ampache\Module\Application\Admin\User\DeleteStreamTokenAction;
+use Ampache\Module\Application\Admin\User\DeleteSubsonicSecretAction;
 use Ampache\Module\Application\Admin\User\DisableAction;
 use Ampache\Module\Application\Admin\User\EnableAction;
 use Ampache\Module\Application\Admin\User\GenerateApiKeyAction;
@@ -43,6 +44,7 @@ use Ampache\Module\Application\Admin\User\ShowDeleteApiKeyAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteAvatarAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteRssTokenAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteStreamTokenAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteSubsonicSecretAction;
 use Ampache\Module\Application\Admin\User\ShowEditAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateApiKeyAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateRssTokenAction;
@@ -76,6 +78,8 @@ $dic->get(ApplicationRunner::class)->run(
         ShowGenerateApiKeyAction::REQUEST_KEY => ShowGenerateApiKeyAction::class,
         DeleteApiKeyAction::REQUEST_KEY => DeleteApiKeyAction::class,
         ShowDeleteApiKeyAction::REQUEST_KEY => ShowDeleteApiKeyAction::class,
+        DeleteSubsonicSecretAction::REQUEST_KEY => DeleteSubsonicSecretAction::class,
+        ShowDeleteSubsonicSecretAction::REQUEST_KEY => ShowDeleteSubsonicSecretAction::class,
         DeleteAvatarAction::REQUEST_KEY => DeleteAvatarAction::class,
         ShowDeleteAvatarAction::REQUEST_KEY => ShowDeleteAvatarAction::class,
         ShowDeleteAction::REQUEST_KEY => ShowDeleteAction::class,

@@ -31,18 +31,22 @@ use Ampache\Repository\SongRepositoryInterface;
 /**
  * Builds exporter classes
  */
-final class CatalogExportFactory implements CatalogExportFactoryInterface
+final readonly class CatalogExportFactory implements CatalogExportFactoryInterface
 {
-    private SongRepositoryInterface $songRepository;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        SongRepositoryInterface $songRepository,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->songRepository = $songRepository;
-        $this->modelFactory   = $modelFactory;
+        private SongRepositoryInterface $songRepository,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
+
+    /**
+     * Returns the exporter class based on the export type
+     */
+    public function createFromExportType(CatalogExportTypeEnum $type): CatalogExporterInterface
+    {
+        return match ($type) {
+            CatalogExportTypeEnum::ITUNES => $this->createItunesExporter(),
+            default => $this->createCsvExporter(),
+        };
     }
 
     private function createCsvExporter(): CatalogExporterInterface
@@ -58,16 +62,5 @@ final class CatalogExportFactory implements CatalogExportFactoryInterface
         return new ItunesExporter(
             $this->songRepository
         );
-    }
-
-    /**
-     * Returns the exporter class based on the export type
-     */
-    public function createFromExportType(CatalogExportTypeEnum $type): CatalogExporterInterface
-    {
-        return match ($type) {
-            CatalogExportTypeEnum::ITUNES => $this->createItunesExporter(),
-            default => $this->createCsvExporter(),
-        };
     }
 }

@@ -40,7 +40,7 @@ final class Migration520001 extends AbstractMigration
         $dupe_prefs = Dba::read($sql);
         $pref_list  = [];
         while ($results = Dba::fetch_assoc($dupe_prefs)) {
-            $pref_list[] = (int)$results['id'];
+            $pref_list[] = (int) $results['id'];
         }
 
         // delete duplicates (if they exist)

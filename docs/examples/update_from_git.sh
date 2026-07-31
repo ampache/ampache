@@ -7,7 +7,9 @@
 AMPACHEDIR="/var/www/ampache"
 
 BRANCH='develop'
+#BRANCH='patch8'
 #BRANCH='patch7'
+#BRANCH='release8'
 #BRANCH='release7'
 
 ### What's the folder being updated
@@ -43,14 +45,18 @@ if [ "$OLD_HASH" != "$NEW_HASH" ]; then
   ### Clean up your garbage data
   php bin/cli run:updateCatalog -t
 
+  ### Ampache8 browses local catalogs by folder; scan to fill the folder tables after upgrading
+  #php bin/cli run:updateCatalog -s
+
   ### Run a public site? you can forcibly set all preferences to admin and stop users changing things
   #php bin/cli admin:updatePreferenceAccessLevel -e -l admin
 
   ### You don't always need to do this but some people might want to keep composer packages updated here
   ### You might want the dev packages as well so you can remove '--no-dev' to install those
-  #composer install --no-dev --prefer-source --no-interaction
+  ### If the git version of php doesn't match yours, fall back to composer update to get the correct packages
+  #composer install --no-dev --prefer-dist --no-interaction || composer update --no-dev --prefer-dist --no-interaction
 
   ### NPM is now required to handle all the javascript packages
-  npm install
-  npm run build
+  npm install || exit 1
+  npm run build || exit 1
 fi

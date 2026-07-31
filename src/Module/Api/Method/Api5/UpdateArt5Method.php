@@ -25,23 +25,39 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class UpdateArt5Method
+ * Gathers new art for an artist or album.
+ *
+ * Version 5 reads the object id from `id` only and checks the parameters before the access level,
+ * so it keeps a method of its own.
  */
-final class UpdateArt5Method
+final class UpdateArt5Method implements MethodInterface
 {
-    public const ACTION = 'update_art';
+    public const string ACTION = 'update_art';
+
+    public function __construct(
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * update_art
@@ -61,48 +77,92 @@ final class UpdateArt5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function update_art(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['type', 'id'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        foreach (['type', 'id'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
 
-        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+        if (
+            !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::MANAGER,
+                $user->id
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::MANAGER->value)
+            );
         }
+
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
         // Catalog::gather_art_item() takes `db_art_first`, i.e. the inverse: keep the art we already have
-        $db_art_first = array_key_exists('overwrite', $input) && (int) $input['overwrite'] === 0;
+        $db_art_first = array_key_exists('overwrite', $input) && (int) $input['overwrite'] == 0;
         $art_url      = Art::url($object_id, $type, $input['auth']);
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album'])) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-
-            return true;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        sprintf('Bad Request: %s', $type),
+                        self::ACTION,
+                        'type'
+                    )
+                )
+            );
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
+
         /** @var Artist|Album $item */
         $item = new $className($object_id);
         if ($item->isNew() || $art_url === null) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'id', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                (string) $object_id,
+                'id'
+            );
         }
+
         // update your object
-
-        if (Catalog::gather_art_item($type, $object_id, $db_art_first, true)) {
-            Api5::message('Gathered new art for: ' . $object_id . ' (' . $type . ')', $input['api_format'], ['art' => $art_url]);
-
-            return true;
+        if (!Catalog::gather_art_item($type, $object_id, $db_art_first, true)) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        sprintf('Bad Request: %s', $object_id),
+                        self::ACTION,
+                        'system'
+                    )
+                )
+            );
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $object_id), self::ACTION, 'system', $input['api_format']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success(
+                    $apiVersion,
+                    'Gathered new art for: ' . $object_id . ' (' . $type . ')',
+                    ['art' => $art_url]
+                )
+            )
+        );
     }
 }

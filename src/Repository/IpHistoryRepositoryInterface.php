@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -31,21 +33,6 @@ use Traversable;
 interface IpHistoryRepositoryInterface
 {
     /**
-     * This returns the ip_history for the provided user
-     *
-     * @return Traversable<array{ip: string, date: DateTimeImmutable, agent: string, action: string}>
-     */
-    public function getHistory(
-        User $user,
-        ?bool $limited = true
-    ): Traversable;
-
-    /**
-     * Returns the most recent ip-address used by the provided user
-     */
-    public function getRecentIpForUser(User $user): ?string;
-
-    /**
      * Deletes outdated records
      */
     public function collectGarbage(): void;
@@ -58,6 +45,21 @@ interface IpHistoryRepositoryInterface
         string $ipAddress,
         string $userAgent,
         DateTimeInterface $date,
-        string $action
+        string $action,
     ): void;
+
+    /**
+     * This returns the ip_history for the provided user
+     *
+     * @return Traversable<array{ip: string, date: DateTimeImmutable, agent: string, action: string}>
+     */
+    public function getHistory(
+        User $user,
+        ?bool $limited = true,
+    ): Traversable;
+
+    /**
+     * Returns the most recent ip-address used by the provided user
+     */
+    public function getRecentIpForUser(User $user): ?string;
 }

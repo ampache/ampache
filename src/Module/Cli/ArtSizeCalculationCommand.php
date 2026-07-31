@@ -30,26 +30,14 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Art;
+use Override;
 
 final class ArtSizeCalculationCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct('run:calculateArtSize', T_('Run art size calculation'));
-
-        $this->configContainer = $configContainer;
 
         $this
             ->option('-f|--fix', T_('Fix database issues'), 'boolval', false)
@@ -79,14 +67,14 @@ final class ArtSizeCalculationCommand extends Command
 
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($inDisk && $localDir) {
-                $folder = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], 'default');
+                $folder = Art::get_dir_on_disk($row['object_type'], (int) $row['object_id'], $row['size'], 'default');
                 if ($folder === null) {
                     continue;
                 }
 
-                $ext = (!empty($row['mime']))
-                    ? str_replace("image/", "", $row['mime'])
-                    : 'jpg';
+                $ext = (empty($row['mime']))
+                    ? 'jpg'
+                    : str_replace("image/", "", $row['mime']);
                 $path   = $folder . 'art-' . $row['size'] . '.' . $ext;
                 $source = Art::get_from_source(
                     ['file' => $path],
@@ -122,5 +110,15 @@ final class ArtSizeCalculationCommand extends Command
             "\n" . T_('Finished art size calculation'),
             true
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

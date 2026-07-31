@@ -34,7 +34,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistRemoveSong4Method
 {
-    public const ACTION = 'playlist_remove_song';
+    public const string ACTION = 'playlist_remove_song';
 
     /**
      * playlist_remove_song
@@ -68,7 +68,7 @@ final class PlaylistRemoveSong4Method
         ob_end_clean();
         $playlist = new Playlist((int) $input['filter']);
         if (!$playlist->has_collaborate($user)) {
-            Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
+            Api4::message('error', 'Access denied to this playlist', '401', $input['api_format']);
 
             return false;
         }
@@ -79,7 +79,7 @@ final class PlaylistRemoveSong4Method
         } elseif (array_key_exists('song', $input)) {
             $song = (int) scrub_in((string) $input['song']);
             if (!$playlist->has_item($song)) {
-                Api4::message('error', T_('Song not found in playlist'), '404', $input['api_format']);
+                Api4::message('error', 'Song not found in playlist', '404', $input['api_format']);
 
                 return false;
             }
@@ -89,7 +89,7 @@ final class PlaylistRemoveSong4Method
         } elseif (array_key_exists('track', $input)) {
             $track = (int) scrub_in((string) $input['track']);
             if (!$playlist->has_item(null, $track)) {
-                Api4::message('error', T_('Track ID not found in playlist'), '404', $input['api_format']);
+                Api4::message('error', 'Track ID not found in playlist', '404', $input['api_format']);
 
                 return false;
             }

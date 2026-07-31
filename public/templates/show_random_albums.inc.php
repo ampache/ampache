@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_random_albums.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -46,7 +48,7 @@ if (!empty($albums)) {
         $album     = new Album($album_id);
         $show_play = true; ?>
     <div class="random_album">
-        <div id="album_<?php echo $album_id; ?>" class="art_album libitem_menu">
+        <div id="album_<?php echo $album_id; ?>" class="art_album libitem_menu" data-object-type="album" data-object-id="<?php echo $album_id; ?>">
             <?php $size = ['width' => 100, 'height' => 100];
         if (Ui::is_grid_view('album')) {
             $size      = ['width' => 150, 'height' => 150];

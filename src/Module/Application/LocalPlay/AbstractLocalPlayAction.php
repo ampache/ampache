@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -37,19 +39,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractLocalPlayAction implements ApplicationActionInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    protected function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
-    }
+    protected function __construct(private readonly ConfigContainerInterface $configContainer) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_LOCALPLAY_PLAYBACK) === false ||
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_LOCALPLAY_PLAYBACK) === false
+            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
         ) {
             throw new AccessDeniedException();
         }
@@ -57,20 +53,20 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
         return $this->handle($request, $gatekeeper);
     }
 
-    protected function showRefresh(): void
-    {
-        $refresh_limit = (int)($this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0);
-        if ($refresh_limit > 5) {
-            $ajax_url = '?page=localplay&action=command&command=refresh';
-            require_once Ui::find_template('javascript_refresh.inc.php');
-        }
-    }
-
     /**
      * @throws ApplicationException
      */
     abstract protected function handle(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface;
+
+    protected function showRefresh(): void
+    {
+        $refresh_limit = $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0;
+        if ($refresh_limit > 5) {
+            $ajax_url = '?page=localplay&action=command&command=refresh';
+            require_once Ui::find_template('javascript_refresh.inc.php');
+        }
+    }
 }

@@ -40,65 +40,200 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Mockery\MockInterface;
+use Override;
 
 class AlbumViewAdapterTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var ZipHandlerInterface|MockInterface|null */
-    private MockInterface $zipHandler;
-
-    /** @var FunctionCheckerInterface|MockInterface|null */
-    private MockInterface $functionChecker;
-
-    /** @var GuiGatekeeperInterface|MockInterface|null */
-    private ?MockInterface $gatekeeper;
-
-    /** @var Browse|MockInterface|null */
-    private MockInterface $browse;
-
-    /** @var Album|MockInterface|null */
-    private MockInterface $album;
-
+    private Album|MockInterface|null $album;
+    private Browse|MockInterface|null $browse;
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private FunctionCheckerInterface|MockInterface|null $functionChecker;
+    private GuiGatekeeperInterface|MockInterface|null $gatekeeper;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private AlbumViewAdapter $subject;
+    private ZipHandlerInterface|MockInterface|null $zipHandler;
 
-    protected function setUp(): void
+    public function testCanBatchDownloadReturnsValue(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->zipHandler      = $this->mock(ZipHandlerInterface::class);
-        $this->functionChecker = $this->mock(FunctionCheckerInterface::class);
-        $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
-        $this->browse          = $this->mock(Browse::class);
-        $this->album           = $this->mock(Album::class);
+        $this->functionChecker->shouldReceive('check')
+            ->with(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            ->once()
+            ->andReturnTrue();
 
-        $this->subject = new AlbumViewAdapter(
-            $this->configContainer,
-            $this->modelFactory,
-            $this->zipHandler,
-            $this->functionChecker,
-            $this->gatekeeper,
-            $this->browse,
-            $this->album,
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
+            ->once()
+            ->andReturnTrue();
+
+        $this->zipHandler->shouldReceive('isZipable')
+            ->with('album')
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canBatchDownload()
         );
     }
 
-    public function testGetIdReturnsAlbumId(): void
+    public function testCanPostShoutReturnsFalseIfAllConditionsAreMet(): void
     {
-        $AlbumId = 666;
-
-        $this->album->shouldReceive('getId')
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
             ->withNoArgs()
             ->once()
-            ->andReturn($AlbumId);
+            ->andReturnTrue();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canPostShout()
+        );
+    }
+
+    public function testCanPostShoutReturnsFalseIfNotAccessible(): void
+    {
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canPostShout()
+        );
+    }
+
+    public function testCanPostShoutReturnsFalseIfSocialIsNotEnabled(): void
+    {
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canPostShout()
+        );
+    }
+
+    public function testCanShareReturnsFalseIfFeatureIsDeactivated(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canShare()
+        );
+    }
+
+    public function testCanShareReturnsFalseIfNotAccessible(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canShare()
+        );
+    }
+
+    public function testCanShareReturnsTrueIfConditionsAreMet(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canShare()
+        );
+    }
+
+    public function testGenreReturnsValues(): void
+    {
+        $value = 'some-tags';
+
+        $this->album->shouldReceive('get_f_tags')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
 
         $this->assertSame(
-            $AlbumId,
-            $this->subject->getId()
+            $value,
+            $this->subject->getGenre()
+        );
+    }
+
+    public function testGetAlbumLinkReturnsValue(): void
+    {
+        $value = 'some-album-link';
+
+        $this->album->shouldReceive('get_f_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getAlbumLink()
+        );
+    }
+
+    public function testGetAlbumUrlReturnsValue(): void
+    {
+        $value = 'some-url';
+
+        $this->album->link = $value;
+
+        $this->album->shouldReceive('get_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getAlbumUrl()
+        );
+    }
+
+    public function testGetArtistLinkReturnsValue(): void
+    {
+        $value = '';
+
+        $this->album->shouldReceive('get_f_parent_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getArtistLink()
         );
     }
 
@@ -127,39 +262,6 @@ class AlbumViewAdapterTest extends MockeryTestCase
         $this->assertSame(
             $averageRating,
             $this->subject->getAverageRating()
-        );
-    }
-
-    public function testGetEditButtonTitleReturnsValue(): void
-    {
-        $this->assertSame(
-            'Album Edit',
-            $this->subject->getEditButtonTitle()
-        );
-    }
-
-    public function testGetPostShoutUrlReturnsValue(): void
-    {
-        $albumId = 666;
-        $webPath = 'some-path';
-
-        $this->album->shouldReceive('getId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($albumId);
-
-        $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($webPath);
-
-        $this->assertSame(
-            sprintf(
-                '%s/shout.php?action=show_add_shout&type=album&id=%d',
-                $webPath,
-                $albumId
-            ),
-            $this->subject->getPostShoutUrl()
         );
     }
 
@@ -211,6 +313,29 @@ class AlbumViewAdapterTest extends MockeryTestCase
         );
     }
 
+    public function testGetEditButtonTitleReturnsValue(): void
+    {
+        $this->assertSame(
+            'Album Edit',
+            $this->subject->getEditButtonTitle()
+        );
+    }
+
+    public function testGetIdReturnsAlbumId(): void
+    {
+        $AlbumId = 666;
+
+        $this->album->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($AlbumId);
+
+        $this->assertSame(
+            $AlbumId,
+            $this->subject->getId()
+        );
+    }
+
     public function testGetPlayedTimesReturnsValue(): void
     {
         $value = 666;
@@ -223,69 +348,28 @@ class AlbumViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetAlbumUrlReturnsValue(): void
+    public function testGetPostShoutUrlReturnsValue(): void
     {
-        $value = 'some-url';
+        $albumId = 666;
+        $webPath = 'some-path';
 
-        $this->album->link = $value;
-
-        $this->album->shouldReceive('get_link')
+        $this->album->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andReturn($value);
+            ->andReturn($albumId);
 
-        $this->assertSame(
-            $value,
-            $this->subject->getAlbumUrl()
-        );
-    }
-
-    public function testGetArtistLinkReturnsValue(): void
-    {
-        $value = '';
-
-        $this->album->shouldReceive('get_f_parent_link')
+        $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
-            ->andReturn($value);
+            ->andReturn($webPath);
 
         $this->assertSame(
-            $value,
-            $this->subject->getArtistLink()
-        );
-    }
-
-    public function testGetAlbumLinkReturnsValue(): void
-    {
-        $value = 'some-album-link';
-
-        $this->album->shouldReceive('get_f_link')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($value);
-
-        $this->assertSame(
-            $value,
-            $this->subject->getAlbumLink()
-        );
-    }
-
-    public function testGetYearIfUseOriginalYearIsDeactivated(): void
-    {
-        $year         = 666;
-        $originalYear = 555;
-
-        $this->album->year          = $year;
-        $this->album->original_year = $originalYear;
-
-        $this->configContainer->shouldReceive('get')
-            ->with('use_original_year')
-            ->once()
-            ->andReturnFalse();
-
-        $this->assertSame(
-            $year,
-            $this->subject->getDisplayYear()
+            sprintf(
+                '%s/shout.php?action=show_add_shout&type=album&id=%d',
+                $webPath,
+                $albumId
+            ),
+            $this->subject->getPostShoutUrl()
         );
     }
 
@@ -327,140 +411,44 @@ class AlbumViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGenreReturnsValues(): void
+    public function testGetYearIfUseOriginalYearIsDeactivated(): void
     {
-        $value = 'some-tags';
+        $year         = 666;
+        $originalYear = 555;
 
-        $this->album->shouldReceive('get_f_tags')
-            ->withNoArgs()
+        $this->album->year          = $year;
+        $this->album->original_year = $originalYear;
+
+        $this->configContainer->shouldReceive('get')
+            ->with('use_original_year')
             ->once()
-            ->andReturn($value);
+            ->andReturnFalse();
 
         $this->assertSame(
-            $value,
-            $this->subject->getGenre()
+            $year,
+            $this->subject->getDisplayYear()
         );
     }
 
-    public function testCanPostShoutReturnsFalseIfSocialIsNotEnabled(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $this->configContainer->shouldReceive('isAuthenticationEnabled')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SOCIABLE)
-            ->once()
-            ->andReturnFalse();
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->zipHandler      = $this->mock(ZipHandlerInterface::class);
+        $this->functionChecker = $this->mock(FunctionCheckerInterface::class);
+        $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
+        $this->browse          = $this->mock(Browse::class);
+        $this->album           = $this->mock(Album::class);
 
-        $this->assertFalse(
-            $this->subject->canPostShout()
-        );
-    }
-
-    public function testCanPostShoutReturnsFalseIfNotAccessible(): void
-    {
-        $this->configContainer->shouldReceive('isAuthenticationEnabled')
-            ->withNoArgs()
-            ->once()
-            ->andReturnTrue();
-
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->assertFalse(
-            $this->subject->canPostShout()
-        );
-    }
-
-    public function testCanPostShoutReturnsFalseIfAllConditionsAreMet(): void
-    {
-        $this->configContainer->shouldReceive('isAuthenticationEnabled')
-            ->withNoArgs()
-            ->once()
-            ->andReturnTrue();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SOCIABLE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertTrue(
-            $this->subject->canPostShout()
-        );
-    }
-
-    public function testCanShareReturnsFalseIfNotAccessible(): void
-    {
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->assertFalse(
-            $this->subject->canShare()
-        );
-    }
-
-    public function testCanShareReturnsFalseIfFeatureIsDeactivated(): void
-    {
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SHARE)
-            ->once()
-            ->andReturnFalse();
-
-        $this->assertFalse(
-            $this->subject->canShare()
-        );
-    }
-
-    public function testCanShareReturnsTrueIfConditionsAreMet(): void
-    {
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SHARE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertTrue(
-            $this->subject->canShare()
-        );
-    }
-
-    public function testCanBatchDownloadReturnsValue(): void
-    {
-        $this->functionChecker->shouldReceive('check')
-            ->with(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
-            ->once()
-            ->andReturnTrue();
-
-        $this->zipHandler->shouldReceive('isZipable')
-            ->with('album')
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertTrue(
-            $this->subject->canBatchDownload()
+        $this->subject = new AlbumViewAdapter(
+            $this->configContainer,
+            $this->modelFactory,
+            $this->zipHandler,
+            $this->functionChecker,
+            $this->gatekeeper,
+            $this->browse,
+            $this->album,
         );
     }
 }

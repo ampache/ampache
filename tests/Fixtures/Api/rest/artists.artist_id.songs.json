@@ -1,0 +1,90 @@
+{
+    "total_count": 1,
+    "md5": "ac27a58e733573c42d78ba0764f86ff9",
+    "song": [
+        {
+            "id": "92786",
+            "title": "The Amazing Power of The...",
+            "name": "The Amazing Power of The...",
+            "artist": {
+                "id": "5770",
+                "name": "_ and The Secret Formula",
+                "prefix": null,
+                "basename": "_ and The Secret Formula"
+            },
+            "artists": [
+                {
+                    "id": "5770",
+                    "name": "_ and The Secret Formula",
+                    "prefix": null,
+                    "basename": "_ and The Secret Formula"
+                }
+            ],
+            "album": {
+                "id": "170238",
+                "name": "The Amazing Power of The...",
+                "prefix": "The",
+                "basename": "Amazing Power of The..."
+            },
+            "albumartist": {
+                "id": "5770",
+                "name": "_ and The Secret Formula",
+                "prefix": null,
+                "basename": "_ and The Secret Formula"
+            },
+            "disk": 1,
+            "disksubtitle": null,
+            "track": 1,
+            "filename": "/media/music\/_ and The Secret Formula\/(1999) The Amazing Power of The... [m211.mp3.015]\/1-01 - The Amazing Power of The....mp3",
+            "genre": [
+                {
+                    "id": "4",
+                    "name": "Electronic"
+                },
+                {
+                    "id": "163",
+                    "name": "Downtempo"
+                },
+                {
+                    "id": "854",
+                    "name": "Broken Beat"
+                }
+            ],
+            "playlisttrack": 1,
+            "time": 279,
+            "year": 1999,
+            "format": "mp3",
+            "stream_format": "mp3",
+            "bitrate": 128000,
+            "stream_bitrate": 128000,
+            "rate": 44100,
+            "mode": "cbr",
+            "mime": "audio\/mpeg",
+            "stream_mime": "audio\/mpeg",
+            "url": "https:\/\/music.com.au\/play\/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=92786&uid=2&player=api&name=-%20and%20The%20Secret%20Formula%20-%20The%20Amazing%20Power%20of%20The....mp3",
+            "size": 4526407,
+            "mbid": "4e11f9e9-eb6b-4a1f-9a0f-7080aa19f41a",
+            "art": "https:\/\/music.com.au\/image.php?object_id=170238&object_type=album&name=art.jpg",
+            "has_art": true,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "playcount": 4,
+            "last_played": null,
+            "catalog": "2",
+            "composer": null,
+            "channels": 2,
+            "comment": "user@music.com.au :)",
+            "license": null,
+            "publisher": "Mono211",
+            "language": null,
+            "lyrics": null,
+            "replaygain_album_gain": null,
+            "replaygain_album_peak": null,
+            "replaygain_track_gain": -3.96,
+            "replaygain_track_peak": 1,
+            "r128_album_gain": null,
+            "r128_track_gain": null
+        }
+    ]
+}

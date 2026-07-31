@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -41,322 +41,20 @@ use PDOStatement;
  */
 class Dba
 {
-    public static $stats = ['query' => 0];
+    /** @var array<string, int> $stats  */
+    public static array $stats = ['query' => 0];
 
-    private static $_sql;
     private static string $_error;
-
-    /**
-     * query
-     * @param string $sql
-     * @param array $params
-     * @param bool $silent
-     * @param Interactor|null $interactor
-     */
-    public static function query($sql, $params = [], $silent = false, $interactor = null): ?PDOStatement
-    {
-        // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
-        //debug_event(self::class, $sql . ' ' . json_encode($params), 5);
-        if (empty(trim($sql))) {
-            return null;
-        }
-
-        // Be aggressive, be strong, be dumb
-        $tries = 0;
-        do {
-            $stmt = self::_query($sql, $params, $silent);
-        } while (!$stmt && $tries++ < 3);
-
-        if ($stmt === null) {
-            $interactor?->error(
-                self::error(),
-                true
-            );
-        }
-
-        return $stmt ?: null;
-    }
-
-    /**
-     * _query
-     * @param string $sql
-     * @param array $params
-     * @param bool $silent
-     */
-    private static function _query($sql, $params, $silent = false): ?PDOStatement
-    {
-        $dbh = self::dbh();
-        if (!$dbh) {
-            debug_event(self::class, 'Error: failed to get database handle', 1);
-
-            return null;
-        }
-
-        self::$_sql = $sql;
-        try {
-            // Run the query
-            if (!empty($params) && strpos((string)self::$_sql, '?')) {
-                $stmt = $dbh->prepare(self::$_sql);
-                $stmt->execute($params);
-            } else {
-                $stmt = $dbh->query(self::$_sql);
-            }
-        } catch (PDOException $error) {
-            // are you trying to write to something that doesn't exist?
-            self::$_error = $error->getMessage();
-            if (!$silent) {
-                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
-                debug_event(self::class, 'Error_query MSG: ' . $error->getMessage(), 1);
-            }
-
-            return null;
-        }
-
-        if (!$stmt) {
-            self::$_error = (string)json_encode($dbh->errorInfo());
-            if (!$silent) {
-                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
-                debug_event(self::class, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
-            }
-
-            self::disconnect();
-        } elseif ($stmt->errorCode() && $stmt->errorCode() != '00000') {
-            self::$_error = (string)json_encode($stmt->errorInfo());
-            if (!$silent) {
-                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
-                debug_event(self::class, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
-            }
-
-            self::finish($stmt);
-            self::disconnect();
-
-            return null;
-        }
-        self::$stats['query']++;
-
-        return $stmt ?: null;
-    }
-
-    /**
-     * read
-     * @param string $sql
-     * @param array $params
-     * @param bool $silent
-     */
-    public static function read($sql, $params = [], $silent = false): ?PDOStatement
-    {
-        return self::query($sql, $params, $silent) ?: null;
-    }
-
-    /**
-     * write
-     * @param string $sql
-     * @param array $params
-     * @param bool $silent
-     */
-    public static function write($sql, $params = [], $silent = false): ?PDOStatement
-    {
-        return self::query($sql, $params, $silent);
-    }
-
-    /**
-     * escape
-     *
-     * This runs an escape on a variable so that it can be safely inserted
-     * into the sql
-     */
-    public static function escape($var): ?string
-    {
-        $dbh = self::dbh();
-        if (!$dbh) {
-            debug_event(self::class, 'Wrong dbh.', 1);
-
-            return '';
-        }
-        if ($var === null) {
-            return '';
-        }
-        $out_var = $dbh->quote($var);
-
-        // This is slightly less ugly than it was, but still ugly
-        return substr($out_var, 1, -1);
-    }
-
-    /**
-     * check_length
-     * Truncate strings for the database that are longer than the limits
-     * @param string $value
-     * @param int $length
-     */
-    public static function check_length($value, $length): string
-    {
-        $result = substr($value, 0, $length);
-        if (!$result) {
-            return $value;
-        }
-
-        return $result;
-    }
-
-    /**
-     * fetch_assoc
-     *
-     * This emulates the mysql_fetch_assoc.
-     * We force it to always return an array, albeit an empty one
-     * The optional finish parameter affects whether we automatically clean
-     * up the result set after the last row is read.
-     * @param PDOStatement|null $resource
-     * @param bool $finish
-     */
-    public static function fetch_assoc($resource, $finish = true): array
-    {
-        if (!$resource) {
-            return [];
-        }
-
-        $result = $resource->fetch(PDO::FETCH_ASSOC);
-
-        if (!$result) {
-            if ($finish) {
-                self::finish($resource);
-            }
-
-            return [];
-        }
-
-        return $result;
-    }
-
-    /**
-     * fetch_row
-     *
-     * This emulates the mysql_fetch_row
-     * we force it to always return an array, albeit an empty one
-     * The optional finish parameter affects whether we automatically clean
-     * up the result set after the last row is read.
-     * @param PDOStatement|null $resource
-     * @param bool $finish
-     */
-    public static function fetch_row($resource, $finish = true): array
-    {
-        if (!$resource) {
-            return [];
-        }
-
-        $result = $resource->fetch(PDO::FETCH_NUM);
-
-        if (!$result) {
-            if ($finish) {
-                self::finish($resource);
-            }
-
-            return [];
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns the value from a single column
-     *
-     * Returns just the first column of a db-query result
-     * (or null, if the query fails). Useful, e.g. for count-results
-     *
-     * @param list<scalar> $parameter
-     */
-    public static function fetch_single_column(
-        string $query,
-        array $parameter = [],
-        bool $finish = true
-    ): ?string {
-        $resource = self::query(
-            $query,
-            $parameter
-        );
-
-        if (!$resource) {
-            return null;
-        }
-
-        $result = $resource->fetch(PDO::FETCH_COLUMN);
-
-        if ($result === false) {
-            if ($finish === true) {
-                self::finish($resource);
-            }
-
-            return null;
-        }
-
-        return (string) $result;
-    }
-
-    /**
-     * @param PDOStatement|null $resource
-     * @param class-string<object> $class
-     * @param bool $finish
-     */
-    public static function fetch_object($resource, $class = 'stdClass', $finish = true): ?object
-    {
-        if (!$resource) {
-            return null;
-        }
-
-        $result = $resource->fetchObject($class);
-
-        if (!$result) {
-            if ($finish) {
-                self::finish($resource);
-            }
-
-            return null;
-        }
-
-        return $result;
-    }
-
-    /**
-     * num_rows
-     *
-     * This emulates the mysql_num_rows function which is really
-     * just a count of rows returned by our select statement, this
-     * doesn't work for updates or inserts.
-     * @param PDOStatement|null $resource
-     */
-    public static function num_rows($resource): int
-    {
-        if ($resource) {
-            $result = $resource->rowCount();
-            if ($result) {
-                return $result;
-            }
-        }
-
-        return 0;
-    }
-
-    /**
-     * finish
-     *
-     * This closes a result handle and clears the memory associated with it
-     * @param PDOStatement|null $resource
-     */
-    public static function finish($resource): void
-    {
-        if ($resource) {
-            $resource->closeCursor();
-        }
-    }
+    private static string $_sql;
 
     /**
      * affected_rows
      *
      * This emulates the mysql_affected_rows function
-     * @param PDOStatement|null $resource
      */
-    public static function affected_rows($resource): int
+    public static function affected_rows(?PDOStatement $resource): int
     {
-        if ($resource) {
+        if ($resource instanceof PDOStatement) {
             $result = $resource->rowCount();
             if ($result) {
                 return $result;
@@ -364,81 +62,6 @@ class Dba
         }
 
         return 0;
-    }
-
-    /**
-     * _connect
-     *
-     * This connects to the database, used by the DBH function
-     */
-    private static function _connect(): ?PDO
-    {
-        $username = AmpConfig::get('database_username');
-        $hostname = AmpConfig::get('database_hostname', '');
-        $password = AmpConfig::get('database_password');
-        $port     = AmpConfig::get('database_port');
-
-        if ($hostname === '') {
-            return null;
-        }
-
-        // Build the data source name
-        if (strpos($hostname, '/') === 0) {
-            $dsn = 'mysql:unix_socket=' . $hostname;
-        } else {
-            $dsn = 'mysql:host=' . $hostname;
-        }
-        if ($port) {
-            $dsn .= ';port=' . (int)($port);
-        }
-
-        try {
-            debug_event(self::class, 'Database connection...', 5);
-            $dbh = new PDO($dsn, $username, $password);
-        } catch (PDOException $error) {
-            self::$_error = $error->getMessage();
-            debug_event(self::class, 'Connection failed: ' . $error->getMessage(), 1);
-
-            return null;
-        }
-
-        return $dbh;
-    }
-
-    /**
-     * _setup_dbh
-     * @param null|PDO $dbh
-     * @param string $database
-     */
-    private static function _setup_dbh($dbh, $database): bool
-    {
-        if (
-            !$dbh ||
-            $dbh->errorCode()
-        ) {
-            return false;
-        }
-
-        $charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset', 'UTF-8'));
-        $charset = $charset['charset'];
-        if ($dbh->exec('SET NAMES ' . $charset) === false) {
-            debug_event(self::class, 'Unable to set connection charset to ' . $charset, 1);
-        }
-
-        try {
-            $dbh->exec('USE `' . $database . '`');
-        } catch (PDOException) {
-            self::$_error = (string)json_encode($dbh->errorInfo());
-            debug_event(self::class, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
-        }
-
-        if (AmpConfig::get('sql_profiling')) {
-            $dbh->exec('SET profiling=1');
-            $dbh->exec('SET profiling_history_size=50');
-            $dbh->exec('SET query_cache_type=0');
-        }
-
-        return true;
     }
 
     /**
@@ -451,8 +74,8 @@ class Dba
         $dbh = self::_connect();
 
         if (!$dbh || $dbh->errorCode()) {
-            if ($dbh) {
-                self::$_error = (string)json_encode($dbh->errorInfo());
+            if ($dbh instanceof PDO) {
+                self::$_error = (string) json_encode($dbh->errorInfo());
             }
 
             return false;
@@ -484,7 +107,7 @@ class Dba
                 $sql        = "DESCRIBE `" . $item['table'] . "`";
                 $db_results = self::read($sql);
 
-                if (!$db_results) {
+                if (!$db_results instanceof PDOStatement) {
                     return false;
                 }
 
@@ -496,12 +119,12 @@ class Dba
                 $sql        = "SELECT COUNT(*) FROM `" . $item['table'] . "`";
                 $db_results = self::read($sql);
 
-                if (!$db_results) {
+                if (!$db_results instanceof PDOStatement) {
                     return false;
                 }
 
                 $row = self::fetch_row($db_results);
-                if ((int)$row[0] < $item['count']) {
+                if ((int) $row[0] < $item['count']) {
                     return false;
                 }
             }
@@ -511,21 +134,17 @@ class Dba
     }
 
     /**
-     * show_profile
-     *
-     * This function is used for debug, helps with profiling
+     * check_length
+     * Truncate strings for the database that are longer than the limits
      */
-    public static function show_profile(): void
+    public static function check_length(string $value, int $length): string
     {
-        if (AmpConfig::get('sql_profiling')) {
-            print '<br/>Profiling data: <br/>';
-            $res = self::read('SHOW PROFILES');
-            print '<table>';
-            while ($row = self::fetch_row($res)) {
-                print '<tr><td>' . implode('</td><td>', $row) . '</td></tr>';
-            }
-            print '</table>';
+        $result = substr($value, 0, $length);
+        if ($result === '' || $result === '0') {
+            return $value;
         }
+
+        return $result;
     }
 
     /**
@@ -580,6 +199,191 @@ class Dba
     }
 
     /**
+     * error
+     * this returns the error of the db
+     */
+    public static function error(): string
+    {
+        return self::$_error;
+    }
+
+    /**
+     * escape
+     *
+     * This runs an escape on a variable so that it can be safely inserted
+     * into the sql
+     */
+    public static function escape($var): ?string
+    {
+        $dbh = self::dbh();
+        if (!$dbh instanceof PDO) {
+            debug_event(self::class, 'Wrong dbh.', 1);
+
+            return '';
+        }
+
+        if ($var === null) {
+            return '';
+        }
+
+        $out_var = $dbh->quote((string) $var);
+
+        // This is slightly less ugly than it was, but still ugly
+        return substr($out_var, 1, -1);
+    }
+
+    /**
+     * fetch_assoc
+     *
+     * This emulates the mysql_fetch_assoc.
+     * We force it to always return an array, albeit an empty one
+     * The optional finish parameter affects whether we automatically clean
+     * up the result set after the last row is read.
+     */
+    public static function fetch_assoc(?PDOStatement $resource, bool $finish = true): array
+    {
+        if (!$resource instanceof PDOStatement) {
+            return [];
+        }
+
+        $result = $resource->fetch(PDO::FETCH_ASSOC);
+
+        if (!$result) {
+            if ($finish) {
+                self::finish($resource);
+            }
+
+            return [];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param class-string<object> $class
+     */
+    public static function fetch_object(?PDOStatement $resource, string $class = 'stdClass', bool $finish = true): ?object
+    {
+        if (!$resource instanceof PDOStatement) {
+            return null;
+        }
+
+        $result = $resource->fetchObject($class);
+
+        if (!$result) {
+            if ($finish) {
+                self::finish($resource);
+            }
+
+            return null;
+        }
+
+        return $result;
+    }
+
+    /**
+     * fetch_row
+     *
+     * This emulates the mysql_fetch_row
+     * we force it to always return an array, albeit an empty one
+     * The optional finish parameter affects whether we automatically clean
+     * up the result set after the last row is read.
+     */
+    public static function fetch_row(?PDOStatement $resource, bool $finish = true): array
+    {
+        if (!$resource instanceof PDOStatement) {
+            return [];
+        }
+
+        $result = $resource->fetch(PDO::FETCH_NUM);
+
+        if (!$result) {
+            if ($finish) {
+                self::finish($resource);
+            }
+
+            return [];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns the value from a single column
+     *
+     * Returns just the first column of a db-query result
+     * (or null, if the query fails). Useful, e.g. for count-results
+     *
+     * @param list<scalar> $parameter
+     */
+    public static function fetch_single_column(
+        string $query,
+        array $parameter = [],
+        bool $finish = true,
+    ): ?string {
+        $resource = self::query(
+            $query,
+            $parameter
+        );
+
+        if (!$resource instanceof PDOStatement) {
+            return null;
+        }
+
+        $result = $resource->fetch(PDO::FETCH_COLUMN);
+
+        if ($result === false) {
+            if ($finish) {
+                self::finish($resource);
+            }
+
+            return null;
+        }
+
+        return (string) $result;
+    }
+
+    /**
+     * finish
+     *
+     * This closes a result handle and clears the memory associated with it
+     */
+    public static function finish(?PDOStatement $resource): void
+    {
+        $resource?->closeCursor();
+    }
+
+    /**
+     * has_column
+     *
+     * Whether a column exists on a table of the current database.
+     */
+    public static function has_column(string $table, string $column): bool
+    {
+        $db_results = self::read(
+            'SELECT `COLUMN_NAME` FROM `information_schema`.`COLUMNS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = ? AND `COLUMN_NAME` = ?;',
+            [$table, $column]
+        );
+
+        return self::fetch_assoc($db_results) !== [];
+    }
+
+    /**
+     * has_index
+     *
+     * Whether an index exists on a table of the current database.
+     */
+    public static function has_index(string $table, string $index): bool
+    {
+        $db_results = self::read(
+            'SELECT `INDEX_NAME` FROM `information_schema`.`STATISTICS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = ? AND `INDEX_NAME` = ?;',
+            [$table, $index]
+        );
+
+        return self::fetch_assoc($db_results) !== [];
+    }
+
+    /**
      * insert_id
      */
     public static function insert_id(): false|string
@@ -593,24 +397,109 @@ class Dba
     }
 
     /**
-     * error
-     * this returns the error of the db
+     * num_rows
+     *
+     * This emulates the mysql_num_rows function which is really
+     * just a count of rows returned by our select statement, this
+     * doesn't work for updates or inserts.
      */
-    public static function error(): string
+    public static function num_rows(?PDOStatement $resource): int
     {
-        return self::$_error;
+        if ($resource instanceof PDOStatement) {
+            $result = $resource->rowCount();
+            if ($result) {
+                return $result;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * optimize_tables
+     *
+     * This runs an optimize on the tables and updates the stats to improve join speed.
+     * This can be slow, but is a good idea to do from time to time.
+     * We do it in case the dba isn't doing it... which we're going to assume they aren't.
+     */
+    public static function optimize_tables(): void
+    {
+        $sql        = "SHOW TABLES";
+        $db_results = self::read($sql);
+
+        while ($row = self::fetch_row($db_results)) {
+            debug_event(self::class, 'optimize_tables ' . $row[0], 5);
+            $sql = "OPTIMIZE TABLE `" . $row[0] . "`;";
+            self::write($sql);
+
+            $sql = "ANALYZE TABLE `" . $row[0] . "`;";
+            self::write($sql);
+        }
+    }
+
+    /**
+     * query
+     */
+    public static function query(string $sql, array $params = [], bool $silent = false, ?Interactor $interactor = null): ?PDOStatement
+    {
+        // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
+        //debug_event(self::class, $sql . ' ' . json_encode($params), 5);
+        if (in_array(trim($sql), ['', '0'], true)) {
+            return null;
+        }
+
+        // Be aggressive, be strong, be dumb
+        $tries = 0;
+        do {
+            $stmt = self::_query($sql, $params, $silent);
+        } while (!$stmt && $tries++ < 3);
+
+        if ($stmt === null) {
+            $interactor?->error(
+                self::error(),
+                true
+            );
+        }
+
+        return $stmt ?: null;
+    }
+
+    /**
+     * read
+     */
+    public static function read(string $sql, array $params = [], bool $silent = false): ?PDOStatement
+    {
+        return self::query($sql, $params, $silent) ?: null;
+    }
+
+    /**
+     * show_profile
+     *
+     * This function is used for debug, helps with profiling
+     */
+    public static function show_profile(): void
+    {
+        if (AmpConfig::get('sql_profiling')) {
+            print '<br/>Profiling data: <br/>';
+            $res = self::read('SHOW PROFILES');
+            print '<table>';
+            while ($row = self::fetch_row($res)) {
+                print '<tr><td>' . implode('</td><td>', $row) . '</td></tr>';
+            }
+
+            print '</table>';
+        }
     }
 
     /**
      * translate_to_mysqlcharset
      *
      * This translates the specified charset to a mysql charset.
-     * @param string|null $charset
      */
-    public static function translate_to_mysqlcharset($charset): array
+    public static function translate_to_mysqlcharset(?string $charset): array
     {
         // Translate real charset names into fancy MySQL land names
-        switch (strtoupper((string)$charset)) {
+        switch (strtoupper((string) $charset)) {
             case 'CP1250':
             case 'WINDOWS-1250':
                 $target_charset   = AmpConfig::get('database_charset', 'cp1250');
@@ -657,24 +546,138 @@ class Dba
     }
 
     /**
-     * optimize_tables
-     *
-     * This runs an optimize on the tables and updates the stats to improve join speed.
-     * This can be slow, but is a good idea to do from time to time.
-     * We do it in case the dba isn't doing it... which we're going to assume they aren't.
+     * write
      */
-    public static function optimize_tables(): void
+    public static function write(string $sql, array $params = [], bool $silent = false): ?PDOStatement
     {
-        $sql        = "SHOW TABLES";
-        $db_results = self::read($sql);
+        return self::query($sql, $params, $silent);
+    }
 
-        while ($row = self::fetch_row($db_results)) {
-            debug_event(self::class, 'optimize_tables ' . $row[0], 5);
-            $sql = "OPTIMIZE TABLE `" . $row[0] . "`;";
-            self::write($sql);
+    /**
+     * _connect
+     *
+     * This connects to the database, used by the DBH function
+     */
+    private static function _connect(): ?PDO
+    {
+        $username = AmpConfig::get('database_username');
+        $hostname = AmpConfig::get('database_hostname', '');
+        $password = AmpConfig::get('database_password');
+        $port     = AmpConfig::get('database_port');
 
-            $sql = "ANALYZE TABLE `" . $row[0] . "`;";
-            self::write($sql);
+        if ($hostname === '') {
+            return null;
         }
+
+        // Build the data source name
+        $dsn = (str_starts_with((string) $hostname, '/')) ? 'mysql:unix_socket=' . $hostname : 'mysql:host=' . $hostname;
+
+        if ($port) {
+            $dsn .= ';port=' . (int) ($port);
+        }
+
+        try {
+            debug_event(self::class, 'Database connection...', 5);
+            $dbh = new PDO($dsn, $username, $password);
+        } catch (PDOException $pdoException) {
+            self::$_error = $pdoException->getMessage();
+            debug_event(self::class, 'Connection failed: ' . $pdoException->getMessage(), 1);
+
+            return null;
+        }
+
+        return $dbh;
+    }
+
+    /**
+     * _query
+     */
+    private static function _query(string $sql, array $params, bool $silent = false): ?PDOStatement
+    {
+        $dbh = self::dbh();
+        if (!$dbh instanceof PDO) {
+            debug_event(self::class, 'Error: failed to get database handle', 1);
+
+            return null;
+        }
+
+        self::$_sql = $sql;
+        try {
+            // Run the query
+            if ($params !== [] && strpos(self::$_sql, '?')) {
+                $stmt = $dbh->prepare(self::$_sql);
+                $stmt->execute($params);
+            } else {
+                $stmt = $dbh->query(self::$_sql);
+            }
+        } catch (PDOException $pdoException) {
+            // are you trying to write to something that doesn't exist?
+            self::$_error = $pdoException->getMessage();
+            if (!$silent) {
+                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
+                debug_event(self::class, 'Error_query MSG: ' . $pdoException->getMessage(), 1);
+            }
+
+            return null;
+        }
+
+        if (!$stmt) {
+            self::$_error = (string) json_encode($dbh->errorInfo());
+            if (!$silent) {
+                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
+                debug_event(self::class, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
+            }
+
+            self::disconnect();
+        } elseif ($stmt->errorCode() && $stmt->errorCode() !== '00000') {
+            self::$_error = (string) json_encode($stmt->errorInfo());
+            if (!$silent) {
+                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
+                debug_event(self::class, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
+            }
+
+            self::finish($stmt);
+            self::disconnect();
+
+            return null;
+        }
+
+        self::$stats['query']++;
+
+        return $stmt ?: null;
+    }
+
+    /**
+     * _setup_dbh
+     */
+    private static function _setup_dbh(?PDO $dbh, string $database): bool
+    {
+        if (
+            !$dbh
+            || $dbh->errorCode()
+        ) {
+            return false;
+        }
+
+        $charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset', 'UTF-8'));
+        $charset = $charset['charset'];
+        if ($dbh->exec('SET NAMES ' . $charset) === false) {
+            debug_event(self::class, 'Unable to set connection charset to ' . $charset, 1);
+        }
+
+        try {
+            $dbh->exec('USE `' . $database . '`');
+        } catch (PDOException) {
+            self::$_error = (string) json_encode($dbh->errorInfo());
+            debug_event(self::class, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
+        }
+
+        if (AmpConfig::get('sql_profiling')) {
+            $dbh->exec('SET profiling=1');
+            $dbh->exec('SET profiling_history_size=50');
+            $dbh->exec('SET query_cache_type=0');
+        }
+
+        return true;
     }
 }

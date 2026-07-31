@@ -30,28 +30,14 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\Activity\TypeHandler\ActivityTypeHandlerInterface;
 use Ampache\Module\User\Activity\TypeHandler\ActivityTypeHandlerMapperInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Log\LoggerInterface;
 
 class UserActivityPosterTest extends MockeryTestCase
 {
-    /** @var MockInterface|ActivityTypeHandlerMapperInterface|null */
-    private MockInterface $activityTypeHandlerMapper;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
-
+    private MockInterface|ActivityTypeHandlerMapperInterface|null $activityTypeHandlerMapper;
+    private LoggerInterface|MockInterface|null $logger;
     private ?UserActivityPoster $subject;
-
-    protected function setUp(): void
-    {
-        $this->activityTypeHandlerMapper = $this->mock(ActivityTypeHandlerMapperInterface::class);
-        $this->logger                    = $this->mock(LoggerInterface::class);
-
-        $this->subject = new UserActivityPoster(
-            $this->activityTypeHandlerMapper,
-            $this->logger
-        );
-    }
 
     public function testPostRegistersAction(): void
     {
@@ -91,6 +77,18 @@ class UserActivityPosterTest extends MockeryTestCase
             $objectType,
             $objectId,
             $date
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->activityTypeHandlerMapper = $this->mock(ActivityTypeHandlerMapperInterface::class);
+        $this->logger                    = $this->mock(LoggerInterface::class);
+
+        $this->subject = new UserActivityPoster(
+            $this->activityTypeHandlerMapper,
+            $this->logger
         );
     }
 }

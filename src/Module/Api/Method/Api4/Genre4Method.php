@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
  */
 final class Genre4Method
 {
-    public const ACTION = 'genre';
+    public const string ACTION = 'genre';
 
     /**
      * genre

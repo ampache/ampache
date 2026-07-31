@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_debug.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\EnvironmentInterface;
@@ -32,7 +34,7 @@ use Ampache\Repository\Model\Preference;
 global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
 
-/** @var array $configuration */
+/** @var array<string, mixed> $configuration */
 /** @var string $latest_version */
 /** @var int $lastCronDate */
 
@@ -40,7 +42,7 @@ $web_path = AmpConfig::get_web_path();
 
 $admin_path = AmpConfig::get_web_path('/admin');
 
-// don't share passwords, api secrets and unset additional variables
+// don't share secrets and unset additional variables
 unset(
     $configuration['daap_pass'],
     $configuration['database_password'],
@@ -49,6 +51,7 @@ unset(
     $configuration['load_time_begin'],
     $configuration['mail_auth_pass'],
     $configuration['musicbrainz_password'],
+    $configuration['oidc_client_secret'],
     $configuration['phpversion'],
     $configuration['proxy_pass'],
     $configuration['secret_key'],
@@ -91,10 +94,10 @@ $current_version = AutoUpdate::get_current_version(); ?>
             : $current_version . ' (' . $configuration['structure'] . ')'; ?></div>
 <?php if (AmpConfig::get('autoupdate', false)) { ?>
     <div><?php echo T_('Latest Ampache version'); ?>: <?php echo $latest_version; ?></div>
-    <?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
-        <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string)AutoUpdate::is_force_git_branch() . '</div>';
+    <?php if (AutoUpdate::is_force_git_branch() !== '') { ?>
+        <?php echo "<div>" . T_('GitHub Branch') . ': ' . AutoUpdate::is_force_git_branch() . '</div>';
     } ?>
-    <?php echo "<div>" . T_('Last Update') . ': ' . (string)((AmpConfig::get('autoupdate_lastcheck', 0)) ? get_datetime(AmpConfig::get('autoupdate_lastcheck', 0)) : T_('Unknown')) . '</div>'; ?>
+    <?php echo "<div>" . T_('Last Update') . ': ' . ((AmpConfig::get('autoupdate_lastcheck', 0)) ? get_datetime((int) AmpConfig::get('autoupdate_lastcheck', 0)) : T_('Unknown')) . '</div>'; ?>
     <div><a class="nohtml" href="<?php echo $admin_path; ?>/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
     <?php if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
         AutoUpdate::show_new_version();
@@ -123,7 +126,7 @@ $current_version = AutoUpdate::get_current_version(); ?>
         <tbody>
         <tr>
             <td><?php echo T_('Version'); ?></td>
-            <td><?php echo (string)phpversion(); ?></td>
+            <td><?php echo phpversion(); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Memory Limit'); ?></td>
@@ -193,7 +196,7 @@ echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
         $value = $string;
     }
     if (Preference::is_boolean($key)) {
-        $value = Ui::printBool($value);
+        $value = Ui::printBool((bool) $value);
     }
 
     // Be sure to print only scalar values

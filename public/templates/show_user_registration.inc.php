@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_user_registration.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
@@ -166,7 +168,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                             $builder->build(280, 128);
                         } ?>
                     <div class="registerfield require">
-                        <label for="captcha_user"><?php echo T_('Captcha'); ?>:</label>
+                        <label for="captcha_user"><?php echo T_('Captcha is required'); ?>:</label>
                         <input id="captcha_user" type="text" name="captcha_user" maxlength="20" />
                         <?php echo AmpError::display('captcha_user'); ?>
                     </div>

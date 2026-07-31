@@ -36,43 +36,14 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowEditRecordActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?ShowEditRecordAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new ShowEditRecordAction(
-            $this->ui,
-            $this->modelFactory
-        );
-    }
-
-    public function testRunThrowExceptionIfAccessIsDenied(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $this->expectException(AccessDeniedException::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunRenders(): void
     {
@@ -103,7 +74,7 @@ class ShowEditRecordActionTest extends MockeryTestCase
         $this->ui->shouldReceive('show')
             ->with(
                 'show_edit_access.inc.php',
-                Mockery::on(static fn (array $context): bool => $context['access'] instanceof AccessListItemInterface)
+                Mockery::on(static fn(array $context): bool => $context['access'] instanceof AccessListItemInterface)
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')
@@ -114,5 +85,32 @@ class ShowEditRecordActionTest extends MockeryTestCase
             ->once();
 
         $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowExceptionIfAccessIsDenied(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->expectException(AccessDeniedException::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui           = $this->mock(UiInterface::class);
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+
+        $this->subject = new ShowEditRecordAction(
+            $this->ui,
+            $this->modelFactory
+        );
     }
 }

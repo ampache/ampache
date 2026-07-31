@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
 
 /**
@@ -42,9 +43,8 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
     public function __construct(
         private PrivilegeCheckerInterface $privilegeChecker,
         private ConfigContainerInterface $configContainer,
-        private ShoutObjectLoaderInterface $shoutObjectLoader
-    ) {
-    }
+        private ShoutObjectLoaderInterface $shoutObjectLoader,
+    ) {}
 
     /**
      * Renders the shout and returns the rendered output
@@ -55,7 +55,7 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
         $shoutObjectId   = $shout->getObjectId();
         $shoutObjectType = $shout->getObjectType()->value;
 
-        if ($object === null) {
+        if (!$object instanceof displayable_item) {
             return '';
         }
 
@@ -64,16 +64,18 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
         $html = "<div class='shoutbox-item'>";
         $html .= "<div class='shoutbox-data'>";
         if (
-            $details &&
-            Art::has_db($shoutObjectId, $shoutObjectType)
+            $details
+            && Art::has_db($shoutObjectId, $shoutObjectType)
         ) {
-            $html .= "<div class='shoutbox-img'><img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . $webPath . "/image.php?object_id=" . $shoutObjectId . "&object_type=" . $shoutObjectType . "&size=150x150\" /></div>";
+            $html .= "<div class='shoutbox-img'><img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . $webPath . "/image.php?object_id=" . $shoutObjectId . "&object_type=" . $shoutObjectType . '&size=150x150" /></div>';
         }
+
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
             $html .= "<div class='shoutbox-object'>" . $object->get_f_link() . "</div>";
             $html .= "<div class='shoutbox-date'>" . get_datetime($shout->getDate()) . "</div>";
         }
+
         $html .= "<div class='shoutbox-text'>" . preg_replace('/(\r\n|\n|\r)/', '<br />', $shout->getText()) . "</div>";
         $html .= "</div>";
         $html .= "</div>";
@@ -94,11 +96,14 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
                     'add_' . $shoutObjectType . '_' . $shoutObjectId
                 );
             }
+
             if ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
-                $html .= "<a href=\"" . $webPath . "/shout.php?action=show_add_shout&type=" . $shoutObjectType . "&id=" . $shoutObjectId . "\">" . Ui::get_material_symbol('comment', T_('Post Shout')) . "</a>";
+                $html .= '<a href="' . $webPath . "/shout.php?action=show_add_shout&type=" . $shoutObjectType . "&id=" . $shoutObjectId . '">' . Ui::get_material_symbol('comment', T_('Post Shout')) . "</a>";
             }
+
             $html .= "</div>";
         }
+
         $html .= "<div class='shoutbox-user'>" . T_('by') . " ";
 
         $user = $shout->getUser();
@@ -111,10 +116,10 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
         } else {
             $html .= T_('Guest');
         }
-        $html .= "</div>";
+
         $html .= "</div>";
         $html .= "</div>";
 
-        return $html;
+        return $html . "</div>";
     }
 }

@@ -67,12 +67,15 @@ export function overlayclickclose() {
     closeplaylist = 1;
 }
 
-export function showPlaylistDialog(e, item_type, item_ids) {
+export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
     $("#playlistdialog").dialog("close");
 
     var parent = window;
     parent.itemType = item_type;
     parent.contentUrl = jsAjaxServer + "/edit.server.php?action=show_edit_playlist&object_type=" + item_type + "&id=" + item_ids;
+    if (item_groups) {
+        parent.contentUrl += "&groups=" + encodeURIComponent(item_groups);
+    }
     parent.editDialogId = "<div id=\"playlistdialog\"></div>";
 
     $(parent.editDialogId).dialog({
@@ -81,7 +84,9 @@ export function showPlaylistDialog(e, item_type, item_ids) {
         resizable: false,
         draggable: false,
         width: 300,
-        height: 100,
+        // auto, because the dialog now holds a playlist group and possibly a collection group
+        height: "auto",
+        maxHeight: 400,
         autoOpen: false,
         position: {
             my: "left+10 top",
@@ -89,7 +94,7 @@ export function showPlaylistDialog(e, item_type, item_ids) {
         },
         open() {
             closeplaylist = 1;
-            $(document).bind("click", overlayclickclose);
+            $(document).on("click.playlistdialog", overlayclickclose);
             $(this).load(parent.contentUrl, function() {
                 $("#playlistdialog").focus();
             });
@@ -98,7 +103,7 @@ export function showPlaylistDialog(e, item_type, item_ids) {
             closeplaylist = 0;
         },
         close(e) {
-            $(document).unbind("click");
+            $(document).off("click.playlistdialog");
             $(this).empty();
             $(this).dialog("destroy");
         }
@@ -108,16 +113,66 @@ export function showPlaylistDialog(e, item_type, item_ids) {
     closeplaylist = 0;
 }
 
-export function handlePlaylistAction(url, id) {
-    ajaxPut(url, id);
+// append_item takes one type per call, so a selection spanning types is sent group by group. The first call
+// carries any new-list name and reports the id it created, which the rest are then appended to.
+// `idParam` names the key that id travels under, so the same stepping drives playlists and collections.
+function appendPlaylistGroups(url, groups, id, idParam) {
+    var idKey = idParam || "playlist_id";
+
+    var pending = String(groups).split(";").filter(Boolean).map(function (group) {
+        var parts = group.split(":");
+
+        return {type: parts[0], ids: parts.slice(1).join(":")};
+    });
+
+    if (pending.length === 0) {
+        ajaxPut(url, id);
+
+        return;
+    }
+
+    // the url already carries the first group, so send it as-is and swap the type/ids in for the others
+    var base = url.replace(/&item_type=[^&]*/, "").replace(/&item_id=[^&]*/, "");
+
+    (function step(index, target) {
+        if (index >= pending.length) {
+            return;
+        }
+
+        var group = pending[index];
+        // the id list stays a bare `1,2`: an encoded comma is refused with a 400 before it reaches php
+        var call = target +
+            "&item_type=" + group.type.replace(/[^a-z_]/g, "") +
+            "&item_id=" + group.ids.replace(/[^0-9,]/g, "");
+
+        $.ajax(call, {type: "post", dataType: "xml", success: function (data) {
+            processContents(data);
+
+            var created = $(data).find("content[div='" + idKey + "']").text();
+            if (created && target.indexOf(idKey + "=") === -1) {
+                target += "&" + idKey + "=" + created;
+            }
+
+            step(index + 1, target);
+        }});
+    }(0, base));
+}
+
+export function handlePlaylistAction(url, id, groups, idParam) {
+    if (groups) {
+        appendPlaylistGroups(url, groups, id, idParam);
+    } else {
+        ajaxPut(url, id);
+    }
+
     $("#playlistdialog").dialog("close");
 }
 
-export function createNewPlaylist(title, url, id) {
+export function createNewPlaylist(title, url, id, groups, idParam) {
     var plname = window.prompt(title, "");
     if (plname !== null) {
-        url += "&name=" + plname;
-        handlePlaylistAction(url, id);
+        url += "&name=" + encodeURIComponent(plname);
+        handlePlaylistAction(url, id, groups, idParam);
     }
 }
 
@@ -155,7 +210,7 @@ export function showBroadcastsDialog(e) {
         },
         open() {
             closebroadcasts = 1;
-            $(document).bind("click", broverlayclickclose);
+            $(document).on("click.broadcastsdialog", broverlayclickclose);
             $(this).load(parent.contentUrl, function() {
                 $("#broadcastsdialog").focus();
             });
@@ -164,7 +219,7 @@ export function showBroadcastsDialog(e) {
             closebroadcasts = 0;
         },
         close(e) {
-            $(document).unbind("click");
+            $(document).off("click.broadcastsdialog");
             $(this).empty();
             $(this).dialog("destroy");
         }
@@ -211,7 +266,7 @@ export function showShareDialog(e, object_type, object_id) {
         },
         open() {
             closeshare = 1;
-            $(document).bind("click", shoverlayclickclose);
+            $(document).on("click.sharedialog", shoverlayclickclose);
             $(this).load(parent.contentUrl, function() {
                 $("#sharedialog").focus();
             });
@@ -220,7 +275,7 @@ export function showShareDialog(e, object_type, object_id) {
             closeshare = 0;
         },
         close(e) {
-            $(document).unbind("click");
+            $(document).off("click.sharedialog");
             $(this).empty();
             $(this).dialog("destroy");
         }
@@ -294,12 +349,7 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
                             $("#" + parent.refreshRowPrefix + parent.editId).attr("id", parent.refreshRowPrefix + new_id);
                         });
                     } else {
-                        var reloadp = window.location;
-                        var hash = window.location.hash.substring(1);
-                        if (hash && hash.indexOf(".php") > -1) {
-                            reloadp = jsWebPath + "/" + hash;
-                        }
-                        loadContentPage(reloadp);
+                        loadContentPage(window.location.href);
                     }
                 },
                 error(resp) {
@@ -316,7 +366,7 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
             modal: true,
             dialogClass: "editdialogstyle",
             resizable: false,
-            width: 666,
+            width: Math.min(666, $(window).width() - 20),
             autoOpen: false,
             show: { effect: "fade", duration: 400 },
             open() {

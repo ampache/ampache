@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -29,8 +29,11 @@ use Ampache\Repository\Model\Query;
 
 final class BroadcastQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
     ];
+
+    protected string $base   = "SELECT %%SELECT%% FROM `broadcast` ";
+    protected string $select = "`broadcast`.`id`";
 
     /** @var string[] $sorts */
     protected array $sorts = [
@@ -41,9 +44,15 @@ final class BroadcastQuery implements QueryInterface
         'user',
     ];
 
-    protected string $select = "`broadcast`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `broadcast` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -53,16 +62,6 @@ final class BroadcastQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**
@@ -90,31 +89,19 @@ final class BroadcastQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
-        switch ($field) {
-            case 'name':
-            case 'title':
-                $sql = "`broadcast`.`name`";
-                break;
-            case 'id':
-            case 'user':
-            case 'started':
-            case 'listeners':
-                $sql = "`broadcast`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'name', 'title' => "`broadcast`.`name`",
+            'id', 'user', 'started', 'listeners' => sprintf('`broadcast`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

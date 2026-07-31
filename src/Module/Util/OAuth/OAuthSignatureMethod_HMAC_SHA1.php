@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -35,31 +35,31 @@ namespace Ampache\Module\Util\OAuth;
 class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod
 {
     /**
-     * get_name
      */
-    public function get_name(): string
-    {
-        return "HMAC-SHA1";
-    }
-
-    /**
-     * @param OAuthRequest $request
-     * @param OAuthConsumer $consumer
-     * @param OAuthToken $token
-     */
-    public function build_signature($request, $consumer, $token): string
+    public function build_signature(OAuthRequest $request, OAuthConsumer $consumer, OAuthToken $token): string
     {
         $base_string          = $request->get_signature_base_string();
         $request->base_string = $base_string;
 
         $key_parts = [
             $consumer->secret,
-            ($token) ? $token->secret : "",
+            $token->secret ?? "",
         ];
 
         $key_parts = OAuthUtil::urlencode_rfc3986($key_parts);
-        $key       = implode('&', $key_parts);
+
+        $key = (is_array($key_parts))
+            ? implode('&', $key_parts)
+            : $key_parts;
 
         return base64_encode(hash_hmac('sha1', $base_string, $key, true));
+    }
+
+    /**
+     * get_name
+     */
+    public function get_name(): string
+    {
+        return "HMAC-SHA1";
     }
 }

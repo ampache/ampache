@@ -30,7 +30,9 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -40,7 +42,7 @@ use Psr\Log\LoggerInterface;
 
 final class ShowEditObjectAction extends AbstractEditAction
 {
-    public const REQUEST_KEY = 'show_edit_object';
+    public const string REQUEST_KEY = 'show_edit_object';
 
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
@@ -50,10 +52,12 @@ final class ShowEditObjectAction extends AbstractEditAction
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
+        LibraryItemLoaderInterface $libraryItemLoader,
         LoggerInterface $logger,
+        ShareRepositoryInterface $shareRepository,
         UiInterface $ui,
     ) {
-        parent::__construct($configContainer, $logger);
+        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->ui              = $ui;

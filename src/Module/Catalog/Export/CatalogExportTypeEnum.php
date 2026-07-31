@@ -30,7 +30,6 @@ namespace Ampache\Module\Catalog\Export;
  */
 enum CatalogExportTypeEnum: string
 {
+    case CSV    = 'csv';
     case ITUNES = 'itunes';
-
-    case CSV = 'csv';
 }

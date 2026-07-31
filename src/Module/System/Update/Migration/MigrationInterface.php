@@ -31,27 +31,11 @@ use Traversable;
 interface MigrationInterface
 {
     /**
-     * Performs the actual migration steps
-     * @throws DatabaseException
-     */
-    public function migrate(): void;
-
-    /**
-     * Sets the cli interactor instance
-     */
-    public function setInteractor(?Interactor $interactor): void;
-
-    /**
      * Returns a list of changelog-strings
      *
      * @return list<non-empty-string>
      */
     public function getChangelog(): array;
-
-    /**
-     * Returns `true` if the migration should trigger a warning within the UI
-     */
-    public function hasWarning(): bool;
 
     /**
      * Returns the sql-statements used for create/migration the database tables
@@ -62,6 +46,22 @@ interface MigrationInterface
         string $collation,
         string $charset,
         string $engine,
-        int $build
+        int $build,
     ): Traversable;
+
+    /**
+     * Returns `true` if the migration should trigger a warning within the UI
+     */
+    public function hasWarning(): bool;
+
+    /**
+     * Performs the actual migration steps
+     * @throws DatabaseException
+     */
+    public function migrate(): void;
+
+    /**
+     * Sets the cli interactor instance
+     */
+    public function setInteractor(?Interactor $interactor): void;
 }

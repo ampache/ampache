@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,13 +23,16 @@ declare(strict_types=0);
  *
  */
 
+// show_manage_shoutbox.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
 
 /** @var ShoutObjectLoaderInterface $shoutObjectLoader */
-/** @var list<Shoutbox> $shouts */
+/** @var array<Shoutbox> $shouts */
 
 $web_path = AmpConfig::get_web_path();
 
@@ -64,9 +67,10 @@ $t_no     = T_('No'); ?>
             $client = $libitem->getUser();
 
             if (
-                $client !== null &&
-                $object !== null
+                $client !== null
+                && $object instanceof displayable_item
             ) {
+                $f_link = $object->get_f_link();
                 require Ui::find_template('show_shout_row.inc.php');
             }
             ?>

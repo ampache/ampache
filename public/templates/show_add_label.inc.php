@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_add_label.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
@@ -120,11 +122,12 @@ Ui::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
 <tr>
     <td><?php echo T_('Status'); ?></td>
     <td>
+        <?php // a fresh form has no `active` key, and a new label is active by default like the column?>
         <select name="active">
-            <option value="1" <?php if (array_key_exists('active', $_REQUEST) && (int)$_REQUEST['active'] === 1) {
+            <option value="1" <?php if (!array_key_exists('active', $_REQUEST) || (int) $_REQUEST['active'] === 1) {
                 echo "selected";
             } ?>><?php echo T_('Active'); ?></option>
-            <option value="0" <?php if (empty($_REQUEST['active']) || (int)$_REQUEST['active'] === 0) {
+            <option value="0" <?php if (array_key_exists('active', $_REQUEST) && (int) $_REQUEST['active'] === 0) {
                 echo "selected";
             } ?>><?php echo T_('Inactive'); ?></option>
         </select>

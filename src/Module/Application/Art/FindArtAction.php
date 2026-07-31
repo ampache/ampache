@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,27 +37,17 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class FindArtAction extends AbstractArtAction
 {
-    public const REQUEST_KEY = 'find_art';
-
-    private ArtCollectorInterface $artCollector;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'find_art';
 
     public function __construct(
-        ArtCollectorInterface $artCollector,
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui
-    ) {
-        $this->artCollector = $artCollector;
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
-    }
+        private readonly ArtCollectorInterface $artCollector,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly UiInterface $ui,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $item        = $this->getItem($gatekeeper);
 
         if ($item === null) {
@@ -78,11 +68,13 @@ final class FindArtAction extends AbstractArtAction
             if (array_key_exists('option_' . $key, $_REQUEST)) {
                 $word['value'] = $_REQUEST['option_' . $key];
             }
+
             $options[$key] = $word['value'];
             if ($word['important'] && !empty($word['value'])) {
                 $keyword .= ' ' . $word['value'];
             }
         }
+
         $options['keyword'] = trim($keyword);
 
         // Prevent the script from timing out
@@ -95,9 +87,11 @@ final class FindArtAction extends AbstractArtAction
         if (array_key_exists('artist_filter', $_REQUEST)) {
             $options['artist_filter'] = true;
         }
+
         if (array_key_exists('search_limit', $_REQUEST)) {
-            $options['search_limit'] = $limit = (int)$_REQUEST['search_limit'];
+            $options['search_limit'] = $limit = (int) $_REQUEST['search_limit'];
         }
+
         if (array_key_exists('year_filter', $_REQUEST) && !empty($_REQUEST['year_filter'])) {
             $options['year_filter'] = 'year:' . $_REQUEST['year_filter'];
         }
@@ -106,14 +100,14 @@ final class FindArtAction extends AbstractArtAction
 
         // If we've got an upload ignore the rest and just insert it
         if (!empty($_FILES['file']['tmp_name'])) {
-            $path_info      = pathinfo($_FILES['file']['name']);
             $upload         = [];
             $upload['file'] = $_FILES['file']['tmp_name'];
-            $upload['mime'] = 'image/' . ($path_info['extension'] ?? 'jpg');
             $image_data     = Art::get_from_source($upload, $object_type);
 
-            if ($image_data != '') {
-                if ($art->insert($image_data, $upload['mime'])) {
+            if ($image_data !== '') {
+                // no mime passed: the uploaded filename is user supplied and says nothing reliable
+                // about the bytes, so let insert() read the real type out of the image itself
+                if ($art->insert($image_data)) {
                     $this->ui->showContinue(
                         T_('No Problem'),
                         T_('Art has been added'),
@@ -138,20 +132,34 @@ final class FindArtAction extends AbstractArtAction
         $images = $this->artCollector->collect($art, $options, $limit);
 
         if (!empty($_REQUEST['cover'])) {
-            $path_info            = pathinfo($_REQUEST['cover']);
+            $path_info            = pathinfo((string) $_REQUEST['cover']);
             $cover_url[0]['url']  = scrub_in((string) $_REQUEST['cover']);
             $cover_url[0]['mime'] = 'image/' . ($path_info['extension'] ?? 'jpg');
         }
+
         $images = array_merge($cover_url, $images);
 
         // If we've found anything then go for it!
-        if (count($images)) {
-            // We don't want to store raw's in here so we need to strip them out into a separate array
+        if ($images !== []) {
+            // The session is a utf8mb4 text column, so raw image bytes can't go in it as they are; the
+            // whole session write fails on the first non-utf8 byte. Anything that can be read back from
+            // somewhere else (a url, an image row) keeps only that reference, and the rest, like a
+            // generated mosaic or an id3 tag picture, is encoded so it stays selectable.
             foreach ($images as $index => $image) {
-                if (is_array($image) && array_key_exists('raw', $image)) {
-                    unset($images[$index]['raw']);
+                if (!array_key_exists('raw', $image)) {
+                    continue;
                 }
-            } // end foreach
+
+                if (
+                    empty($image['url'])
+                    && empty($image['db'])
+                ) {
+                    $images[$index]['raw_base64'] = base64_encode($image['raw']);
+                }
+
+                unset($images[$index]['raw']);
+            }
+
             // Store the results for further use
             $_SESSION['form']['images'] = $images;
             $this->ui->show(

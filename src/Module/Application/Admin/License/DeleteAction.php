@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -40,25 +40,15 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Deletes a single license
  */
-final class DeleteAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private LicenseRepositoryInterface $licenseRepository;
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        LicenseRepositoryInterface $licenseRepository
-    ) {
-        $this->ui                = $ui;
-        $this->configContainer   = $configContainer;
-        $this->licenseRepository = $licenseRepository;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private LicenseRepositoryInterface $licenseRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

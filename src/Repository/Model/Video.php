@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -34,84 +34,54 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 
 class Video extends database_object implements
     Media,
-    library_item,
+    displayable_item,
+    container_item,
     GarbageCollectibleInterface,
     CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'video';
+    protected const string DB_TABLENAME = 'video';
 
-    public int $id = 0;
-
-    public string $file;
-
-    public int $catalog;
-
-    public ?string $title = null;
-
-    public ?string $video_codec = null;
-
-    public ?string $audio_codec = null;
-
-    public int $resolution_x;
-
-    public int $resolution_y;
-
-    public int $time;
-
-    public int $size;
-
-    public ?string $mime = null;
-
-    public ?int $addition_time = null;
-
-    public ?int $update_time = null;
-
-    public int $enabled;
-
-    public bool $played;
-
-    public ?int $release_date = null;
-
-    public ?int $channels = null;
-
-    public ?int $bitrate = null;
-
+    public ?int $addition_time           = null;
+    public ?string $audio_codec          = null;
+    public ?int $bitrate                 = null;
+    public int $catalog                  = 0;
+    public ?int $channels                = null;
+    public ?int $display_x               = null;
+    public ?int $display_y               = null;
+    public int $enabled                  = 0;
+    public ?string $file                 = null;
+    public ?float $frame_rate            = null;
+    public int $id                       = 0;
+    public ?int $last_played             = null; // When this was last streamed, as a unix timestamp; null until it has been played.
+    public ?string $link                 = null;
+    public ?string $mime                 = null;
+    public ?string $mode                 = null;
+    public bool $played                  = false;
+    public ?int $release_date            = null;
+    public int $resolution_x             = 0;
+    public int $resolution_y             = 0;
+    public int $size                     = 0;
+    public int $time                     = 0;
+    public ?string $title                = null;
+    public int $total_count              = 0;
+    public int $total_skip               = 0;
+    public string $type                  = '';
+    public ?int $update_time             = null;
     public int|float|null $video_bitrate = null;
-
-    public ?int $display_x = null;
-
-    public ?int $display_y = null;
-
-    public ?float $frame_rate = null;
-
-    public ?string $mode = null;
-
-    public int $total_count = 0;
-
-    public int $total_skip = 0;
-
-    private int $weight = 0;
-
-    public ?string $link = null;
-
-    public string $type;
+    public ?string $video_codec          = null;
+    private ?string $f_display           = null;
+    private ?string $f_link              = null;
+    private ?string $f_resolution        = null;
+    private ?bool $has_art               = null;
 
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
-
-    private ?string $f_link = null;
-
-    private ?bool $has_art = null;
-
-    private ?string $f_resolution = null;
-
-    private ?string $f_display = null;
 
     /**
      * Constructor
@@ -129,27 +99,40 @@ class Video extends database_object implements
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->catalog       = (int) ($info['catalog'] ?? 0);
+        $this->title         = $info['title'] ?? null;
+        $this->file          = $info['file'] ?? null;
+        $this->size          = (int) ($info['size'] ?? 0);
+        $this->time          = (int) ($info['time'] ?? 0);
+        $this->mime          = $info['mime'] ?? null;
+        $this->enabled       = (int) ($info['enabled'] ?? 0);
+        $this->played        = (bool) ($info['played'] ?? false);
+        $this->update_time   = isset($info['update_time']) ? (int) $info['update_time'] : null;
+        $this->addition_time = isset($info['addition_time']) ? (int) $info['addition_time'] : null;
+        $this->bitrate       = isset($info['bitrate']) ? (int) $info['bitrate'] : null;
+        $this->mode          = $info['mode'] ?? null;
+        $this->channels      = isset($info['channels']) ? (int) $info['channels'] : null;
+        $this->resolution_x  = (int) ($info['resolution_x'] ?? 0);
+        $this->resolution_y  = (int) ($info['resolution_y'] ?? 0);
+        $this->display_x     = isset($info['display_x']) ? (int) $info['display_x'] : null;
+        $this->display_y     = isset($info['display_y']) ? (int) $info['display_y'] : null;
+        $this->video_codec   = $info['video_codec'] ?? null;
+        $this->audio_codec   = $info['audio_codec'] ?? null;
+        $this->frame_rate    = isset($info['frame_rate']) ? (float) $info['frame_rate'] : null;
+        $this->video_bitrate = isset($info['video_bitrate']) ? (float) $info['video_bitrate'] : null;
+        $this->release_date  = isset($info['release_date']) ? (int) $info['release_date'] : null;
+        $this->last_played   = isset($info['last_played']) ? (int) $info['last_played'] : null;
+        $this->total_count   = (int) ($info['total_count'] ?? 0);
+        $this->total_skip    = (int) ($info['total_skip'] ?? 0);
 
-        $this->type = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
-    }
-
-    public function getId(): int
-    {
-        return (int)($this->id ?? 0);
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
+        $this->type = ($this->file) ? strtolower(pathinfo($this->file, PATHINFO_EXTENSION)) : '';
     }
 
     /**
      * build_cache
      * Build a cache based on the array of ids passed, saves lots of little queries
-     * @param int[] $ids
+     * @param array<int|string> $ids
      */
     public static function build_cache(array $ids): bool
     {
@@ -157,11 +140,12 @@ class Video extends database_object implements
             return false;
         }
 
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = 'SELECT * FROM `video` WHERE `video`.`id` IN ' . $idlist;
-        $db_results = Dba::read($sql);
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
 
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach (self::getVideoRepository()->getRowsByIds($ids) as $row) {
             parent::add_to_cache('video', $row['id'], $row);
         }
 
@@ -169,247 +153,41 @@ class Video extends database_object implements
     }
 
     /**
-     * get_f_resolution
+     * compare_video_information
+     * this compares the new ID3 tags of a file against
+     * the ones in the database to see if they have changed
+     * it returns false if nothing has changes, or the true
+     * if they have. Static because it doesn't need this
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>
+     * }
      */
-    public function get_f_resolution(): ?string
+    public static function compare_video_information(Video $video, Video $new_video): array
     {
-        if (!$this->f_resolution && ($this->resolution_x || $this->resolution_y)) {
-            $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
-        }
-
-        return $this->f_resolution;
-    }
-
-    /**
-     * get_f_display
-     */
-    public function get_f_display(): ?string
-    {
-        if (!$this->f_display && ($this->display_x || $this->display_y)) {
-            $this->f_display = $this->display_x . 'x' . $this->display_y;
-        }
-
-        return $this->f_display;
-    }
-
-    /**
-     * Returns the filename of the media-item
-     */
-    public function getFileName(): string
-    {
-        return $this->get_fullname() . '.' . $this->type;
-    }
-
-    /**
-     * does the item have art?
-     */
-    public function has_art(): bool
-    {
-        if ($this->has_art === null) {
-            $this->has_art = Art::has_db($this->id, 'video');
-        }
-
-        return $this->has_art ?? false;
-    }
-
-    /**
-     * Get item keywords for metadata searches.
-     * @return array{title: array{important: true, label: string, value: string|null}}
-     */
-    public function get_keywords(): array
-    {
-        return [
-            'title' => [
-                'important' => true,
-                'label' => T_('Title'),
-                'value' => $this->get_fullname()
-            ]
+        $string_array = [
+            'title',
+            'tags',
         ];
-    }
 
-    /**
-     * Get item fullname.
-     */
-    public function get_fullname(): ?string
-    {
-        return $this->title;
-    }
+        // Skip some stuff we don't care about
+        $skip_array = [
+            'addition_time',
+            'catalog',
+            'disabledMetadataFields',
+            'enabled',
+            'file',
+            'id',
+            'mime',
+            'played',
+            'tag_id',
+            'total_count',
+            'total_skip',
+            'type',
+            'update_time',
+        ];
 
-    /**
-     * Get item link.
-     */
-    public function get_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->link === null) {
-            $web_path = AmpConfig::get_web_path();
-
-            $this->link = $web_path . "/video.php?action=show_video&video_id=" . $this->id;
-        }
-
-        return $this->link ?? '';
-    }
-
-    /**
-     * Get item tags.
-     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
-     */
-    public function get_tags(): array
-    {
-        if ($this->tags === null) {
-            $this->tags = Tag::get_top_tags('video', $this->id);
-        }
-
-        return $this->tags ?? [];
-    }
-
-    /**
-     * Get item f_tags.
-     */
-    public function get_f_tags(): string
-    {
-        return Tag::get_display($this->get_tags(), true, 'video');
-    }
-
-    /**
-     * Get item link.
-     */
-    public function get_f_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->f_link === null) {
-            $link_text    = scrub_out($this->get_fullname());
-            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . $link_text . "\"> " . $link_text . "</a>";
-        }
-
-        return $this->f_link;
-    }
-
-    /**
-     * Return a formatted link to the parent object (if appliccable)
-     */
-    public function get_f_parent_link(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * Get item f_time or f_time_h.
-     */
-    public function get_f_time(?bool $hours = false): string
-    {
-        $min = floor($this->time / 60);
-        $sec = sprintf("%02d", ($this->time % 60));
-        if (!$hours) {
-            return $min . ":" . $sec;
-        }
-
-        $hour  = sprintf("%02d", floor($min / 60));
-        $min_h = sprintf("%02d", ($min % 60));
-
-        return $hour . ":" . $min_h . ":" . $sec;
-    }
-
-    /**
-     * Get item get_f_album_link.
-     */
-    public function get_f_album_link(): string
-    {
-        return '';
-    }
-
-    /**
-     * Get item get_f_album_disk_link.
-     */
-    public function get_f_album_disk_link(): string
-    {
-        return '';
-    }
-
-    /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
-     */
-    public function get_parent(): ?array
-    {
-        return null;
-    }
-
-    /**
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        return [];
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
-    }
-
-    /**
-     * Get all childrens and sub-childrens medias.
-     *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_medias(?string $filter_type = null): array
-    {
-        $medias = [];
-        if ($filter_type === null || $filter_type === 'video') {
-            $medias[] = ['object_type' => LibraryItemEnum::VIDEO, 'object_id' => $this->id];
-        }
-
-        return $medias;
-    }
-
-    /**
-     * Returns the id of the catalog the item is associated to
-     */
-    public function getCatalogId(): int
-    {
-        return $this->catalog;
-    }
-
-    /**
-     * Get item's owner.
-     */
-    public function get_user_owner(): ?int
-    {
-        return null;
-    }
-
-    /**
-     * Get default art kind for this item.
-     */
-    public function get_default_art_kind(): string
-    {
-        return 'preview';
-    }
-
-    /**
-     * get_description
-     */
-    public function get_description(): string
-    {
-        return '';
-    }
-
-    /**
-     * display_art
-     * @param array{width: int, height: int} $size
-     */
-    public function display_art(array $size, bool $force = false): void
-    {
-        if (Art::has_db($this->id, 'video') || $force) {
-            Art::display('video', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
-        }
+        return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
     }
 
     /**
@@ -419,111 +197,56 @@ class Video extends database_object implements
      */
     public static function garbage_collection(): void
     {
-        // delete files matching catalog_ignore_pattern
-        $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
-        if ($ignore_pattern) {
-            Dba::write("DELETE FROM `video` WHERE `file` REGEXP ?;", [$ignore_pattern]);
+        self::getVideoRepository()->collectGarbage();
+    }
+
+    /**
+     * generate_preview
+     * Generate video preview image from a video file
+     */
+    public static function generate_preview(int $video_id, bool $overwrite = false): void
+    {
+        if ($overwrite || !Art::has_db($video_id, 'video', 'preview')) {
+            $artp  = new Art($video_id, 'video', 'preview');
+            $video = new Video($video_id);
+            $image = Stream::get_image_preview($video);
+            if ($image) {
+                $artp->insert($image, 'image/png');
+            }
+        }
+    }
+
+    /**
+     * get_deleted
+     * get items from the deleted_videos table
+     * @return array<int, array{
+     *     id: int,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: int,
+     *     total_count: int,
+     *     total_skip: int
+     * }>
+     */
+    public static function get_deleted(): array
+    {
+        $deleted = [];
+        foreach (self::getVideoRepository()->getDeletedRows() as $row) {
+            $deleted[] = [
+                'id' => (int) $row['id'],
+                'addition_time' => (int) $row['addition_time'],
+                'delete_time' => (int) $row['delete_time'],
+                'title' => $row['title'],
+                'file' => $row['file'],
+                'catalog' => (int) $row['catalog'],
+                'total_count' => (int) $row['total_count'],
+                'total_skip' => (int) $row['total_skip'],
+            ];
         }
 
-        // clean up missing catalogs
-        Dba::write("DELETE FROM `video` WHERE `video`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
-    }
-
-    /**
-     * Get stream types.
-     * @return list<string>
-     */
-    public function get_stream_types(?string $player = null): array
-    {
-        return Stream::get_stream_types_for_type($this->type, $player);
-    }
-
-    /**
-     * play_url
-     * This returns a "PLAY" url for the video in question here, this currently feels a little
-     * like a hack, might need to adjust it in the future
-     */
-    public function play_url(string $additional_params = '', string $player = '', bool $local = false, int|string|null $uid = null, ?string $streamToken = null): string
-    {
-        if ($this->isNew()) {
-            return '';
-        }
-
-        if (!$uid) {
-            // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
-            $uid = Core::get_global('user')?->getId() ?? 0;
-        }
-
-        // set no use when using auth
-        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
-            $uid = -1;
-        }
-
-        $media_name = $this->get_stream_name() . "." . $this->type;
-        $media_name = (string)preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
-        $media_name = (AmpConfig::get('stream_beautiful_url'))
-            ? urlencode($media_name)
-            : rawurlencode($media_name);
-
-        $url = Stream::get_base_url($local, $streamToken) . "type=video&oid=" . $this->id . "&uid=" . $uid . $additional_params;
-        if ($player !== '') {
-            $url .= "&player=" . $player;
-        }
-
-        $url .= "&name=" . $media_name;
-
-        return Stream_Url::format($url);
-    }
-
-    /**
-     * Get stream name.
-     */
-    public function get_stream_name(): string
-    {
-        return (string)$this->title;
-    }
-
-    /**
-     * get_transcode_settings
-     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
-     * @return array{format?: string, command?: string}
-     */
-    public function get_transcode_settings(?string $target = null, ?string $player = null, array $options = []): array
-    {
-        return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
-    }
-
-    /**
-     * getYear
-     */
-    public function getYear(): string
-    {
-        return '';
-    }
-
-    /**
-     * type_to_mime
-     *
-     * Returns the mime type for the specified file extension/type
-     */
-    public static function type_to_mime(string $type): string
-    {
-        // FIXME: This should really be done the other way around.
-        // Store the mime type in the database, and provide a function
-        // to make it a human-friendly type.
-        return match ($type) {
-            'avi' => 'video/avi',
-            'ogg', 'ogv' => 'application/ogg',
-            'wmv' => 'audio/x-ms-wmv',
-            'mp4', 'm4v' => 'video/mp4',
-            'mkv' => 'video/x-matroska',
-            'mov' => 'video/quicktime',
-            'divx' => 'video/x-divx',
-            'webm' => 'video/webm',
-            'flv' => 'video/x-flv',
-            'ts' => 'video/mp2t',
-            default => 'video/mpeg',
-        };
+        return $deleted;
     }
 
     /**
@@ -555,7 +278,6 @@ class Video extends database_object implements
         $frame_rate    = (float) $data['frame_rate'];
         $video_bitrate = Catalog::check_int($data['video_bitrate'], PHP_INT_MAX, 0);
 
-        $sql    = "INSERT INTO `video` (`file`, `catalog`, `title`, `video_codec`, `audio_codec`, `resolution_x`, `resolution_y`, `size`, `time`, `mime`, `release_date`, `addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = [
             $data['file'],
             $data['catalog'],
@@ -577,10 +299,9 @@ class Video extends database_object implements
             $frame_rate,
             $video_bitrate,
         ];
-        Dba::write($sql, $params);
-        $video_id = (int) Dba::insert_id();
+        $video_id = self::getVideoRepository()->insert($params);
 
-        Catalog::update_map((int)$data['catalog'], 'video', $video_id);
+        Catalog::update_map((int) $data['catalog'], 'video', $video_id);
 
         if (is_array($tags)) {
             foreach ($tags as $tag) {
@@ -592,10 +313,10 @@ class Video extends database_object implements
         }
 
         if (
-            $data['art'] &&
-            $options !== null &&
-            $options !== [] &&
-            $options['gather_art']
+            $data['art']
+            && $options !== null
+            && $options !== []
+            && $options['gather_art']
         ) {
             $art = new Art($video_id, 'video');
             $art->insert_url($data['art']);
@@ -605,64 +326,59 @@ class Video extends database_object implements
     }
 
     /**
-     * update
-     * This takes a key'd array of data as input and updates a video entry
+     * type_to_mime
+     *
+     * Returns the mime type for the specified file extension/type
      */
-    public function update(array $data): int
+    public static function type_to_mime(string $type): string
     {
-        $sql    = "UPDATE `video` SET `title` = ?";
-        $title  = $data['title'] ?? $this->title;
-        $params = [$title];
-        // don't require a release date when updating a video
-        if (isset($data['release_date'])) {
-            $f_release_date     = (string) $data['release_date'];
-            $release_date       = strtotime($f_release_date);
-            $this->release_date = $release_date ?: null;
-            $sql .= ", `release_date` = ?";
-            $params[] = $release_date;
+        // FIXME: This should really be done the other way around.
+        // Store the mime type in the database, and provide a function
+        // to make it a human-friendly type.
+        return match ($type) {
+            'avi' => 'video/avi',
+            'ogg', 'ogv' => 'application/ogg',
+            'wmv' => 'audio/x-ms-wmv',
+            'mp4', 'm4v' => 'video/mp4',
+            'mkv' => 'video/x-matroska',
+            'mov' => 'video/quicktime',
+            'divx' => 'video/x-divx',
+            'webm' => 'video/webm',
+            'flv' => 'video/x-flv',
+            'ts' => 'video/mp2t',
+            default => 'video/mpeg',
+        };
+    }
+
+    /**
+     * update_played
+     * sets the played flag
+     */
+    public static function update_played(bool $new_played, int $video_id): void
+    {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
+            return;
         }
 
-        $sql .= " WHERE `id` = ?";
-        $params[] = $this->id;
+        self::getVideoRepository()->setPlayed($video_id, $new_played);
+    }
 
-        Dba::write($sql, $params);
-
-        if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'video', $this->id, true);
+    /**
+     * update_utime
+     * sets a new update time
+     */
+    public static function update_utime(int $video_id, int $time = 0): void
+    {
+        if (!$time) {
+            $time = time();
         }
 
-        $this->title = $title;
-
-        return $this->id;
+        self::getVideoRepository()->setUpdateTime($video_id, $time);
     }
 
     public static function update_video(int $video_id, Video $new_video): void
     {
-        $update_time  = time();
-        $release_date = (is_numeric($new_video->release_date))
-            ? $new_video->release_date
-            : null;
-
-        $sql = "UPDATE `video` SET `title` = ?, `bitrate` = ?, `size` = ?, `time` = ?, `video_codec` = ?, `audio_codec` = ?, `resolution_x` = ?, `resolution_y` = ?, `release_date` = ?, `channels` = ?, `display_x` = ?, `display_y` = ?, `frame_rate` = ?, `video_bitrate` = ?, `update_time` = ? WHERE `id` = ?";
-
-        Dba::write($sql, [
-            $new_video->title,
-            $new_video->bitrate,
-            $new_video->size,
-            $new_video->time,
-            $new_video->video_codec,
-            $new_video->audio_codec,
-            $new_video->resolution_x,
-            $new_video->resolution_y,
-            $release_date,
-            $new_video->channels,
-            $new_video->display_x,
-            $new_video->display_y,
-            $new_video->frame_rate,
-            $new_video->video_bitrate,
-            $update_time,
-            $video_id,
-        ]);
+        self::getVideoRepository()->updateFromTags($video_id, $new_video, time());
     }
 
     /**
@@ -671,32 +387,422 @@ class Video extends database_object implements
     public static function update_video_counts(int $video_id): void
     {
         if ($video_id > 0) {
-            $params = [$video_id];
-            $sql    = "UPDATE `video` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
-            Dba::write($sql, $params);
-            $sql = "UPDATE `video` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
-            Dba::write($sql, $params);
-            $sql = "UPDATE `video` SET `video`.`played` = 0 WHERE `video`.`played` = 1 AND `video`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_type` = 'video' AND `count_type` = 'stream');";
-            Dba::write($sql, $params);
-            $sql = "UPDATE `video` SET `video`.`played` = 1 WHERE `video`.`played` = 0 AND `video`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_type` = 'video' AND `count_type` = 'stream');";
-            Dba::write($sql, $params);
+            self::getVideoRepository()->updateCounts($video_id);
         }
     }
 
     /**
-     * generate_preview
-     * Generate video preview image from a video file
+     * @deprecated inject dependency
      */
-    public static function generate_preview(int $video_id, bool $overwrite = false): void
+    private static function getVideoRepository(): VideoRepositoryInterface
     {
-        if ($overwrite || !Art::has_db($video_id, 'video', 'preview')) {
-            $artp  = new Art($video_id, 'video', 'preview');
-            $video = new Video($video_id);
-            $image = Stream::get_image_preview($video);
-            if ($image) {
-                $artp->insert($image, 'image/png');
-            }
+        global $dic;
+
+        return $dic->get(VideoRepositoryInterface::class);
+    }
+
+    public function check_play_history(int $user, string $agent, int $date): bool
+    {
+        return Stats::has_played_history('video', $this, $user, $agent, $date);
+    }
+
+    /**
+     * display_art
+     * @param array{width: int, height: int} $size
+     */
+    public function display_art(array $size, bool $force = false): void
+    {
+        if (Art::has_db($this->id, 'video') || $force) {
+            Art::display('video', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
         }
+    }
+
+    /**
+     * Get default art kind for this item.
+     */
+    public function get_default_art_kind(): string
+    {
+        return 'preview';
+    }
+
+    /**
+     * get_description
+     */
+    public function get_description(): string
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_disk_link.
+     */
+    public function get_f_album_disk_link(): string
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_link.
+     */
+    public function get_f_album_link(): string
+    {
+        return '';
+    }
+
+    /**
+     * get_f_display
+     */
+    public function get_f_display(): ?string
+    {
+        if (!$this->f_display && ($this->display_x || $this->display_y)) {
+            $this->f_display = $this->display_x . 'x' . $this->display_y;
+        }
+
+        return $this->f_display;
+    }
+
+    /**
+     * Get item link.
+     */
+    public function get_f_link(?string $title = null): string
+    {
+        // don't do anything if it's formatted
+        if ($this->f_link === null) {
+            $link_text    = scrub_out($title ?? $this->get_fullname());
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . $link_text . "\"> " . $link_text . "</a>";
+        }
+
+        return $this->f_link;
+    }
+
+    /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * get_f_resolution
+     */
+    public function get_f_resolution(): ?string
+    {
+        if (!$this->f_resolution && ($this->resolution_x || $this->resolution_y)) {
+            $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
+        }
+
+        return $this->f_resolution;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->get_tags(), true, 'video');
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(?bool $hours = false): string
+    {
+        $min = floor($this->time / 60);
+        $sec = sprintf("%02d", ($this->time % 60));
+        if (!$hours) {
+            return $min . ":" . $sec;
+        }
+
+        $hour  = sprintf("%02d", floor($min / 60));
+        $min_h = sprintf("%02d", ($min % 60));
+
+        return $hour . ":" . $min_h . ":" . $sec;
+    }
+
+    /**
+     * Get item fullname.
+     */
+    public function get_fullname(): ?string
+    {
+        return $this->title;
+    }
+
+    /**
+     * Get item keywords for metadata searches.
+     * @return array{title: array{important: true, label: string, value: string|null}}
+     */
+    public function get_keywords(): array
+    {
+        return [
+            'title' => [
+                'important' => true,
+                'label' => T_('Title'),
+                'value' => $this->get_fullname()
+            ]
+        ];
+    }
+
+    /**
+     * Get item link.
+     */
+    public function get_link(): string
+    {
+        // don't do anything if it's formatted
+        if ($this->link === null) {
+            $web_path = AmpConfig::get_web_path();
+
+            $this->link = $web_path . "/video.php?action=show_video&video_id=" . $this->id;
+        }
+
+        return $this->link ?? '';
+    }
+
+    /**
+     * Get all childrens and sub-childrens medias.
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function get_medias(?string $filter_type = null): array
+    {
+        $medias = [];
+        if ($filter_type === null || $filter_type === 'video') {
+            $medias[] = ['object_type' => LibraryItemEnum::VIDEO, 'object_id' => $this->id];
+        }
+
+        return $medias;
+    }
+
+    /**
+     * get_parent
+     * Return parent `object_type`, `object_id`; null otherwise.
+     */
+    public function get_parent(): ?array
+    {
+        return null;
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return '';
+    }
+
+    /**
+     * Get stream name.
+     */
+    public function get_stream_name(): string
+    {
+        return (string) $this->title;
+    }
+
+    /**
+     * Get stream types.
+     * @return list<string>
+     */
+    public function get_stream_types(?string $player = null): array
+    {
+        return Stream::get_stream_types_for_type($this->type, $player);
+    }
+
+    /**
+     * Get subtitle file from language code.
+     */
+    public function get_subtitle_file(string $lang_code): string
+    {
+        $subtitle = '';
+        if ($this->file && ($lang_code == '__' || $this->get_language_name($lang_code))) {
+            $pinfo    = pathinfo($this->file);
+            $subtitle = ($pinfo['dirname']) . DIRECTORY_SEPARATOR . $pinfo['filename'];
+            if ($lang_code != '__') {
+                $subtitle .= '.' . $lang_code;
+            }
+
+            $subtitle .= '.srt';
+        }
+
+        return $subtitle;
+    }
+
+    /**
+     * get_subtitles
+     * Get existing subtitles list for this video
+     * @return array<array{
+     *     file: string,
+     *     lang_code: string,
+     *     lang_name: string
+     * }>
+     */
+    public function get_subtitles(): array
+    {
+        $subtitles = [];
+        $filter    = '';
+        if ($this->file) {
+            $pinfo  = pathinfo($this->file);
+            $filter = ($pinfo['dirname']) . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
+        }
+
+        foreach (glob($filter) ?: [] as $srt) {
+            $psrt      = explode('.', $srt);
+            $lang_code = '__';
+            $lang_name = T_('Unknown');
+            if (count($psrt) >= 2) {
+                $lang_code = $psrt[count($psrt) - 2];
+                if (strlen($lang_code) == 2) {
+                    $lang_name = $this->get_language_name($lang_code);
+                }
+            }
+
+            $subtitles[] = [
+                'file' => ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $srt,
+                'lang_code' => $lang_code,
+                'lang_name' => $lang_name
+            ];
+        }
+
+        return $subtitles;
+    }
+
+    /**
+     * Get item tags.
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('video', $this->id);
+        }
+
+        return $this->tags ?? [];
+    }
+
+    /**
+     * get_transcode_settings
+     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
+     * @return array{format?: string, command?: string}
+     */
+    public function get_transcode_settings(?string $target = null, ?string $player = null, array $options = []): array
+    {
+        return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
+    }
+
+    /**
+     * Get item's owner.
+     */
+    public function get_user_owner(): ?int
+    {
+        return null;
+    }
+
+    /**
+     * Returns the id of the catalog the item is associated to
+     */
+    public function getCatalogId(): int
+    {
+        return $this->catalog;
+    }
+
+    /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string
+    {
+        return $this->get_fullname() . '.' . $this->type;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::VIDEO;
+    }
+
+    /**
+     * getYear
+     */
+    public function getYear(): string
+    {
+        return '';
+    }
+
+    /**
+     * does the item have art?
+     */
+    public function has_art(): bool
+    {
+        if ($this->has_art === null) {
+            $this->has_art = Art::has_db($this->id, 'video');
+        }
+
+        return $this->has_art ?? false;
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
+    /**
+     * play_url
+     * This returns a "PLAY" url for the video in question here, this currently feels a little
+     * like a hack, might need to adjust it in the future
+     */
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false, int|string|null $uid = null, ?string $streamToken = null): string
+    {
+        if ($this->isNew()) {
+            return '';
+        }
+
+        if (!$uid) {
+            // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
+            $uid = Core::get_global('user')?->getId() ?? 0;
+        }
+
+        // set no use when using auth
+        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
+            $uid = -1;
+        }
+
+        $media_name = $this->get_stream_name() . "." . $this->type;
+        $media_name = (string) preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
+        $media_name = (AmpConfig::get('stream_beautiful_url'))
+            ? urlencode($media_name)
+            : rawurlencode($media_name);
+
+        $url = Stream::get_base_url($local, $streamToken) . "type=video&oid=" . $this->id . "&uid=" . $uid . $additional_params;
+        if ($player !== '') {
+            $url .= "&player=" . $player;
+        }
+
+        $url .= "&name=" . $media_name;
+
+        return Stream_Url::format($url);
+    }
+
+    /**
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     */
+    public function remove(): bool
+    {
+        $deleted = !$this->file || !file_exists($this->file) || unlink($this->file);
+        if ($deleted) {
+            // keep details about deletions
+            $deleted = self::getVideoRepository()->delete($this);
+            if ($deleted) {
+                $this->getArtCleanup()->collectGarbageForObject('video', $this->id);
+                Userflag::garbage_collection('video', $this->id);
+                Rating::garbage_collection('video', $this->id);
+                $this->getShoutRepository()->collectGarbage('video', $this->id);
+                $this->getUseractivityRepository()->collectGarbage('video', $this->id);
+            }
+        } else {
+            debug_event(self::class, 'Cannot delete ' . $this->file . ' file. Please check permissions.', 1);
+        }
+
+        return $deleted;
     }
 
     /**
@@ -729,49 +835,26 @@ class Video extends database_object implements
     }
 
     /**
-     * @param int $user
-     * @param string $agent
-     * @param int $date
+     * update
+     * This takes a key'd array of data as input and updates a video entry
      */
-    public function check_play_history($user, $agent, $date): bool
+    public function update(array $data): int
     {
-        return Stats::has_played_history('video', $this, $user, $agent, $date);
-    }
+        $this->title = $data['title'] ?? $this->title;
 
-    /**
-     * get_subtitles
-     * Get existing subtitles list for this video
-     * @return array<array{
-     *     file: string,
-     *     lang_code: string,
-     *     lang_name: string
-     * }>
-     */
-    public function get_subtitles(): array
-    {
-        $subtitles = [];
-        $pinfo     = pathinfo($this->file);
-        $filter    = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
-
-        foreach (glob($filter) ?: [] as $srt) {
-            $psrt      = explode('.', $srt);
-            $lang_code = '__';
-            $lang_name = T_('Unknown');
-            if (count($psrt) >= 2) {
-                $lang_code = $psrt[count($psrt) - 2];
-                if (strlen($lang_code) == 2) {
-                    $lang_name = $this->get_language_name($lang_code);
-                }
-            }
-
-            $subtitles[] = [
-                'file' => ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $srt,
-                'lang_code' => $lang_code,
-                'lang_name' => $lang_name
-            ];
+        // don't require a release date when updating a video
+        $with_release_date = isset($data['release_date']);
+        if ($with_release_date) {
+            $this->release_date = strtotime((string) $data['release_date']) ?: null;
         }
 
-        return $subtitles;
+        self::getVideoRepository()->update($this, $with_release_date);
+
+        if (isset($data['edit_tags'])) {
+            Tag::update_tag_list((string) $data['edit_tags'], 'video', $this->id, true);
+        }
+
+        return $this->id;
     }
 
     /**
@@ -970,180 +1053,13 @@ class Video extends database_object implements
     }
 
     /**
-     * Get subtitle file from language code.
+     * @deprecated inject dependency
      */
-    public function get_subtitle_file(string $lang_code): string
+    private function getArtCleanup(): ArtCleanupInterface
     {
-        $subtitle = '';
-        if ($lang_code == '__' || $this->get_language_name($lang_code)) {
-            $pinfo    = pathinfo($this->file);
-            $subtitle = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $pinfo['filename'];
-            if ($lang_code != '__') {
-                $subtitle .= '.' . $lang_code;
-            }
+        global $dic;
 
-            $subtitle .= '.srt';
-        }
-
-        return $subtitle;
-    }
-
-    /**
-     * remove
-     * Delete the object from disk and/or database where applicable.
-     */
-    public function remove(): bool
-    {
-        $deleted = !file_exists($this->file) || unlink($this->file);
-        if ($deleted) {
-            // keep details about deletions
-            $params = [$this->id];
-            $sql    = "REPLACE INTO `deleted_video` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip` FROM `video` WHERE `id` = ?;";
-            Dba::write($sql, $params);
-
-            $sql     = "DELETE FROM `video` WHERE `id` = ?";
-            $deleted = (Dba::write($sql, $params) !== null);
-            if ($deleted) {
-                $this->getArtCleanup()->collectGarbageForObject('video', $this->id);
-                Userflag::garbage_collection('video', $this->id);
-                Rating::garbage_collection('video', $this->id);
-                $this->getShoutRepository()->collectGarbage('video', $this->id);
-                $this->getUseractivityRepository()->collectGarbage('video', $this->id);
-            }
-        } else {
-            debug_event(self::class, 'Cannot delete ' . $this->file . ' file. Please check permissions.', 1);
-        }
-
-        return $deleted;
-    }
-
-    /**
-     * update_utime
-     * sets a new update time
-     */
-    public static function update_utime(int $video_id, int $time = 0): void
-    {
-        if (!$time) {
-            $time = time();
-        }
-
-        $sql = "UPDATE `video` SET `update_time` = ? WHERE `id` = ?;";
-        Dba::write($sql, [$time, $video_id]);
-    }
-
-    /**
-     * update_played
-     * sets the played flag
-     */
-    public static function update_played(bool $new_played, int $video_id): void
-    {
-        self::_update_item('played', (($new_played) ? 1 : 0), $video_id, AccessLevelEnum::USER);
-    }
-
-    /**
-     * _update_item
-     * This is a private function that should only be called from within the video class.
-     * It takes a field, value video id and level. first and foremost it checks the level
-     * against Core::get_global('user') to make sure they are allowed to update this record
-     * it then updates it and sets $this->{$field} to the new value
-     */
-    private static function _update_item(string $field, int|string $value, int $video_id, AccessLevelEnum $level): void
-    {
-        /* Check them Rights! */
-        if (!Access::check(AccessTypeEnum::INTERFACE, $level)) {
-            return;
-        }
-
-        /* Can't update to blank */
-        if (trim((string) $value) === '') {
-            return;
-        }
-
-        $sql = sprintf('UPDATE `video` SET `%s` = ? WHERE `id` = ?', $field);
-        Dba::write($sql, [$value, $video_id]);
-    }
-
-    /**
-     * get_deleted
-     * get items from the deleted_videos table
-     * @return list<array{
-     *     id: int,
-     *     addition_time: int,
-     *     delete_time: int,
-     *     title: string,
-     *     file: string,
-     *     catalog: int,
-     *     total_count: int,
-     *     total_skip: int
-     * }>
-     */
-    public static function get_deleted(): array
-    {
-        $deleted    = [];
-        $sql        = "SELECT * FROM `deleted_video`";
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $deleted[] = [
-                'id' => (int) $row['id'],
-                'addition_time' => (int) $row['addition_time'],
-                'delete_time' => (int) $row['delete_time'],
-                'title' => $row['title'],
-                'file' => $row['file'],
-                'catalog' => (int) $row['catalog'],
-                'total_count' => (int) $row['total_count'],
-                'total_skip' => (int) $row['total_skip'],
-            ];
-        }
-
-        return $deleted;
-    }
-
-    /**
-     * compare_video_information
-     * this compares the new ID3 tags of a file against
-     * the ones in the database to see if they have changed
-     * it returns false if nothing has changes, or the true
-     * if they have. Static because it doesn't need this
-     * @return array{
-     *     change: bool,
-     *     element: array<string, string>
-     * }
-     */
-    public static function compare_video_information(Video $video, Video $new_video): array
-    {
-        $string_array = [
-            'title',
-            'tags',
-        ];
-
-        // Skip some stuff we don't care about
-        $skip_array = [
-            'addition_time',
-            'catalog',
-            'disabledMetadataFields',
-            'enabled',
-            'file',
-            'id',
-            'mime',
-            'played',
-            'tag_id',
-            'total_count',
-            'total_skip',
-            'type',
-            'update_time',
-        ];
-
-        return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
-    }
-
-    public function get_parent_fullname(): string
-    {
-        return '';
-    }
-
-    public function getMediaType(): LibraryItemEnum
-    {
-        return LibraryItemEnum::VIDEO;
+        return $dic->get(ArtCleanupInterface::class);
     }
 
     /**
@@ -1164,15 +1080,5 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private function getArtCleanup(): ArtCleanupInterface
-    {
-        global $dic;
-
-        return $dic->get(ArtCleanupInterface::class);
     }
 }

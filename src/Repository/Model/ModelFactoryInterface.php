@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -29,87 +29,96 @@ use Ampache\Module\Authorization\Access;
 
 interface ModelFactoryInterface
 {
-    public function createPlaylist(int $id): Playlist;
-
-    public function createBrowse(
-        ?int $browse_id = null,
-        bool $cached = true
-    ): Browse;
-
-    public function createSong(
-        ?int $songId = null
-    ): Song;
-
-    public function createRating(
-        int $objectId,
-        string $typeId
-    ): Rating;
-
-    public function createUser(
-        ?int $userId = null
-    ): User;
+    public function createAccess(
+        int $accessId,
+    ): Access;
 
     public function createAlbum(
-        ?int $albumId = null
+        ?int $albumId = null,
     ): Album;
 
     public function createAlbumDisk(
-        ?int $albumDiskId = null
+        ?int $albumDiskId = null,
     ): AlbumDisk;
-
-    public function createArtist(
-        ?int $artistId = null
-    ): Artist;
-
-    public function createWanted(
-        ?int $wantedId = null
-    ): Wanted;
 
     public function createArt(
         ?int $artId = null,
         string $type = 'album',
-        string $kind = 'default'
+        string $kind = 'default',
     ): Art;
 
+    public function createArtist(
+        ?int $artistId = null,
+    ): Artist;
+
     public function createBroadcast(
-        int $broadcastId
+        int $broadcastId,
     ): Broadcast;
 
+    public function createBrowse(
+        ?int $browse_id = null,
+        bool $cached = true,
+    ): Browse;
+
+    public function createDemocratic(
+        int $democraticId,
+    ): Democratic;
+
     public function createLiveStream(
-        int $liveStreamId
+        int $liveStreamId,
     ): Live_Stream;
 
+    public function createPlaylist(int $id): Playlist;
+
     public function createPodcast(
-        int $podcastId
+        int $podcastId,
     ): Podcast;
 
     public function createPodcastEpisode(
-        int $podcastEpisodeId
+        int $podcastEpisodeId,
     ): Podcast_Episode;
 
     public function createPrivateMsg(
-        int $privateMessageId
+        int $privateMessageId,
     ): PrivateMessageInterface;
 
-    public function createDemocratic(
-        int $democraticId
-    ): Democratic;
-
-    public function createTmpPlaylist(
-        int $tmpPlaylistId
-    ): Tmp_Playlist;
+    public function createRating(
+        int $objectId,
+        string $typeId,
+    ): Rating;
 
     public function createSearch(
         ?int $searchId = 0,
         string $searchType = 'song',
-        ?User $user = null
+        ?User $user = null,
     ): Search;
 
-    public function createAccess(
-        int $accessId
-    ): Access;
+    /**
+     * Loads a *saved* search. Use this instead of `createSearch()` whenever the id comes from the
+     * database — the stored row has no object type to restore, so a smartlist is always songs.
+     */
+    public function createSmartlist(
+        ?int $searchId = 0,
+        ?User $user = null,
+    ): Smartlist;
+
+    public function createSong(
+        ?int $songId = null,
+    ): Song;
+
+    public function createTmpPlaylist(
+        int $tmpPlaylistId,
+    ): Tmp_Playlist;
+
+    public function createUser(
+        ?int $userId = null,
+    ): User;
 
     public function createVideo(
-        int $videoId
+        int $videoId,
     ): Video;
+
+    public function createWanted(
+        ?int $wantedId = null,
+    ): Wanted;
 }

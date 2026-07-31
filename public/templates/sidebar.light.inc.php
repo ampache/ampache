@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// sidebar.light.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -47,7 +49,7 @@ use Ampache\Repository\Model\User;
 /** @var bool|null $allow_upload */
 
 $current_user = $current_user ?? Core::get_global('user');
-$is_session   = (User::is_registered() && !empty($current_user) && ($current_user?->id ?? 0) > 0);
+$is_session   = (User::is_registered() && ($current_user->id ?? 0) > 0);
 $allow_upload = $allow_upload ?? $access25 && Upload::can_upload($current_user);
 $albumString  = (AmpConfig::get('album_group'))
     ? 'album'

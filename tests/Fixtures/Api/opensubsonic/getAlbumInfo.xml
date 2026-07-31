@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.16.1" type="ampache" serverVersion="8.0.0" openSubsonic="1">
+  <albumInfo>
+    <notes/>
+    <musicBrainzId>4ff00c1b-d9ee-40dc-aa1d-cd8ec4540667</musicBrainzId>
+    <smallImageUrl/>
+    <mediumImageUrl/>
+    <largeImageUrl/>
+  </albumInfo>
+</subsonic-response>

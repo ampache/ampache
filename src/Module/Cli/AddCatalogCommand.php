@@ -27,26 +27,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Catalog\Update\AddCatalogInterface;
+use Override;
 
 final class AddCatalogCommand extends Command
 {
-    private AddCatalogInterface $addCatalog;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        AddCatalogInterface $addCatalog
+        private readonly AddCatalogInterface $addCatalog,
     ) {
         parent::__construct('run:addCatalog', T_('Create a local media catalog'));
-
-        $this->addCatalog = $addCatalog;
 
         $this
             ->argument('[catalogName]', T_('Catalog name'))
@@ -62,7 +50,7 @@ final class AddCatalogCommand extends Command
         string $catalogPath,
         string $mediaType,
         string $filePattern,
-        string $folderPattern
+        string $folderPattern,
     ): void {
         $this->addCatalog->add(
             $this->io(),
@@ -73,5 +61,15 @@ final class AddCatalogCommand extends Command
             $filePattern,
             $folderPattern
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

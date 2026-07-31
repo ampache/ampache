@@ -25,8 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init\Exception;
 
+use Override;
+
 final class EnvironmentNotSuitableException extends InitializationException
 {
     /** @var string */
+    #[Override]
     protected $message = 'Environment is not suitable - please refer to the installation guide';
 }

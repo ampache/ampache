@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_plugins.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Plugin;
@@ -51,15 +53,15 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
 
             $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
             if ($installed_version === 0) {
-                $action = "<a href=\"" . $admin_path . "/modules.php?action=confirm_install_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
-                                T_('Activate') . "</a>";
+                $action = "<a href=\"" . $admin_path . "/modules.php?action=confirm_install_plugin&plugin=" . scrub_out($plugin_name) . "\">"
+                                . T_('Activate') . "</a>";
             } else {
-                $action = "<a href=\"" . $admin_path . "/modules.php?action=confirm_uninstall_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
-                                T_('Deactivate') . "</a>";
+                $action = "<a href=\"" . $admin_path . "/modules.php?action=confirm_uninstall_plugin&plugin=" . scrub_out($plugin_name) . "\">"
+                                . T_('Deactivate') . "</a>";
                 if ($installed_version < $plugin->_plugin->version) {
-                    $action .= '<br><a href="' . $admin_path .
-                    '/modules.php?action=upgrade_plugin&plugin=' .
-                    scrub_out($plugin_name) . '">' . T_('Upgrade') . '</a>';
+                    $action .= '<br><a href="' . $admin_path
+                    . '/modules.php?action=upgrade_plugin&plugin='
+                    . scrub_out($plugin_name) . '">' . T_('Upgrade') . '</a>';
                 }
             } ?>
         <tr>

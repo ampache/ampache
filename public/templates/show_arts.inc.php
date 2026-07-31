@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,13 +23,15 @@ declare(strict_types=0);
  *
  */
 
+// show_arts.inc.php
+
 // Gotta do some math here!
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
 
-/** @var array $images */
+/** @var array<int, array{'raw'?: string, 'db'?: int, 'url'?: string, 'title'?: string, 'mime'?: string}> $images */
 /** @var int $object_id */
 /** @var string $object_type */
 /** @var string $burl */
@@ -39,8 +41,7 @@ $web_path = AmpConfig::get_web_path();
 $total_images = count($images);
 $rows         = floor($total_images / 5);
 $count        = 0;
-$ajax_str     = ((AmpConfig::get('ajax_load')) ? '#' : '');
-$select_art   = '/' . $ajax_str . 'arts.php?action=select_art'; ?>
+$select_art   = '/arts.php?action=select_art'; ?>
 <?php Ui::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <tr>
@@ -48,7 +49,7 @@ $select_art   = '/' . $ajax_str . 'arts.php?action=select_art'; ?>
 while ($count <= $rows) {
     $j=0;
     while ($j < 5) {
-        $key        = $count * 5 + $j;
+        $key        = (int) ($count * 5 + $j);
         $image_url  = $web_path . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . bin2hex(random_bytes(20)) . '&object_type=' . $object_type;
         $dimensions = [
             'width' => 0,
@@ -58,7 +59,8 @@ while ($count <= $rows) {
             $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
         }
         if ((int) $dimensions['width'] == 0 || (int) $dimensions['height'] == 0) {
-            $image_url = $web_path . '/images/blankalbum.png';
+            $defaultimg = ($object_type === 'folder') ? 'folder' : 'blankalbum';
+            $image_url  = $web_path . '/images/' . $defaultimg . '.png';
         }
         if (!isset($images[$key])) {
             echo "<td>&nbsp;</td>\n";
@@ -67,7 +69,7 @@ while ($count <= $rows) {
                 <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" height="" width="175" /></a>
                 <br />
                 <p>
-                <?php if (is_array($dimensions) && (!(int) $dimensions['width'] == 0 || !(int) $dimensions['height'] == 0)) { ?>
+                <?php if ((!(int) $dimensions['width'] == 0 || !(int) $dimensions['height'] == 0)) { ?>
                 [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
                 [<a href="<?php echo $web_path . $select_art; ?>&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
                 <?php
@@ -77,9 +79,9 @@ while ($count <= $rows) {
                 </p>
             </td>
 <?php
-        } // end else
+        }
         $j++;
-    } // end while cells
+    }
     if ($count < $rows) {
         echo "</tr>\n<tr>";
     } else {

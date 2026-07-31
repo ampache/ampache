@@ -37,108 +37,209 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Mockery\MockInterface;
+use Override;
 
 class SongViewAdapterTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var MockInterface|GuiGatekeeperInterface|null */
-    private ?MockInterface $gatekeeper;
-
-    /** @var Song|MockInterface|null */
-    private MockInterface $song;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private MockInterface|GuiGatekeeperInterface|null $gatekeeper;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private Song|MockInterface|null $song;
     private SongViewAdapter $subject;
 
-    protected function setUp(): void
+    public function testCanBeReorderedReturnsValues(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
-        $this->song            = $this->mock(Song::class);
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ->once()
+            ->andReturnTrue();
 
-        $this->subject = new SongViewAdapter(
-            $this->configContainer,
-            $this->modelFactory,
-            $this->gatekeeper,
-            $this->song
+        $this->assertTrue(
+            $this->subject->canBeReordered()
         );
     }
 
-    public function testGetIdReturnsSongId(): void
+    public function testCanDownloadReturnsValue(): void
     {
-        $AlbumId = 666;
-
-        $this->song->shouldReceive('getId')
-            ->withNoArgs()
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DOWNLOAD)
             ->once()
-            ->andReturn($AlbumId);
+            ->andReturnTrue();
 
-        $this->assertSame(
-            $AlbumId,
-            $this->subject->getId()
+        $this->assertTrue(
+            $this->subject->canDownload()
         );
     }
 
-    public function testGetWaveformUrlReturnsUrl(): void
+    public function testCanEditPlaylistReturnsValue(): void
     {
-        $songId  = 666;
-        $webPath = 'some-path';
-
-        $this->song->shouldReceive('getId')
-            ->withNoArgs()
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
-            ->andReturn($songId);
+            ->andReturnTrue();
 
-        $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($webPath);
-
-        $this->assertSame(
-            sprintf(
-                '%s/waveform.php?song_id=%d',
-                $webPath,
-                $songId
-            ),
-            $this->subject->getWaveformUrl()
+        $this->assertTrue(
+            $this->subject->canEditPlaylist()
         );
     }
 
-    public function testGetDisplayStatsUrl(): void
+    public function testCanPostShoutReturnsFalseIfAllConditionsAreMet(): void
     {
-        $songId  = 666;
-        $webPath = 'some-path';
-
-        $this->song->shouldReceive('getId')
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
             ->withNoArgs()
             ->once()
-            ->andReturn($songId);
-
-        $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
+            ->andReturnTrue();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
             ->once()
-            ->andReturn($webPath);
+            ->andReturnTrue();
 
-        $this->assertSame(
-            sprintf(
-                '%s/stats.php?action=graph&object_type=song&object_id=%d',
-                $webPath,
-                $songId
-            ),
-            $this->subject->getDisplayStatsUrl()
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canPostShout()
         );
     }
 
-    public function testGetEditButtonTitleReturnsValue(): void
+    public function testCanPostShoutReturnsFalseIfNotAccessible(): void
     {
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canPostShout()
+        );
+    }
+
+    public function testCanPostShoutReturnsFalseIfSocialIsNotEnabled(): void
+    {
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canPostShout()
+        );
+    }
+
+    public function testCanShareReturnsFalseIfFeatureIsDeactivated(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canShare()
+        );
+    }
+
+    public function testCanShareReturnsFalseIfNotAccessible(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canShare()
+        );
+    }
+
+    public function testCanShareReturnsTrueIfConditionsAreMet(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canShare()
+        );
+    }
+
+    public function testGenreReturnsValues(): void
+    {
+        $value = 'some-tags';
+
+        $this->song->shouldReceive('get_f_tags')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
         $this->assertSame(
-            'Song Edit',
-            $this->subject->getEditButtonTitle()
+            $value,
+            $this->subject->getGenre()
+        );
+    }
+
+    public function testGetAlbumDiskLinkReturnsValue(): void
+    {
+        $value = '';
+
+        $this->song->shouldReceive('get_f_album_disk_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getAlbumDiskLink()
+        );
+    }
+
+    public function testGetAlbumLinkReturnsValue(): void
+    {
+        $value = '';
+
+        $this->song->shouldReceive('get_f_album_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getAlbumLink()
+        );
+    }
+
+    public function testGetArtistLinkReturnsValue(): void
+    {
+        $value = '';
+
+        $this->song->shouldReceive('get_f_parent_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getArtistLink()
         );
     }
 
@@ -170,7 +271,7 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetPostShoutUrlReturnsValue(): void
+    public function testGetDeletionUrlReturnsValue(): void
     {
         $songId  = 666;
         $webPath = 'some-path';
@@ -187,11 +288,37 @@ class SongViewAdapterTest extends MockeryTestCase
 
         $this->assertSame(
             sprintf(
-                '%s/shout.php?action=show_add_shout&type=song&id=%d',
+                '%s/song.php?action=%s&song_id=%d',
+                $webPath,
+                DeleteAction::REQUEST_KEY,
+                $songId
+            ),
+            $this->subject->getDeletionUrl()
+        );
+    }
+
+    public function testGetDisplayStatsUrl(): void
+    {
+        $songId  = 666;
+        $webPath = 'some-path';
+
+        $this->song->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($songId);
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($webPath);
+
+        $this->assertSame(
+            sprintf(
+                '%s/stats.php?action=graph&object_type=song&object_id=%d',
                 $webPath,
                 $songId
             ),
-            $this->subject->getPostShoutUrl()
+            $this->subject->getDisplayStatsUrl()
         );
     }
 
@@ -220,163 +347,39 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetDeletionUrlReturnsValue(): void
+    public function testGetEditButtonTitleReturnsValue(): void
     {
-        $songId  = 666;
-        $webPath = 'some-path';
+        $this->assertSame(
+            'Song Edit',
+            $this->subject->getEditButtonTitle()
+        );
+    }
+
+    public function testGetIdReturnsSongId(): void
+    {
+        $AlbumId = 666;
 
         $this->song->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andReturn($songId);
+            ->andReturn($AlbumId);
 
-        $this->configContainer->shouldReceive('getWebPath')
+        $this->assertSame(
+            $AlbumId,
+            $this->subject->getId()
+        );
+    }
+
+    public function testGetLicenseLinkReturnsEmptyStringIfNotSet(): void
+    {
+        $this->song->shouldReceive('getLicense')
             ->withNoArgs()
             ->once()
-            ->andReturn($webPath);
+            ->andReturnNull();
 
         $this->assertSame(
-            sprintf(
-                '%s/song.php?action=%s&song_id=%d',
-                $webPath,
-                DeleteAction::REQUEST_KEY,
-                $songId
-            ),
-            $this->subject->getDeletionUrl()
-        );
-    }
-
-    public function testGetTrackNumberReturnsTrack(): void
-    {
-        $trackNumber = 666;
-
-        $this->song->track = $trackNumber;
-
-        $this->assertSame(
-            (string)$trackNumber,
-            $this->subject->getTrackNumber()
-        );
-    }
-
-    public function testGetSongUrlReturnsValue(): void
-    {
-        $value = 'some-url';
-
-        $this->song->link = $value;
-
-        $this->song->shouldReceive('get_link')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($value);
-
-        $this->assertSame(
-            $value,
-            $this->subject->getSongUrl()
-        );
-    }
-
-    public function testGetSongLinkReturnsValues(): void
-    {
-        $value = 'some-link';
-
-        $this->song->shouldReceive('get_f_link')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($value);
-
-        $this->assertSame(
-            $value,
-            $this->subject->getSongLink()
-        );
-    }
-
-    public function testGetArtistLinkReturnsValue(): void
-    {
-        $value = '';
-
-        $this->song->shouldReceive('get_f_parent_link')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($value);
-
-        $this->assertSame(
-            $value,
-            $this->subject->getArtistLink()
-        );
-    }
-
-    public function testGetAlbumLinkReturnsValue(): void
-    {
-        $value = '';
-
-        $this->song->shouldReceive('get_f_album_link')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($value);
-
-        $this->assertSame(
-            $value,
-            $this->subject->getAlbumLink()
-        );
-    }
-
-    public function testGetAlbumDiskLinkReturnsValue(): void
-    {
-        $value = '';
-
-        $this->song->shouldReceive('get_f_album_disk_link')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($value);
-
-        $this->assertSame(
-            $value,
-            $this->subject->getAlbumDiskLink()
-        );
-    }
-
-    public function testGetYearReturnsValues(): void
-    {
-        $value = 666;
-
-        $this->song->year = $value;
-
-        $this->assertSame(
-            $value,
-            $this->subject->getYear()
-        );
-    }
-
-    public function testGenreReturnsValues(): void
-    {
-        $value = 'some-tags';
-
-        $this->song->shouldReceive('get_f_tags')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($value);
-
-        $this->assertSame(
-            $value,
-            $this->subject->getGenre()
-        );
-    }
-
-    public function testPlayDurationReturnsValue(): void
-    {
-        $value = '4:24';
-        $time  = 264;
-
-        $this->song->time = $time;
-
-        $this->song->shouldReceive('get_f_time')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($value);
-
-        $this->assertSame(
-            $value,
-            $this->subject->getPlayDuration()
+            '',
+            $this->subject->getLicenseLink()
         );
     }
 
@@ -397,19 +400,6 @@ class SongViewAdapterTest extends MockeryTestCase
 
         $this->assertSame(
             $link,
-            $this->subject->getLicenseLink()
-        );
-    }
-
-    public function testGetLicenseLinkReturnsEmptyStringIfNotSet(): void
-    {
-        $this->song->shouldReceive('getLicense')
-            ->withNoArgs()
-            ->once()
-            ->andReturnNull();
-
-        $this->assertSame(
-            '',
             $this->subject->getLicenseLink()
         );
     }
@@ -438,139 +428,143 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testCanPostShoutReturnsFalseIfSocialIsNotEnabled(): void
+    public function testGetPostShoutUrlReturnsValue(): void
     {
-        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+        $songId  = 666;
+        $webPath = 'some-path';
+
+        $this->song->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andReturnFalse();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SOCIABLE)
-            ->once()
-            ->andReturnFalse();
+            ->andReturn($songId);
 
-        $this->assertFalse(
-            $this->subject->canPostShout()
-        );
-    }
-
-    public function testCanPostShoutReturnsFalseIfNotAccessible(): void
-    {
-        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+        $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
-            ->andReturnTrue();
+            ->andReturn($webPath);
 
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->assertFalse(
-            $this->subject->canPostShout()
+        $this->assertSame(
+            sprintf(
+                '%s/shout.php?action=show_add_shout&type=song&id=%d',
+                $webPath,
+                $songId
+            ),
+            $this->subject->getPostShoutUrl()
         );
     }
 
-    public function testCanPostShoutReturnsFalseIfAllConditionsAreMet(): void
+    public function testGetSongLinkReturnsValues(): void
     {
-        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+        $value = 'some-link';
+
+        $this->song->shouldReceive('get_f_link')
             ->withNoArgs()
             ->once()
-            ->andReturnTrue();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SOCIABLE)
-            ->once()
-            ->andReturnTrue();
+            ->andReturn($value);
 
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertTrue(
-            $this->subject->canPostShout()
+        $this->assertSame(
+            $value,
+            $this->subject->getSongLink()
         );
     }
 
-    public function testCanShareReturnsFalseIfNotAccessible(): void
+    public function testGetSongUrlReturnsValue(): void
     {
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnFalse();
+        $value = 'some-url';
 
-        $this->assertFalse(
-            $this->subject->canShare()
+        $this->song->link = $value;
+
+        $this->song->shouldReceive('get_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getSongUrl()
         );
     }
 
-    public function testCanShareReturnsFalseIfFeatureIsDeactivated(): void
+    public function testGetTrackNumberReturnsTrack(): void
     {
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
+        $trackNumber = 666;
 
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SHARE)
-            ->once()
-            ->andReturnFalse();
+        $this->song->track = $trackNumber;
 
-        $this->assertFalse(
-            $this->subject->canShare()
+        $this->assertSame(
+            (string) $trackNumber,
+            $this->subject->getTrackNumber()
         );
     }
 
-    public function testCanShareReturnsTrueIfConditionsAreMet(): void
+    public function testGetWaveformUrlReturnsUrl(): void
     {
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
+        $songId  = 666;
+        $webPath = 'some-path';
 
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SHARE)
+        $this->song->shouldReceive('getId')
+            ->withNoArgs()
             ->once()
-            ->andReturnTrue();
+            ->andReturn($songId);
 
-        $this->assertTrue(
-            $this->subject->canShare()
+        $this->configContainer->shouldReceive('getWebPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($webPath);
+
+        $this->assertSame(
+            sprintf(
+                '%s/waveform.php?song_id=%d',
+                $webPath,
+                $songId
+            ),
+            $this->subject->getWaveformUrl()
         );
     }
 
-    public function testCanDownloadReturnsValue(): void
+    public function testGetYearReturnsValues(): void
     {
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DOWNLOAD)
-            ->once()
-            ->andReturnTrue();
+        $value = 666;
 
-        $this->assertTrue(
-            $this->subject->canDownload()
+        $this->song->year = $value;
+
+        $this->assertSame(
+            $value,
+            $this->subject->getYear()
         );
     }
 
-    public function testCanEditPlaylistReturnsValue(): void
+    public function testPlayDurationReturnsValue(): void
     {
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ->once()
-            ->andReturnTrue();
+        $value = '4:24';
+        $time  = 264;
 
-        $this->assertTrue(
-            $this->subject->canEditPlaylist()
+        $this->song->time = $time;
+
+        $this->song->shouldReceive('get_f_time')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getPlayDuration()
         );
     }
 
-    public function testCanBeReorderedReturnsValues(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ->once()
-            ->andReturnTrue();
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
+        $this->song            = $this->mock(Song::class);
 
-        $this->assertTrue(
-            $this->subject->canBeReordered()
+        $this->subject = new SongViewAdapter(
+            $this->configContainer,
+            $this->modelFactory,
+            $this->gatekeeper,
+            $this->song
         );
     }
 }

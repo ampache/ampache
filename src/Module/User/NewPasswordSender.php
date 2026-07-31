@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -31,26 +31,19 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use PHPMailer\PHPMailer\Exception;
 
-final class NewPasswordSender implements NewPasswordSenderInterface
+final readonly class NewPasswordSender implements NewPasswordSenderInterface
 {
-    private PasswordGeneratorInterface $passwordGenerator;
-
-    private UserRepositoryInterface $userRepository;
-
     public function __construct(
-        PasswordGeneratorInterface $passwordGenerator,
-        UserRepositoryInterface $userRepository
-    ) {
-        $this->passwordGenerator = $passwordGenerator;
-        $this->userRepository    = $userRepository;
-    }
+        private PasswordGeneratorInterface $passwordGenerator,
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     /**
      * @throws Exception
      */
     public function send(
         string $email,
-        string $current_ip
+        string $current_ip,
     ): bool {
         // get the Client and set the new password
         $user = $this->userRepository->findByEmail($email);
@@ -62,13 +55,13 @@ final class NewPasswordSender implements NewPasswordSenderInterface
 
         // do not allow administrator password resets
         if ($user->has_access(AccessLevelEnum::ADMIN)) {
-            debug_event(self::class, 'Administrator can\'t reset their password.', 1);
+            debug_event(self::class, "Administrator can't reset their password.", 1);
 
             return false;
         }
 
         $time        = time();
-        $last_reset  = (int)User::get_user_data($user->id, 'password_reset', 0)['password_reset'];
+        $last_reset  = (int) User::get_user_data($user->id, 'password_reset', 0)['password_reset'];
         $reset_limit = ($time - 3600) > $last_reset; // don't let a user spam resets
         if ($user->email == $email && Mailer::is_mail_enabled() && $reset_limit) {
             $newpassword = $this->passwordGenerator->generate();

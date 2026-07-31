@@ -37,7 +37,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 final class LicenseSongs4Method
 {
-    public const ACTION = 'license_songs';
+    public const string ACTION = 'license_songs';
 
     /**
      * license_songs
@@ -60,7 +60,7 @@ final class LicenseSongs4Method
     public static function license_songs(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
-            Api4::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: licensing features are not enabled.', '400', $input['api_format']);
 
             return false;
         }

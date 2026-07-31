@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -32,6 +34,16 @@ use SimpleXMLElement;
 interface PodcastSyncerInterface
 {
     /**
+     * Add podcast episodes
+     */
+    public function addEpisodes(
+        Podcast $podcast,
+        SimpleXMLElement $episodes,
+        ?DateTimeInterface $lastSync = null,
+        bool $gather = false,
+    ): void;
+
+    /**
      * Update the feed and sync all new episodes
      */
     public function sync(Podcast $podcast, bool $gather = false): bool;
@@ -45,20 +57,9 @@ interface PodcastSyncerInterface
      * Sync all podcast-items within the given catalogs
      *
      * @param iterable<Catalog> $catalogs
-     *
      * @return int Amount of new episodes
      */
     public function syncForCatalogs(
-        iterable $catalogs
+        iterable $catalogs,
     ): int;
-
-    /**
-     * Add podcast episodes
-     */
-    public function addEpisodes(
-        Podcast $podcast,
-        SimpleXMLElement $episodes,
-        ?DateTimeInterface $lastSync = null,
-        bool $gather = false
-    ): void;
 }

@@ -42,19 +42,12 @@ use Psr\Log\LoggerInterface;
 /**
  * Creates new sharing items
  */
-final class ShareCreator implements ShareCreatorInterface
+final readonly class ShareCreator implements ShareCreatorInterface
 {
-    private PluginRetrieverInterface $pluginRetriever;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        PluginRetrieverInterface $pluginRetriever,
-        LoggerInterface $logger
-    ) {
-        $this->pluginRetriever = $pluginRetriever;
-        $this->logger          = $logger;
-    }
+        private PluginRetrieverInterface $pluginRetriever,
+        private LoggerInterface $logger,
+    ) {}
 
     public function create(
         User $user,
@@ -65,7 +58,7 @@ final class ShareCreator implements ShareCreatorInterface
         int $expire_days = 0,
         string $secret = '',
         int $max_counter = 0,
-        ?string $description = ''
+        ?string $description = '',
     ): ?int {
         if (!in_array($object_type, Share::VALID_TYPES, true)) {
             $this->logger->error(
@@ -77,8 +70,8 @@ final class ShareCreator implements ShareCreatorInterface
         }
 
         if (
-            !$allow_stream &&
-            !$allow_download
+            !$allow_stream
+            && !$allow_download
         ) {
             $this->logger->error(
                 'create_share: must allow stream OR allow download',
@@ -103,14 +96,15 @@ final class ShareCreator implements ShareCreatorInterface
                 $description = $albumdisk->get_fullname() . ' (' . $albumdisk->get_parent_fullname() . ')';
             }
         }
+
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = [
             $user->getId(),
             $object_type->value,
             $object_id,
             time(),
-            (int)$allow_stream,
-            (int)$allow_download,
+            (int) $allow_stream,
+            (int) $allow_download,
             $expire_days,
             $secret,
             0,
@@ -119,18 +113,16 @@ final class ShareCreator implements ShareCreatorInterface
         ];
         Dba::write($sql, $params);
 
-        $share_id = (int)Dba::insert_id();
+        $share_id = (int) Dba::insert_id();
 
         $url = Share::get_url($share_id, $secret);
         // Get a shortener url if any available
         foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::URL_SHORTENER, $user) as $plugin) {
             try {
-
-                /** @var string|null $short_url */
                 $short_url = ($plugin->_plugin instanceof PluginShortenerInterface)
                     ? $plugin->_plugin->shortener($url)
                     : null;
-                if (!empty($short_url)) {
+                if (!in_array($short_url, [null, '', '0'], true)) {
                     $url = $short_url;
                     break;
                 }

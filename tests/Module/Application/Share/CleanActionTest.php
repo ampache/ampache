@@ -41,59 +41,11 @@ class CleanActionTest extends TestCase
     use ConsecutiveParams;
 
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private UiInterface&MockObject $ui;
-
-    private ShareRepositoryInterface&MockObject $shareRepository;
-
-    private CleanAction $subject;
-
-    private ServerRequestInterface&MockObject $request;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->shareRepository = $this->createMock(ShareRepositoryInterface::class);
-
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-
-        $this->subject = new CleanAction(
-            $this->configContainer,
-            $this->ui,
-            $this->shareRepository
-        );
-    }
-
-    public function testRunThrowsIfSharingIsDisabled(): void
-    {
-        static::expectException(AccessDeniedException::class);
-
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SHARE)
-            ->willReturn(false);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
-
-    public function testRunThrowsIfDemoModeIsEnabled(): void
-    {
-        static::expectException(AccessDeniedException::class);
-
-        $this->configContainer->expects(static::exactly(2))
-            ->method('isFeatureEnabled')
-            ->with(...self::withConsecutive(
-                [ConfigurationKeyEnum::SHARE],
-                [ConfigurationKeyEnum::DEMO_MODE],
-            ))
-            ->willReturn(true, true);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
+    private ServerRequestInterface&MockObject $request;
+    private ShareRepositoryInterface&MockObject $shareRepository;
+    private CleanAction $subject;
+    private UiInterface&MockObject $ui;
 
     public function testRunRenders(): void
     {
@@ -125,8 +77,51 @@ class CleanActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
+        );
+    }
+
+    public function testRunThrowsIfDemoModeIsEnabled(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $this->configContainer->expects(static::exactly(2))
+            ->method('isFeatureEnabled')
+            ->with(...self::withConsecutive(
+                [ConfigurationKeyEnum::SHARE],
+                [ConfigurationKeyEnum::DEMO_MODE],
+            ))
+            ->willReturn(true, true);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    public function testRunThrowsIfSharingIsDisabled(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->willReturn(false);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    protected function setUp(): void
+    {
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->shareRepository = $this->createMock(ShareRepositoryInterface::class);
+
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+
+        $this->subject = new CleanAction(
+            $this->configContainer,
+            $this->ui,
+            $this->shareRepository
         );
     }
 }

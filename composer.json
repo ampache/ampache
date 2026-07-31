@@ -8,23 +8,24 @@
     "config":
     {
         "platform": {
+            "ext-ctype": "1.0",
             "ext-curl": "1.0",
             "ext-date": "1.0",
             "ext-dom": "1.0",
+            "ext-fileinfo": "1.0",
             "ext-gd": "1.0",
             "ext-gmp": "1.0",
             "ext-http": "1.0",
+            "ext-iconv": "1.0",
+            "ext-libxml": "1.0",
             "ext-mbstring": "1.0",
             "ext-openssl": "1.0",
             "ext-pcre": "1.0",
-            "ext-spl": "1.0",
             "ext-simplexml": "1.0",
-            "ext-ctype": "1.0",
-            "ext-iconv": "1.0",
-            "ext-libxml": "1.0",
+            "ext-spl": "1.0",
             "ext-xml": "1.0",
-            "ext-xmlwriter": "1.0",
             "ext-xmlreader": "1.0",
+            "ext-xmlwriter": "1.0",
             "lib-libxml": "2.7.0"
         },
         "sort-packages": true,
@@ -37,9 +38,10 @@
         }
     },
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.5",
         "ext-curl": "*",
         "ext-dom": "*",
+        "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
@@ -56,19 +58,20 @@
         "ampache/php-discogs-api": "dev-release",
         "cboden/ratchet": "0.4.*",
         "clue/multicast-react": "^1.1.0",
-        "doctrine/cache": "^2",
         "gettext/gettext": "^5",
         "gettext/translator": "^1.2",
+        "goat1000/svggraph": "^3.20",
         "gregwar/captcha": "^2.0",
         "idleberg/vite-manifest": "^1.0",
         "james-heinrich/getid3": "dev-master",
+        "jumbojett/openid-connect-php": "^1.0",
         "jwilsson/spotify-web-api-php": "^6",
         "krixon/xbmc-php-rpc": "dev-master",
         "kunalvarma05/dropbox-php-sdk": "^0.4",
         "lachlan-00/musicbrainz": "dev-release",
         "nyholm/psr7": "^1.3",
         "nyholm/psr7-server": "^1.0",
-        "php-curl-class/php-curl-class": "^9.18",
+        "php-curl-class/php-curl-class": "^13.0",
         "php-di/php-di": "^7.0",
         "phpmailer/phpmailer": "^6",
         "psr/log": "^3",
@@ -82,15 +85,15 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.49",
+        "justinrainbow/json-schema": "^6",
         "mikey179/vfsstream": "^1.6",
         "mockery/mockery": "^1.3",
         "phpstan/extension-installer": "^1.3",
-        "phpstan/phpstan": "^1.10",
-        "phpstan/phpstan-mockery": "^1.1",
+        "phpstan/phpstan": "^2",
+        "phpstan/phpstan-mockery": "^2",
         "phpunit/phpunit": "^11",
-        "rector/rector": "^1",
-        "seec/phpunit-consecutive-params": "^1.1",
-        "szymach/c-pchart": "3.0.17"
+        "rector/rector": "^2",
+        "seec/phpunit-consecutive-params": "^1.1"
     },
     "repositories":
     [
@@ -126,9 +129,20 @@
         "stan": "vendor/bin/phpstan analyse",
         "stan-baseline": "vendor/bin/phpstan --generate-baseline",
         "tests": "vendor/bin/phpunit -c phpunit.xml",
-        "syntax": "resources/scripts/tests/syntax.sh",
+        "spec": "vendor/bin/phpunit --filter SpecConformanceTest",
+        "syntax": "@php resources/scripts/tests/syntax.php",
         "cs:fix": "vendor/bin/php-cs-fixer fix",
         "cs:check": "vendor/bin/php-cs-fixer fix --dry-run -vv",
+        "api:docs": [
+            "python resources/scripts/api-docs/generate_openapi_schemas.py",
+            "python resources/scripts/api-docs/generate_api_methods_md.py"
+        ],
+        "api:docs:check": [
+            "python resources/scripts/api-docs/generate_openapi_schemas.py --check",
+            "python resources/scripts/api-docs/generate_api_methods_md.py --check",
+            "python resources/scripts/api-docs/check_openapi_examples.py --strict",
+            "python resources/scripts/api-docs/lint_openapi.py"
+        ],
         "post-autoload-dump": [
             "@php resources/scripts/composer/check_tag_tools.php"
         ],
@@ -141,16 +155,19 @@
         "stan": "Performs static analysis",
         "stan-baseline": "Regenerate phpstan baseline",
         "tests": "Executes the unit tests",
+        "spec": "Validates the captured Ampache REST, Subsonic and OpenSubsonic responses against the published specifications",
         "syntax": "Performs php syntax checks",
         "cs:fix": "Performs code-style corrections on the whole codebase",
         "cs:check": "Performs a code-style dry-run on the whole codebase",
+        "api:docs": "Regenerates docs/openapi.json and the API method reference documents (needs python)",
+        "api:docs:check": "Fails if the generated API documents are out of date with the code (needs python)",
         "rector:dry": "Performs rector code-migrations dry-run",
         "rector:fix": "Applies pending rector code-migrations"
     },
     "suggest": {
-        "szymach/c-pchart": "Enable graphical statistics",
+        "ext-gd": "Needed for image resizing and waveforms",
+        "ext-http": "Yourls plugin",
         "ext-ldap": "Needed to support ldap authentication",
-        "ext-gd": "Needed for graphical statistics",
         "ext-pthreads": "Needed to support async functions",
         "ext-sockets": "Needed for upnp functions",
         "ext-xmlreader": "Needed for upnp functions"

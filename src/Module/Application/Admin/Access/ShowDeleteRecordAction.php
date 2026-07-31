@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,25 +37,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowDeleteRecordAction implements ApplicationActionInterface
+final readonly class ShowDeleteRecordAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_delete_record';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'show_delete_record';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-    }
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -65,14 +55,14 @@ final class ShowDeleteRecordAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
             return null;
         }
 
-        $accessId = (int)($request->getQueryParams()['access_id'] ?? 0);
+        $accessId = (int) ($request->getQueryParams()['access_id'] ?? 0);
         $access   = $this->modelFactory->createAccess($accessId);
 
         $this->ui->showConfirmation(

@@ -25,20 +25,37 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\Recommendation;
-use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class UpdateArtistInfo5Method
+ * Updates artist information and fetches similar artists from last.fm.
+ *
+ * Version 5 reads the object id from `id` only and checks the parameters before the access level,
+ * so it keeps a method of its own.
  */
-final class UpdateArtistInfo5Method
+final class UpdateArtistInfo5Method implements MethodInterface
 {
-    public const ACTION = 'update_artist_info';
+    public const string ACTION = 'update_artist_info';
+
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * update_artist_info
@@ -50,43 +67,73 @@ final class UpdateArtistInfo5Method
      * id = (integer) $artist_id
      *
      * @param array{
-     *     id: string,
+     *     id?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function update_artist_info(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['id'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('id', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'id')
+            );
         }
 
-        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+        if (
+            !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::MANAGER,
+                $user->id
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::MANAGER->value)
+            );
         }
+
         $object_id = (int) $input['id'];
-        $item      = new Artist($object_id);
+        $item      = $this->modelFactory->createArtist($object_id);
         if ($item->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'id', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                (string) $object_id,
+                'id'
+            );
         }
 
         $info = Recommendation::get_artist_info($object_id);
         $like = Recommendation::get_artists_like($object_id);
+
         // update your object, you need at least catalog_manager access to the db
         if (
             $info['id'] !== null
             || count($like) > 0
         ) {
-            Api5::message('Updated artist info: ' . $object_id, $input['api_format']);
-
-            return true;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success($apiVersion, 'Updated artist info: ' . $object_id)
+                )
+            );
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $object_id), self::ACTION, 'system', $input['api_format']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    sprintf('Bad Request: %s', $object_id),
+                    self::ACTION,
+                    'system'
+                )
+            )
+        );
     }
 }

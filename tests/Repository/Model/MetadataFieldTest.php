@@ -32,22 +32,32 @@ use PHPUnit\Framework\TestCase;
 class MetadataFieldTest extends TestCase
 {
     private MetadataFieldRepositoryInterface $metadataFieldRepository;
-
     private MetadataField $subject;
 
-    protected function setUp(): void
+    public static function setterGetterDataProvider(): Generator
     {
-        $this->metadataFieldRepository = $this->createMock(MetadataFieldRepositoryInterface::class);
+        yield ['getName', 'setName', '', 'some-name'];
 
-        $this->subject = new MetadataField(
-            $this->metadataFieldRepository
-        );
+        yield ['isPublic', 'setPublic', true, false];
     }
 
-    public function testIsNewReturnsTrueINew(): void
-    {
-        static::assertTrue(
-            $this->subject->isNew()
+    #[DataProvider(methodName: 'setterGetterDataProvider')]
+    public function testGetterReturnsSetData(
+        string $getterMethod,
+        string $setterMethod,
+        mixed $defaultValue,
+        mixed $setValue,
+    ): void {
+        self::assertSame(
+            $defaultValue,
+            call_user_func_array([$this->subject, $getterMethod], [])
+        );
+
+        call_user_func_array([$this->subject, $setterMethod], [$setValue]);
+
+        self::assertSame(
+            $setValue,
+            call_user_func_array([$this->subject, $getterMethod], [])
         );
     }
 
@@ -60,46 +70,35 @@ class MetadataFieldTest extends TestCase
             ->with($this->subject)
             ->willReturn($id);
 
-        static::assertSame(
+        self::assertSame(
             0,
             $this->subject->getId()
         );
 
         $this->subject->save();
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->isNew()
         );
-        static::assertSame(
+        self::assertSame(
             $id,
             $this->subject->getId()
         );
     }
 
-    #[DataProvider(methodName: 'setterGetterDataProvider')]
-    public function testGetterReturnsSetData(
-        string $getterMethod,
-        string $setterMethod,
-        mixed $defaultValue,
-        mixed $setValue
-    ): void {
-        static::assertSame(
-            $defaultValue,
-            call_user_func_array([$this->subject, $getterMethod], [])
-        );
-
-        call_user_func_array([$this->subject, $setterMethod], [$setValue]);
-
-        static::assertSame(
-            $setValue,
-            call_user_func_array([$this->subject, $getterMethod], [])
+    public function testIsNewReturnsTrueINew(): void
+    {
+        self::assertTrue(
+            $this->subject->isNew()
         );
     }
 
-    public static function setterGetterDataProvider(): Generator
+    protected function setUp(): void
     {
-        yield ['getName', 'setName', '', 'some-name'];
+        $this->metadataFieldRepository = $this->createMock(MetadataFieldRepositoryInterface::class);
 
-        yield ['isPublic', 'setPublic', true, false];
+        $this->subject = new MetadataField(
+            $this->metadataFieldRepository
+        );
     }
 }

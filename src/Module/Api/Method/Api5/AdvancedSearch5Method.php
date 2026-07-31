@@ -25,20 +25,68 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class AdvancedSearch5Method
+ * Performs an advanced search given passed rules and returns the matching objects.
+ *
+ * Version 5 does not send a result count and renders the `label`/`genre` results without the
+ * later per-user data, so it keeps a method of its own.
  */
-final class AdvancedSearch5Method
+final class AdvancedSearch5Method implements MethodInterface
 {
-    public const ACTION = 'advanced_search';
+    public const string ACTION = 'advanced_search';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
+    /**
+     * The rule check is shared with the `search` alias, so it lives here
+     *
+     * @param array<string, mixed> $input
+     *
+     * @throws RequestParamMissingException
+     */
+    public function checkRules(array $input): void
+    {
+        foreach (['rule_1', 'rule_1_operator', 'rule_1_input'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
+        }
+    }
+
+    /**
+     * The video gate is shared with the `search` alias, so it lives here
+     *
+     * @throws AccessDeniedException
+     */
+    public function checkType(string $type): void
+    {
+        if (
+            $type == 'video'
+            && !$this->configContainer->get(ConfigurationKeyEnum::ALLOW_VIDEO)
+        ) {
+            throw new AccessDeniedException(
+                'Enable: video'
+            );
+        }
+    }
 
     /**
      * advanced_search
@@ -68,124 +116,114 @@ final class AdvancedSearch5Method
      * offset = (integer) //optional
      * limit = (integer) //optional
      *
-     * @param array<string, mixed> $input
+     * @param array{
+     *     operator?: string,
+     *     rule_1?: string,
+     *     rule_1_operator?: int,
+     *     rule_1_input?: mixed,
+     *     type?: string,
+     *     random?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param 5 $apiVersion
+     *
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
-    public static function advanced_search(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['rule_1', 'rule_1_operator', 'rule_1_input'], self::ACTION)) {
-            return false;
-        }
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $this->checkRules($input);
 
         $type = (isset($input['type'])) ? (string) $input['type'] : 'song';
-        if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
 
-            return false;
-        }
+        $this->checkType($type);
+
         // confirm the correct data
         if (!in_array(strtolower($type), Search::VALID_TYPES)) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        sprintf('Bad Request: %s', $type),
+                        self::ACTION,
+                        'type'
+                    )
+                )
+            );
         }
+
         if (strtolower($type) === 'album_disk') {
-            Api5::empty($type, $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, $type)
+                )
+            );
         }
+
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;
         $data['type']   = $type;
-        $search_sql     = Search::prepare($data, $user);
-        $query          = Search::query($search_sql);
-        $results        = $query['results'];
-        if (empty($results)) {
-            Api5::empty($type, $input['api_format']);
 
-            return false;
-        }
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                switch ($type) {
-                    case 'album':
-                        echo Json5_Data::albums($results, [], $user, $input['auth']);
-                        break;
-                    case 'song_artist':
-                    case 'album_artist':
-                    case 'artist':
-                        echo Json5_Data::artists($results, [], $user, $input['auth']);
-                        break;
-                    case 'label':
-                        echo Json5_Data::labels($results);
-                        break;
-                    case 'playlist':
-                        echo Json5_Data::playlists($results, $user, $input['auth']);
-                        break;
-                    case 'podcast':
-                        echo Json5_Data::podcasts($results, $user, $input['auth']);
-                        break;
-                    case 'podcast_episode':
-                        echo Json5_Data::podcast_episodes($results, $user, $input['auth']);
-                        break;
-                    case 'genre':
-                    case 'tag':
-                        echo Json5_Data::genres($results);
-                        break;
-                    case 'user':
-                        echo Json5_Data::users($results);
-                        break;
-                    case 'video':
-                        echo Json5_Data::videos($results, $user, $input['auth']);
-                        break;
-                    default:
-                        echo Json5_Data::songs($results, $user, $input['auth']);
-                        break;
-                }
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                switch ($type) {
-                    case 'album':
-                        echo Xml5_Data::albums($results, [], $user, $input['auth']);
-                        break;
-                    case 'song_artist':
-                    case 'album_artist':
-                    case 'artist':
-                        echo Xml5_Data::artists($results, [], $user, $input['auth']);
-                        break;
-                    case 'label':
-                        echo Xml5_Data::labels($results, $user);
-                        break;
-                    case 'playlist':
-                        echo Xml5_Data::playlists($results, $user, $input['auth']);
-                        break;
-                    case 'podcast':
-                        echo Xml5_Data::podcasts($results, $user, $input['auth']);
-                        break;
-                    case 'podcast_episode':
-                        echo Xml5_Data::podcast_episodes($results, $user, $input['auth']);
-                        break;
-                    case 'genre':
-                    case 'tag':
-                        echo Xml5_Data::genres($results, $user);
-                        break;
-                    case 'user':
-                        echo Xml5_Data::users($results);
-                        break;
-                    case 'video':
-                        echo Xml5_Data::videos($results, $user, $input['auth']);
-                        break;
-                    default:
-                        echo Xml5_Data::songs($results, $user, $input['auth']);
-                        break;
-                }
+        $query   = Search::query(Search::prepare($data, $user));
+        $results = $query['results'];
+
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, $type)
+                )
+            );
         }
 
-        return true;
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $this->renderResult($output, $apiVersion, $type, $results, $user, $input)
+            )
+        );
+    }
+
+    /**
+     * Render the result for the searched type
+     *
+     * `song_artist` and `album_artist` are artist searches, so both formats render them as artists.
+     *
+     * @param 5 $apiVersion
+     * @param array<int|string> $results
+     * @param array{auth: string, ...} $input
+     */
+    private function renderResult(
+        ApiOutputInterface $output,
+        int $apiVersion,
+        string $type,
+        array $results,
+        User $user,
+        array $input,
+    ): string {
+        return match ($type) {
+            'album' => $output->albums($apiVersion, $results, [], $user, $input['auth']),
+            'artist', 'song_artist', 'album_artist' => $output->artists($apiVersion, $results, [], $user, $input['auth']),
+            'label' => $output->labels($apiVersion, $results, $user),
+            'playlist' => $output->playlists($apiVersion, $results, $user, $input['auth']),
+            'podcast' => $output->podcasts($apiVersion, $results, $user, $input['auth']),
+            'podcast_episode' => $output->podcastEpisodes($apiVersion, $results, $user, $input['auth']),
+            'genre', 'tag' => $output->genres($apiVersion, $results, $user),
+            'user' => $output->users($apiVersion, $results),
+            'video' => $output->videos($apiVersion, $results, $user, $input['auth']),
+            default => $output->songs($apiVersion, $results, $user, $input['auth']),
+        };
     }
 }

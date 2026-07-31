@@ -1,0 +1,148 @@
+{
+    "total_count": 7,
+    "md5": "bd66e6ded2773652e48a78d809a53d1b",
+    "song": [
+        {
+            "id": "1368204",
+            "title": "TANZNEID",
+            "name": "TANZNEID",
+            "artist": {
+                "id": "17771",
+                "name": "Electric Callboy",
+                "prefix": null,
+                "basename": "Electric Callboy"
+            },
+            "artists": [
+                {
+                    "id": "17771",
+                    "name": "Electric Callboy",
+                    "prefix": null,
+                    "basename": "Electric Callboy"
+                }
+            ],
+            "album": {
+                "id": "214923",
+                "name": "TANZNEID (24-bit HD audio)",
+                "prefix": null,
+                "basename": "TANZNEID (24-bit HD audio)"
+            },
+            "albumartist": {
+                "id": "17771",
+                "name": "Electric Callboy",
+                "prefix": null,
+                "basename": "Electric Callboy"
+            },
+            "disk": 1,
+            "disksubtitle": null,
+            "track": 1,
+            "filename": "\/mnt\/data\/user\/files\/clientsync\/Downloads\/Electric Callboy - TANZNEID (24-bit HD audio) (pre-order)\/Electric Callboy - TANZNEID (24-bit HD audio) - 01 TANZNEID.flac",
+            "genre": [],
+            "playlisttrack": 1,
+            "time": 184,
+            "year": 2026,
+            "format": "flac",
+            "stream_format": "mp3",
+            "bitrate": 1761497,
+            "stream_bitrate": 192000,
+            "rate": 44100,
+            "mode": "vbr",
+            "mime": "audio\/flac",
+            "stream_mime": "audio\/mpeg",
+            "url": "https:\/\/music.com.au\/play\/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=1368204&uid=2&transcode_to=mp3&bitrate=192000&player=api&name=Electric%20Callboy%20-%20TANZNEID.mp3",
+            "size": 40772832,
+            "mbid": null,
+            "art": "https:\/\/music.com.au\/image.php?object_id=214923&object_type=album&name=art.jpg",
+            "has_art": false,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "playcount": 0,
+            "last_played": null,
+            "catalog": "32",
+            "composer": null,
+            "channels": 2,
+            "comment": "Visit https:\/\/centurymedia.bandcamp.com",
+            "license": null,
+            "publisher": null,
+            "language": null,
+            "lyrics": null,
+            "replaygain_album_gain": null,
+            "replaygain_album_peak": null,
+            "replaygain_track_gain": null,
+            "replaygain_track_peak": null,
+            "r128_album_gain": null,
+            "r128_track_gain": null
+        },
+        {
+            "id": "1368200",
+            "title": "RATATATA",
+            "name": "RATATATA",
+            "artist": {
+                "id": "17771",
+                "name": "Electric Callboy",
+                "prefix": null,
+                "basename": "Electric Callboy"
+            },
+            "artists": [
+                {
+                    "id": "17771",
+                    "name": "Electric Callboy",
+                    "prefix": null,
+                    "basename": "Electric Callboy"
+                }
+            ],
+            "album": {
+                "id": "214923",
+                "name": "TANZNEID (24-bit HD audio)",
+                "prefix": null,
+                "basename": "TANZNEID (24-bit HD audio)"
+            },
+            "albumartist": {
+                "id": "17771",
+                "name": "Electric Callboy",
+                "prefix": null,
+                "basename": "Electric Callboy"
+            },
+            "disk": 1,
+            "disksubtitle": null,
+            "track": 2,
+            "filename": "\/mnt\/data\/user\/files\/clientsync\/Downloads\/Electric Callboy - TANZNEID (24-bit HD audio) (pre-order)\/Electric Callboy - TANZNEID (24-bit HD audio) - 02 RATATATA.flac",
+            "genre": [],
+            "playlisttrack": 2,
+            "time": 215,
+            "year": 2026,
+            "format": "flac",
+            "stream_format": "mp3",
+            "bitrate": 1760794,
+            "stream_bitrate": 192000,
+            "rate": 44100,
+            "mode": "vbr",
+            "mime": "audio\/flac",
+            "stream_mime": "audio\/mpeg",
+            "url": "https:\/\/music.com.au\/play\/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=1368200&uid=2&transcode_to=mp3&bitrate=192000&player=api&name=Electric%20Callboy%20-%20RATATATA.mp3",
+            "size": 47635983,
+            "mbid": null,
+            "art": "https:\/\/music.com.au\/image.php?object_id=214923&object_type=album&name=art.jpg",
+            "has_art": false,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "playcount": 0,
+            "last_played": null,
+            "catalog": "32",
+            "composer": null,
+            "channels": 2,
+            "comment": "Visit https:\/\/centurymedia.bandcamp.com",
+            "license": null,
+            "publisher": null,
+            "language": null,
+            "lyrics": null,
+            "replaygain_album_gain": null,
+            "replaygain_album_peak": null,
+            "replaygain_track_gain": null,
+            "replaygain_track_peak": null,
+            "r128_album_gain": null,
+            "r128_track_gain": null
+        }
+    ]
+}

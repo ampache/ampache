@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,11 +23,13 @@ declare(strict_types=0);
  *
  */
 
+// show_edit_shout.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Shoutbox $shout */
-/** @var Ampache\Repository\Model\library_item $object */
+/** @var Ampache\Repository\Model\displayable_item $object */
 /** @var Ampache\Repository\Model\User $client */
 
 Ui::show_box_top(T_('Edit Existing Shoutbox Post')); ?>

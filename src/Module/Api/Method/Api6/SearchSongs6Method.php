@@ -25,77 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Module\Api\Api6;
-use Ampache\Module\Api\Json6_Data;
-use Ampache\Module\Api\Xml6_Data;
-use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractSearchSongsMethod;
 
 /**
- * Class SearchSongs6Method
- * @package Lib\Api6Methods
+ * Searches the songs and returns songs
+ *
+ * Api version 6 insists on `filter` being present, even when `rule_1_input` supplies the value.
  */
-final class SearchSongs6Method
+final class SearchSongs6Method extends AbstractSearchSongsMethod
 {
-    public const ACTION = 'search_songs';
-
-    /**
-     * search_songs
-     * MINIMUM_API_VERSION=380001
-     *
-     * This searches the songs and returns... songs
-     *
-     * Refer to the wiki for further information on rule_* types and data
-     * https://ampache.org/api/api-xml-methods
-     * https://ampache.org/api/api-json-methods
-     *
-     * operator = (string) 'and', 'or' (whether to match one rule or all)
-     * rule_1 = (string)
-     * rule_1_operator = (integer) 0|1|2|3|4|5|6
-     * rule_1_input = (mixed) The string, date, integer you are searching for
-     * type = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
-     * random = (boolean)  0, 1 (random order of results; default to 0) //optional
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
-     * @param array<string, mixed> $input
-     */
-    public static function search_songs(array $input, User $user): bool
-    {
-        if (!Api6::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $data                    = [];
-        $data['type']            = 'song';
-        $data['rule_1']          = 'anywhere';
-        $data['rule_1_input']    = $input['rule_1_input'] ?? $input['filter'];
-        $data['rule_1_operator'] = 0;
-
-        $search_sql = Search::prepare($data, $user);
-        $query      = Search::query($search_sql);
-        $results    = $query['results'];
-        $count      = $query['count'];
-        if (empty($results)) {
-            Api6::empty('song', $input['api_format']);
-
-            return false;
-        }
-
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
-                Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count($count);
-                echo Json6_Data::songs($results, $user, $input['auth']);
-                break;
-            default:
-                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
-                Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count($count);
-                echo Xml6_Data::songs($results, $user, $input['auth']);
-        }
-
-        return true;
-    }
+    protected const bool ALIAS_SATISFIES_FILTER = false;
 }

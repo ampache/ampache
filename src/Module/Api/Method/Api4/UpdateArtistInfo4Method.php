@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class UpdateArtistInfo4Method
 {
-    public const ACTION = 'update_artist_info';
+    public const string ACTION = 'update_artist_info';
 
     /**
      * update_artist_info
@@ -65,7 +65,7 @@ final class UpdateArtistInfo4Method
         $object_id = (int) $input['id'];
         $item      = new Artist($object_id);
         if ($item->isNew()) {
-            Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
+            Api4::message('error', 'The requested item was not found', '404', $input['api_format']);
 
             return false;
         }
@@ -81,7 +81,7 @@ final class UpdateArtistInfo4Method
 
             return true;
         }
-        Api4::message('error', T_('Failed to update_artist_info or recommendations for ' . $object_id), '400', $input['api_format']);
+        Api4::message('error', 'Failed to update_artist_info or recommendations for ' . $object_id, '400', $input['api_format']);
 
         return true;
     }

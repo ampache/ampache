@@ -25,20 +25,36 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Song;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class RecordPlay5Method
+ * Records a play against a song for a user.
+ *
+ * Version 5 reads the object id from `id` only, so it keeps a method of its own.
  */
-final class RecordPlay5Method
+final class RecordPlay5Method implements MethodInterface
 {
-    public const ACTION = 'record_play';
+    public const string ACTION = 'record_play';
+
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     /**
      * record_play
@@ -54,51 +70,76 @@ final class RecordPlay5Method
      * date = (integer) UNIXTIME() //optional
      *
      * @param array{
-     *     id: string,
+     *     id?: string,
      *     user?: int|string,
      *     client?: string,
      *     date?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function record_play(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['id'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('id', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'id')
+            );
         }
+
         $play_user = $user;
         if (isset($input['user'])) {
             $play_user = ((int) $input['user'] > 0)
-                ? new User((int) $input['user'])
+                ? $this->modelFactory->createUser((int) $input['user'])
                 : User::get_from_username((string) $input['user']);
         }
-        // validate supplied user
-        $valid = ($play_user instanceof User && in_array($play_user->id, self::getUserRepository()->getValid()));
-        if ($valid === false) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $input['user'] ?? $user->id), self::ACTION, 'user', $input['api_format']);
 
-            return false;
+        // validate supplied user
+        if (
+            !$play_user instanceof User
+            || !in_array($play_user->id, $this->userRepository->getValid())
+        ) {
+            throw new ResultEmptyException(
+                (string) ($input['user'] ?? $user->id),
+                'user'
+            );
         }
+
         // If you are setting plays for other users make sure we have an admin
-        if ($play_user->id !== $user->id && !Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+        if (
+            $play_user->id !== $user->id
+            && !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::ADMIN,
+                $user->id
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
-        ob_end_clean();
+
         $object_id = (int) $input['id'];
         $date      = (array_key_exists('date', $input)) ? (int) scrub_in((string) $input['date']) : time(); //optional
 
         // validate client string or fall back to 'api'
         $agent = scrub_in((string) ($input['client'] ?? 'api'));
 
-        $media = new Song($object_id);
+        $media = $this->modelFactory->createSong($object_id);
         if ($media->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'id', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                (string) $object_id,
+                'id'
+            );
         }
+
         debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
@@ -107,18 +148,13 @@ final class RecordPlay5Method
             User::save_mediaplay($play_user, $media);
         }
 
-        Api5::message('successfully recorded play: ' . $media->id . ' for: ' . $play_user->username, $input['api_format']);
-
-        return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success(
+                    $apiVersion,
+                    'successfully recorded play: ' . $media->id . ' for: ' . $play_user->username
+                )
+            )
+        );
     }
 }

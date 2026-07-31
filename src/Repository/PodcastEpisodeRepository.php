@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -45,49 +46,21 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
-        private ConfigContainerInterface $configContainer
-    ) {
-    }
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     /**
-     * Returns all episode-ids for the given podcast
-     *
-     * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
-     *
-     * @return list<int>
+     * Cleans up orphaned episodes
      */
-    public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array
+    public function collectGarbage(): void
     {
-        $skipDisabledCatalogs = $this->configContainer->get(ConfigurationKeyEnum::CATALOG_DISABLE);
-
-        $params = [$podcast->getId()];
-        $sql    = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` ';
-
-        if ($skipDisabledCatalogs) {
-            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` ';
+        try {
+            $this->connection->query(
+                'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
+            );
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
         }
-
-        $sql .= 'WHERE `podcast_episode`.`podcast` = ? ';
-
-        if ($stateFilter !== null) {
-            $sql .= 'AND `podcast_episode`.`state` = ? ';
-            $params[] = $stateFilter->value;
-        }
-
-        if ($skipDisabledCatalogs) {
-            $sql .= 'AND `catalog`.`enabled` = \'1\' ';
-        }
-
-        $sql .= 'ORDER BY `podcast_episode`.`pubdate` DESC';
-
-        $result = $this->connection->query($sql, $params);
-
-        $episodeIds = [];
-        while ($episodeId = $result->fetchColumn()) {
-            $episodeIds[] = (int) $episodeId;
-        }
-
-        return $episodeIds;
     }
 
     /**
@@ -121,6 +94,70 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     }
 
     /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Podcast_Episode
+    {
+        $item = new Podcast_Episode($itemId);
+        if ($item->isNew()) {
+            return null;
+        }
+
+        return $item;
+    }
+
+    /**
+     * Returns the calculated count of available episodes for the given podcast
+     */
+    public function getEpisodeCount(Podcast $podcast): int
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(id) from `podcast_episode` where `podcast` = ?',
+            [$podcast->getId()]
+        );
+    }
+
+    /**
+     * Returns all episode-ids for the given podcast
+     *
+     * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
+     * @return int[]
+     */
+    public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array
+    {
+        $skipDisabledCatalogs = $this->configContainer->get(ConfigurationKeyEnum::CATALOG_DISABLE);
+
+        $params = [$podcast->getId()];
+        $sql    = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` ';
+
+        if ($skipDisabledCatalogs) {
+            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` ';
+        }
+
+        $sql .= 'WHERE `podcast_episode`.`podcast` = ? ';
+
+        if ($stateFilter !== null) {
+            $sql .= 'AND `podcast_episode`.`state` = ? ';
+            $params[] = $stateFilter->value;
+        }
+
+        if ($skipDisabledCatalogs) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+
+        $sql .= 'ORDER BY `podcast_episode`.`pubdate` DESC';
+
+        $result = $this->connection->query($sql, $params);
+
+        $episodeIds = [];
+        while ($episodeId = $result->fetchColumn()) {
+            $episodeIds[] = (int) $episodeId;
+        }
+
+        return $episodeIds;
+    }
+
+    /**
      * Returns all podcast episodes which are eligible for deletion
      *
      * If enabled, this will return all episodes of the podcast which are above the keep-limit
@@ -150,10 +187,9 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
      * Returns all podcast episodes which are eligible for download
      *
      * @param null|positive-int $downloadLimit
-     *
      * @return Generator<Podcast_Episode>
      */
-    public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit): Generator
+    public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit = null): Generator
     {
         $limitSql = '';
         if ($downloadLimit !== null) {
@@ -192,13 +228,99 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     }
 
     /**
-     * Returns the calculated count of available episodes for the given podcast
+     * Returns a number of random, completed podcast episodes from the whole library
+     *
+     * @return list<int>
      */
-    public function getEpisodeCount(Podcast $podcast): int
+    public function getRandom(int $userId, ?int $count = 1): array
     {
-        return (int) $this->connection->fetchOne(
-            'SELECT COUNT(id) from `podcast_episode` where `podcast` = ?',
-            [$podcast->getId()]
+        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` '
+            . 'LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` '
+            . 'WHERE `podcast_episode`.`state` = ? '
+            . 'AND `catalog`.`id` IN (' . implode(',', Catalog::get_catalogs('', $userId, true)) . ') '
+            . 'ORDER BY RAND() LIMIT ' . $count;
+
+        $result = $this->connection->query($sql, [PodcastEpisodeStateEnum::COMPLETED->value]);
+
+        $episodeIds = [];
+        while ($episodeId = $result->fetchColumn()) {
+            $episodeIds[] = (int) $episodeId;
+        }
+
+        return $episodeIds;
+    }
+
+    /**
+     * Returns a number of random, completed episodes from a single podcast
+     *
+     * @return list<int>
+     */
+    public function getRandomByPodcast(int $podcastId, int $userId, ?int $count = 1): array
+    {
+        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` '
+            . 'LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` '
+            . 'WHERE `podcast_episode`.`podcast` = ? AND `podcast_episode`.`state` = ? '
+            . 'AND `catalog`.`id` IN (' . implode(',', Catalog::get_catalogs('', $userId, true)) . ') '
+            . 'ORDER BY RAND() LIMIT ' . $count;
+
+        $result = $this->connection->query($sql, [$podcastId, PodcastEpisodeStateEnum::COMPLETED->value]);
+
+        $episodeIds = [];
+        while ($episodeId = $result->fetchColumn()) {
+            $episodeIds[] = (int) $episodeId;
+        }
+
+        return $episodeIds;
+    }
+
+    /**
+     * Stores the path the episode was downloaded to
+     */
+    public function setFile(int $episodeId, string $file): void
+    {
+        $this->connection->query(
+            'UPDATE `podcast_episode` SET `file` = ? WHERE `id` = ?',
+            [$file, $episodeId]
+        );
+    }
+
+    /**
+     * Flags the episode as played
+     */
+    public function setPlayed(int $episodeId): void
+    {
+        $this->connection->query(
+            'UPDATE `podcast_episode` SET `played` = 1 WHERE `id` = ?',
+            [$episodeId]
+        );
+    }
+
+    /**
+     * Stamps the episode as updated
+     */
+    public function setUpdateTime(int $episodeId, int $time): void
+    {
+        $this->connection->query(
+            'UPDATE `podcast_episode` SET `update_time` = ? WHERE `id` = ?;',
+            [$time, $episodeId]
+        );
+    }
+
+    /**
+     * Writes the editable properties of an existing episode
+     */
+    public function update(Podcast_Episode $episode): void
+    {
+        $this->connection->query(
+            'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?',
+            [
+                $episode->title,
+                $episode->website,
+                $episode->description,
+                $episode->author,
+                $episode->category,
+                $episode->getId(),
+            ]
         );
     }
 
@@ -207,38 +329,11 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
      */
     public function updateState(
         Podcast_Episode $episode,
-        PodcastEpisodeStateEnum $state
+        PodcastEpisodeStateEnum $state,
     ): void {
         $this->connection->query(
             'UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?',
             [$state->value, $episode->getId()]
         );
-    }
-
-    /**
-     * Cleans up orphaned episodes
-     */
-    public function collectGarbage(): void
-    {
-        try {
-            $this->connection->query(
-                'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
-            );
-        } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
-        }
-    }
-
-    /**
-     * Finds a single item by its id
-     */
-    public function findById(int $itemId): ?Podcast_Episode
-    {
-        $item = new Podcast_Episode($itemId);
-        if ($item->isNew()) {
-            return null;
-        }
-
-        return $item;
     }
 }

@@ -36,28 +36,28 @@ use Psr\Container\ContainerInterface;
 
 class UpdaterTest extends TestCase
 {
-    private UpdateHelperInterface&MockObject $updateHelper;
-
-    private UpdateInfoRepositoryInterface&MockObject $updateInfoRepository;
-
     private ContainerInterface&MockObject $dic;
-
+    private Updater $subject;
+    private UpdateHelperInterface&MockObject $updateHelper;
+    private UpdateInfoRepositoryInterface&MockObject $updateInfoRepository;
     private UpdateRunnerInterface&MockObject $updateRunner;
 
-    private Updater $subject;
-
-    protected function setUp(): void
+    public function testCheckTablesYieldMissingTables(): void
     {
-        $this->updateHelper         = $this->createMock(UpdateHelperInterface::class);
-        $this->updateInfoRepository = $this->createMock(UpdateInfoRepositoryInterface::class);
-        $this->dic                  = $this->createMock(ContainerInterface::class);
-        $this->updateRunner         = $this->createMock(UpdateRunnerInterface::class);
+        $table = 'snafu';
 
-        $this->subject = new Updater(
-            $this->updateHelper,
-            $this->updateInfoRepository,
-            $this->dic,
-            $this->updateRunner
+        $this->updateRunner->expects(static::once())
+            ->method('runTableCheck')
+            ->with(
+                self::isType('iterable'),
+                true,
+                600000
+            )
+            ->willReturn(new ArrayIterator([$table]));
+
+        self::assertSame(
+            $table,
+            $this->subject->checkTables(true, 600000)->current()
         );
     }
 
@@ -85,7 +85,7 @@ class UpdaterTest extends TestCase
 
         $result = $this->subject->getPendingUpdates()->current();
 
-        static::assertSame(
+        self::assertSame(
             [
                 'versionFormatted' => $formattedVersion,
                 'version' => $version,
@@ -102,9 +102,26 @@ class UpdaterTest extends TestCase
             ->with(UpdateInfoEnum::DB_VERSION)
             ->willReturn('600048');
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->hasPendingUpdates()
         );
+    }
+
+    public function testUpdatePerformsTheActualUpdate(): void
+    {
+        $this->updateInfoRepository->expects(static::once())
+            ->method('getValueByKey')
+            ->with(UpdateInfoEnum::DB_VERSION)
+            ->willReturn('600000');
+
+        $this->updateRunner->expects(static::once())
+            ->method('run')
+            ->with(
+                self::isType('iterable'),
+                null
+            );
+
+        $this->subject->update();
     }
 
     public function testUpdateThrowsIfCurrentVersionIsLowerThenTheMinimum(): void
@@ -119,39 +136,18 @@ class UpdaterTest extends TestCase
         $this->subject->update();
     }
 
-    public function testUpdatePerformsTheActualUpdate(): void
+    protected function setUp(): void
     {
-        $this->updateInfoRepository->expects(static::once())
-            ->method('getValueByKey')
-            ->with(UpdateInfoEnum::DB_VERSION)
-            ->willReturn('600000');
+        $this->updateHelper         = $this->createMock(UpdateHelperInterface::class);
+        $this->updateInfoRepository = $this->createMock(UpdateInfoRepositoryInterface::class);
+        $this->dic                  = $this->createMock(ContainerInterface::class);
+        $this->updateRunner         = $this->createMock(UpdateRunnerInterface::class);
 
-        $this->updateRunner->expects(static::once())
-            ->method('run')
-            ->with(
-                static::isType('iterable'),
-                null
-            );
-
-        $this->subject->update();
-    }
-
-    public function testCheckTablesYieldMissingTables(): void
-    {
-        $table = 'snafu';
-
-        $this->updateRunner->expects(static::once())
-            ->method('runTableCheck')
-            ->with(
-                static::isType('iterable'),
-                true,
-                600000
-            )
-            ->willReturn(new ArrayIterator([$table]));
-
-        static::assertSame(
-            $table,
-            $this->subject->checkTables(true, 600000)->current()
+        $this->subject = new Updater(
+            $this->updateHelper,
+            $this->updateInfoRepository,
+            $this->dic,
+            $this->updateRunner
         );
     }
 }

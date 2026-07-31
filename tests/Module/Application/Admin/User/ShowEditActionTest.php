@@ -40,51 +40,12 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowEditActionTest extends TestCase
 {
-    private UiInterface&MockObject $ui;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private ModelFactoryInterface&MockObject $modelFactory;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
+    private ModelFactoryInterface&MockObject $modelFactory;
     private ServerRequestInterface&MockObject $request;
-
     private ShowEditAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->request         = $this->createMock(ServerRequestInterface::class);
-        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
-
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-
-        $this->subject = new ShowEditAction(
-            $this->ui,
-            $this->modelFactory,
-            $this->configContainer,
-        );
-    }
-
-    public function testRunReturnsNullInDemoMode(): void
-    {
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->willReturn(true);
-
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->willReturn(true);
-
-        static::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
-        );
-    }
+    private UiInterface&MockObject $ui;
 
     public function testRunErrorsIfUserWasNotFound(): void
     {
@@ -159,8 +120,42 @@ class ShowEditActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
+        );
+    }
+
+    public function testRunReturnsNullInDemoMode(): void
+    {
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->willReturn(true);
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->willReturn(true);
+
+        self::assertNull(
+            $this->subject->run($this->request, $this->gatekeeper)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->request         = $this->createMock(ServerRequestInterface::class);
+        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
+
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+
+        $this->subject = new ShowEditAction(
+            $this->ui,
+            $this->modelFactory,
+            $this->configContainer,
         );
     }
 }

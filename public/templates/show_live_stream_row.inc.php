@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_live_stream_row.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -67,7 +69,7 @@ $libitem->display_art($size); ?>
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->id);
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <a id="<?php echo 'add_to_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, '<?php echo 'live_stream'; ?>', '<?php echo $libitem->id; ?>')">
-                <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
             </a>
         <?php } ?>
     </span>
@@ -76,16 +78,14 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>
 <?php if ($show_ratings) { ?>
     <td class="cel_ratings">
-        <?php if (AmpConfig::get('ratings')) { ?>
-            <div class="rating">
-                <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
-                    <?php echo Rating::show($libitem->getId(), $object_type); ?>
-                </span>
-                <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
-                    <?php echo Userflag::show($libitem->getId(), $object_type); ?>
-                </span>
-            </div>
-        <?php } ?>
+        <div class="rating">
+            <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
+                <?php echo Rating::show($libitem->getId(), $object_type); ?>
+            </span>
+            <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
+                <?php echo Userflag::show($libitem->getId(), $object_type); ?>
+            </span>
+        </div>
     </td>
 <?php } ?>
 <td class="cel_action">
@@ -97,6 +97,6 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
         <?php
 }
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-    echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'close', T_('Delete'), 'delete_live_stream_' . $libitem->id);
+    echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'close', T_('Delete'), 'delete_live_stream_' . $libitem->id, '', '', T_('Are you sure?'));
 } ?>
 </td>

@@ -1,0 +1,71 @@
+{
+    "id": "1096520",
+    "title": "\u06de",
+    "name": "\u06de",
+    "artist": {
+        "id": "28005",
+        "name": "Digital Island Fantasy Akita",
+        "prefix": null,
+        "basename": "Digital Island Fantasy Akita"
+    },
+    "artists": [
+        {
+            "id": "28005",
+            "name": "Digital Island Fantasy Akita",
+            "prefix": null,
+            "basename": "Digital Island Fantasy Akita"
+        }
+    ],
+    "album": {
+        "id": "178817",
+        "name": "3rd Street Promenade",
+        "prefix": null,
+        "basename": "3rd Street Promenade"
+    },
+    "albumartist": {
+        "id": "28005",
+        "name": "Digital Island Fantasy Akita",
+        "prefix": null,
+        "basename": "Digital Island Fantasy Akita"
+    },
+    "disk": 1,
+    "disksubtitle": null,
+    "track": 2,
+    "filename": "/media/music\/Digital Island Fantasy Akita\/(2013) 3rd Street Promenade\/1-02 - \u06de.flac",
+    "genre": [],
+    "playlisttrack": 1,
+    "time": 90,
+    "year": 2013,
+    "format": "flac",
+    "stream_format": "mp3",
+    "bitrate": 1424897,
+    "stream_bitrate": 192000,
+    "rate": 44100,
+    "mode": "vbr",
+    "mime": "audio\/flac",
+    "stream_mime": "audio\/mpeg",
+    "url": "https:\/\/music.com.au\/play\/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=1096520&uid=2&transcode_to=mp3&bitrate=192000&player=api&name=Digital%20Island%20Fantasy%20Akita%20-%20-.mp3",
+    "size": 16089402,
+    "mbid": "dc6a90f6-0271-4592-9bc4-fd3cdca0d368",
+    "art": "https:\/\/music.com.au\/image.php?object_id=178817&object_type=album&name=art.jpg",
+    "has_art": true,
+    "flag": false,
+    "rating": null,
+    "averagerating": null,
+    "playcount": 1,
+    "last_played": null,
+    "catalog": "2",
+    "composer": null,
+    "channels": 2,
+    "comment": null,
+    "license": null,
+    "publisher": null,
+    "language": null,
+    "lyrics": null,
+    "replaygain_album_gain": null,
+    "replaygain_album_peak": null,
+    "replaygain_track_gain": -4.89,
+    "replaygain_track_peak": 1,
+    "r128_album_gain": null,
+    "r128_track_gain": null
+}

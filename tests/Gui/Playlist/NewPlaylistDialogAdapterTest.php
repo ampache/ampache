@@ -29,39 +29,87 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
+use Generator;
 use Mockery\MockInterface;
+use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NewPlaylistDialogAdapterTest extends MockeryTestCase
 {
-    /** @var MockInterface|PlaylistLoaderInterface|null */
-    private MockInterface $playlistLoader;
-
-    /** @var MockInterface|AjaxUriRetrieverInterface|null */
-    private MockInterface $ajaxUriRetriever;
-
-    /** @var MockInterface|GuiGatekeeperInterface|null */
-    private MockInterface $gatekeeper;
-
+    private MockInterface|AjaxUriRetrieverInterface|null $ajaxUriRetriever;
+    private MockInterface|CollectionRepositoryInterface|null $collectionRepository;
+    private MockInterface|GuiGatekeeperInterface|null $gatekeeper;
+    private string $objectIds  = '666';
     private string $objectType = 'some-object-type';
-
-    private string $objectIds = '666';
-
+    private MockInterface|PlaylistLoaderInterface|null $playlistLoader;
     private ?NewPlaylistDialogAdapter $subject;
 
-    protected function setUp(): void
+    public static function playlistTypeDataProvider(): Generator
     {
-        $this->playlistLoader   = $this->mock(PlaylistLoaderInterface::class);
-        $this->ajaxUriRetriever = $this->mock(AjaxUriRetrieverInterface::class);
-        $this->gatekeeper       = $this->mock(GuiGatekeeperInterface::class);
+        yield 'folder' => ['folder', true];
+        yield 'song' => ['song', true];
+        yield 'genre named after its table' => ['tag', false];
+        yield 'unknown type' => ['some-object-type', false];
+    }
 
-        $this->subject = new NewPlaylistDialogAdapter(
+    public function testAjaxUriReturnsUri(): void
+    {
+        $uri = 'some-uri';
+
+        $this->ajaxUriRetriever->shouldReceive('getAjaxUri')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($uri);
+
+        $this->assertSame(
+            $uri,
+            $this->subject->getAjaxUri()
+        );
+    }
+
+    public function testGetNewPlaylistTitleReturnsValue(): void
+    {
+        $this->assertSame(
+            'Playlist Name',
+            $this->subject->getNewPlaylistTitle()
+        );
+    }
+
+    public function testGetObjectIdsReturnsValue(): void
+    {
+        $this->assertSame(
+            $this->objectIds,
+            $this->subject->getObjectIds()
+        );
+    }
+
+    public function testGetObjectTypeReturnsValue(): void
+    {
+        $this->assertSame(
+            $this->objectType,
+            $this->subject->getObjectType()
+        );
+    }
+
+    /**
+     * A folder contributes the media below it, so the playlist half of the dialog is offered for one; a genre
+     * has no media at all and only belongs in a collection.
+     */
+    #[DataProvider('playlistTypeDataProvider')]
+    public function testGetPlaylistsEnabledFollowsTheRequestedType(string $objectType, bool $expected): void
+    {
+        $subject = new NewPlaylistDialogAdapter(
             $this->playlistLoader,
             $this->ajaxUriRetriever,
+            $this->collectionRepository,
             $this->gatekeeper,
-            $this->objectType,
+            $objectType,
             $this->objectIds
         );
+
+        $this->assertSame($expected, $subject->getPlaylistsEnabled());
     }
 
     public function testGetPlaylistsReturnsList(): void
@@ -86,42 +134,21 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testAjaxUriReturnsUri(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $uri = 'some-uri';
+        $this->playlistLoader       = $this->mock(PlaylistLoaderInterface::class);
+        $this->ajaxUriRetriever     = $this->mock(AjaxUriRetrieverInterface::class);
+        $this->gatekeeper           = $this->mock(GuiGatekeeperInterface::class);
+        $this->collectionRepository = $this->mock(CollectionRepositoryInterface::class);
 
-        $this->ajaxUriRetriever->shouldReceive('getAjaxUri')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($uri);
-
-        $this->assertSame(
-            $uri,
-            $this->subject->getAjaxUri()
-        );
-    }
-
-    public function testGetObjectTypeReturnsValue(): void
-    {
-        $this->assertSame(
+        $this->subject = new NewPlaylistDialogAdapter(
+            $this->playlistLoader,
+            $this->ajaxUriRetriever,
+            $this->collectionRepository,
+            $this->gatekeeper,
             $this->objectType,
-            $this->subject->getObjectType()
-        );
-    }
-
-    public function testGetObjectIdsReturnsValue(): void
-    {
-        $this->assertSame(
-            $this->objectIds,
-            $this->subject->getObjectIds()
-        );
-    }
-
-    public function testGetNewPlaylistTitleReturnsValue(): void
-    {
-        $this->assertSame(
-            'Playlist Name',
-            $this->subject->getNewPlaylistTitle()
+            $this->objectIds
         );
     }
 }

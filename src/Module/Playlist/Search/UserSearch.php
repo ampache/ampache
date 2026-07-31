@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -44,7 +44,7 @@ final class UserSearch implements SearchInterface
      * }
      */
     public function getSql(
-        Search $search
+        Search $search,
     ): array {
         $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
 
@@ -54,18 +54,20 @@ final class UserSearch implements SearchInterface
         $parameters = [];
 
         foreach ($search->rules as $rule) {
-            $type     = $search->get_rule_type($rule[0]);
+            $type     = $search->get_rule_type_by_name($rule[0]);
             $operator = [];
             if ($type === null) {
                 continue;
             }
-            foreach ($search->basetypes[$type] as $baseOperator) {
+
+            foreach ($search->get_basetypes()[$type] as $baseOperator) {
                 if ($baseOperator['name'] == $rule[1]) {
                     $operator = $baseOperator;
                     break;
                 }
             }
-            $input        = $search->filter_data((string)$rule[2], $type, $operator);
+
+            $input        = $search->filter_data((string) $rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
@@ -73,8 +75,9 @@ final class UserSearch implements SearchInterface
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
                         $where[] = "NOT (`user`.`username` SOUNDS LIKE ?)";
                     } else {
-                        $where[] = "`user`.`username` $operator_sql ?";
+                        $where[] = sprintf('`user`.`username` %s ?', $operator_sql);
                     }
+
                     $parameters[] = $input;
                     break;
                 default:
@@ -83,7 +86,7 @@ final class UserSearch implements SearchInterface
             } // switch on ruletype
         } // foreach rule
 
-        $where_sql = implode(" $sql_logic_operator ", $where);
+        $where_sql = implode(sprintf(' %s ', $sql_logic_operator), $where);
         ksort($table);
 
         return [

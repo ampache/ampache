@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -40,31 +40,21 @@ use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SendMailAction implements ApplicationActionInterface
+final readonly class SendMailAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'send_mail';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'send_mail';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-    }
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             throw new AccessDeniedException();
         }
@@ -77,6 +67,7 @@ final class SendMailAction implements ApplicationActionInterface
             if (ini_get($ini_default_charset)) {
                 ini_set($ini_default_charset, "UTF-8");
             }
+
             mb_language("uni");
         }
 
@@ -87,12 +78,12 @@ final class SendMailAction implements ApplicationActionInterface
             $mailer->setSubject($this->requestParser->getFromRequest('subject'));
             $mailer->setMessage($this->requestParser->getFromRequest('message'));
 
-            if ($this->requestParser->getFromRequest('from') == 'system') {
+            if ($this->requestParser->getFromRequest('from') === 'system') {
                 $mailer->set_default_sender();
             } else {
                 $user = Core::get_global('user');
                 if ($user instanceof User) {
-                    $mailer->setSender((string)$user->email, (string)$user->get_fullname());
+                    $mailer->setSender((string) $user->email, (string) $user->get_fullname());
                 } else {
                     $mailer->set_default_sender();
                 }

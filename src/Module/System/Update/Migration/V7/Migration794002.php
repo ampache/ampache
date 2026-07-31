@@ -33,8 +33,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration794002 extends AbstractMigration
 {
     protected array $changelog = ['Add weight columns to album_disk table'];
-
-    protected bool $warning = true;
+    protected bool $warning    = true;
 
     public function migrate(): void
     {

@@ -5,7 +5,8 @@ const requiredFiles = [
     'public/lib/components/bootstrap/js/bootstrap.bundle.min.js',
     'public/lib/components/bootstrap/css/bootstrap.min.css',
     'public/lib/components/filepond/filepond.min.js',
-    'public/lib/components/wunderbaum/wunderbaum.umd.js'
+    'public/lib/components/wunderbaum/wunderbaum.umd.js',
+    'public/lib/components/material-symbols/folder.svg'
 ];
 
 const missing = requiredFiles.filter((file) => !fs.existsSync(file));

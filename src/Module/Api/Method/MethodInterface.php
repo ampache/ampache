@@ -35,6 +35,13 @@ use Psr\Http\Message\ResponseInterface;
 interface MethodInterface
 {
     /**
+     * A method may be shared between api versions. The version resolved by the ApiHandler is
+     * passed in so the method can hand it to the ApiOutputInterface, which dispatches to the
+     * matching per-version data formatter. Only methods whose parameters or checks actually
+     * differ between versions need a version-specific implementation.
+     *
+     * @param 3|4|5|6|8 $apiVersion
+     *
      * @throws ApiMethodException
      * @throws ApiException
      */
@@ -44,5 +51,6 @@ interface MethodInterface
         ApiOutputInterface $output,
         array $input,
         User $user,
+        int $apiVersion,
     ): ResponseInterface;
 }

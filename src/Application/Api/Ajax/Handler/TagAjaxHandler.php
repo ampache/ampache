@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -41,8 +41,7 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private LabelRepositoryInterface $labelRepository,
         private PrivilegeCheckerInterface $privilegeChecker,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
@@ -56,7 +55,7 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
                 if ($type === 'tag_hidden_row') {
                     $tags = Tag::get_display(Tag::get_tags('all_hidden'));
                 } else {
-                    $tags = (in_array($type, ['album_disk_row', 'album_row', 'artist_row', 'song_row', 'tag_row', 'video_row', 'broadcast_row']))
+                    $tags = (in_array($type, ['album_disk_row', 'album_row', 'artist_row', 'song_row', 'tag_row', 'video_row', 'broadcast_row'], true))
                         ? Tag::get_display(Tag::get_tags())
                         : '';
                 }
@@ -77,7 +76,7 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
                 }
 
                 debug_event('tag.ajax', 'Deleting tag...', 5);
-                $tag = new Tag($_GET['tag_id']);
+                $tag = new Tag((int) ($_GET['tag_id'] ?? 0));
                 $tag->delete();
                 header('Location: ' . AmpConfig::get_web_path() . '/browse.php?action=tag&type=artist');
 

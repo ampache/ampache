@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -27,6 +27,7 @@ namespace Ampache\Module\Playback;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\MemoryObject;
+use Override;
 
 /**
  * Stream_Url Class
@@ -45,7 +46,9 @@ use Ampache\Module\Util\MemoryObject;
  */
 class Stream_Url extends MemoryObject
 {
-    public $properties = [
+    #[Override]
+    /** @var string[] $properties */
+    public array $properties = [
         'url',
         'info_url',
         'image_url',
@@ -57,73 +60,6 @@ class Stream_Url extends MemoryObject
         'codec',
         'track_num',
     ]; // Columns for the stream_playlist table. (Ordered by database structure)
-
-    /**
-     * parse
-     *
-     * Takes an url and parses out all the chewy goodness.
-     * @return array<string, string>
-     */
-    public static function parse(string $url): array
-    {
-        if (empty($url)) {
-            return [];
-        }
-        if (AmpConfig::get('stream_beautiful_url')) {
-            $posargs = strpos($url, '/play/');
-            if ($posargs !== false) {
-                $argsstr = substr($url, $posargs + 6);
-                $url     = substr($url, 0, $posargs + 6) . 'index.php?';
-                $args    = explode('/', $argsstr);
-                $a_count = count($args);
-                for ($index = 0; $index < $a_count; $index += 2) {
-                    if ($index > 0) {
-                        $url .= '&';
-                    }
-                    $url .= $args[$index] . '=' . $args[$index + 1];
-                }
-            }
-        }
-
-        $query    = (string)parse_url($url, PHP_URL_QUERY);
-        $elements = explode('&', $query);
-        $results  = [];
-
-        $results['base_url'] = $url;
-
-        if (is_array($elements)) {
-            foreach ($elements as $element) {
-                if (strpos((string)$element, '=')) {
-                    list($key, $value) = explode('=', $element);
-                    switch ($key) {
-                        case 'oid':
-                            $key = 'id';
-                            break;
-                        case 'video':
-                            if (make_bool($value)) {
-                                $results['type'] = 'video';
-                            }
-                            break;
-                        case 'demo_id':
-                            if (make_bool($value)) {
-                                $results['type'] = 'democratic';
-                            }
-                            break;
-                        case 'random_id':
-                            if (make_bool($value)) {
-                                $results['type'] = 'random';
-                            }
-                            break;
-                    }
-                    if (!empty($value)) {
-                        $results[$key] = $value;
-                    }
-                }
-            }
-        }
-
-        return $results;
-    }
 
     /**
      * add_options
@@ -141,11 +77,12 @@ class Stream_Url extends MemoryObject
 
             if (count($curel) > 2) {
                 foreach ($newel as $urlParameter) {
-                    if (strpos((string)$urlParameter, '=')) {
+                    if (strpos($urlParameter, '=')) {
                         $element = explode('=', $urlParameter);
                         array_splice($curel, count($curel) - 2, 0, $element);
                     }
                 }
+
                 $url = implode('/', $curel);
             }
         } else {
@@ -191,5 +128,76 @@ class Stream_Url extends MemoryObject
             'democratic' => T_('Democratic'),
             default => $type,
         };
+    }
+
+    /**
+     * parse
+     *
+     * Takes an url and parses out all the chewy goodness.
+     * @return array<string, string>
+     */
+    public static function parse(string $url): array
+    {
+        if ($url === '' || $url === '0') {
+            return [];
+        }
+
+        if (AmpConfig::get('stream_beautiful_url')) {
+            $posargs = strpos($url, '/play/');
+            if ($posargs !== false) {
+                $argsstr = substr($url, $posargs + 6);
+                $url     = substr($url, 0, $posargs + 6) . 'index.php?';
+                $args    = explode('/', $argsstr);
+                $a_count = count($args);
+                for ($index = 0; $index < $a_count; $index += 2) {
+                    if ($index > 0) {
+                        $url .= '&';
+                    }
+
+                    $url .= $args[$index] . '=' . $args[$index + 1];
+                }
+            }
+        }
+
+        $query    = (string) parse_url($url, PHP_URL_QUERY);
+        $elements = explode('&', $query);
+        $results  = [];
+
+        $results['base_url'] = $url;
+
+        foreach ($elements as $element) {
+            if (strpos($element, '=')) {
+                [$key, $value] = explode('=', $element);
+                switch ($key) {
+                    case 'oid':
+                        $key = 'id';
+                        break;
+                    case 'video':
+                        if (make_bool($value)) {
+                            $results['type'] = 'video';
+                        }
+
+                        break;
+                    case 'demo_id':
+                        if (make_bool($value)) {
+                            $results['type'] = 'democratic';
+                        }
+
+                        break;
+                    case 'random_id':
+                        if (make_bool($value)) {
+                            $results['type'] = 'random';
+                        }
+
+                        break;
+                }
+
+                if ($value !== '' && $value !== '0') {
+                    $results[$key] = $value;
+                }
+            }
+        }
+
+        return $results;
     }
 }

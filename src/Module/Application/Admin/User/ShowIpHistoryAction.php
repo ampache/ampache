@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -38,41 +38,27 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ShowIpHistoryAction extends AbstractUserAction
 {
-    /** @var string */
-    public const REQUEST_KEY = 'show_ip_history';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private IpHistoryRepositoryInterface $ipHistoryRepository;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'show_ip_history';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        IpHistoryRepositoryInterface $ipHistoryRepository,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->ui                  = $ui;
-        $this->modelFactory        = $modelFactory;
-        $this->ipHistoryRepository = $ipHistoryRepository;
-        $this->configContainer     = $configContainer;
-    }
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly IpHistoryRepositoryInterface $ipHistoryRepository,
+        private readonly ConfigContainerInterface $configContainer,
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
         $queryParams = $request->getQueryParams();
-        $userId      = (int)($queryParams['user_id'] ?? 0);
-        $showAll     = (bool)($queryParams['all'] ?? 0);
+        $userId      = (int) ($queryParams['user_id'] ?? 0);
+        $showAll     = (bool) ($queryParams['all'] ?? 0);
 
         $user = $this->modelFactory->createUser($userId);
         if ($user->isNew()) {
             throw new ObjectNotFoundException($userId);
         }
 
-        if ($showAll === true) {
+        if ($showAll) {
             $history = $this->ipHistoryRepository->getHistory(
                 $user,
                 false,

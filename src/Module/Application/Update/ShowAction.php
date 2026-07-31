@@ -34,31 +34,18 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private TalFactoryInterface $talFactory;
-
-    private GuiFactoryInterface $guiFactory;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        TalFactoryInterface $talFactory,
-        GuiFactoryInterface $guiFactory,
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory
-    ) {
-        $this->talFactory      = $talFactory;
-        $this->guiFactory      = $guiFactory;
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
-    }
+        private TalFactoryInterface $talFactory,
+        private GuiFactoryInterface $guiFactory,
+        private ResponseFactoryInterface $responseFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         $result = $this->talFactory->createTalView()
             ->setTemplate('update.xhtml')

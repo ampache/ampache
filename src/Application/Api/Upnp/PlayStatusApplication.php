@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -41,7 +41,7 @@ final class PlayStatusApplication implements ApplicationInterface
         // get current UPnP player instance
         $controller = new AmpacheUPnP();
         $instance   = $controller->get_instance();
-        if ($instance === []) {
+        if ($instance === [] || !isset($instance['name']) || !isset($instance['url'])) {
             die("No UPnP instance found");
         }
 

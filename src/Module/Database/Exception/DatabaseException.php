@@ -30,6 +30,4 @@ use Exception;
 /**
  * Base exception class for database related exceptions
  */
-abstract class DatabaseException extends Exception
-{
-}
+abstract class DatabaseException extends Exception {}

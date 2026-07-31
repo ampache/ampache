@@ -39,6 +39,6 @@ final class Migration700009 extends AbstractMigration
             : -1;
 
         $this->updatePreferences('upload_catalog', 'Uploads catalog destination', '-1', AccessLevelEnum::ADMIN->value, 'integer', 'options', 'upload');
-        Preference::update_all('upload_catalog', (string)$upload_catalog);
+        Preference::update_all('upload_catalog', (string) $upload_catalog);
     }
 }

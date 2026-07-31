@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -28,39 +30,9 @@ use Traversable;
 interface RssItemInterface
 {
     /**
-     * Returns the item title
-     */
-    public function getTitle(): string;
-
-    /**
-     * Returns `true` if the item provides an image
-     */
-    public function hasImage(): bool;
-
-    /**
      * Returns the items image-url
      */
     public function getImageUrl(): string;
-
-    /**
-     * Returns `true` if the item provides a summary/description text
-     */
-    public function hasSummary(): bool;
-
-    /**
-     * Returns the items summary/description text
-     */
-    public function getSummary(): string;
-
-    /**
-     * Returns `true` if an item-owner is set
-     */
-    public function hasOwner(): bool;
-
-    /**
-     * Returns the name of the owner
-     */
-    public function getOwnerName(): string;
 
     /**
      * Returns all media-items which are associated with the item
@@ -77,4 +49,34 @@ interface RssItemInterface
      * }>
      */
     public function getMedias(): Traversable;
+
+    /**
+     * Returns the name of the owner
+     */
+    public function getOwnerName(): string;
+
+    /**
+     * Returns the items summary/description text
+     */
+    public function getSummary(): string;
+
+    /**
+     * Returns the item title
+     */
+    public function getTitle(): string;
+
+    /**
+     * Returns `true` if the item provides an image
+     */
+    public function hasImage(): bool;
+
+    /**
+     * Returns `true` if an item-owner is set
+     */
+    public function hasOwner(): bool;
+
+    /**
+     * Returns `true` if the item provides a summary/description text
+     */
+    public function hasSummary(): bool;
 }

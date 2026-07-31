@@ -35,24 +35,6 @@ use Generator;
 
 final readonly class NowPlayingFeed extends AbstractGenericRssFeed
 {
-    protected function getTitle(): string
-    {
-        return T_('Now Playing');
-    }
-
-    /**
-     * this is the pub date we should use for the Now Playing information,
-     * this is a little specific as it uses the 'newest' expire we can find
-     */
-    protected function getPubDate(): ?int
-    {
-        // Little redundant, should be fixed by an improvement in the get_now_playing stuff
-        $data    = Stream::get_now_playing();
-        $element = array_shift($data);
-
-        return $element['expire'] ?? null;
-    }
-
     /**
      * Feed image link
      */
@@ -72,14 +54,14 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
             ? 'video'
             : 'song';
 
-        return (string)Art::url($media->getId(), $type, null, 2);
+        return (string) Art::url($media->getId(), $type, null, 2);
     }
 
     protected function getItems(): Generator
     {
         $data = Stream::get_now_playing();
 
-        $format     = (string)AmpConfig::get('rss_format', '%t - %a - %A');
+        $format     = (string) AmpConfig::get('rss_format', '%t - %a - %A');
         $string_map = [
             '%t' => 'title',
             '%a' => 'artist',
@@ -94,12 +76,12 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
             $description = $format;
             foreach ($string_map as $search => $replace) {
                 $text = match ($replace) {
-                    'title' => (string)$media->get_fullname(),
+                    'title' => (string) $media->get_fullname(),
                     'artist' => ($media instanceof Song)
-                        ? (string)$media->get_parent_fullname()
+                        ? $media->get_parent_fullname()
                         : '',
                     'album' => ($media instanceof Song)
-                        ? (string)$media->get_album_fullname($media->album, true)
+                        ? $media->get_album_fullname($media->album, true)
                         : '',
                 };
                 $title       = str_replace($search, $text, $title);
@@ -111,7 +93,7 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
                 'link' => $media->get_link(),
                 'description' => str_replace('<p>Artist: </p><p>Album: </p>', '', $description),
                 'comments' => $client->get_link(),
-                'pubDate' => date("r", (int)$element['expire']),
+                'pubDate' => date("r", (int) $element['expire']),
                 'guid' => (isset($media->mbid))
                     ? 'https://musicbrainz.org/recording/' . $media->mbid
                     : $element['expire'] . '-' . $client->getId() . '-' . $media->getId(),
@@ -120,5 +102,23 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
                     : 'false',
             ];
         }
+    }
+
+    /**
+     * this is the pub date we should use for the Now Playing information,
+     * this is a little specific as it uses the 'newest' expire we can find
+     */
+    protected function getPubDate(): ?int
+    {
+        // Little redundant, should be fixed by an improvement in the get_now_playing stuff
+        $data    = Stream::get_now_playing();
+        $element = array_shift($data);
+
+        return $element['expire'] ?? null;
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Now Playing');
     }
 }

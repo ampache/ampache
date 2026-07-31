@@ -25,87 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Module\Api\Api6;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractUpdateArtMethod;
 
 /**
- * Class UpdateArt6Method
- * @package Lib\Api6Methods
+ * Gathers new art for an artist or album
+ *
+ * Api version 6 reports the object id as `id` and accepts `filter` as an alias.
  */
-final class UpdateArt6Method
+final class UpdateArt6Method extends AbstractUpdateArtMethod
 {
-    public const ACTION = 'update_art';
+    protected const string FILTER_ALIAS = 'filter';
 
-    /**
-     * update_art
-     * MINIMUM_API_VERSION=400001
-     *
-     * updates a single album, artist, song running the gather_art process
-     * Existing art is replaced unless you send overwrite=0, which keeps whatever is already there.
-     *
-     * type = (string) 'artist', 'album'
-     * id = (string) $artist_id, $album_id
-     * overwrite = (integer) 0,1 //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     id?: string,
-     *     type: string,
-     *     overwrite?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function update_art(array $input, User $user): bool
-    {
-        if (!Api6::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api6::check_parameter($input, ['type', 'id'], self::ACTION)) {
-            return false;
-        }
-
-        $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
-        // Catalog::gather_art_item() takes `db_art_first`, i.e. the inverse: keep the art we already have
-        $db_art_first = array_key_exists('overwrite', $input) && (int) $input['overwrite'] === 0;
-        $art_url      = Art::url($object_id, $type, $input['auth']);
-
-        // confirm the correct data
-        if (!in_array(strtolower($type), ['artist', 'album'])) {
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
-
-            return true;
-        }
-
-        $className = ObjectTypeToClassNameMapper::map($type);
-        /** @var Artist|Album $item */
-        $item = new $className($object_id);
-        if ($item->isNew() || $art_url === null) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
-
-            return false;
-        }
-        // update your object
-
-        if (Catalog::gather_art_item($type, $object_id, $db_art_first, true)) {
-            Api6::message('Gathered new art for: ' . $object_id . ' (' . $type . ')', $input['api_format'], ['art' => $art_url]);
-
-            return true;
-        }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_id), self::ACTION, 'system', $input['api_format']);
-
-        return true;
-    }
+    protected const string FILTER_KEY = 'id';
 }

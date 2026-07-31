@@ -28,28 +28,28 @@ namespace Ampache\Module\Authorization;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Mockery\MockInterface;
+use Override;
 
 class GatekeeperFactoryTest extends MockeryTestCase
 {
-    /** @var MockInterface|PrivilegeCheckerInterface|null */
-    private MockInterface $privilegeChecker;
-
+    private MockInterface|PrivilegeCheckerInterface|null $privilegeChecker;
     private ?GatekeeperFactory $subject;
-
-    protected function setUp(): void
-    {
-        $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
-
-        $this->subject = new GatekeeperFactory(
-            $this->privilegeChecker
-        );
-    }
 
     public function testCreateGuiGatekeeperReturnsInstance(): void
     {
         $this->assertInstanceOf(
             GuiGatekeeper::class,
             $this->subject->createGuiGatekeeper()
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+
+        $this->subject = new GatekeeperFactory(
+            $this->privilegeChecker
         );
     }
 }

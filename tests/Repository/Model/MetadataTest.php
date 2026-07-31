@@ -33,104 +33,15 @@ use PHPUnit\Framework\TestCase;
 
 class MetadataTest extends TestCase
 {
-    private MetadataRepositoryInterface&MockObject $metadataRepository;
-
     private MetadataFieldRepositoryInterface $metadataFieldRepository;
-
+    private MetadataRepositoryInterface&MockObject $metadataRepository;
     private Metadata $subject;
-
-    protected function setUp(): void
-    {
-        $this->metadataRepository      = $this->createMock(MetadataRepositoryInterface::class);
-        $this->metadataFieldRepository = $this->createMock(MetadataFieldRepositoryInterface::class);
-
-        $this->subject = new Metadata(
-            $this->metadataRepository,
-            $this->metadataFieldRepository
-        );
-    }
-
-    public function testIsNewReturnsTrueINew(): void
-    {
-        static::assertTrue(
-            $this->subject->isNew()
-        );
-    }
-
-    public function testIsNewReturnsFalseAfterSaving(): void
-    {
-        $id = 666;
-
-        $this->metadataRepository->expects(static::once())
-            ->method('persist')
-            ->with($this->subject)
-            ->willReturn($id);
-
-        static::assertSame(
-            0,
-            $this->subject->getId()
-        );
-
-        $this->subject->save();
-
-        static::assertFalse(
-            $this->subject->isNew()
-        );
-        static::assertSame(
-            $id,
-            $this->subject->getId()
-        );
-    }
-
-    #[DataProvider(methodName: 'setterGetterDataProvider')]
-    public function testGetterReturnsSetData(
-        string $getterMethod,
-        string $setterMethod,
-        mixed $defaultValue,
-        mixed $setValue
-    ): void {
-        static::assertSame(
-            $defaultValue,
-            call_user_func_array([$this->subject, $getterMethod], [])
-        );
-
-        call_user_func_array([$this->subject, $setterMethod], [$setValue]);
-
-        static::assertSame(
-            $setValue,
-            call_user_func_array([$this->subject, $getterMethod], [])
-        );
-    }
 
     public static function setterGetterDataProvider(): Generator
     {
         yield ['getObjectId', 'setObjectId', 0, 666];
         yield ['getData', 'setData', '', 'some-data'];
         yield ['getType', 'setType', '', 'Some-type'];
-    }
-
-    public function testSetTypePerformsUcFirst(): void
-    {
-        $value = 'some-value';
-
-        $this->subject->setType($value);
-
-        static::assertSame(
-            ucfirst($value),
-            $this->subject->getType()
-        );
-    }
-
-    public function testGetFieldReturnsSetField(): void
-    {
-        $field = $this->createMock(MetadataField::class);
-
-        $this->subject->setField($field);
-
-        static::assertSame(
-            $field,
-            $this->subject->getField()
-        );
     }
 
     public function testGetFieldLoadsFieldAndCaches(): void
@@ -146,17 +57,104 @@ class MetadataTest extends TestCase
             ->with($fieldId)
             ->willReturn($field);
 
-        static::assertSame(
+        self::assertSame(
             $field,
             $this->subject->getField()
         );
-        static::assertSame(
+        self::assertSame(
             $field,
             $this->subject->getField()
         );
-        static::assertSame(
+        self::assertSame(
             $fieldId,
             $this->subject->getFieldId()
+        );
+    }
+
+    public function testGetFieldReturnsSetField(): void
+    {
+        $field = $this->createMock(MetadataField::class);
+
+        $this->subject->setField($field);
+
+        self::assertSame(
+            $field,
+            $this->subject->getField()
+        );
+    }
+
+    #[DataProvider(methodName: 'setterGetterDataProvider')]
+    public function testGetterReturnsSetData(
+        string $getterMethod,
+        string $setterMethod,
+        mixed $defaultValue,
+        mixed $setValue,
+    ): void {
+        self::assertSame(
+            $defaultValue,
+            call_user_func_array([$this->subject, $getterMethod], [])
+        );
+
+        call_user_func_array([$this->subject, $setterMethod], [$setValue]);
+
+        self::assertSame(
+            $setValue,
+            call_user_func_array([$this->subject, $getterMethod], [])
+        );
+    }
+
+    public function testIsNewReturnsFalseAfterSaving(): void
+    {
+        $id = 666;
+
+        $this->metadataRepository->expects(static::once())
+            ->method('persist')
+            ->with($this->subject)
+            ->willReturn($id);
+
+        self::assertSame(
+            0,
+            $this->subject->getId()
+        );
+
+        $this->subject->save();
+
+        self::assertFalse(
+            $this->subject->isNew()
+        );
+        self::assertSame(
+            $id,
+            $this->subject->getId()
+        );
+    }
+
+    public function testIsNewReturnsTrueINew(): void
+    {
+        self::assertTrue(
+            $this->subject->isNew()
+        );
+    }
+
+    public function testSetTypePerformsUcFirst(): void
+    {
+        $value = 'some-value';
+
+        $this->subject->setType($value);
+
+        self::assertSame(
+            ucfirst($value),
+            $this->subject->getType()
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->metadataRepository      = $this->createMock(MetadataRepositoryInterface::class);
+        $this->metadataFieldRepository = $this->createMock(MetadataFieldRepositoryInterface::class);
+
+        $this->subject = new Metadata(
+            $this->metadataRepository,
+            $this->metadataFieldRepository
         );
     }
 }

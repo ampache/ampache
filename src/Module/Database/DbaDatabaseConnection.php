@@ -40,6 +40,53 @@ use PDOStatement;
 final class DbaDatabaseConnection implements DatabaseConnectionInterface
 {
     /**
+     * Fetches a single column from the query result
+     *
+     * Useful e.g. for counting-queries
+     *
+     * @param list<mixed> $params
+     * @throws QueryFailedException
+     */
+    public function fetchOne(
+        string $sql,
+        array $params = [],
+    ): mixed {
+        return $this->query($sql, $params)->fetchColumn();
+    }
+
+    /**
+     * Fetches a single whole row and returns it as an associative array
+     *
+     * @param list<mixed> $params
+     * @return false|array<string, mixed> Will return `false` if row is empty
+     * @throws QueryFailedException
+     */
+    public function fetchRow(
+        string $sql,
+        array $params = [],
+    ): array|bool {
+        return $this->query($sql, $params)->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Returns the most recent inserted id
+     *
+     * @return non-negative-int
+     * @throws InsertIdInvalidException
+     */
+    public function getLastInsertedId(): int
+    {
+        // we assume insertion succeed (errors would throw exceptions), so simply cast it
+        $result = (int) Dba::insert_id();
+
+        if ($result <= 0) {
+            throw new InsertIdInvalidException();
+        }
+
+        return $result;
+    }
+
+    /**
      * Executes the provided sql query
      *
      * If the query fails, a DatabaseException will be thrown
@@ -65,54 +112,6 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
             }
 
             throw new QueryFailedException();
-        }
-
-        return $result;
-    }
-
-    /**
-     * Fetches a single column from the query result
-     *
-     * Useful e.g. for counting-queries
-     *
-     * @param list<mixed> $params
-     *
-     * @return mixed Will return `false` if row is empty
-     */
-    public function fetchOne(
-        string $sql,
-        array $params = []
-    ) {
-        return $this->query($sql, $params)->fetchColumn();
-    }
-
-    /**
-     * Fetches a single whole row and returns it as an associative array
-     *
-     * @param list<mixed> $params
-     *
-     * @return false|array<string, mixed> Will return `false` if row is empty
-     */
-    public function fetchRow(
-        string $sql,
-        array $params = []
-    ) {
-        return $this->query($sql, $params)->fetch(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Returns the most recent inserted id
-     *
-     * @return non-negative-int
-     * @throws InsertIdInvalidException
-     */
-    public function getLastInsertedId(): int
-    {
-        // we assume insertion succeed (errors would throw exceptions), so simply cast it
-        $result = (int) Dba::insert_id();
-
-        if ($result <= 0) {
-            throw new InsertIdInvalidException();
         }
 
         return $result;

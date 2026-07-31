@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,24 +23,27 @@ declare(strict_types=0);
  *
  */
 
+// footer.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 ?>
+                <?php echo Ui::material_symbol_sprite(); ?>
                 </div>
                 <div style="clear:both;">
                 </div>
             </div>
         </div> <!-- end id="maincontainer"-->
         <?php
-            $count_temp_playlist = 0;
+            $has_temp_playlist = false;
 if (!isset($_SESSION['login']) || !$_SESSION['login']) {
     if (!empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
-        $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
+        $has_temp_playlist = Core::get_global('user')->playlist->has_items();
     }
 } ?>
-        <div id="footer" class="<?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
+        <div id="footer" class="<?php echo(($has_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
         <?php if (AmpConfig::get('show_donate')) { ?>
             <a id="donate" href="//ampache.org/donate.html" title="<?php echo T_('Donate'); ?>" target="_blank"><?php echo T_('Donate'); ?></a> |
         <?php } ?>
@@ -50,12 +53,48 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']) {
             <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © Ampache.org, 2001-2026"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
         <?php } ?>
         </div>
-        <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
+        <?php if (!isset($_SESSION['login']) || !$_SESSION['login']) { ?>
         <div id="webplayer-minimize">
           <a href="javascript:TogglePlayerVisibility();"><?php echo Ui::get_material_symbol('dock_to_bottom', T_('Show/Hide Player')); ?></a>
         </div>
         <div id="webplayer"></div>
         <?php require_once Ui::find_template('uberviz.inc.php');
         } ?>
+        <div id="mobile-nav-backdrop" onclick="CloseMobileNav();"></div>
+        <script>
+            // Off-canvas sidebar drawer for small screens (<=768px). The
+            // temp-playlist is a plain slideDown dropdown (ToggleRightbarVisibility),
+            // so it needs no class here.
+            function ToggleMobileSidebar() {
+                document.body.classList.toggle('sidebar-open');
+            }
+            function CloseMobileNav() {
+                document.body.classList.remove('sidebar-open');
+            }
+            // Rightbar submenus (add-to-playlist / random items) are click-toggled at
+            // every screen size: click the trigger to open/close, click elsewhere or
+            // pick an item to close. (Hover-only menus vanish on mouse-out and are
+            // unreliable on touch.) Delegated on document because the rightbar is
+            // re-rendered by AJAX. Guarded because pages without a rightbar (the login
+            // form) render this footer without ever loading jQuery.
+            if (typeof jQuery !== 'undefined') {
+                $(document).on('click', '#rightbar li', function (e) {
+                    if (!$(this).children('.submenu').length) return;
+                    if ($(e.target).closest('.submenu').length) return; // taps inside = selections
+                    var wasOpen = $(this).hasClass('submenu-open');
+                    $('#rightbar li.submenu-open').removeClass('submenu-open');
+                    if (!wasOpen) $(this).addClass('submenu-open');
+                });
+                $(document).on('click', '#rightbar .submenu a', function () {
+                    $('#rightbar li.submenu-open').removeClass('submenu-open');
+                });
+                $(document).on('click', function (e) {
+                    if (!$(e.target).closest('#rightbar').length) {
+                        $('#rightbar li.submenu-open').removeClass('submenu-open');
+                    }
+                });
+            }
+        </script>
+        <?php echo Ui::material_symbol_sprite(); ?>
     </body>
 </html>

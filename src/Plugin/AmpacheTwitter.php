@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,22 +26,30 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheTwitter extends AmpachePlugin implements PluginExternalShareInterface
 {
-    public string $name = 'Twitter';
-
+    #[Override]
     public string $categories = 'share';
 
+    #[Override]
     public string $description = 'Twitter share';
 
-    public string $url = 'https://twitter.com';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000001';
-
+    #[Override]
     public string $min_ampache = '370027';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'Twitter';
+
+    #[Override]
+    public string $url = 'https://twitter.com';
+
+    #[Override]
+    public string $version = '000001';
 
     /**
      * Constructor
@@ -52,11 +60,35 @@ class AmpacheTwitter extends AmpachePlugin implements PluginExternalShareInterfa
     }
 
     /**
+     * external_share
+     */
+    public function external_share(string $url, string $text): string
+    {
+        $share = "https://twitter.com/share?url=" . rawurlencode($url);
+        if ($text !== '' && $text !== '0') {
+            $share .= "&text=" . rawurlencode($text);
+        }
+
+        return $share;
+    }
+
+    /**
      * install
      * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
+        return true;
+    }
+
+    /**
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
+     */
+    public function load(User $user): bool
+    {
+        unset($user);
+
         return true;
     }
 
@@ -75,30 +107,6 @@ class AmpacheTwitter extends AmpachePlugin implements PluginExternalShareInterfa
      */
     public function upgrade(): bool
     {
-        return true;
-    }
-
-    /**
-     * external_share
-     */
-    public function external_share(string $url, string $text): string
-    {
-        $share = "https://twitter.com/share?url=" . rawurlencode($url);
-        if ($text !== '' && $text !== '0') {
-            $share .= "&text=" . rawurlencode($text);
-        }
-
-        return $share;
-    }
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool
-    {
-        unset($user);
-
         return true;
     }
 }

@@ -26,7 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\SongDataFieldEnum;
+use Ampache\Repository\Model\SongFieldEnum;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -34,15 +37,53 @@ use PHPUnit\Framework\TestCase;
 class SongRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
-
     private SongRepository $subject;
 
-    protected function setUp(): void
+    public function testFindOwnerIdReturnsFalseWhenTheSongDoesNotExist(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->connection->method('fetchRow')->willReturn(false);
 
-        $this->subject = new SongRepository(
-            $this->connection,
+        static::assertFalse($this->subject->findOwnerId(666));
+    }
+
+    public function testFindOwnerIdReturnsNullWhenTheSongWasNotUploaded(): void
+    {
+        // distinct from the missing-song case below: this row exists, so an owner check may still downgrade
+        $this->connection->method('fetchRow')->willReturn(['user_upload' => null]);
+
+        static::assertNull($this->subject->findOwnerId(666));
+    }
+
+    public function testFindOwnerIdReturnsTheUploader(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchRow')
+            ->with('SELECT `user_upload` FROM `song` WHERE `id` = ?', [666])
+            ->willReturn(['user_upload' => '42']);
+
+        static::assertSame(42, $this->subject->findOwnerId(666));
+    }
+
+    public function testGetByCatalogReturnsAllItems(): void
+    {
+        $songId = 666;
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `song` ORDER BY `album`, `track`',
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $songId, false);
+
+        self::assertSame(
+            [$songId],
+            iterator_to_array($this->subject->getByCatalog())
         );
     }
 
@@ -70,32 +111,64 @@ class SongRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $songId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$songId],
             iterator_to_array($this->subject->getByCatalog($catalog))
         );
     }
 
-    public function testGetByCatalogReturnsAllItems(): void
+    public function testSetDataFieldReturnsFalseWhenTheWriteFailed(): void
     {
-        $songId = 666;
-
-        $result = $this->createMock(PDOStatement::class);
-
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(
-                'SELECT `id` FROM `song` ORDER BY `album`, `track`',
-            )
-            ->willReturn($result);
+            ->willThrowException(new QueryFailedException('some-error'));
 
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $songId, false);
+        static::assertFalse($this->subject->setDataField(666, SongDataFieldEnum::LYRICS, 'some-lyrics'));
+    }
 
-        static::assertSame(
-            [$songId],
-            iterator_to_array($this->subject->getByCatalog())
+    public function testSetDataFieldWritesToSongDataKeyedBySongId(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `song_data` SET `comment` = ? WHERE `song_id` = ?', ['some-comment', 666]);
+
+        static::assertTrue($this->subject->setDataField(666, SongDataFieldEnum::COMMENT, 'some-comment'));
+    }
+
+    public function testSetFieldAcceptsANullValue(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `song` SET `license` = ? WHERE `id` = ?', [null, 666]);
+
+        static::assertTrue($this->subject->setField(666, SongFieldEnum::LICENSE, null));
+    }
+
+    public function testSetFieldReturnsFalseWhenTheWriteFailed(): void
+    {
+        // the model's callers branch on this, so the exception must not escape as a fatal
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        static::assertFalse($this->subject->setField(666, SongFieldEnum::TITLE, 'some-title'));
+    }
+
+    public function testSetFieldWritesTheColumnFromTheEnum(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `song` SET `title` = ? WHERE `id` = ?', ['some-title', 666]);
+
+        static::assertTrue($this->subject->setField(666, SongFieldEnum::TITLE, 'some-title'));
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+
+        $this->subject = new SongRepository(
+            $this->connection,
         );
     }
 }

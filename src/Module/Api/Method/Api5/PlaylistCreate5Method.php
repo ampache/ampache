@@ -25,20 +25,29 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class PlaylistCreate5Method
+ * Creates a new playlist and returns it.
+ *
+ * Version 5 always creates a public playlist for any type other than `private`, so it keeps a
+ * method of its own.
  */
-final class PlaylistCreate5Method
+final class PlaylistCreate5Method implements MethodInterface
 {
-    public const ACTION = 'playlist_create';
+    public const string ACTION = 'playlist_create';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * playlist_create
@@ -50,17 +59,28 @@ final class PlaylistCreate5Method
      * type = (string) 'public', 'private'
      *
      * @param array{
-     *     name: string,
+     *     name?: string,
      *     type?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws RequestParamMissingException
      */
-    public static function playlist_create(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['name'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('name', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'name')
+            );
         }
+
         $name = $input['name'];
         $type = (isset($input['type'])) ? $input['type'] : 'private';
         if ($type != 'private') {
@@ -69,19 +89,24 @@ final class PlaylistCreate5Method
 
         $object_id = Playlist::create($name, $type, $user->id);
         if (!$object_id) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'input', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        'Bad Request',
+                        self::ACTION,
+                        'input'
+                    )
+                )
+            );
         }
-        Catalog::count_table('playlist');
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json5_Data::playlists([$object_id], $user, $input['auth'], false, false);
-                break;
-            default:
-                echo Xml5_Data::playlists([$object_id], $user, $input['auth']);
-        }
 
-        return true;
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->playlists($apiVersion, [$object_id], $user, $input['auth'], false, false)
+            )
+        );
     }
 }

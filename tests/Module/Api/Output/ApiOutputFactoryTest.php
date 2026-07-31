@@ -26,15 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\MockeryTestCase;
+use Override;
 
 class ApiOutputFactoryTest extends MockeryTestCase
 {
     private ApiOutputFactory $subject;
-
-    protected function setUp(): void
-    {
-        $this->subject = new ApiOutputFactory();
-    }
 
     public function testCreateJsonOutputReturnsInstance(): void
     {
@@ -50,5 +46,11 @@ class ApiOutputFactoryTest extends MockeryTestCase
             XmlOutput::class,
             $this->subject->createXmlOutput()
         );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new ApiOutputFactory();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// list_header.inc.php
+
 /**
  * List Header
  * The default pager widget for moving through a list of many items.
@@ -34,7 +36,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Browse;
 
-/** @var Browse $browse */
+/** @var Browse|null $browse */
+
+if (!$browse) {
+    return;
+}
 
 if (isset($is_header) && $is_header) {
     $is_header = false;
@@ -160,6 +166,9 @@ if ($limit > 0 && $total > $limit) {
             <?php } elseif (!$browse->is_mashup()) {
                 $browse->set_grid_view(false);
             } ?>
+            <?php if (in_array($browse->get_type(), Browse::MULTISELECT_TYPES)) { ?>
+            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_select_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_use_select()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_select&value=' + $('#browse_" . $browse->id . "_use_select_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_select_" . $is_header); ?>"><?php echo T_('Select'); ?></span>
+            <?php } ?>
             <?php if (!$browse->is_static_content() && $browse->is_use_filters()) { ?>
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_use_alpha()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_alpha&value=' + $('#browse_" . $browse->id . "_use_alpha_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_alpha_" . $is_header); ?>"><?php echo T_('Alphabet'); ?></span>
             <?php } ?>

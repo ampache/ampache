@@ -36,6 +36,20 @@ final class Migration550001 extends AbstractMigration
         'Add column `catalog_filter_group` to `user` table to assign a filter group',
     ];
 
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 550001) {
+            yield 'catalog_filter_group' => "CREATE TABLE IF NOT EXISTS `catalog_filter_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT'); UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT'; ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = 1;";
+            yield 'catalog_filter_group_map' => "CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY (group_id,catalog_id)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        }
+    }
+
     /**
      * Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups
      * Add column `catalog_filter_group` to `user` table to assign a filter group
@@ -61,17 +75,5 @@ final class Migration550001 extends AbstractMigration
         // Add the default access group to the user table
         Dba::write("ALTER TABLE `user` DROP COLUMN `catalog_filter_group`;", [], true);
         $this->updateDatabase("ALTER TABLE `user` ADD COLUMN `catalog_filter_group` INT(11) UNSIGNED NOT NULL DEFAULT 0;");
-    }
-
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build
-    ): Generator {
-        if ($build > 550001) {
-            yield 'catalog_filter_group' => "CREATE TABLE IF NOT EXISTS `catalog_filter_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT'); UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT'; ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = 1;";
-            yield 'catalog_filter_group_map' => "CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY (group_id,catalog_id)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        }
     }
 }

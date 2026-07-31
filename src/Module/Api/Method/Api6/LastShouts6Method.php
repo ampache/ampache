@@ -25,92 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api6;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json6_Data;
-use Ampache\Module\Api\Xml6_Data;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Module\Api\Method\AbstractLastShoutsMethod;
 
 /**
- * Class LastShouts6Method
- * @package Lib\Api6Methods
+ * Returns the latest posted shouts
+ *
+ * Api version 6 reports the user as `username` and accepts `filter` as an alias.
  */
-final class LastShouts6Method
+final class LastShouts6Method extends AbstractLastShoutsMethod
 {
-    public const ACTION = 'last_shouts';
+    protected const string FILTER_ALIAS = 'filter';
 
-    /**
-     * last_shouts
-     * MINIMUM_API_VERSION=380001
-     *
-     * This get the latest posted shouts
-     *
-     * filter = (integer|string) filter by user id OR username //optional
-     * username = (string) $username //optional
-     * limit = (integer) $limit Default: 10 (popular_threshold) //optional
-     *
-     * @param array{
-     *     filter?: int|string,
-     *     username?: string,
-     *     limit?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function last_shouts(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
-        if (!Api6::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
-        }
-        unset($user);
-        $limit = (int) ($input['limit'] ?? 0);
-        if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
-        }
-
-        $username = (!empty($input['username']))
-            ? $input['username']
-            : null;
-
-        if (is_numeric($username)) {
-            $results = iterator_to_array(
-                self::getShoutRepository()->getTopById($limit, (int) $username)
-            );
-        } else {
-            $results = iterator_to_array(
-                self::getShoutRepository()->getTop($limit, $username)
-            );
-        }
-
-        // no empty-envelope short circuit: the populated response is a bare `shout: []` too
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json6_Data::shouts($results);
-                break;
-            default:
-                echo Xml6_Data::shouts($results);
-        }
-
-        return true;
-    }
-
-    /**
-     * @todo inject by constructor
-     */
-    private static function getShoutRepository(): ShoutRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ShoutRepositoryInterface::class);
-    }
+    protected const string FILTER_KEY = 'username';
 }

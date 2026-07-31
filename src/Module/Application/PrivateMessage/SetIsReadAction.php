@@ -37,36 +37,26 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SetIsReadAction implements ApplicationActionInterface
+final readonly class SetIsReadAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'set_is_read';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private PrivateMessageRepositoryInterface $pmRepository;
+    public const string REQUEST_KEY = 'set_is_read';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        PrivateMessageRepositoryInterface $pmRepository
-    ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->pmRepository    = $pmRepository;
-    }
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private PrivateMessageRepositoryInterface $pmRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
         ) {
             throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
@@ -74,15 +64,15 @@ final class SetIsReadAction implements ApplicationActionInterface
 
         $readMode   = (int) ($queryParams['read'] ?? 0);
         $messageIds = array_map(
-            'intval',
+            intval(...),
             explode(',', $queryParams['msgs'] ?? [])
         );
 
         foreach ($messageIds as $messageId) {
             $message = $this->pmRepository->findById($messageId);
             if (
-                $message === null ||
-                $message->getRecipientUserId() !== $gatekeeper->getUserId()
+                $message === null
+                || $message->getRecipientUserId() !== $gatekeeper->getUserId()
             ) {
                 throw new AccessDeniedException(
                     sprintf('Unknown or unauthorized private message `%d`.', $messageId),
@@ -95,7 +85,7 @@ final class SetIsReadAction implements ApplicationActionInterface
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
-            T_('Message\'s state has been changed'),
+            T_("Message's state has been changed"),
             sprintf(
                 '%s/browse.php?action=pvmsg',
                 $this->configContainer->getWebPath()

@@ -25,20 +25,33 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class LicenseSongs5Method
+ * Returns all songs attached to a license.
+ *
+ * Version 5 does not paginate the result and scrubs the filter itself, so it keeps a method of
+ * its own.
  */
-final class LicenseSongs5Method
+final class LicenseSongs5Method implements MethodInterface
 {
-    public const ACTION = 'license_songs';
+    public const string ACTION = 'license_songs';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private SongRepositoryInterface $songRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * license_songs
@@ -49,52 +62,53 @@ final class LicenseSongs5Method
      * filter = (string) UID of license
      *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     offset?: int,
      *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     *
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
-    public static function license_songs(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('licensing')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: licensing'), self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $results = self::getSongRepository()->getByLicense((int) scrub_in((string) $input['filter']));
-        if (empty($results)) {
-            Api5::empty('song', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::LICENSING)) {
+            throw new AccessDeniedException(
+                'Enable: licensing'
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::songs($results, $user, $input['auth']);
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::songs($results, $user, $input['auth']);
+        if (!array_key_exists('filter', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
         }
 
-        return true;
-    }
+        $results = $this->songRepository->getByLicense((int) scrub_in((string) $input['filter']));
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'song')
+                )
+            );
+        }
 
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return $dic->get(SongRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

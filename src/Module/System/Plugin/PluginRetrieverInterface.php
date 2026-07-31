@@ -37,6 +37,6 @@ interface PluginRetrieverInterface
      */
     public function retrieveByType(
         PluginTypeEnum $pluginType,
-        User $user
+        User $user,
     ): Generator;
 }

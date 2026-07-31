@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -27,14 +29,14 @@ use Ampache\Gui\Catalog\CatalogDetailsInterface;
 
 interface StatsViewAdapterInterface
 {
-    public function displayVideo(): bool;
-
     public function displayPodcast(): bool;
 
-    public function getCatalogStats(): CatalogStatsInterface;
+    public function displayVideo(): bool;
 
     /**
      * @return CatalogDetailsInterface[]
      */
     public function getCatalogDetails(): array;
+
+    public function getCatalogStats(): CatalogStatsInterface;
 }

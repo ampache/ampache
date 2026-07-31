@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,25 +37,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateFromTagsAction implements ApplicationActionInterface
+final readonly class UpdateFromTagsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_from_tags';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'update_from_tags';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-    }
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -67,8 +57,8 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
 
         // Make sure they are a 'power' user or the object owner
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false &&
-            $gatekeeper->getUserId() !== $album->get_user_owner()
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
+            && $gatekeeper->getUserId() !== $album->get_user_owner()
         ) {
             throw new AccessDeniedException();
         }

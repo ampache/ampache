@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,25 +36,15 @@ use Psr\Log\LoggerInterface;
 
 final class DemocraticAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'democratic';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'democratic';
 
     public function __construct(
-        RequestParserInterface $requestParser,
+        private readonly RequestParserInterface $requestParser,
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly ModelFactoryInterface $modelFactory,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-
-        parent::__construct($logger, $configContainer);
+        parent::__construct($logger, $this->configContainer);
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -63,7 +53,7 @@ final class DemocraticAction extends AbstractStreamAction
             return null;
         }
 
-        $democratic_id = (int)$this->requestParser->getFromRequest('democratic_id');
+        $democratic_id = (int) $this->requestParser->getFromRequest('democratic_id');
         $democratic    = $this->modelFactory->createDemocratic($democratic_id);
         $urls          = [$democratic->play_url()];
         $play_type     = $this->configContainer->get(ConfigurationKeyEnum::PLAY_TYPE);

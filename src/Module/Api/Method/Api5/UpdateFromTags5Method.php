@@ -25,21 +25,33 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class UpdateFromTags5Method
+ * Updates a single album, artist or song from its tag data.
+ *
+ * Version 5 reads the object id from `id` only, so it keeps a method of its own.
  */
-final class UpdateFromTags5Method
+final class UpdateFromTags5Method implements MethodInterface
 {
-    public const ACTION = 'update_from_tags';
+    public const string ACTION = 'update_from_tags';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * update_from_tags
@@ -56,37 +68,61 @@ final class UpdateFromTags5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws RequestParamMissingException|ResultEmptyException
      */
-    public static function update_from_tags(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['type', 'id'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        foreach (['type', 'id'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
-        unset($user);
+
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album', 'song'])) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        sprintf('Bad Request: %s', $type),
+                        self::ACTION,
+                        'type'
+                    )
+                )
+            );
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
+
         /** @var Artist|Album|Song $item */
         $item = new $className($object_id);
         if ($item->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'id', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                (string) $object_id,
+                'id'
+            );
         }
+
         // update your object
         Catalog::update_single_item($type, $object_id, true);
 
-        Api5::message('Updated tags for: ' . $object_id . ' (' . $type . ')', $input['api_format']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success($apiVersion, 'Updated tags for: ' . $object_id . ' (' . $type . ')')
+            )
+        );
     }
 }

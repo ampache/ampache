@@ -31,42 +31,30 @@ use Psr\Log\LoggerInterface;
 /**
  * This is a legacy implementation in order to replace the global `log_event` and `debug_event` methods
  */
-final class LegacyLogger implements LoggerInterface
+final readonly class LegacyLogger implements LoggerInterface
 {
+    public const string CONTEXT_TYPE = 'event_type';
+
     /**
      * This emulates the Ampache log levels
      */
-    public const LOG_LEVEL_CRITICAL = 1;
-    public const LOG_LEVEL_ERROR    = 2;
-    public const LOG_LEVEL_WARNING  = 3;
-    public const LOG_LEVEL_NOTICE   = 4;
-    public const LOG_LEVEL_DEBUG    = 5;
+    public const int LOG_LEVEL_CRITICAL = 1;
 
-    public const CONTEXT_TYPE = 'event_type';
+    public const int LOG_LEVEL_DEBUG = 5;
 
-    private const FALLBACK_DATETIME = 'c';
-    private const FALLBACK_USERNAME = 'ampache';
-    private const LOG_NAME          = 'ampache';
+    public const int LOG_LEVEL_ERROR = 2;
 
-    private ConfigContainerInterface $configContainer;
+    public const int LOG_LEVEL_NOTICE = 4;
 
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
-    }
+    public const int LOG_LEVEL_WARNING = 3;
 
-    /**
-     * @see LegacyLogger::critical (Required function to implement LoggerInterface)
-     */
-    public function emergency($message, array $context = []): void
-    {
-        $this->log(
-            self::LOG_LEVEL_CRITICAL,
-            $message,
-            $context
-        );
-    }
+    private const string FALLBACK_DATETIME = 'c';
+
+    private const string FALLBACK_USERNAME = 'ampache';
+
+    private const string LOG_NAME = 'ampache';
+
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     /**
      * @see LegacyLogger::critical (Required function to implement LoggerInterface)
@@ -93,6 +81,30 @@ final class LegacyLogger implements LoggerInterface
     }
 
     /**
+     * debug_level = 5
+     */
+    public function debug($message, array $context = []): void
+    {
+        $this->log(
+            self::LOG_LEVEL_DEBUG,
+            $message,
+            $context
+        );
+    }
+
+    /**
+     * @see LegacyLogger::critical (Required function to implement LoggerInterface)
+     */
+    public function emergency($message, array $context = []): void
+    {
+        $this->log(
+            self::LOG_LEVEL_CRITICAL,
+            $message,
+            $context
+        );
+    }
+
+    /**
      * debug_level = 2
      */
     public function error($message, array $context = []): void
@@ -105,48 +117,12 @@ final class LegacyLogger implements LoggerInterface
     }
 
     /**
-     * debug_level = 3
-     */
-    public function warning($message, array $context = []): void
-    {
-        $this->log(
-            self::LOG_LEVEL_WARNING,
-            $message,
-            $context
-        );
-    }
-
-    /**
-     * debug_level = 4
-     */
-    public function notice($message, array $context = []): void
-    {
-        $this->log(
-            self::LOG_LEVEL_NOTICE,
-            $message,
-            $context
-        );
-    }
-
-    /**
      * @see LegacyLogger::notice (Required function to implement LoggerInterface)
      */
     public function info($message, array $context = []): void
     {
         $this->log(
             self::LOG_LEVEL_NOTICE,
-            $message,
-            $context
-        );
-    }
-
-    /**
-     * debug_level = 5
-     */
-    public function debug($message, array $context = []): void
-    {
-        $this->log(
-            self::LOG_LEVEL_DEBUG,
             $message,
             $context
         );
@@ -193,21 +169,46 @@ final class LegacyLogger implements LoggerInterface
             $log_filename = str_replace("%m", date('m'), $log_filename);
             $log_filename = str_replace("%d", date('d'), $log_filename);
         }
-        $log_filename = rtrim($this->configContainer->get('log_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $log_filename;
+
+        $log_filename = rtrim((string) $this->configContainer->get('log_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $log_filename;
 
         $event_name = $context[self::CONTEXT_TYPE] ?? '';
         $username   = $context['username'] ?? null;
         if (empty($username)) {
             $user     = Core::get_global('user');
-            $username = $user?->username ?? self::FALLBACK_USERNAME;
+            $username = $user->username ?? self::FALLBACK_USERNAME;
         }
 
         if (
-            !error_log("$log_time [$username] ($event_name) -> $message\n", 3, $log_filename) &&
-            !defined('SSE_OUTPUT') &&
-            !defined('CLI') && !defined('API')
+            !error_log(sprintf('%s [%s] (%s) -> %s%s', $log_time, $username, $event_name, $message, PHP_EOL), 3, $log_filename)
+            && !defined('SSE_OUTPUT')
+            && !defined('CLI') && !defined('API')
         ) {
-            echo "Warning: Unable to write to log ($log_filename) Please check your log_path variable in ampache.cfg.php";
+            echo sprintf('Warning: Unable to write to log (%s) Please check your log_path variable in ampache.cfg.php', $log_filename);
         }
+    }
+
+    /**
+     * debug_level = 4
+     */
+    public function notice($message, array $context = []): void
+    {
+        $this->log(
+            self::LOG_LEVEL_NOTICE,
+            $message,
+            $context
+        );
+    }
+
+    /**
+     * debug_level = 3
+     */
+    public function warning($message, array $context = []): void
+    {
+        $this->log(
+            self::LOG_LEVEL_WARNING,
+            $message,
+            $context
+        );
     }
 }

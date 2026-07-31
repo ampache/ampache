@@ -31,7 +31,9 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Broadcast;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\database_object;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LibraryItemLoader;
 use Ampache\Repository\Model\Live_Stream;
@@ -40,8 +42,8 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\PrivateMsg;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
@@ -59,7 +61,7 @@ use Ampache\Repository\Model\Wanted;
 final class ObjectTypeToClassNameMapper
 {
     /** @var array<string, class-string<database_object>> */
-    private const OBJECT_TYPE_MAPPING = [
+    private const array OBJECT_TYPE_MAPPING = [
         ObjectTypeEnum::ALBUM->value => Album::class,
         ObjectTypeEnum::ALBUM_ARTIST->value => Artist::class,
         ObjectTypeEnum::ALBUM_DISK->value => AlbumDisk::class,
@@ -67,15 +69,18 @@ final class ObjectTypeToClassNameMapper
         ObjectTypeEnum::ARTIST->value => Artist::class,
         ObjectTypeEnum::BOOKMARK->value => Bookmark::class,
         ObjectTypeEnum::BROADCAST->value => Broadcast::class,
+        ObjectTypeEnum::FOLDER->value => Folder::class,
         ObjectTypeEnum::GENRE->value => Tag::class,
         ObjectTypeEnum::LABEL->value => Label::class,
         ObjectTypeEnum::LIVE_STREAM->value => Live_Stream::class,
+        ObjectTypeEnum::COLLECTION->value => Collection::class,
         ObjectTypeEnum::PLAYLIST->value => Playlist::class,
         ObjectTypeEnum::PODCAST->value => Podcast::class,
         ObjectTypeEnum::PODCAST_EPISODE->value => Podcast_Episode::class,
         ObjectTypeEnum::PRIVATE_MESSAGE->value => PrivateMsg::class,
-        ObjectTypeEnum::SEARCH->value => Search::class,
+        ObjectTypeEnum::SEARCH->value => Smartlist::class, // A `search` called from here is always a saved list
         ObjectTypeEnum::SHARE->value => Share::class,
+        ObjectTypeEnum::SMARTLIST->value => Smartlist::class,
         ObjectTypeEnum::SONG->value => Song::class,
         ObjectTypeEnum::SONG_ARTIST->value => Artist::class,
         ObjectTypeEnum::SONG_PREVIEW->value => Song_Preview::class,

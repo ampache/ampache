@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
@@ -40,8 +42,21 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
 {
     public function __construct(
         private ModelFactoryInterface $modelFactory,
-        private DatabaseConnectionInterface $connection
-    ) {
+        private DatabaseConnectionInterface $connection,
+        private CatalogCounterInterface $catalogCounter,
+    ) {}
+
+    /**
+     * This deletes the object with the given id from the database
+     */
+    public function delete(Live_Stream $liveStream): void
+    {
+        $this->connection->query(
+            'DELETE FROM `live_stream` WHERE `id` = ?',
+            [$liveStream->getId()]
+        );
+
+        $this->catalogCounter->count(CountableTableEnum::LIVE_STREAM);
     }
 
     /**
@@ -49,10 +64,10 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
      *
      * If a user is provided, the result will be limited to catalogs the user has access to
      *
-     * @return list<int>
+     * @return int[]
      */
     public function findAll(
-        ?User $user = null
+        ?User $user = null,
     ): array {
         $userId = $user?->getId();
 
@@ -83,15 +98,43 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
     }
 
     /**
-     * This deletes the object with the given id from the database
+     * Saves the item, inserting it when it is new
+     *
+     * Returns the id of a newly created item, null when an existing one was updated
      */
-    public function delete(Live_Stream $liveStream): void
+    public function persist(Live_Stream $liveStream): ?int
     {
+        if (!$liveStream->isNew()) {
+            $this->connection->query(
+                'UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, `codec` = ? WHERE `id` = ?',
+                [
+                    $liveStream->name,
+                    $liveStream->site_url,
+                    $liveStream->url,
+                    $liveStream->codec,
+                    $liveStream->getId(),
+                ]
+            );
+
+            return null;
+        }
+
         $this->connection->query(
-            'DELETE FROM `live_stream` WHERE `id` = ?',
-            [$liveStream->getId()]
+            'INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)',
+            [
+                $liveStream->name,
+                $liveStream->site_url,
+                $liveStream->url,
+                $liveStream->catalog,
+                $liveStream->codec,
+            ]
         );
 
-        Catalog::count_table('live_stream');
+        $insertedId = $this->connection->getLastInsertedId() ?: null;
+
+        // the count is maintained here for both writes, so the model's create() no longer repeats it
+        $this->catalogCounter->count(CountableTableEnum::LIVE_STREAM);
+
+        return $insertedId;
     }
 }

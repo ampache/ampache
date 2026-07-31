@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -31,23 +31,13 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Tag;
 
-final class ArtistTagUpdater implements ArtistTagUpdaterInterface
+final readonly class ArtistTagUpdater implements ArtistTagUpdaterInterface
 {
-    private AlbumRepositoryInterface $albumRepository;
-
-    private AlbumTagUpdaterInterface $albumTagUpdater;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        AlbumRepositoryInterface $albumRepository,
-        AlbumTagUpdaterInterface $albumTagUpdater,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->albumRepository = $albumRepository;
-        $this->albumTagUpdater = $albumTagUpdater;
-        $this->modelFactory    = $modelFactory;
-    }
+        private AlbumRepositoryInterface $albumRepository,
+        private AlbumTagUpdaterInterface $albumTagUpdater,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
     /**
      * Update tags of artists and/or albums
@@ -57,7 +47,7 @@ final class ArtistTagUpdater implements ArtistTagUpdaterInterface
         string $tags_comma,
         bool $override_childs,
         bool $add_to_childs = false,
-        bool $force_update = false
+        bool $force_update = false,
     ): void {
         Tag::update_tag_list($tags_comma, 'artist', $artist->getId(), ($force_update) ? true : $override_childs);
 

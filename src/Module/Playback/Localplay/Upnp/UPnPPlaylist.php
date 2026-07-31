@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,24 +30,18 @@ use Ampache\Module\System\Session;
 
 class UPnPPlaylist
 {
-    private string $_deviceGUID;
+    private int $_current = 0;
 
     /** @var array<int, array{name: string, link: string}> $_songs */
     private array $_songs = [];
-
-    private int $_current = 0;
 
     /**
      * UPnPPlaylist constructor.
      * Playlist is its own for each UPnP device
      */
-    public function __construct(string $deviceGUID)
+    public function __construct(private readonly string $_deviceGUID)
     {
-        $this->_deviceGUID = $deviceGUID;
         $this->PlayListRead();
-        if (!is_array($this->_songs)) {
-            $this->Clear();
-        }
     }
 
     public function Add(string $name, string $link): void
@@ -59,10 +53,12 @@ class UPnPPlaylist
         $this->PlayListSave();
     }
 
-    public function RemoveTrack(int $track): void
+    /**
+     * @return array<int, array{name: string, link: string}>
+     */
+    public function AllItems(): array
     {
-        unset($this->_songs[$track - 1]);
-        $this->PlayListSave();
+        return $this->_songs;
     }
 
     public function Clear(): void
@@ -70,14 +66,6 @@ class UPnPPlaylist
         $this->_songs   = [];
         $this->_current = 0;
         $this->PlayListSave();
-    }
-
-    /**
-     * @return array<int, array{name: string, link: string}>
-     */
-    public function AllItems(): array
-    {
-        return $this->_songs;
     }
 
     /**
@@ -140,6 +128,12 @@ class UPnPPlaylist
         return false;
     }
 
+    public function RemoveTrack(int $track): void
+    {
+        unset($this->_songs[$track - 1]);
+        $this->PlayListSave();
+    }
+
     /**
      * skip
      */
@@ -147,8 +141,8 @@ class UPnPPlaylist
     {
         // note that pos is started from 1 not from zero
         if (
-            $track_id >= 1 &&
-            $track_id <= count($this->_songs)
+            $track_id >= 1
+            && $track_id <= count($this->_songs)
         ) {
             $this->_current = $track_id - 1;
             $this->PlayListSave();
@@ -164,8 +158,8 @@ class UPnPPlaylist
         $sid      = 'upnp_pls_' . $this->_deviceGUID;
         $pls_data = json_decode(Session::read($sid), true);
 
-        $this->_songs   = $pls_data['upnp_playlist'];
-        $this->_current = $pls_data['upnp_current'];
+        $this->_songs   = (is_array($pls_data['upnp_playlist'])) ? $pls_data['upnp_playlist'] : [];
+        $this->_current = (int) ($pls_data['upnp_current'] ?? 0);
     }
 
     private function PlayListSave(): void

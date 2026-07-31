@@ -38,7 +38,7 @@ use Ampache\Repository\Model\Userflag;
  */
 final class Flag4Method
 {
-    public const ACTION = 'flag';
+    public const string ACTION = 'flag';
 
     /**
      * flag
@@ -64,7 +64,7 @@ final class Flag4Method
     public static function flag(array $input, User $user): bool
     {
         if (!AmpConfig::get('ratings')) {
-            Api4::message('error', T_('Access Denied: Rating features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: Rating features are not enabled.', '400', $input['api_format']);
 
             return false;
         }
@@ -81,19 +81,19 @@ final class Flag4Method
         }
         // confirm the correct data
         if (!Userflag::is_valid(strtolower($type))) {
-            Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
             return false;
         }
 
         if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
-            Api4::message('error', T_('Wrong library item type'), '401', $input['api_format']);
+            Api4::message('error', 'Wrong library item type', '401', $input['api_format']);
         } else {
             $className = ObjectTypeToClassNameMapper::map($type);
             /** @var library_item $item */
             $item = new $className((int) $object_id);
             if ($item->getId() === 0) {
-                Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
+                Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
                 return false;
             }

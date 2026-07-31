@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -27,10 +29,29 @@ interface EnvironmentInterface
 {
     public function check(): bool;
 
+    public function check_dependencies_folder(): bool;
+
     /**
-     * check for required php version
+     * check for required function exists
      */
-    public function check_php_version(): bool;
+    public function check_mbstring_func_overload(): bool;
+
+    /**
+     * This checks to see if we can manually override the max execution time
+     */
+    public function check_override_exec_time(): bool;
+
+    /**
+     * This checks to see if we can manually override the memory limit
+     */
+    public function check_override_memory(): bool;
+
+    /**
+     * check for required function exists
+     */
+    public function check_php_curl(): bool;
+
+    public function check_php_gd(): bool;
 
     /**
      * check for required function exists
@@ -42,15 +63,7 @@ interface EnvironmentInterface
      */
     public function check_php_hash_algo(): bool;
 
-    /**
-     * check for required function exists
-     */
-    public function check_php_json(): bool;
-
-    /**
-     * check for required function exists
-     */
-    public function check_php_curl(): bool;
+    public function check_php_int_size(): bool;
 
     /**
      * check for required module
@@ -60,7 +73,14 @@ interface EnvironmentInterface
     /**
      * check for required function exists
      */
-    public function check_php_session(): bool;
+    public function check_php_json(): bool;
+
+    /**
+     * This checks to make sure that the php memory limit is withing the
+     * recommended range, this doesn't take into account the size of your
+     * catalog.
+     */
+    public function check_php_memory(): bool;
 
     /**
      * check for required function exists
@@ -75,14 +95,9 @@ interface EnvironmentInterface
     /**
      * check for required function exists
      */
-    public function check_mbstring_func_overload(): bool;
+    public function check_php_session(): bool;
 
-    /**
-     * This checks to make sure that the php memory limit is withing the
-     * recommended range, this doesn't take into account the size of your
-     * catalog.
-     */
-    public function check_php_memory(): bool;
+    public function check_php_simplexml(): bool;
 
     /**
      * This checks to make sure that the php time limit is set to some
@@ -91,42 +106,29 @@ interface EnvironmentInterface
     public function check_php_timelimit(): bool;
 
     /**
-     * This checks to see if we can manually override the memory limit
+     * check for required php version
      */
-    public function check_override_memory(): bool;
+    public function check_php_version(): bool;
 
-    /**
-     * This checks to see if we can manually override the max execution time
-     */
-    public function check_override_exec_time(): bool;
+    public function check_php_zlib(): bool;
 
     /**
      * This checks to see if max upload size is not too small
      */
     public function check_upload_size(): bool;
 
-    public function check_php_int_size(): bool;
-
-    public function check_php_zlib(): bool;
-
-    public function check_php_simplexml(): bool;
-
-    public function check_php_gd(): bool;
-
-    public function check_dependencies_folder(): bool;
-
-    public function isDevJS(string $entry): bool;
+    public function getHttpPort(): int;
 
     public function isCli(): bool;
 
-    public function isSsl(): bool;
+    public function isDevJS(string $entry): bool;
 
     /**
      * Checks if the application is used by a mobile client (like smartphones)
      */
     public function isMobile(): bool;
 
-    public function getHttpPort(): int;
+    public function isSsl(): bool;
 
     public function setUp(): void;
 }

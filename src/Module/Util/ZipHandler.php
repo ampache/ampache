@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -42,8 +42,22 @@ final class ZipHandler implements ZipHandlerInterface
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly StreamFactoryInterface $streamFactory,
-        private readonly LoggerInterface $logger
-    ) {
+        private readonly LoggerInterface $logger,
+    ) {}
+
+    /**
+     * Clean up the generated zip file
+     */
+    public static function destroyZip(?string $zipFile): void
+    {
+        if ($zipFile && is_file($zipFile)) {
+            @unlink($zipFile);
+        }
+    }
+
+    public function __destruct()
+    {
+        self::destroyZip($this->zipFile);
     }
 
     /**
@@ -58,16 +72,6 @@ final class ZipHandler implements ZipHandlerInterface
     }
 
     /**
-     * Clean up the generated zip file
-     */
-    public static function destroyZip(?string $zipFile): void
-    {
-        if ($zipFile && is_file($zipFile)) {
-            @unlink($zipFile);
-        }
-    }
-
-    /**
      * takes array of full paths to medias
      * zips them, adds art and m3u, and sends them
      *
@@ -79,12 +83,12 @@ final class ZipHandler implements ZipHandlerInterface
         ResponseInterface $response,
         string $name,
         array $files,
-        bool $flat_path
+        bool $flat_path,
     ): ResponseInterface {
         $art_name    = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
         $addart      = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
-        $archiveName = (string)preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-        $comment     = (string)$this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
+        $archiveName = (string) preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+        $comment     = (string) $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
 
         $this->zipFile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . uniqid('ampache-zip-');
 
@@ -103,7 +107,7 @@ final class ZipHandler implements ZipHandlerInterface
 
         $arc = new ZipArchive();
         $arc->open($this->zipFile, ZipArchive::CREATE);
-        if (!empty($comment)) {
+        if ($comment !== '' && $comment !== '0') {
             $arc->setArchiveComment($comment);
         }
 
@@ -115,6 +119,7 @@ final class ZipHandler implements ZipHandlerInterface
                 if (!is_file($file)) {
                     continue;
                 }
+
                 $dirname = ($flat_path)
                     ? $archiveName
                     : dirname($file);
@@ -126,14 +131,16 @@ final class ZipHandler implements ZipHandlerInterface
                 $arc->addFile($file, $folder . DIRECTORY_SEPARATOR . basename($file));
             }
         }
+
         if (
-            $addart === true &&
-            !empty($folder) &&
-            is_file($artpath)
+            $addart
+            && ($folder !== '' && $folder !== '0')
+            && is_file($artpath)
         ) {
             $arc->addFile($artpath, $folder . DIRECTORY_SEPARATOR . $art_name);
         }
-        if (!empty($playlist) && !empty($folder)) {
+
+        if ($playlist !== '' && $playlist !== '0' && ($folder !== '' && $folder !== '0')) {
             $arc->addEmptyDir($folder, ZipArchive::CREATE);
             $arc->addFromString($archiveName . ".m3u", $playlist);
         }
@@ -154,11 +161,9 @@ final class ZipHandler implements ZipHandlerInterface
         register_shutdown_function(static function () use ($body, $zipPath): void {
             try {
                 // close stream resource first (helps on Windows)
-                if (method_exists($body, 'close')) {
-                    $body->close();
-                }
-            } catch (Exception $error) {
-                debug_event(self::class, 'zip error: ' . $error->getMessage(), 5);
+                $body->close();
+            } catch (Exception $exception) {
+                debug_event(self::class, 'zip error: ' . $exception->getMessage(), 5);
             }
 
             self::destroyZip($zipPath);
@@ -166,15 +171,10 @@ final class ZipHandler implements ZipHandlerInterface
 
         return $response
             ->withHeader('Content-Type', 'application/zip')
-            ->withHeader('Content-Disposition', sprintf('attachment; filename*=UTF-8\'\'%s', rawurlencode($normalizedArchiveName)))
+            ->withHeader('Content-Disposition', sprintf("attachment; filename*=UTF-8''%s", rawurlencode($normalizedArchiveName)))
             ->withHeader('Pragma', 'public')
             ->withHeader('Cache-Control', 'public, must-revalidate')
             ->withHeader('Content-Transfer-Encoding', 'binary')
             ->withBody($body);
-    }
-
-    public function __destruct()
-    {
-        self::destroyZip($this->zipFile);
     }
 }

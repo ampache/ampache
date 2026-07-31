@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -33,27 +33,20 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAddFilterAction extends AbstractFilterAction
 {
-    public const REQUEST_KEY = 'show_add_filter';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'show_add_filter';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-    }
+        private readonly UiInterface $ui,
+        private readonly ConfigContainerInterface $configContainer,
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
-        $body = (array)$request->getParsedBody();
+        $body = (array) $request->getParsedBody();
 
         $filter_name = scrub_in(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES));
 

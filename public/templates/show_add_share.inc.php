@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_add_share.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -44,8 +46,8 @@ use Ampache\Repository\Model\Video;
 /** @var string $token */
 /** @var bool $isZipable */
 
-$allow_stream   = (bool)($_REQUEST['allow_stream'] ?? 0);
-$allow_download = (bool)($_REQUEST['allow_download'] ?? 0);
+$allow_stream   = (bool) ($_REQUEST['allow_stream'] ?? 0);
+$allow_download = (bool) ($_REQUEST['allow_download'] ?? 0);
 
 Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get_web_path(); ?>/share.php?action=create">
@@ -78,12 +80,12 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 </tr>
 <?php if (
     (
-        in_array($object_type, [LibraryItemEnum::SONG, LibraryItemEnum::VIDEO, LibraryItemEnum::PODCAST_EPISODE], true) &&
-        Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)
-    ) ||
-    (
-        $isZipable &&
-        Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+        in_array($object_type, [LibraryItemEnum::SONG, LibraryItemEnum::VIDEO, LibraryItemEnum::PODCAST_EPISODE], true)
+        && Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)
+    )
+    || (
+        $isZipable
+        && Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
     )
 ) { ?>
 <tr>

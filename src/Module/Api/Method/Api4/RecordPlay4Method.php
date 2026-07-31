@@ -37,7 +37,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class RecordPlay4Method
 {
-    public const ACTION = 'record_play';
+    public const string ACTION = 'record_play';
 
     /**
      * record_play
@@ -75,7 +75,7 @@ final class RecordPlay4Method
         // validate supplied user
         $valid = ($play_user instanceof User && in_array($play_user->id, self::getUserRepository()->getValid()));
         if ($valid === false) {
-            Api4::message('error', T_('User_id not found'), '404', $input['api_format']);
+            Api4::message('error', 'User_id not found', '404', $input['api_format']);
 
             return false;
         }
@@ -92,7 +92,7 @@ final class RecordPlay4Method
 
         $media = new Song($object_id);
         if ($media->isNew()) {
-            Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
+            Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
             return false;
         }

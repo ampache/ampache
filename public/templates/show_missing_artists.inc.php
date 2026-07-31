@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,10 +23,12 @@ declare(strict_types=0);
  *
  */
 
+// show_missing_artists.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-/** @var list<array{mbid: string, name: string}> $wartists */
+/** @var array<int, array{mbid: string, name: string}> $wartists */
 
 Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
 <table class="tabledata striped-rows">

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,31 +32,37 @@ use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Override;
 
 class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
-    public string $name = 'ListenBrainz';
-
+    #[Override]
     public string $categories = 'scrobbling';
 
+    #[Override]
     public string $description = 'Records your played songs to your ListenBrainz Account';
 
-    public string $url = '';
+    #[Override]
+    public string $max_ampache = '999999';
 
-    public string $version = '000002';
-
+    #[Override]
     public string $min_ampache = '380004';
 
-    public string $max_ampache = '999999';
+    #[Override]
+    public string $name = 'ListenBrainz';
+
+    #[Override]
+    public string $url = '';
+
+    #[Override]
+    public string $version = '000002';
+
+    private string $api_host = 'api.listenbrainz.org';
+    private string $host     = 'listenbrainz.org';
+    private string $scheme   = 'https';
 
     // These are internal settings used by this class, run this->load to fill them out
     private string $token = '';
-
-    private string $api_host = 'api.listenbrainz.org';
-
-    private string $scheme = 'https';
-
-    private string $host = 'listenbrainz.org';
 
     /**
      * Constructor
@@ -81,28 +87,23 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function uninstall(): bool
+    public function load(User $user): bool
     {
-        return Preference::delete('listenbrainz_token');
-    }
+        $user->set_preferences();
+        $data = $user->prefs;
+        // check if user have a token
+        if (strlen(trim((string) $data['listenbrainz_token'])) !== 0) {
+            $this->token = trim((string) $data['listenbrainz_token']);
+        } else {
+            debug_event('listenbrainz.plugin', 'No token, not scrobbling (need to add your ListenBrainz api key to ampache)', 4);
 
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
             return false;
         }
 
-        if ($from_version < 2) {
-            Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-        }
+        $this->api_host = $data['listenbrainz_api_url'] ?? 'api.listenbrainz.org';
 
         return true;
     }
@@ -183,6 +184,39 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
     }
 
     /**
+     * set_flag
+     * This takes care of spreading your love on ListenBrainz
+     */
+    public function set_flag(Song $song, bool $flagged): void {}
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return Preference::delete('listenbrainz_token');
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version === 0) {
+            return false;
+        }
+
+        if ($from_version < 2) {
+            Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+        }
+
+        return true;
+    }
+
+    /**
      * post_json_url
      * This is a generic poster for HTTP requests
      */
@@ -204,35 +238,5 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
         $target  = $this->scheme . '://' . $this->api_host . $url;
 
         return file_get_contents($target, false, $context) ?: null;
-    }
-
-    /**
-     * set_flag
-     * This takes care of spreading your love on ListenBrainz
-     */
-    public function set_flag(Song $song, bool $flagged): void
-    {
-    }
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool
-    {
-        $user->set_preferences();
-        $data = $user->prefs;
-        // check if user have a token
-        if (strlen(trim((string) $data['listenbrainz_token'])) !== 0) {
-            $this->token = trim((string) $data['listenbrainz_token']);
-        } else {
-            debug_event('listenbrainz.plugin', 'No token, not scrobbling (need to add your ListenBrainz api key to ampache)', 4);
-
-            return false;
-        }
-
-        $this->api_host = $data['listenbrainz_api_url'] ?? 'api.listenbrainz.org';
-
-        return true;
     }
 }

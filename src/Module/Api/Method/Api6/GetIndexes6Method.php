@@ -25,46 +25,58 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api6;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json6_Data;
-use Ampache\Module\Api\Xml6_Data;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Method\ObjectTypeGate;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class GetIndexes6Method
- * @package Lib\Api6Methods
+ * Returns an index of object ids for a type
+ *
+ * This is deprecated and only exists in api version 6; version 8 replaced it with `index`.
  */
-final class GetIndexes6Method
+final class GetIndexes6Method implements MethodInterface
 {
-    public const ACTION = 'get_indexes';
+    public const string ACTION = 'get_indexes';
+
+    private ConfigContainerInterface $configContainer;
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory,
+    ) {
+        $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
+    }
 
     /**
-     * get_indexes
      * MINIMUM_API_VERSION=400001
-     * CHANGED_IN_API_VERSION=5.0.0
      *
-     * This takes a collection of inputs and returns ID + name for the object type
-     * Add 'include' to allow indexing all song tracks (enabled for xml by default)
+     * This takes a collection of inputs and returns an index of object ids
      *
-     * This method is deprecated and will be removed in **API7** (Use list)
-     *
-     * type = (string) 'album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'
-     * filter = (string) //optional
-     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add = $browse->set_api_filter(date) //optional
-     * update = $browse->set_api_filter(date) //optional
-     * include = (integer) 0,1 include songs if available for that object //optional
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * type        = (string) the object type
+     * filter      = (string) //optional
+     * hide_search = (integer) 0,1 hide searches in the result //optional
+     * exact       = (integer) 0,1 match the filter exactly //optional
+     * add         = $browse->set_api_filter(date) //optional
+     * update      = $browse->set_api_filter(date) //optional
+     * include     = (integer) 0,1 include songs if available for that object //optional
+     * offset      = (integer) //optional
+     * limit       = (integer) //optional
+     * cond        = (string) Apply additional filters to the browse //optional
+     * sort        = (string) sort name or comma separated key pair //optional
      *
      * @param array{
-     *     type: string,
+     *     type?: string,
      *     filter?: string,
      *     hide_search?: int,
      *     exact?: int,
@@ -78,69 +90,82 @@ final class GetIndexes6Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @throws AccessDeniedException|RequestParamMissingException
      */
-    public static function get_indexes(array $input, User $user): bool
-    {
-        if (!Api6::check_parameter($input, ['type'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('type', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'type')
+            );
         }
 
         $type = (string) $input['type'];
-        if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
-            return false;
+        $gate = ObjectTypeGate::check($this->configContainer, $type);
+        if ($gate !== null) {
+            throw new AccessDeniedException($gate);
         }
-        if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
-            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: podcast', self::ACTION, 'system', $input['api_format']);
 
-            return false;
-        }
-        if (!AmpConfig::get('share') && $type == 'share') {
-            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: share', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        if (!AmpConfig::get('live_stream') && $type == 'live_stream') {
-            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: live_stream', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        $include = (array_key_exists('include', $input) && (int) $input['include'] == 1);
-        $hide    = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
-        if (!in_array(strtolower($type), ['album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'])) {
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
+        if (!in_array(strtolower($type), ObjectTypeGate::INDEX_TYPES)) {
+            $response->getBody()->write(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    sprintf('Bad Request: %s', $type),
+                    self::ACTION,
+                    'type'
+                )
+            );
 
-            return false;
+            return $response;
         }
-        $browse = Api6::getBrowse($user);
-        if (
-            $type === 'playlist'
-            && $hide === false
-        ) {
+
+        $include = (array_key_exists('include', $input) && (int) $input['include'] === 1);
+        $hide    = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] === 1)
+            || (bool) $this->configContainer->get('hide_search');
+
+        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse->set_user_id($user);
+
+        if ($type === 'playlist' && $hide === false) {
             $browse->set_type('playlist_search');
         } else {
             $browse->set_type($type);
         }
 
         // hide playlists starting with the user string (if enabled)
-        $hide_string = ($type === 'playlist')
-            ? str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user->id, 'api_hidden_playlists')))
+        $hideString = ($type === 'playlist')
+            ? str_replace(
+                '%',
+                '\%',
+                str_replace('_', '\_', (string) Preference::get_by_user($user->getId(), 'api_hidden_playlists'))
+            )
             : '';
-        if (!empty($hide_string)) {
-            $browse->set_filter('not_starts_with', $hide_string);
+        if (!empty($hideString)) {
+            $browse->set_filter('not_starts_with', $hideString);
         }
 
         $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
-        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] === 1)
+            ? 'exact_match'
+            : 'alpha_match';
+
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 
         if ($type === 'playlist') {
             $browse->set_filter('playlist_open', $user->getId());
+
             if (
                 $hide === false
                 && (bool) Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
@@ -153,24 +178,20 @@ final class GetIndexes6Method
 
         $results = $browse->get_objects();
         if (empty($results)) {
-            Api6::empty($type, $input['api_format']);
+            $response->getBody()->write(
+                $output->writeEmpty($apiVersion, $type)
+            );
 
-            return false;
+            return $response;
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
-                Json6_Data::set_limit($input['limit'] ?? 0);
-                echo Json6_Data::indexes($results, $type, $user, $input['auth'], $include);
-                break;
-            default:
-                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
-                Xml6_Data::set_limit($input['limit'] ?? 0);
-                echo Xml6_Data::indexes($results, $type, $user, $input['auth'], true, $include);
-        }
+        $output->setOffset($apiVersion, (int) ($input['offset'] ?? 0));
+        $output->setLimit($apiVersion, (int) ($input['limit'] ?? 0));
 
-        return true;
+        $response->getBody()->write(
+            $output->indexes($apiVersion, $results, $type, $user, $input['auth'], true, $include)
+        );
+
+        return $response;
     }
 }

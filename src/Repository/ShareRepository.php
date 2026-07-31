@@ -44,33 +44,8 @@ final readonly class ShareRepository implements ShareRepositoryInterface
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
-        private ConfigContainerInterface $configContainer
-    ) {
-    }
-
-    /**
-     * Finds a single item by its id
-     */
-    public function findById(int $itemId): ?Share
-    {
-        $result = new Share($itemId);
-        if ($result->isNew()) {
-            return null;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Migrate a share associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
-    {
-        $this->connection->query(
-            'UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
-            [$newObjectId, $objectType, $oldObjectId]
-        );
-    }
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     /**
      * Cleanup old shares
@@ -87,9 +62,33 @@ final readonly class ShareRepository implements ShareRepositoryInterface
     }
 
     /**
+     * Deletes a single item
+     */
+    public function delete(Share $item): void
+    {
+        $this->connection->query(
+            'DELETE FROM `share` WHERE `id` = ?',
+            [$item->getId()]
+        );
+    }
+
+    /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Share
+    {
+        $result = new Share($itemId);
+        if ($result->isNew()) {
+            return null;
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns the ids of all items the user has access to
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getIdsByUser(User $user): array
     {
@@ -124,13 +123,13 @@ final readonly class ShareRepository implements ShareRepositoryInterface
     }
 
     /**
-     * Deletes a single item
+     * Migrate a share associate stats to a new object
      */
-    public function delete(Share $item): void
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
     {
         $this->connection->query(
-            'DELETE FROM `share` WHERE `id` = ?',
-            [$item->getId()]
+            'UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            [$newObjectId, $objectType, $oldObjectId]
         );
     }
 
@@ -143,5 +142,33 @@ final readonly class ShareRepository implements ShareRepositoryInterface
             'UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?',
             [$date->getTimestamp(), $share->getId()]
         );
+    }
+
+    /**
+     * Writes the editable properties of an existing share
+     *
+     * Users below MANAGER are scoped to their own shares by the statement itself
+     *
+     * @throws DatabaseException
+     */
+    public function update(Share $share, User $user): void
+    {
+        $sql = 'UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ?';
+
+        $params = [
+            $share->max_counter,
+            $share->expire_days,
+            ($share->allow_stream) ? 1 : 0,
+            ($share->allow_download) ? 1 : 0,
+            $share->description,
+            $share->getId(),
+        ];
+
+        if (!$user->has_access(AccessLevelEnum::MANAGER)) {
+            $sql .= ' AND `user` = ?';
+            $params[] = $user->getId();
+        }
+
+        $this->connection->query($sql, $params);
     }
 }

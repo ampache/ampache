@@ -34,23 +34,74 @@ use PDO;
  */
 final class Environment implements EnvironmentInterface
 {
-    public const PHP_VERSION = 8.2;
+    public const float PHP_VERSION = 8.5;
 
     public function check(): bool
     {
         return (
-            $this->check_php_version() &&
-            $this->check_php() &&
-            $this->check_dependencies_folder()
+            $this->check_php_version()
+            && $this->check_php()
+            && $this->check_dependencies_folder()
         );
     }
 
-    /**
-     * check for required php version
-     */
-    public function check_php_version(): bool
+    public function check_dependencies_folder(): bool
     {
-        return floatval(phpversion()) >= self::PHP_VERSION;
+        return file_exists(__DIR__ . '/../../../vendor');
+    }
+
+    /**
+     * check for required function exists
+     */
+    public function check_mbstring_func_overload(): bool
+    {
+        return (ini_get('mbstring.func_overload') <= 0);
+    }
+
+    /**
+     * This checks to see if we can manually override the max execution time
+     */
+    public function check_override_exec_time(): bool
+    {
+        $current = ini_get('max_execution_time');
+        set_time_limit((int) $current + 60);
+
+        return ($current != ini_get('max_execution_time'));
+    }
+
+    /**
+     * This checks to see if we can manually override the memory limit
+     */
+    public function check_override_memory(): bool
+    {
+        /* Check memory */
+        $current_memory = ini_get('memory_limit');
+        $current_memory = (int) substr((string) $current_memory, 0, strlen((string) $current_memory) - 1);
+
+        $new_limit = ($current_memory + 16) . "M";
+
+        /* Bump it by 16 megs (for getid3)*/
+        if (!ini_set('memory_limit', $new_limit)) {
+            return false;
+        }
+
+        // Make sure it actually worked
+        $new_memory = ini_get('memory_limit');
+
+        return ($new_limit == $new_memory);
+    }
+
+    /**
+     * check for required function exists
+     */
+    public function check_php_curl(): bool
+    {
+        return function_exists('curl_version');
+    }
+
+    public function check_php_gd(): bool
+    {
+        return (extension_loaded('gd') || extension_loaded('gd2'));
     }
 
     /**
@@ -67,25 +118,14 @@ final class Environment implements EnvironmentInterface
     public function check_php_hash_algo(): bool
     {
         return (
-            function_exists('hash_algos') &&
-            in_array('sha256', hash_algos())
+            function_exists('hash_algos')
+            && in_array('sha256', hash_algos())
         );
     }
 
-    /**
-     * check for required function exists
-     */
-    public function check_php_json(): bool
+    public function check_php_int_size(): bool
     {
-        return function_exists('json_encode');
-    }
-
-    /**
-     * check for required function exists
-     */
-    public function check_php_curl(): bool
-    {
-        return function_exists('curl_version');
+        return (PHP_INT_SIZE > 4);
     }
 
     /**
@@ -99,9 +139,22 @@ final class Environment implements EnvironmentInterface
     /**
      * check for required function exists
      */
-    public function check_php_session(): bool
+    public function check_php_json(): bool
     {
-        return function_exists('session_set_save_handler');
+        return function_exists('json_encode');
+    }
+
+    /**
+     * This checks to make sure that the php memory limit is withing the
+     * recommended range, this doesn't take into account the size of your
+     * catalog.
+     */
+    public function check_php_memory(): bool
+    {
+        $current_memory = ini_get('memory_limit');
+        $current_memory = substr($current_memory, 0, strlen((string) $current_memory) - 1);
+
+        return ((int) ($current_memory) >= 48);
     }
 
     /**
@@ -118,30 +171,22 @@ final class Environment implements EnvironmentInterface
     public function check_php_pdo_mysql(): bool
     {
         return (
-            class_exists('PDO') &&
-            in_array('mysql', PDO::getAvailableDrivers())
+            class_exists('PDO')
+            && in_array('mysql', PDO::getAvailableDrivers())
         );
     }
 
     /**
      * check for required function exists
      */
-    public function check_mbstring_func_overload(): bool
+    public function check_php_session(): bool
     {
-        return (! (ini_get('mbstring.func_overload') > 0));
+        return function_exists('session_set_save_handler');
     }
 
-    /**
-     * This checks to make sure that the php memory limit is withing the
-     * recommended range, this doesn't take into account the size of your
-     * catalog.
-     */
-    public function check_php_memory(): bool
+    public function check_php_simplexml(): bool
     {
-        $current_memory = ini_get('memory_limit');
-        $current_memory = substr($current_memory, 0, strlen((string) $current_memory) - 1);
-
-        return (! ((int) ($current_memory) < 48));
+        return function_exists('simplexml_load_string');
     }
 
     /**
@@ -152,65 +197,15 @@ final class Environment implements EnvironmentInterface
     {
         $current = (int) (ini_get('max_execution_time'));
 
-        return ($current >= 60 || $current == 0);
+        return ($current >= 60 || $current === 0);
     }
 
     /**
-     * This checks to see if we can manually override the memory limit
+     * check for required php version
      */
-    public function check_override_memory(): bool
+    public function check_php_version(): bool
     {
-        /* Check memory */
-        $current_memory = ini_get('memory_limit');
-        $current_memory = (int)substr($current_memory, 0, strlen((string) $current_memory) - 1);
-        $new_limit      = ($current_memory + 16) . "M";
-
-        /* Bump it by 16 megs (for getid3)*/
-        if (!ini_set('memory_limit', $new_limit)) {
-            return false;
-        }
-
-        // Make sure it actually worked
-        $new_memory = ini_get('memory_limit');
-
-        return (! ($new_limit != $new_memory));
-    }
-
-    /**
-     * This checks to see if we can manually override the max execution time
-     */
-    public function check_override_exec_time(): bool
-    {
-        $current = ini_get('max_execution_time');
-        set_time_limit((int) $current + 60);
-
-        return (! ($current == ini_get('max_execution_time')));
-    }
-
-    /**
-     * This checks to see if max upload size is not too small
-     */
-    public function check_upload_size(): bool
-    {
-        $upload_max = return_bytes((string)ini_get('upload_max_filesize'));
-        $post_max   = return_bytes((string)ini_get('post_max_size'));
-        $mini       = 20971520; // 20M
-
-        return (
-            (
-                $upload_max >= $mini ||
-                $upload_max < 1
-            ) &&
-            (
-                $post_max >= $mini ||
-                $post_max < 1
-            )
-        );
-    }
-
-    public function check_php_int_size(): bool
-    {
-        return (PHP_INT_SIZE > 4);
+        return floatval(phpversion()) >= self::PHP_VERSION;
     }
 
     public function check_php_zlib(): bool
@@ -218,49 +213,42 @@ final class Environment implements EnvironmentInterface
         return function_exists('gzcompress');
     }
 
-    public function check_php_simplexml(): bool
+    /**
+     * This checks to see if max upload size is not too small
+     */
+    public function check_upload_size(): bool
     {
-        return function_exists('simplexml_load_string');
-    }
+        $upload_max = return_bytes((string) ini_get('upload_max_filesize'));
+        $post_max   = return_bytes((string) ini_get('post_max_size'));
+        $mini       = 20971520; // 20M
 
-    public function check_php_gd(): bool
-    {
-        return (extension_loaded('gd') || extension_loaded('gd2'));
-    }
-
-    public function check_dependencies_folder(): bool
-    {
-        return file_exists(__DIR__ . '/../../../vendor');
-    }
-
-    public function isCli(): bool
-    {
-        return php_sapi_name() === 'cli';
-    }
-
-    public function isSsl(): bool
-    {
         return (
             (
-                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-                Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https'
-            ) ||
-            (
-                isset($_SERVER['HTTPS']) &&
-                Core::get_server('HTTPS') == 'on'
+                $upload_max >= $mini
+                || $upload_max < 1
+            )
+            && (
+                $post_max >= $mini
+                || $post_max < 1
             )
         );
     }
 
-    public function isMobile(): bool
+    public function getHttpPort(): int
     {
-        $user_agent = (string)($_SERVER['HTTP_USER_AGENT'] ?? '');
+        $port = 80;
+        if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
+            $port = (int) $_SERVER['HTTP_X_FORWARDED_PORT'];
+        } elseif (isset($_SERVER['SERVER_PORT'])) {
+            $port = (int) $_SERVER['SERVER_PORT'];
+        }
 
-        return strpos($user_agent, 'Mobile') && (
-            strpos($user_agent, 'Android') ||
-            strpos($user_agent, 'iPad') ||
-            strpos($user_agent, 'iPhone')
-        );
+        return $port;
+    }
+
+    public function isCli(): bool
+    {
+        return PHP_SAPI === 'cli';
     }
 
     public function isDevJS(string $entry): bool
@@ -290,28 +278,41 @@ final class Environment implements EnvironmentInterface
         return !$error;
     }
 
-    public function getHttpPort(): int
+    public function isMobile(): bool
     {
-        $port = 80;
-        if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
-            $port = (int) $_SERVER['HTTP_X_FORWARDED_PORT'];
-        } elseif (isset($_SERVER['SERVER_PORT'])) {
-            $port = (int) $_SERVER['SERVER_PORT'];
-        }
+        $user_agent = (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
 
-        return $port;
+        return strpos($user_agent, 'Mobile') && (
+            strpos($user_agent, 'Android')
+            || strpos($user_agent, 'iPad')
+            || strpos($user_agent, 'iPhone')
+        );
+    }
+
+    public function isSsl(): bool
+    {
+        return (
+            (
+                isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
+                && Core::get_server('HTTP_X_FORWARDED_PROTO') === 'https'
+            )
+            || (
+                isset($_SERVER['HTTPS'])
+                && Core::get_server('HTTPS') === 'on'
+            )
+        );
     }
 
     public function setUp(): void
     {
         // Set a new Error Handler
-        $old_error_handler = set_error_handler('ampache_error_handler');
+        set_error_handler(ampache_error_handler(...));
 
         // Check their PHP Vars to make sure we're cool here
         $post_size = @ini_get('post_max_size');
         if (
-            $post_size &&
-            substr($post_size, strlen($post_size) - 1, strlen($post_size)) != 'M'
+            $post_size
+            && substr($post_size, strlen($post_size) - 1, strlen($post_size)) !== 'M'
         ) {
             // Sane value time
             ini_set('post_max_size', '8M');
@@ -321,8 +322,8 @@ final class Environment implements EnvironmentInterface
         ini_set('session.gc_probability', '5');
         $current_memory = ini_get('memory_limit');
         if (
-            !$current_memory ||
-            Ui::unformat_bytes($current_memory) < Ui::unformat_bytes('32M')
+            !$current_memory
+            || Ui::unformat_bytes($current_memory) < Ui::unformat_bytes('32M')
         ) {
             $current_memory = '32M';
         }
@@ -336,12 +337,12 @@ final class Environment implements EnvironmentInterface
     private function check_php(): bool
     {
         return
-            $this->check_php_hash() &&
-            $this->check_php_hash_algo() &&
-            $this->check_php_pdo() &&
-            $this->check_php_pdo_mysql() &&
-            $this->check_php_session() &&
-            $this->check_php_json() &&
-            $this->check_php_intl();
+            $this->check_php_hash()
+            && $this->check_php_hash_algo()
+            && $this->check_php_pdo()
+            && $this->check_php_pdo_mysql()
+            && $this->check_php_session()
+            && $this->check_php_json()
+            && $this->check_php_intl();
     }
 }

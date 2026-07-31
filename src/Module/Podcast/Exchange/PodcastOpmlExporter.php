@@ -35,19 +35,12 @@ use PhpTal\PHPTAL;
  *
  * @see http://opml.org/spec2.opml
  */
-final class PodcastOpmlExporter implements PodcastExporterInterface
+final readonly class PodcastOpmlExporter implements PodcastExporterInterface
 {
-    private TalFactoryInterface $talFactory;
-
-    private PodcastRepositoryInterface $podcastRepository;
-
     public function __construct(
-        TalFactoryInterface $talFactory,
-        PodcastRepositoryInterface $podcastRepository
-    ) {
-        $this->talFactory        = $talFactory;
-        $this->podcastRepository = $podcastRepository;
-    }
+        private TalFactoryInterface $talFactory,
+        private PodcastRepositoryInterface $podcastRepository,
+    ) {}
 
     /**
      * Exports all podcasts-subscriptions and returns the result

@@ -25,20 +25,35 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class PreferenceEdit5Method
+ * Edits a preference value, optionally applying it to all users.
+ *
+ * Version 5 knows nothing about the `default` parameter the later versions accept and wraps the
+ * json payload in a `preference` key, so it keeps a method of its own.
  */
-final class PreferenceEdit5Method
+final class PreferenceEdit5Method implements MethodInterface
 {
-    public const ACTION = 'preference_edit';
+    public const string ACTION = 'preference_edit';
+
+    public function __construct(
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * preference_edit
@@ -57,19 +72,43 @@ final class PreferenceEdit5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessFailedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function preference_edit(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['filter', 'value'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        foreach (['filter', 'value'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
+
         $all = array_key_exists('all', $input) && (int) $input['all'] == 1;
+
         // don't apply to all when you aren't an admin
-        if ($all && !Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+        if (
+            $all
+            && !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::ADMIN,
+                $user->id
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
+
         // fix preferences that are missing for user
-        User::fix_preferences($user->id);
+        Preference::fix_user_preferences($user->id);
 
         // allow getting system prefs is you have access
         $user_id = ($all)
@@ -78,28 +117,33 @@ final class PreferenceEdit5Method
 
         $pref_name  = (string) $input['filter'];
         $preference = Preference::get($pref_name, $user_id);
-        if (empty($preference)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $pref_name), self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+        if ($preference === []) {
+            throw new ResultEmptyException(
+                $pref_name
+            );
         }
+
         $value = $input['value'];
         if (!Preference::update($pref_name, $user->id, $value, $all)) {
-            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'system', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        'Bad Request',
+                        self::ACTION,
+                        'system'
+                    )
+                )
+            );
         }
+
         $preference = Preference::get($pref_name, $user_id);
-        $results    = ['preference' => $preference];
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($results, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Api::object_array($results['preference'], 'preference');
-        }
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->objectArray($apiVersion, ['preference' => $preference], $preference, 'preference')
+            )
+        );
     }
 }

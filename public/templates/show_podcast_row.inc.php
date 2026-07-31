@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -22,6 +22,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_podcast_row.inc.php
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -56,9 +58,20 @@ use Ampache\Repository\Model\Userflag;
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
-    <?php Art::display('podcast', $libitem->getId(), (string)$libitem->get_fullname(), ['width' => 128, 'height' => 128], $libitem->get_link()); ?>
+    <?php Art::display('podcast', $libitem->getId(), (string) $libitem->get_fullname(), ['width' => 128, 'height' => 128], $libitem->get_link()); ?>
 </td>
 <td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+<?php
+    echo Ajax::button('?action=basket&type=podcast&id=' . $libitem->getId(), 'new_window', T_('Add to Temporary Playlist'), 'add_podcast_' . $libitem->getId());
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+        <a id="<?php echo 'add_to_playlist_podcast_' . $libitem->getId(); ?>" onclick="showPlaylistDialog(event, 'podcast', '<?php echo $libitem->getId(); ?>')">
+            <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+        </a>
+    <?php } ?>
+    </span>
+</td>
 <td class="cel_siteurl"><?php echo "<a target=\"_blank\" href=\"" . $libitem->getWebsite() . "\">" . $libitem->getWebsite() . "</a>"; ?></td>
 <td class="cel_episodes"><?php echo $libitem->getEpisodeCount(); ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
@@ -66,12 +79,10 @@ use Ampache\Repository\Model\Userflag;
 <?php } ?>
 <?php if ($show_ratings) { ?>
         <td class="cel_ratings">
-            <?php if (AmpConfig::get('ratings')) { ?>
-                <div class="rating">
-                    <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_podcast"><?php echo Rating::show($libitem->getId(), 'podcast'); ?></span>
-                    <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_podcast"><?php echo Userflag::show($libitem->getId(), 'podcast'); ?></span>
-                </div>
-            <?php } ?>
+            <div class="rating">
+                <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_podcast"><?php echo Rating::show($libitem->getId(), 'podcast'); ?></span>
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_podcast"><?php echo Userflag::show($libitem->getId(), 'podcast'); ?></span>
+            </div>
         </td>
     <?php } ?>
 <td class="cel_action">

@@ -38,93 +38,184 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
+    private ConfigContainerInterface&MockInterface $configContainer;
+    private LoggerInterface&MockInterface $logger;
     private ModelFactoryInterface&MockInterface $modelFactory;
-
+    private PrivilegeCheckerInterface&MockInterface $privilegeChecker;
+    private ShowAction $subject;
     private UiInterface&MockInterface $ui;
 
-    private LoggerInterface&MockInterface $logger;
-
-    private PrivilegeCheckerInterface&MockInterface $privilegeChecker;
-
-    private ConfigContainerInterface&MockInterface $configContainer;
-
-    private ShowAction $subject;
-
-    protected function setUp(): void
+    public function testRunShowsAlbumEditabbleWithSingleDisc(): void
     {
-        $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
-        $this->ui               = $this->mock(UiInterface::class);
-        $this->logger           = $this->mock(LoggerInterface::class);
-        $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
-        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->modelFactory,
-            $this->ui,
-            $this->logger,
-            $this->privilegeChecker,
-            $this->configContainer
-        );
-    }
-
-    public function testRunShowsErrorIfAlbumDoesNotExist(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $album      = $this->mock(Album::class);
-        $user       = $this->mock(User::class);
 
-        $albumId        = 42;
-        $album->catalog = 1;
+        $userId = 42;
 
-        $user->catalogs['music'] = [1];
-
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             ->once()
-            ->andReturn($user);
+            ->andReturnFalse();
 
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['album' => (string) $albumId]);
-
-        $this->modelFactory->shouldReceive('createAlbum')
-            ->with($albumId)
-            ->once()
-            ->andReturn($album);
-
-        $album->shouldReceive('isNew')
-            ->withNoArgs()
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
             ->once()
             ->andReturnTrue();
 
-        $this->ui->shouldReceive('showHeader')
+        $album->shouldReceive('get_user_owner')
             ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
+            ->once()
+            ->andReturn($userId);
+        $album->shouldReceive('getDiskCount')
             ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
+            ->once()
+            ->andReturn(1);
+        $album->shouldReceive('getAlbumArtist')
             ->withNoArgs()
-            ->once();
+            ->once()
+            ->andReturn(123);
 
-        $this->logger->shouldReceive('warning')
-            ->with(
-                'Requested an album that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => ShowAction::class]
-            )
-            ->once();
+        $gatekeeper->shouldReceive('getUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
 
-        $this->expectOutputString('You have requested an object that does not exist');
+        $this->createExpectations(
+            $album,
+            $gatekeeper,
+            true,
+            'show_album.inc.php'
+        );
+    }
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
+    public function testRunShowsAlbumEditableIfContentManager(): void
+    {
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $album      = $this->mock(Album::class);
+
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ->once()
+            ->andReturnTrue();
+
+        $album->shouldReceive('getDiskCount')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(2);
+
+        $this->createExpectations(
+            $album,
+            $gatekeeper,
+            true,
+            'show_album_group_disks.inc.php',
+        );
+    }
+
+    public function testRunShowsAlbumEditableIfUsersMatch(): void
+    {
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $album      = $this->mock(Album::class);
+
+        $userId = 42;
+
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
+            ->once()
+            ->andReturnTrue();
+
+        $album->shouldReceive('get_user_owner')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+        $album->shouldReceive('getDiskCount')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(2);
+        $album->shouldReceive('getAlbumArtist')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(123);
+
+        $gatekeeper->shouldReceive('getUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+
+        $this->createExpectations(
+            $album,
+            $gatekeeper,
+            true,
+            'show_album_group_disks.inc.php'
+        );
+    }
+
+    public function testRunShowsAlbumNotEditableIfArtistIsNotSet(): void
+    {
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $album      = $this->mock(Album::class);
+
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ->once()
+            ->andReturnFalse();
+
+        $album->shouldReceive('getDiskCount')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(2);
+        $album->shouldReceive('getAlbumArtist')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(0);
+
+        $this->createExpectations(
+            $album,
+            $gatekeeper,
+            false,
+            'show_album_group_disks.inc.php'
+        );
+    }
+
+    public function testRunShowsAlbumNotEditableIfFeatureDisabled(): void
+    {
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $album      = $this->mock(Album::class);
+
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
+            ->once()
+            ->andReturnFalse();
+
+        $album->shouldReceive('getDiskCount')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(2);
+        $album->shouldReceive('getAlbumArtist')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(123);
+
+        $this->createExpectations(
+            $album,
+            $gatekeeper,
+            false,
+            'show_album_group_disks.inc.php'
         );
     }
 
@@ -196,171 +287,77 @@ class ShowActionTest extends MockeryTestCase
         );
     }
 
-    public function testRunShowsAlbumNotEditableIfArtistIsNotSet(): void
+    public function testRunShowsErrorIfAlbumDoesNotExist(): void
     {
+        $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
 
-        $this->privilegeChecker->shouldReceive('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ->once()
-            ->andReturnFalse();
+        $albumId        = 42;
+        $album->catalog = 1;
 
-        $album->shouldReceive('getDiskCount')
+        $user->catalogs['music'] = [1];
+
+        $gatekeeper->shouldReceive('getUser')
             ->withNoArgs()
             ->once()
-            ->andReturn(2);
-        $album->shouldReceive('getAlbumArtist')
+            ->andReturn($user);
+
+        $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
-            ->andReturn(0);
+            ->andReturn(['album' => (string) $albumId]);
 
-        $this->createExpectations(
-            $album,
-            $gatekeeper,
-            false,
-            'show_album_group_disks.inc.php'
-        );
-    }
-
-    public function testRunShowsAlbumNotEditableIfFeatureDisabled(): void
-    {
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $album      = $this->mock(Album::class);
-
-        $this->privilegeChecker->shouldReceive('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        $this->modelFactory->shouldReceive('createAlbum')
+            ->with($albumId)
             ->once()
-            ->andReturnFalse();
+            ->andReturn($album);
 
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
-            ->once()
-            ->andReturnFalse();
-
-        $album->shouldReceive('getDiskCount')
+        $album->shouldReceive('isNew')
             ->withNoArgs()
-            ->once()
-            ->andReturn(2);
-        $album->shouldReceive('getAlbumArtist')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(123);
-
-        $this->createExpectations(
-            $album,
-            $gatekeeper,
-            false,
-            'show_album_group_disks.inc.php'
-        );
-    }
-
-    public function testRunShowsAlbumEditableIfUsersMatch(): void
-    {
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $album      = $this->mock(Album::class);
-
-        $userId = 42;
-
-        $this->privilegeChecker->shouldReceive('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
             ->once()
             ->andReturnTrue();
 
-        $album->shouldReceive('get_user_owner')
+        $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-        $album->shouldReceive('getDiskCount')
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
-            ->once()
-            ->andReturn(2);
-        $album->shouldReceive('getAlbumArtist')
+            ->once();
+        $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
-            ->once()
-            ->andReturn(123);
+            ->once();
 
-        $gatekeeper->shouldReceive('getUserId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
+        $this->logger->shouldReceive('warning')
+            ->with(
+                'Requested an album that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => ShowAction::class]
+            )
+            ->once();
 
-        $this->createExpectations(
-            $album,
-            $gatekeeper,
-            true,
-            'show_album_group_disks.inc.php'
+        $this->expectOutputString('You have requested an object that does not exist');
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
         );
     }
 
-    public function testRunShowsAlbumEditableIfContentManager(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $album      = $this->mock(Album::class);
+        $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
+        $this->ui               = $this->mock(UiInterface::class);
+        $this->logger           = $this->mock(LoggerInterface::class);
+        $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
 
-        $this->privilegeChecker->shouldReceive('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ->once()
-            ->andReturnTrue();
-
-        $album->shouldReceive('getDiskCount')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(2);
-
-        $this->createExpectations(
-            $album,
-            $gatekeeper,
-            true,
-            'show_album_group_disks.inc.php',
-        );
-    }
-
-    public function testRunShowsAlbumEditabbleWithSingleDisc(): void
-    {
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $album      = $this->mock(Album::class);
-
-        $userId = 42;
-
-        $this->privilegeChecker->shouldReceive('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
-            ->once()
-            ->andReturnTrue();
-
-        $album->shouldReceive('get_user_owner')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-        $album->shouldReceive('getDiskCount')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(1);
-        $album->shouldReceive('getAlbumArtist')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(123);
-
-        $gatekeeper->shouldReceive('getUserId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-
-        $this->createExpectations(
-            $album,
-            $gatekeeper,
-            true,
-            'show_album.inc.php'
+        $this->subject = new ShowAction(
+            $this->modelFactory,
+            $this->ui,
+            $this->logger,
+            $this->privilegeChecker,
+            $this->configContainer
         );
     }
 
@@ -368,7 +365,7 @@ class ShowActionTest extends MockeryTestCase
         Album&MockInterface $album,
         GuiGatekeeperInterface&MockInterface $gatekeeper,
         bool $isEditAble,
-        string $templateName
+        string $templateName,
     ): void {
         $request = $this->mock(ServerRequestInterface::class);
         $user    = $this->mock(User::class);

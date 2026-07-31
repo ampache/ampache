@@ -28,30 +28,15 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\InstallationHelperInterface;
+use Override;
 
 final class AdminUpdateConfigFileCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    private InstallationHelperInterface $installationHelper;
-
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        InstallationHelperInterface $installationHelper
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly InstallationHelperInterface $installationHelper,
     ) {
         parent::__construct('admin:updateConfigFile', T_('Update the Ampache config file'));
-
-        $this->configContainer    = $configContainer;
-        $this->installationHelper = $installationHelper;
         $this
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
             ->usage('<bold>  admin:updateConfigFile</end> <comment> ## ' . T_('Update the config file') . '<eol/>');
@@ -74,7 +59,7 @@ final class AdminUpdateConfigFileCommand extends Command
             );
         }
 
-        if ($dryRun === true) {
+        if ($dryRun) {
             $interactor->info(
                 "\n" . T_('Running in Test Mode. Use -e|--execute to update'),
                 true
@@ -96,5 +81,15 @@ final class AdminUpdateConfigFileCommand extends Command
                 );
             }
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

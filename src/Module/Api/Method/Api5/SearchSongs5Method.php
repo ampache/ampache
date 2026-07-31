@@ -25,18 +25,28 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class SearchSongs5Method
+ * Returns the songs matching an `anywhere` search of the filter.
+ *
+ * Version 5 always renders the songs, even when the search found nothing, so it keeps a method of
+ * its own.
  */
-final class SearchSongs5Method
+final class SearchSongs5Method implements MethodInterface
 {
-    public const ACTION = 'search_songs';
+    public const string ACTION = 'search_songs';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * search_songs
@@ -48,36 +58,47 @@ final class SearchSongs5Method
      * offset = (integer) //optional
      * limit = (integer) //optional
      *
-     * @param array<string, mixed> $input
+     * @param array{
+     *     filter?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param 5 $apiVersion
+     *
+     * @throws RequestParamMissingException
      */
-    public static function search_songs(array $input, User $user): bool
-    {
-        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!array_key_exists('filter', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
         }
+
         $data                    = [];
         $data['type']            = 'song';
         $data['rule_1']          = 'anywhere';
         $data['rule_1_input']    = $input['filter'];
         $data['rule_1_operator'] = 0;
 
-        $search_sql = Search::prepare($data, $user);
-        $query      = Search::query($search_sql);
-        $results    = $query['results'];
+        $query   = Search::query(Search::prepare($data, $user));
+        $results = $query['results'];
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
-                Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::songs($results, $user, $input['auth']);
-                break;
-            default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
-                Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::songs($results, $user, $input['auth']);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

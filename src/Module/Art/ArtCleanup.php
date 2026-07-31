@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,15 +37,14 @@ use Ampache\Repository\Model\library_item;
 /**
  * Provides methods for the cleanup/deletion of art-items
  */
-final class ArtCleanup implements ArtCleanupInterface
+final readonly class ArtCleanup implements ArtCleanupInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private const TYPES = [
+    private const array TYPES = [
         'album_disk',
         'album',
         'artist',
         'catalog',
+        'folder',
         'label',
         'live_stream',
         'playlist',
@@ -57,11 +56,7 @@ final class ArtCleanup implements ArtCleanupInterface
         'video',
     ];
 
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     /**
      * look for art in the image table that doesn't fit min or max dimensions and delete it
@@ -78,20 +73,116 @@ final class ArtCleanup implements ArtCleanupInterface
             $sql = 'DELETE FROM `image` WHERE `width` < ? AND `width` > 0';
             Dba::write($sql, [$minw]);
         }
+
         // max width is set and current width is too high
         if ($maxw) {
             $sql = 'DELETE FROM `image` WHERE `width` > ? AND `width` > 0';
             Dba::write($sql, [$maxw]);
         }
+
         // min height is set and current width is too low
         if ($minh) {
             $sql = 'DELETE FROM `image` WHERE `height` < ? AND `height` > 0';
             Dba::write($sql, [$minh]);
         }
+
         // max height is set and current height is too high
         if ($maxh) {
             $sql = 'DELETE FROM `image` WHERE `height` > ? AND `height` > 0';
             Dba::write($sql, [$maxh]);
+        }
+    }
+
+    /**
+     * This cleans up art that no longer has a corresponding object
+     */
+    public function collectGarbage(): void
+    {
+        $types = self::TYPES;
+
+        $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
+        // iterate over our types and delete the images
+        foreach ($types as $type) {
+            if ($album_art_store_disk) {
+                $sql        = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
+                $db_results = Dba::read($sql);
+                while ($row = Dba::fetch_row($db_results)) {
+                    Art::delete_from_dir($row[1], (int) $row[0]);
+                }
+            }
+
+            $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
+            Dba::write($sql, [], true);
+        }
+    }
+
+    /**
+     * This cleans up art that no longer has a corresponding object
+     */
+    public function collectGarbageForObject(string $object_type, int $object_id): void
+    {
+        $types = self::TYPES;
+
+        $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
+        if (in_array($object_type, $types, true)) {
+            if ($album_art_store_disk) {
+                Art::delete_from_dir($object_type, $object_id);
+            }
+
+            $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+            Dba::write($sql, [$object_type, $object_id], true);
+        } else {
+            debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+        }
+    }
+
+    /**
+     * This resets the art in the database
+     */
+    public function deleteForArt(Art $art): void
+    {
+        if ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK)) {
+            Art::delete_from_dir($art->object_type, $art->object_id, $art->kind);
+        }
+
+        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
+        Dba::write($sql, [$art->object_id, $art->object_type, $art->kind]);
+    }
+
+    /**
+     * Remove all thumbnail art in the database keeping original images
+     */
+    public function deleteThumbnails(Interactor $interactor, bool $delete): void
+    {
+        $sql        = "SELECT * FROM `image` WHERE `size` != 'original';";
+        $db_results = Dba::read($sql);
+        $thumbnails = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $thumbnails[] = [
+                'id' => $row['id'],
+                'object_id' => $row['object_id'],
+                'object_type' => $row['object_type'],
+                'kind' => $row['kind'],
+                'size' => $row['size'],
+                'mime' => $row['mime'],
+            ];
+        }
+
+        $interactor->info(
+            'Found ' . count($thumbnails) . ' thumbnails to delete',
+            true
+        );
+
+        if ($delete) {
+            $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
+            foreach ($thumbnails as $thumbnail) {
+                if ($album_art_store_disk) {
+                    Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind'], $thumbnail['size'], $thumbnail['mime']);
+                }
+
+                $sql = "DELETE FROM `image` WHERE `id` = ? AND `size` != 'original'";
+                Dba::write($sql, [$thumbnail['id']]);
+            }
         }
     }
 
@@ -166,10 +257,12 @@ final class ArtCleanup implements ArtCleanupInterface
                                         true
                                     );
                                 }
+
                                 continue;
                             }
+
                             $size = $matches[1];
-                            if (!Art::has_db((int)$object_id, $type, 'default', $size)) {
+                            if (!Art::has_db((int) $object_id, $type, 'default', $size)) {
                                 if ($delete) {
                                     unlink($object_path . DIRECTORY_SEPARATOR . $file);
                                     $interactor->info(
@@ -193,6 +286,7 @@ final class ArtCleanup implements ArtCleanupInterface
                                 }
                             }
                         }
+
                         if (preg_match('/^art-(original)\./', $file, $matches)) {
                             if (!$exists) {
                                 if ($delete) {
@@ -205,10 +299,12 @@ final class ArtCleanup implements ArtCleanupInterface
                                         true
                                     );
                                 }
+
                                 continue;
                             }
+
                             $size = $matches[1];
-                            if (!Art::has_db((int)$object_id, $type, 'default', $size)) {
+                            if (!Art::has_db((int) $object_id, $type, 'default', $size)) {
                                 if ($delete) {
                                     unlink($object_path . DIRECTORY_SEPARATOR . $file);
                                     $interactor->info(
@@ -244,8 +340,8 @@ final class ArtCleanup implements ArtCleanupInterface
                 $sql        = "SELECT `object_id`, `object_type`, `kind`, `size`, `mime` FROM `image` WHERE `size` != 'original'";
                 $db_results = Dba::read($sql);
                 while ($row = Dba::fetch_assoc($db_results)) {
-                    $art_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], $row['kind'], true);
-                    $old_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], 'original', $row['kind']);
+                    $art_path = Art::get_dir_on_disk($row['object_type'], (int) $row['object_id'], $row['size'], $row['kind'], true);
+                    $old_path = Art::get_dir_on_disk($row['object_type'], (int) $row['object_id'], 'original', $row['kind']);
 
                     $art_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
                     $old_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
@@ -264,13 +360,13 @@ final class ArtCleanup implements ArtCleanupInterface
             $sql        = "SELECT `object_id`, `object_type`, `kind`, `size`, `mime` FROM `image`;";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
-                $art_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], $row['kind'], true);
+                $art_path = Art::get_dir_on_disk($row['object_type'], (int) $row['object_id'], $row['size'], $row['kind'], true);
                 $art_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
                 if (!Core::is_readable($art_path)) {
                     if ($delete) {
                         // If this art is gone stop trying to find it
                         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ? AND `size` = ?";
-                        Dba::write($sql, [(int)$row['object_id'], $row['object_type'], $row['kind'], $row['size']], true);
+                        Dba::write($sql, [(int) $row['object_id'], $row['object_type'], $row['kind'], $row['size']], true);
                         $interactor->info(
                             sprintf(
                                 'DELETE: %s/%s',
@@ -298,95 +394,6 @@ final class ArtCleanup implements ArtCleanupInterface
                 'No local metadata directory configured, skipping thumbnail migration',
                 true
             );
-        }
-    }
-
-    /**
-     * This cleans up art that no longer has a corresponding object
-     */
-    public function collectGarbageForObject(string $object_type, int $object_id): void
-    {
-        $types = self::TYPES;
-
-        $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
-        if (in_array($object_type, $types)) {
-            if ($album_art_store_disk) {
-                Art::delete_from_dir($object_type, $object_id);
-            }
-            $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-            Dba::write($sql, [$object_type, $object_id], true);
-        } else {
-            debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
-        }
-    }
-
-    /**
-     * This cleans up art that no longer has a corresponding object
-     */
-    public function collectGarbage(): void
-    {
-        $types = self::TYPES;
-
-        $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
-        // iterate over our types and delete the images
-        foreach ($types as $type) {
-            if ($album_art_store_disk) {
-                $sql        = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
-                $db_results = Dba::read($sql);
-                while ($row = Dba::fetch_row($db_results)) {
-                    Art::delete_from_dir($row[1], (int)$row[0]);
-                }
-            }
-            $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
-            Dba::write($sql, [], true);
-        }
-    }
-
-    /**
-     * This resets the art in the database
-     */
-    public function deleteForArt(Art $art): void
-    {
-        if ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK)) {
-            Art::delete_from_dir($art->object_type, $art->object_id, $art->kind);
-        }
-        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
-        Dba::write($sql, [$art->object_id, $art->object_type, $art->kind]);
-    }
-
-    /**
-     * Remove all thumbnail art in the database keeping original images
-     */
-    public function deleteThumbnails(Interactor $interactor, bool $delete): void
-    {
-        $sql        = "SELECT * FROM `image` WHERE `size` != 'original';";
-        $db_results = Dba::read($sql);
-        $thumbnails = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $thumbnails[] = [
-                'id' => $row['id'],
-                'object_id' => $row['object_id'],
-                'object_type' => $row['object_type'],
-                'kind' => $row['kind'],
-                'size' => $row['size'],
-                'mime' => $row['mime'],
-            ];
-        }
-
-        $interactor->info(
-            'Found ' . count($thumbnails) . ' thumbnails to delete',
-            true
-        );
-
-        if ($delete) {
-            $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
-            foreach ($thumbnails as $thumbnail) {
-                if ($album_art_store_disk) {
-                    Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind'], $thumbnail['size'], $thumbnail['mime']);
-                }
-                $sql = "DELETE FROM `image` WHERE `id` = ? AND `size` != 'original'";
-                Dba::write($sql, [$thumbnail['id']]);
-            }
         }
     }
 }

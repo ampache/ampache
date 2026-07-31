@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -42,17 +42,16 @@ final readonly class UserAjaxHandler implements AjaxHandlerInterface
         private UserFollowStateRendererInterface $userFollowStateRenderer,
         private PrivilegeCheckerInterface $privilegeChecker,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
         $results = [];
         $action  = $this->requestParser->getFromRequest('action');
-        $user_id = (int)$this->requestParser->getFromRequest('user_id');
+        $user_id = (int) $this->requestParser->getFromRequest('user_id');
 
-        if ($action === 'flip_follow' && ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
-        $this->configContainer->isFeatureEnabled('sociable'))) {
+        if ($action === 'flip_follow' && ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+        && $this->configContainer->isFeatureEnabled('sociable'))) {
             $fuser = new User($user_id);
             if ($fuser->id > 0 && $user_id !== $user->getId()) {
                 $this->followToggler->toggle(

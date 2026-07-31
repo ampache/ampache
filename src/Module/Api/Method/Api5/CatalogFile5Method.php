@@ -25,13 +25,20 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Catalog\Catalog_local;
-use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -39,13 +46,24 @@ use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class CatalogFile5Method
+ * Performs add/clean/verify/remove on a single local catalog file.
+ *
+ * Version 5 reads the catalog id from `catalog` only and checks the access level before the
+ * parameters, so it keeps a method of its own.
  */
-final class CatalogFile5Method
+final class CatalogFile5Method implements MethodInterface
 {
-    public const ACTION = 'catalog_file';
+    public const string ACTION = 'catalog_file';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * catalog_file
@@ -66,49 +84,86 @@ final class CatalogFile5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     * @throws AccessDeniedException|AccessFailedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function catalog_file(array $input, User $user): bool
-    {
-        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (
+            !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::CONTENT_MANAGER,
+                $user->id
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::CONTENT_MANAGER->value)
+            );
         }
-        if (!Api5::check_parameter($input, ['catalog', 'file', 'task'], self::ACTION)) {
-            return false;
+
+        foreach (['catalog', 'file', 'task'] as $parameter) {
+            if (!array_key_exists($parameter, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', $parameter)
+                );
+            }
         }
+
         $file = html_entity_decode($input['file']);
         $task = explode(',', html_entity_decode((string) ($input['task'])));
 
         // confirm that a valid task is going to happen
-        if (!AmpConfig::get('delete_from_disk') && in_array('remove', $task)) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: delete_from_disk'), self::ACTION, 'system', $input['api_format']);
-
-            return false;
+        if (
+            !$this->configContainer->get(ConfigurationKeyEnum::DELETE_FROM_DISK)
+            && in_array('remove', $task)
+        ) {
+            throw new AccessDeniedException(
+                'Enable: delete_from_disk'
+            );
         }
+
         if (!file_exists($file) && !in_array('clean', $task)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $file), self::ACTION, 'file', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                $file,
+                'file'
+            );
         }
+
         $output_task = '';
         foreach ($task as $item) {
             if (!in_array($item, ['add', 'clean', 'verify', 'remove'])) {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $item), self::ACTION, 'task', $input['api_format']);
-
-                return false;
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->error(
+                            $apiVersion,
+                            ErrorCodeEnum::BAD_REQUEST,
+                            sprintf('Bad Request: %s', $item),
+                            self::ACTION,
+                            'task'
+                        )
+                    )
+                );
             }
+
             $output_task .= $item . ', ';
         }
+
         $output_task = rtrim($output_task, ', ');
         $catalog_id  = (int) $input['catalog'];
         $catalog     = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $catalog_id), self::ACTION, 'catalog', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                (string) $catalog_id,
+                'catalog'
+            );
         }
+
         switch ($catalog->gather_types) {
             case 'podcast':
                 $type  = 'podcast_episode';
@@ -125,53 +180,57 @@ final class CatalogFile5Method
                 break;
         }
 
-        if ($catalog->catalog_type == 'local') {
-            foreach ($task as $item) {
-                switch ($item) {
-                    case 'clean':
-                        if ($media->isNew() === false) {
-                            /** @var Catalog_local $catalog */
-                            $catalog->clean_file($file, $type);
-                        }
-                        break;
-                    case 'verify':
-                        if ($media->isNew() === false) {
-                            Catalog::update_media_from_tags($media, [$type]);
-                        }
-                        break;
-                    case 'add':
-                        if ($media->isNew()) {
-                            /** @var Catalog_local $catalog */
-                            $catalog->add_file($file, []);
-                        }
-                        break;
-                    case 'remove':
-                        if ($media->isNew() === false) {
-                            $media->remove();
-                        }
-                        break;
-                }
-            }
-            // update the counts too
-            if ($media instanceof Song) {
-                Album::update_album_count($media->album);
-                Artist::update_table_counts();
-            }
-            Api5::message('successfully started: ' . $output_task . ' for ' . $file, $input['api_format']);
-        } else {
-            Api5::error(ErrorCodeEnum::NOT_FOUND, T_('Not Found'), self::ACTION, 'catalog', $input['api_format']);
+        if ($catalog->catalog_type != 'local') {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::NOT_FOUND,
+                        'Not Found',
+                        self::ACTION,
+                        'catalog'
+                    )
+                )
+            );
         }
 
-        return true;
-    }
+        foreach ($task as $item) {
+            switch ($item) {
+                case 'clean':
+                    if ($media->isNew() === false) {
+                        /** @var Catalog_local $catalog */
+                        $catalog->clean_file($file, $type);
+                    }
+                    break;
+                case 'verify':
+                    if ($media->isNew() === false) {
+                        Catalog::update_media_from_tags($media, [$type]);
+                    }
+                    break;
+                case 'add':
+                    if ($media->isNew()) {
+                        /** @var Catalog_local $catalog */
+                        $catalog->add_file($file, []);
+                    }
+                    break;
+                case 'remove':
+                    if ($media->isNew() === false) {
+                        $media->remove();
+                    }
+                    break;
+            }
+        }
 
-    /**
-     * @deprecated
-     */
-    public static function getSongDeleter(): SongDeleterInterface
-    {
-        global $dic;
+        // update the counts too
+        if ($media instanceof Song) {
+            Album::update_album_count($media->album);
+            Artist::update_table_counts();
+        }
 
-        return $dic->get(SongDeleterInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success($apiVersion, 'successfully started: ' . $output_task . ' for ' . $file)
+            )
+        );
     }
 }

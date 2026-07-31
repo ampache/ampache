@@ -33,32 +33,25 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdatePlaylistAction implements ApplicationActionInterface
+final readonly class UpdatePlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_playlist';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'update_playlist';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
-    }
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist = $this->modelFactory->createSearch(
+        $playlist = $this->modelFactory->createSmartlist(
             (int) ($request->getQueryParams()['playlist_id'] ?? 0)
         );
 
         $data = $request->getParsedBody();
         if (
-            is_array($data) &&
-            $playlist->has_access()
+            is_array($data)
+            && $playlist->has_access()
         ) {
             $playlist->set_rules($data);
             $playlist->update($data);

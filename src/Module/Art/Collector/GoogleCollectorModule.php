@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,15 +32,9 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use WpOrg\Requests\Requests;
 
-final class GoogleCollectorModule implements CollectorModuleInterface
+final readonly class GoogleCollectorModule implements CollectorModuleInterface
 {
-    private LoggerInterface $logger;
-
-    public function __construct(
-        LoggerInterface $logger
-    ) {
-        $this->logger = $logger;
-    }
+    public function __construct(private LoggerInterface $logger) {}
 
     /**
      * Raw google search to retrieve the art, not very reliable
@@ -60,9 +54,9 @@ final class GoogleCollectorModule implements CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array {
-        if (!$limit) {
+        if ($limit === 0) {
             $limit = 5;
         }
 
@@ -93,6 +87,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
                     if (preg_match('/lookaside\.fbsbx\.com/', $match)) {
                         break;
                     }
+
                     $match = rawurldecode($match);
 
                     $this->logger->debug(
@@ -105,6 +100,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
                     if ($pos > 0) {
                         $results['extension'] = substr($test, 0, $pos);
                     }
+
                     if (preg_match('~[^png|^jpg|^jpeg|^jif|^bmp]~', $test)) {
                         $results['extension'] = 'jpg';
                     }
@@ -122,9 +118,9 @@ final class GoogleCollectorModule implements CollectorModuleInterface
                     }
                 }
             }
-        } catch (Exception $error) {
+        } catch (Exception $exception) {
             $this->logger->error(
-                'Error getting google images: ' . $error->getMessage(),
+                'Error getting google images: ' . $exception->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
