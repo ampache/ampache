@@ -97,6 +97,12 @@ final class AdvancedSearch6Method
             return false;
         }
 
+        if (strtolower($type) === 'album_disk') {
+            Api6::empty($type, $input['api_format']);
+
+            return false;
+        }
+
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;

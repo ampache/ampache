@@ -77,7 +77,7 @@ final class XmlRestApiApplication implements ApiApplicationInterface
         // catalog task shortcuts (e.g. `POST catalogs/{catalog_id}/clean`) are aliases of
         // catalog_action, so derive the task from the path before the action is normalized
         $task = ($type === 'catalog' && isset($input['filter']))
-            ? match ((string) $input['action']) {
+            ? match ((string) ($input['action'] ?? '')) {
                 'add' => 'add_to_catalog',
                 'clean' => 'clean_catalog',
                 'update' => 'update_catalog',
@@ -87,13 +87,16 @@ final class XmlRestApiApplication implements ApiApplicationInterface
         : null;
 
         // normalize input actions (REST paths)
-        $action = $this->apiHandler->normalizeAction((string) $input['action'], $type, isset($input['filter']));
-        $action = match ($method) {
-            'DELETE' => $action . '_delete',
-            'PATCH' => $action . '_edit',
-            'PUT' => $action . '_create',
-            default => $action,
-        };
+        $action = $this->apiHandler->normalizeAction((string) ($input['action'] ?? ''), $type, isset($input['filter']));
+        // an empty action is handled by the api handler; don't turn it into a method suffix
+        $action = ($action === '')
+            ? $action
+            : match ($method) {
+                'DELETE' => $action . '_delete',
+                'PATCH' => $action . '_edit',
+                'PUT' => $action . '_create',
+                default => $action,
+            };
 
         // filter out bad requests
         if ($action === 'register' && $method !== 'POST') {
