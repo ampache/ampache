@@ -295,6 +295,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 if ($object_type !== null && $object_id > 0) {
                     header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset', 'UTF-8'));
+                    header_remove('Content-Disposition');
                     echo $this->shareUiLinkRenderer->render($object_type, $object_id);
 
                     return;
