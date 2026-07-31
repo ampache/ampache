@@ -189,13 +189,6 @@ final class UpdateRunner implements UpdateRunnerInterface
             }
         }
 
-        if ($currentVersion >= 800019) {
-            // Migration\V8\Migration800019 (Ampache7 has no per-format bitrate overrides)
-            if (!Preference::delete('transcode_bitrate_formats')) {
-                throw new UpdateFailedException();
-            }
-        }
-
         if ($currentVersion >= 800018) {
             // Migration\V8\Migration800018 (Ampache7 stores `transcode_bitrate` in kilobits, not bits)
             if (
@@ -274,17 +267,17 @@ final class UpdateRunner implements UpdateRunnerInterface
             }
         }
 
-        // Migration\V8\Migration800009 needs no rollback of its own. It added `folder`.`weight`, and the
-        // `>= 800007` block below drops the whole `folder` table, taking the column with it.
-
-        if ($currentVersion >= 800008) {
-            // Migration\V8\Migration800010 (`folder_map` was created by Migration800008 in older develop8 builds)
+        if ($currentVersion >= 800010) {
+            // Migration\V8\Migration800010 (drop the table that migration creates)
             if (
                 !Dba::write("DROP TABLE IF EXISTS `folder_map`;")
             ) {
                 throw new UpdateFailedException();
             }
         }
+
+        // Migration\V8\Migration800009 needs no rollback of its own. It added `folder`.`weight`, and the
+        // `>= 800007` block below drops the whole `folder` table, taking the column with it.
 
         if ($currentVersion >= 800007) {
             // Migration\V8\Migration800007
