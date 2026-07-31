@@ -30,10 +30,13 @@ use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -75,12 +78,88 @@ $cel_time    = ($is_table) ? "cel_time" : 'grid_time';
 $cel_license = ($is_table) ? "cel_license" : 'grid_license';
 $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter';
 $css_class   = ($is_table) ? '' : ' gridview';
+
+global $dic;
+$zipHandler = $dic->get(ZipHandlerInterface::class);
+
+// Multi select. Grid view has no room for a checkbox column and an empty browse has nothing to act on, so the
+// bar only appears on a populated table view where at least one of the batch actions is actually available.
+$directplay = (bool) AmpConfig::get('directplay');
+$can_add    = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
+$batch_dl   = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('song');
+// The column is laid out wherever the actions would work, so toggling the option in the view menu shows and
+// hides the checkboxes without every other column shifting sideways. Batch actions are not for everyone
+// though, so the checkboxes and the bar wait until 'Multi-Select' is picked.
+$can_multiselect  = $is_table && $object_ids !== [] && ($directplay || $can_add || $batch_dl);
+$show_multiselect = $can_multiselect && $browse->is_use_select();
+if ($can_multiselect) {
+    ++$thcount;
+}
+
+$multiselect_actions = [];
+if ($directplay) {
+    $multiselect_actions[] = [
+        'action' => 'ajax',
+        'url' => Ajax::url('?page=stream&action=directplay&object_type={type}&object_id={ids}'),
+        'icon' => 'play_circle',
+        'text' => T_('Play'),
+    ];
+    if (Stream_Playlist::check_autoplay_next()) {
+        $multiselect_actions[] = [
+            'action' => 'ajax',
+            'url' => Ajax::url('?page=stream&action=directplay&object_type={type}&object_id={ids}&playnext=true'),
+            'icon' => 'menu_open',
+            'text' => T_('Play next'),
+        ];
+    }
+    if (Stream_Playlist::check_autoplay_append()) {
+        $multiselect_actions[] = [
+            'action' => 'ajax',
+            'url' => Ajax::url('?page=stream&action=directplay&object_type={type}&object_id={ids}&append=true'),
+            'icon' => 'low_priority',
+            'text' => T_('Play last'),
+        ];
+    }
+}
+
+$multiselect_actions[] = [
+    'action' => 'ajax',
+    'url' => Ajax::url('?action=basket&type={type}&id={ids}'),
+    'icon' => 'new_window',
+    'text' => T_('Add to Temporary Playlist'),
+];
+if ($can_add) {
+    $multiselect_actions[] = [
+        'action' => 'playlist',
+        'url' => '',
+        'icon' => 'playlist_add',
+        'text' => T_('Add to playlist'),
+    ];
+}
+
+// A selection cannot stream as one file, so the batch zip is the only sane download; it needs the zip function
+// and `song` among the zipable types, matching how the album and artist pages gate their own zip links.
+if ($batch_dl) {
+    $multiselect_actions[] = [
+        'action' => 'link',
+        'url' => $web_path . '/batch.php?action={type}&id={ids}',
+        'icon' => 'folder_zip',
+        'text' => T_('Download'),
+    ];
+}
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
+} ?>
+<div<?php echo ($show_multiselect) ? ' data-multiselect-scope' : ''; ?>>
+<?php if ($show_multiselect) {
+    require Ui::find_template('show_multiselect_actions.inc.php');
 } ?>
 <table id="reorder_songs_table_<?php echo $browse->get_filter('album') ?? $browse->id; ?>" class="tabledata striped-rows <?php echo $css_class; ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
     <thead>
         <tr class="th-top">
+            <?php if ($can_multiselect) { ?>
+            <th class="cel_select essential persist"><?php if ($show_multiselect) { ?><input type="checkbox" class="multiselect-all" title="<?php echo T_('Select'); ?>" /><?php } ?></th>
+            <?php } ?>
             <th class="cel_play essential"><?php echo $cel_play_text; ?></th>
             <th class="<?php echo $cel_song; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'song_sort_title' . $browse->id); ?></th>
             <th class="cel_add essential"></th>
@@ -150,6 +229,15 @@ foreach ($object_ids as $song_id) {
     } ?>
             <tr id="song_<?php echo $libitem->id; ?>">
                 <?php if ($libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+                    // The rest of the row is a TAL template, so the checkbox cell is emitted here; it only ever
+                    // has to lead the row, and keeping it out of song_row.xhtml leaves that template untouched.
+                    if ($can_multiselect) {
+                        $checkbox = ($show_multiselect)
+                            ? '<input type="checkbox" class="multiselect-item" title="' . T_('Select') . '" data-id="' . $libitem->id . '" data-type="song" />'
+                            : '';
+                        echo '<td class="cel_select">' . $checkbox . '</td>';
+                    }
+
                     $content = $talFactory->createTalView()
                         ->setContext('USER_IS_REGISTERED', User::is_registered())
                         ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
@@ -182,6 +270,9 @@ foreach ($object_ids as $song_id) {
     </tbody>
     <tfoot>
         <tr class="th-bottom">
+            <?php if ($can_multiselect) { ?>
+            <th class="cel_select"></th>
+            <?php } ?>
             <th class="cel_play"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, '#', 'song_sort_track' . $browse->id); ?></th>
             <th class="<?php echo $cel_song; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'song_sort_title' . $browse->id); ?></th>
             <th class="cel_add"></th>
@@ -190,6 +281,9 @@ foreach ($object_ids as $song_id) {
             <?php } ?>
             <?php if (!$hide_album) { ?>
                 <th class="<?php echo $cel_album; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'song_sort_album' . $browse->id); ?></th>
+            <?php } ?>
+            <?php if (!$hide_year) { ?>
+            <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'song_sort_year'); ?></th>
             <?php } ?>
             <?php if (!$hide_genres) { ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
@@ -214,6 +308,7 @@ foreach ($object_ids as $song_id) {
         </tr>
     </tfoot>
 </table>
+</div>
 
 <?php show_table_render((isset($argument) && is_bool($argument) ? $argument : false)); ?>
 <?php if ($browse->is_show_header()) {
