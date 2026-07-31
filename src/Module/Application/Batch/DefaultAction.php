@@ -101,15 +101,18 @@ final readonly class DefaultAction implements ApplicationActionInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
+        $itemType = LibraryItemEnum::tryFrom($object_type);
         $libItems = [];
-        foreach ($object_ids as $object_id) {
-            $libItem = $this->libraryItemLoader->load(
-                LibraryItemEnum::from($object_type),
-                $object_id,
-            );
+        if ($itemType !== null) {
+            foreach ($object_ids as $object_id) {
+                $libItem = $this->libraryItemLoader->load(
+                    $itemType,
+                    $object_id,
+                );
 
-            if ($libItem instanceof container_item) {
-                $libItems[] = $libItem;
+                if ($libItem instanceof container_item) {
+                    $libItems[] = $libItem;
+                }
             }
         }
 
