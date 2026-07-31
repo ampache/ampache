@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS `album` (
   `original_year` int(4) DEFAULT NULL,
   `barcode` varchar(64) DEFAULT NULL,
   `catalog_number` varchar(64) DEFAULT NULL,
+  `subtitle` varchar(64) DEFAULT NULL,
   `version` varchar(64) DEFAULT NULL,
   `time` bigint(20) UNSIGNED DEFAULT NULL,
   `release_status` varchar(32) DEFAULT NULL,
@@ -485,13 +486,16 @@ CREATE TABLE IF NOT EXISTS `folder` (
   `user` int(11) DEFAULT NULL,
   `update_time` int(11) UNSIGNED DEFAULT 0,
   `addition_time` int(11) UNSIGNED DEFAULT 0,
+  `playable` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `object_count` int(11) UNSIGNED DEFAULT 0,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `path` varchar(255) DEFAULT NULL,
-  `path_name` varchar(4096) DEFAULT NULL,
+  `path_name` varchar(512) DEFAULT NULL,
+  `weight` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
+  KEY `folder_catalog_IDX` (`catalog`,`path_name`),
   KEY `catalog` (`catalog`),
   KEY `user` (`user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -504,16 +508,20 @@ CREATE TABLE IF NOT EXISTS `folder` (
 
 DROP TABLE IF EXISTS `folder_map`;
 CREATE TABLE IF NOT EXISTS `folder_map` (
-  `folder_id` int(11) UNSIGNED NOT NULL,
+  `folder_id` int(11) UNSIGNED DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
-  `object_type` varchar(16) DEFAULT NULL,
+  `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `catalog` int(11) NOT NULL DEFAULT 0,
+  `path_name` varchar(512) DEFAULT NULL,
   UNIQUE KEY `unique_folder_map` (`object_id`,`object_type`,`folder_id`),
+  KEY `folder_catalog_IDX` (`catalog`,`path_name`),
   KEY `object_id_index` (`object_id`),
   KEY `folder_id_type_index` (`folder_id`,`object_type`),
   KEY `object_id_type_index` (`object_id`,`object_type`),
   KEY `object_type_IDX` (`object_type`) USING BTREE,
   KEY `object_type_id_IDX` (`object_type`,`object_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 --

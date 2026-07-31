@@ -369,6 +369,21 @@ class Dba
     }
 
     /**
+     * has_index
+     *
+     * Whether an index exists on a table of the current database.
+     */
+    public static function has_index(string $table, string $index): bool
+    {
+        $db_results = self::read(
+            'SELECT `INDEX_NAME` FROM `information_schema`.`STATISTICS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = ? AND `INDEX_NAME` = ?;',
+            [$table, $index]
+        );
+
+        return self::fetch_assoc($db_results) !== [];
+    }
+
+    /**
      * insert_id
      */
     public static function insert_id(): false|string
