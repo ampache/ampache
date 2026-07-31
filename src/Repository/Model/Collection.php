@@ -257,7 +257,7 @@ class Collection extends playlist_object
     public function get_link(): string
     {
         if ($this->link === null) {
-            $this->link = AmpConfig::get_web_path() . '/collection.php?action=show&collection=' . $this->id;
+            $this->link = AmpConfig::get_web_path('/client') . '/collection.php?action=show&collection=' . $this->id;
         }
 
         return $this->link;

@@ -94,7 +94,7 @@ final readonly class CreateAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 T_('Playlist created'),
                 $name,
-                sprintf('%s/playlist.php?action=show&playlist_id=%d', $this->configContainer->getWebPath(), $playlistId)
+                sprintf('%s/playlist.php?action=show&playlist_id=%d', $this->configContainer->getWebPath('/client'), $playlistId)
             );
         }
 

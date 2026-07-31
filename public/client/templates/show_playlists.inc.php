@@ -53,7 +53,7 @@ if ($show_playlist_add) { ?>
 <div id="information_actions">
     <ul>
         <li>
-            <a href="<?php echo AmpConfig::get_web_path(); ?>/playlist.php?action=show_create">
+            <a href="<?php echo AmpConfig::get_web_path('/client'); ?>/playlist.php?action=show_create">
                 <?php echo Ui::get_material_symbol('add_circle', T_('Create Playlist')); ?>
                 <?php echo T_('Create Playlist'); ?>
             </a>

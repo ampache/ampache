@@ -62,7 +62,7 @@ final readonly class DeleteCollectionAction implements ApplicationActionInterfac
                         ->createResponse(RFC7231::FOUND)
                         ->withHeader(
                             'Location',
-                            sprintf('%s/browse.php?action=collection', $this->configContainer->getWebPath())
+                            sprintf('%s/browse.php?action=collection', $this->configContainer->getWebPath('/client'))
                         );
                 }
             }

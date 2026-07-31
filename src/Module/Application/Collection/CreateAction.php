@@ -108,7 +108,7 @@ final readonly class CreateAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 T_('Collection created'),
                 $name,
-                sprintf('%s/collection.php?action=show&collection=%d', $this->configContainer->getWebPath(), $collectionId)
+                sprintf('%s/collection.php?action=show&collection=%d', $this->configContainer->getWebPath('/client'), $collectionId)
             );
         }
 

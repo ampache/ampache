@@ -56,7 +56,7 @@ final readonly class DeletionUrlResolver implements DeletionUrlResolverInterface
             return '';
         }
 
-        $webPath = $this->configContainer->getWebPath();
+        $webPath = $this->configContainer->getWebPath('/client');
         if (!str_starts_with($decoded, $webPath . '/')) {
             return '';
         }

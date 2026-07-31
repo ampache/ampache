@@ -49,7 +49,7 @@ if (!empty($tab)) {
     if ($tab !== 'account' && $tab !== 'modules') {
         debug_event('show_preferences.inc', $tab, 5); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get_web_path('/client'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
-=======<?php $ui->showPreferenceBox(($preferences[$tab] ?? [])); ?>
+<?php $ui->showPreferenceBox(($preferences[$tab] ?? [])); ?>
 <div class="formValidation">
     <input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
     <?php echo Core::form_register('update_preference'); ?>

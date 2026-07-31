@@ -1,12 +1,12 @@
 import fs from 'node:fs';
 
 const requiredFiles = [
-    'public/client/lib/components/jquery/jquery.min.js',
-    'public/client/lib/components/bootstrap/js/bootstrap.bundle.min.js',
-    'public/client/lib/components/bootstrap/css/bootstrap.min.css',
-    'public/client/lib/components/filepond/filepond.min.js',
-    'public/client/lib/components/wunderbaum/wunderbaum.umd.js',
-    'public/client/lib/components/material-symbols/folder.svg'
+    'public/lib/components/jquery/jquery.min.js',
+    'public/lib/components/bootstrap/js/bootstrap.bundle.min.js',
+    'public/lib/components/bootstrap/css/bootstrap.min.css',
+    'public/lib/components/filepond/filepond.min.js',
+    'public/lib/components/wunderbaum/wunderbaum.umd.js',
+    'public/lib/components/material-symbols/folder.svg'
 ];
 
 const missing = requiredFiles.filter((file) => !fs.existsSync(file));
