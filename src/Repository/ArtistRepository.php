@@ -219,6 +219,31 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     }
 
     /**
+     * Batch version of getFullNameById: same SQL formula, one query for many ids.
+     *
+     * @param list<int> $artistIds
+     * @return array<int, string>
+     */
+    public function getFullNamesByIds(array $artistIds): array
+    {
+        if ($artistIds === []) {
+            return [];
+        }
+
+        $idList = implode(',', array_map('intval', $artistIds));
+        $result = $this->connection->query(
+            "SELECT `id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name` FROM `artist` WHERE `id` IN (" . $idList . ")"
+        );
+
+        $names = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $names[(int) $row['id']] = (string) $row['f_name'];
+        }
+
+        return $names;
+    }
+
+    /**
      * Reads the minimal artist detail Subsonic needs, together with its lowest-numbered catalog
      *
      * @return array{id: int, f_name: string, name: string, album_count: int, song_count: int, catalog_id: int}|null
