@@ -63,6 +63,20 @@ class FolderTest extends TestCase
         static::assertSame([], $subject->get_children('some-name'));
     }
 
+    public function testGetFLinkClosesTheAnchor(): void
+    {
+        $subject = new Folder();
+
+        $subject->id   = 666;
+        $subject->link = 'some-link';
+        $subject->name = 'some-name';
+
+        static::assertSame(
+            '<a href="some-link" title="some-name">some-name</a>',
+            $subject->get_f_link()
+        );
+    }
+
     public function testGetMediasDelegatesWithTheFilterType(): void
     {
         $subject = new Folder();

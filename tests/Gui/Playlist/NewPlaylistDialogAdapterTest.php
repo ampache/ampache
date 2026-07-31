@@ -31,8 +31,10 @@ use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
+use Generator;
 use Mockery\MockInterface;
 use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NewPlaylistDialogAdapterTest extends MockeryTestCase
 {
@@ -43,6 +45,14 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
     private string $objectType = 'some-object-type';
     private MockInterface|PlaylistLoaderInterface|null $playlistLoader;
     private ?NewPlaylistDialogAdapter $subject;
+
+    public static function playlistTypeDataProvider(): Generator
+    {
+        yield 'folder' => ['folder', true];
+        yield 'song' => ['song', true];
+        yield 'genre named after its table' => ['tag', false];
+        yield 'unknown type' => ['some-object-type', false];
+    }
 
     public function testAjaxUriReturnsUri(): void
     {
@@ -81,6 +91,25 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
             $this->objectType,
             $this->subject->getObjectType()
         );
+    }
+
+    /**
+     * A folder contributes the media below it, so the playlist half of the dialog is offered for one; a genre
+     * has no media at all and only belongs in a collection.
+     */
+    #[DataProvider('playlistTypeDataProvider')]
+    public function testGetPlaylistsEnabledFollowsTheRequestedType(string $objectType, bool $expected): void
+    {
+        $subject = new NewPlaylistDialogAdapter(
+            $this->playlistLoader,
+            $this->ajaxUriRetriever,
+            $this->collectionRepository,
+            $this->gatekeeper,
+            $objectType,
+            $this->objectIds
+        );
+
+        $this->assertSame($expected, $subject->getPlaylistsEnabled());
     }
 
     public function testGetPlaylistsReturnsList(): void

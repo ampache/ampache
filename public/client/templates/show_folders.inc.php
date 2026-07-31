@@ -41,15 +41,17 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var Ampache\Repository\Model\Folder $folder */
+/** @var Ampache\Repository\Model\Folder|null $folder */
 /** @var string[] $object_ids */
 
 $web_path = AmpConfig::get_web_path('/client');
 
-$access25          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
-$show_playlist_add = $access25;
-$show_direct_play  = AmpConfig::get('directplay');
-$directplay_limit  = AmpConfig::get('direct_play_limit', 500);
+// A pinned collection hands its members straight to this browse, so there is no folder being walked into
+$folder = $folder ?? new Folder(-1);
+
+$access25         = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
+$show_direct_play = AmpConfig::get('directplay');
+$directplay_limit = AmpConfig::get('direct_play_limit', 500);
 // folder_row data and options
 $thcount           = 9;
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
@@ -99,10 +101,17 @@ $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper(
 
 /* Foreach through the objects e.g. folder-12 song-125 podcast_episode-233 */
 foreach ($object_ids as $object) {
-    preg_match('/([a-z_]+)-([0-9]+)/', $object, $matches);
-    $object_type = $matches[1] ?? null;
-    $object_id   = (int) ($matches[2] ?? 0);
-    $libitem     = null;
+    // A bare id is a folder: that is what a collection pinned to folders hands over, having no types to send
+    if (preg_match('/^[0-9]+$/', (string) $object)) {
+        $object_type = 'folder';
+        $object_id   = (int) $object;
+    } else {
+        preg_match('/([a-z_]+)-([0-9]+)/', (string) $object, $matches);
+        $object_type = $matches[1] ?? null;
+        $object_id   = (int) ($matches[2] ?? 0);
+    }
+
+    $libitem = null;
     switch ($object_type) {
         case 'folder':
             $libitem = new Folder($object_id);
@@ -122,8 +131,11 @@ foreach ($object_ids as $object) {
         continue;
     }
 
-    if ($directplay_limit > 0 && property_exists($libitem, 'object_count')) {
-        $show_playlist_add = $access25 && $libitem->playable && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
+    // The temporary playlist queues the item itself, so a folder holding nothing playable has nothing to offer;
+    // the add-to-list dialog is a different question, because a collection curates the folder rather than plays it
+    $show_temp_add = $access25;
+    if ($libitem instanceof Folder && $directplay_limit > 0) {
+        $show_temp_add = $access25 && $libitem->playable && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
     } ?>
             <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu" data-object-type="<?php echo $object_type; ?>" data-object-id="<?php echo $libitem->getId(); ?>">
     <?php $content = $talFactory->createTalView()
@@ -131,7 +143,8 @@ foreach ($object_ids as $object) {
             ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
             ->setContext('FOLDER', $guiFactory->createFolderViewAdapter($gatekeeper, $folder, $libitem, $object_type))
             ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
-            ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
+            ->setContext('IS_SHOW_PLAYLIST_ADD', $show_temp_add)
+            ->setContext('IS_SHOW_LIST_ADD', $access25)
             ->setContext('CLASS_COVER', $cel_cover)
             ->setContext('CLASS_FOLDER', $cel_folder)
             ->setContext('CLASS_COUNTER', $cel_counter)

@@ -73,48 +73,74 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
     var currentjpitem = null;
     var currentAudioElement = undefined;
 
-    // Random/democratic streams only carry a placeholder in the client playlist.
-    // Poll the server for the real internal song that is currently playing and
-    // fill in its title / artist / album / artwork / action buttons.
-    var nowPlayingPoll = null;
+    // Random/democratic streams only carry a placeholder in the client playlist, so the real internal song
+    // has to be asked for. It can only change when the track does, so it is resolved once per track and held
+    // until the next one starts rather than polled on a timer.
     var nowPlayingObjectId = null;
+    var nowPlayingPending = false;
+    var nowPlayingRetry = null;
+    var nowPlayingAttempts = 0;
+    var nowPlayingMaxAttempts = 3;
+    var nowPlayingRetryMs = 1500;
 
     function pollNowPlaying()
     {
         if (typeof jsAjaxUrl === 'undefined') {
             return;
         }
+        nowPlayingAttempts++;
         $.getJSON(jsAjaxUrl + '?page=player&action=now_playing', function (data) {
-            if (data && data.found) {
-                $('.playing_title').html(data.title);
-                $('.playing_artist').html(data.artist);
-                if (data.art) {
-                    $('.playing_art').attr('src', data.art).show();
-                }
-                // only rebuild the action row when the song changes (it hosts the rating widget)
-                if (data.actions && data.object_id && data.object_id !== nowPlayingObjectId) {
-                    nowPlayingObjectId = data.object_id;
-                    $('.playing_actions').html(data.actions);
-                    ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + data.object_type + '&object_id=' + data.object_id);
-                }
+            if (!data || !data.found || !data.object_id || data.object_id === nowPlayingObjectId) {
+                scheduleNowPlayingRetry();
+
+                return;
             }
-        });
+
+            nowPlayingPending = false;
+            nowPlayingObjectId = data.object_id;
+            $('.playing_title').html(data.title);
+            $('.playing_artist').html(data.artist);
+            if (data.art) {
+                $('.playing_art').attr('src', data.art).show();
+            }
+            if (data.actions) {
+                $('.playing_actions').html(data.actions);
+                ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + data.object_type + '&object_id=' + data.object_id);
+            }
+        }).fail(scheduleNowPlayingRetry);
     }
 
-    function startNowPlayingPoll()
+    function scheduleNowPlayingRetry()
     {
-        if (nowPlayingPoll !== null) {
+        if (nowPlayingAttempts >= nowPlayingMaxAttempts) {
+            nowPlayingPending = false;
+
             return;
         }
-        pollNowPlaying();
-        nowPlayingPoll = setInterval(pollNowPlaying, 7000);
+        cancelNowPlayingRetry();
+        nowPlayingRetry = setTimeout(pollNowPlaying, nowPlayingRetryMs);
     }
 
-    function stopNowPlayingPoll()
+    function cancelNowPlayingRetry()
     {
-        if (nowPlayingPoll !== null) {
-            clearInterval(nowPlayingPoll);
-            nowPlayingPoll = null;
+        if (nowPlayingRetry !== null) {
+            clearTimeout(nowPlayingRetry);
+            nowPlayingRetry = null;
+        }
+    }
+
+    function nowPlayingTrackChanged()
+    {
+        cancelNowPlayingRetry();
+        nowPlayingPending = true;
+        nowPlayingAttempts = 0;
+    }
+
+    // Resuming from a pause reuses the held song; only a track change clears it
+    function refreshNowPlaying()
+    {
+        if (nowPlayingPending) {
+            pollNowPlaying();
         }
     }
 
@@ -214,7 +240,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
             <?php if ($isRandom || $isDemocratic) { ?>
-            startNowPlayingPoll();
+            refreshNowPlaying();
             <?php } ?>
             // Splice the shared audio graph (EQ + ReplayGain) in as soon as playback starts so the equalizer is active.
             if (typeof ensureAudioGraph === 'function' && ensureAudioGraph() && audioContext && audioContext.state === 'suspended') {
@@ -401,9 +427,13 @@ if (AmpConfig::get('song_page_title') && $isShare === false) {
         $("#jquery_jplayer_1").bind($.jPlayer.event.progress, correctPlayerTimeline);
         $("#jquery_jplayer_1").bind($.jPlayer.event.durationchange, correctPlayerTimeline);
 
+<?php if ($isRandom || $isDemocratic) { ?>
+        $("#jquery_jplayer_1").bind($.jPlayer.event.loadstart, nowPlayingTrackChanged);
+<?php } ?>
+
         $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
             <?php if ($isRandom || $isDemocratic) { ?>
-            stopNowPlayingPoll();
+            cancelNowPlayingRetry();
             <?php } ?>
             if (brkey != '') {
                 sendBroadcastMessage('PLAYER_PLAY', 0);
