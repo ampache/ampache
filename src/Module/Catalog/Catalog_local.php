@@ -1249,10 +1249,13 @@ class Catalog_local extends Catalog
      */
     public function prepare_media(Podcast_Episode|Video|Song $media): array
     {
+        $file_path = (string) $media->file;
+        $file_size = Core::get_filesize($file_path);
+
         return [
-            'file_path' => (string) $media->file,
+            'file_path' => $file_path,
             'file_name' => $media->getFileName(),
-            'file_size' => $media->size,
+            'file_size' => ($file_size > 0) ? $file_size : $media->size,
             'file_type' => $media->type,
         ];
     }
