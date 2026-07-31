@@ -205,6 +205,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* Unexpected errors from an API method were logged as a bare message with no file or line, leaving nothing to locate the cause by
 * Pages that stopped part way through and returned a blank or half-written page, because an uncaught error is logged and swallowed rather than shown
   * The embedded web player (`web_player_embedded.php`) and the video page, when opened without a `playlist_id`; the player template was handed an undefined `$playlist` and now gets an empty one
   * Generating a video preview image read `$time` before it was set, because a `Video` built from an id that is not in the database leaves its typed properties unset
