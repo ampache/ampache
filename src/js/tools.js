@@ -94,7 +94,7 @@ export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
         },
         open() {
             closeplaylist = 1;
-            $(document).bind("click", overlayclickclose);
+            $(document).on("click.playlistdialog", overlayclickclose);
             $(this).load(parent.contentUrl, function() {
                 $("#playlistdialog").focus();
             });
@@ -103,7 +103,7 @@ export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
             closeplaylist = 0;
         },
         close(e) {
-            $(document).unbind("click");
+            $(document).off("click.playlistdialog");
             $(this).empty();
             $(this).dialog("destroy");
         }
@@ -210,7 +210,7 @@ export function showBroadcastsDialog(e) {
         },
         open() {
             closebroadcasts = 1;
-            $(document).bind("click", broverlayclickclose);
+            $(document).on("click.broadcastsdialog", broverlayclickclose);
             $(this).load(parent.contentUrl, function() {
                 $("#broadcastsdialog").focus();
             });
@@ -219,7 +219,7 @@ export function showBroadcastsDialog(e) {
             closebroadcasts = 0;
         },
         close(e) {
-            $(document).unbind("click");
+            $(document).off("click.broadcastsdialog");
             $(this).empty();
             $(this).dialog("destroy");
         }
@@ -266,7 +266,7 @@ export function showShareDialog(e, object_type, object_id) {
         },
         open() {
             closeshare = 1;
-            $(document).bind("click", shoverlayclickclose);
+            $(document).on("click.sharedialog", shoverlayclickclose);
             $(this).load(parent.contentUrl, function() {
                 $("#sharedialog").focus();
             });
@@ -275,7 +275,7 @@ export function showShareDialog(e, object_type, object_id) {
             closeshare = 0;
         },
         close(e) {
-            $(document).unbind("click");
+            $(document).off("click.sharedialog");
             $(this).empty();
             $(this).dialog("destroy");
         }
