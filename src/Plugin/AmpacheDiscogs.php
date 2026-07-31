@@ -97,12 +97,18 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
         }
 
         $results = [];
+        $isAlbum     = in_array('album', $gather_types);
+        $isArtist    = in_array('artist', $gather_types);
+        $artistName  = (string) ($media_info['artist'] ?? (($isArtist) ? $media_info['title'] ?? '' : ''));
+        $albumArtist = (string) ($media_info['albumartist'] ?? (($isAlbum) ? $artistName : ''));
+        $albumName   = (string) ($media_info['album'] ?? (($isAlbum) ? $media_info['title'] ?? '' : ''));
+
         try {
-            if (!empty($media_info['artist']) && !in_array('album', $media_info)) {
-                $artists = $this->discogs->search_artist($media_info['artist']);
+            if ($artistName !== '' && !$isAlbum) {
+                $artists = $this->discogs->search_artist($artistName);
                 if (isset($artists['results']) && count($artists['results']) > 0) {
                     foreach ($artists['results'] as $result) {
-                        if ($result['title'] === $media_info['artist']) {
+                        if ($result['title'] === $artistName) {
                             $artist = $this->discogs->get_artist((int) $result['id']);
                             if (isset($artist['images']) && count($artist['images']) > 0) {
                                 $results['art'] = $artist['images'][0]['uri'];
@@ -120,13 +126,13 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                 }
             }
 
-            if (!empty($media_info['albumartist']) && !empty($media_info['album'])) {
+            if ($albumArtist !== '' && $albumName !== '') {
                 /**
                  * https://api.discogs.com/database/search?type=master&release_title=Ghosts&artist=Ladytron&per_page=10&key=key@secret=secret
                  */
-                $albums = $this->discogs->search_album($media_info['albumartist'], $media_info['album']);
+                $albums = $this->discogs->search_album($albumArtist, $albumName);
                 if (empty($albums['results'])) {
-                    $albums = $this->discogs->search_album($media_info['albumartist'], $media_info['album'], 'release');
+                    $albums = $this->discogs->search_album($albumArtist, $albumName, 'release');
                 }
 
                 // get the album that matches $artist - $album
@@ -156,7 +162,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                      * } $albumSearch
                      */
                     foreach ($albums['results'] as $albumSearch) {
-                        if ($media_info['albumartist'] . ' - ' . $media_info['album'] === $albumSearch['title']) {
+                        if ($albumArtist . ' - ' . $albumName === $albumSearch['title']) {
                             $album = $albumSearch;
                             break;
                         }
