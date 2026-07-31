@@ -78,7 +78,6 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
     // until the next one starts rather than polled on a timer.
     var nowPlayingObjectId = null;
     var nowPlayingSeenId = null;
-    var nowPlayingHeld = null;
     var nowPlayingPending = false;
     var nowPlayingActive = false;
     var nowPlayingRetry = null;
@@ -109,28 +108,18 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
             nowPlayingPending = false;
             nowPlayingActive = false;
             nowPlayingObjectId = data.object_id;
-            nowPlayingHeld = data;
-            applyNowPlayingHold();
+            $('.playing_title').html(data.title);
+            $('.playing_artist').html(data.artist);
+            if (data.art) {
+                $('.playing_art').attr('src', data.art).show();
+            } else {
+                clearNowPlayingArt();
+            }
+            if (data.actions) {
+                $('.playing_actions').html(data.actions);
+                ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + data.object_type + '&object_id=' + data.object_id);
+            }
         }).fail(scheduleNowPlayingRetry);
-    }
-
-    // The play handler rewrites the placeholder titles on every resume, so the held song is put back over it
-    function applyNowPlayingHold()
-    {
-        if (nowPlayingHeld === null) {
-            return;
-        }
-        $('.playing_title').html(nowPlayingHeld.title);
-        $('.playing_artist').html(nowPlayingHeld.artist);
-        if (nowPlayingHeld.art) {
-            $('.playing_art').attr('src', nowPlayingHeld.art).show();
-        } else {
-            clearNowPlayingArt();
-        }
-        if (nowPlayingHeld.actions) {
-            $('.playing_actions').html(nowPlayingHeld.actions);
-            ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + nowPlayingHeld.object_type + '&object_id=' + nowPlayingHeld.object_id);
-        }
     }
 
     function clearNowPlayingArt()
@@ -178,7 +167,6 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
     function nowPlayingTrackChanged()
     {
         cancelNowPlayingRetry();
-        nowPlayingHeld = null;
         nowPlayingSeenId = null;
         nowPlayingPending = true;
         nowPlayingAttempts = 0;
@@ -426,10 +414,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                     $('.playing_lyrics').html(lyricsobj);
                     <?php }
                     }
-                        if ($isRandom || $isDemocratic) { ?>
-                    applyNowPlayingHold();
-                    <?php }
-                        }
+                    }
 if (AmpConfig::get('song_page_title') && $isShare === false) {
     echo "var mediaTitle = obj.title;\n";
     echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
