@@ -36,6 +36,7 @@ interface ArtCollectorInterface
      *     'raw'?: string,
      *     'db'?: int,
      *     'url'?: string,
+     *     'mosaic'?: array{object_id: int, limit: int},
      *     'title'?: string,
      *     'mime'?: string
      * }>
