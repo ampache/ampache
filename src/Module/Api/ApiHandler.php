@@ -992,8 +992,7 @@ final class ApiHandler implements ApiHandlerInterface
                         );
             }
         } catch (Throwable $error) {
-            // `LegacyLogger` drops every context key but `event_type`, so the origin has to travel in the message
-            // or an unexpected throwable from deep inside a handler is logged with nothing to locate it by
+            // `LegacyLogger` drops every context key but `event_type`, so the origin travels in the message
             $this->logger->error(
                 sprintf(
                     '%s in %s:%d',
