@@ -123,7 +123,7 @@ final class Gatekeeper implements GatekeeperInterface
 
     public function getUser(string $requestKey = 'auth'): ?User
     {
-        return $this->userRepository->findByApiKey($this->getAuth($requestKey)) ?? $this->userRepository->findByUsername($this->request->getQueryParams()['user'] ?? '');
+        return $this->userRepository->findByApiKey($this->getAuth($requestKey));
     }
 
     public function getUserName(string $requestKey = 'auth'): string

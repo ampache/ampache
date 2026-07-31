@@ -163,17 +163,17 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         cursor: default;
     }
 
-    /* Loading indicator sits at the right of the header, padded clear of the two action buttons
-       (which occupy the rightmost ~76px) so it never lands on top of them. Position only, so the
-       width, centring, colour and spinner all still come from the theme and it looks the same as
-       the one in the main interface. display:none until an ajax call runs. */
+    /* The loading indicator is a header item rather than an overlay, so it cannot land on the play
+       type select or the action buttons whatever width they take. Only the title shrinks to make
+       room for it, and it is display:none until an ajax call runs, so the controls never move.
+       Position only, so the width, centring, colour and spinner still come from the theme. */
     #mini-page #ajax-loading {
-        position: fixed;
-        top: 14px;
-        right: 92px;
+        position: static;
+        flex: 0 0 auto;
+        top: auto;
+        right: auto;
         left: auto;
         transform: none;
-        z-index: 10006;
     }
 
     /* The temporary playlist drops out of the header button. The theme pins it under the main
@@ -229,17 +229,14 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         }
 
         /* The theme restyles the loading indicator into a padded grey pill without a spinner below
-           768px. Put the desktop treatment back so it reads the same at every width; only the
-           background image needs !important, the theme kills that one outright. Scoped to the
-           media query so the desktop rule, which is already right, is left alone. The colour is
-           inherited from the body rather than left transparent because the header title fills the
-           row at these widths and would otherwise show through the text. */
+           768px; put the desktop spinner back so it reads the same at every width, the theme kills
+           that one outright so it needs !important. The header has no room for the label at these
+           widths, so the spinner carries it alone and the text stays for screen readers. */
         #mini-page #ajax-loading {
-            top: 8px;
-            width: 120px;
+            width: 24px;
             padding: 0;
             border-radius: 0;
-            background-color: inherit;
+            font-size: 0;
             background-image: url('<?php echo $ajax_loader; ?>') !important;
         }
 
@@ -274,13 +271,13 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         <div id="rfc3514" style="display:none;">0x0</div>
         <div id="reloader" style="display:none;"></div>
         <div id="notification" class="notification-out"><?php echo Ui::get_material_symbol('info', T_('Information')); ?><span id="notification-content"></span></div>
-        <div id="ajax-loading"><?php echo T_('Loading'); ?> . . .</div>
 
         <div id="mini-header">
             <span id="mini-logo">
                 <img src="<?php echo $logo_url; ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
             </span>
             <span id="mini-title"><?php echo $site_title; ?></span>
+            <div id="ajax-loading"><?php echo T_('Loading'); ?> . . .</div>
             <?php require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
             <a class="mini-action nohtml" href="javascript:ToggleRightbarVisibility();" title="<?php echo $t_playlist; ?>"><?php echo Ui::get_material_symbol('dock_to_left', $t_playlist); ?></a>
             <a class="mini-action nohtml" target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" title="<?php echo $t_logout; ?>"><?php echo Ui::get_material_symbol('logout', $t_logout); ?></a>

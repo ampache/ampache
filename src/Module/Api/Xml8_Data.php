@@ -562,6 +562,38 @@ class Xml8_Data
     }
 
     /**
+     * folder_list
+     *
+     * Folders as standalone objects, for a caller listing folders rather than walking into one. The nested
+     * `items` of the `folders` method are deliberately absent: a member of a list is a reference, not a tree.
+     *
+     * @param array<int|string> $objects Folder id's to include
+     */
+    public static function folder_list(array $objects, User $user, string $auth, bool $full_xml = true): string
+    {
+        self::$count = self::$count ?: count($objects);
+        $md5         = md5(serialize($objects));
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+
+        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+
+        foreach ($objects as $folder_id) {
+            $folder = new Folder((int) $folder_id);
+            if ($folder->isNew()) {
+                continue;
+            }
+
+            $rating      = new Rating($folder->getId(), 'folder');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag($folder->getId(), 'folder');
+
+            $string .= "<folder id=\"" . $folder->getId() . "\">\n\t<name><![CDATA[" . $folder->get_fullname() . "]]></name>\n\t<parent>" . $folder->parent . "</parent>\n\t<path><![CDATA[" . $folder->path_name . "]]></path>\n\t<catalog>" . $folder->catalog . "</catalog>\n\t<items>" . (int) $folder->object_count . "</items>\n\t<playable>" . ($folder->playable ? '1' : '0') . "</playable>\n\t<art><![CDATA[" . Art::url($folder->getId(), 'folder', $auth) . "]]></art>\n\t<has_art>" . ($folder->has_art() ? '1' : '0') . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? '') . "</averagerating>\n</folder>\n";
+        }
+
+        return Api::output_xml($string, $full_xml);
+    }
+
+    /**
      * folders
      *
      * This returns folders to the user in an xml document.
@@ -1864,6 +1896,7 @@ class Xml8_Data
             'album' => self::albums($ids, [], $user, $auth, false),
             'album_disk' => self::album_disks($ids, [], $user, $auth, false),
             'artist' => self::artists($ids, [], $user, $auth, false),
+            'folder' => self::folder_list($ids, $user, $auth, false),
             'genre' => self::genres($ids, $user),
             'label' => self::labels($ids, $user),
             'live_stream' => self::live_streams($ids, $user, false),

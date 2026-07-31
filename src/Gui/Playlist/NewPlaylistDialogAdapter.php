@@ -39,12 +39,17 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
 {
     /**
      * Types a playlist can actually take.
+     *
+     * A container contributes the media it expands to rather than itself, which is how a folder belongs here at
+     * all: the playlist gets the songs below it, the same way an album contributes its own.
+     *
      * @var list<string>
      */
     private const array PLAYLIST_TYPES = [
         'album',
         'album_disk',
         'artist',
+        'folder',
         'label',
         'live_stream',
         'playlist',
