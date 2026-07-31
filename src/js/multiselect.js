@@ -70,10 +70,11 @@ function multiSelectGroupByType(selection) {
 }
 
 // Reflects the current count into the bar: the summary updates and the actions disable at zero so the bar can
-// never fire a request with an empty id list.
+// never fire a request with an empty id list. The batch zip takes one type, so a mixed selection disables it.
 function multiSelectRefresh($scope) {
     var $items = multiSelectItems($scope);
     var count = $items.filter(":checked").length;
+    var mixed = multiSelectGroupByType(multiSelectSelection($scope)).length > 1;
 
     // A row-wide click target needs row-wide feedback, so the whole row carries the state, not just the checkbox.
     $items.each(function () {
@@ -83,16 +84,33 @@ function multiSelectRefresh($scope) {
     $scope.find("[data-multiselect-count]").text(count);
     $scope.find("[data-multiselect-bar]").toggleClass("multiselect-empty", count === 0);
     $scope.find("[data-multiselect-action]").attr("aria-disabled", count === 0 ? "true" : "false");
+    $scope.find("[data-multiselect-action='link']").attr("aria-disabled", (count === 0 || mixed) ? "true" : "false");
 
     var $all = $scope.find("input.multiselect-all");
     $all.prop("checked", count > 0 && count === $items.length);
     $all.prop("indeterminate", count > 0 && count < $items.length);
 }
 
+// The ids and types come back out of the row attributes, so they are encoded on the way into a url: a value can
+// only ever be a value and never add a parameter or a fragment of its own.
 function multiSelectFill(template, replacements) {
     return Object.keys(replacements).reduce(function (url, key) {
-        return url.split("{" + key + "}").join(replacements[key]);
+        return url.split("{" + key + "}").join(encodeURIComponent(replacements[key]));
     }, template);
+}
+
+// The url template is document text as well, so a navigation is resolved against this page first and only taken
+// when it lands back on this server. Anything else, a javascript: uri above all, is dropped instead of followed.
+function multiSelectSafeUrl(url) {
+    try {
+        var resolved = new URL(url, window.location.href);
+
+        return (resolved.origin === window.location.origin && (resolved.protocol === "http:" || resolved.protocol === "https:"))
+            ? resolved.href
+            : null;
+    } catch (error) {
+        return null;
+    }
 }
 
 // A track_ids template addresses playlist rows directly, so the type is irrelevant and one request covers the
@@ -209,6 +227,18 @@ $(document).on("click", "a[data-multiselect-action]", function (event) {
                 return group.type + ":" + group.ids.join(",");
             }).join(";")
         );
+
+        return;
+    }
+
+    // A zip arrives as one response for one type, so it leaves through an ordinary navigation, not an ajaxPut.
+    if (action === "link") {
+        var group = multiSelectGroupByType(selection)[0];
+        var target = multiSelectSafeUrl(multiSelectFill(template, {type: group.type, ids: group.ids.join(",")}));
+
+        if (target !== null) {
+            window.location.assign(target);
+        }
 
         return;
     }

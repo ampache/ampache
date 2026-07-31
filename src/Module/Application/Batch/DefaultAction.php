@@ -89,24 +89,53 @@ final readonly class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $object_id = (int) $this->requestParser->getFromRequest('id');
+        // A selection downloads in one request, so the id list is the general case and a single id is a list of one.
+        // Each item contributes its own medias, which is what already made an album zip work, just repeated per id.
+        $object_ids = array_values(
+            array_filter(
+                array_map('intval', explode(',', $this->requestParser->getFromRequest('id')))
+            )
+        );
         $this->logger->debug(
-            'Requested item ' . $object_id,
+            'Requested item ' . implode(', ', $object_ids),
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        $libItem = $this->libraryItemLoader->load(
-            LibraryItemEnum::from($object_type),
-            $object_id,
-        );
+        $itemType = LibraryItemEnum::tryFrom($object_type);
+        $libItems = [];
+        if ($itemType !== null) {
+            foreach ($object_ids as $object_id) {
+                $libItem = $this->libraryItemLoader->load(
+                    $itemType,
+                    $object_id,
+                );
 
-        if ($libItem instanceof container_item) {
-            if ($libItem instanceof Song) {
-                $libItem->fill_ext_info();
+                if ($libItem instanceof container_item) {
+                    $libItems[] = $libItem;
+                }
+            }
+        }
+
+        if ($libItems !== []) {
+            foreach ($libItems as $libItem) {
+                if ($libItem instanceof Song) {
+                    $libItem->fill_ext_info();
+                }
+
+                $media_ids = array_merge($media_ids, $libItem->get_medias());
             }
 
-            $name      = (string) $libItem->get_fullname();
-            $media_ids = array_merge($media_ids, $libItem->get_medias());
+            // One item keeps its own name so a single download is unchanged; a selection is named for its first item
+            // plus how many more came along, which stays recognisable without the name growing with the selection.
+            // The zip name is stripped of punctuation later, so the suffix has to read correctly as bare words.
+            $name = (string) $libItems[0]->get_fullname();
+            if (count($libItems) > 1) {
+                $name = sprintf(
+                    nT_('%s and %d more item', '%s and %d more items', count($libItems) - 1),
+                    $name,
+                    count($libItems) - 1
+                );
+            }
         } else {
             // Switch on the actions
             switch ($action) {

@@ -26,15 +26,25 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\InstallationHelperInterface;
+use Ampache\Module\System\Update\Exception\UpdateException;
+use Ampache\Module\System\Update\Exception\UpdateFailedException;
+use Ampache\Module\System\Update\UpdaterInterface;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\UpdateInfoEnum;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Override;
 
 final class InstallerCommand extends Command
 {
     public function __construct(
         private readonly InstallationHelperInterface $installationHelper,
+        private readonly UpdaterInterface $updater,
+        private readonly UpdateInfoRepositoryInterface $updateInfoRepository,
     ) {
         parent::__construct('install', T_('Install the database'));
 
@@ -76,16 +86,23 @@ final class InstallerCommand extends Command
 
         // Now let's make sure it's not already installed
         if (!$this->installationHelper->install_check_status($configfile)) {
-            $interactor->error(
-                T_('Existing Ampache installation found'),
-                true
-            );
             if ($force) {
+                $interactor->error(
+                    T_('Existing Ampache installation found'),
+                    true
+                );
                 $interactor->warn(
                     T_('Force specified, proceeding anyway'),
                     true
                 );
             } else {
+                // Not an error: finishing the job on the database that is already there is the install
+                $interactor->info(
+                    T_('Existing Ampache installation found'),
+                    true
+                );
+                $this->updateExistingInstallation($interactor);
+
                 return;
             }
         }
@@ -146,5 +163,69 @@ final class InstallerCommand extends Command
         $this->onExit(static fn($exitCode = 0) => exit($exitCode));
 
         return $this;
+    }
+
+    /**
+     * Bring an already installed database fully up to date, the same way `admin:updateDatabase -e` would
+     */
+    private function updateExistingInstallation(Interactor $interactor): bool
+    {
+        if (!Dba::check_database_inserted()) {
+            $interactor->error(
+                T_('Unable to query the database, check your Ampache config'),
+                true
+            );
+
+            return false;
+        }
+
+        // Recreate any table the schema is missing before the migrations that expect them run
+        try {
+            $missing = $this->updater->checkTables(
+                true,
+                (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION)
+            );
+            foreach ($missing as $table_name) {
+                /* HINT: filename (File path) OR table name (podcast, video, etc) */
+                $interactor->info(sprintf(T_('Missing: %s'), $table_name), true);
+            }
+        } catch (UpdateFailedException $error) {
+            $interactor->error(sprintf(T_('Update failed! %s'), $error->getMessage()), true);
+
+            return false;
+        }
+
+        // A database left behind by a newer Ampache has to come back down before anything else makes sense
+        if ($this->updater->hasOverUpdated()) {
+            try {
+                $this->updater->rollback();
+            } catch (UpdateException $error) {
+                $interactor->error(sprintf(T_('Update failed! %s'), $error->getMessage()), true);
+
+                return false;
+            }
+        }
+
+        if ($this->updater->hasPendingUpdates()) {
+            $interactor->info(T_('Update Now!'), true);
+
+            try {
+                $this->updater->update($interactor);
+            } catch (UpdateException $error) {
+                $interactor->error(sprintf(T_('Update failed! %s'), $error->getMessage()), true);
+
+                return false;
+            }
+
+            $interactor->ok(T_('Updated'), true);
+        } else {
+            $interactor->info(T_('No update needed'), true);
+        }
+
+        // Preferences live in the application, not the schema, so migrations never fill their rows in
+        Preference::set_defaults();
+        Preference::translate_db();
+
+        return true;
     }
 }
