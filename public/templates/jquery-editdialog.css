@@ -133,14 +133,9 @@
    jQuery add to playlist dialog
    ------------------------------ */
 .playlistdialogstyle.ui-dialog {
-    background-color: #222;
     font-size: 10px;
-    overflow-x: hidden;
-    overflow-y: auto;
     padding: 0;
     margin: 0;
-    width: 100%;
-    height: 100%;
     border-radius: 2px;
     border: 2px solid rgba(0, 0, 0, 0.15);
     z-index: 10000;
