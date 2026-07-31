@@ -79,16 +79,18 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
     var nowPlayingObjectId = null;
     var nowPlayingHeld = null;
     var nowPlayingPending = false;
+    var nowPlayingActive = false;
     var nowPlayingRetry = null;
     var nowPlayingAttempts = 0;
-    var nowPlayingMaxAttempts = 3;
-    var nowPlayingRetryMs = 1500;
+    var nowPlayingMaxAttempts = 8;
+    var nowPlayingRetryMs = 2000;
 
     function pollNowPlaying()
     {
         if (typeof jsAjaxUrl === 'undefined') {
             return;
         }
+        nowPlayingActive = true;
         nowPlayingAttempts++;
         $.getJSON(jsAjaxUrl + '?page=player&action=now_playing', function (data) {
             if (!data || !data.found || !data.object_id || data.object_id === nowPlayingObjectId) {
@@ -98,6 +100,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
             }
 
             nowPlayingPending = false;
+            nowPlayingActive = false;
             nowPlayingObjectId = data.object_id;
             nowPlayingHeld = data;
             applyNowPlayingHold();
@@ -130,41 +133,45 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
 
     function scheduleNowPlayingRetry()
     {
+        cancelNowPlayingRetry();
         if (nowPlayingAttempts >= nowPlayingMaxAttempts) {
             nowPlayingPending = false;
-            // Giving up on a track we never resolved would otherwise leave the previous song's cover on screen
-            if (nowPlayingHeld === null) {
-                clearNowPlayingArt();
-            }
 
             return;
         }
-        cancelNowPlayingRetry();
+        nowPlayingActive = true;
         nowPlayingRetry = setTimeout(pollNowPlaying, nowPlayingRetryMs);
     }
 
     function cancelNowPlayingRetry()
     {
+        nowPlayingActive = false;
         if (nowPlayingRetry !== null) {
             clearTimeout(nowPlayingRetry);
             nowPlayingRetry = null;
         }
     }
 
+    // The placeholder item never changes, so the previous song has to be dropped the moment a new stream is
+    // requested or a slow or failed lookup leaves its title and cover sitting over the track that replaced it.
     function nowPlayingTrackChanged()
     {
         cancelNowPlayingRetry();
         nowPlayingHeld = null;
         nowPlayingPending = true;
         nowPlayingAttempts = 0;
+        clearNowPlayingArt();
     }
 
-    // Resuming from a pause reuses the held song; only a track change clears it
+    // now_playing is only written once the stream request reaches the server, and the player fires `play` before it
+    // even asks for the url, so the lookup waits for media data to arrive or it always reads the previous track.
     function refreshNowPlaying()
     {
-        if (nowPlayingPending) {
-            pollNowPlaying();
+        if (!nowPlayingPending || nowPlayingActive) {
+            return;
         }
+        nowPlayingAttempts = 0;
+        pollNowPlaying();
     }
 
     $(document).ready(function(){
@@ -262,9 +269,6 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
         }
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
-            <?php if ($isRandom || $isDemocratic) { ?>
-            refreshNowPlaying();
-            <?php } ?>
             // Splice the shared audio graph (EQ + ReplayGain) in as soon as playback starts so the equalizer is active.
             if (typeof ensureAudioGraph === 'function' && ensureAudioGraph() && audioContext && audioContext.state === 'suspended') {
                 audioContext.resume();
@@ -298,25 +302,30 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                         NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
                         <?php } ?>
                         if ("mediaSession" in navigator) {
-                            // Allow the browser to expose what's playing the the OS via e.g. MPRIS on Linux
-                            navigator.mediaSession.metadata = new MediaMetadata({
-                                title: obj.title,
-                                artist: obj.artist,
-                                artwork: [
+                            // Random/democratic placeholders carry no poster, and an undefined src is fetched as a url
+                            var mediaPoster = currentjpitem.attr("data-poster") || '';
+                            var mediaArtwork = (mediaPoster === '')
+                                ? []
+                                : [
                                     {
-                                        src: currentjpitem.attr("data-poster"),
+                                        src: mediaPoster,
                                         sizes: "96x96",
                                         type: "image/png"
                                     },
                                     {
                                         // Not the right size, but 256x256 is necessary for
                                         // Android device to display the artwork
-                                        src: currentjpitem.attr("data-poster"),
+                                        src: mediaPoster,
                                         sizes: "256x256",
                                         type: "image/png"
                                     }
-                                ],
-                                album: currentjpitem.attr("data-album_name"),
+                                ];
+                            // Allow the browser to expose what's playing the the OS via e.g. MPRIS on Linux
+                            navigator.mediaSession.metadata = new MediaMetadata({
+                                title: obj.title,
+                                artist: obj.artist,
+                                artwork: mediaArtwork,
+                                album: currentjpitem.attr("data-album_name") || '',
                             });
                             navigator.mediaSession.playbackState = "playing";
                         }
@@ -455,6 +464,8 @@ if (AmpConfig::get('song_page_title') && $isShare === false) {
 
 <?php if ($isRandom || $isDemocratic) { ?>
         $("#jquery_jplayer_1").bind($.jPlayer.event.loadstart, nowPlayingTrackChanged);
+        $("#jquery_jplayer_1").bind($.jPlayer.event.loadeddata, refreshNowPlaying);
+        $("#jquery_jplayer_1").bind($.jPlayer.event.playing, refreshNowPlaying);
 <?php } ?>
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
