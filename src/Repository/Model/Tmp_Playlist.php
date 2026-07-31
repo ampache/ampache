@@ -169,11 +169,11 @@ class Tmp_Playlist extends database_object
      */
     public static function session_clean(string $sessid, string $plist_id): void
     {
-        $sql = "DELETE FROM `tmp_playlist` WHERE `session` = ? AND `id` != ?";
+        $sql = "DELETE FROM `tmp_playlist_data` WHERE `tmp_playlist` IN (SELECT `id` FROM `tmp_playlist` WHERE `session` = ? AND `id` != ?)";
         Dba::write($sql, [$sessid, $plist_id]);
 
-        /* Remove associated tracks */
-        self::prune_tracks();
+        $sql = "DELETE FROM `tmp_playlist` WHERE `session` = ? AND `id` != ?";
+        Dba::write($sql, [$sessid, $plist_id]);
     }
 
     /**
