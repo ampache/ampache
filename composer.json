@@ -58,7 +58,6 @@
         "ampache/php-discogs-api": "dev-release",
         "cboden/ratchet": "0.4.*",
         "clue/multicast-react": "^1.1.0",
-        "doctrine/cache": "^2",
         "gettext/gettext": "^5",
         "gettext/translator": "^1.2",
         "goat1000/svggraph": "^3.20",
