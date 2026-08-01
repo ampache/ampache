@@ -221,7 +221,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     /**
      * Batch version of getFullNameById: same SQL formula, one query for many ids.
      *
-     * @param list<int> $artistIds
+     * @param array<int|string> $artistIds
      * @return array<int, string>
      */
     public function getFullNamesByIds(array $artistIds): array

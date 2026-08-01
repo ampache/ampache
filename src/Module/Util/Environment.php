@@ -45,7 +45,6 @@ final class Environment implements EnvironmentInterface
     public const array OPTIONAL_EXTENSIONS = [
         'http' => 'Yourls plugin',
         'ldap' => 'Needed to support ldap authentication',
-        'pthreads' => 'Needed to support async functions',
         'sockets' => 'Needed for upnp functions',
         'xmlreader' => 'Needed for upnp functions',
     ];

@@ -197,6 +197,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * `szymach/c-pchart` dependency dropped, along with the `pGraph_Yformat_bytes()` helper it needed
 * `resources/fonts/FreeMono.ttf`, left behind when `easy_captcha` was removed; `gregwar/captcha` ships its own fonts
 * Unused legacy OAuth implementation deleted (`OAuthDataStore`, `OAuthServer`, `OAuthSignatureMethod_PLAINTEXT`, `OAuthSignatureMethod_RSA_SHA1`)
+* The `ext-pthreads` suggestion, along with the unreferenced `ScrobblerAsync` class that was the only thing to ever extend `Thread`; the extension has no PHP 8 support and needs a thread-safe (ZTS) build that no distribution ships
 * `docker/Dockerfilephp82`, `Dockerfilephp83`, `Dockerfilephp84` removed (replaced by `Dockerfilephp85`)
 * The popup web player is removed (`web_player.php`, `create_web_player.inc.php`). Playback is always the embedded player at the bottom of the page. **NOTE** if you used the popup to keep the player in a separate window, there is no replacement for it
 * Database 800020

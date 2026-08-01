@@ -91,7 +91,7 @@ interface ArtistRepositoryInterface
     /**
      * Batch version of getFullNameById: returns [artist_id => full name].
      *
-     * @param list<int> $artistIds
+     * @param array<int|string> $artistIds
      * @return array<int, string>
      */
     public function getFullNamesByIds(array $artistIds): array;

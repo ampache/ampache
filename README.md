@@ -92,7 +92,6 @@ Please see [the wiki](https://ampache.org/docs/installation/) and don't forget t
 * Optional PHP modules (Ampache runs without them, the feature named does not):
   * http (Yourls plugin)
   * ldap (LDAP authentication)
-  * pthreads (async functions)
   * sockets (UPnP)
   * xmlreader (UPnP)
 
