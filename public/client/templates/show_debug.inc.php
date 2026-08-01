@@ -145,26 +145,31 @@ echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
             <td><?php echo T_('Open Basedir'); ?></td>
             <td><?php echo ini_get('open_basedir'); ?></td>
         </tr>
-        <tr>
-            <td><?php echo T_('Zlib Support'); ?></td>
-            <td><?php echo Ui::printBool(function_exists('gzcompress')); ?></td>
+        </tbody>
+    </table>
+    <?php Ui::show_box_bottom(); ?>
+    <?php Ui::show_box_top(T_('PHP Modules'), 'box box_php_modules'); ?>
+    <table class="tabledata striped-rows">
+        <colgroup>
+            <col id="col_php_module">
+            <col id="col_php_module_value">
+            <col id="col_php_module_description">
+        </colgroup>
+        <thead>
+        <tr class="th-top">
+            <th class="cel_php_module"><?php echo T_('Modules'); ?></th>
+            <th class="cel_php_module_value"><?php echo T_('Value'); ?></th>
+            <th class="cel_php_module_description"><?php echo T_('Description'); ?></th>
         </tr>
+        </thead>
+        <tbody>
+<?php foreach ($environment->getExtensionStatus() as $extension) { ?>
         <tr>
-            <td><?php echo T_('GD Support'); ?></td>
-            <td><?php echo Ui::printBool(function_exists('imagecreatefromstring')); ?></td>
+            <td><?php echo $extension['name']; ?></td>
+            <td><?php echo Ui::printBool($extension['loaded']); ?></td>
+            <td><?php echo ($extension['required']) ? T_('Required') : $extension['description']; ?></td>
         </tr>
-        <tr>
-            <td><?php echo T_('Iconv Support'); ?></td>
-            <td><?php echo Ui::printBool(function_exists('iconv')); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo T_('Gettext Support'); ?></td>
-            <td><?php echo Ui::printBool(function_exists('bindtextdomain')); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo T_('PHP intl extension'); ?></td>
-            <td><?php echo Ui::printBool($environment->check_php_intl()); ?></td>
-        </tr>
+<?php } ?>
         </tbody>
     </table>
     <?php Ui::show_box_bottom(); ?>

@@ -168,7 +168,6 @@
         "ext-gd": "Needed for image resizing and waveforms",
         "ext-http": "Yourls plugin",
         "ext-ldap": "Needed to support ldap authentication",
-        "ext-pthreads": "Needed to support async functions",
         "ext-sockets": "Needed for upnp functions",
         "ext-xmlreader": "Needed for upnp functions"
     }

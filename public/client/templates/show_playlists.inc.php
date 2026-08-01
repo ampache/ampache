@@ -90,6 +90,10 @@ $talFactory = $dic->get(TalFactoryInterface::class);
 $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
+
+// One TAL view reused for all rows
+$playlistRowView = $talFactory->createTalView()->setTemplate('playlist_row.xhtml');
+
 foreach ($object_ids as $playlist_id) {
     $libitem = new Playlist($playlist_id);
     if ($libitem->isNew() || (!$libitem->has_collaborate() && $libitem->type === 'private')) {
@@ -99,15 +103,16 @@ foreach ($object_ids as $playlist_id) {
     // Don't show empty playlist if not admin or the owner
     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) || $libitem->get_user_owner() == $user_id || $libitem->get_media_count() > 0) { ?>
         <tr id="playlist_row_<?php echo $libitem->id; ?>">
-            <?php $content = $talFactory->createTalView()
-        ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-        ->setContext('PLAYLIST', $guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
-        ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
-        ->setContext('IS_SHOW_ART', $show_art)
-        ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
-        ->setContext('CLASS_COVER', $cel_cover)
-        ->setTemplate('playlist_row.xhtml')
-        ->render();
+            <?php
+             // Reassign EVERY key each row. Prev row's value sticks otherwise.
+             // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
+            $content = $playlistRowView
+                           ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+                           ->setContext('PLAYLIST', $guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
+                           ->setContext('IS_SHOW_ART', $show_art)
+                           ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
+                           ->setContext('CLASS_COVER', $cel_cover)
+                           ->render();
 
         echo $content; ?>
         </tr>

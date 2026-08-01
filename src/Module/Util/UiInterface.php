@@ -91,6 +91,11 @@ interface UiInterface
     ): void;
 
     /**
+     * Displays a generic error page pointing at the debug page (test.php)
+     */
+    public function showErrorPage(): void;
+
+    /**
      * This displays the footer
      */
     public function showFooter(): void;

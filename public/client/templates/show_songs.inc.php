@@ -221,6 +221,9 @@ if (empty($browse_cached)) {
     Song::build_cache($object_ids);
 }
 
+// One TAL view reused for all rows
+$songRowView = $talFactory->createTalView()->setTemplate('song_row.xhtml');
+
 foreach ($object_ids as $song_id) {
     $libitem = new Song($song_id);
     if ($libitem->isNew()) {
@@ -237,23 +240,23 @@ foreach ($object_ids as $song_id) {
                         echo '<td class="cel_select">' . $checkbox . '</td>';
                     }
 
-                    $content = $talFactory->createTalView()
-                        ->setContext('USER_IS_REGISTERED', User::is_registered())
-                        ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-                        ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
-                        ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
-                        ->setContext('ARGUMENT_PARAM', $argument_param)
-                        ->setContext('IS_TABLE_VIEW', $is_table)
-                        ->setContext('IS_ALBUM_GROUP', $is_group)
-                        ->setContext('IS_SHOW_TRACK', $show_track)
-                        ->setContext('IS_SHOW_LICENSE', $show_license)
-                        ->setContext('IS_HIDE_GENRE', $hide_genres)
-                        ->setContext('IS_HIDE_ARTIST', $hide_artist)
-                        ->setContext('IS_HIDE_ALBUM', $hide_album)
-                        ->setContext('IS_HIDE_YEAR', $hide_year)
-                        ->setContext('IS_HIDE_DRAG', (empty($argument) || $hide_drag))
-                        ->setTemplate('song_row.xhtml')
-                        ->render();
+                    // Reassign EVERY key each row. Prev row's value sticks otherwise.
+                    // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
+                    $content = $songRowView
+                                ->setContext('USER_IS_REGISTERED', User::is_registered())
+                                ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+                                ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
+                                ->setContext('ARGUMENT_PARAM', $argument_param)
+                                ->setContext('IS_TABLE_VIEW', $is_table)
+                                ->setContext('IS_ALBUM_GROUP', $is_group)
+                                ->setContext('IS_SHOW_TRACK', $show_track)
+                                ->setContext('IS_SHOW_LICENSE', $show_license)
+                                ->setContext('IS_HIDE_GENRE', $hide_genres)
+                                ->setContext('IS_HIDE_ARTIST', $hide_artist)
+                                ->setContext('IS_HIDE_ALBUM', $hide_album)
+                                ->setContext('IS_HIDE_YEAR', $hide_year)
+                                ->setContext('IS_HIDE_DRAG', (empty($argument) || $hide_drag))
+                                ->render();
 
                     echo $content;
                 } ?>
