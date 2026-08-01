@@ -45,6 +45,8 @@ final class ObjectCache implements ObjectCacheInterface
             // get individual user thresholds if not the default
             $thresholds[] = (int) $row['value'];
         }
+        // Drop duplicate thresholds: same value = identical INSERT...SELECT run per type.
+        $thresholds = array_unique($thresholds);
 
         $object_types = [
             'album',

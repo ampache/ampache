@@ -117,6 +117,13 @@ interface EnvironmentInterface
      */
     public function check_upload_size(): bool;
 
+    /**
+     * Every php extension Ampache asks for, required ones first, with whether this server has it
+     *
+     * @return list<array{name: string, loaded: bool, required: bool, description: string}>
+     */
+    public function getExtensionStatus(): array;
+
     public function getHttpPort(): int;
 
     public function isCli(): bool;

@@ -520,17 +520,13 @@ class Song extends database_object implements
         Dba::write("DELETE FROM `song_data` WHERE `song_data`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);");
         Dba::write("DELETE FROM `song_map` WHERE `song_map`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);");
         // also clean up some bad data that might creep in
-        Dba::write("UPDATE `song` SET `composer` = NULL WHERE `composer` = '';");
-        Dba::write("UPDATE `song` SET `mbid` = NULL WHERE `mbid` = '';");
+        // One table scan instead of two.
+        Dba::write("UPDATE `song` SET `composer` = NULLIF(`composer`, ''), `mbid` = NULLIF(`mbid`, '');");
 
         Dba::write("INSERT IGNORE INTO `song_data` (`song_id`) SELECT `id` FROM `song` WHERE `id` NOT IN (SELECT `song_id` FROM `song_data`);");
 
-        Dba::write("UPDATE `song_data` SET `comment` = NULL WHERE `comment` = '';");
-        Dba::write("UPDATE `song_data` SET `lyrics` = NULL WHERE `lyrics` = '';");
-        Dba::write("UPDATE `song_data` SET `label` = NULL WHERE `label` = '';");
-        Dba::write("UPDATE `song_data` SET `language` = NULL WHERE `language` = '';");
-        Dba::write("UPDATE `song_data` SET `waveform` = NULL WHERE `waveform` = '';");
-        Dba::write("UPDATE `song_data` SET `disksubtitle` = NULL WHERE `disksubtitle` = '';");
+        // One table scan instead of six: NULLIF empties each column independently.
+        Dba::write("UPDATE `song_data` SET `comment` = NULLIF(`comment`, ''), `lyrics` = NULLIF(`lyrics`, ''), `label` = NULLIF(`label`, ''), `language` = NULLIF(`language`, ''), `waveform` = NULLIF(`waveform`, ''), `disksubtitle` = NULLIF(`disksubtitle`, '');");
     }
 
     /**

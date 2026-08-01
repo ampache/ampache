@@ -10,7 +10,6 @@ parameters:
     - public/upnp
     - public/ample (?)
     - public/foam (?)
-    - src/Module/Playback/Scrobble/ScrobblerAsync.php
     - tests
 includes:
     - phpstan-baseline.neon

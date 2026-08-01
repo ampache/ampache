@@ -1,5 +1,15 @@
 # OpenID Connect
 
+Ampache can delegate login to an external identity provider (IdP) over OpenID Connect — Microsoft Entra ID (Azure AD), Keycloak, Authentik, Okta, Google, and anything else that speaks standard OIDC.
+
+Users click a button on the login page, authenticate at the provider, and return to Ampache logged in.
+
+Accounts are created and kept up to date the same way LDAP does it.
+
+Only **one** provider is supported at a time.
+
+## How it works
+
 * A user clicks **Sign in with OpenID Connect** on the login form
   * They will be sent straight to the provider if `oidc_auto_redirect` is enabled
 * Ampache redirects them to the provider using the authorization-code flow with PKCE (S256)
