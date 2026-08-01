@@ -215,6 +215,10 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * A missing artist page with no musicbrainz id, which passed `null` into `Ui::show_box_top()`
   * Selecting cover art once the session's candidate list had expired; the choice is checked and you are returned to the previous page instead
   * `share.php?action=external_share` with no `plugin` named, which built a plugin from an empty name; the request is refused up front instead
+* A database with no tables in it (a valid config pointing at an empty database)
+  * The startup checks threw the failure away with a `return` inside a `finally` block, so the page half loaded and every request logged a wall of missing table errors; you are sent to `test.php`, which names what is missing
+  * `update.php` redirects there as well, rather than rendering a page it has no version to fill in
+  * `bin/cli admin:updateDatabase` reports it instead of ending in a `QueryFailedException` stack trace
 * Right click (`libitem_contextmenu`) actions on a browse row
   * The menu worked out what it was acting on by cutting the row id at the first underscore, so it read `podcast_episode_5` as podcast #episode and a collection row as collection #row; rows now state their identity with `data-object-type` and `data-object-id`
   * Album disk rows, in both the browse and "Albums of the Moment", were labelled as albums, so the menu (and the inline refresh after an edit) went after the album that happened to share that id

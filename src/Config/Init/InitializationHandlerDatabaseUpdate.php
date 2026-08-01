@@ -27,6 +27,7 @@ namespace Ampache\Config\Init;
 
 use Ampache\Config\Init\Exception\DatabaseOutdatedException;
 use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
+use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\UpdaterInterface;
 
@@ -42,7 +43,14 @@ final readonly class InitializationHandlerDatabaseUpdate implements Initializati
                 throw new EnvironmentNotSuitableException();
             }
 
-            if ($this->updater->hasPendingUpdates()) {
+            try {
+                $hasPendingUpdates = $this->updater->hasPendingUpdates();
+            } catch (QueryFailedException) {
+                // the database has no readable update_info, so there is nothing to update and test.php can say why
+                throw new EnvironmentNotSuitableException();
+            }
+
+            if ($hasPendingUpdates) {
                 throw new DatabaseOutdatedException();
             }
         }

@@ -65,17 +65,18 @@ final readonly class Init
             $redirectionUrl = 'update.php';
         } catch (RequireAuthException $error) {
             $redirectionUrl = 'login.php';
-        } finally {
-            if ($error == null) {
-                return;
-            }
-
-            if ($this->environment->isCli()) {
-                throw $error;
-            }
-
-            $this->redirect((string) $redirectionUrl);
         }
+
+        // returning from a finally block would discard an exception no catch above matched, so this stays outside one
+        if ($error === null) {
+            return;
+        }
+
+        if ($this->environment->isCli()) {
+            throw $error;
+        }
+
+        $this->redirect((string) $redirectionUrl);
     }
 
     private function redirect(string $destination): void

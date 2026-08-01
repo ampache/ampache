@@ -33,6 +33,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Update\Exception\UpdateFailedException;
@@ -60,6 +61,15 @@ final readonly class UpdateAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
+        try {
+            $hasPendingUpdates = $this->updater->hasPendingUpdates();
+        } catch (QueryFailedException) {
+            // there is no readable update_info to update from, so send them somewhere that explains what is missing
+            return $this->responseFactory
+                ->createResponse(RFC7231::FOUND)
+                ->withHeader('Location', $this->configContainer->getWebPath() . '/test.php');
+        }
+
         if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) === 'sources') {
             if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
                 throw new AccessDeniedException();
@@ -95,7 +105,7 @@ final readonly class UpdateAction implements ApplicationActionInterface
             return $this->responseFactory
                 ->createResponse(RFC7231::FOUND)
                 ->withHeader('Location', $target);
-        } elseif ($this->updater->hasPendingUpdates()) {
+        } elseif ($hasPendingUpdates) {
             try {
                 $this->updater->update();
             } catch (UpdateFailedException) {
