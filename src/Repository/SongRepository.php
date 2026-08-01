@@ -837,6 +837,37 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * The parent artists of many songs (or albums) in one statement, keyed by the object they belong to
+     *
+     * Every requested id is present in the result, mapping to an empty list when it has no parents, so a
+     * caller caching the answer does not fall back to a per-object query for the ones that matched nothing.
+     *
+     * @param list<int> $objectIds
+     * @return array<int, list<int>>
+     */
+    public function getParentIdsBulk(array $objectIds, bool $forAlbum): array
+    {
+        if ($objectIds === []) {
+            return [];
+        }
+
+        /** @var array<int, list<int>> $parents */
+        $parents = array_fill_keys($objectIds, []);
+
+        $holders = implode(',', array_fill(0, count($objectIds), '?'));
+        $sql     = ($forAlbum)
+            ? sprintf("SELECT DISTINCT `album_id` AS `owner_id`, `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` IN (%s);", $holders)
+            : sprintf("SELECT DISTINCT `object_id` AS `owner_id`, `artist_id` AS `object_id` FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` IN (%s);", $holders);
+
+        $result = $this->connection->query($sql, $objectIds);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $parents[(int) $row['owner_id']][] = (int) $row['object_id'];
+        }
+
+        return $parents;
+    }
+
+    /**
      * Gets the songs from the artist in a random order
      *
      * @return int[]

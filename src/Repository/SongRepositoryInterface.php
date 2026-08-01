@@ -279,6 +279,14 @@ interface SongRepositoryInterface
     public function getParentIds(int $objectId, bool $forAlbum): array;
 
     /**
+     * The parent artists of many songs (or albums) in one statement, keyed by the object they belong to
+     *
+     * @param list<int> $objectIds
+     * @return array<int, list<int>>
+     */
+    public function getParentIdsBulk(array $objectIds, bool $forAlbum): array;
+
+    /**
      * Gets the songs from the artist in a random order
      *
      * @return list<int>

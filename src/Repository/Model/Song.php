@@ -229,6 +229,15 @@ class Song extends database_object implements
         Album::build_cache($albums);
         Art::build_cache($albums);
 
+        // one artist_map read for the page instead of one per song, and the same for the album artists
+        foreach ($repository->getParentIdsBulk(array_map(intval(...), array_values($song_ids)), false) as $songId => $parentIds) {
+            parent::add_to_cache('song_artists', $songId, $parentIds);
+        }
+
+        foreach ($repository->getParentIdsBulk(array_values(array_unique($albums)), true) as $albumId => $parentIds) {
+            parent::add_to_cache('album_artists', $albumId, $parentIds);
+        }
+
         // If we're rating this then cache them as well
         if (AmpConfig::get('ratings')) {
             Rating::build_cache('song', $song_ids);
@@ -515,12 +524,17 @@ class Song extends database_object implements
      */
     public static function get_parent_array(int $object_id, ?string $type = 'artist'): array
     {
-        $results = [];
         if (!$object_id) {
-            return $results;
+            return [];
         }
 
-        return self::getSongRepository()->getParentIds($object_id, $type == 'album');
+        $forAlbum = ($type == 'album');
+        $key      = ($forAlbum) ? 'album_artists' : 'song_artists';
+        if (parent::is_cached($key, $object_id)) {
+            return parent::get_from_cache($key, $object_id);
+        }
+
+        return self::getSongRepository()->getParentIds($object_id, $forAlbum);
     }
 
     /**
