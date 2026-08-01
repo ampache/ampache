@@ -65,6 +65,9 @@ class Ui implements UiInterface
     /** @var array<string, array{attrs: string, viewbox: string, inner: string}|null> parsed material symbol source files */
     private static array $_symbol_cache = [];
 
+    /** @var array<string, string> resolved template paths, keyed by theme|extern|template */
+    private static array $_template_cache = [];
+
     private static int $_ticker = 0;
 
     /** @var array<string, bool> material symbols referenced on the current page (sprite content) */
@@ -156,18 +159,25 @@ class Ui implements UiInterface
      */
     public static function find_template(string $template, bool $extern = false): string
     {
-        $path      = AmpConfig::get('theme_path', '/themes/reborn') . '/templates/' . $template;
+        // Path only depends on theme + extern + template name, so resolve once per request.
+        $theme    = (string) AmpConfig::get('theme_path', '/themes/reborn');
+        $cacheKey = $theme . '|' . ($extern ? '1' : '0') . '|' . $template;
+        if (isset(self::$_template_cache[$cacheKey])) {
+            return self::$_template_cache[$cacheKey];
+        }
+
+        $path      = $theme . '/templates/' . $template;
         $realpath  = __DIR__ . '/../../../public/client/' . $path;
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (($extension !== 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
-            return $path;
+            return self::$_template_cache[$cacheKey] = $path;
         }
 
         if ($extern) {
-            return '/templates/' . $template;
+            return self::$_template_cache[$cacheKey] = '/templates/' . $template;
         }
 
-        return __DIR__ . '/../../../public/client/templates/' . $template;
+        return self::$_template_cache[$cacheKey] = __DIR__ . '/../../../public/client/templates/' . $template;
     }
 
     /**
@@ -1570,6 +1580,20 @@ class Ui implements UiInterface
                 'path' => $path
             ]
         );
+    }
+
+    public function showErrorPage(): void
+    {
+        // the error usually arrives part way through a page, so throw away whatever has been written so far
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        if (!headers_sent()) {
+            header('HTTP/1.1 500 Internal Server Error');
+        }
+
+        require_once self::find_template('show_error.inc.php');
     }
 
     public function showFooter(): void

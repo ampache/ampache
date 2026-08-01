@@ -501,7 +501,7 @@ abstract class playlist_object extends database_object implements
      */
     private function _collect_covers(int $limit): array
     {
-        $web_path = AmpConfig::get_web_path();
+        $web_path = AmpConfig::get_web_path('/client');
 
         $medias = $this->get_art_items();
         $count  = 0;

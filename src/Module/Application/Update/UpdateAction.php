@@ -67,7 +67,7 @@ final readonly class UpdateAction implements ApplicationActionInterface
             // there is no readable update_info to update from, so send them somewhere that explains what is missing
             return $this->responseFactory
                 ->createResponse(RFC7231::FOUND)
-                ->withHeader('Location', $this->configContainer->getWebPath() . '/test.php');
+                ->withHeader('Location', $this->configContainer->getWebPath('/client') . '/test.php');
         }
 
         if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) === 'sources') {
