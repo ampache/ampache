@@ -44,6 +44,7 @@ final class XmlOutput implements ApiOutputInterface
     public function __construct(
         private Xml5_Data $xml5Data,
         private Xml6_Data $xml6Data,
+        private Xml8_Data $xml8Data,
     ) {}
 
     /**
@@ -62,7 +63,7 @@ final class XmlOutput implements ApiOutputInterface
         bool $encode = true,
         bool $asObject = true,
     ): string {
-        return Xml8_Data::album_disks($albumDisks, $include, $user, $auth, $encode);
+        return $this->xml8Data->album_disks($albumDisks, $include, $user, $auth, $encode);
     }
 
     /**
@@ -87,7 +88,7 @@ final class XmlOutput implements ApiOutputInterface
             4 => Xml4_Data::albums($albums, $include, $user, $auth, $encode),
             5 => $this->xml5Data->albums($albums, $include, $user, $auth, $encode),
             6 => $this->xml6Data->albums($albums, $include, $user, $auth, $encode),
-            8 => Xml8_Data::albums($albums, $include, $user, $auth, $encode),
+            8 => $this->xml8Data->albums($albums, $include, $user, $auth, $encode),
         };
     }
 
@@ -103,7 +104,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->artists($artists, $include, $user, $auth),
             6 => $this->xml6Data->artists($artists, $include, $user, $auth),
-            8 => Xml8_Data::artists($artists, $include, $user, $auth),
+            8 => $this->xml8Data->artists($artists, $include, $user, $auth),
         };
     }
 
@@ -118,7 +119,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->bookmarks($bookmarks),
             6 => $this->xml6Data->bookmarks($bookmarks, $auth, $include),
-            8 => Xml8_Data::bookmarks($bookmarks, $auth, $include),
+            8 => $this->xml8Data->bookmarks($bookmarks, $auth, $include),
         };
     }
 
@@ -138,7 +139,7 @@ final class XmlOutput implements ApiOutputInterface
     ): string {
         return match ($apiVersion) {
             6 => $this->xml6Data->browses($objects, $parentType, $childType, $parentId, $catalogId),
-            8 => Xml8_Data::browses($objects, $parentType, $childType, $parentId, $catalogId),
+            8 => $this->xml8Data->browses($objects, $parentType, $childType, $parentId, $catalogId),
         };
     }
 
@@ -154,7 +155,7 @@ final class XmlOutput implements ApiOutputInterface
             // the version 5 builder only ever took integer ids
             5 => $this->xml5Data->catalogs(array_map(intval(...), $catalogs), $user),
             6 => $this->xml6Data->catalogs($catalogs, $user),
-            8 => Xml8_Data::catalogs($catalogs, $user),
+            8 => $this->xml8Data->catalogs($catalogs, $user),
         };
     }
 
@@ -172,7 +173,7 @@ final class XmlOutput implements ApiOutputInterface
     ): string {
         unset($asObject);
 
-        return Xml8_Data::collection_items($collection, $user, $auth);
+        return $this->xml8Data->collection_items($collection, $user, $auth);
     }
 
     /**
@@ -190,7 +191,7 @@ final class XmlOutput implements ApiOutputInterface
     ): string {
         unset($asObject);
 
-        return Xml8_Data::collections($objects, $user, $auth);
+        return $this->xml8Data->collections($objects, $user, $auth);
     }
 
     /**
@@ -217,7 +218,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->deleted($objectType, $objects),
             6 => $this->xml6Data->deleted($objectType, $objects),
-            8 => Xml8_Data::deleted($objectType, $objects),
+            8 => $this->xml8Data->deleted($objectType, $objects),
         };
     }
 
@@ -244,7 +245,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->democratic($objectIds, $user, $auth),
             6 => $this->xml6Data->democratic($objectIds, $user, $auth),
-            8 => Xml8_Data::democratic($objectIds, $user, $auth),
+            8 => $this->xml8Data->democratic($objectIds, $user, $auth),
         };
     }
 
@@ -277,7 +278,7 @@ final class XmlOutput implements ApiOutputInterface
         User $user,
         string $auth,
     ): string {
-        return Xml8_Data::folders($objects, $folder, $user, $auth);
+        return $this->xml8Data->folders($objects, $folder, $user, $auth);
     }
 
     /**
@@ -291,7 +292,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->genres($genres, $user),
             6 => $this->xml6Data->genres($genres, $user),
-            8 => Xml8_Data::genres($genres, $user),
+            8 => $this->xml8Data->genres($genres, $user),
         };
     }
 
@@ -305,7 +306,7 @@ final class XmlOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             6 => $this->xml6Data->index($objects, $objectType, $user, $include),
-            8 => Xml8_Data::index($objects, $objectType, $user, $include),
+            8 => $this->xml8Data->index($objects, $objectType, $user, $include),
         };
     }
 
@@ -327,7 +328,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->indexes($objects, $objectType, $user, $auth, $fullXml, $include),
             6 => $this->xml6Data->indexes($objects, $objectType, $user, $auth, $fullXml, $include),
-            8 => Xml8_Data::indexes($objects, $objectType, $user, $auth, $fullXml, $include),
+            8 => $this->xml8Data->indexes($objects, $objectType, $user, $auth, $fullXml, $include),
         };
     }
 
@@ -357,7 +358,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->labels($labels, $user),
             6 => $this->xml6Data->labels($labels, $user),
-            8 => Xml8_Data::labels($labels, $user),
+            8 => $this->xml8Data->labels($labels, $user),
         };
     }
 
@@ -372,7 +373,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->licenses($licenses, $user),
             6 => $this->xml6Data->licenses($licenses, $user),
-            8 => Xml8_Data::licenses($licenses, $user),
+            8 => $this->xml8Data->licenses($licenses, $user),
         };
     }
 
@@ -385,7 +386,7 @@ final class XmlOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             6 => $this->xml6Data->lists($objects),
-            8 => Xml8_Data::lists($objects),
+            8 => $this->xml8Data->lists($objects),
         };
     }
 
@@ -400,7 +401,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->live_streams($liveStreams, $user),
             6 => $this->xml6Data->live_streams($liveStreams, $user),
-            8 => Xml8_Data::live_streams($liveStreams, $user),
+            8 => $this->xml8Data->live_streams($liveStreams, $user),
         };
     }
 
@@ -434,7 +435,7 @@ final class XmlOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             6 => $this->xml6Data->now_playing($results),
-            8 => Xml8_Data::now_playing($results),
+            8 => $this->xml8Data->now_playing($results),
         };
     }
 
@@ -468,7 +469,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->playlists($playlists, $user, $auth),
             6 => $this->xml6Data->playlists($playlists, $user, $auth, $songs),
-            8 => Xml8_Data::playlists($playlists, $user, $auth, $songs),
+            8 => $this->xml8Data->playlists($playlists, $user, $auth, $songs),
         };
     }
 
@@ -482,7 +483,7 @@ final class XmlOutput implements ApiOutputInterface
             4 => Xml4_Data::podcast_episodes($result, $user, $auth),
             5 => $this->xml5Data->podcast_episodes($result, $user, $auth),
             6 => $this->xml6Data->podcast_episodes($result, $user, $auth),
-            8 => Xml8_Data::podcast_episodes($result, $user, $auth),
+            8 => $this->xml8Data->podcast_episodes($result, $user, $auth),
         };
     }
 
@@ -497,7 +498,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->podcasts($podcasts, $user, $auth, $episodes),
             6 => $this->xml6Data->podcasts($podcasts, $user, $auth, $episodes),
-            8 => Xml8_Data::podcasts($podcasts, $user, $auth, $episodes),
+            8 => $this->xml8Data->podcasts($podcasts, $user, $auth, $episodes),
         };
     }
 
@@ -523,7 +524,7 @@ final class XmlOutput implements ApiOutputInterface
         // don't set count here as each type of object will count themselves
         return match ($apiVersion) {
             6 => $this->xml6Data->searches($results, $counts, $user, $auth),
-            8 => Xml8_Data::searches($results, $counts, $user, $auth),
+            8 => $this->xml8Data->searches($results, $counts, $user, $auth),
         };
     }
 
@@ -577,7 +578,7 @@ final class XmlOutput implements ApiOutputInterface
         match ($apiVersion) {
             5 => $this->xml5Data->set_count($count),
             6 => $this->xml6Data->set_count($count),
-            8 => Xml8_Data::set_count($count),
+            8 => $this->xml8Data->set_count($count),
         };
     }
 
@@ -591,7 +592,7 @@ final class XmlOutput implements ApiOutputInterface
             4 => Xml4_Data::set_limit($limit),
             5 => $this->xml5Data->set_limit($limit),
             6 => $this->xml6Data->set_limit($limit),
-            8 => Xml8_Data::set_limit($limit),
+            8 => $this->xml8Data->set_limit($limit),
         };
     }
 
@@ -605,7 +606,7 @@ final class XmlOutput implements ApiOutputInterface
             4 => Xml4_Data::set_offset($offset),
             5 => $this->xml5Data->set_offset($offset),
             6 => $this->xml6Data->set_offset($offset),
-            8 => Xml8_Data::set_offset($offset),
+            8 => $this->xml8Data->set_offset($offset),
         };
     }
 
@@ -620,7 +621,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->shares($shares, $user),
             6 => $this->xml6Data->shares($shares, $user),
-            8 => Xml8_Data::shares($shares, $user),
+            8 => $this->xml8Data->shares($shares, $user),
         };
     }
 
@@ -640,7 +641,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->shouts(new ArrayIterator($shouts)),
             6 => $this->xml6Data->shouts($shouts),
-            8 => Xml8_Data::shouts($shouts),
+            8 => $this->xml8Data->shouts($shouts),
         };
     }
 
@@ -655,7 +656,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->songs($songs, $user, $auth),
             6 => $this->xml6Data->songs($songs, $user, $auth),
-            8 => Xml8_Data::songs($songs, $user, $auth),
+            8 => $this->xml8Data->songs($songs, $user, $auth),
         };
     }
 
@@ -668,7 +669,7 @@ final class XmlOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             6 => $this->xml6Data->song_tags($objects, $auth),
-            8 => Xml8_Data::song_tags($objects, $auth),
+            8 => $this->xml8Data->song_tags($objects, $auth),
         };
     }
 
@@ -687,7 +688,7 @@ final class XmlOutput implements ApiOutputInterface
     ): string {
         unset($asObject);
 
-        return Xml8_Data::sonic_matches($matches, $user, $auth);
+        return $this->xml8Data->sonic_matches($matches, $user, $auth);
     }
 
     /**
@@ -720,7 +721,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->timeline($activities),
             6 => $this->xml6Data->timeline($activities),
-            8 => Xml8_Data::timeline($activities),
+            8 => $this->xml8Data->timeline($activities),
         };
     }
 
@@ -734,7 +735,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->user($user, $fullInfo),
             6 => $this->xml6Data->user($user, $fullInfo, $auth),
-            8 => Xml8_Data::user($user, $fullInfo, $auth),
+            8 => $this->xml8Data->user($user, $fullInfo, $auth),
         };
     }
 
@@ -749,7 +750,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->users($users),
             6 => $this->xml6Data->users($users),
-            8 => Xml8_Data::users($users),
+            8 => $this->xml8Data->users($users),
         };
     }
 
@@ -764,7 +765,7 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             5 => $this->xml5Data->videos($videos, $user, $auth),
             6 => $this->xml6Data->videos($videos, $user, $auth),
-            8 => Xml8_Data::videos($videos, $user, $auth),
+            8 => $this->xml8Data->videos($videos, $user, $auth),
         };
     }
 

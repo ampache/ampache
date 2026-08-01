@@ -28,8 +28,10 @@ namespace Ampache\Module\Api\Output;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Json6_Data;
+use Ampache\Module\Api\Json8_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Api\Xml6_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -58,6 +60,20 @@ class ApiOutputFactoryTest extends MockeryTestCase
         );
     }
 
+    #[Override]
+    protected function setUp(): void
+    {
+        // the formatters are final, so the factory gets real ones built from mocked repositories
+        $this->subject = new ApiOutputFactory(
+            json5Data: new Json5_Data(...$this->repositories()),
+            json6Data: new Json6_Data(...$this->repositories()),
+            json8Data: new Json8_Data(...$this->repositories()),
+            xml5Data: new Xml5_Data(...$this->repositories()),
+            xml6Data: new Xml6_Data(...$this->repositories()),
+            xml8Data: new Xml8_Data(...$this->repositories()),
+        );
+    }
+
     /**
      * Every formatter takes the same six repositories, so each one gets its own set of mocks
      *
@@ -80,17 +96,5 @@ class ApiOutputFactoryTest extends MockeryTestCase
             $this->mock(PodcastRepositoryInterface::class),
             $this->mock(SongRepositoryInterface::class),
         ];
-    }
-
-    #[Override]
-    protected function setUp(): void
-    {
-        // the formatters are final, so the factory gets real ones built from mocked repositories
-        $this->subject = new ApiOutputFactory(
-            json5Data: new Json5_Data(...$this->repositories()),
-            json6Data: new Json6_Data(...$this->repositories()),
-            xml5Data: new Xml5_Data(...$this->repositories()),
-            xml6Data: new Xml6_Data(...$this->repositories()),
-        );
     }
 }
