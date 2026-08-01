@@ -28,6 +28,7 @@ namespace Ampache\Module\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use InvalidArgumentException;
 use PDO;
 
 /**
@@ -310,6 +311,10 @@ final class CatalogCounter implements CatalogCounterInterface
         $params = [];
         $join   = 'WHERE';
         if ($catalogId > 0) {
+            if (!$table->hasCatalogColumn()) {
+                throw new InvalidArgumentException(sprintf('%s rows do not carry a catalog, so the count cannot be narrowed to one', $table->value));
+            }
+
             $sql .= $join . sprintf(' `%s`.`catalog` = ? ', $table->value);
             $params[] = $catalogId;
             $join     = 'AND';

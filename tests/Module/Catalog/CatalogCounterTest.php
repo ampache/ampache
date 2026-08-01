@@ -28,6 +28,7 @@ namespace Ampache\Module\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use InvalidArgumentException;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -135,6 +136,19 @@ class CatalogCounterTest extends TestCase
         );
     }
 
+    public function testCountForCatalogAllowsEveryTableThatCarriesOne(): void
+    {
+        $this->connection->method('fetchOne')->willReturn('4');
+
+        foreach (CountableTableEnum::cases() as $case) {
+            if (!$case->hasCatalogColumn()) {
+                continue;
+            }
+
+            static::assertSame(4, $this->subject->countForCatalog($case, 7));
+        }
+    }
+
     public function testCountForCatalogChainsEveryNarrowingWithAnd(): void
     {
         // the version this replaced never moved past WHERE for the update_time clause, so a catalog-less
@@ -164,6 +178,17 @@ class CatalogCounterTest extends TestCase
             ->willReturn('9');
 
         static::assertSame(9, $this->subject->countForCatalog(CountableTableEnum::ALBUM, 7));
+    }
+
+    public function testCountForCatalogRefusesATableWithNoCatalogOfItsOwn(): void
+    {
+        // the generated SQL used to name a column that does not exist, so MySQL answered "unknown column"
+        $this->connection->expects(static::never())->method('fetchOne');
+
+        static::expectException(InvalidArgumentException::class);
+        static::expectExceptionMessage('artist rows do not carry a catalog');
+
+        $this->subject->countForCatalog(CountableTableEnum::ARTIST, 7);
     }
 
     public function testCountLeavesTheDerivedTotalsAloneForAListTable(): void
