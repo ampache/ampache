@@ -159,6 +159,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The optional top menu (`topmenu`) carries the same entries as the light sidebar, adding `Albums`, `Smartlists`, `Radio` and `Log out` alongside the existing links; `Smartlists` follows `sidebar_hide_search` and `Radio` only appears when `live_stream` is on
 * `direct_play_limit`: any existing "unlimited" (`0`) value is reset to a default cap of `500` tracks
 * `playable_item` interface split into `displayable_item` and `container_item` as part of a large interface cleanup
+* The server counts (the totals in the API handshake and on the admin debug page) can no longer go stale because of an unrecognised table name. `Catalog::count_table()` takes a fixed list of countable tables instead of a free-text string, which silently counted zero and left the stored total untouched
+* Refreshing those totals no longer re-reads the whole `song`, `video` and `podcast_episode` tables. Each table's share of `items`, `time` and `size` is stored on its own, so adding or removing a song leaves the other two tables alone, and a deletion that already knows what it removed adjusts the totals without reading anything. One count went from four full table scans to one, and a song deletion to none
+* Internal namespaces reorganised: `Ampache\Application` is gone (its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`), and `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have all left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums. The api version 5, 6 and 8 output formatters are container services rather than static classes. Only relevant if you carry local patches
 * API version 8 has been added to the list of API versions
 * Docker: build using `docker/Dockerfilephp85`
 * Theme
@@ -199,7 +202,13 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Unused legacy OAuth implementation deleted (`OAuthDataStore`, `OAuthServer`, `OAuthSignatureMethod_PLAINTEXT`, `OAuthSignatureMethod_RSA_SHA1`)
 * The `ext-pthreads` suggestion, along with the unreferenced `ScrobblerAsync` class that was the only thing to ever extend `Thread`; the extension has no PHP 8 support and needs a thread-safe (ZTS) build that no distribution ships
 * `docker/Dockerfilephp82`, `Dockerfilephp83`, `Dockerfilephp84` removed (replaced by `Dockerfilephp85`)
+* The periodic count sweep (`Catalog::update_counts()`) is gone, along with the 30 minute timer it kept in `update_info`. Counts are maintained as things change and repaired by garbage collection (`bin/cli run:updateCatalog -g`), so they are no longer stale between sweeps
 * The popup web player is removed (`web_player.php`, `create_web_player.inc.php`). Playback is always the embedded player at the bottom of the page. **NOTE** if you used the popup to keep the player in a separate window, there is no replacement for it
+* Database 800039
+  * `folder` rows holding a bare directory name are removed; the next catalog scan recreates them with their real path
+* Database 800038
+  * `object_count` gains the missing `podcast` rows for episode plays recorded before podcasts were counted
+  * The `update_counts` row is removed from `update_info`; it timed a sweep that no longer exists
 * Database 800020
   * The `webplayer_html5` preference is removed; HTML5 is the only remaining web player
 * Database 800022
@@ -208,6 +217,27 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* Deleting a catalog filter from a link that carried no filter name confirmed it with a blank name and logged a runtime error; the confirmation now reads `Catalog Filter`
+* Cleaning a remote, Subsonic, Dropbox or Seafile catalog removed songs without recording them in the deleted-song archive, so they could not be restored and left no trace; they are archived the same way a local catalog's are
+* Adding a second Beets (remote) catalog for a URL that already had one was allowed; the duplicate check looked in the wrong table for a column it does not have
+* Moving a file between catalogs (`run:updateCatalogFile -m`, `run:updateCatalogFolder -m`)
+  * The album or podcast moved catalog as soon as the first of its files did, because the query deciding whether the rest had moved was missing its parameters
+  * A moved podcast wrote its new catalog to the `album` table
+  * The album's and podcast's `catalog_map` rows were rewritten under the media type instead of their own
+* Renaming a file into another catalog (`run:updateCatalogFile -r`) updated the mapping but not the stored path, leaving the row pointing at the old file
+* Importing a playlist that links to this server accepted every song id, existing or not; the check counted rows returned by a `COUNT(*)`, which is always one, so a dead link became a dangling playlist entry
+* Folder browsing and folder play counts, which have never worked
+  * The scanner stored a folder's bare directory name in `folder`.`path_name` instead of its path, so no song was ever mapped to a folder: `folder_map` held only folder rows, every folder was `playable = 0`, and no folder ever gained a play count
+  * Reading a folder's modification time failed for the same reason, logging a `filemtime(): stat failed` runtime error per folder on every scan
+  * Folder play counts were rebuilt from the media mapped **directly** to a folder while a play increments every parent, so the two disagreed; the rebuild now sums the whole subtree, which is what a play records
+* Play counts
+  * Clearing statistics left every play count standing; only the `played` flag was reset, and that was tested against the count it had not cleared
+  * Deleting a play from your history recorded a skip for it, so removing plays inflated skip counts
+  * `total_skip` on an episode or a video that was only ever skipped was wiped, because it was cleared against stream plays rather than skips
+  * A multi-disk album took one disc's skip total instead of the album's
+  * Server totals (`album`, `album_disk`, `artist`, `catalog`, `label`, `license`, `tag`, `items`, `time`, `size`) were only correct for up to 30 minutes at a time; they are maintained as things are added and deleted, and repaired by garbage collection
+  * `Catalog::get_videos_count()` raised an unknown-column error for any catalog id, because the id was wrapped in backticks
+* Adding a catalog stopped at the first WMA file carrying a boolean ASF tag (`IsVBR`), leaving the rest of the catalog unscanned
 * Unexpected errors from an API method were logged as a bare message with no file or line, leaving nothing to locate the cause by
 * Pages that stopped part way through and returned a blank or half-written page, because an uncaught error is logged and swallowed rather than shown
   * The embedded web player (`web_player_embedded.php`) and the video page, when opened without a `playlist_id`; the player template was handed an undefined `$playlist` and now gets an empty one
@@ -221,7 +251,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * A page handler that throws now shows a generic error page linking to the debug page (`test.php`); ajax calls, media streams and API clients are left with their own payload
   * A startup failure that none of the init handlers expected redirects to `test.php` rather than ending the request silently
 * A database with no tables in it (a valid config pointing at an empty database)
-  * The startup checks threw the failure away with a `return` inside a `finally` block, so the page half loaded and every request logged a wall of missing table errors; you are sent to `test.php`, which names what is missing
+  * Instead of a half-loaded page and a log full of missing table errors, you are sent to `test.php`, which names what is missing
   * `update.php` redirects there as well, rather than rendering a page it has no version to fill in
   * `bin/cli admin:updateDatabase` reports it instead of ending in a `QueryFailedException` stack trace
 * Right click (`libitem_contextmenu`) actions on a browse row
