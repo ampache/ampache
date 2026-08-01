@@ -368,7 +368,9 @@ class Ui implements UiInterface
      */
     public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
-        $title      = $title ?? T_(ucfirst($name));
+        // Same icons repeat all over a page: translate each name once.
+        static $title_cache = [];
+        $title      = $title ?? $title_cache[$name] ??= T_(ucfirst($name));
         $symbol_key = $name;
         // Skip the per-call disk stat once the symbol is cached. Hundreds of calls per page.
         if (array_key_exists($name, self::$_symbol_cache)) {
