@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\UserFieldEnum;
@@ -44,8 +43,10 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function activateByUsername(string $username): void
     {
-        $sql = "UPDATE `user` SET `disabled`='0', `validation` = NULL WHERE `username` = ?";
-        Dba::write($sql, [$username]);
+        $this->connection->query(
+            'UPDATE `user` SET `disabled` = 0, `validation` = NULL WHERE `username` = ?',
+            [$username]
+        );
     }
 
     /**
@@ -76,13 +77,13 @@ final readonly class UserRepository implements UserRepositoryInterface
             'user_vote',
             'wanted',
         ];
+        $statements = [];
         foreach ($user_tables as $table_id) {
-            $sql = "DELETE FROM `" . $table_id . "` WHERE `user` IS NOT NULL AND `user` != -1 AND `user` != 0 AND `user` NOT IN (SELECT `id` FROM `user`);";
-            Dba::write($sql, [], true);
+            $statements[] = "DELETE FROM `" . $table_id . "` WHERE `user` IS NOT NULL AND `user` != -1 AND `user` != 0 AND `user` NOT IN (SELECT `id` FROM `user`);";
         }
 
         // the collaborator map names its column `user_id`, so the loop above steps over it entirely
-        Dba::write("DELETE FROM `user_playlist_map` WHERE `user_id` NOT IN (SELECT `id` FROM `user`);", [], true);
+        $statements[] = 'DELETE FROM `user_playlist_map` WHERE `user_id` NOT IN (SELECT `id` FROM `user`);';
 
         // reset their data to null if they've made custom changes
         $user_tables = [
@@ -90,31 +91,28 @@ final readonly class UserRepository implements UserRepositoryInterface
             'label',
         ];
         foreach ($user_tables as $table_id) {
-            $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` IS NOT NULL AND `user` != -1 AND `user` NOT IN (SELECT `id` FROM `user`);";
-            Dba::write($sql, [], true);
+            $statements[] = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` IS NOT NULL AND `user` != -1 AND `user` NOT IN (SELECT `id` FROM `user`);";
         }
 
-        $sql = "UPDATE `song` SET `user_upload` = NULL WHERE `user_upload` IS NOT NULL AND `user_upload` != -1 AND `user_upload` NOT IN (SELECT `id` FROM `user`);";
-        Dba::write($sql, [], true);
-
+        $statements[] = 'UPDATE `song` SET `user_upload` = NULL WHERE `user_upload` IS NOT NULL AND `user_upload` != -1 AND `user_upload` NOT IN (SELECT `id` FROM `user`);';
         // Clean up the playlist data table
-        $sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist`.`id` IS NULL";
-        Dba::write($sql, [], true);
-
+        $statements[] = 'DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist`.`id` IS NULL';
         // Clean out the tags
-        $sql = "DELETE FROM `tag` WHERE `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_map`) AND `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_merge`)";
-        Dba::write($sql, [], true);
-
+        $statements[] = 'DELETE FROM `tag` WHERE `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_map`) AND `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_merge`)';
         // Clean out the tag_merges that have been lost
-        $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` NOT IN (SELECT `id` FROM `tag`) OR `tag_merge`.`merged_to` NOT IN (SELECT `id` FROM `tag`)";
-        Dba::write($sql, [], true);
-
+        $statements[] = 'DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` NOT IN (SELECT `id` FROM `tag`) OR `tag_merge`.`merged_to` NOT IN (SELECT `id` FROM `tag`)';
         // Delete their following/followers
-        $sql = "DELETE FROM `user_follower` WHERE (`user` NOT IN (SELECT `id` FROM `user`)) OR (`follow_user` NOT IN (SELECT `id` FROM `user`))";
-        Dba::write($sql, [], true);
+        $statements[] = 'DELETE FROM `user_follower` WHERE (`user` NOT IN (SELECT `id` FROM `user`)) OR (`follow_user` NOT IN (SELECT `id` FROM `user`))';
+        $statements[] = 'DELETE FROM `session` WHERE `username` IS NOT NULL AND `username` NOT IN (SELECT `username` FROM `user`);';
 
-        $sql = "DELETE FROM `session` WHERE `username` IS NOT NULL AND `username` NOT IN (SELECT `username` FROM `user`);";
-        Dba::write($sql, [], true);
+        // one table the install does not have must not take the rest of the sweep down with it
+        foreach ($statements as $sql) {
+            try {
+                $this->connection->query($sql);
+            } catch (DatabaseException) {
+                debug_event(self::class, 'collectGarbage error: ' . $sql, 5);
+            }
+        }
     }
 
     /**
@@ -164,7 +162,7 @@ final readonly class UserRepository implements UserRepositoryInterface
                 array_values($columns)
             );
         } catch (DatabaseException) {
-            // the caller reads 0 as "not created" and stops, which is what the old falsy `Dba::write()` gave it
+            // the caller reads 0 as "not created" and stops
             return 0;
         }
 
@@ -202,8 +200,8 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function enable(int $userId): void
     {
-        Dba::write(
-            "UPDATE `user` SET `disabled`='0' WHERE `id` = ?",
+        $this->connection->query(
+            'UPDATE `user` SET `disabled` = 0 WHERE `id` = ?',
             [$userId]
         );
     }
@@ -232,30 +230,29 @@ final readonly class UserRepository implements UserRepositoryInterface
     {
         if ($apikey !== '' && $apikey !== '0') {
             // check for legacy unencrypted apikey
-            $sql        = "SELECT `id` FROM `user` WHERE `apikey` = ?";
-            $db_results = Dba::read($sql, [$apikey]);
-            $results    = Dba::fetch_assoc($db_results);
+            $userId = $this->connection->fetchOne(
+                'SELECT `id` FROM `user` WHERE `apikey` = ?',
+                [$apikey]
+            );
 
-            if (array_key_exists('id', $results)) {
-                return new User((int) $results['id']);
+            if ($userId !== false) {
+                return new User((int) $userId);
             }
 
             // check for api sessions
             $sql = (AmpConfig::get('perpetual_api_session'))
                 ? "SELECT `username` FROM `session` WHERE `id` = ? AND (`expire` = 0 OR `expire` > ?) AND `type` = 'api'"
                 : "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND `type` = 'api'";
-            $db_results = Dba::read($sql, [$apikey, time()]);
-            $results    = Dba::fetch_assoc($db_results);
+            $userName = $this->connection->fetchOne($sql, [$apikey, time()]);
 
-            if (array_key_exists('username', $results)) {
-                return User::get_from_username($results['username']);
+            if ($userName !== false) {
+                return User::get_from_username((string) $userName);
             }
 
             // check for sha256 hashed apikey for client
             // https://ampache.org/api/
-            $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
-            $db_results = Dba::read($sql);
-            while ($row = Dba::fetch_assoc($db_results)) {
+            $dbResults = $this->connection->query('SELECT `id`, `apikey`, `username` FROM `user`');
+            while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
                 if ($row['apikey'] && $row['username']) {
                     $key        = hash('sha256', (string) $row['apikey']);
                     $passphrase = hash('sha256', $row['username'] . $key);
@@ -274,14 +271,14 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function findByEmail(string $email): ?User
     {
-        $user       = null;
-        $sql        = 'SELECT `id` FROM `user` WHERE `email` = ?';
-        $db_results = Dba::read($sql, [$email]);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User((int) $results['id']);
-        }
+        $userId = $this->connection->fetchOne(
+            'SELECT `id` FROM `user` WHERE `email` = ?',
+            [$email]
+        );
 
-        return $user;
+        return ($userId === false)
+            ? null
+            : new User((int) $userId);
     }
 
     /**
@@ -304,19 +301,19 @@ final readonly class UserRepository implements UserRepositoryInterface
     {
         if ($streamToken !== '' && $streamToken !== '0') {
             // check for legacy unencrypted streamtoken
-            $sql        = "SELECT `id` FROM `user` WHERE `streamtoken` = ?";
-            $db_results = Dba::read($sql, [$streamToken]);
-            $results    = Dba::fetch_assoc($db_results);
+            $userId = $this->connection->fetchOne(
+                'SELECT `id` FROM `user` WHERE `streamtoken` = ?',
+                [$streamToken]
+            );
 
-            if (array_key_exists('id', $results)) {
-                return new User((int) $results['id']);
+            if ($userId !== false) {
+                return new User((int) $userId);
             }
 
             // check for sha256 hashed streamtoken for client
             // https://ampache.org/api/
-            $sql        = "SELECT `id`, `streamtoken`, `username` FROM `user`";
-            $db_results = Dba::read($sql);
-            while ($row = Dba::fetch_assoc($db_results)) {
+            $dbResults = $this->connection->query('SELECT `id`, `streamtoken`, `username` FROM `user`');
+            while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
                 if ($row['streamtoken'] && $row['username']) {
                     $key        = hash('sha256', (string) $row['streamtoken']);
                     $passphrase = hash('sha256', $row['username'] . $key);
@@ -339,14 +336,14 @@ final readonly class UserRepository implements UserRepositoryInterface
             return new User(-1);
         }
 
-        $user       = null;
-        $sql        = 'SELECT `id` FROM `user` WHERE `username` = ?';
-        $db_results = Dba::read($sql, [$username]);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User((int) $results['id']);
-        }
+        $userId = $this->connection->fetchOne(
+            'SELECT `id` FROM `user` WHERE `username` = ?',
+            [$username]
+        );
 
-        return $user;
+        return ($userId === false)
+            ? null
+            : new User((int) $userId);
     }
 
     /**
@@ -358,12 +355,15 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function findByWebsite(string $website): array
     {
-        $website    = rtrim($website, "/");
-        $sql        = 'SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1';
-        $db_results = Dba::read($sql, [$website]);
-        $users      = [];
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = (int) $results['id'];
+        $website   = rtrim($website, "/");
+        $dbResults = $this->connection->query(
+            'SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1',
+            [$website]
+        );
+
+        $users = [];
+        while ($userId = $dbResults->fetchColumn()) {
+            $users[] = (int) $userId;
         }
 
         return $users;
@@ -402,14 +402,14 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function getByRssToken(string $rssToken): ?User
     {
-        $user       = null;
-        $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
-        $db_results = Dba::read($sql, [$rssToken]);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User((int) $results['id']);
-        }
+        $userId = $this->connection->fetchOne(
+            'SELECT `id` FROM `user` WHERE `rsstoken` = ?',
+            [$rssToken]
+        );
 
-        return $user;
+        return ($userId === false)
+            ? null
+            : new User((int) $userId);
     }
 
     /**
@@ -588,13 +588,13 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function getStatistics(int $timePeriod = 1200): array
     {
-        $userResult = Dba::fetch_single_column(
+        $userResult = $this->connection->fetchOne(
             'SELECT COUNT(`id`) FROM `user`'
         );
 
         $time = time();
 
-        $sessionResult = Dba::fetch_single_column(
+        $sessionResult = $this->connection->fetchOne(
             <<<SQL
                 SELECT
                 COUNT(DISTINCT `session`.`username`)
@@ -656,9 +656,9 @@ final readonly class UserRepository implements UserRepositoryInterface
             ? 'SELECT `id` FROM `user`;'
             : "SELECT `id` FROM `user` WHERE `disabled` = '0';";
 
-        $db_results = Dba::read($sql);
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = (int) $results['id'];
+        $dbResults = $this->connection->query($sql);
+        while ($userId = $dbResults->fetchColumn()) {
+            $users[] = (int) $userId;
         }
 
         User::add_to_cache($key, $value, $users);
@@ -686,9 +686,9 @@ final readonly class UserRepository implements UserRepositoryInterface
             ? 'SELECT `id`, `username` FROM `user`;'
             : "SELECT `id`, `username` FROM `user` WHERE `disabled` = '0';";
 
-        $db_results = Dba::read($sql);
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[(int) $results['id']] = $results['username'];
+        $dbResults = $this->connection->query($sql);
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
+            $users[(int) $row['id']] = $row['username'];
         }
 
         User::add_to_cache($key, $value, $users);
@@ -701,12 +701,14 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function getValidationByUsername(string $username): ?string
     {
-        $sql        = "SELECT `validation` FROM `user` WHERE `username` = ?";
-        $db_results = Dba::read($sql, [$username]);
+        $validation = $this->connection->fetchOne(
+            'SELECT `validation` FROM `user` WHERE `username` = ?',
+            [$username]
+        );
 
-        $row = Dba::fetch_assoc($db_results);
-
-        return $row['validation'] ?? null;
+        return ($validation === false || $validation === null)
+            ? null
+            : (string) $validation;
     }
 
     /**
@@ -726,19 +728,14 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function idByEmail(string $email): int
     {
-        $db_results = Dba::read(
+        $userId = $this->connection->fetchOne(
             'SELECT `id` FROM `user` WHERE `email` = ?',
             [$email]
         );
 
-        $data   = Dba::fetch_assoc($db_results);
-        $result = $data['id'] ?? null;
-
-        if ($result !== null) {
-            return (int) $result;
-        }
-
-        return 0;
+        return ($userId === false)
+            ? 0
+            : (int) $userId;
     }
 
     /**
@@ -746,9 +743,8 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function idByResetToken(string $token): int
     {
-        $sql        = 'SELECT `id`, `username`, `email` FROM `user` WHERE `access` != 100;';
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $dbResults = $this->connection->query('SELECT `id`, `username`, `email` FROM `user` WHERE `access` != 100;');
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
             $email_hash = hash('sha256', (string) $row['email']);
             $user_token = hash('sha256', $row['username'] . $email_hash);
             if ($token === $user_token) {
@@ -768,19 +764,14 @@ final readonly class UserRepository implements UserRepositoryInterface
             return 0;
         }
 
-        $db_results = Dba::read(
+        $userId = $this->connection->fetchOne(
             'SELECT `id` FROM `user` WHERE `username` = ?',
             [$username]
         );
 
-        $data   = Dba::fetch_assoc($db_results);
-        $result = $data['id'] ?? null;
-
-        if ($result !== null) {
-            return (int) $result;
-        }
-
-        return 0;
+        return ($userId === false)
+            ? 0
+            : (int) $userId;
     }
 
     /**
@@ -788,11 +779,14 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function retrievePasswordFromUser(int $userId): string
     {
-        $sql        = 'SELECT * FROM `user` WHERE `id` = ?';
-        $db_results = Dba::read($sql, [$userId]);
-        $row        = Dba::fetch_assoc($db_results);
+        $password = $this->connection->fetchOne(
+            'SELECT `password` FROM `user` WHERE `id` = ?',
+            [$userId]
+        );
 
-        return $row['password'] ?? '';
+        return ($password === false || $password === null)
+            ? ''
+            : (string) $password;
     }
 
     /**
@@ -845,9 +839,10 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function updateApiKey(int $userId, string $apikey): void
     {
-        $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
-
-        Dba::write($sql, [$apikey, $userId]);
+        $this->connection->query(
+            'UPDATE `user` SET `apikey` = ? WHERE `id` = ?',
+            [$apikey, $userId]
+        );
     }
 
     /**
@@ -856,8 +851,8 @@ final readonly class UserRepository implements UserRepositoryInterface
     public function updateLastSeen(
         int $userId,
     ): void {
-        Dba::write(
-            'UPDATE user SET last_seen = ? WHERE `id` = ?',
+        $this->connection->query(
+            'UPDATE `user` SET `last_seen` = ? WHERE `id` = ?',
             [time(), $userId]
         );
     }
@@ -867,9 +862,10 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function updateRssToken(int $userId, string $rssToken): void
     {
-        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
-
-        Dba::write($sql, [$rssToken, $userId]);
+        $this->connection->query(
+            'UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?',
+            [$rssToken, $userId]
+        );
     }
 
     /**
@@ -877,8 +873,10 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function updateStreamToken(int $userId, string $userName, string $streamToken): void
     {
-        $sql = "UPDATE `user` SET `streamtoken` = ? WHERE `id` = ?";
-        Dba::write($sql, [$streamToken, $userId]);
+        $this->connection->query(
+            'UPDATE `user` SET `streamtoken` = ? WHERE `id` = ?',
+            [$streamToken, $userId]
+        );
     }
 
     /**
@@ -886,8 +884,9 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function updateSubsonicSecret(int $userId, ?string $secret): void
     {
-        $sql = "UPDATE `user` SET `subsonic_secret` = ? WHERE `id` = ?";
-
-        Dba::write($sql, [$secret, $userId]);
+        $this->connection->query(
+            'UPDATE `user` SET `subsonic_secret` = ? WHERE `id` = ?',
+            [$secret, $userId]
+        );
     }
 }

@@ -33,11 +33,74 @@ use Ampache\Repository\Model\SongFieldEnum;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class SongRepositoryTest extends TestCase
 {
+    use ConsecutiveParams;
+
     private DatabaseConnectionInterface&MockObject $connection;
     private SongRepository $subject;
+
+    public function testCollectGarbageForSongsSkipsAnEmptyList(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        $this->subject->collectGarbageForSongs([]);
+    }
+
+    public function testCollectGarbageForSongsSwallowsAFailedStatement(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` IN (42,666);")
+            ->willThrowException(new QueryFailedException());
+
+        $this->subject->collectGarbageForSongs([42, 666]);
+    }
+
+    public function testDeleteRecordsTheDeletionAndRemovesTheSong(): void
+    {
+        $songId = 666;
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    [
+                        'REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` = ?;',
+                        [$songId],
+                    ],
+                    [
+                        'DELETE FROM `song` WHERE `id` = ?',
+                        [$songId],
+                    ]
+                )
+            );
+
+        static::assertTrue($this->subject->delete($songId));
+    }
+
+    public function testDeleteReturnsFalseWhenTheSongCouldNotBeRemoved(): void
+    {
+        $calls = 0;
+
+        // the deleted_song record is best effort, so only the delete itself decides the result
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function () use (&$calls): PDOStatement {
+                $calls++;
+
+                if ($calls === 2) {
+                    throw new QueryFailedException();
+                }
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        static::assertFalse($this->subject->delete(666));
+    }
 
     public function testFindOwnerIdReturnsFalseWhenTheSongDoesNotExist(): void
     {
@@ -114,6 +177,28 @@ class SongRepositoryTest extends TestCase
         self::assertSame(
             [$songId],
             iterator_to_array($this->subject->getByCatalog($catalog))
+        );
+    }
+
+    public function testGetByLicenseReturnsSongIds(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `song` WHERE `song`.`license` = ?',
+                [42]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(3))
+            ->method('fetchColumn')
+            ->willReturn('666', '33', false);
+
+        static::assertSame(
+            [666, 33],
+            $this->subject->getByLicense(42)
         );
     }
 

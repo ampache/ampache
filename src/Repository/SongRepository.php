@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -38,6 +37,7 @@ use Ampache\Repository\Model\SongDataFieldEnum;
 use Ampache\Repository\Model\SongFieldEnum;
 use Ampache\Repository\Model\Tag;
 use Generator;
+use PDO;
 
 final readonly class SongRepository implements SongRepositoryInterface
 {
@@ -51,8 +51,19 @@ final readonly class SongRepository implements SongRepositoryInterface
             Album::check_album_map($song->album, 'song', $song_artist_id);
         }
 
-        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` = ? AND (EXISTS (SELECT 1 FROM `album` WHERE `album`.`id` = ? AND `album`.`album_artist` IS NULL) OR NOT EXISTS (SELECT 1 FROM `song` WHERE `song`.`album` = ?));", [$song->album, $song->album, $song->album], true);
-        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = ?;", [$song->id], true);
+        $statements = [
+            ["DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` = ? AND (EXISTS (SELECT 1 FROM `album` WHERE `album`.`id` = ? AND `album`.`album_artist` IS NULL) OR NOT EXISTS (SELECT 1 FROM `song` WHERE `song`.`album` = ?));", [$song->album, $song->album, $song->album]],
+            ["DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = ?;", [$song->id]],
+        ];
+
+        // a map that cannot be cleaned is not worth failing the caller over
+        foreach ($statements as $statement) {
+            try {
+                $this->connection->query($statement[0], $statement[1]);
+            } catch (DatabaseException) {
+                debug_event(self::class, 'collectGarbage error: ' . $statement[0], 5);
+            }
+        }
     }
 
     public function collectGarbageForSongs(array $songIds): void
@@ -63,23 +74,35 @@ final readonly class SongRepository implements SongRepositoryInterface
 
         $idList = implode(',', array_map('intval', $songIds));
 
-        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` IN ($idList);");
+        try {
+            $this->connection->query("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` IN ($idList);");
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbageForSongs error', 5);
+        }
     }
 
     public function delete(int $songId): bool
     {
-        // keep details about deletions
-        Dba::write(
-            'REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` = ?;',
-            [$songId]
-        );
+        // keep details about deletions, but losing the record must not stop the delete itself
+        try {
+            $this->connection->query(
+                'REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` = ?;',
+                [$songId]
+            );
+        } catch (DatabaseException) {
+            debug_event(self::class, 'delete could not record deleted_song ' . $songId, 3);
+        }
 
-        $deleted = Dba::write(
-            'DELETE FROM `song` WHERE `id` = ?',
-            [$songId]
-        );
+        try {
+            $this->connection->query(
+                'DELETE FROM `song` WHERE `id` = ?',
+                [$songId]
+            );
+        } catch (DatabaseException) {
+            return false;
+        }
 
-        return $deleted !== null;
+        return true;
     }
 
     /**
@@ -115,9 +138,9 @@ final readonly class SongRepository implements SongRepositoryInterface
             ? "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`disk`, `song`.`track` FROM `song` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`;"
             : "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`disk`, `song`.`track` FROM `song` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`;";
 
-        $db_results = Dba::read($sql, [$artistId]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $dbResults = $this->connection->query($sql, [$artistId]);
+        $results   = [];
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
             $results[] = (int) $row['id'];
         }
 
@@ -142,10 +165,10 @@ final readonly class SongRepository implements SongRepositoryInterface
             $sql .= " LIMIT " . $limit;
         }
 
-        $db_results = Dba::read($sql, [$albumId]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        $dbResults = $this->connection->query($sql, [$albumId]);
+        $results   = [];
+        while ($songId = $dbResults->fetchColumn()) {
+            $results[] = (int) $songId;
         }
 
         return $results;
@@ -169,10 +192,10 @@ final readonly class SongRepository implements SongRepositoryInterface
             $sql .= "LIMIT " . $limit;
         }
 
-        $db_results = Dba::read($sql, [$albumDiskId]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        $dbResults = $this->connection->query($sql, [$albumDiskId]);
+        $results   = [];
+        while ($songId = $dbResults->fetchColumn()) {
+            $results[] = (int) $songId;
         }
 
         return $results;
@@ -191,9 +214,9 @@ final readonly class SongRepository implements SongRepositoryInterface
             ? "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`disk`, `song`.`track` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`"
             : "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`disk`, `song`.`track` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`";
 
-        $db_results = Dba::read($sql, [$artistId]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $dbResults = $this->connection->query($sql, [$artistId]);
+        $results   = [];
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
             $results[] = (int) $row['id'];
         }
 
@@ -236,10 +259,10 @@ final readonly class SongRepository implements SongRepositoryInterface
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `folder` ON `folder`.`id` = `song`.`folder` WHERE `folder`.`name` = ? AND `folder`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`"
             : "SELECT `song`.`id` FROM `song` LEFT JOIN `folder` ON `folder`.`id` = `song`.`folder` WHERE `folder`.`name` = ? ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`";
 
-        $db_results = Dba::read($sql, [$folderName]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        $dbResults = $this->connection->query($sql, [$folderName]);
+        $results   = [];
+        while ($songId = $dbResults->fetchColumn()) {
+            $results[] = (int) $songId;
         }
 
         return $results;
@@ -258,10 +281,10 @@ final readonly class SongRepository implements SongRepositoryInterface
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id` WHERE `song_data`.`label` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`"
             : "SELECT `song`.`id` FROM `song` LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id` WHERE `song_data`.`label` = ? ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`";
 
-        $db_results = Dba::read($sql, [$labelName]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        $dbResults = $this->connection->query($sql, [$labelName]);
+        $results   = [];
+        while ($songId = $dbResults->fetchColumn()) {
+            $results[] = (int) $songId;
         }
 
         return $results;
@@ -274,14 +297,14 @@ final readonly class SongRepository implements SongRepositoryInterface
      */
     public function getByLicense(int $licenseId): array
     {
-        $db_results = Dba::read(
+        $dbResults = $this->connection->query(
             'SELECT `id` FROM `song` WHERE `song`.`license` = ?',
             [$licenseId]
         );
 
         $results = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        while ($songId = $dbResults->fetchColumn()) {
+            $results[] = (int) $songId;
         }
 
         return $results;
@@ -316,10 +339,10 @@ final readonly class SongRepository implements SongRepositoryInterface
             ? "SELECT DISTINCT `artist_map`.`object_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY RAND()"
             : "SELECT DISTINCT `artist_map`.`object_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ORDER BY RAND()";
 
-        $db_results = Dba::read($sql, [$artist->getId()]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        $dbResults = $this->connection->query($sql, [$artist->getId()]);
+        $results   = [];
+        while ($songId = $dbResults->fetchColumn()) {
+            $results[] = (int) $songId;
         }
 
         return $results;
@@ -357,9 +380,9 @@ final readonly class SongRepository implements SongRepositoryInterface
             ? "SELECT DISTINCT `song`.`id`, COUNT(`object_count`.`object_id`) AS `counting` FROM `song` LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` WHERE `artist_map`.`artist_id` = " . $artist->getId() . " AND `artist_map`.`object_type` = 'song' AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . $count
             : "SELECT DISTINCT `song`.`id`, COUNT(`object_count`.`object_id`) AS `counting` FROM `song` LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` WHERE `artist_map`.`artist_id` = " . $artist->getId() . " AND `artist_map`.`object_type` = 'song' GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . $count;
 
-        $db_results = Dba::read($sql);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $dbResults = $this->connection->query($sql);
+        $results   = [];
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
             $results[] = (int) $row['id'];
         }
 
