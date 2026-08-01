@@ -105,6 +105,27 @@ class RatingRepositoryTest extends TestCase
         static::assertNull($this->subject->getAverageRating(666, 'song'));
     }
 
+    public function testGetAverageRatingsNarrowsTheSameWayTheSingleObjectQueryDoes(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        // without the HAVING clause the batch that warms the cache disagrees with getAverageRating(),
+        // so a browse showed a rounded average where the object's own page showed none at all
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT ROUND(AVG(`rating`), 2) AS `rating`, `object_id` FROM `rating` WHERE `object_id` IN (1,2) AND `object_type` = ? GROUP BY `object_id` HAVING COUNT(`object_id`) > 1',
+                ['song']
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn(['object_id' => '1', 'rating' => '3.67'], false);
+
+        static::assertSame([1 => 3.67], $this->subject->getAverageRatings('song', [1, 2]));
+    }
+
     public function testGetUserRatingReturnsTheStoredValue(): void
     {
         $this->connection->expects(static::once())

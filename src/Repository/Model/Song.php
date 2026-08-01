@@ -227,7 +227,6 @@ class Song extends database_object implements
 
         Artist::build_cache($artists);
         Album::build_cache($albums);
-        Tag::build_map_cache('song', $song_ids);
         Art::build_cache($albums);
 
         // If we're rating this then cache them as well

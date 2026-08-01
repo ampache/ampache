@@ -189,7 +189,7 @@ final readonly class RatingRepository implements RatingRepositoryInterface
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT ROUND(AVG(`rating`), 2) AS `rating`, `object_id` FROM `rating` WHERE `object_id` IN (%s) AND `object_type` = ? GROUP BY `object_id`',
+                'SELECT ROUND(AVG(`rating`), 2) AS `rating`, `object_id` FROM `rating` WHERE `object_id` IN (%s) AND `object_type` = ? GROUP BY `object_id` HAVING COUNT(`object_id`) > 1',
                 implode(',', array_map(intval(...), $objectIds))
             ),
             [$objectType]
