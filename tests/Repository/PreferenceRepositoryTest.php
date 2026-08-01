@@ -28,6 +28,7 @@ namespace Ampache\Repository;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class PreferenceRepositoryTest extends TestCase
@@ -35,6 +36,7 @@ class PreferenceRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private PreferenceRepository $subject;
 
     public function testAddUserPreferenceIgnoresARowThatAlreadyExists(): void
@@ -141,9 +143,11 @@ class PreferenceRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new PreferenceRepository(
-            $this->connection
+            $this->connection,
+            $this->logger
         );
     }
 

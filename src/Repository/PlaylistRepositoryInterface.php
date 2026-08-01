@@ -67,9 +67,84 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
     public function deleteTrackByObjectId(Playlist $playlist, int $objectId): void;
 
     /**
+     * Reads the id of a user's playlist with this exact name and type, or `null` when they have none
+     */
+    public function findIdByName(string $name, int $userId, string $type): ?int;
+
+    /**
+     * Reads the ids a user may see, optionally narrowed by name and by the names they hide
+     *
+     * @return list<int>
+     */
+    public function findIds(
+        int $userId,
+        bool $isAdmin,
+        bool $includePublic,
+        string $playlistName,
+        bool $like,
+        ?string $hiddenPrefix,
+    ): array;
+
+    /**
+     * Reads the id and display name of every playlist a user may see, keyed by id
+     *
+     * @return array<int, string>
+     */
+    public function findNames(int $userId, bool $isAdmin): array;
+
+    /**
+     * Reads the saved smartlists a user can reach, as id => name
+     *
+     * @return array<int, string>
+     */
+    public function findSearchNames(int $userId, bool $ownedOnly): array;
+
+    /**
+     * Reads the entries of one media type in a playlist, in track order or at random
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function getItemsOfType(
+        int $playlistId,
+        string $objectType,
+        int $userId,
+        bool $catalogFilter,
+        bool $withTime,
+        bool $random,
+        string $limit = '',
+    ): array;
+
+    /**
      * The highest position currently used, so appended entries carry on from there
      */
     public function getLastTrackNumber(Playlist $playlist): int;
+
+    /**
+     * Counts the entries of a playlist, honouring the catalog filter the user browses under
+     */
+    public function getMediaCount(int $playlistId, string $type, int $userId, bool $catalogFilter): int;
+
+    /**
+     * Reads the media types a playlist holds
+     *
+     * @return list<string>
+     */
+    public function getObjectTypes(int $playlistId): array;
+
+    /**
+     * Reads whole playlist rows for the in-request cache
+     *
+     * @param list<int|string> $playlistIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $playlistIds): array;
+
+    /**
+     * Sums the running time of a set of songs
+     *
+     * @param list<int> $songIds
+     */
+    public function getTotalDuration(array $songIds): int;
 
     /**
      * Entry ids in their stored order, for renumbering
@@ -84,6 +159,16 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
      * @return int[]
      */
     public function getTrackIdsSorted(Playlist $playlist): array;
+
+    /**
+     * Whether a playlist holds an object, a track position, or that object at or before that position
+     */
+    public function hasItem(int $playlistId, ?int $objectId, ?int $track, string $objectType): bool;
+
+    /**
+     * Inserts a playlist and returns its id, or `null` when the write failed
+     */
+    public function insert(string $name, int $userId, string $username, string $type, int $date): ?int;
 
     /**
      * Moves every entry pointing at one object onto another

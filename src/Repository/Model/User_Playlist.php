@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
+use Ampache\Repository\UserPlaylistRepositoryInterface;
 
 /**
  * UserPlaylist Class
@@ -64,28 +64,22 @@ class User_Playlist extends database_object
     }
 
     /**
+     * @deprecated inject dependency
+     */
+    private static function getUserPlaylistRepository(): UserPlaylistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserPlaylistRepositoryInterface::class);
+    }
+
+    /**
      * add_items
      * Add an array of songs to the playlist
      */
     public function add_items(array $data, int $time): void
     {
-        $sql    = 'INSERT INTO `user_playlist` (`playqueue_time`, `playqueue_client`, `user`, `object_type`, `object_id`, `track`) VALUES ';
-        $values = [];
-        foreach ($data as $row) {
-            if (in_array($row['object_type'], ['song','live_stream','video','podcast_episode'])) {
-                $sql .= '(?, ?, ?, ?, ?, ?),';
-                $values[] = $time;
-                $values[] = $this->client;
-                $values[] = $this->user;
-                $values[] = $row['object_type'];
-                $values[] = $row['object_id'];
-                $values[] = $row['track'];
-            }
-        }
-
-        // remove last comma
-        $sql = substr($sql, 0, -1) . ';';
-        Dba::write($sql, $values);
+        self::getUserPlaylistRepository()->addItems($this->user, $this->client, $time, array_values($data));
     }
 
     /**
@@ -94,8 +88,7 @@ class User_Playlist extends database_object
      */
     public function clear(): void
     {
-        $sql = "DELETE FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
-        Dba::write($sql, [$this->user, $this->client]);
+        self::getUserPlaylistRepository()->clear($this->user, $this->client);
     }
 
     /**
@@ -104,9 +97,7 @@ class User_Playlist extends database_object
      */
     public function get_count(): int
     {
-        $sql        = "SELECT MAX(`track`) AS `count` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
-        $db_results = Dba::read($sql, [$this->user, $this->client]);
-        $results    = Dba::fetch_assoc($db_results);
+        $results = ['count' => self::getUserPlaylistRepository()->getCount($this->user, $this->client)];
 
         return (int) $results['count'];
     }
@@ -125,12 +116,9 @@ class User_Playlist extends database_object
      */
     public function get_current_object(): array
     {
-        $items = [];
-        // Select the current object for this user
-        $sql        = "SELECT `object_type`, `object_id`, `track`, `current_track`, `current_time` FROM `user_playlist` WHERE `user` = ? AND `current_track` = 1 LIMIT 1";
-        $db_results = Dba::read($sql, [$this->user]);
-
-        while ($results = Dba::fetch_assoc($db_results)) {
+        $items   = [];
+        $results = self::getUserPlaylistRepository()->getCurrentRow($this->user);
+        if ($results !== []) {
             $items = [
                 'object_type' => $results['object_type'],
                 'object_id' => (int) $results['object_id'],
@@ -159,11 +147,7 @@ class User_Playlist extends database_object
     public function get_items(): array
     {
         $items = [];
-        // Select all objects from this user
-        $sql        = "SELECT `object_type`, `object_id`, `track`, `current_track`, `current_time` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ? ORDER BY `track`";
-        $db_results = Dba::read($sql, [$this->user, $this->client]);
-
-        while ($results = Dba::fetch_assoc($db_results)) {
+        foreach (self::getUserPlaylistRepository()->getItems($this->user, $this->client) as $results) {
             $items[] = [
                 'object_type' => $results['object_type'],
                 'object_id' => $results['object_id'],
@@ -183,11 +167,7 @@ class User_Playlist extends database_object
      */
     public function get_latest(): string
     {
-        $sql        = "SELECT MAX(`playqueue_time`) AS `time`, `playqueue_client`, `user` FROM `user_playlist` WHERE `user` = ? GROUP BY `playqueue_client`, `user`";
-        $db_results = Dba::read($sql, [$this->user]);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return $results['playqueue_client'] ?? '';
+        return self::getUserPlaylistRepository()->getLatestClient($this->user);
     }
 
     /**
@@ -196,14 +176,7 @@ class User_Playlist extends database_object
      */
     public function get_time(): int
     {
-        $sql        = "SELECT DISTINCT(`playqueue_time`) AS `time` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
-        $db_results = Dba::read($sql, [$this->user, $this->client]);
-        $results    = Dba::fetch_assoc($db_results);
-        if ($results === []) {
-            return time();
-        }
-
-        return (int) $results['time'];
+        return self::getUserPlaylistRepository()->getTime($this->user, $this->client) ?? time();
     }
 
     /**
@@ -212,12 +185,7 @@ class User_Playlist extends database_object
      */
     public function set_current_id(string $object_type, int $track, int $position): void
     {
-        // remove the old current
-        $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
-        Dba::write($sql, [$this->user]);
-        // set the new one
-        $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `track` = ? AND `user` = ? LIMIT 1";
-        Dba::write($sql, [$position, $object_type, $track, $this->user]);
+        self::getUserPlaylistRepository()->setCurrentByTrack($this->user, $object_type, $track, $position);
     }
 
     /**
@@ -226,11 +194,6 @@ class User_Playlist extends database_object
      */
     public function set_current_object(string $object_type, int $object_id, int $position): void
     {
-        // remove the old current
-        $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
-        Dba::write($sql, [$this->user]);
-        // set the new one
-        $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `object_id` = ? AND `user` = ? LIMIT 1";
-        Dba::write($sql, [$position, $object_type, $object_id, $this->user]);
+        self::getUserPlaylistRepository()->setCurrentByObject($this->user, $object_type, $object_id, $position);
     }
 }

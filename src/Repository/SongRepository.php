@@ -28,6 +28,7 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\Database\Exception\InsertIdInvalidException;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
@@ -36,6 +37,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\SongDataFieldEnum;
 use Ampache\Repository\Model\SongFieldEnum;
+use Ampache\Repository\Model\SongMbidSourceEnum;
 use Ampache\Repository\Model\Tag;
 use Generator;
 use PDO;
@@ -90,6 +92,43 @@ final readonly class SongRepository implements SongRepositoryInterface
         }
     }
 
+    /**
+     * Removes the songs and song rows the scanner has orphaned, across the whole table
+     */
+    public function collectOrphanedGarbage(?string $ignorePattern): void
+    {
+        $statements = [];
+        if ($ignorePattern !== null && $ignorePattern !== '') {
+            // delete files matching catalog_ignore_pattern
+            $statements[] = ['DELETE FROM `song` WHERE `file` REGEXP ?;', [$ignorePattern]];
+        }
+
+        // delete duplicates
+        $statements[] = ['DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;', []];
+        // clean up missing catalogs
+        $statements[] = ['DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`);', []];
+        // delete the rest
+        $statements[] = ['DELETE FROM `song_data` WHERE `song_data`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);', []];
+        $statements[] = ['DELETE FROM `song_map` WHERE `song_map`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);', []];
+        // also clean up some bad data that might creep in, one table scan instead of two
+        $statements[] = ["UPDATE `song` SET `composer` = NULLIF(`composer`, ''), `mbid` = NULLIF(`mbid`, '');", []];
+        $statements[] = ['INSERT IGNORE INTO `song_data` (`song_id`) SELECT `id` FROM `song` WHERE `id` NOT IN (SELECT `song_id` FROM `song_data`);', []];
+        // one table scan instead of six: NULLIF empties each column independently
+        $statements[] = ["UPDATE `song_data` SET `comment` = NULLIF(`comment`, ''), `lyrics` = NULLIF(`lyrics`, ''), `label` = NULLIF(`label`, ''), `language` = NULLIF(`language`, ''), `waveform` = NULLIF(`waveform`, ''), `disksubtitle` = NULLIF(`disksubtitle`, '');", []];
+
+        // one statement that cannot run must not take the rest of the sweep down with it
+        foreach ($statements as $statement) {
+            try {
+                $this->connection->query($statement[0], $statement[1]);
+            } catch (DatabaseException) {
+                $this->logger->debug(
+                    'collectGarbage error: ' . $statement[0],
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
+        }
+    }
+
     public function delete(int $songId): bool
     {
         // keep details about deletions, but losing the record must not stop the delete itself
@@ -118,6 +157,106 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * Reads the id of the song holding this file
+     */
+    public function findIdByFile(string $file): ?int
+    {
+        $songId = $this->connection->fetchOne('SELECT `song`.`id` FROM `song` WHERE `song`.`file` = ? LIMIT 1', [$file]);
+
+        return ($songId === false)
+            ? null
+            : (int) $songId;
+    }
+
+    /**
+     * Reads the id of the song carrying this MusicBrainz id
+     */
+    public function findIdByMbid(string $mbid): ?int
+    {
+        $songId = $this->connection->fetchOne('SELECT `song`.`id` FROM `song` WHERE `song`.`mbid` = ? LIMIT 1', [$mbid]);
+
+        return ($songId === false)
+            ? null
+            : (int) $songId;
+    }
+
+    /**
+     * Reads the id of the song matching a set of tags, by mbid where the tags carry one and by name where they do not
+     *
+     * @param array<string, mixed> $data
+     */
+    public function findIdByTags(array $data): ?int
+    {
+        $where  = 'WHERE `song`.`title` = ?';
+        $params = [$data['title']];
+        if ($data['track']) {
+            $where .= ' AND `song`.`track` = ?';
+            $params[] = $data['track'];
+        }
+
+        $sql = 'SELECT `song`.`id` FROM `song` INNER JOIN `artist` ON `artist`.`id` = `song`.`artist` INNER JOIN `album` ON `album`.`id` = `song`.`album` ';
+
+        if ($data['mb_artistid']) {
+            $where .= ' AND `artist`.`mbid` = ?';
+            $params[] = $data['mb_artistid'];
+        } else {
+            $where .= ' AND `artist`.`name` = ?';
+            $params[] = $data['artist'];
+        }
+
+        if ($data['mb_albumid']) {
+            $where .= ' AND `album`.`mbid` = ?';
+            $params[] = $data['mb_albumid'];
+        } else {
+            $where .= ' AND `album`.`name` = ?';
+            $params[] = $data['album'];
+        }
+
+        $songId = $this->connection->fetchOne($sql . $where . ' LIMIT 1', $params);
+
+        return ($songId === false)
+            ? null
+            : (int) $songId;
+    }
+
+    /**
+     * Reads a song id from a last.fm style match on title, artist and album
+     */
+    public function findIdForScrobble(
+        string $songName,
+        string $artistName,
+        string $albumName,
+        string $songMbid,
+        string $artistMbid,
+        string $albumMbid,
+    ): ?int {
+        // by default require song, album, artist for any searches
+        $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?)";
+        $params = [$songName, $artistName, $artistName, $albumName, $albumName];
+
+        if ($songMbid !== '') {
+            $sql .= ' AND `song`.`mbid` = ?';
+            $params[] = $songMbid;
+        }
+
+        if ($artistMbid !== '') {
+            $sql .= ' AND `artist`.`mbid` = ?';
+            $params[] = $artistMbid;
+        }
+
+        if ($albumMbid !== '') {
+            $sql .= ' AND `album`.`mbid` = ?';
+            $params[] = $albumMbid;
+        }
+
+        $songId = $this->connection->fetchOne($sql . ' LIMIT 1;', $params);
+
+        return ($songId === false)
+            ? null
+            : (int) $songId;
+    }
+
+    /**
      * The uploader of the song
      *
      * Three distinct states: an id, `null` when the song exists but was not user-uploaded, and `false`
@@ -135,6 +274,21 @@ final readonly class SongRepository implements SongRepositoryInterface
         return ($row['user_upload'] === null)
             ? null
             : (int) $row['user_upload'];
+    }
+
+    /**
+     * Reads the MusicBrainz id of an album, an artist or an album artist
+     */
+    public function findRelatedMbid(SongMbidSourceEnum $source, int $objectId): ?string
+    {
+        $mbid = $this->connection->fetchOne(
+            sprintf('SELECT `mbid` FROM `%s` WHERE `id` = ? LIMIT 1;', $source->value),
+            [$objectId]
+        );
+
+        return ($mbid === false || $mbid === null)
+            ? null
+            : (string) $mbid;
     }
 
     /**
@@ -323,6 +477,67 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * Reads the extended row of a song
+     *
+     * @return array<string, mixed>
+     */
+    public function getDataRow(int $songId): array
+    {
+        $row = $this->connection->fetchRow(
+            'SELECT `comment`, `lyrics`, `label`, `language`, `waveform`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `disksubtitle` FROM `song_data` WHERE `song_id` = ?',
+            [$songId]
+        );
+
+        return ($row === false)
+            ? []
+            : $row;
+    }
+
+    /**
+     * Reads the extended rows of a set of songs, for the in-request cache
+     *
+     * @param list<int|string> $songIds
+     * @return list<array<string, mixed>>
+     */
+    public function getDataRowsByIds(array $songIds): array
+    {
+        if ($songIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT * FROM `song_data` WHERE `song_id` IN (%s)',
+                implode(',', array_map(intval(...), $songIds))
+            )
+        );
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Reads the rows the `deleted_song` archive holds
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function getDeletedRows(): array
+    {
+        $result = $this->connection->query('SELECT * FROM `deleted_song`');
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
      * Gets a list of the disabled songs for and returns an array of Songs
      *
      * @return Generator<Song>
@@ -336,6 +551,27 @@ final readonly class SongRepository implements SongRepositoryInterface
         while ($rowId = $result->fetchColumn()) {
             yield new Song((int) $rowId);
         }
+    }
+
+    /**
+     * Reads the artists mapped onto a song, or the artists mapped onto an album
+     *
+     * @return list<int>
+     */
+    public function getParentIds(int $objectId, bool $forAlbum): array
+    {
+        $sql = ($forAlbum)
+            ? "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;"
+            : "SELECT DISTINCT `artist_id` AS `object_id` FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` = ?;";
+
+        $result = $this->connection->query($sql, [$objectId]);
+
+        $objectIds = [];
+        while ($parentId = $result->fetchColumn()) {
+            $objectIds[] = (int) $parentId;
+        }
+
+        return $objectIds;
     }
 
     /**
@@ -379,6 +615,89 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * Reads the replaygain columns of the extended row, the one partial read the callers ask for
+     *
+     * @return array<string, mixed>
+     */
+    public function getReplaygainRow(int $songId): array
+    {
+        $row = $this->connection->fetchRow(
+            'SELECT `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain` FROM `song_data` WHERE `song_id` = ?',
+            [$songId]
+        );
+
+        return ($row === false)
+            ? []
+            : $row;
+    }
+
+    /**
+     * Reads one song row with the album and artist identity a `Song` object is built from
+     *
+     * @return array<string, mixed>
+     */
+    public function getRow(int $songId): array
+    {
+        $row = $this->connection->fetchRow(
+            'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `song`.`last_played`, `album`.`album_artist` AS `albumartist`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?',
+            [$songId]
+        );
+
+        return ($row === false)
+            ? []
+            : $row;
+    }
+
+    /**
+     * Reads song rows for the in-request cache, dropping the disabled catalogs when they are hidden
+     *
+     * @param list<int|string> $songIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $songIds, bool $catalogDisable): array
+    {
+        if ($songIds === []) {
+            return [];
+        }
+
+        $columns = '`song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `song`.`last_played`';
+        $idList  = implode(',', array_map(intval(...), $songIds));
+
+        $sql = ($catalogDisable)
+            ? sprintf("SELECT %s FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN (%s) AND `catalog`.`enabled` = '1' ", $columns, $idList)
+            : sprintf('SELECT %s FROM `song` WHERE `song`.`id` IN (%s)', $columns, $idList);
+
+        $result = $this->connection->query($sql);
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Reads the values mapped onto a song, ISRCs being the only kind so far
+     *
+     * @return list<string>
+     */
+    public function getSongMapValues(int $songId, string $objectType): array
+    {
+        $result = $this->connection->query(
+            'SELECT DISTINCT `object_id` FROM `song_map` WHERE `object_type` = ? AND `song_id` = ?;',
+            [$objectType, $songId]
+        );
+
+        $values = [];
+        while ($value = $result->fetchColumn()) {
+            $values[] = (string) $value;
+        }
+
+        return $values;
+    }
+
+    /**
      * gets the songs for this artist
 
      * @return int[]
@@ -399,6 +718,108 @@ final readonly class SongRepository implements SongRepositoryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * Whether a song row exists
+     */
+    public function hasId(int $songId): bool
+    {
+        return $this->connection->fetchOne('SELECT `song`.`id` FROM `song` WHERE `song`.`id` = ?', [$songId]) !== false;
+    }
+
+    /**
+     * Inserts a song row and returns its id, or `null` when the write failed
+     *
+     * @param list<mixed> $values in the column order of the statement
+     */
+    public function insert(array $values): ?int
+    {
+        try {
+            $this->connection->query(
+                'INSERT INTO `song` (`catalog`, `file`, `album`, `album_disk`, `disk`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `addition_time`, `update_time`, `year`, `mbid`, `user_upload`, `license`, `composer`, `channels`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                $values
+            );
+
+            return $this->connection->getLastInsertedId();
+        } catch (DatabaseException|InsertIdInvalidException) {
+            return null;
+        }
+    }
+
+    /**
+     * Inserts the extended row that belongs with a new song
+     *
+     * @param list<mixed> $values in the column order of the statement
+     */
+    public function insertData(array $values): void
+    {
+        $this->connection->query(
+            'INSERT INTO `song_data` (`song_id`, `disksubtitle`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            $values
+        );
+    }
+
+    /**
+     * Points the maps of one album at another and drops what the old one left behind
+     *
+     * A single song is moved on its own when the caller names one; otherwise the whole album moves.
+     */
+    public function migrateAlbum(int $newAlbumId, int $oldAlbumId, int $songId): bool
+    {
+        $statements = [
+            ['UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `album_id` = ?', [$newAlbumId, $oldAlbumId]],
+        ];
+
+        $statements[] = ($songId > 0)
+            ? ["UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = 'song'", [$newAlbumId, $oldAlbumId, $songId]]
+            : ["UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_type` = 'song'", [$newAlbumId, $oldAlbumId]];
+
+        $statements[] = ['UPDATE IGNORE `artist_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?', [$newAlbumId, 'album', $oldAlbumId]];
+        $statements[] = ['UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?', [$newAlbumId, 'album', $oldAlbumId]];
+
+        foreach ($statements as $statement) {
+            try {
+                $this->connection->query($statement[0], $statement[1]);
+            } catch (DatabaseException) {
+                return false;
+            }
+        }
+
+        // delete leftover duplicate maps
+        $this->connection->query('DELETE FROM `album_disk` WHERE `album_id` = ?', [$oldAlbumId]);
+        $this->connection->query('DELETE FROM `album_map` WHERE `album_id` = ?', [$oldAlbumId]);
+        $this->connection->query('DELETE FROM `artist_map` WHERE `object_type` = ? AND `object_id` = ?', ['album', $oldAlbumId]);
+        $this->connection->query('DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?', ['album', $oldAlbumId]);
+
+        return true;
+    }
+
+    /**
+     * Points the maps of one artist at another and drops what the old one left behind
+     */
+    public function migrateArtist(int $newArtistId, int $oldArtistId): bool
+    {
+        $statements = [
+            ['UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ?', [$newArtistId, $oldArtistId]],
+            ['UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?', [$newArtistId, $oldArtistId]],
+            ['UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?', [$newArtistId, 'artist', $oldArtistId]],
+        ];
+
+        foreach ($statements as $statement) {
+            try {
+                $this->connection->query($statement[0], $statement[1]);
+            } catch (DatabaseException) {
+                return false;
+            }
+        }
+
+        // delete leftover duplicate maps
+        $this->connection->query('DELETE FROM `album_map` WHERE `object_id` = ?', [$oldArtistId]);
+        $this->connection->query('DELETE FROM `artist_map` WHERE `artist_id` = ?', [$oldArtistId]);
+        $this->connection->query('DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?', ['artist', $oldArtistId]);
+
+        return true;
     }
 
     /**
@@ -436,5 +857,74 @@ final readonly class SongRepository implements SongRepositoryInterface
         }
 
         return true;
+    }
+
+    /**
+     * Rewrites a song row and its extended row from a freshly read file
+     *
+     * @param list<mixed> $songValues in the column order of the statement
+     * @param list<mixed> $dataValues in the column order of the statement
+     */
+    public function updateSong(int $songId, array $songValues, array $dataValues): void
+    {
+        $this->connection->query(
+            'UPDATE `song` SET `album` = ?, `album_disk` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?',
+            $songValues
+        );
+
+        // did you miss the insert? it'll never come back if we don't check
+        $this->connection->query(
+            'INSERT IGNORE INTO `song_data` (`song_id`) SELECT `id` from `song` where `id` = ? AND `id` NOT IN (SELECT `song_id` FROM `song_data`);',
+            [$songId]
+        );
+
+        $this->connection->query(
+            'UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?',
+            $dataValues
+        );
+    }
+
+    /**
+     * Replaces the mapped values of one kind for a song, dropping whatever is no longer in the list
+     *
+     * @param list<int|string> $objectIds
+     */
+    public function updateSongMap(array $objectIds, string $objectType, int $songId): void
+    {
+        if ($objectIds === []) {
+            $this->connection->query(
+                'DELETE FROM `song_map` WHERE `song_id` = ? AND `object_type` = ?;',
+                [$songId, $objectType]
+            );
+
+            return;
+        }
+
+        foreach ($objectIds as $objectId) {
+            $this->connection->query(
+                'REPLACE INTO `song_map` (`song_id`, `object_type`, `object_id`) VALUES (?, ?, ?);',
+                [$songId, $objectType, $objectId]
+            );
+        }
+
+        // we only want the latest values in the map, so anything not in the new list goes
+        $this->connection->query(
+            sprintf(
+                'DELETE FROM `song_map` WHERE `song_id` = ? AND `object_type` = ? AND `object_id` NOT IN (%s);',
+                implode(',', array_fill(0, count($objectIds), '?'))
+            ),
+            array_merge([$songId, $objectType], $objectIds)
+        );
+    }
+
+    /**
+     * Stamps a song as read from its file
+     */
+    public function updateUpdateTime(int $songId, int $time): void
+    {
+        $this->connection->query(
+            'UPDATE `song` SET `update_time` = ? WHERE `id` = ?;',
+            [$time, $songId]
+        );
     }
 }

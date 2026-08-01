@@ -25,36 +25,38 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\UpdateInfoEnum;
-
-interface UpdateInfoRepositoryInterface
+/**
+ * Provides access to the `tmp_browse` table, where a browse keeps its state and its result ids
+ *
+ * This is the table half of `Query`; the SQL a browse generates for the objects themselves is query
+ * building and stays in the class.
+ */
+interface TmpBrowseRepositoryInterface
 {
     /**
-     * Reads the stored version of every installed plugin, keyed by plugin name
+     * Drops the browses whose session is gone
+     */
+    public function collectGarbage(): void;
+
+    /**
+     * Stores a new browse for a session and returns its id, or `null` when the write failed
+     */
+    public function create(string $sessionId, string $data): ?int;
+
+    /**
+     * Reads the stored state and result ids of a browse
      *
-     * @return array<string, int>
+     * @return array{data?: ?string, object_data?: ?string}
      */
-    public function getPluginVersions(): array;
+    public function getRow(int $browseId, string $sessionId): array;
 
     /**
-     * Returns a single value by its key
-     *
-     * Will return `null` if no item was found
+     * Stores the result ids of a browse
      */
-    public function getValueByKey(UpdateInfoEnum $key): ?string;
+    public function updateObjectData(int $browseId, string $sessionId, string $objectData): void;
 
     /**
-     * Drops the stored version of one plugin, which is what marks it uninstalled
+     * Stores the state of a browse
      */
-    public function removePluginVersion(string $pluginName): void;
-
-    /**
-     * Stores the version of an installed plugin
-     */
-    public function setPluginVersion(string $pluginName, int $version): void;
-
-    /**
-     * Sets a value using the provided params
-     */
-    public function setValue(UpdateInfoEnum $key, string $value): void;
+    public function updateState(int $browseId, string $sessionId, string $data): void;
 }

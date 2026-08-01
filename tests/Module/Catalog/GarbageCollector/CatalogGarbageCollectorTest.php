@@ -32,10 +32,13 @@ use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserflagRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
@@ -113,6 +116,9 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
             TagRepositoryInterface::class => $this->tagRepository,
             UserRepositoryInterface::class => $this->userRepository,
+            RatingRepositoryInterface::class => $this->createMock(RatingRepositoryInterface::class),
+            SongRepositoryInterface::class => $this->createMock(SongRepositoryInterface::class),
+            UserflagRepositoryInterface::class => $this->createMock(UserflagRepositoryInterface::class),
             default => $this->createMock(LoggerInterface::class),
         });
 

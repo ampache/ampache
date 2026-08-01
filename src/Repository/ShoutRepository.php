@@ -41,13 +41,15 @@ use Psr\Log\LoggerInterface;
  *
  * @extends BaseRepository<Shoutbox>
  */
-final class ShoutRepository extends BaseRepository implements ShoutRepositoryInterface
+final readonly class ShoutRepository extends BaseRepository implements ShoutRepositoryInterface
 {
     public function __construct(
-        protected DatabaseConnectionInterface $connection,
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly LoggerInterface $logger,
-    ) {}
+        DatabaseConnectionInterface $connection,
+        private UserRepositoryInterface $userRepository,
+        private LoggerInterface $logger,
+    ) {
+        parent::__construct($connection);
+    }
 
     /**
      * Cleans out orphaned shout-box items

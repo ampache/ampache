@@ -30,9 +30,24 @@ use Traversable;
 interface ImageRepositoryInterface
 {
     /**
+     * Counts the stored images of one object at a size, which is how "does it have art" is answered
+     */
+    public function countByObject(string $objectType, int $objectId, string $size, string $kind): int;
+
+    /**
+     * Drops one stored size of an object's art
+     */
+    public function deleteBySize(int $objectId, string $objectType, string $size, string $kind): void;
+
+    /**
      * Clear the image column (if you have the image on disk)
      */
     public function deleteImage(int $imageId): void;
+
+    /**
+     * Copies every stored image of one object onto another, keeping whatever the target already had
+     */
+    public function duplicate(string $objectType, int $oldObjectId, string $writeType, int $newObjectId): void;
 
     /**
      * Get the object details for the art table
@@ -40,6 +55,39 @@ interface ImageRepositoryInterface
      * @return Traversable<array{id: int, object_id: int, object_type: string, size: string, mime: string}>
      */
     public function findAllImage(): Traversable;
+
+    /**
+     * Reads the identity of one stored image at a size, falling back to nothing when it has none
+     *
+     * @return array<string, mixed>
+     */
+    public function findByObjectAndSize(string $objectType, int $objectId, string $size): array;
+
+    /**
+     * The id of the row the last write produced, or 0 when there was none
+     */
+    public function findLastInsertedId(): int;
+
+    /**
+     * Reads the sizes stored for an object, so the files behind them can be copied
+     *
+     * @return list<array{size: string, kind: string, mime: string}>
+     */
+    public function findSizes(string $objectType, int $objectId): array;
+
+    /**
+     * Reads a stored thumbnail, matching an exact size or an original of those dimensions
+     *
+     * @return array<string, mixed>
+     */
+    public function findThumbnail(string $objectType, int $objectId, string $size, string $kind, int $width, int $height): array;
+
+    /**
+     * Reads the original stored image of an object
+     *
+     * @return array<string, mixed>
+     */
+    public function getOriginalRow(string $objectType, int $objectId, string $kind): array;
 
     /**
      * Get the object details for the art table
@@ -50,4 +98,40 @@ interface ImageRepositoryInterface
         string $size,
         string $mimeType,
     ): ?string;
+
+    /**
+     * Reads one whole image row by its id
+     *
+     * @return array<string, mixed>
+     */
+    public function getRowById(int $imageId): array;
+
+    /**
+     * Reads one stored image at an exact size
+     *
+     * @return array<string, mixed>
+     */
+    public function getRowBySize(string $size, string $objectType, int $objectId, string $kind): array;
+
+    /**
+     * Reads the identity of the images belonging to a set of objects, for the in-request cache
+     *
+     * @param list<int|string> $objectIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByObjectIds(array $objectIds, ?string $objectType = null): array;
+
+    /**
+     * Stores an image, replacing whatever was held at that object/size/kind
+     */
+    public function replace(
+        ?string $image,
+        int $width,
+        int $height,
+        string $mime,
+        string $size,
+        string $objectType,
+        int $objectId,
+        string $kind,
+    ): void;
 }

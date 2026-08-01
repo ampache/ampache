@@ -32,7 +32,6 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\PlaylistRepositoryInterface;
 
 /**
@@ -93,11 +92,7 @@ class Playlist extends playlist_object
             return false;
         }
 
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = 'SELECT * FROM `playlist` WHERE `id` IN ' . $idlist;
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach (self::getPlaylistRepository()->getRowsByIds(array_values($ids)) as $row) {
             parent::add_to_cache('playlist', $row['id'], $row);
         }
 
@@ -115,20 +110,8 @@ class Playlist extends playlist_object
             $user_id = $user->id ?? -1;
         }
 
-        $results    = [];
-        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = ? AND `user` = ? AND `type` = ?";
-        $db_results = Dba::read($sql, [$name, $user_id, $type]);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
-
         // return the duplicate ID
-        if ($results !== []) {
-            return $results[0];
-        }
-
-        return 0;
+        return self::getPlaylistRepository()->findIdByName($name, $user_id, $type) ?? 0;
     }
 
     /**
@@ -155,17 +138,14 @@ class Playlist extends playlist_object
         // get the public_name/username
         $username = User::get_username($user_id);
 
-        $date = time();
-        $sql  = "INSERT INTO `playlist` (`name`, `user`, `username`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$name, $user_id, $username, $type, $date, $date]);
-        $insert_id = Dba::insert_id();
-        if (empty($insert_id)) {
+        $insert_id = self::getPlaylistRepository()->insert($name, $user_id, (string) $username, $type, time());
+        if ($insert_id === null) {
             return null;
         }
 
         self::getCatalogCounter()->count(CountableTableEnum::PLAYLIST);
 
-        return (int) $insert_id;
+        return $insert_id;
     }
 
     /**
@@ -196,22 +176,7 @@ class Playlist extends playlist_object
         }
 
         $is_admin = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1);
-        $sql      = "SELECT `id`, IF(`user` = ?, `name`, CONCAT(`name`, ' (', `username`, ')')) AS `name` FROM `playlist` ";
-        $params   = [$user_id];
-
-        if (!$is_admin) {
-            $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
-            $params[] = $user_id;
-        }
-
-        $sql .= "ORDER BY `name`";
-        //debug_event(self::class, 'get_playlists query: ' . $sql . ' ' . print_r($params, true), 5);
-
-        $db_results = Dba::read($sql, $params);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = $row['name'];
-        }
+        $results  = self::getPlaylistRepository()->findNames($user_id, $is_admin);
 
         parent::add_to_cache($key, $user_id, $results);
 
@@ -250,39 +215,11 @@ class Playlist extends playlist_object
                 || $user_id == -1
             )
         );
-        $sql    = "SELECT `id` FROM `playlist` ";
-        $params = [];
-        $join   = 'WHERE';
+        $hide_string = ($includeHidden)
+            ? null
+            : str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user_id, 'api_hidden_playlists')));
 
-        if (!$is_admin) {
-            $sql .= ($includePublic)
-                ? $join . ' (`user` = ? OR `type` = \'public\') '
-                : $join . ' (`user` = ?) ';
-            $params[] = $user_id;
-            $join     = 'AND';
-        }
-
-        if ($playlist_name !== '') {
-            $playlist_name = ($like) ? "LIKE '%" . $playlist_name . "%' " : "= '" . $playlist_name . "'";
-            $sql .= $join . ' `name` ' . $playlist_name;
-            $join = 'AND';
-        }
-
-        if (!$includeHidden) {
-            $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user_id, 'api_hidden_playlists')));
-            if (!empty($hide_string)) {
-                $sql .= $join . ' `name` NOT LIKE \'' . Dba::escape($hide_string) . "%' ";
-            }
-        }
-
-        $sql .= "ORDER BY `name`";
-        //debug_event(self::class, 'get_playlists query: ' . $sql . ' ' . print_r($params, true), 5);
-
-        $db_results = Dba::read($sql, $params);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
+        $results = self::getPlaylistRepository()->findIds($user_id, $is_admin, (bool) $includePublic, (string) $playlist_name, (bool) $like, $hide_string);
 
         if (
             $playlist_name === ''
@@ -479,64 +416,12 @@ class Playlist extends playlist_object
         $user    = Core::get_global('user');
         $user_id = $user->id ?? -1;
 
-        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data` WHERE `playlist` = ?';
-        $db_object_types = Dba::read($sql, [$this->id]);
+        $repository    = self::getPlaylistRepository();
+        $catalogFilter = (bool) AmpConfig::get('catalog_filter');
 
-        while ($row = Dba::fetch_assoc($db_object_types)) {
-            $object_type = LibraryItemEnum::from($row['object_type']);
-            $params      = [$this->id];
-            $system      = ($user_id < 0);
-
-            switch ($object_type) {
-                case LibraryItemEnum::SONG:
-                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `song`.`time` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="song" AND `object_id` IS NOT NULL ';
-                    if (AmpConfig::get('catalog_filter')) {
-                        if ($system) {
-                            $sql .= 'AND `playlist_data`.`object_type`="song" AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
-                        } else {
-                            $sql .= 'AND `playlist_data`.`object_type`="song" AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ';
-                            $params[] = $user_id;
-                        }
-                    }
-
-                    $sql .= 'ORDER BY `playlist_data`.`track`';
-                    break;
-                case LibraryItemEnum::PODCAST_EPISODE:
-                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `podcast_episode`.`time` FROM `playlist_data` INNER JOIN `podcast_episode` ON `playlist_data`.`object_id` = `podcast_episode`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="podcast_episode" AND `object_id` IS NOT NULL ';
-                    if (AmpConfig::get('catalog_filter')) {
-                        if ($system) {
-                            $sql .= 'AND `playlist_data`.`object_type`="podcast_episode" AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
-                        } else {
-                            $sql .= 'AND `playlist_data`.`object_type`="podcast_episode" AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ';
-                            $params[] = $user_id;
-                        }
-                    }
-
-                    $sql .= 'ORDER BY `playlist_data`.`track`';
-                    break;
-                case LibraryItemEnum::VIDEO:
-                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `video`.`time` FROM `playlist_data` INNER JOIN `video` ON `playlist_data`.`object_id` = `video`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="video" AND `object_id` IS NOT NULL ';
-                    if (AmpConfig::get('catalog_filter')) {
-                        if ($system) {
-                            $sql .= 'AND `playlist_data`.`object_type`="video" AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
-                        } else {
-                            $sql .= 'AND `playlist_data`.`object_type`="video" AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ';
-                            $params[] = $user_id;
-                        }
-                    }
-
-                    $sql .= 'ORDER BY `playlist_data`.`track`';
-                    break;
-                default:
-                    $sql      = "SELECT `id`, `object_id`, `object_type`, `track`, 0 AS `time` FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = ? ORDER BY `track`";
-                    $params[] = $object_type->value;
-                    debug_event(self::class, sprintf('get_items(): %s not handled', $object_type->value), 5);
-            }
-
-            //debug_event(self::class, "get_items(): Results:\n" . print_r($results,true), 5);
-            $db_results = Dba::read($sql, $params);
-
-            while ($row = Dba::fetch_assoc($db_results)) {
+        foreach ($repository->getObjectTypes($this->id) as $type) {
+            $object_type = LibraryItemEnum::from($type);
+            foreach ($repository->getItemsOfType($this->id, $type, $user_id, $catalogFilter, true, false) as $row) {
                 $results[] = [
                     'object_type' => LibraryItemEnum::from($row['object_type']),
                     'object_id' => (int) $row['object_id'],
@@ -561,60 +446,14 @@ class Playlist extends playlist_object
      */
     public function get_media_count(string $type = ''): int
     {
-        $user      = Core::get_global('user');
-        $user_id   = $user->id ?? -1;
-        $params    = [$this->id];
-        $all_media = empty($type) || !in_array($type, ['broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video']);
+        $user = Core::get_global('user');
 
-        if ($all_media) {
-            // empty or invalid type so check for all media types
-            $sql = "SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` "
-                . "LEFT JOIN `broadcast` ON `playlist_data`.`object_id` = `broadcast`.`id` AND `playlist_data`.`object_type` = 'broadcast' "
-                . "LEFT JOIN `democratic` ON `playlist_data`.`object_id` = `democratic`.`id` AND `playlist_data`.`object_type` = 'democratic' "
-                . "LEFT JOIN `live_stream` ON `playlist_data`.`object_id` = `live_stream`.`id` AND `playlist_data`.`object_type` = 'live_stream' "
-                . "LEFT JOIN `podcast_episode` ON `playlist_data`.`object_id` = `podcast_episode`.`id` AND `playlist_data`.`object_type` = 'podcast_episode' "
-                . "LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song' "
-                . "LEFT JOIN `song_preview` ON `playlist_data`.`object_id` = `song_preview`.`id` AND `playlist_data`.`object_type` = 'song_preview' "
-                . "LEFT JOIN `video` ON `playlist_data`.`object_id` = `video`.`id` AND `playlist_data`.`object_type` = 'video' "
-                . "WHERE `playlist_data`.`playlist` = ?  AND `playlist_data`.`object_type` IS NOT NULL ";
-        } else {
-            // check for a specific type of object
-            $sql = 'SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` INNER JOIN `' . $type . '` ON `playlist_data`.`object_id` = `' . $type . '`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = \'' . $type . '\' AND `object_id` IS NOT NULL ';
-        }
-
-        if (AmpConfig::get('catalog_filter')) {
-            if ($user_id < 0) {
-                if ($all_media) {
-                    $sql .= "AND (`playlist_data`.`object_type` = 'live_stream' AND `live_stream`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) "
-                        . "OR `playlist_data`.`object_type` = 'podcast_episode' AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) "
-                        . "OR `playlist_data`.`object_type` = 'song' AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) "
-                        . "OR `playlist_data`.`object_type` = 'video' AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)) ";
-                } else {
-                    $sql .= "AND `playlist_data`.`object_type` = '$type' AND `$type`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ";
-                }
-            } elseif ($all_media) {
-                $sql .= "AND (`playlist_data`.`object_type` = 'live_stream' AND `live_stream`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) "
-                    . "OR `playlist_data`.`object_type` = 'podcast_episode' AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) "
-                    . "OR `playlist_data`.`object_type` = 'song' AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) "
-                    . "OR `playlist_data`.`object_type` = 'video' AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1)) ";
-                $params = [$this->id, $user_id, $user_id, $user_id, $user_id];
-            } else {
-                $sql .= "AND `playlist_data`.`object_type` = '$type' AND `$type`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ";
-                $params[] = $user_id;
-            }
-        }
-
-        $sql .= "GROUP BY `playlist_data`.`playlist`;";
-
-        //debug_event(self::class, "get_media_count(): " . $sql . ' ' . print_r($params, true), 5);
-
-        $db_results = Dba::read($sql, $params);
-        $row        = Dba::fetch_assoc($db_results);
-        if ($row === []) {
-            return 0;
-        }
-
-        return (int) $row['list_count'];
+        return self::getPlaylistRepository()->getMediaCount(
+            $this->id,
+            $type,
+            $user->id ?? -1,
+            (bool) AmpConfig::get('catalog_filter')
+        );
     }
 
     /**
@@ -624,57 +463,22 @@ class Playlist extends playlist_object
      */
     public function get_random_items(?string $limit = ''): array
     {
-        $results = [];
-        $user    = Core::get_global('user');
-        $user_id = $user->id ?? -1;
+        $results       = [];
+        $user          = Core::get_global('user');
+        $user_id       = $user->id ?? -1;
+        $repository    = self::getPlaylistRepository();
+        $catalogFilter = (bool) AmpConfig::get('catalog_filter');
 
-        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data` WHERE `playlist` = ?';
-        $db_object_types = Dba::read($sql, [$this->id]);
-
-        while ($row = Dba::fetch_assoc($db_object_types)) {
-            $object_type = $row['object_type'];
-            $params      = [$this->id];
-
-            switch ($object_type) {
-                case 'song':
-                case 'live_stream':
-                case 'podcast_episode':
-                case 'video':
-                    $sql = sprintf('SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track` FROM `playlist_data` INNER JOIN `%s` ON `playlist_data`.`object_id` = `%s`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_type` = \'%s\' ', $object_type, $object_type, $object_type);
-                    if (AmpConfig::get('catalog_filter')) {
-                        if ($user_id < 0) {
-                            $sql .= sprintf('AND `playlist_data`.`object_type`=\'%s\' AND `%s`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ', $object_type, $object_type);
-                        } else {
-                            $sql .= sprintf('AND `playlist_data`.`object_type`=\'%s\' AND `%s`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ', $object_type, $object_type);
-                            $params[] = $user_id;
-                        }
-                    }
-
-                    $sql .= 'ORDER BY RAND()';
-                    break;
-                default:
-                    $sql      = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = ? ORDER BY RAND()";
-                    $params[] = $object_type;
-                    debug_event(self::class, sprintf('get_random_items(): %s not handled', $object_type), 5);
-            }
-
-            $sql .= (empty($limit))
-                ? ''
-                : ' LIMIT ' . $limit;
-
-            //debug_event(self::class, "get_random_items(): " . $sql . $limit_sql, 5);
-            $db_results = Dba::read($sql, $params);
-            while ($row = Dba::fetch_assoc($db_results)) {
+        foreach ($repository->getObjectTypes($this->id) as $type) {
+            foreach ($repository->getItemsOfType($this->id, $type, $user_id, $catalogFilter, false, true, (string) $limit) as $row) {
                 $results[] = [
                     'object_type' => LibraryItemEnum::from($row['object_type']),
                     'object_id' => (int) $row['object_id'],
                     'track' => (int) $row['track'],
-                    'track_id' => $row['id']
+                    'track_id' => $row['id'],
                 ];
             }
         }
-
-        shuffle($results);
 
         return $results;
     }
@@ -687,28 +491,19 @@ class Playlist extends playlist_object
      */
     public function get_songs(): array
     {
-        $results = [];
         $user    = Core::get_global('user');
-        $user_id = $user->id ?? -1;
-        $params  = [$this->id];
+        $results = [];
 
-        $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="song" AND `object_id` IS NOT NULL ';
-        if (AmpConfig::get('catalog_filter')) {
-            if ($user_id < 0) {
-                $sql .= 'AND `playlist_data`.`object_type`="song" AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
-            } else {
-                $sql .= 'AND `playlist_data`.`object_type`="song" AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ';
-                $params[] = $user_id;
-            }
-            $sql .= 'AND `playlist_data`.`object_type`="song" AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ';
-            $params[] = $user_id;
-        }
-
-        $sql .= "ORDER BY `playlist_data`.`track`";
-        $db_results = Dba::read($sql, $params);
-        //debug_event(self::class, "get_songs(): " . $sql . ' ' . print_r($params, true), 5);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach (
+            self::getPlaylistRepository()->getItemsOfType(
+                $this->id,
+                'song',
+                $user->id ?? -1,
+                (bool) AmpConfig::get('catalog_filter'),
+                false,
+                false
+            ) as $row
+        ) {
             $results[] = (int) $row['object_id'];
         }
 
@@ -721,22 +516,7 @@ class Playlist extends playlist_object
      */
     public function get_total_duration(): int
     {
-        $songs  = $this->get_songs();
-        $idlist = '(' . implode(',', $songs) . ')';
-        if ($idlist == '()') {
-            return 0;
-        }
-
-        $sql        = 'SELECT SUM(`time`) FROM `song` WHERE `id` IN ' . $idlist;
-        $db_results = Dba::read($sql);
-        $row        = Dba::fetch_row($db_results);
-        if ($row === []) {
-            return 0;
-        }
-
-        //debug_event(self::class, "get_total_duration(): " . $sql, 5);
-
-        return (int) $row[0];
+        return self::getPlaylistRepository()->getTotalDuration(array_values($this->get_songs()));
     }
 
     public function getMediaType(): LibraryItemEnum
@@ -754,27 +534,7 @@ class Playlist extends playlist_object
             return false;
         }
 
-        if (!$object && $track > 0) {
-            // searching by track
-            $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = ? AND `playlist_data`.`track` = ? LIMIT 1";
-            $db_results = Dba::read($sql, [$this->id, $object_type, $track]);
-        } elseif ($track > 0) {
-            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = ? AND `track` <= ? AND `playlist_data`.`object_id` = ? LIMIT 1";
-            $db_results = Dba::read($sql, [$this->id, $object_type, $track, $object]);
-        } else {
-            // Search object and optionally check by track
-            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
-            $db_results = Dba::read($sql, [$this->id, $object_type, $object]);
-        }
-
-        $results = Dba::fetch_assoc($db_results);
-        if (isset($results['object_id']) || isset($results['track'])) {
-            debug_event(self::class, $this->id . ' has_item: ' . $object_type . ' ' . ($results['object_id'] ?? $results['track']), 5);
-
-            return true;
-        }
-
-        return false;
+        return self::getPlaylistRepository()->hasItem($this->id, $object, $track, $object_type);
     }
 
     /**
@@ -783,22 +543,13 @@ class Playlist extends playlist_object
      */
     public function has_search(int $playlist_user): int
     {
-        // search for your own playlist
-        $sql        = "SELECT `id`, `name` FROM `search` WHERE `user` = ?";
-        $db_results = Dba::read($sql, [$playlist_user]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if ($row['name'] == $this->name) {
-                return (int) $row['id'];
-            }
-        }
+        $repository = self::getPlaylistRepository();
 
-        // look for public ones
-        $user_id    = (int) (Core::get_global('user')?->getId());
-        $sql        = "SELECT `id`, `name` FROM `search` WHERE (`type`='public' OR `user` = ?)";
-        $db_results = Dba::read($sql, [$user_id]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if ($row['name'] == $this->name) {
-                return (int) $row['id'];
+        // search for your own playlist, then for the public ones
+        foreach ([$repository->findSearchNames($playlist_user, true), $repository->findSearchNames((int) (Core::get_global('user')?->getId()), false)] as $names) {
+            $searchId = array_search($this->name, $names, true);
+            if ($searchId !== false) {
+                return (int) $searchId;
             }
         }
 

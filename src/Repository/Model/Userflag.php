@@ -29,10 +29,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Plugin\PluginSaveMediaplayInterface;
+use Ampache\Repository\UserflagRepositoryInterface;
 use Exception;
 
 /**
@@ -100,14 +100,7 @@ class Userflag extends database_object
             return false;
         }
 
-        $userflags  = [];
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = sprintf('SELECT `object_id`, `date` FROM `user_flag` WHERE `user` = ? AND `object_id` IN %s AND `object_type` = ?', $idlist);
-        $db_results = Dba::read($sql, [$user_id, $type]);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $userflags[$row['object_id']] = $row['date'];
-        }
+        $userflags = self::getUserflagRepository()->getFlagDates($type, array_values($ids), $user_id);
 
         foreach ($ids as $object_id) {
             if (isset($userflags[$object_id])) {
@@ -131,36 +124,7 @@ class Userflag extends database_object
      */
     public static function garbage_collection(?string $object_type = null, ?int $object_id = null): void
     {
-        $types = [
-            'album_disk',
-            'album',
-            'artist',
-            'catalog',
-            'folder',
-            'label',
-            'live_stream',
-            'playlist',
-            'podcast_episode',
-            'podcast',
-            'search',
-            'song',
-            'tag',
-            'user',
-            'video',
-        ];
-
-        if ($object_type !== null) {
-            if (in_array($object_type, $types)) {
-                $sql = "DELETE FROM `user_flag` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, [$object_type, $object_id]);
-            } else {
-                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
-            }
-        } else {
-            foreach ($types as $type) {
-                Dba::write(sprintf('DELETE FROM `user_flag` WHERE `object_type` = \'%s\' AND `user_flag`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`);', $type, $type, $type));
-            }
-        }
+        self::getUserflagRepository()->collectGarbage($object_type, $object_id);
     }
 
     /**
@@ -187,78 +151,7 @@ class Userflag extends database_object
             $offset = 0;
         }
 
-        // Select Top objects counting by # of rows
-        $sql   = self::get_latest_sql($type, $user, $since, $before, $by_user, $catalog_id);
-        $limit = ($offset < 1)
-            ? $count
-            : $offset . "," . $count;
-        if ($limit > 0) {
-            $sql .= 'LIMIT ' . $limit;
-        }
-
-        //debug_event(self::class, 'get_latest ' . $sql, 5);
-        $db_results = Dba::read($sql);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_latest_sql
-     */
-    public static function get_latest_sql(
-        string $input_type,
-        ?User $user = null,
-        int $since = 0,
-        int $before = 0,
-        bool $by_user = false,
-        int $catalog_id = 0,
-    ): string {
-        $type = Stats::validate_type($input_type);
-        $sql  = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
-        if ($input_type == 'album_artist' || $input_type == 'song_artist') {
-            $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `user_flag`.`object_id` AND `user_flag`.`object_type` = 'artist'";
-        }
-
-        $sql .= " WHERE `user_flag`.`object_type` = '" . $type . "'";
-        if ($by_user && $user?->id > 0) {
-            $sql .= sprintf(' AND `user_flag`.`user` = \'%s\'', $user->id);
-        }
-
-        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
-            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
-        }
-
-        if (AmpConfig::get('catalog_filter')) {
-            $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user?->getId() ?? -1);
-        }
-
-        $catalog_sql = Catalog::get_catalog_id_filter($input_type, '`user_flag`.`object_id`', $catalog_id);
-        if ($catalog_sql !== '') {
-            $sql .= " AND " . $catalog_sql;
-        }
-
-        if ($input_type == 'album_artist') {
-            $sql .= " AND `artist`.`album_count` > 0";
-        }
-
-        if ($input_type == 'song_artist') {
-            $sql .= " AND `artist`.`song_count` > 0";
-        }
-
-        if ($since > 0) {
-            $sql .= " AND `user_flag`.`date` >= '" . $since . "'";
-            if ($before > 0) {
-                $sql .= " AND `user_flag`.`date` <= '" . $before . "'";
-            }
-        }
-
-        //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
-
-        return $sql . " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `date` DESC ";
+        return self::getUserflagRepository()->findLatestIds($type, $user, $count, $offset, $since, $before, $by_user, $catalog_id);
     }
 
     public static function is_valid(string $type): bool
@@ -271,9 +164,7 @@ class Userflag extends database_object
      */
     public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
-        $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+        self::getUserflagRepository()->migrate($object_type, $old_object_id, $new_object_id);
     }
 
     /**
@@ -330,6 +221,16 @@ class Userflag extends database_object
     }
 
     /**
+     * @deprecated inject dependency
+     */
+    private static function getUserflagRepository(): UserflagRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserflagRepositoryInterface::class);
+    }
+
+    /**
      * get_flag
      * @return bool|array{bool, int}
      */
@@ -361,16 +262,15 @@ class Userflag extends database_object
             return (bool) $object[0];
         }
 
-        $flagged    = false;
-        $sql        = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ?";
-        $db_results = Dba::read($sql, [$user_id, $this->id, $this->type]);
-        if ($row = Dba::fetch_assoc($db_results)) {
+        $flagged = false;
+        $date    = self::getUserflagRepository()->getFlagDate($this->id, $this->type, $user_id);
+        if ($date !== null) {
             // always cache the date in case it's called by subsonic
-            parent::add_to_cache($key, $this->id, [true, (int) $row['date']]);
+            parent::add_to_cache($key, $this->id, [true, $date]);
             if ($get_date) {
                 return [
                     true,
-                    (int) $row['date']
+                    $date
                 ];
             }
 
@@ -413,31 +313,18 @@ class Userflag extends database_object
 
         debug_event(self::class, sprintf('Setting userflag for %s %d to %s (%s)', $this->type, $this->id, $flagged, $date), 4);
 
-        // a playlist, collection, folder, search or live stream can be flagged but carries no weight column
-        $weighted = in_array($this->type, Stats::WEIGHT_TYPES, true);
+        $repository = self::getUserflagRepository();
 
         if (!$flagged) {
-            $sql    = "DELETE FROM `user_flag` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
-            $params = [$this->id, $this->type, $user_id];
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [false]);
-
-            // adjust weight
-            if ($weighted) {
-                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
-            }
+            $repository->adjustWeight($this->type, $this->id, -1);
+            $repository->deleteFlag($this->id, $this->type, $user_id);
         } else {
-            $sql    = "REPLACE INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
-            $params = [$this->id, $this->type, $user_id, $date];
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [1, $date]);
-
             $this->getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, $this->id, $date);
-
-            if ($weighted) {
-                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
-            }
+            $repository->adjustWeight($this->type, $this->id, 1);
+            $repository->setFlag($this->id, $this->type, $user_id, $date);
         }
-
-        Dba::write($sql, $params);
 
         if ($this->type == 'song') {
             $user = new User($user_id);

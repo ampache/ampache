@@ -59,6 +59,7 @@ use Ampache\Module\Database\Query\WantedQuery;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\TmpBrowseRepositoryInterface;
 
 /**
  * Query Class
@@ -153,23 +154,19 @@ class Query
         }
 
         if ($query_id === 0) {
-            $data = $this->_serialize($this->_state);
-            $sql  = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
-            Dba::write($sql, [$sid, $data]);
-            $insert_id = Dba::insert_id();
-            if (!$insert_id) {
+            $insert_id = self::getTmpBrowseRepository()->create((string) $sid, $this->_serialize($this->_state));
+            if ($insert_id === null) {
                 return;
             }
 
             $this->reset();
-            $this->id = (int) $insert_id;
+            $this->id = $insert_id;
 
             return;
         }
-        $sql = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
 
-        $db_results = Dba::read($sql, [$query_id, $sid]);
-        if ($results = Dba::fetch_assoc($db_results)) {
+        $results = self::getTmpBrowseRepository()->getRow((int) $query_id, (string) $sid);
+        if (!empty($results['data'])) {
             $this->id     = (int) $query_id;
             $this->_state = (array) $this->_unserialize($results['data']);
             $this->_cache = (array_key_exists('object_data', $results) && !empty($results['object_data']))
@@ -190,8 +187,7 @@ class Query
      */
     public static function garbage_collection(): void
     {
-        $sql = 'DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN `session` ON `session`.`id` = `tmp_browse`.`sid` WHERE `session`.`id` IS NULL';
-        Dba::write($sql);
+        self::getTmpBrowseRepository()->collectGarbage();
     }
 
     /**
@@ -269,6 +265,16 @@ class Query
     }
 
     /**
+     * @deprecated inject dependency
+     */
+    private static function getTmpBrowseRepository(): TmpBrowseRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TmpBrowseRepositoryInterface::class);
+    }
+
+    /**
      * Get content div name
      */
     public function get_content_div(): string
@@ -342,9 +348,7 @@ class Query
         }
 
         if (!$this->is_simple()) {
-            $sql        = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
-            $db_results = Dba::read($sql, [session_id(), $this->id]);
-            $results    = Dba::fetch_assoc($db_results);
+            $results = self::getTmpBrowseRepository()->getRow((int) $this->id, (string) session_id());
 
             if (array_key_exists('data', $results) && !empty($results['data'])) {
                 $data = (array) $this->_unserialize($results['data']);
@@ -488,10 +492,11 @@ class Query
             $this->set_total(count($object_ids));
             $browse_id = $this->id;
             if ($browse_id != 'nocache') {
-                $data = $this->_serialize($this->_cache);
-
-                $sql = 'UPDATE `tmp_browse` SET `object_data` = ? WHERE `sid` = ? AND `id` = ?';
-                Dba::write($sql, [$data, session_id(), $browse_id]);
+                self::getTmpBrowseRepository()->updateObjectData(
+                    (int) $browse_id,
+                    (string) session_id(),
+                    $this->_serialize($this->_cache)
+                );
             }
         }
 
@@ -1017,10 +1022,11 @@ class Query
     {
         $browse_id = $this->id;
         if ($browse_id != 'nocache') {
-            $data = $this->_serialize($this->_state);
-
-            $sql = 'UPDATE `tmp_browse` SET `data` = ? WHERE `sid` = ? AND `id` = ?';
-            Dba::write($sql, [$data, session_id(), $browse_id]);
+            self::getTmpBrowseRepository()->updateState(
+                (int) $browse_id,
+                (string) session_id(),
+                $this->_serialize($this->_state)
+            );
         }
     }
 

@@ -40,7 +40,6 @@ use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
@@ -194,21 +193,12 @@ class Song extends database_object implements
             return false;
         }
 
-        $idlist = '(' . implode(',', $song_ids) . ')';
-        if ($idlist == '()') {
-            return false;
-        }
-
-        $artists = [];
-        $albums  = [];
+        $artists    = [];
+        $albums     = [];
+        $repository = self::getSongRepository();
 
         // Song data cache
-        $sql = (AmpConfig::get('catalog_disable'))
-            ? "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `song`.`last_played` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN $idlist AND `catalog`.`enabled` = '1' "
-            : "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `song`.`last_played` FROM `song` WHERE `song`.`id` IN $idlist";
-
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach ($repository->getRowsByIds(array_values($song_ids), (bool) AmpConfig::get('catalog_disable')) as $row) {
             if (AmpConfig::get('show_played_times')) {
                 $row['total_count'] = (empty($limit_threshold))
                     ? $row['total_count']
@@ -240,10 +230,7 @@ class Song extends database_object implements
         }
 
         // Build a cache for the song's extended table
-        $sql        = 'SELECT * FROM `song_data` WHERE `song_id` IN ' . $idlist;
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach ($repository->getDataRowsByIds(array_values($song_ids)) as $row) {
             parent::add_to_cache('song_data', $row['song_id'], $row);
         }
 
@@ -263,40 +250,22 @@ class Song extends database_object implements
         string $artist_mbid = '',
         string $album_mbid = '',
     ): string {
-        // by default require song, album, artist for any searches
-        $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?)";
-        $params = [
+        $songId = self::getSongRepository()->findIdForScrobble(
             $song_name,
             $artist_name,
-            $artist_name,
             $album_name,
-            $album_name,
-        ];
-        if (!empty($song_mbid)) {
-            $sql .= " AND `song`.`mbid` = ?";
-            $params[] = $song_mbid;
-        }
+            $song_mbid,
+            $artist_mbid,
+            $album_mbid
+        );
 
-        if (!empty($artist_mbid)) {
-            $sql .= " AND `artist`.`mbid` = ?";
-            $params[] = $artist_mbid;
-        }
-
-        if (!empty($album_mbid)) {
-            $sql .= " AND `album`.`mbid` = ?";
-            $params[] = $album_mbid;
-        }
-
-        $sql .= " LIMIT 1;";
-        $db_results = Dba::read($sql, $params);
-        $row        = Dba::fetch_assoc($db_results);
-        if ($row === []) {
+        if ($songId === null) {
             debug_event(self::class, 'can_scrobble failed to find: ' . $song_name, 5);
 
             return '';
         }
 
-        return (string) $row['id'];
+        return (string) $songId;
     }
 
     /**
@@ -440,62 +409,28 @@ class Song extends database_object implements
     }
 
     /**
-     * find
+     * The id of a song already holding these tags, or `false` when there is none
+     *
      * @param array<string, mixed> $data
      */
-    public static function find(array $data): bool
+    public static function find(array $data): int|false
     {
-        $sql_base = "SELECT `song`.`id` FROM `song`";
+        $repository = self::getSongRepository();
         if ($data['mb_trackid']) {
-            $sql        = $sql_base . " WHERE `song`.`mbid` = ? LIMIT 1";
-            $db_results = Dba::read($sql, [$data['mb_trackid']]);
-            if ($results = Dba::fetch_assoc($db_results)) {
-                return $results['id'];
+            $songId = $repository->findIdByMbid((string) $data['mb_trackid']);
+            if ($songId !== null) {
+                return $songId;
             }
         }
 
         if ($data['file']) {
-            $sql        = $sql_base . " WHERE `song`.`file` = ? LIMIT 1";
-            $db_results = Dba::read($sql, [$data['file']]);
-            if ($results = Dba::fetch_assoc($db_results)) {
-                return $results['id'];
+            $songId = $repository->findIdByFile((string) $data['file']);
+            if ($songId !== null) {
+                return $songId;
             }
         }
 
-        $where  = "WHERE `song`.`title` = ?";
-        $sql    = $sql_base;
-        $params = [$data['title']];
-        if ($data['track']) {
-            $where .= " AND `song`.`track` = ?";
-            $params[] = $data['track'];
-        }
-
-        $sql .= " INNER JOIN `artist` ON `artist`.`id` = `song`.`artist`";
-        $sql .= " INNER JOIN `album` ON `album`.`id` = `song`.`album`";
-
-        if ($data['mb_artistid']) {
-            $where .= " AND `artist`.`mbid` = ?";
-            $params[] = $data['mb_artistid'];
-        } else {
-            $where .= " AND `artist`.`name` = ?";
-            $params[] = $data['artist'];
-        }
-
-        if ($data['mb_albumid']) {
-            $where .= " AND `album`.`mbid` = ?";
-            $params[] = $data['mb_albumid'];
-        } else {
-            $where .= " AND `album`.`name` = ?";
-            $params[] = $data['album'];
-        }
-
-        $sql .= $where . " LIMIT 1";
-        $db_results = Dba::read($sql, $params);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return $results['id'];
-        }
-
-        return false;
+        return $repository->findIdByTags($data) ?? false;
     }
 
     /**
@@ -506,27 +441,8 @@ class Song extends database_object implements
     public static function garbage_collection(): void
     {
         debug_event(self::class, 'collectGarbage', 5);
-        // delete files matching catalog_ignore_pattern
-        $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
-        if ($ignore_pattern) {
-            Dba::write("DELETE FROM `song` WHERE `file` REGEXP ?;", [$ignore_pattern]);
-        }
 
-        // delete duplicates
-        Dba::write("DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;");
-        // clean up missing catalogs
-        Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
-        // delete the rest
-        Dba::write("DELETE FROM `song_data` WHERE `song_data`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);");
-        Dba::write("DELETE FROM `song_map` WHERE `song_map`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);");
-        // also clean up some bad data that might creep in
-        // One table scan instead of two.
-        Dba::write("UPDATE `song` SET `composer` = NULLIF(`composer`, ''), `mbid` = NULLIF(`mbid`, '');");
-
-        Dba::write("INSERT IGNORE INTO `song_data` (`song_id`) SELECT `id` FROM `song` WHERE `id` NOT IN (SELECT `song_id` FROM `song_data`);");
-
-        // One table scan instead of six: NULLIF empties each column independently.
-        Dba::write("UPDATE `song_data` SET `comment` = NULLIF(`comment`, ''), `lyrics` = NULLIF(`lyrics`, ''), `label` = NULLIF(`label`, ''), `language` = NULLIF(`language`, ''), `waveform` = NULLIF(`waveform`, ''), `disksubtitle` = NULLIF(`disksubtitle`, '');");
+        self::getSongRepository()->collectOrphanedGarbage((string) AmpConfig::get('catalog_ignore_pattern'));
     }
 
     /**
@@ -568,10 +484,8 @@ class Song extends database_object implements
      */
     public static function get_deleted(): array
     {
-        $deleted    = [];
-        $sql        = "SELECT * FROM `deleted_song`";
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $deleted = [];
+        foreach (self::getSongRepository()->getDeletedRows() as $row) {
             $deleted[] = [
                 'id' => (int) $row['id'],
                 'addition_time' => (int) $row['addition_time'],
@@ -600,16 +514,7 @@ class Song extends database_object implements
             return $results;
         }
 
-        $sql = ($type == 'album')
-            ? "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;"
-            : "SELECT DISTINCT `artist_id` AS `object_id` FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` = ?;";
-
-        $db_results = Dba::read($sql, [$object_id]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['object_id'];
-        }
-
-        return $results;
+        return self::getSongRepository()->getParentIds($object_id, $type == 'album');
     }
 
     /**
@@ -618,19 +523,11 @@ class Song extends database_object implements
      */
     public static function get_song_map_array(int $song_id, ?string $type = 'isrc'): array
     {
-        $results = [];
         if (!$song_id) {
-            return $results;
+            return [];
         }
 
-        $sql = "SELECT DISTINCT `object_id` FROM `song_map` WHERE `object_type` = ? AND `song_id` = ?;";
-
-        $db_results = Dba::read($sql, [$type, $song_id]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (string) $row['object_id'];
-        }
-
-        return $results;
+        return self::getSongRepository()->getSongMapValues($song_id, (string) $type);
     }
 
     /**
@@ -642,23 +539,12 @@ class Song extends database_object implements
             return null;
         }
 
-        $sql = "SELECT DISTINCT `object_id` FROM `song_map` WHERE `object_type` = ? AND `song_id` = ?;";
-
-        $db_results = Dba::read($sql, [$type, $song_id]);
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (string) $row['object_id'];
-        }
-
-        return null;
+        return self::getSongRepository()->getSongMapValues($song_id, $type)[0] ?? null;
     }
 
     public static function has_id(int|string $song_id): bool
     {
-        $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`id` = ?";
-        $db_results = Dba::read($sql, [$song_id]);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return isset($results['id']);
+        return self::getSongRepository()->hasId((int) $song_id);
     }
 
     /**
@@ -798,15 +684,12 @@ class Song extends database_object implements
         $album_disk_id = AlbumDisk::check($album_id, $disk, $catalog, $disksubtitle);
 
         $insert_time = time();
-        $sql         = "INSERT INTO `song` (`catalog`, `file`, `album`, `album_disk`, `disk`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `addition_time`, `update_time`, `year`, `mbid`, `user_upload`, `license`, `composer`, `channels`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $db_results  = Dba::write($sql, [$catalog, $file, $album_id, $album_disk_id, $disk, $artist_id, $title, $bitrate, $rate, $mode, $size, $time, $track, $insert_time, $insert_time, $year, $track_mbid, $user_upload, $license_id, $composer ?: null, $channels]);
-        if (!$db_results) {
+        $song_id     = self::getSongRepository()->insert([$catalog, $file, $album_id, $album_disk_id, $disk, $artist_id, $title, $bitrate, $rate, $mode, $size, $time, $track, $insert_time, $insert_time, $year, $track_mbid, $user_upload, $license_id, $composer ?: null, $channels]);
+        if ($song_id === null) {
             debug_event(self::class, 'Unable to insert ' . $file, 2);
 
             return null;
         }
-
-        $song_id = (int) Dba::insert_id();
         $artists = [$artist_id, (int) $albumartist_id];
 
         // map the song to catalog album and artist maps
@@ -894,8 +777,7 @@ class Song extends database_object implements
             }
         }
 
-        $sql = "INSERT INTO `song_data` (`song_id`, `disksubtitle`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain]);
+        self::getSongRepository()->insertData([$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain]);
 
         return $song_id;
     }
@@ -918,44 +800,7 @@ class Song extends database_object implements
         Catalog::migrate_map('album', $old_album, $new_album);
 
         // update mapping tables
-        $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `album_id` = ?";
-        if (Dba::write($sql, [$new_album, $old_album]) === null) {
-            return false;
-        }
-
-        if ($song_id > 0) {
-            $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = 'song'";
-            if (Dba::write($sql, [$new_album, $old_album, $song_id]) === null) {
-                return false;
-            }
-        } else {
-            $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_type` = 'song'";
-            if (Dba::write($sql, [$new_album, $old_album]) === null) {
-                return false;
-            }
-        }
-
-        $sql = "UPDATE IGNORE `artist_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        if (Dba::write($sql, [$new_album, 'album', $old_album]) === null) {
-            return false;
-        }
-
-        $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        if (Dba::write($sql, [$new_album, 'album', $old_album]) === null) {
-            return false;
-        }
-
-        // delete leftovers duplicate maps
-        $sql = "DELETE FROM `album_disk` WHERE `album_id` = ?";
-        Dba::write($sql, [$old_album]);
-        $sql = "DELETE FROM `album_map` WHERE `album_id` = ?";
-        Dba::write($sql, [$old_album]);
-        $sql = "DELETE FROM `artist_map` WHERE `object_type` = ? AND `object_id` = ?";
-        Dba::write($sql, ['album', $old_album]);
-        $sql = "DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
-        Dba::write($sql, ['album', $old_album]);
-
-        return true;
+        return self::getSongRepository()->migrateAlbum($new_album, $old_album, $song_id);
     }
 
     /**
@@ -975,29 +820,9 @@ class Song extends database_object implements
             Art::duplicate('artist', $old_artist, $new_artist);
             self::getWantedRepository()->migrateArtist($old_artist, $new_artist);
             Catalog::migrate_map('artist', $old_artist, $new_artist);
+
             // update mapping tables
-            $sql = "UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ?";
-            if (Dba::write($sql, [$new_artist, $old_artist]) === null) {
-                return false;
-            }
-
-            $sql = "UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?";
-            if (Dba::write($sql, [$new_artist, $old_artist]) === null) {
-                return false;
-            }
-
-            $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-            if (Dba::write($sql, [$new_artist, 'artist', $old_artist]) === null) {
-                return false;
-            }
-
-            // delete leftovers duplicate maps
-            $sql = "DELETE FROM `album_map` WHERE `object_id` = ?";
-            Dba::write($sql, [$old_artist]);
-            $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ?";
-            Dba::write($sql, [$old_artist]);
-            $sql = "DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
-            Dba::write($sql, ['artist', $old_artist]);
+            return self::getSongRepository()->migrateArtist($new_artist, $old_artist);
         }
 
         return true;
@@ -1204,14 +1029,11 @@ class Song extends database_object implements
     {
         $update_time = time();
 
-        $sql = "UPDATE `song` SET `album` = ?, `album_disk` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
-        Dba::write($sql, [$new_song->album, $new_song->album_disk, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer ?: null, $new_song->bitrate, $new_song->rate, $new_song->mode, $new_song->channels, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id]);
-
-        // did you miss the insert? it'll never come back if we don't check
-        Dba::write("INSERT IGNORE INTO `song_data` (`song_id`) SELECT `id` from `song` where `id` = ? AND `id` NOT IN (SELECT `song_id` FROM `song_data`);", [$song_id]);
-
-        $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?";
-        Dba::write($sql, [$new_song->label ?: null, $new_song->lyrics ?: null, $new_song->language ?: null, $new_song->disksubtitle ?: null, $new_song->comment ?: null, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id]);
+        self::getSongRepository()->updateSong(
+            $song_id,
+            [$new_song->album, $new_song->album_disk, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer ?: null, $new_song->bitrate, $new_song->rate, $new_song->mode, $new_song->channels, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id],
+            [$new_song->label ?: null, $new_song->lyrics ?: null, $new_song->language ?: null, $new_song->disksubtitle ?: null, $new_song->comment ?: null, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id]
+        );
     }
 
     /**
@@ -1221,25 +1043,7 @@ class Song extends database_object implements
      */
     public static function update_song_map(array $new_data, string $type, int $song_id): void
     {
-        if (empty($new_data)) {
-            $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `object_type` = ?;";
-            Dba::write($sql, [$song_id, $type]) !== null;
-
-            return;
-        }
-
-        // we only want your latest values in the map so we delete anything not in the new list
-        $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `object_type` = ? AND `object_id` NOT IN (";
-
-        foreach ($new_data as $object_id) {
-            // insert new values
-            Dba::write("REPLACE INTO `song_map` (`song_id`, `object_type`, `object_id`) VALUES (?, ?, ?);", [$song_id, $type, $object_id]);
-            // append to the sql for deletions
-            $sql .= "'" . Dba::escape($object_id) . "',";
-        }
-        $sql = rtrim($sql, ',') . ');';
-
-        Dba::write($sql, [$song_id, $type]) !== null;
+        self::getSongRepository()->updateSongMap(array_values($new_data), $type, $song_id);
     }
 
     /**
@@ -1289,8 +1093,7 @@ class Song extends database_object implements
             $time = time();
         }
 
-        $sql = "UPDATE `song` SET `update_time` = ? WHERE `id` = ?;";
-        Dba::write($sql, [$time, $song_id]);
+        self::getSongRepository()->updateUpdateTime($song_id, $time);
     }
 
     /**
@@ -1637,13 +1440,7 @@ class Song extends database_object implements
     public function get_album_mbid(): ?string
     {
         if ($this->album_mbid === null) {
-            $db_results = Dba::read(
-                'SELECT `mbid` FROM `album` WHERE `id` = ? LIMIT 1;',
-                [$this->album]
-            );
-            if ($row = Dba::fetch_assoc($db_results)) {
-                $this->album_mbid = $row['mbid'];
-            }
+            $this->album_mbid = self::getSongRepository()->findRelatedMbid(SongMbidSourceEnum::ALBUM, (int) $this->album);
         }
 
         return $this->album_mbid;
@@ -1671,13 +1468,7 @@ class Song extends database_object implements
     public function get_albumartist_mbid(): ?string
     {
         if ($this->albumartist_mbid === null) {
-            $db_results = Dba::read(
-                'SELECT `mbid` FROM `artist` WHERE `id` = ? LIMIT 1;',
-                [$this->get_album_artist()]
-            );
-            if ($row = Dba::fetch_assoc($db_results)) {
-                $this->albumartist_mbid = $row['mbid'];
-            }
+            $this->albumartist_mbid = self::getSongRepository()->findRelatedMbid(SongMbidSourceEnum::ARTIST, (int) $this->get_album_artist());
         }
 
         return $this->albumartist_mbid;
@@ -1690,13 +1481,7 @@ class Song extends database_object implements
     public function get_artist_mbid(): ?string
     {
         if ($this->artist_mbid === null) {
-            $db_results = Dba::read(
-                'SELECT `mbid` FROM `artist` WHERE `id` = ? LIMIT 1;',
-                [$this->artist]
-            );
-            if ($row = Dba::fetch_assoc($db_results)) {
-                $this->artist_mbid = $row['mbid'];
-            }
+            $this->artist_mbid = self::getSongRepository()->findRelatedMbid(SongMbidSourceEnum::ARTIST, (int) $this->artist);
         }
 
         return $this->artist_mbid;
@@ -2577,17 +2362,11 @@ class Song extends database_object implements
             return parent::get_from_cache('song_data', $this->id);
         }
 
-        $columns = (empty($select))
-            ? '`comment`, `lyrics`, `label`, `language`, `waveform`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `disksubtitle`'
-            : Dba::escape($select);
-
-        $sql        = sprintf('SELECT %s FROM `song_data` WHERE `song_id` = ?', $columns);
-        $db_results = Dba::read($sql, [$this->id]);
-        if (!$db_results) {
-            return [];
-        }
-
-        $results = Dba::fetch_assoc($db_results);
+        // the only partial read a caller asks for is the replaygain set, so no columns go into the statement
+        $repository = self::getSongRepository();
+        $results    = (empty($select))
+            ? $repository->getDataRow($this->id)
+            : $repository->getReplaygainRow($this->id);
 
         if (empty($select)) {
             parent::add_to_cache('song_data', $this->id, $results);
@@ -2675,9 +2454,7 @@ class Song extends database_object implements
             return true;
         }
 
-        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `song`.`last_played`, `album`.`album_artist` AS `albumartist`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
-        $db_results = Dba::read($sql, [$song_id]);
-        $results    = Dba::fetch_assoc($db_results);
+        $results = self::getSongRepository()->getRow($song_id);
         if (isset($results['id'])) {
             parent::add_to_cache('song', $song_id, $results);
             $this->setSongInfoFromArray($results);

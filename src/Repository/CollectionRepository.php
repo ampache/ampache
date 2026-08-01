@@ -61,26 +61,33 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
 
     public function collectGarbage(): void
     {
-        try {
-            // A member whose object was deleted is dropped; the collection itself survives
-            foreach (Collection::VALID_TYPES as $objectType) {
-                $table = ($objectType === 'genre') ? 'tag' : $objectType;
-                $this->connection->query(
-                    sprintf(
-                        'DELETE FROM `collection_map` WHERE `object_type` = ? AND `object_id` NOT IN (SELECT `id` FROM `%s`);',
-                        $table
-                    ),
-                    [$objectType]
+        $statements = [];
+
+        // A member whose object was deleted is dropped; the collection itself survives
+        foreach (Collection::VALID_TYPES as $objectType) {
+            $table        = ($objectType === 'genre') ? 'tag' : $objectType;
+            $statements[] = [
+                sprintf(
+                    'DELETE FROM `collection_map` WHERE `object_type` = ? AND `object_id` NOT IN (SELECT `id` FROM `%s`);',
+                    $table
+                ),
+                [$objectType],
+            ];
+        }
+
+        $statements[] = ['DELETE FROM `collection` WHERE `user` IS NOT NULL AND `user` NOT IN (SELECT `id` FROM `user`);', []];
+        $statements[] = ['DELETE FROM `collection_map` WHERE `collection` NOT IN (SELECT `id` FROM `collection`);', []];
+
+        // one type that cannot be swept must not take the orphan cleanups behind it down as well
+        foreach ($statements as $statement) {
+            try {
+                $this->connection->query($statement[0], $statement[1]);
+            } catch (DatabaseException) {
+                $this->logger->debug(
+                    'collectGarbage error: ' . $statement[0],
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
-
-            $this->connection->query('DELETE FROM `collection` WHERE `user` IS NOT NULL AND `user` NOT IN (SELECT `id` FROM `user`);');
-            $this->connection->query('DELETE FROM `collection_map` WHERE `collection` NOT IN (SELECT `id` FROM `collection`);');
-        } catch (DatabaseException) {
-            $this->logger->debug(
-                'collectGarbage error',
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
         }
     }
 

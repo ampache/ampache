@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
+use Ampache\Repository\UserActivityRepositoryInterface;
 
 class Useractivity extends database_object
 {
@@ -73,11 +73,7 @@ class Useractivity extends database_object
             return false;
         }
 
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = 'SELECT * FROM `user_activity` WHERE `id` IN ' . $idlist;
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach (self::getUserActivityRepository()->getRowsByIds(array_values($ids)) as $row) {
             parent::add_to_cache('user_activity', $row['id'], $row);
         }
 
@@ -89,9 +85,17 @@ class Useractivity extends database_object
      */
     public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
-        $sql = "UPDATE `user_activity` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        self::getUserActivityRepository()->migrate($object_type, $old_object_id, $new_object_id);
+    }
 
-        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserActivityRepository(): UserActivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityRepositoryInterface::class);
     }
 
     public function getId(): int

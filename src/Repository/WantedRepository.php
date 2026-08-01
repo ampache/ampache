@@ -48,6 +48,17 @@ final readonly class WantedRepository implements WantedRepositoryInterface
     ) {}
 
     /**
+     * Marks a wanted item as accepted
+     */
+    public function accept(string $musicbrainzId): void
+    {
+        $this->connection->query(
+            'UPDATE `wanted` SET `accepted` = 1 WHERE `mbid` = ?',
+            [$musicbrainzId]
+        );
+    }
+
+    /**
      * This cleans out unused wanted items
      */
     public function collectGarbage(): void

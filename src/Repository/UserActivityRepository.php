@@ -167,6 +167,44 @@ final readonly class UserActivityRepository implements UserActivityRepositoryInt
     }
 
     /**
+     * Reads whole activity rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param list<int|string> $activityIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $activityIds): array
+    {
+        if ($activityIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT * FROM `user_activity` WHERE `id` IN (%s)',
+                implode(',', array_map(intval(...), $activityIds))
+            )
+        );
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Moves the activity of an object onto another one
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
+    {
+        $this->connection->query(
+            'UPDATE `user_activity` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            [$newObjectId, $objectType, $oldObjectId]
+        );
+    }
+
+    /**
      * Inserts the necessary data to register a generic action on an object
      *
      * @todo Replace when active record models are available

@@ -45,16 +45,54 @@ interface PreferenceRepositoryInterface
     ;
 
     /**
+     * Drops the user rows whose preference no longer exists
+     */
+    public function collectGarbage(): void;
+
+    /**
      * Drops the preference rows that no longer belong to anyone, and the system ones that leaked onto users
      */
     public function collectPreferenceGarbage(): void
     ;
 
     /**
+     * Copies the server's own preference values onto a user
+     */
+    public function copySystemPreferences(int $userId): bool;
+
+    /**
+     * Counts the preferences matching a name or an id, which is how existence is asked
+     */
+    public function countByNameOrId(int|string $preference): int;
+
+    /**
+     * Drops a preference by name or by id
+     */
+    public function deleteByNameOrId(int|string $preference): bool;
+
+    /**
      * Drops one duplicated preference row, matching on the value so the surviving copy is the one kept
      */
     public function deleteDuplicatePreference(int $userId, int $preferenceId, int|string|null $value): void
     ;
+
+    /**
+     * Reads the id of a preference by name
+     */
+    public function findIdByName(string $name): ?int;
+
+    /**
+     * Reads the names from a list that have no `preference` row yet
+     *
+     * @param list<string> $names
+     * @return list<string>
+     */
+    public function findMissingNames(array $names): array;
+
+    /**
+     * Reads the name of a preference by id
+     */
+    public function findNameById(int|string $preferenceId): ?string;
 
     /**
      * Returns a nice flat dict of all the possible preferences
@@ -88,12 +126,31 @@ interface PreferenceRepositoryInterface
     ;
 
     /**
+     * Reads the categories preferences are grouped under
+     *
+     * @return list<string>
+     */
+    public function getCategories(): array;
+
+    /**
      * Reads the users holding fewer preferences than exist, which is the cheap way to find the ones needing repair
      *
      * @return list<int>
      */
     public function getIdsMissingPreferences(): array
     ;
+
+    /**
+     * Reads the name and value of every preference resolved for a user
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function getInitRows(int $userId): array;
+
+    /**
+     * Reads the access level a preference demands
+     */
+    public function getLevel(string $name): ?int;
 
     /**
      * Reads a user's stored preferences as preference-id => value, so duplicates are visible to the caller
@@ -112,6 +169,61 @@ interface PreferenceRepositoryInterface
     ;
 
     /**
+     * Reads one preference as a user sees it, with the row the display needs
+     *
+     * @return array<string, mixed>
+     */
+    public function getUserPreferenceRow(string $name, int $userId, bool $systemOnly): array;
+
+    /**
+     * Reads a user's stored values, keyed by whichever column this schema carries
+     *
+     * @return array<int|string, ?string>
+     */
+    public function getUserValues(int $userId, bool $keyedByName): array;
+
+    /**
+     * Whether this database spells the column `category`, which it has since Migration600051
+     */
+    public function hasCategoryColumn(): bool;
+
+    /**
+     * Whether `user_preference` carries the name column it gained in Migration700020
+     */
+    public function hasUserPreferenceName(): bool;
+
+    /**
+     * Inserts one preference with the row Ampache ships for it
+     */
+    public function insertDefault(
+        string $name,
+        string $value,
+        string $description,
+        int $level,
+        string $type,
+        string $category,
+        ?string $subcategory,
+    ): bool;
+
+    /**
+     * Inserts a preference and seeds it onto the server and, unless it is a system one, onto every user
+     */
+    public function insertPreference(
+        string $name,
+        string $description,
+        float|int|string|null $default,
+        int $level,
+        string $type,
+        string $category,
+        ?string $subcategory,
+    ): bool;
+
+    /**
+     * Renames a preference
+     */
+    public function rename(string $oldName, string $newName): void;
+
+    /**
      * Puts the DEFAULT catalog filter group back at id 0, where the rest of the schema assumes it lives
      *
      * Autoincrement starts at 1, so a group inserted normally lands in the wrong place and every catalog filter
@@ -127,4 +239,45 @@ interface PreferenceRepositoryInterface
      */
     public function repairLanguagePreferences(): void
     ;
+
+    /**
+     * Puts every preference on one access level
+     */
+    public function setAllLevels(int $level): bool;
+
+    /**
+     * Puts named preferences on the access level they are shipped with
+     *
+     * @param array<int, list<string>> $levels level => the preferences taking it
+     */
+    public function setLevels(array $levels): bool;
+
+    /**
+     * Writes a preset onto a user, one statement per distinct value
+     *
+     * @param array<int|string, list<string>> $values value => the preferences taking it
+     */
+    public function setUserPreferenceValues(int $userId, array $values): bool;
+
+    /**
+     * Applies the canonical description of every preference, leaving the ones already correct alone
+     *
+     * @param array<string, string> $descriptions name => description
+     */
+    public function updateDescriptions(array $descriptions): void;
+
+    /**
+     * Puts one preference on an access level
+     */
+    public function updateLevel(int|string $preferenceId, int $level): void;
+
+    /**
+     * Writes one value, optionally onto the shipped default and onto every user rather than just one
+     */
+    public function updateValue(int|string $preference, bool|float|int|string|null $value, ?int $userId, bool $applyToDefault): void;
+
+    /**
+     * Writes one value for every user, which is what an admin changing a default means
+     */
+    public function updateValueForAll(int|string $preference, bool|float|int|string|null $value): void;
 }

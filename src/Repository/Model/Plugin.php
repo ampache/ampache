@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\AmpachePlugin;
 use Ampache\Plugin\PluginEnum;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 
 class Plugin
 {
@@ -39,7 +39,7 @@ class Plugin
      * A plain static rather than `database_object`'s cache, which is a no-op unless `memory_cache` is
      * enabled — and it is commented out by default, so this read ran once per plugin per page.
      *
-     * @var array<string, string>|null
+     * @var array<string, int>|null
      */
     private static ?array $_version_cache = null;
 
@@ -73,18 +73,10 @@ class Plugin
     public static function get_plugin_version(string $plugin_name): int
     {
         if (self::$_version_cache === null) {
-            // only `Plugin_` keys are ever looked up here, so the rest of update_info stays on the server
-            $db_results = Dba::read("SELECT `key`, `value` FROM `update_info` WHERE `key` LIKE 'Plugin\_%';");
-
-            $results = [];
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $results[$row['key']] = $row['value'];
-            }
-
-            self::$_version_cache = $results;
+            self::$_version_cache = self::getUpdateInfoRepository()->getPluginVersions();
         }
 
-        return (int) (self::$_version_cache['Plugin_' . $plugin_name] ?? 0);
+        return self::$_version_cache['Plugin_' . $plugin_name] ?? 0;
     }
 
     /**
@@ -212,6 +204,16 @@ class Plugin
     }
 
     /**
+     * @deprecated inject dependency
+     */
+    private static function getUpdateInfoRepository(): UpdateInfoRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UpdateInfoRepositoryInterface::class);
+    }
+
+    /**
      * get_ampache_db_version
      * This function returns the Ampache database version
      */
@@ -221,10 +223,7 @@ class Plugin
             return database_object::get_from_cache('plugin_version_db_version', 1)[0];
         }
 
-        $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key`='db_version'";
-        $db_results = Dba::read($sql);
-        $results    = Dba::fetch_assoc($db_results);
-        $version    = (string) ($results['value'] ?? '');
+        $version = (string) self::getUpdateInfoRepository()->getValueByKey(UpdateInfoEnum::DB_VERSION);
         database_object::add_to_cache('plugin_version_db_version', 1, [$version]);
 
         return $version;
@@ -314,9 +313,7 @@ class Plugin
             return;
         }
 
-        $name = Dba::escape('Plugin_' . $this->_plugin->name);
-        $sql  = sprintf('DELETE FROM `update_info` WHERE `key`=\'%s\'', $name);
-        Dba::write($sql);
+        self::getUpdateInfoRepository()->removePluginVersion($this->_plugin->name);
         self::$_version_cache = null;
     }
 
@@ -330,11 +327,7 @@ class Plugin
             return;
         }
 
-        $name    = Dba::escape('Plugin_' . $this->_plugin->name);
-        $version = (int) Dba::escape($version);
-
-        $sql = "REPLACE INTO `update_info` SET `key` = ?, `value` = ?";
-        Dba::write($sql, [$name, $version]);
+        self::getUpdateInfoRepository()->setPluginVersion($this->_plugin->name, (int) $version);
         self::$_version_cache = null;
     }
 

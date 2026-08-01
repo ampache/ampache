@@ -34,7 +34,6 @@ use Ampache\Module\Art\Collector\MetaTagCollectorModule;
 use Ampache\Module\Art\Mosaic\PlaylistArtBuilderInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -42,6 +41,7 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Plugin\AmpacheDiscogs;
 use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Plugin\AmpacheTheaudiodb;
+use Ampache\Repository\ImageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use RuntimeException;
@@ -116,15 +116,7 @@ class Art extends database_object
             return false;
         }
 
-        $idlist = '(' . implode(',', $object_ids) . ')';
-        $sql    = 'SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN ' . $idlist;
-        if ($type !== null) {
-            $sql .= sprintf(' AND `object_type` = \'%s\'', $type);
-        }
-
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach (self::getImageRepository()->getRowsByObjectIds(array_values($object_ids), $type) as $row) {
             parent::add_to_cache('art', $row['object_type'] . $row['object_id'] . $row['size'], $row);
         }
 
@@ -364,9 +356,7 @@ class Art extends database_object
         }
 
         if (AmpConfig::get('album_art_store_disk')) {
-            $sql        = "SELECT `size`, `kind`, `mime` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-            $db_results = Dba::read($sql, [$object_type, $old_object_id]);
-            while ($row = Dba::fetch_assoc($db_results)) {
+            foreach (self::getImageRepository()->findSizes($object_type, $old_object_id) as $row) {
                 $image = self::_read_from_dir($row['size'], $object_type, $old_object_id, $row['kind'], $row['mime']);
                 if ($image !== null) {
                     self::_write_to_dir($image, $row['size'], $write_type, $new_object_id, $row['kind'], $row['mime']);
@@ -374,11 +364,8 @@ class Art extends database_object
             }
         }
 
-        $sql = "INSERT IGNORE INTO `image` (`image`, `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `width`, `height`, `mime`, `size`, ? AS `object_type`, ? AS `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-
-        if (Dba::write($sql, [$write_type, $new_object_id, $object_type, $old_object_id])) {
-            debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_type:' . $write_type . ' new_id:' . $new_object_id, 5);
-        }
+        self::getImageRepository()->duplicate($object_type, $old_object_id, $write_type, $new_object_id);
+        debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_type:' . $write_type . ' new_id:' . $new_object_id, 5);
     }
 
     /**
@@ -554,9 +541,8 @@ class Art extends database_object
 
         // If it came from the database
         if (isset($data['db'])) {
-            $sql        = "SELECT * FROM `image` WHERE `id` = ?;";
-            $db_results = Dba::read($sql, [$data['db']]);
-            if ($row = Dba::fetch_assoc($db_results)) {
+            $row = self::getImageRepository()->getRowById((int) $data['db']);
+            if ($row !== []) {
                 if (AmpConfig::get('album_art_store_disk')) {
                     return (string) self::_read_from_dir(
                         'original',
@@ -729,12 +715,7 @@ class Art extends database_object
 
             return ($nb_img > 0);
         }
-        $sql        = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ? AND `kind` = ?";
-        $db_results = Dba::read($sql, [$object_type, $object_id, $size, $kind]);
-        $nb_img     = 0;
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $nb_img = (int) $results['nb_img'];
-        }
+        $nb_img = self::getImageRepository()->countByObject($object_type, $object_id, (string) $size, (string) $kind);
         database_object::add_to_cache('art_has_db_' . $object_type, $object_id, [$nb_img]);
 
         return ($nb_img > 0);
@@ -808,18 +789,18 @@ class Art extends database_object
             $art_id = $row['id'] ?? null;
         }
 
-        $sql = "SELECT `id`, `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ?;";
         if (empty($mime)) {
-            $db_results = Dba::read($sql, [$type, $uid, $size]);
+            $repository = self::getImageRepository();
+            $row        = $repository->findByObjectAndSize($type, $uid, $size);
 
-            if ($row = Dba::fetch_assoc($db_results)) {
+            if ($row !== []) {
                 parent::add_to_cache('art', $key, $row);
                 $mime   = $row['mime'];
                 $art_id = $row['id'];
             } else {
-                $db_results = Dba::read($sql, [$type, $uid, 'original']);
+                $row = $repository->findByObjectAndSize($type, $uid, 'original');
 
-                if ($row = Dba::fetch_assoc($db_results)) {
+                if ($row !== []) {
                     parent::add_to_cache('art', $key, $row);
                     $mime = $row['mime'];
                 }
@@ -1018,6 +999,16 @@ class Art extends database_object
     }
 
     /**
+     * @deprecated inject dependency
+     */
+    private static function getImageRepository(): ImageRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ImageRepositoryInterface::class);
+    }
+
+    /**
      * generate_thumb
      * Automatically resizes the image for thumbnail viewing.
      * Only works on gif/jpg/png/bmp. Fails if PHP-GD isn't available
@@ -1175,10 +1166,9 @@ class Art extends database_object
      */
     public function get_image(bool $fallback = false, ?string $size = null): bool
     {
-        $sql        = "SELECT `id`, `image`, `width`, `height`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = 'original' AND `kind` = ?";
-        $db_results = Dba::read($sql, [$this->object_type, $this->object_id, $this->kind]);
+        $results = self::getImageRepository()->getOriginalRow($this->object_type, $this->object_id, $this->kind);
 
-        if ($results = Dba::fetch_assoc($db_results)) {
+        if ($results !== []) {
             if (AmpConfig::get('album_art_store_disk')) {
                 $this->raw = (string) self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
             } else {
@@ -1224,11 +1214,8 @@ class Art extends database_object
      */
     public function get_thumb(array $size): array
     {
-        $sizetext   = $size['width'] . 'x' . $size['height'];
-        $sql        = "SELECT `image`, `mime` FROM `image` WHERE `size` = ? AND `object_type` = ? AND `object_id` = ? AND `kind` = ?";
-        $db_results = Dba::read($sql, [$sizetext, $this->object_type, $this->object_id, $this->kind]);
-
-        $results = Dba::fetch_assoc($db_results);
+        $sizetext = $size['width'] . 'x' . $size['height'];
+        $results  = self::getImageRepository()->getRowBySize($sizetext, $this->object_type, $this->object_id, $this->kind);
         if ($results !== []) {
             if (AmpConfig::get('album_art_store_disk')) {
                 $image = self::_read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, $results['mime']);
@@ -1352,15 +1339,8 @@ class Art extends database_object
         }
 
         // Thumbnails might already be in the database
-        if ($width > 0 && $height > 0) {
-            $sql    = "SELECT `id`, `image`, `width`, `height`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND (`size` = ? OR (`size` = 'original' AND `width` = ? AND `height` = ?)) AND `kind` = ?";
-            $params = [$this->object_type, $this->object_id, $size, $width, $height, $this->kind];
-        } else {
-            $sql    = "SELECT `id`, `image`, `width`, `height`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ? AND `kind` = ?";
-            $params = [$this->object_type, $this->object_id, $size, $this->kind];
-        }
-        $db_results = Dba::read($sql, $params);
-        if ($results = Dba::fetch_assoc($db_results)) {
+        $results = self::getImageRepository()->findThumbnail($this->object_type, $this->object_id, (string) $size, $this->kind, $width, $height);
+        if ($results !== []) {
             $this->id         = (int) $results['id'];
             $this->width      = (int) $results['width'];
             $this->height     = (int) $results['height'];
@@ -1533,8 +1513,7 @@ class Art extends database_object
         }
 
         // Insert it!
-        $sql = "REPLACE INTO `image` (`image`, `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [
+        self::getImageRepository()->replace(
             $source,
             $width,
             $height,
@@ -1542,8 +1521,8 @@ class Art extends database_object
             $sizetext,
             $this->object_type,
             $this->object_id,
-            $this->kind,
-        ]);
+            $this->kind
+        );
 
         // clear object cache on insert
         if (parent::is_cached('art', $this->object_type . $this->object_id . 'original')) {
@@ -1607,15 +1586,13 @@ class Art extends database_object
         $height   = $size['height'];
         $sizetext = $width . 'x' . $height;
 
-        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
-        Dba::write($sql, [$this->object_id, $this->object_type, $sizetext, $this->kind]);
+        self::getImageRepository()->deleteBySize($this->object_id, $this->object_type, $sizetext, $this->kind);
 
         if (AmpConfig::get('album_art_store_disk') && self::_write_to_dir($source, $sizetext, $this->object_type, $this->object_id, $this->kind, $mime)) {
             $source = null;
         }
 
-        $sql = "REPLACE INTO `image` (`image`, `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [
+        self::getImageRepository()->replace(
             $source,
             $width,
             $height,
@@ -1623,13 +1600,10 @@ class Art extends database_object
             $sizetext,
             $this->object_type,
             $this->object_id,
-            $this->kind,
-        ]);
+            $this->kind
+        );
 
-        $art_id = Dba::insert_id() ?: null;
-        if (is_string($art_id)) {
-            $this->id = (int) $art_id;
-        }
+        $this->id = self::getImageRepository()->findLastInsertedId();
 
         return true;
     }

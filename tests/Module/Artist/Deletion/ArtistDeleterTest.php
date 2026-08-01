@@ -36,11 +36,14 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserflagRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class ArtistDeleterTest extends TestCase
@@ -49,6 +52,7 @@ class ArtistDeleterTest extends TestCase
     private AlbumRepositoryInterface&MockObject $albumRepository;
     private ArtCleanupInterface&MockObject $artCleanup;
     private ArtistRepositoryInterface&MockObject $artistRepository;
+    private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LabelRepositoryInterface&MockObject $labelRepository;
     private LoggerInterface&MockObject $logger;
@@ -182,6 +186,17 @@ class ArtistDeleterTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->dic = $this->createMock(ContainerInterface::class);
+
+        // Rating::garbage_collection() reaches its repository through the `global $dic` bridge
+        $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            RatingRepositoryInterface::class => $this->createMock(RatingRepositoryInterface::class),
+            UserflagRepositoryInterface::class => $this->createMock(UserflagRepositoryInterface::class),
+            default => $this->createMock(LoggerInterface::class),
+        });
+
+        $GLOBALS['dic'] = $this->dic;
+
         $this->albumDeleter           = $this->createMock(AlbumDeleterInterface::class);
         $this->artistRepository       = $this->createMock(ArtistRepositoryInterface::class);
         $this->albumRepository        = $this->createMock(AlbumRepositoryInterface::class);

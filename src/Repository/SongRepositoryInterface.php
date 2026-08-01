@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\SongDataFieldEnum;
 use Ampache\Repository\Model\SongFieldEnum;
+use Ampache\Repository\Model\SongMbidSourceEnum;
 use Ampache\Repository\Model\Tag;
 use Iterator;
 use Traversable;
@@ -43,13 +44,52 @@ interface SongRepositoryInterface
      */
     public function collectGarbageForSongs(array $songIds): void;
 
+    /**
+     * Removes the songs and song rows the scanner has orphaned, across the whole table
+     */
+    public function collectOrphanedGarbage(?string $ignorePattern): void;
+
     public function delete(int $songId): bool;
+
+    /**
+     * Reads the id of the song holding this file
+     */
+    public function findIdByFile(string $file): ?int;
+
+    /**
+     * Reads the id of the song carrying this MusicBrainz id
+     */
+    public function findIdByMbid(string $mbid): ?int;
+
+    /**
+     * Reads the id of the song matching a set of tags, by mbid where the tags carry one and by name where they do not
+     *
+     * @param array<string, mixed> $data
+     */
+    public function findIdByTags(array $data): ?int;
+
+    /**
+     * Reads a song id from a last.fm style match on title, artist and album
+     */
+    public function findIdForScrobble(
+        string $songName,
+        string $artistName,
+        string $albumName,
+        string $songMbid,
+        string $artistMbid,
+        string $albumMbid,
+    ): ?int;
 
     /**
      * The uploader of the song: an id, null when it was not user-uploaded, false when there is no
      * such song
      */
     public function findOwnerId(int $songId): int|false|null;
+
+    /**
+     * Reads the MusicBrainz id of an album, an artist or an album artist
+     */
+    public function findRelatedMbid(SongMbidSourceEnum $source, int $objectId): ?string;
 
     /**
      * gets the songs (including songs where they are the album artist) for this artist
@@ -116,11 +156,40 @@ interface SongRepositoryInterface
     public function getByLicense(int $licenseId): array;
 
     /**
+     * Reads the extended row of a song
+     *
+     * @return array<string, mixed>
+     */
+    public function getDataRow(int $songId): array;
+
+    /**
+     * Reads the extended rows of a set of songs, for the in-request cache
+     *
+     * @param list<int|string> $songIds
+     * @return list<array<string, mixed>>
+     */
+    public function getDataRowsByIds(array $songIds): array;
+
+    /**
+     * Reads the rows the `deleted_song` archive holds
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function getDeletedRows(): array;
+
+    /**
      * Gets a list of the disabled songs for and returns an array of Songs
      *
      * @return Iterator<Song>
      */
     public function getDisabled(): Iterator;
+
+    /**
+     * Reads the artists mapped onto a song, or the artists mapped onto an album
+     *
+     * @return list<int>
+     */
+    public function getParentIds(int $objectId, bool $forAlbum): array;
 
     /**
      * Gets the songs from the artist in a random order
@@ -141,6 +210,35 @@ interface SongRepositoryInterface
     ): array;
 
     /**
+     * Reads the replaygain columns of the extended row, the one partial read the callers ask for
+     *
+     * @return array<string, mixed>
+     */
+    public function getReplaygainRow(int $songId): array;
+
+    /**
+     * Reads one song row with the album and artist identity a `Song` object is built from
+     *
+     * @return array<string, mixed>
+     */
+    public function getRow(int $songId): array;
+
+    /**
+     * Reads song rows for the in-request cache, dropping the disabled catalogs when they are hidden
+     *
+     * @param list<int|string> $songIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $songIds, bool $catalogDisable): array;
+
+    /**
+     * Reads the values mapped onto a song, ISRCs being the only kind so far
+     *
+     * @return list<string>
+     */
+    public function getSongMapValues(int $songId, string $objectType): array;
+
+    /**
      * gets the songs for this artist
      *
      * @return list<int>
@@ -151,6 +249,35 @@ interface SongRepositoryInterface
     ): array;
 
     /**
+     * Whether a song row exists
+     */
+    public function hasId(int $songId): bool;
+
+    /**
+     * Inserts a song row and returns its id, or `null` when the write failed
+     *
+     * @param list<mixed> $values in the column order of the statement
+     */
+    public function insert(array $values): ?int;
+
+    /**
+     * Inserts the extended row that belongs with a new song
+     *
+     * @param list<mixed> $values in the column order of the statement
+     */
+    public function insertData(array $values): void;
+
+    /**
+     * Points the maps of one album at another and drops what the old one left behind
+     */
+    public function migrateAlbum(int $newAlbumId, int $oldAlbumId, int $songId): bool;
+
+    /**
+     * Points the maps of one artist at another and drops what the old one left behind
+     */
+    public function migrateArtist(int $newArtistId, int $oldArtistId): bool;
+
+    /**
      * Writes a single `song_data` column, returning false when the write failed
      */
     public function setDataField(int $songId, SongDataFieldEnum $field, string $value): bool;
@@ -159,4 +286,24 @@ interface SongRepositoryInterface
      * Writes a single `song` column, returning false when the write failed
      */
     public function setField(int $songId, SongFieldEnum $field, int|string|null $value): bool;
+
+    /**
+     * Rewrites a song row and its extended row from a freshly read file
+     *
+     * @param list<mixed> $songValues in the column order of the statement
+     * @param list<mixed> $dataValues in the column order of the statement
+     */
+    public function updateSong(int $songId, array $songValues, array $dataValues): void;
+
+    /**
+     * Replaces the mapped values of one kind for a song, dropping whatever is no longer in the list
+     *
+     * @param list<int|string> $objectIds
+     */
+    public function updateSongMap(array $objectIds, string $objectType, int $songId): void;
+
+    /**
+     * Stamps a song as read from its file
+     */
+    public function updateUpdateTime(int $songId, int $time): void;
 }
