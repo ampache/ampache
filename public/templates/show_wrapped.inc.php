@@ -25,11 +25,11 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 
 /** @var int $endTime */
 /** @var int $startTime */

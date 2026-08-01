@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Activity;
 
-use Ampache\Repository\Model\Useractivity;
-
 interface UserActivityRendererInterface
 {
     /**

@@ -31,7 +31,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\library_item;
 
 /**

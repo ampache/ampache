@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
 use Psr\Log\LoggerInterface;

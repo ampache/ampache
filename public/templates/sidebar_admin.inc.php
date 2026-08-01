@@ -30,9 +30,9 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Preference;
 
 /** @var string $web_path */
 /** @var string $admin_path */

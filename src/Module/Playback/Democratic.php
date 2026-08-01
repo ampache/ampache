@@ -23,19 +23,21 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Playback;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Database\Query\Smartlist;
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\DemocraticRepositoryInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 
 /**
  * This class handles democratic play, which is a fancy

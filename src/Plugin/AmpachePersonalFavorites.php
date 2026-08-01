@@ -30,10 +30,10 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Plugin\Plugin;
+use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Override;
 

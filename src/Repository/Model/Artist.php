@@ -26,10 +26,15 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Label\LabelListUpdaterInterface;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Repository\ArtistRepositoryInterface;

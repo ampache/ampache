@@ -30,8 +30,8 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Playback\Democratic;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Democratic;
 
 /** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var Democratic $democratic */

@@ -23,16 +23,17 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
-use Ampache\Module\System\Core;
 use Ampache\Repository\CatalogFilterRepositoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**

@@ -27,10 +27,10 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Media;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Override;
 

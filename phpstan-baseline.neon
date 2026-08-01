@@ -1801,10 +1801,10 @@ parameters:
 			path: src/Module/Catalog/Catalog.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Democratic\:\:get_cool_songs\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Playback\\Democratic\:\:get_cool_songs\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Democratic.php
+			path: src/Module/Playback/Democratic.php
 
 		-
 			message: '#^Method Ampache\\Repository\\Model\\Label\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
@@ -1819,16 +1819,16 @@ parameters:
 			path: src/Repository/Model/Live_Stream.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Preference\:\:fix_preferences\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\System\\Preference\:\:fix_preferences\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Preference.php
+			path: src/Module/System/Preference.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Preference\:\:update\(\) has parameter \$value with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\System\\Preference\:\:update\(\) has parameter \$value with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Preference.php
+			path: src/Module/System/Preference.php
 
 		-
 			message: '#^Method Ampache\\Module\\Database\\Query\\Query\:\:_post_process\(\) has parameter \$data with no value type specified in iterable type array\.$#'
@@ -1951,10 +1951,10 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\User_Playlist\:\:add_items\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Playback\\User_Playlist\:\:add_items\(\) has parameter \$data with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/User_Playlist.php
+			path: src/Module/Playback/User_Playlist.php
 
 		-
 			message: '#^PHPDoc tag @var for variable \$group has no value type specified in iterable type array\.$#'
@@ -1975,22 +1975,22 @@ parameters:
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\database_object\:\:add_to_cache\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\database_object\:\:add_to_cache\(\) has parameter \$data with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/database_object.php
+			path: src/Module/Database/database_object.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\database_object\:\:get_from_cache\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\database_object\:\:get_from_cache\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/database_object.php
+			path: src/Module/Database/database_object.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\database_object\:\:get_info\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\database_object\:\:get_info\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/database_object.php
+			path: src/Module/Database/database_object.php
 
 		-
 			message: '#^Method Ampache\\Repository\\Model\\playlist_object\:\:gather_art\(\) return type has no value type specified in iterable type array\.$#'

@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Database;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;

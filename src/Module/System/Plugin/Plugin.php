@@ -23,12 +23,14 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\System\Plugin;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Module\Database\database_object;
 use Ampache\Plugin\AmpachePlugin;
 use Ampache\Plugin\PluginEnum;
+use Ampache\Repository\Model\UpdateInfoEnum;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 
 class Plugin

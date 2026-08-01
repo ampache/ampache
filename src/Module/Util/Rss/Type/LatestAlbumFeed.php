@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Type;
 
+use Ampache\Module\Art\Art;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\User;
 use Generator;
 use Psr\Http\Message\ServerRequestInterface;

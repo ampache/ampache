@@ -34,9 +34,9 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\AutoUpdate;
+use Ampache\Module\System\Preference;
 use Ampache\Module\System\Session;
 use Ampache\Module\System\Update;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 

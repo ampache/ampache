@@ -30,10 +30,10 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Plugin\Plugin;
+use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Override;
 

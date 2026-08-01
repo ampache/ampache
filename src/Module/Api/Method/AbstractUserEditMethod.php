@@ -36,10 +36,10 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Preference;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 

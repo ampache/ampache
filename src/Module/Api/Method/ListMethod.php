@@ -32,8 +32,8 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 

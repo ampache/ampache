@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Art\Art;
 use Ampache\Repository\CatalogRepositoryInterface;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;

@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Label\LabelNameFilterInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\LabelRepositoryInterface;

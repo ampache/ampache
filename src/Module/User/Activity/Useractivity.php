@@ -23,8 +23,9 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\User\Activity;
 
+use Ampache\Module\Database\database_object;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 class Useractivity extends database_object

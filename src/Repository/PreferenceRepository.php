@@ -29,7 +29,7 @@ use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Database\Exception\InsertIdInvalidException;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\Preference;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\User;
 use PDO;
 use Psr\Log\LoggerInterface;

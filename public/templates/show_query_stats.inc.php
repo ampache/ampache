@@ -26,9 +26,9 @@ declare(strict_types=1);
 // show_query_stats.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\database_object;
 
 if (AmpConfig::get('show_footer_statistics')) {
     $load_time_end = microtime(true);

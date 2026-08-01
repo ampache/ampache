@@ -23,7 +23,9 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Database;
+
+use Ampache\Repository\Model\ModelInterface;
 
 abstract class BaseModel implements ModelInterface
 {

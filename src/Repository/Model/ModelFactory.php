@@ -25,10 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Database\Query\Smartlist;
+use Ampache\Module\Playback\Democratic;
+use Ampache\Module\Playback\Tmp_Playlist;
+use Ampache\Module\Statistics\Rating;
 
 /**
  * This class is used to instantiate model objects (like Playlist, Song, ...)

@@ -23,15 +23,17 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Statistics;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Plugin\AmpacheRatingMatch;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\RatingRepositoryInterface;
 use Exception;
 

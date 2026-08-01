@@ -27,6 +27,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -37,10 +39,8 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\SongRepositoryInterface;
 
 final readonly class DefaultAjaxHandler implements AjaxHandlerInterface

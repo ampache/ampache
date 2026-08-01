@@ -26,9 +26,9 @@ declare(strict_types=1);
 // show_now_playing_video_row.inc.php
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Userflag;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\Model\Video;
 
 /** @var Video $media */

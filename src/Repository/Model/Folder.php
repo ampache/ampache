@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 

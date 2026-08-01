@@ -26,9 +26,9 @@ declare(strict_types=1);
 // show_big_art.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Art;
 
 $art_url  = Art::url((int) Core::get_get('id'), 'album');
 $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US')); ?>

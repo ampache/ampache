@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Plugin;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Preference;
 use Ampache\Module\Util\OAuth\OAuthConsumer;
 use Ampache\Module\Util\OAuth\OAuthRequest;
 use Ampache\Module\Util\OAuth\OAuthSignatureMethod_HMAC_SHA1;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Override;
 
