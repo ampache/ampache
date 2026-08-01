@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Application\Api\Ajax\Handler;
+namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;

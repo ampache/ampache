@@ -23,24 +23,11 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Application\Api\Upnp;
+namespace Ampache\Module\Api\Ajax\Handler;
 
-use Ampache\Application\ApplicationInterface;
+use Ampache\Repository\Model\User;
 
-final class EventReplyApplication implements ApplicationInterface
+interface AjaxHandlerInterface
 {
-    public function run(): void
-    {
-        $headers = getallheaders();
-        //$callback = $headers['Callback'];
-        //$nt = $headers['NT'];
-        $timeout = $headers['Timeout'];
-        if (empty($timeout)) {
-            $timeout = "Second-3600";
-        }
-
-        header("SID: uuid:" . uniqid());
-        header("TIMEOUT:" . $timeout);
-        header("Connection: close");
-    }
+    public function handle(User $user): void;
 }

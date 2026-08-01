@@ -23,13 +23,13 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Application\Api\Upnp;
+namespace Ampache\Module\Api\Upnp;
 
-use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\ApiApplicationInterface;
 use Ampache\Module\Api\Upnp_Api;
 
-final class CmControlReplyApplication implements ApplicationInterface
+final class CmControlReplyApplication implements ApiApplicationInterface
 {
     public function run(): void
     {

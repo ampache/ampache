@@ -23,14 +23,14 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Application\Api\Upnp;
+namespace Ampache\Module\Api\Upnp;
 
-use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\ApiApplicationInterface;
 use Ampache\Module\Api\Upnp_Api;
 use Ampache\Module\System\Core;
 
-final class UpnpApplication implements ApplicationInterface
+final class UpnpApplication implements ApiApplicationInterface
 {
     public function run(): void
     {

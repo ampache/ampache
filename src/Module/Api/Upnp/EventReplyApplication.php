@@ -23,9 +23,24 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Application;
+namespace Ampache\Module\Api\Upnp;
 
-interface ApplicationInterface
+use Ampache\Module\Api\ApiApplicationInterface;
+
+final class EventReplyApplication implements ApiApplicationInterface
 {
-    public function run(): void;
+    public function run(): void
+    {
+        $headers = getallheaders();
+        //$callback = $headers['Callback'];
+        //$nt = $headers['NT'];
+        $timeout = $headers['Timeout'];
+        if (empty($timeout)) {
+            $timeout = "Second-3600";
+        }
+
+        header("SID: uuid:" . uniqid());
+        header("TIMEOUT:" . $timeout);
+        header("Connection: close");
+    }
 }

@@ -23,46 +23,53 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Application\Api\Ajax\Handler;
+namespace Ampache\Module\Api\Ajax\Handler;
 
-use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\User\Following\UserFollowStateRendererInterface;
-use Ampache\Module\User\Following\UserFollowTogglerInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\User;
 
-final readonly class UserAjaxHandler implements AjaxHandlerInterface
+final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
-        private UserFollowTogglerInterface $followToggler,
-        private UserFollowStateRendererInterface $userFollowStateRenderer,
-        private PrivilegeCheckerInterface $privilegeChecker,
-        private ConfigContainerInterface $configContainer,
     ) {}
 
     public function handle(User $user): void
     {
         $results = [];
         $action  = $this->requestParser->getFromRequest('action');
-        $user_id = (int) $this->requestParser->getFromRequest('user_id');
 
-        if ($action === 'flip_follow' && ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        && $this->configContainer->isFeatureEnabled('sociable'))) {
-            $fuser = new User($user_id);
-            if ($fuser->id > 0 && $user_id !== $user->getId()) {
-                $this->followToggler->toggle(
-                    $fuser,
-                    $user
-                );
-                $results['button_follow_' . $user_id] = $this->userFollowStateRenderer->render(
-                    $fuser,
-                    $user
-                );
+        if ($action === 'flip_state') {
+            if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+                debug_event('catalog.ajax', ($user->username ?? T_('Unknown')) . ' attempted to change the state of a catalog', 1);
+
+                return;
             }
+
+            $catalog = Catalog::create_from_id((int) $this->requestParser->getFromRequest('catalog_id'));
+            if ($catalog === null) {
+                return;
+            }
+
+            $new_enabled = !$catalog->enabled;
+            Catalog::update_enabled($new_enabled, $catalog->id);
+            $catalog->enabled = $new_enabled;
+            // Return the new Ajax::button
+            $id = 'button_flip_state_' . $catalog->id;
+            if ($new_enabled) {
+                $button     = 'unpublished';
+                $buttontext = T_('Disable');
+            } else {
+                $button     = 'check_circle';
+                $buttontext = T_('Enable');
+            }
+
+            $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);
         } // switch on action;
 
         // We always do this

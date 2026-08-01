@@ -23,14 +23,14 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Application\Api\Upnp;
+namespace Ampache\Module\Api\Upnp;
 
-use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\ApiApplicationInterface;
 use Ampache\Module\Playback\Localplay\Upnp\AmpacheUPnP;
 use Ampache\Module\Playback\Localplay\Upnp\UPnPPlayer;
 
-final class PlayStatusApplication implements ApplicationInterface
+final class PlayStatusApplication implements ApiApplicationInterface
 {
     public function run(): void
     {

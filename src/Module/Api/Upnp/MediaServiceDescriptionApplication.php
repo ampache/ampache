@@ -23,13 +23,13 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Application\Api\Upnp;
+namespace Ampache\Module\Api\Upnp;
 
-use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\ApiApplicationInterface;
 use Ampache\Module\Api\Upnp_Api;
 
-final class MediaServiceDescriptionApplication implements ApplicationInterface
+final class MediaServiceDescriptionApplication implements ApiApplicationInterface
 {
     public function run(): void
     {
