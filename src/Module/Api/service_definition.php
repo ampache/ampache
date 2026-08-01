@@ -39,6 +39,8 @@ return [
     DaapApiApplication::class => autowire(),
     SseApiApplication::class => autowire(),
     ApiOutputFactoryInterface::class => autowire(ApiOutputFactory::class),
+    Json5_Data::class => autowire(),
+    Xml5_Data::class => autowire(),
     ApiHandlerInterface::class => autowire(ApiHandler::class),
     Upnp\UpnpApplication::class => autowire(),
     Upnp\PlayStatusApplication::class => autowire(),

@@ -59,14 +59,96 @@ use Traversable;
 /**
  * XML5_Data Class
  *
- * This class takes care of all of the xml document stuff in Ampache these
- * are all static calls
+ * This class takes care of all of the api version 5 xml document stuff. It is a service resolved
+ * through the container; only the three formatters that take no dependencies stay static, because
+ * the legacy static Api5 class still calls them.
  */
-class Xml5_Data
+final class Xml5_Data
 {
-    private static ?int $count  = null;
-    private static ?int $limit  = 5000;
-    private static int $offset  = 0;
+    private ?int $count = null;
+    private ?int $limit = 5000;
+    private int $offset = 0;
+
+    public function __construct(
+        private AlbumRepositoryInterface $albumRepository,
+        private BookmarkRepositoryInterface $bookmarkRepository,
+        private LabelRepositoryInterface $labelRepository,
+        private LicenseRepositoryInterface $licenseRepository,
+        private PodcastRepositoryInterface $podcastRepository,
+        private SongRepositoryInterface $songRepository,
+    ) {}
+
+    /**
+     * empty
+     *
+     * This generates an empty root element
+     */
+    public static function empty(): string
+    {
+        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n</root>\n";
+    }
+
+    /**
+     * error
+     *
+     * This generates a standard XML Error message
+     */
+    public static function error(int|string $code, string $string, string $action, string $type): string
+    {
+        $xml_string = "\t<error errorCode=\"$code\">\n\t\t<errorAction><![CDATA[" . $action . "]]></errorAction>\n\t\t<errorType><![CDATA[" . $type . "]]></errorType>\n\t\t<errorMessage><![CDATA[" . $string . "]]></errorMessage>\n\t</error>";
+
+        return Api::output_xml($xml_string);
+    }
+
+    /**
+     * success
+     *
+     * This generates a standard XML Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<string, string> $return_data
+     */
+    public static function success(string $string, array $return_data = []): string
+    {
+        $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
+        foreach ($return_data as $title => $data) {
+            $xml_string .= "\n\t<$title><![CDATA[" . $data . "]]></$title>";
+        }
+
+        return Api::output_xml($xml_string);
+    }
+
+    /**
+     * genre_string
+     *
+     * This returns the formatted 'genre' string for an xml document
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
+     */
+    private static function _genre_string(array $tags): string
+    {
+        $string = '';
+
+        if (!empty($tags)) {
+            $atags = [];
+            foreach ($tags as $tag) {
+                if (array_key_exists($tag['id'], $atags)) {
+                    $atags[$tag['id']]['count']++;
+                } else {
+                    $atags[$tag['id']] = [
+                        'name' => $tag['name'],
+                        'count' => 1
+                    ];
+                }
+            }
+
+            foreach ($atags as $tag_id => $data) {
+                $string .= "\t<genre id=\"" . $tag_id . "\"><![CDATA[" . $data['name'] . "]]></genre>\n";
+            }
+        }
+
+        return $string;
+    }
 
     /**
      * albums
@@ -77,10 +159,10 @@ class Xml5_Data
      * @param string[] $include Array of other items to include.
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
-    public static function albums(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
+    public function albums(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('album', $user->id) . "</total_count>\n" : '';
 
@@ -113,7 +195,7 @@ class Xml5_Data
 
             // Handle includes
             $songs = (in_array("songs", $include))
-                ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, $auth, false)
+                ? $this->songs($this->songRepository->getByAlbum($album->id), $user, $auth, false)
                 : '';
 
             $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $album->disk_count . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::_genre_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n</album>\n";
@@ -132,10 +214,10 @@ class Xml5_Data
      * @param string[] $include Array of other items to include.
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
-    public static function artists(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
+    public function artists(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('artist', $user->id) . "</total_count>\n" : '';
 
@@ -157,10 +239,10 @@ class Xml5_Data
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, $auth, false)
+                ? $this->albums($this->albumRepository->getAlbumByArtist($artist->id), [], $user, $auth, false)
                 : '';
             $songs = (in_array("songs", $include))
-                ? self::songs(self::getSongRepository()->getByArtist($artist->id), $user, $auth, false)
+                ? $this->songs($this->songRepository->getByArtist($artist->id), $user, $auth, false)
                 : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . $artist->album_count . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . $artist->song_count . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . (int) $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
@@ -176,12 +258,12 @@ class Xml5_Data
      *
      * @param int[] $objects Bookmark id's to include
      */
-    public static function bookmarks(array $objects): string
+    public function bookmarks(array $objects): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
-        $bookmarkRepository = self::getBookmarkRepository();
+        $bookmarkRepository = $this->bookmarkRepository;
 
         $string = "";
         foreach ($objects as $bookmark_id) {
@@ -201,10 +283,10 @@ class Xml5_Data
      *
      * @param int[] $objects group of catalog id's
      */
-    public static function catalogs(array $objects, User $user): string
+    public function catalogs(array $objects, User $user): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n";
 
@@ -241,10 +323,10 @@ class Xml5_Data
      *     podcast?: int,
      * }> $objects deleted object list
      */
-    public static function deleted(string $object_type, array $objects): string
+    public function deleted(string $object_type, array $objects): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = '';
         // here is where we call the object type
@@ -284,7 +366,7 @@ class Xml5_Data
      *     track: int
      * }> $object_ids Object IDs
      */
-    public static function democratic(array $object_ids, User $user, string $auth): string
+    public function democratic(array $object_ids, User $user, string $auth): string
     {
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';
@@ -317,38 +399,16 @@ class Xml5_Data
     }
 
     /**
-     * empty
-     *
-     * This generates an empty root element
-     */
-    public static function empty(): string
-    {
-        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n</root>\n";
-    }
-
-    /**
-     * error
-     *
-     * This generates a standard XML Error message
-     */
-    public static function error(int|string $code, string $string, string $action, string $type): string
-    {
-        $xml_string = "\t<error errorCode=\"$code\">\n\t\t<errorAction><![CDATA[" . $action . "]]></errorAction>\n\t\t<errorType><![CDATA[" . $type . "]]></errorType>\n\t\t<errorMessage><![CDATA[" . $string . "]]></errorMessage>\n\t</error>";
-
-        return Api::output_xml($xml_string);
-    }
-
-    /**
      * genres
      *
      * This returns genres to the user, in a pretty xml document with the information
      *
      * @param array<int|string> $objects Genre id's to include
      */
-    public static function genres(array $objects, User $user): string
+    public function genres(array $objects, User $user): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = "<total_count>" . Catalog::get_update_info('tag', $user->id) . "</total_count>\n";
 
@@ -371,10 +431,10 @@ class Xml5_Data
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @param bool $include include episodes from podcasts or tracks in a playlist
      */
-    public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
+    public function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         // you might not want the joined tables for playlists
         $total_count = (AmpConfig::get('hide_search', false) && $object_type == 'playlist')
@@ -387,13 +447,13 @@ class Xml5_Data
             case 'artist':
                 foreach ($objects as $object_id) {
                     if ($include) {
-                        $string .= self::artists([(int) $object_id], ['songs', 'albums'], $user, $auth, false);
+                        $string .= $this->artists([(int) $object_id], ['songs', 'albums'], $user, $auth, false);
                     } else {
                         $artist = new Artist((int) $object_id);
                         if ($artist->isNew()) {
                             break;
                         }
-                        $albums = self::getAlbumRepository()->getAlbumByArtist((int) $object_id);
+                        $albums = $this->albumRepository->getAlbumByArtist((int) $object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
@@ -408,7 +468,7 @@ class Xml5_Data
             case 'album':
                 foreach ($objects as $object_id) {
                     if ($include) {
-                        $string .= self::albums([(int) $object_id], ['songs'], $user, $auth, false);
+                        $string .= $this->albums([(int) $object_id], ['songs'], $user, $auth, false);
                     } else {
                         $album = new Album((int) $object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n";
@@ -457,17 +517,17 @@ class Xml5_Data
                 }
                 break;
             case 'share':
-                $string .= self::shares($objects, $user, false);
+                $string .= $this->shares($objects, $user, false);
                 break;
             case 'podcast':
                 foreach ($objects as $object_id) {
-                    $podcast = self::getPodcastRepository()->findById((int) $object_id);
+                    $podcast = $this->podcastRepository->findById((int) $object_id);
                     if ($podcast !== null) {
                         $string .= "<podcast id=\"$object_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->get_description() . "]]></description>\n\t<language><![CDATA[" . scrub_out($podcast->getLanguage()) . "]]></language>\n\t<copyright><![CDATA[" . scrub_out($podcast->getCopyright()) . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->getFeedUrl() . "]]></feed_url>\n\t<generator><![CDATA[" . scrub_out($podcast->getGenerator()) . "]]></generator>\n\t<website><![CDATA[" . scrub_out($podcast->getWebsite()) . "]]></website>\n\t<build_date><![CDATA[" . $podcast->getLastBuildDate()->format(DATE_ATOM) . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->getLastSyncDate()->format(DATE_ATOM) . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n";
                         if ($include) {
                             $episodes = $podcast->getEpisodeIds();
                             foreach ($episodes as $episode_id) {
-                                $string .= self::podcast_episodes([$episode_id], $user, $auth, false);
+                                $string .= $this->podcast_episodes([$episode_id], $user, $auth, false);
                             }
                         }
                         $string .= "\t</podcast>\n";
@@ -475,13 +535,13 @@ class Xml5_Data
                 }
                 break;
             case 'podcast_episode':
-                $string .= self::podcast_episodes($objects, $user, $auth, false);
+                $string .= $this->podcast_episodes($objects, $user, $auth, false);
                 break;
             case 'video':
-                $string .= self::videos($objects, $user, $auth, false);
+                $string .= $this->videos($objects, $user, $auth, false);
                 break;
             case 'live_stream':
-                $string .= self::live_streams($objects, $user, false);
+                $string .= $this->live_streams($objects, $user, false);
         }
 
         return Api::output_xml($string, $full_xml);
@@ -494,14 +554,14 @@ class Xml5_Data
      *
      * @param array<int|string> $objects
      */
-    public static function labels(array $objects, User $user): string
+    public function labels(array $objects, User $user): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = "<total_count>" . Catalog::get_update_info('label', $user->id) . "</total_count>\n";
 
-        $labelRepository = self::getLabelRepository();
+        $labelRepository = $this->labelRepository;
 
         foreach ($objects as $label_id) {
             $label = $labelRepository->findById((int) $label_id);
@@ -522,14 +582,14 @@ class Xml5_Data
      *
      * @param array<int|string> $objects Licence id's assigned to songs and artists
      */
-    public static function licenses(array $objects, User $user): string
+    public function licenses(array $objects, User $user): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = "<total_count>" . Catalog::get_update_info('license', $user->id) . "</total_count>\n";
 
-        $licenseRepository = self::getLicenseRepository();
+        $licenseRepository = $this->licenseRepository;
 
         foreach ($objects as $license_id) {
             $license = $licenseRepository->findById((int) $license_id);
@@ -549,10 +609,10 @@ class Xml5_Data
      * @param array<int|string> $objects
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
-    public static function live_streams(array $objects, User $user, bool $full_xml = true): string
+    public function live_streams(array $objects, User $user, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('live_stream', $user->id) . "</total_count>\n" : '';
 
@@ -575,10 +635,10 @@ class Xml5_Data
      *
      * @param array<int|string> $objects Playlist id's to include
      */
-    public static function playlists(array $objects, User $user, string $auth): string
+    public function playlists(array $objects, User $user, string $auth): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $total_count = (AmpConfig::get('hide_search', false))
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
@@ -631,10 +691,10 @@ class Xml5_Data
      * @param array<int|string> $objects Podcast_Episode id's to include
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
-    public static function podcast_episodes(array $objects, User $user, string $auth, bool $full_xml = true): string
+    public function podcast_episodes(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('podcast_episode', $user->id) . "</total_count>\n" : '';
 
@@ -662,12 +722,12 @@ class Xml5_Data
      * @param array<int|string> $objects Podcast id's to include
      * @param bool $episodes include the episodes of the podcast //optional
      */
-    public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false): string
+    public function podcasts(array $objects, User $user, string $auth, bool $episodes = false): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
-        $podcastRepository = self::getPodcastRepository();
+        $podcastRepository = $this->podcastRepository;
 
         $string = "<total_count>" . Catalog::get_update_info('podcast', $user->id) . "</total_count>\n";
 
@@ -685,7 +745,7 @@ class Xml5_Data
             if ($episodes) {
                 $results = $podcast->getEpisodeIds();
                 if (!empty($results)) {
-                    $string .= self::podcast_episodes($results, $user, $auth, false);
+                    $string .= $this->podcast_episodes($results, $user, $auth, false);
                 }
             }
             $string .= "\t</podcast>\n";
@@ -701,9 +761,9 @@ class Xml5_Data
      *
      * @param int|string $count Set the total count of your results
      */
-    public static function set_count(int|string $count): void
+    public function set_count(int|string $count): void
     {
-        self::$count = (int) $count;
+        $this->count = (int) $count;
     }
 
     /**
@@ -713,13 +773,13 @@ class Xml5_Data
      *
      * @param int|string $limit Set a limit on your results
      */
-    public static function set_limit(int|string $limit): bool
+    public function set_limit(int|string $limit): bool
     {
         if (!$limit) {
             return false;
         }
 
-        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
+        $this->limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
 
         return true;
     }
@@ -731,9 +791,9 @@ class Xml5_Data
      *
      * @param int|string $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
      */
-    public static function set_offset(int|string $offset): void
+    public function set_offset(int|string $offset): void
     {
-        self::$offset = (int) $offset;
+        $this->offset = (int) $offset;
     }
 
     /**
@@ -744,10 +804,10 @@ class Xml5_Data
      * @param array<int|string> $objects Share id's to include
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
-    public static function shares(array $objects, User $user, bool $full_xml = true): string
+    public function shares(array $objects, User $user, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n" : '';
 
@@ -770,7 +830,7 @@ class Xml5_Data
      *
      * @param Traversable<Shoutbox> $objects Shout identifier list
      */
-    public static function shouts(Traversable $objects): string
+    public function shouts(Traversable $objects): string
     {
         $string = "";
         /** @var Shoutbox $shout */
@@ -792,10 +852,10 @@ class Xml5_Data
      * This returns an xml document from an array of song ids.
      * @param array<int|string> $objects
      */
-    public static function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
+    public function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n" : '';
 
@@ -860,32 +920,13 @@ class Xml5_Data
     }
 
     /**
-     * success
-     *
-     * This generates a standard XML Success message
-     * nothing fancy here...
-     *
-     * @param string $string success message
-     * @param array<string, string> $return_data
-     */
-    public static function success(string $string, array $return_data = []): string
-    {
-        $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
-        foreach ($return_data as $title => $data) {
-            $xml_string .= "\n\t<$title><![CDATA[" . $data . "]]></$title>";
-        }
-
-        return Api::output_xml($xml_string);
-    }
-
-    /**
      * timeline
      *
      * This handles creating an xml document for an activity list
      *
      * @param int[] $objects Activity identifier list
      */
-    public static function timeline(array $objects): string
+    public function timeline(array $objects): string
     {
         $string = "";
         foreach ($objects as $activity_id) {
@@ -906,7 +947,7 @@ class Xml5_Data
      *
      * This handles creating an xml document for a user
      */
-    public static function user(User $user, bool $fullinfo): string
+    public function user(User $user, bool $fullinfo): string
     {
         $string = "<user id=\"" . $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n";
         if ($fullinfo) {
@@ -928,10 +969,10 @@ class Xml5_Data
      *
      * @param array<int|string> $objects User identifier list
      */
-    public static function users(array $objects): string
+    public function users(array $objects): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = "";
         foreach ($objects as $user_id) {
@@ -952,10 +993,10 @@ class Xml5_Data
      * @param array<int|string> $objects Video id's to include
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
-    public static function videos(array $objects, User $user, string $auth, bool $full_xml = true): string
+    public function videos(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('video', $user->id) . "</total_count>\n" : '';
 
@@ -973,96 +1014,5 @@ class Xml5_Data
         }
 
         return Api::output_xml($string, $full_xml);
-    }
-
-    /**
-     * genre_string
-     *
-     * This returns the formatted 'genre' string for an xml document
-     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
-     */
-    private static function _genre_string(array $tags): string
-    {
-        $string = '';
-
-        if (!empty($tags)) {
-            $atags = [];
-            foreach ($tags as $tag) {
-                if (array_key_exists($tag['id'], $atags)) {
-                    $atags[$tag['id']]['count']++;
-                } else {
-                    $atags[$tag['id']] = [
-                        'name' => $tag['name'],
-                        'count' => 1
-                    ];
-                }
-            }
-
-            foreach ($atags as $tag_id => $data) {
-                $string .= "\t<genre id=\"" . $tag_id . "\"><![CDATA[" . $data['name'] . "]]></genre>\n";
-            }
-        }
-
-        return $string;
-    }
-
-    /**
-     * @deprecated
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getBookmarkRepository(): BookmarkRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(BookmarkRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject dependency
-     */
-    private static function getLabelRepository(): LabelRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(LabelRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getLicenseRepository(): LicenseRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(LicenseRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
     }
 }

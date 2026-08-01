@@ -26,6 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Api\Json5_Data;
+use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Override;
 
 class ApiOutputFactoryTest extends MockeryTestCase
@@ -51,6 +59,24 @@ class ApiOutputFactoryTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->subject = new ApiOutputFactory();
+        // the formatters are final, so the factory gets real ones built from mocked repositories
+        $this->subject = new ApiOutputFactory(
+            new Json5_Data(
+                $this->mock(AlbumRepositoryInterface::class),
+                $this->mock(BookmarkRepositoryInterface::class),
+                $this->mock(LabelRepositoryInterface::class),
+                $this->mock(LicenseRepositoryInterface::class),
+                $this->mock(PodcastRepositoryInterface::class),
+                $this->mock(SongRepositoryInterface::class),
+            ),
+            new Xml5_Data(
+                $this->mock(AlbumRepositoryInterface::class),
+                $this->mock(BookmarkRepositoryInterface::class),
+                $this->mock(LabelRepositoryInterface::class),
+                $this->mock(LicenseRepositoryInterface::class),
+                $this->mock(PodcastRepositoryInterface::class),
+                $this->mock(SongRepositoryInterface::class),
+            )
+        );
     }
 }

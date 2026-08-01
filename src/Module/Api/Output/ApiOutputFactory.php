@@ -25,15 +25,23 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Api\Json5_Data;
+use Ampache\Module\Api\Xml5_Data;
+
 final class ApiOutputFactory implements ApiOutputFactoryInterface
 {
+    public function __construct(
+        private Json5_Data $json5Data,
+        private Xml5_Data $xml5Data,
+    ) {}
+
     public function createJsonOutput(): ApiOutputInterface
     {
-        return new JsonOutput();
+        return new JsonOutput($this->json5Data);
     }
 
     public function createXmlOutput(): ApiOutputInterface
     {
-        return new XmlOutput();
+        return new XmlOutput($this->xml5Data);
     }
 }
