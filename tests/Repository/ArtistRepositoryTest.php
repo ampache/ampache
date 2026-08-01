@@ -31,6 +31,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ArtistFieldEnum;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class ArtistRepositoryTest extends TestCase
@@ -38,6 +39,7 @@ class ArtistRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private ArtistRepository $subject;
 
     public function testAddArtistMapInsertsIgnoringDuplicates(): void
@@ -225,9 +227,11 @@ class ArtistRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new ArtistRepository(
-            $this->connection
+            $this->connection,
+            $this->logger,
         );
     }
 }

@@ -33,6 +33,7 @@ use Ampache\Repository\Model\SongFieldEnum;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class SongRepositoryTest extends TestCase
@@ -40,6 +41,7 @@ class SongRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private SongRepository $subject;
 
     public function testCollectGarbageForSongsSkipsAnEmptyList(): void
@@ -251,9 +253,11 @@ class SongRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new SongRepository(
             $this->connection,
+            $this->logger,
         );
     }
 }

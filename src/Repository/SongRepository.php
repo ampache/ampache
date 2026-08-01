@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -38,11 +39,13 @@ use Ampache\Repository\Model\SongFieldEnum;
 use Ampache\Repository\Model\Tag;
 use Generator;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 final readonly class SongRepository implements SongRepositoryInterface
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
     ) {}
 
     public function collectGarbage(Song $song): void
@@ -61,7 +64,10 @@ final readonly class SongRepository implements SongRepositoryInterface
             try {
                 $this->connection->query($statement[0], $statement[1]);
             } catch (DatabaseException) {
-                debug_event(self::class, 'collectGarbage error: ' . $statement[0], 5);
+                $this->logger->debug(
+                    'collectGarbage error: ' . $statement[0],
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
             }
         }
     }
@@ -77,7 +83,10 @@ final readonly class SongRepository implements SongRepositoryInterface
         try {
             $this->connection->query("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` IN ($idList);");
         } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbageForSongs error', 5);
+            $this->logger->debug(
+                'collectGarbageForSongs error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 
@@ -90,7 +99,10 @@ final readonly class SongRepository implements SongRepositoryInterface
                 [$songId]
             );
         } catch (DatabaseException) {
-            debug_event(self::class, 'delete could not record deleted_song ' . $songId, 3);
+            $this->logger->warning(
+                'delete could not record deleted_song ' . $songId,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
 
         try {

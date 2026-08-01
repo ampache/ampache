@@ -33,6 +33,7 @@ use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class UserRepositoryTest extends TestCase
@@ -40,6 +41,7 @@ class UserRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private UserRepository $subject;
 
     public function testCreateLeavesOmittedColumnsOutOfTheStatement(): void
@@ -227,9 +229,11 @@ class UserRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new UserRepository(
-            $this->connection
+            $this->connection,
+            $this->logger,
         );
     }
 }

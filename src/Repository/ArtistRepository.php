@@ -28,21 +28,29 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ArtistFieldEnum;
 use Ampache\Repository\Model\Catalog;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 final readonly class ArtistRepository implements ArtistRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Maps an artist onto a song or album; duplicates are ignored so the scanner can call it unconditionally
      */
     public function addArtistMap(int $artistId, string $objectType, int $objectId): void
     {
-        debug_event(self::class, 'addArtistMap artist_id {' . $artistId . '} ' . $objectType . ' {' . $objectId . '}', 5);
+        $this->logger->debug(
+            'addArtistMap artist_id {' . $artistId . '} ' . $objectType . ' {' . $objectId . '}',
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
 
         $this->connection->query(
             'INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);',
@@ -55,7 +63,10 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        debug_event(self::class, 'collectGarbage', 5);
+        $this->logger->debug(
+            'collectGarbage',
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
         $queries = [
             ['DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);', ['album']],
             ['DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `album`);', ['album']],
@@ -70,7 +81,10 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
                 $params = $query[1];
                 $this->connection->query($sql, $params);
             } catch (DatabaseException) {
-                debug_event(self::class, 'collectGarbage error', 5);
+                $this->logger->debug(
+                    'collectGarbage error',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
             }
         }
     }
@@ -469,7 +483,10 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
      */
     public function removeArtistMap(int $artistId, string $objectType, int $objectId): void
     {
-        debug_event(self::class, 'removeArtistMap artist_id {' . $artistId . '} ' . $objectType . ' {' . $objectId . '}', 5);
+        $this->logger->debug(
+            'removeArtistMap artist_id {' . $artistId . '} ' . $objectType . ' {' . $objectId . '}',
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
 
         $this->connection->query(
             'DELETE FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = ? AND `object_id` = ?;',
@@ -589,7 +606,10 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         try {
             $this->connection->query($sql, $params);
         } catch (DatabaseException) {
-            debug_event(self::class, 'count maintenance failed: ' . $sql, 3);
+            $this->logger->warning(
+                'count maintenance failed: ' . $sql,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 }

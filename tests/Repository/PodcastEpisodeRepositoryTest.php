@@ -35,6 +35,7 @@ use DateTime;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class PodcastEpisodeRepositoryTest extends TestCase
@@ -43,6 +44,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
 
     private ConfigContainerInterface&MockObject $configContainer;
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private ModelFactoryInterface&MockObject $modelFactory;
     private PodcastEpisodeRepository $subject;
 
@@ -439,12 +441,14 @@ class PodcastEpisodeRepositoryTest extends TestCase
     {
         $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
         $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger          = $this->createMock(LoggerInterface::class);
         $this->configContainer = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new PodcastEpisodeRepository(
             $this->modelFactory,
             $this->connection,
             $this->configContainer,
+            $this->logger,
         );
     }
 }

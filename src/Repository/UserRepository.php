@@ -29,14 +29,19 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\UserFieldEnum;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 final readonly class UserRepository implements UserRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Activates the user by username
@@ -110,7 +115,10 @@ final readonly class UserRepository implements UserRepositoryInterface
             try {
                 $this->connection->query($sql);
             } catch (DatabaseException) {
-                debug_event(self::class, 'collectGarbage error: ' . $sql, 5);
+                $this->logger->debug(
+                    'collectGarbage error: ' . $sql,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
             }
         }
     }

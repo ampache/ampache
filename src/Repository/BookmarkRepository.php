@@ -27,13 +27,18 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
+use Psr\Log\LoggerInterface;
 
 final readonly class BookmarkRepository implements BookmarkRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Remove bookmark for items that no longer exist.
@@ -57,7 +62,10 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
                     )
                 );
             } catch (DatabaseException) {
-                debug_event(self::class, 'collectGarbage error', 5);
+                $this->logger->debug(
+                    'collectGarbage error',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
             }
         }
     }

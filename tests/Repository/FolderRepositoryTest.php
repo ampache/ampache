@@ -30,10 +30,12 @@ use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class FolderRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private FolderRepository $subject;
 
     public function testCollectGarbageRunsCleanupQueries(): void
@@ -359,7 +361,8 @@ class FolderRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
-        $this->subject = new FolderRepository($this->connection);
+        $this->subject = new FolderRepository($this->connection, $this->logger);
     }
 }

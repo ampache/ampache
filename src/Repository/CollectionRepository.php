@@ -27,13 +27,18 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\User;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 final readonly class CollectionRepository implements CollectionRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     public function addItem(int $collectionId, int $objectId, string $objectType, bool $unique = false): bool
     {
@@ -72,7 +77,10 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
             $this->connection->query('DELETE FROM `collection` WHERE `user` IS NOT NULL AND `user` NOT IN (SELECT `id` FROM `user`);');
             $this->connection->query('DELETE FROM `collection_map` WHERE `collection` NOT IN (SELECT `id` FROM `collection`);');
         } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
+            $this->logger->debug(
+                'collectGarbage error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 

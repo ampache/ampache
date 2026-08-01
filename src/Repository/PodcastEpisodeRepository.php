@@ -30,11 +30,13 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Generator;
+use Psr\Log\LoggerInterface;
 
 /**
  * Manages database access related to podcast-episodes
@@ -47,6 +49,7 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
         private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
     ) {}
 
     /**
@@ -59,7 +62,10 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
                 'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
             );
         } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
+            $this->logger->debug(
+                'collectGarbage error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 

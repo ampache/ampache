@@ -28,11 +28,16 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 final readonly class UserActivityRepository implements UserActivityRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Remove activities for items that no longer exist.
@@ -62,7 +67,10 @@ final readonly class UserActivityRepository implements UserActivityRepositoryInt
                     [$object_type, $object_id]
                 );
             } else {
-                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                $this->logger->critical(
+                    'Garbage collect on type `' . $object_type . '` is not supported.',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
             }
         } else {
             $statements = [];
@@ -80,7 +88,10 @@ final readonly class UserActivityRepository implements UserActivityRepositoryInt
                 try {
                     $this->connection->query($statement[0], $statement[1]);
                 } catch (DatabaseException) {
-                    debug_event(self::class, 'collectGarbage error: ' . $statement[0], 5);
+                    $this->logger->debug(
+                        'collectGarbage error: ' . $statement[0],
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
                 }
             }
         }

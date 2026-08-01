@@ -31,10 +31,12 @@ use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class UserActivityRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private UserActivityRepository $subject;
 
     public function testCollectGarbageDeletesTheActivitiesOfASingleObject(): void
@@ -129,9 +131,11 @@ class UserActivityRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new UserActivityRepository(
-            $this->connection
+            $this->connection,
+            $this->logger,
         );
     }
 }

@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -34,10 +35,14 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use PDO;
 use PDOStatement;
+use Psr\Log\LoggerInterface;
 
 final readonly class FolderRepository implements FolderRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * This cleans out unused folders
@@ -54,13 +59,16 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $this->connection->query('DELETE FROM `folder` WHERE `id` NOT IN (SELECT `folder_id` FROM `folder_map`) AND `parent` IS NOT NULL AND `user` IS NULL;');
             $this->update_folder_counts();
         } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
+            $this->logger->debug(
+                'collectGarbage error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 
     public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent_id = null): ?Folder
     {
-        //debug_event(self::class, 'CREATE ' . $folderName . ' ' . $folderPath . ' ' . $parent_id, 5);
+        //$this->logger->debug('CREATE ' . $folderName . ' ' . $folderPath . ' ' . $parent_id, [LegacyLogger::CONTEXT_TYPE => self::class]);
         $folderId = Folder::create([
             'name' => $folderName,
             'catalog' => $catalogId,
@@ -143,7 +151,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $sql .= 'AND `folder_map`.`folder_id` IS NULL ';
         }
 
-        //debug_event(self::class, 'getByName ' . sprintf('SQL %s', $sql) . print_r([$folderName, $catalogId, $parent], true), 5);
+        //$this->logger->debug('getByName ' . sprintf('SQL %s', $sql) . print_r([$folderName, $catalogId, $parent], true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
         $result = $this->connection->query($sql . 'LIMIT 1;', $params);
 
@@ -177,7 +185,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $params[] = $parentPath;
         }
 
-        //debug_event(self::class, 'getByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
+        //$this->logger->debug('getByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
         $rowId = $this->connection->fetchOne($sql, $params);
         if ($rowId === false) {
@@ -292,7 +300,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
                 $params[] = $parent_id;
             }
 
-            //debug_event(self::class, 'lookup' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
+            //$this->logger->debug('lookup' . sprintf('SQL %s', $sql) . print_r($params, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
             $result = $this->connection->fetchOne($sql, $params);
 
@@ -313,7 +321,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $ret    = 0;
             $sql    = 'SELECT `id` FROM `folder` WHERE `path_name` = ? AND `catalog` = ?';
             $params = [$name, $catalogId];
-            //debug_event(self::class, 'lookupByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
+            //$this->logger->debug('lookupByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
             $result = $this->connection->fetchOne($sql, $params);
 

@@ -29,10 +29,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumFieldEnum;
 use Ampache\Repository\Model\Catalog;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 final readonly class AlbumRepository implements AlbumRepositoryInterface
 {
@@ -53,14 +55,20 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         'version',
     ];
 
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Maps an artist onto an album, as either its album-artist (`album`) or one of its track artists (`song`)
      */
     public function addAlbumMap(int $albumId, string $objectType, int $objectId): void
     {
-        debug_event(self::class, 'addAlbumMap album_id {' . $albumId . '} ' . $objectType . '_artist {' . $objectId . '}', 5);
+        $this->logger->debug(
+            'addAlbumMap album_id {' . $albumId . '} ' . $objectType . '_artist {' . $objectId . '}',
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
 
         $this->connection->query(
             'INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);',
@@ -86,7 +94,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             try {
                 $this->connection->query($sql);
             } catch (DatabaseException) {
-                debug_event(self::class, 'collectGarbage error', 5);
+                $this->logger->debug(
+                    'collectGarbage error',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
             }
         }
 
@@ -97,7 +108,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
                 $this->connection->query('DELETE FROM `album_disk` WHERE `id` = ?;', [$albumDiskId], true);
             }
         } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
+            $this->logger->debug(
+                'collectGarbage error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 
@@ -721,7 +735,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      */
     public function removeAlbumMap(int $albumId, string $objectType, int $objectId): void
     {
-        debug_event(self::class, 'removeAlbumMap album_id {' . $albumId . '} ' . $objectType . '_artist {' . $objectId . '}', 5);
+        $this->logger->debug(
+            'removeAlbumMap album_id {' . $albumId . '} ' . $objectType . '_artist {' . $objectId . '}',
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
 
         $this->connection->query(
             'DELETE FROM `album_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;',
@@ -832,7 +849,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         try {
             $this->connection->query($sql, $params);
         } catch (DatabaseException) {
-            debug_event(self::class, 'count maintenance failed: ' . $sql, 3);
+            $this->logger->warning(
+                'count maintenance failed: ' . $sql,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 }

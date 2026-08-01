@@ -30,10 +30,12 @@ use Ampache\Repository\Model\Wanted;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class WantedRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private WantedRepository $subject;
 
     public function testCollectGarbagePerformsCleanup(): void
@@ -264,9 +266,11 @@ class WantedRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new WantedRepository(
-            $this->connection
+            $this->connection,
+            $this->logger,
         );
     }
 }

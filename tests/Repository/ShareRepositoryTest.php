@@ -35,11 +35,13 @@ use DateTime;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class ShareRepositoryTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private ShareRepository $subject;
 
     public function testCollectGarbageCleansUp(): void
@@ -253,11 +255,13 @@ class ShareRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger          = $this->createMock(LoggerInterface::class);
         $this->configContainer = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new ShareRepository(
             $this->connection,
-            $this->configContainer
+            $this->configContainer,
+            $this->logger,
         );
     }
 }
