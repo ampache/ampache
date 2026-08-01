@@ -134,6 +134,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Add to playlist
   * The action is on the artist, smartlist, podcast, podcast episode, radio station and video pages, which only offered the temporary playlist before
   * Podcast rows carry it as well, so a whole podcast can be added from a browse the way an album already could
+* A `PHP Modules` table on `Admin -> Server Config -> Ampache Debug` listing every php extension Ampache requires or suggests, whether this server has it, and what an optional one is needed for
 
 ### Changed (8.0.0)
 
@@ -215,6 +216,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * A missing artist page with no musicbrainz id, which passed `null` into `Ui::show_box_top()`
   * Selecting cover art once the session's candidate list had expired; the choice is checked and you are returned to the previous page instead
   * `share.php?action=external_share` with no `plugin` named, which built a plugin from an empty name; the request is refused up front instead
+* Unexpected errors that left you looking at a blank or half-written page
+  * A page handler that throws now shows a generic error page linking to the debug page (`test.php`); ajax calls, media streams and API clients are left with their own payload
+  * A startup failure that none of the init handlers expected redirects to `test.php` rather than ending the request silently
 * A database with no tables in it (a valid config pointing at an empty database)
   * The startup checks threw the failure away with a `return` inside a `finally` block, so the page half loaded and every request logged a wall of missing table errors; you are sent to `test.php`, which names what is missing
   * `update.php` redirects there as well, rather than rendering a page it has no version to fill in

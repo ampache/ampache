@@ -68,17 +68,35 @@ Please see [the wiki](https://ampache.org/docs/installation/) and don't forget t
 
 **NOTE** That php7.4 is not supported for Ampache6 but can still be built.
 
-* PHP modules:
+* Required PHP modules (the `ext-` requirements of composer.json, plus the MySQL driver and the modules the installer checks):
+  * curl
+  * dom
+  * fileinfo ([Required](https://ampache.org/docs/help/troubleshooting/ampache8-for-admins#php-fileinfo-extension-is-required) in Ampache 8.0.0 and higher, usually included in PHP)
+  * gd
+  * gettext
+  * hash (included in PHP)
+  * iconv
+  * intl
+  * json (included in php8+)
+  * libxml
+  * mbstring
+  * openssl
   * PDO
   * PDO_MYSQL
-  * hash
-  * session
-  * json (included in php8+)
-  * fileinfo ([Required](https://ampache.org/docs/help/troubleshooting/ampache8-for-admins#php-fileinfo-extension-is-required) in Ampache 8.0.0 and higher usually included in PHP)
-  * intl
+  * session (included in PHP)
   * simplexml
-  * curl
+  * xml
   * zip ([Required](https://ampache.org/docs/help/troubleshooting/ampache7-for-admins#php-zip-extension-is-required) in Ampache 7.0.0 and higher)
+  * zlib
+
+* Optional PHP modules (Ampache runs without them, the feature named does not):
+  * http (Yourls plugin)
+  * ldap (LDAP authentication)
+  * pthreads (async functions)
+  * sockets (UPnP)
+  * xmlreader (UPnP)
+
+Admins can see which of these the server actually has under `Admin -> Server Config -> Ampache Debug` (the `PHP Modules` table).
 
 * For FreeBSD The following php modules must be loaded:
   * php-xml

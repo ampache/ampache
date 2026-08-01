@@ -75,12 +75,16 @@ final readonly class ApplicationRunner
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
+            $this->showErrorPage($request);
+
             return;
         } catch (ContainerExceptionInterface) {
             $this->logger->critical(
                 sprintf('No handler found for action "%s"', $action_name),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
+
+            $this->showErrorPage($request);
 
             return;
         }
@@ -145,9 +149,25 @@ final readonly class ApplicationRunner
                     )
                 ]
             );
-            /**
-             * @todo Add a nice error page
-             */
+
+            $this->showErrorPage($request);
         }
+    }
+
+    /**
+     * Show the generic error page, but only where a browser is waiting for a page to look at
+     */
+    private function showErrorPage(ServerRequestInterface $request): void
+    {
+        // ajax calls, media streams and api clients would receive the markup as their payload
+        if (
+            headers_sent()
+            || $request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest'
+            || !str_contains($request->getHeaderLine('Accept'), 'text/html')
+        ) {
+            return;
+        }
+
+        $this->ui->showErrorPage();
     }
 }

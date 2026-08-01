@@ -149,6 +149,15 @@ class ApplicationRunnerTest extends MockeryTestCase
             ->once()
             ->andReturn($gatekeeper);
 
+        $request->shouldReceive('getHeaderLine')
+            ->with('X-Requested-With')
+            ->once()
+            ->andReturn('');
+        $request->shouldReceive('getHeaderLine')
+            ->with('Accept')
+            ->once()
+            ->andReturn('application/json');
+
         $handler->shouldReceive('run')
             ->with($request, $gatekeeper)
             ->once()
@@ -189,6 +198,15 @@ class ApplicationRunnerTest extends MockeryTestCase
             )
             ->once();
 
+        $request->shouldReceive('getHeaderLine')
+            ->with('X-Requested-With')
+            ->once()
+            ->andReturn('');
+        $request->shouldReceive('getHeaderLine')
+            ->with('Accept')
+            ->once()
+            ->andReturn('application/json');
+
         $this->subject->run(
             $request,
             [$action => $handler],
@@ -220,6 +238,15 @@ class ApplicationRunnerTest extends MockeryTestCase
                 [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
             )
             ->once();
+
+        $request->shouldReceive('getHeaderLine')
+            ->with('X-Requested-With')
+            ->once()
+            ->andReturn('');
+        $request->shouldReceive('getHeaderLine')
+            ->with('Accept')
+            ->once()
+            ->andReturn('application/json');
 
         $this->subject->run($request, [], '');
     }
@@ -328,6 +355,62 @@ class ApplicationRunnerTest extends MockeryTestCase
             $request,
             [$default_action => $handler_name],
             $default_action
+        );
+    }
+
+    public function testRunShowsTheErrorPageForABrowserRequest(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $handler    = $this->mock(ApplicationActionInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $action       = 'some-action';
+        $handler_name = 'some-handler';
+        $error        = new Exception('some-error');
+
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['action' => $action]);
+        $request->shouldReceive('getHeaderLine')
+            ->with('X-Requested-With')
+            ->once()
+            ->andReturn('');
+        $request->shouldReceive('getHeaderLine')
+            ->with('Accept')
+            ->once()
+            ->andReturn('text/html,application/xhtml+xml');
+
+        $this->dic->shouldReceive('get')
+            ->with($handler_name)
+            ->once()
+            ->andReturn($handler);
+
+        $this->logger->shouldReceive('debug')
+            ->with(Mockery::type('string'), Mockery::type('array'))
+            ->once();
+        $this->logger->shouldReceive('critical')
+            ->with(Mockery::type('string'), Mockery::type('array'))
+            ->once();
+
+        $this->gatekeeperFactory->shouldReceive('createGuiGatekeeper')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($gatekeeper);
+
+        $handler->shouldReceive('run')
+            ->with($request, $gatekeeper)
+            ->once()
+            ->andThrow($error);
+
+        $this->ui->shouldReceive('showErrorPage')
+            ->withNoArgs()
+            ->once();
+
+        $this->subject->run(
+            $request,
+            [$action => $handler_name],
+            ''
         );
     }
 

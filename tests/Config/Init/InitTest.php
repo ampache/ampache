@@ -47,6 +47,11 @@ class InitTest extends MockeryTestCase
             ->once()
             ->andThrow($error);
 
+        $this->environment->shouldReceive('isCli')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
         $this->expectExceptionObject($error);
 
         $this->subject->init();

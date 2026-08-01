@@ -81,6 +81,49 @@ class EnvironmentTest extends TestCase
         static::assertTrue($this->subject->check_php_version());
     }
 
+    public function testExtensionListsMatchComposerJson(): void
+    {
+        $composer = json_decode(
+            (string) file_get_contents(__DIR__ . '/../../../composer.json'),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+
+        $extensions = static fn(array $packages): array => array_values(
+            array_map(
+                static fn(string $package): string => substr($package, 4),
+                array_filter(
+                    array_keys($packages),
+                    static fn(string $package): bool => str_starts_with($package, 'ext-')
+                )
+            )
+        );
+
+        $required = $extensions($composer['require']);
+        $optional = array_values(array_diff($extensions($composer['suggest']), $required));
+
+        static::assertSame($required, Environment::REQUIRED_EXTENSIONS);
+        static::assertSame($optional, array_keys(Environment::OPTIONAL_EXTENSIONS));
+    }
+
+    public function testGetExtensionStatusReportsEveryDeclaredExtension(): void
+    {
+        $status = $this->subject->getExtensionStatus();
+
+        static::assertCount(
+            count(Environment::REQUIRED_EXTENSIONS)
+            + count(Environment::ADDITIONAL_EXTENSIONS)
+            + count(Environment::OPTIONAL_EXTENSIONS),
+            $status
+        );
+
+        $curl = $status[array_search('curl', array_column($status, 'name'), true)];
+
+        static::assertTrue($curl['required']);
+        static::assertTrue($curl['loaded']);
+    }
+
     public function testIsCliReturnsTrueUnderThePhpunitCliRunner(): void
     {
         static::assertTrue($this->subject->isCli());

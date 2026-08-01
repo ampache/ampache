@@ -1582,6 +1582,20 @@ class Ui implements UiInterface
         );
     }
 
+    public function showErrorPage(): void
+    {
+        // the error usually arrives part way through a page, so throw away whatever has been written so far
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        if (!headers_sent()) {
+            header('HTTP/1.1 500 Internal Server Error');
+        }
+
+        require_once self::find_template('show_error.inc.php');
+    }
+
     public function showFooter(): void
     {
         static::show_footer();
