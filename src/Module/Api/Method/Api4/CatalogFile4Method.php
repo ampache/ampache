@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\Catalog_local;
-use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -143,15 +142,5 @@ final class CatalogFile4Method
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function getSongDeleter(): SongDeleterInterface
-    {
-        global $dic;
-
-        return $dic->get(SongDeleterInterface::class);
     }
 }

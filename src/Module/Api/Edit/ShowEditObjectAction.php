@@ -47,6 +47,7 @@ final class ShowEditObjectAction extends AbstractEditAction
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
     private UiInterface $ui;
+    private UserRepositoryInterface $userRepository;
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
@@ -56,21 +57,13 @@ final class ShowEditObjectAction extends AbstractEditAction
         LoggerInterface $logger,
         ShareRepositoryInterface $shareRepository,
         UiInterface $ui,
+        UserRepositoryInterface $userRepository,
     ) {
         parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->ui              = $ui;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        $this->userRepository  = $userRepository;
     }
 
     protected function handle(
@@ -82,7 +75,7 @@ final class ShowEditObjectAction extends AbstractEditAction
         ?Browse $browse = null,
     ): ResponseInterface {
         ob_start();
-        $users     = self::getUserRepository()->getValidArray();
+        $users     = $this->userRepository->getValidArray();
         $users[-1] = T_('System');
 
         $this->ui->show(

@@ -75,6 +75,7 @@ class Ui implements UiInterface
 
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
+        private readonly MetadataFieldRepositoryInterface $metadataFieldRepository,
     ) {}
 
     /**
@@ -1374,7 +1375,7 @@ class Ui implements UiInterface
                 // array keys are cast to int by php so the stored comma separated string ids need the same treatment
                 $ids     = array_map('intval', array_filter(explode(',', (string) $value), 'is_numeric'));
                 $options = [];
-                foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
+                foreach ($this->metadataFieldRepository->getPropertyList() as $propertyId => $propertyName) {
                     $selected  = (in_array((int) $propertyId, $ids, true)) ? ' selected="selected"' : '';
                     $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . scrub_out($propertyName) . '</option>';
                 }
@@ -1654,15 +1655,5 @@ class Ui implements UiInterface
     public function showQueryStats(): void
     {
         require self::find_template('show_query_stats.inc.php');
-    }
-
-    /**
-     * @todo inject dependency
-     */
-    private function getMetadataFieldRepository(): MetadataFieldRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(MetadataFieldRepositoryInterface::class);
     }
 }

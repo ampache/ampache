@@ -113,16 +113,16 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                                 case 'album':
                                     foreach ($objects as $object) {
                                         $songs = (is_array($object))
-                                            ? array_merge($songs, $this->getSongRepository()->getByAlbum($object['object_id'] ?? 0))
-                                            : array_merge($songs, $this->getSongRepository()->getByAlbum((int) $object));
+                                            ? array_merge($songs, $this->songRepository->getByAlbum($object['object_id'] ?? 0))
+                                            : array_merge($songs, $this->songRepository->getByAlbum((int) $object));
                                     }
 
                                     break;
                                 case 'artist':
                                     foreach ($objects as $object) {
                                         $songs = (is_array($object))
-                                            ? array_merge($songs, $this->getSongRepository()->getAllByArtist($object['object_id'] ?? 0))
-                                            : array_merge($songs, $this->getSongRepository()->getAllByArtist((int) $object));
+                                            ? array_merge($songs, $this->songRepository->getAllByArtist($object['object_id'] ?? 0))
+                                            : array_merge($songs, $this->songRepository->getAllByArtist((int) $object));
                                     }
 
                                     break;
@@ -237,12 +237,5 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 
         // Go ahead and do the echo
         echo xoutput_from_array($results);
-    }
-
-    private function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
     }
 }
