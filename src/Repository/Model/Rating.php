@@ -110,7 +110,7 @@ class Rating extends database_object
             $user_ratings[$row['object_id']] = $row['rating'];
         }
 
-        $sql        = sprintf('SELECT ROUND(AVG(`rating`), 2) AS `rating`, `object_id` FROM `rating` WHERE `object_id` IN %s AND `object_type` = ? GROUP BY `object_id`', $idlist);
+        $sql        = sprintf('SELECT ROUND(AVG(`rating`), 2) AS `rating`, `object_id` FROM `rating` WHERE `object_id` IN %s AND `object_type` = ? GROUP BY `object_id` HAVING COUNT(`object_id`) > 1', $idlist);
         $db_results = Dba::read($sql, [$type]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -123,9 +123,10 @@ class Rating extends database_object
 
             parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, [$rating]);
             // Then store the average
-            $rating = (isset($ratings[$object_id])) ? round($ratings[$object_id], 1) : 0;
+            // keep float precision + 0 means "no average". matches get_average_rating().
+            $rating = (isset($ratings[$object_id])) ? round($ratings[$object_id], 2) : 0;
 
-            parent::add_to_cache('rating_' . $type . '_all', $object_id, [(int) $rating]);
+            parent::add_to_cache('rating_' . $type . '_all', $object_id, [$rating]);
         }
 
         return true;
@@ -454,8 +455,11 @@ class Rating extends database_object
     public function get_average_rating(): ?float
     {
         $key = 'rating_' . $this->type . '_all';
-        if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {
-            return (float) parent::get_from_cache($key, $this->id)[0];
+        // cached 0 = no average. don't re-query it.
+        if (parent::is_cached($key, $this->id)) {
+            $cached = (float) parent::get_from_cache($key, $this->id)[0];
+
+            return ($cached > 0) ? $cached : null;
         }
 
         $params     = [$this->id, $this->type];
