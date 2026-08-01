@@ -89,6 +89,14 @@ interface ArtistRepositoryInterface
     public function getFullNameById(int $artistId): ?string;
 
     /**
+     * Batch version of getFullNameById: returns [artist_id => full name].
+     *
+     * @param list<int> $artistIds
+     * @return array<int, string>
+     */
+    public function getFullNamesByIds(array $artistIds): array;
+
+    /**
      * Reads the minimal artist detail Subsonic needs, together with its lowest-numbered catalog
      *
      * @return array{id: int, f_name: string, name: string, album_count: int, song_count: int, catalog_id: int}|null

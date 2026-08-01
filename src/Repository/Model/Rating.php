@@ -489,8 +489,11 @@ class Rating extends database_object
         }
 
         $key = 'rating_' . $this->type . '_user' . $user_id;
-        if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {
-            return parent::get_from_cache($key, $this->id)[0];
+        // cached 0 = no rating. don't re-query it.
+        if (parent::is_cached($key, $this->id)) {
+            $cached = (int) parent::get_from_cache($key, $this->id)[0];
+
+            return ($cached > 0) ? $cached : null;
         }
 
         $params     = [$user_id, $this->id, $this->type];
