@@ -130,7 +130,7 @@ foreach ($object_ids as $album_id) {
         continue;
     }
 
-    if ($directplay_limit > 0) {
+    if ($directplay_limit > 0 && $is_table) {
         $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
     } ?>
         <tr id="album_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="album" data-object-id="<?php echo $libitem->id; ?>">

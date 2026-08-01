@@ -114,7 +114,7 @@ foreach ($object_ids as $artist_id) {
 
     $show_direct_play  = $show_direct_play_cfg;
     $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
-    if ($directplay_limit > 0) {
+    if ($directplay_limit > 0 && $is_table) {
         $show_playlist_add = ($libitem->song_count <= $directplay_limit);
         if ($show_direct_play) {
             $show_direct_play = $show_playlist_add;
