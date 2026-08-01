@@ -370,15 +370,21 @@ class Ui implements UiInterface
     {
         $title      = $title ?? T_(ucfirst($name));
         $symbol_key = $name;
-        $filepath   = __DIR__ . '/../../../resources/images/material-symbols/' . $name . '.svg';
-        if (!is_file($filepath)) {
-            // fall back to error icon if icon is missing
-            debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
-            $symbol_key = 'icon_error';
-            $filepath   = __DIR__ . '/../../../resources/images/icon_error.svg';
+        // Skip the per-call disk stat once the symbol is cached. Hundreds of calls per page.
+        if (array_key_exists($name, self::$_symbol_cache)) {
+            $symbol = self::$_symbol_cache[$name];
+        } else {
+            $filepath = __DIR__ . '/../../../resources/images/material-symbols/' . $name . '.svg';
+            if (!is_file($filepath)) {
+                // fall back to error icon if icon is missing
+                debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
+                $symbol_key = 'icon_error';
+                $filepath   = __DIR__ . '/../../../resources/images/icon_error.svg';
+            }
+
+            $symbol = self::_load_symbol_parts($symbol_key, $filepath);
         }
 
-        $symbol = self::_load_symbol_parts($symbol_key, $filepath);
         if ($symbol === null) {
             return '';
         }
