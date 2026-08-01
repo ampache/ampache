@@ -41,6 +41,7 @@ final class JsonOutput implements ApiOutputInterface
 {
     public function __construct(
         private Json5_Data $json5Data,
+        private Json6_Data $json6Data,
     ) {}
 
     /**
@@ -82,7 +83,7 @@ final class JsonOutput implements ApiOutputInterface
         return match ($apiVersion) {
             4 => Json4_Data::albums($albums, $include, $user, $auth),
             5 => $this->json5Data->albums($albums, $include, $user, $auth),
-            6 => Json6_Data::albums($albums, $include, $user, $auth, $encode, $asObject),
+            6 => $this->json6Data->albums($albums, $include, $user, $auth, $encode, $asObject),
             8 => Json8_Data::albums($albums, $include, $user, $auth, $encode, $asObject),
         };
     }
@@ -98,7 +99,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->artists($artists, $include, $user, $auth, $asObject),
-            6 => Json6_Data::artists($artists, $include, $user, $auth, $asObject),
+            6 => $this->json6Data->artists($artists, $include, $user, $auth, $asObject),
             8 => Json8_Data::artists($artists, $include, $user, $auth, $asObject),
         };
     }
@@ -113,7 +114,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->bookmarks($bookmarks, $asObject),
-            6 => Json6_Data::bookmarks($bookmarks, $auth, $include, $asObject),
+            6 => $this->json6Data->bookmarks($bookmarks, $auth, $include, $asObject),
             8 => Json8_Data::bookmarks($bookmarks, $auth, $include, $asObject),
         };
     }
@@ -133,7 +134,7 @@ final class JsonOutput implements ApiOutputInterface
         ?int $catalogId = null,
     ): string {
         return match ($apiVersion) {
-            6 => Json6_Data::browses($objects, $parentType, $childType, $parentId, $catalogId),
+            6 => $this->json6Data->browses($objects, $parentType, $childType, $parentId, $catalogId),
             8 => Json8_Data::browses($objects, $parentType, $childType, $parentId, $catalogId),
         };
     }
@@ -149,7 +150,7 @@ final class JsonOutput implements ApiOutputInterface
         return match ($apiVersion) {
             // the version 5 builder only ever took integer ids
             5 => $this->json5Data->catalogs(array_map(intval(...), $catalogs), $asObject),
-            6 => Json6_Data::catalogs($catalogs, $asObject),
+            6 => $this->json6Data->catalogs($catalogs, $asObject),
             8 => Json8_Data::catalogs($catalogs, $asObject),
         };
     }
@@ -208,7 +209,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->deleted($objectType, $objects),
-            6 => Json6_Data::deleted($objectType, $objects),
+            6 => $this->json6Data->deleted($objectType, $objects),
             8 => Json8_Data::deleted($objectType, $objects),
         };
     }
@@ -233,7 +234,7 @@ final class JsonOutput implements ApiOutputInterface
     ): string {
         return match ($apiVersion) {
             5 => $this->json5Data->democratic($objectIds, $user, $auth, $asObject),
-            6 => Json6_Data::democratic($objectIds, $user, $auth, $asObject),
+            6 => $this->json6Data->democratic($objectIds, $user, $auth, $asObject),
             8 => Json8_Data::democratic($objectIds, $user, $auth, $asObject),
         };
     }
@@ -280,7 +281,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->genres($genres, $asObject),
-            6 => Json6_Data::genres($genres, $asObject),
+            6 => $this->json6Data->genres($genres, $asObject),
             8 => Json8_Data::genres($genres, $asObject),
         };
     }
@@ -294,7 +295,7 @@ final class JsonOutput implements ApiOutputInterface
     public function index(int $apiVersion, array $objects, string $objectType, User $user, bool $include = false): string
     {
         return match ($apiVersion) {
-            6 => Json6_Data::index($objects, $objectType, $user, $include),
+            6 => $this->json6Data->index($objects, $objectType, $user, $include),
             8 => Json8_Data::index($objects, $objectType, $user, $include),
         };
     }
@@ -318,7 +319,7 @@ final class JsonOutput implements ApiOutputInterface
     ): string {
         return match ($apiVersion) {
             5 => $this->json5Data->indexes($objects, $objectType, $user, $auth, $include),
-            6 => Json6_Data::indexes($objects, $objectType, $user, $auth, $include),
+            6 => $this->json6Data->indexes($objects, $objectType, $user, $auth, $include),
             8 => Json8_Data::indexes($objects, $objectType, $user, $auth, $include),
         };
     }
@@ -347,7 +348,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->labels($labels, $asObject),
-            6 => Json6_Data::labels($labels, $asObject),
+            6 => $this->json6Data->labels($labels, $asObject),
             8 => Json8_Data::labels($labels, $asObject),
         };
     }
@@ -362,7 +363,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->licenses($licenses, $asObject),
-            6 => Json6_Data::licenses($licenses, $asObject),
+            6 => $this->json6Data->licenses($licenses, $asObject),
             8 => Json8_Data::licenses($licenses, $asObject),
         };
     }
@@ -375,7 +376,7 @@ final class JsonOutput implements ApiOutputInterface
     public function lists(int $apiVersion, array $objects): string
     {
         return match ($apiVersion) {
-            6 => Json6_Data::lists($objects),
+            6 => $this->json6Data->lists($objects),
             8 => Json8_Data::lists($objects),
         };
     }
@@ -390,7 +391,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->live_streams($liveStreams, $asObject),
-            6 => Json6_Data::live_streams($liveStreams, $asObject),
+            6 => $this->json6Data->live_streams($liveStreams, $asObject),
             8 => Json8_Data::live_streams($liveStreams, $asObject),
         };
     }
@@ -432,7 +433,7 @@ final class JsonOutput implements ApiOutputInterface
     public function nowPlaying(int $apiVersion, array $results): string
     {
         return match ($apiVersion) {
-            6 => Json6_Data::now_playing($results),
+            6 => $this->json6Data->now_playing($results),
             8 => Json8_Data::now_playing($results),
         };
     }
@@ -463,7 +464,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->playlists($playlists, $user, $auth, $songs, $asObject),
-            6 => Json6_Data::playlists($playlists, $user, $auth, $songs, $asObject),
+            6 => $this->json6Data->playlists($playlists, $user, $auth, $songs, $asObject),
             8 => Json8_Data::playlists($playlists, $user, $auth, $songs, $asObject),
         };
     }
@@ -477,7 +478,7 @@ final class JsonOutput implements ApiOutputInterface
         return match ($apiVersion) {
             4 => Json4_Data::podcast_episodes($result, $user, $auth, $asObject),
             5 => $this->json5Data->podcast_episodes($result, $user, $auth, $asObject),
-            6 => Json6_Data::podcast_episodes($result, $user, $auth, $encode, $asObject),
+            6 => $this->json6Data->podcast_episodes($result, $user, $auth, $encode, $asObject),
             8 => Json8_Data::podcast_episodes($result, $user, $auth, $encode, $asObject),
         };
     }
@@ -492,7 +493,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->podcasts($podcasts, $user, $auth, $episodes, $asObject),
-            6 => Json6_Data::podcasts($podcasts, $user, $auth, $episodes, $asObject),
+            6 => $this->json6Data->podcasts($podcasts, $user, $auth, $episodes, $asObject),
             8 => Json8_Data::podcasts($podcasts, $user, $auth, $episodes, $asObject),
         };
     }
@@ -603,7 +604,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         match ($apiVersion) {
             5 => $this->json5Data->set_count($count),
-            6 => Json6_Data::set_count($count),
+            6 => $this->json6Data->set_count($count),
             8 => Json8_Data::set_count($count),
         };
     }
@@ -616,7 +617,7 @@ final class JsonOutput implements ApiOutputInterface
         match ($apiVersion) {
             4 => Json4_Data::set_limit($limit),
             5 => $this->json5Data->set_limit($limit),
-            6 => Json6_Data::set_limit($limit),
+            6 => $this->json6Data->set_limit($limit),
             8 => Json8_Data::set_limit($limit),
         };
     }
@@ -629,7 +630,7 @@ final class JsonOutput implements ApiOutputInterface
         match ($apiVersion) {
             4 => Json4_Data::set_offset($offset),
             5 => $this->json5Data->set_offset($offset),
-            6 => Json6_Data::set_offset($offset),
+            6 => $this->json6Data->set_offset($offset),
             8 => Json8_Data::set_offset($offset),
         };
     }
@@ -644,7 +645,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->shares($shares, $user, $asObject),
-            6 => Json6_Data::shares($shares, $user, $asObject),
+            6 => $this->json6Data->shares($shares, $user, $asObject),
             8 => Json8_Data::shares($shares, $user, $asObject),
         };
     }
@@ -662,7 +663,7 @@ final class JsonOutput implements ApiOutputInterface
     ): string {
         return match ($apiVersion) {
             5 => $this->json5Data->shouts(new ArrayIterator($shouts), $asObject),
-            6 => Json6_Data::shouts($shouts, $asObject),
+            6 => $this->json6Data->shouts($shouts, $asObject),
             8 => Json8_Data::shouts($shouts, $asObject),
         };
     }
@@ -677,7 +678,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->songs($songs, $user, $auth, $asObject),
-            6 => Json6_Data::songs($songs, $user, $auth, $encode, $asObject),
+            6 => $this->json6Data->songs($songs, $user, $auth, $encode, $asObject),
             8 => Json8_Data::songs($songs, $user, $auth, $encode, $asObject),
         };
     }
@@ -691,7 +692,7 @@ final class JsonOutput implements ApiOutputInterface
     public function songTags(int $apiVersion, array $objects, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
-            6 => Json6_Data::song_tags($objects, $auth, $asObject),
+            6 => $this->json6Data->song_tags($objects, $auth, $asObject),
             8 => Json8_Data::song_tags($objects, $auth, $asObject),
         };
     }
@@ -740,7 +741,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->timeline($activities),
-            6 => Json6_Data::timeline($activities),
+            6 => $this->json6Data->timeline($activities),
             8 => Json8_Data::timeline($activities),
         };
     }
@@ -754,7 +755,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->user($user, $fullInfo, $asObject),
-            6 => Json6_Data::user($user, $fullInfo, $auth, $asObject),
+            6 => $this->json6Data->user($user, $fullInfo, $auth, $asObject),
             8 => Json8_Data::user($user, $fullInfo, $auth, $asObject),
         };
     }
@@ -770,7 +771,7 @@ final class JsonOutput implements ApiOutputInterface
         return match ($apiVersion) {
             // the version 5 builder only ever took integer ids
             5 => $this->json5Data->users(array_map(intval(...), $users)),
-            6 => Json6_Data::users($users),
+            6 => $this->json6Data->users($users),
             8 => Json8_Data::users($users),
         };
     }
@@ -785,7 +786,7 @@ final class JsonOutput implements ApiOutputInterface
     {
         return match ($apiVersion) {
             5 => $this->json5Data->videos($videos, $user, $auth, $asObject),
-            6 => Json6_Data::videos($videos, $user, $auth, $asObject),
+            6 => $this->json6Data->videos($videos, $user, $auth, $asObject),
             8 => Json8_Data::videos($videos, $user, $auth, $asObject),
         };
     }
@@ -812,7 +813,7 @@ final class JsonOutput implements ApiOutputInterface
     private function albumsArray(int $apiVersion, array $objects, User $user, string $auth): array
     {
         return match ($apiVersion) {
-            6 => Json6_Data::albums_array($objects, [], $user, $auth, false),
+            6 => $this->json6Data->albums_array($objects, [], $user, $auth, false),
             8 => Json8_Data::albums_array($objects, [], $user, $auth, false),
         };
     }
@@ -825,7 +826,7 @@ final class JsonOutput implements ApiOutputInterface
     private function artistsArray(int $apiVersion, array $objects, User $user, string $auth): array
     {
         return match ($apiVersion) {
-            6 => Json6_Data::artists_array($objects, [], $user, $auth, false),
+            6 => $this->json6Data->artists_array($objects, [], $user, $auth, false),
             8 => Json8_Data::artists_array($objects, [], $user, $auth, false),
         };
     }
@@ -838,7 +839,7 @@ final class JsonOutput implements ApiOutputInterface
     private function genresArray(int $apiVersion, array $objects): array
     {
         return match ($apiVersion) {
-            6 => Json6_Data::genres_array($objects),
+            6 => $this->json6Data->genres_array($objects),
             8 => Json8_Data::genres_array($objects),
         };
     }
@@ -851,7 +852,7 @@ final class JsonOutput implements ApiOutputInterface
     private function labelsArray(int $apiVersion, array $objects): array
     {
         return match ($apiVersion) {
-            6 => Json6_Data::labels_array($objects),
+            6 => $this->json6Data->labels_array($objects),
             8 => Json8_Data::labels_array($objects),
         };
     }
@@ -864,7 +865,7 @@ final class JsonOutput implements ApiOutputInterface
     private function playlistsArray(int $apiVersion, array $objects, User $user, string $auth): array
     {
         return match ($apiVersion) {
-            6 => Json6_Data::playlists_array($objects, $user, $auth),
+            6 => $this->json6Data->playlists_array($objects, $user, $auth),
             8 => Json8_Data::playlists_array($objects, $user, $auth),
         };
     }
@@ -877,7 +878,7 @@ final class JsonOutput implements ApiOutputInterface
     private function podcastEpisodesArray(int $apiVersion, array $objects, User $user, string $auth): array
     {
         return match ($apiVersion) {
-            6 => Json6_Data::podcast_episodes_array($objects, $user, $auth, false),
+            6 => $this->json6Data->podcast_episodes_array($objects, $user, $auth, false),
             8 => Json8_Data::podcast_episodes_array($objects, $user, $auth, false),
         };
     }
@@ -890,7 +891,7 @@ final class JsonOutput implements ApiOutputInterface
     private function podcastsArray(int $apiVersion, array $objects, User $user, string $auth): array
     {
         return match ($apiVersion) {
-            6 => Json6_Data::podcasts_array($objects, $user, $auth),
+            6 => $this->json6Data->podcasts_array($objects, $user, $auth),
             8 => Json8_Data::podcasts_array($objects, $user, $auth),
         };
     }
@@ -903,7 +904,7 @@ final class JsonOutput implements ApiOutputInterface
     private function songsArray(int $apiVersion, array $objects, User $user, string $auth): array
     {
         return match ($apiVersion) {
-            6 => Json6_Data::songs_array($objects, $user, $auth),
+            6 => $this->json6Data->songs_array($objects, $user, $auth),
             8 => Json8_Data::songs_array($objects, $user, $auth),
         };
     }
@@ -916,7 +917,7 @@ final class JsonOutput implements ApiOutputInterface
     private function usersArray(int $apiVersion, array $objects): array
     {
         return match ($apiVersion) {
-            6 => Json6_Data::users_array($objects),
+            6 => $this->json6Data->users_array($objects),
             8 => Json8_Data::users_array($objects),
         };
     }
@@ -929,7 +930,7 @@ final class JsonOutput implements ApiOutputInterface
     private function videosArray(int $apiVersion, array $objects, User $user, string $auth): array
     {
         return match ($apiVersion) {
-            6 => Json6_Data::videos_array($objects, $user, $auth),
+            6 => $this->json6Data->videos_array($objects, $user, $auth),
             8 => Json8_Data::videos_array($objects, $user, $auth),
         };
     }

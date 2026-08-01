@@ -60,15 +60,127 @@ use Ampache\Repository\SongRepositoryInterface;
 /**
  * Json6_Data Class
  *
- * This class takes care of all of the JSON document stuff in Ampache these
- * are all static calls
+ * This class takes care of all of the api version 6 JSON document stuff. It is a service resolved
+ * through the container; only the three formatters that take no dependencies stay static, because
+ * the legacy static Api6 class still calls them
  *
  */
-class Json6_Data
+final class Json6_Data
 {
-    private static int $count  = 0;
-    private static ?int $limit = 5000;
-    private static int $offset = 0;
+    private int $count  = 0;
+    private ?int $limit = 5000;
+    private int $offset = 0;
+
+    public function __construct(
+        private AlbumRepositoryInterface $albumRepository,
+        private BookmarkRepositoryInterface $bookmarkRepository,
+        private LabelRepositoryInterface $labelRepository,
+        private LicenseRepositoryInterface $licenseRepository,
+        private PodcastRepositoryInterface $podcastRepository,
+        private SongRepositoryInterface $songRepository,
+    ) {}
+
+    /**
+     * empty
+     *
+     * This generates a JSON empty object
+     * nothing fancy here...
+     *
+     * @param string|null $type object type
+     */
+    public static function empty(?string $type = null): string
+    {
+        if (empty($type)) {
+            return json_encode([], JSON_PRETTY_PRINT) ?: '';
+        }
+
+        return json_encode(
+            [
+                "total_count" => 0,
+                "md5" => md5(serialize([])),
+                $type => []
+            ],
+            JSON_PRETTY_PRINT
+        ) ?: '';
+    }
+
+    /**
+     * error
+     *
+     * This generates a JSON Error message
+     * nothing fancy here...
+     *
+     * @param int|string $code Error code
+     * @param string $string Error message
+     * @param string $action Error method
+     * @param string $type Error type
+     */
+    public static function error(int|string $code, string $string, string $action, string $type): string
+    {
+        $message = [
+            "error" => [
+                "errorCode" => (string) $code,
+                "errorAction" => $action,
+                "errorType" => $type,
+                "errorMessage" => $string,
+            ]
+        ];
+
+        return json_encode($message, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * success
+     *
+     * This generates a standard JSON Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<string, string> $return_data
+     */
+    public static function success(string $string, array $return_data = []): string
+    {
+        $message = ["success" => $string];
+        foreach ($return_data as $title => $data) {
+            $message[$title] = $data;
+        }
+
+        return json_encode($message, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * _genre_array
+     *
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @return array<int, array{id: string, name: string}>
+     */
+    private static function _genre_array(array $tags): array
+    {
+        $JSON = [];
+
+        if (!empty($tags)) {
+            $atags = [];
+            foreach ($tags as $tag) {
+                if (array_key_exists($tag['id'], $atags)) {
+                    $atags[$tag['id']]['count']++;
+                } else {
+                    $atags[$tag['id']] = [
+                        "name" => $tag['name'],
+                        "count" => 1
+                    ];
+                }
+            }
+
+            foreach ($atags as $tag_id => $data) {
+                $JSON[] = [
+                    "id" => (string) $tag_id,
+                    "name" => $data['name']
+                ];
+            }
+        }
+
+        return $JSON;
+    }
 
     /**
      * albums
@@ -80,15 +192,15 @@ class Json6_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "album"
      */
-    public static function albums(array $objects, array $include, User $user, string $auth, bool $encode = true, bool $object = true): string
+    public function albums(array $objects, array $include, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $JSON        = self::albums_array($objects, $include, $user, $auth, $encode);
+        $JSON        = $this->albums_array($objects, $include, $user, $auth, $encode);
 
         if ($object) {
             $output = [
-                "total_count" => self::$count,
+                "total_count" => $this->count,
                 "md5" => $md5,
                 "album" => $JSON
             ];
@@ -143,10 +255,10 @@ class Json6_Data
      *     "mbid_group": null|string,
      * }> JSON Object "album"
      */
-    public static function albums_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
+    public function albums_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $encode);
 
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
@@ -196,7 +308,7 @@ class Json6_Data
 
             // Handle includes
             $songs = (in_array("songs", $include))
-                ? self::songs_array(self::getSongRepository()->getByAlbum($album->id), $user, $auth)
+                ? $this->songs_array($this->songRepository->getByAlbum($album->id), $user, $auth)
                 : [];
 
             $objArray['time']          = (int) $album->time;
@@ -226,15 +338,15 @@ class Json6_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "artist"
      */
-    public static function artists(array $objects, array $include, User $user, string $auth, bool $object = true): string
+    public function artists(array $objects, array $include, User $user, string $auth, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $JSON        = self::artists_array($objects, $include, $user, $auth);
+        $JSON        = $this->artists_array($objects, $include, $user, $auth);
 
         if ($object) {
             $output = [
-                "total_count" => self::$count,
+                "total_count" => $this->count,
                 "md5" => $md5,
                 "artist" => $JSON
             ];
@@ -309,10 +421,10 @@ class Json6_Data
      *     "placeformed": null|string,
      * }>
      */
-    public static function artists_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
+    public function artists_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $encode);
 
         Rating::build_cache('artist', $objects);
         $JSON = [];
@@ -331,10 +443,10 @@ class Json6_Data
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums_array(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, $auth, false)
+                ? $this->albums_array($this->albumRepository->getAlbumByArtist($artist->id), [], $user, $auth, false)
                 : [];
             $songs = (in_array("songs", $include))
-                ? self::songs_array(self::getSongRepository()->getByArtist($artist->id), $user, $auth)
+                ? $this->songs_array($this->songRepository->getByArtist($artist->id), $user, $auth)
                 : [];
 
             $JSON[] = [
@@ -372,20 +484,20 @@ class Json6_Data
      * @param bool $include if true include the object in the bookmark
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function bookmarks(array $objects, string $auth, bool $include = false, bool $object = true): string
+    public function bookmarks(array $objects, string $auth, bool $include = false, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $output = [
-            "total_count" => self::$count,
+            "total_count" => $this->count,
             "md5" => $md5,
         ];
 
-        $bookmarkRepository = self::getBookmarkRepository();
+        $bookmarkRepository = $this->bookmarkRepository;
 
-        self::$count = 0;
+        $this->count = 0;
         $JSON        = [];
         foreach ($objects as $bookmark_id) {
             $bookmark = $bookmarkRepository->findById($bookmark_id);
@@ -419,17 +531,17 @@ class Json6_Data
             ) {
                 switch ($bookmark_object_type) {
                     case 'song':
-                        $JSON[self::$count]['song'] = self::songs_array([(int) $bookmark_object_id], $user, $auth);
+                        $JSON[$this->count]['song'] = $this->songs_array([(int) $bookmark_object_id], $user, $auth);
                         break;
                     case 'podcast_episode':
-                        $JSON[self::$count]['podcast_episode'] = self::podcast_episodes_array([(int) $bookmark_object_id], $user, $auth, false);
+                        $JSON[$this->count]['podcast_episode'] = $this->podcast_episodes_array([(int) $bookmark_object_id], $user, $auth, false);
                         break;
                     case 'video':
-                        $JSON[self::$count]['video'] = self::videos_array([(int) $bookmark_object_id], $user, $auth);
+                        $JSON[$this->count]['video'] = $this->videos_array([(int) $bookmark_object_id], $user, $auth);
                         break;
                 }
             }
-            self::$count++;
+            $this->count++;
         }
         if ($object) {
             $output["bookmark"] = $JSON;
@@ -447,14 +559,14 @@ class Json6_Data
      *
      * @param array<int, array{id: int|string, name: string}> $objects Name array from `Catalog::get_name_array()`
      */
-    public static function browses(array $objects, string $parent_type, string $child_type, ?int $parent_id = null, ?int $catalog_id = null): string
+    public function browses(array $objects, string $parent_type, string $child_type, ?int $parent_id = null, ?int $catalog_id = null): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $output = [
-            "total_count" => self::$count,
+            "total_count" => $this->count,
             "md5" => $md5,
             "catalog_id" => (string) $catalog_id,
             "parent_id" => (string) $parent_id,
@@ -488,14 +600,14 @@ class Json6_Data
      * @param array<int|string> $objects group of catalog id's
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function catalogs(array $objects, bool $object = true): string
+    public function catalogs(array $objects, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $output = [
-            "total_count" => self::$count,
+            "total_count" => $this->count,
             "md5" => $md5,
         ];
 
@@ -560,14 +672,14 @@ class Json6_Data
      *     podcast?: int,
      * }> $objects deleted object list
      */
-    public static function deleted(string $object_type, array $objects): string
+    public function deleted(string $object_type, array $objects): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $output = [
-            "total_count" => self::$count,
+            "total_count" => $this->count,
             "md5" => $md5,
         ];
 
@@ -641,7 +753,7 @@ class Json6_Data
      * }> $object_ids Object IDs
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function democratic(array $object_ids, User $user, string $auth, bool $object = true): string
+    public function democratic(array $object_ids, User $user, string $auth, bool $object = true): string
     {
         $democratic = Democratic::get_current_playlist($user);
 
@@ -662,7 +774,7 @@ class Json6_Data
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
-            $song_album  = self::getAlbumRepository()->getNames($song->album);
+            $song_album  = $this->albumRepository->getNames($song->album);
             $song_artist = Artist::get_name_array_by_id($song->artist);
 
             $JSON[] = [
@@ -702,55 +814,6 @@ class Json6_Data
     }
 
     /**
-     * empty
-     *
-     * This generates a JSON empty object
-     * nothing fancy here...
-     *
-     * @param string|null $type object type
-     */
-    public static function empty(?string $type = null): string
-    {
-        if (empty($type)) {
-            return json_encode([], JSON_PRETTY_PRINT) ?: '';
-        }
-
-        return json_encode(
-            [
-                "total_count" => 0,
-                "md5" => md5(serialize([])),
-                $type => []
-            ],
-            JSON_PRETTY_PRINT
-        ) ?: '';
-    }
-
-    /**
-     * error
-     *
-     * This generates a JSON Error message
-     * nothing fancy here...
-     *
-     * @param int|string $code Error code
-     * @param string $string Error message
-     * @param string $action Error method
-     * @param string $type Error type
-     */
-    public static function error(int|string $code, string $string, string $action, string $type): string
-    {
-        $message = [
-            "error" => [
-                "errorCode" => (string) $code,
-                "errorAction" => $action,
-                "errorType" => $type,
-                "errorMessage" => $string,
-            ]
-        ];
-
-        return json_encode($message, JSON_PRETTY_PRINT) ?: '';
-    }
-
-    /**
      * genres_string
      *
      * This returns genres to the user, in a pretty JSON document with the information
@@ -759,15 +822,15 @@ class Json6_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "label"
      */
-    public static function genres(array $objects, bool $object = true): string
+    public function genres(array $objects, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $JSON        = self::genres_array($objects);
+        $JSON        = $this->genres_array($objects);
 
         if ($object) {
             $output = [
-                "total_count" => self::$count,
+                "total_count" => $this->count,
                 "md5" => $md5,
                 "genre" => $JSON
             ];
@@ -798,10 +861,10 @@ class Json6_Data
      *     }>
      * }> JSON Object "genre"
      */
-    public static function genres_array(array $objects): array
+    public function genres_array(array $objects): array
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $JSON = [];
         foreach ($objects as $tag_id) {
@@ -841,10 +904,10 @@ class Json6_Data
      * @param bool $include (add child id's of the object (in sub array by type))
      * @return string JSON Object "catalog"|"artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
-    public static function index(array $objects, string $type, User $user, bool $include = false): string
+    public function index(array $objects, string $type, User $user, bool $include = false): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $output = [];
 
@@ -980,43 +1043,43 @@ class Json6_Data
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
-    public static function indexes(array $objects, string $type, User $user, string $auth, bool $include = false): string
+    public function indexes(array $objects, string $type, User $user, string $auth, bool $include = false): string
     {
         // here is where we call the object type
         switch ($type) {
             case 'catalog':
-                $results = self::catalogs($objects);
+                $results = $this->catalogs($objects);
                 break;
             case 'song':
-                $results = self::songs($objects, $user, $auth);
+                $results = $this->songs($objects, $user, $auth);
                 break;
             case 'album':
                 $include_array = ($include) ? ['songs'] : [];
-                $results       = self::albums($objects, $include_array, $user, $auth);
+                $results       = $this->albums($objects, $include_array, $user, $auth);
                 break;
             case 'album_artist':
             case 'artist':
             case 'song_artist':
                 $include_array = ($include) ? ['songs', 'albums'] : [];
-                $results       = self::artists($objects, $include_array, $user, $auth);
+                $results       = $this->artists($objects, $include_array, $user, $auth);
                 break;
             case 'playlist':
-                $results = self::playlists($objects, $user, $auth, $include);
+                $results = $this->playlists($objects, $user, $auth, $include);
                 break;
             case 'share':
-                $results = self::shares($objects, $user);
+                $results = $this->shares($objects, $user);
                 break;
             case 'podcast':
-                $results = self::podcasts($objects, $user, $auth, $include);
+                $results = $this->podcasts($objects, $user, $auth, $include);
                 break;
             case 'podcast_episode':
-                $results = self::podcast_episodes($objects, $user, $auth);
+                $results = $this->podcast_episodes($objects, $user, $auth);
                 break;
             case 'video':
-                $results = self::videos($objects, $user, $auth);
+                $results = $this->videos($objects, $user, $auth);
                 break;
             case 'live_stream':
-                $results = self::live_streams($objects);
+                $results = $this->live_streams($objects);
                 break;
             default:
                 $results = self::error('4710', sprintf('Bad Request: %s', $type), 'indexes', 'type');
@@ -1032,15 +1095,15 @@ class Json6_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "label"
      */
-    public static function labels(array $objects, bool $object = true): string
+    public function labels(array $objects, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $JSON        = self::labels_array($objects);
+        $JSON        = $this->labels_array($objects);
 
         if ($object) {
             $output = [
-                "total_count" => self::$count,
+                "total_count" => $this->count,
                 "md5" => $md5,
                 "label" => $JSON
             ];
@@ -1068,14 +1131,14 @@ class Json6_Data
      *     "user": string,
      * }>
      */
-    public static function labels_array(array $objects): array
+    public function labels_array(array $objects): array
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $JSON = [];
 
-        $labelRepository = self::getLabelRepository();
+        $labelRepository = $this->labelRepository;
 
         foreach ($objects as $label_id) {
             $label = $labelRepository->findById((int) $label_id);
@@ -1108,18 +1171,18 @@ class Json6_Data
      * @param array<int|string> $objects Licence id's assigned to songs and artists
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function licenses(array $objects, bool $object = true): string
+    public function licenses(array $objects, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $output = [
-            "total_count" => self::$count,
+            "total_count" => $this->count,
             "md5" => $md5,
         ];
 
-        $licenseRepository = self::getLicenseRepository();
+        $licenseRepository = $this->licenseRepository;
 
         $JSON = [];
         foreach ($objects as $license_id) {
@@ -1150,14 +1213,14 @@ class Json6_Data
      *
      * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
-    public static function lists(array $objects): string
+    public function lists(array $objects): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $output = [
-            "total_count" => self::$count,
+            "total_count" => $this->count,
             "md5" => $md5,
         ];
 
@@ -1187,15 +1250,15 @@ class Json6_Data
      * @param array<int|string> $objects
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function live_streams(array $objects, bool $object = true): string
+    public function live_streams(array $objects, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $JSON        = self::live_streams_array($objects);
+        $JSON        = $this->live_streams_array($objects);
 
         if ($object) {
             $output = [
-                "total_count" => self::$count,
+                "total_count" => $this->count,
                 "md5" => $md5,
                 "live_stream" => $JSON
             ];
@@ -1219,10 +1282,10 @@ class Json6_Data
      *     "site_url": null|string
      * }>
      */
-    public static function live_streams_array(array $objects): array
+    public function live_streams_array(array $objects): array
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $JSON = [];
         foreach ($objects as $live_stream_id) {
@@ -1256,7 +1319,7 @@ class Json6_Data
      *     expire: int
      * }> $results
      */
-    public static function now_playing(array $results): string
+    public function now_playing(array $results): string
     {
         $JSON = [];
         foreach ($results as $now_playing) {
@@ -1291,15 +1354,15 @@ class Json6_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "playlist"
      */
-    public static function playlists(array $objects, User $user, string $auth, bool $songs = false, bool $object = true): string
+    public function playlists(array $objects, User $user, string $auth, bool $songs = false, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $JSON        = self::playlists_array($objects, $user, $auth, $songs);
+        $JSON        = $this->playlists_array($objects, $user, $auth, $songs);
 
         if ($object) {
             $output = [
-                "total_count" => self::$count,
+                "total_count" => $this->count,
                 "md5" => $md5,
                 "playlist" => $JSON
             ];
@@ -1333,10 +1396,10 @@ class Json6_Data
      *     "time": int,
      * }>
      */
-    public static function playlists_array(array $objects, User $user, string $auth, bool $songs = false): array
+    public function playlists_array(array $objects, User $user, string $auth, bool $songs = false): array
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $JSON = [];
         foreach ($objects as $playlist_id) {
@@ -1430,15 +1493,15 @@ class Json6_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "podcast_episode"
      */
-    public static function podcast_episodes(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
+    public function podcast_episodes(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $JSON        = self::podcast_episodes_array($objects, $user, $auth, $encode);
+        $JSON        = $this->podcast_episodes_array($objects, $user, $auth, $encode);
 
         if ($object) {
             $output = [
-                "total_count" => self::$count,
+                "total_count" => $this->count,
                 "md5" => $md5,
                 "podcast_episode" => $JSON
             ];
@@ -1488,10 +1551,10 @@ class Json6_Data
      *     "played": string
      * }>
      */
-    public static function podcast_episodes_array(array $objects, User $user, string $auth, bool $encode = true): array
+    public function podcast_episodes_array(array $objects, User $user, string $auth, bool $encode = true): array
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $encode);
 
         $JSON = [];
         foreach ($objects as $episode_id) {
@@ -1556,15 +1619,15 @@ class Json6_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "podcast"
      */
-    public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $object = true): string
+    public function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $JSON        = self::podcasts_array($objects, $user, $auth, $episodes);
+        $JSON        = $this->podcasts_array($objects, $user, $auth, $episodes);
 
         if ($object) {
             $output = [
-                "total_count" => self::$count,
+                "total_count" => $this->count,
                 "md5" => $md5,
                 "podcast" => $JSON
             ];
@@ -1633,12 +1696,12 @@ class Json6_Data
      *     }>
      * }>
      */
-    public static function podcasts_array(array $objects, User $user, string $auth, bool $episodes = false): array
+    public function podcasts_array(array $objects, User $user, string $auth, bool $episodes = false): array
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
-        $podcastRepository = self::getPodcastRepository();
+        $podcastRepository = $this->podcastRepository;
 
         $JSON = [];
         foreach ($objects as $podcast_id) {
@@ -1664,7 +1727,7 @@ class Json6_Data
             $podcast_episodes    = [];
             if ($episodes) {
                 $results          = $podcast->getEpisodeIds();
-                $podcast_episodes = self::podcast_episodes_array($results, $user, $auth, false);
+                $podcast_episodes = $this->podcast_episodes_array($results, $user, $auth, false);
             }
 
             // Build this element
@@ -1698,9 +1761,9 @@ class Json6_Data
      * Set the total count of returned objects
      *
      */
-    public static function set_count(int|string $count): void
+    public function set_count(int|string $count): void
     {
-        self::$count = (int) $count;
+        $this->count = (int) $count;
     }
 
     /**
@@ -1710,13 +1773,13 @@ class Json6_Data
      *
      * @param int|string $limit Set a limit on your results
      */
-    public static function set_limit(int|string $limit): bool
+    public function set_limit(int|string $limit): bool
     {
         if (!$limit) {
             return false;
         }
 
-        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
+        $this->limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
 
         return true;
     }
@@ -1728,9 +1791,9 @@ class Json6_Data
      *
      * @param int|string $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
      */
-    public static function set_offset(int|string $offset): void
+    public function set_offset(int|string $offset): void
     {
-        self::$offset = (int) $offset;
+        $this->offset = (int) $offset;
     }
 
     /**
@@ -1741,14 +1804,14 @@ class Json6_Data
      * @param array<int|string> $objects Share id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function shares(array $objects, User $user, bool $object = true): string
+    public function shares(array $objects, User $user, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $output = [
-            "total_count" => self::$count,
+            "total_count" => $this->count,
             "md5" => $md5,
         ];
 
@@ -1809,7 +1872,7 @@ class Json6_Data
      * @param array<Shoutbox> $shouts Shout id list
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function shouts(array $shouts, bool $object = true): string
+    public function shouts(array $shouts, bool $object = true): string
     {
         $JSON = [];
 
@@ -1842,14 +1905,14 @@ class Json6_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
-    public static function song_tags(array $objects, string $auth, bool $object = true): string
+    public function song_tags(array $objects, string $auth, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $output = [
-            "total_count" => self::$count,
+            "total_count" => $this->count,
             "md5" => $md5,
         ];
 
@@ -1948,15 +2011,15 @@ class Json6_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
-    public static function songs(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
+    public function songs(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $JSON        = self::songs_array($objects, $user, $auth, $encode);
+        $JSON        = $this->songs_array($objects, $user, $auth, $encode);
 
         if ($object) {
             $output = [
-                "total_count" => self::$count,
+                "total_count" => $this->count,
                 "md5" => $md5,
                 "song" => $JSON
             ];
@@ -2043,13 +2106,13 @@ class Json6_Data
      *     r128_track_gain: float|null
      * }>
      */
-    public static function songs_array(array $objects, User $user, string $auth, bool $encode = true): array
+    public function songs_array(array $objects, User $user, string $auth, bool $encode = true): array
     {
         Stream::set_session($auth);
         $playlist_track = 0;
 
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $encode);
 
         Song::build_cache($objects);
 
@@ -2069,7 +2132,7 @@ class Json6_Data
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
-            $song_album  = self::getAlbumRepository()->getNames($song->album);
+            $song_album  = $this->albumRepository->getNames($song->album);
             $song_artist = Artist::get_name_array_by_id($song->artist);
             /** @var array<int, array{id: string, name: string, prefix: string, basename: string}> $song_artists */
             $song_artists = [];
@@ -2182,25 +2245,6 @@ class Json6_Data
     }
 
     /**
-     * success
-     *
-     * This generates a standard JSON Success message
-     * nothing fancy here...
-     *
-     * @param string $string success message
-     * @param array<string, string> $return_data
-     */
-    public static function success(string $string, array $return_data = []): string
-    {
-        $message = ["success" => $string];
-        foreach ($return_data as $title => $data) {
-            $message[$title] = $data;
-        }
-
-        return json_encode($message, JSON_PRETTY_PRINT) ?: '';
-    }
-
-    /**
      * timeline
      *
      * This handles creating an JSON document for an activity list
@@ -2208,7 +2252,7 @@ class Json6_Data
      * @param int[] $activities Activity id list
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function timeline(array $activities, bool $object = true): string
+    public function timeline(array $activities, bool $object = true): string
     {
         $JSON = [];
         foreach ($activities as $activity_id) {
@@ -2237,7 +2281,7 @@ class Json6_Data
      *
      * This handles creating an JSON document for a user
      */
-    public static function user(User $user, bool $fullinfo, string $auth, ?bool $object = true): string
+    public function user(User $user, bool $fullinfo, string $auth, ?bool $object = true): string
     {
         $art_url = Art::url($user->id, 'user', $auth);
         if ($fullinfo) {
@@ -2290,10 +2334,10 @@ class Json6_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "user"
      */
-    public static function users(array $objects, bool $encode = true, bool $object = true): string
+    public function users(array $objects, bool $encode = true, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $JSON        = self::users_array($objects, $encode);
+        $this->count = $this->count ?: count($objects);
+        $JSON        = $this->users_array($objects, $encode);
 
         if ($object) {
             $output = ["user" => $JSON];
@@ -2310,10 +2354,10 @@ class Json6_Data
      * @param array<int|string> $objects User id list
      * @return array<int, array{id: string, username: null|string}>
      */
-    public static function users_array(array $objects, bool $encode = true): array
+    public function users_array(array $objects, bool $encode = true): array
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $encode);
 
         $JSON = [];
         foreach ($objects as $user_id) {
@@ -2337,15 +2381,15 @@ class Json6_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "video"
      */
-    public static function videos(array $objects, User $user, string $auth, bool $object = true): string
+    public function videos(array $objects, User $user, string $auth, bool $object = true): string
     {
-        self::$count = self::$count ?: count($objects);
+        $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $JSON        = self::videos_array($objects, $user, $auth);
+        $JSON        = $this->videos_array($objects, $user, $auth);
 
         if ($object) {
             $output = [
-                "total_count" => self::$count,
+                "total_count" => $this->count,
                 "md5" => $md5,
                 "video" => $JSON
             ];
@@ -2377,10 +2421,10 @@ class Json6_Data
      *     "playcount": int
      * }>
      */
-    public static function videos_array(array $objects, User $user, string $auth): array
+    public function videos_array(array $objects, User $user, string $auth): array
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $JSON = [];
         foreach ($objects as $video_id) {
@@ -2411,99 +2455,5 @@ class Json6_Data
         }
 
         return $JSON;
-    }
-
-    /**
-     * _genre_array
-     *
-     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
-     * @return array<int, array{id: string, name: string}>
-     */
-    private static function _genre_array(array $tags): array
-    {
-        $JSON = [];
-
-        if (!empty($tags)) {
-            $atags = [];
-            foreach ($tags as $tag) {
-                if (array_key_exists($tag['id'], $atags)) {
-                    $atags[$tag['id']]['count']++;
-                } else {
-                    $atags[$tag['id']] = [
-                        "name" => $tag['name'],
-                        "count" => 1
-                    ];
-                }
-            }
-
-            foreach ($atags as $tag_id => $data) {
-                $JSON[] = [
-                    "id" => (string) $tag_id,
-                    "name" => $data['name']
-                ];
-            }
-        }
-
-        return $JSON;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getBookmarkRepository(): BookmarkRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(BookmarkRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject dependency
-     */
-    private static function getLabelRepository(): LabelRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(LabelRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getLicenseRepository(): LicenseRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(LicenseRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
     }
 }

@@ -26,22 +26,26 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\Module\Api\Json5_Data;
+use Ampache\Module\Api\Json6_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Xml6_Data;
 
 final class ApiOutputFactory implements ApiOutputFactoryInterface
 {
     public function __construct(
         private Json5_Data $json5Data,
+        private Json6_Data $json6Data,
         private Xml5_Data $xml5Data,
+        private Xml6_Data $xml6Data,
     ) {}
 
     public function createJsonOutput(): ApiOutputInterface
     {
-        return new JsonOutput($this->json5Data);
+        return new JsonOutput($this->json5Data, $this->json6Data);
     }
 
     public function createXmlOutput(): ApiOutputInterface
     {
-        return new XmlOutput($this->xml5Data);
+        return new XmlOutput($this->xml5Data, $this->xml6Data);
     }
 }
