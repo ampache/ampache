@@ -370,8 +370,8 @@ class Ui implements UiInterface
     {
         // Same icons repeat all over a page: translate each name once.
         static $title_cache = [];
-        $title      = $title ?? $title_cache[$name] ??= T_(ucfirst($name));
-        $symbol_key = $name;
+        $title              = $title ?? $title_cache[$name] ??= T_(ucfirst($name));
+        $symbol_key         = $name;
         // Skip the per-call disk stat once the symbol is cached. Hundreds of calls per page.
         if (array_key_exists($name, self::$_symbol_cache)) {
             $symbol = self::$_symbol_cache[$name];
