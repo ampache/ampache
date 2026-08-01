@@ -298,6 +298,50 @@ class AlbumRepositoryTest extends TestCase
         );
     }
 
+    public function testGetRandomSongsReturnsIds(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ORDER BY RAND()',
+                [666]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(3))
+            ->method('fetchColumn')
+            ->willReturn('42', '33', false);
+
+        static::assertSame(
+            [42, 33],
+            $this->subject->getRandomSongs(666)
+        );
+    }
+
+    public function testGetSongsByAlbumDiskReturnsIdsInDiskTrackOrder(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`',
+                [666]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('42', false);
+
+        static::assertSame(
+            [42],
+            $this->subject->getSongsByAlbumDisk(666)
+        );
+    }
+
     public function testIsOrphanMatchesTheUntranslatedPlaceholderToo(): void
     {
         $this->connection->expects(static::once())

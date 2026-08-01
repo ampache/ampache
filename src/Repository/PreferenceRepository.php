@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use PDO;
@@ -160,14 +159,14 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
                 `preference`.`description`
         SQL;
 
-        $db_results = Dba::read(
+        $dbResults = $this->connection->query(
             sprintf($sql, $userLimit),
             [$userId]
         );
 
         $results = [];
 
-        while ($row = Dba::fetch_assoc($db_results)) {
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
             if ($api && in_array($row['name'], self::HIDE_ARRAY)) {
                 // don't show these to API users as they are not useful
                 continue;

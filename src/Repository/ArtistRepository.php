@@ -28,7 +28,6 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ArtistFieldEnum;
 use Ampache\Repository\Model\Catalog;
@@ -99,7 +98,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
                 [$name, $prefix, $mbid, $userId]
             );
         } catch (DatabaseException) {
-            // the caller reads null as "no artist" and gives up, which is what the old falsy `Dba::write()` gave it
+            // the caller reads null as "no artist" and gives up
             return null;
         }
 
@@ -396,9 +395,9 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         }
 
         $sql .= "ORDER BY RAND() LIMIT " . $count;
-        $db_results = Dba::read($sql);
+        $dbResults = $this->connection->query($sql);
 
-        while ($row = Dba::fetch_assoc($db_results)) {
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
             $results[] = (int) $row['artist_id'];
         }
 

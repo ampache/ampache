@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumFieldEnum;
 use Ampache\Repository\Model\Catalog;
@@ -142,7 +141,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
                 ]
             );
         } catch (DatabaseException) {
-            // the caller reads 0 as "no album" and carries on, which is what the old falsy `Dba::write()` gave it
+            // the caller reads 0 as "no album" and carries on
             return 0;
         }
 
@@ -260,9 +259,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         };
 
         $sql        = sprintf('SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? %s GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY %s', $catalog_where, $sql_sort);
-        $db_results = Dba::read($sql, [$artistId]);
+        $dbResults  = $this->connection->query($sql, [$artistId]);
         $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
             $results[] = (int) $row['id'];
         }
 
@@ -302,9 +301,11 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         bool $group_release_type = false,
     ): array {
         $userId        = Core::get_global('user')?->getId();
+        $params        = [$artistId];
         $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
         if ($catalogId !== null) {
-            $catalog_where = "AND `album`.`catalog` = '" . Dba::escape($catalogId) . "'";
+            $catalog_where = 'AND `album`.`catalog` = ?';
+            $params[]      = $catalogId;
         }
 
         $original_year = (AmpConfig::get('use_original_year'))
@@ -323,10 +324,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $sql = ($showAlbum)
             ? sprintf('SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? %s GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY %s', $catalog_where, $sql_sort)
             : sprintf('SELECT DISTINCT `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, %s FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? %s GROUP BY `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, %s ORDER BY %s, `album_disk`.`disk`', $original_year, $catalog_where, $original_year, $sql_sort);
-        $db_results = Dba::read($sql, [$artistId]);
-        $results    = [];
+        $dbResults = $this->connection->query($sql, $params);
+        $results   = [];
         if ($group_release_type) {
-            while ($row = Dba::fetch_assoc($db_results)) {
+            while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
                 // We assume undefined release type is album
                 $rtype = (string) ($row['release_type'] ?? 'album');
                 if (!isset($results[$rtype])) {
@@ -351,7 +352,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
                 }
             }
         } else {
-            while ($row = Dba::fetch_assoc($db_results)) {
+            while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
                 $results[] = (int) $row['id'];
             }
         }
@@ -502,10 +503,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             'ORDER BY RAND() LIMIT %d',
             $count
         );
-        $db_results = Dba::read($sql);
+        $dbResults = $this->connection->query($sql);
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        while ($albumId = $dbResults->fetchColumn()) {
+            $results[] = (int) $albumId;
         }
 
         return $results;
@@ -541,10 +542,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             'ORDER BY RAND() LIMIT %d',
             $count
         );
-        $db_results = Dba::read($sql);
+        $dbResults = $this->connection->query($sql);
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        while ($albumId = $dbResults->fetchColumn()) {
+            $results[] = (int) $albumId;
         }
 
         return $results;
@@ -564,11 +565,11 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
 
         $sql .= 'ORDER BY RAND()';
-        $db_results = Dba::read($sql, [$albumId]);
+        $dbResults = $this->connection->query($sql, [$albumId]);
 
         $results = [];
-        while ($row = Dba::fetch_row($db_results)) {
-            $results[] = (int) $row['0'];
+        while ($songId = $dbResults->fetchColumn()) {
+            $results[] = (int) $songId;
         }
 
         return $results;
@@ -588,11 +589,11 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             : "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ";
 
         $sql .= 'ORDER BY RAND()';
-        $db_results = Dba::read($sql, [$albumDiskId]);
+        $dbResults = $this->connection->query($sql, [$albumDiskId]);
 
         $results = [];
-        while ($row = Dba::fetch_row($db_results)) {
-            $results[] = (int) $row['0'];
+        while ($songId = $dbResults->fetchColumn()) {
+            $results[] = (int) $songId;
         }
 
         return $results;
@@ -668,11 +669,11 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     ): array {
         $userId     = Core::get_global('user')?->getId();
         $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
-        $db_results = Dba::read($sql, [$albumId]);
+        $dbResults  = $this->connection->query($sql, [$albumId]);
 
         $results = [];
-        while ($row = Dba::fetch_row($db_results)) {
-            $results[] = (int) $row['0'];
+        while ($songId = $dbResults->fetchColumn()) {
+            $results[] = (int) $songId;
         }
 
         return $results;
@@ -693,11 +694,11 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             : "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ";
 
         $sql .= "ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
-        $db_results = Dba::read($sql, [$albumDiskId]);
+        $dbResults = $this->connection->query($sql, [$albumDiskId]);
 
         $results = [];
-        while ($row = Dba::fetch_row($db_results)) {
-            $results[] = (int) $row['0'];
+        while ($songId = $dbResults->fetchColumn()) {
+            $results[] = (int) $songId;
         }
 
         return $results;
