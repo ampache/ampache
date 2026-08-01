@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
@@ -33,6 +33,16 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 

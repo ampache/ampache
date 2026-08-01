@@ -39,7 +39,7 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var list<int> $object_ids */
 /** @var string $limit_threshold */
 /** @var bool $group_release */

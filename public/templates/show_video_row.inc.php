@@ -41,7 +41,7 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 
 /** @var Video $libitem */
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var bool $hide_genres */
 /** @var bool $show_ratings */
 /** @var string $cel_cover */

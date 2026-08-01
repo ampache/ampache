@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Database\Query;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Catalog\Catalog;

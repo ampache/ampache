@@ -31,6 +31,7 @@ use Ampache\Module\Art\Mosaic\PlaylistArtBuilderInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;

@@ -31,8 +31,8 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Browse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

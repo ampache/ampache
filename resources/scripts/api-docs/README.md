@@ -80,7 +80,7 @@ payloads assembled elsewhere:
 |---|---|
 | `Method/PreferenceItemBuilder.php` | preference endpoints |
 | `Api.php` (`server_details()`) | `handshake`, and `ping` derived from it |
-| `Repository/Model/Search.php` (`get_rule_types()`) | `search_rules` |
+| `Module/Database/Query/Search.php` (`get_rule_types()`) | `search_rules` |
 | `Playback/Localplay/LocalPlay.php` (`get()`) | `localplay_songs` |
 
 ## The escape hatches

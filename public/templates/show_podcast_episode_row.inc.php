@@ -39,7 +39,7 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\Podcast_Episode $libitem */
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var bool $is_mashup */
 /** @var bool $is_table */
 /** @var bool $show_ratings */

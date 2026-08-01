@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -33,7 +34,6 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;

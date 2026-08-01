@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -38,7 +39,6 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;

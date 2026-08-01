@@ -28,7 +28,7 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
-use Ampache\Repository\Model\Smartlist;
+use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Repository\Model\User;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;

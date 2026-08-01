@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
@@ -46,6 +46,16 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\playlist_object;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use JsonException;

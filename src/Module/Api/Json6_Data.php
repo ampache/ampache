@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -45,7 +46,6 @@ use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;

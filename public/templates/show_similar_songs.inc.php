@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\Artist $artist */
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var list<int> $object_ids */
 /** @var string[] $hide_columns */
 /** @var string $argument_param */

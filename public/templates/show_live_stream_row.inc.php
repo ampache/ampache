@@ -37,7 +37,7 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Live_Stream $libitem */
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var string $cel_cover */
 /** @var string $object_type */
 /** @var bool $show_ratings */

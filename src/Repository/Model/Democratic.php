@@ -28,6 +28,8 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;

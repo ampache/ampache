@@ -23,43 +23,15 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Database\Query\AlbumDiskQuery;
-use Ampache\Module\Database\Query\AlbumQuery;
-use Ampache\Module\Database\Query\ArtistQuery;
-use Ampache\Module\Database\Query\BroadcastQuery;
-use Ampache\Module\Database\Query\CatalogQuery;
-use Ampache\Module\Database\Query\CollectionItemsQuery;
-use Ampache\Module\Database\Query\CollectionQuery;
-use Ampache\Module\Database\Query\DemocraticQuery;
-use Ampache\Module\Database\Query\FolderQuery;
-use Ampache\Module\Database\Query\FollowerQuery;
-use Ampache\Module\Database\Query\LabelQuery;
-use Ampache\Module\Database\Query\LicenseQuery;
-use Ampache\Module\Database\Query\LiveStreamQuery;
-use Ampache\Module\Database\Query\PlaylistLocalplayQuery;
-use Ampache\Module\Database\Query\PlaylistMediaQuery;
-use Ampache\Module\Database\Query\PlaylistQuery;
-use Ampache\Module\Database\Query\PlaylistSearchQuery;
-use Ampache\Module\Database\Query\PodcastEpisodeQuery;
-use Ampache\Module\Database\Query\PodcastQuery;
-use Ampache\Module\Database\Query\PvmsgQuery;
-use Ampache\Module\Database\Query\QueryInterface;
-use Ampache\Module\Database\Query\ShareQuery;
-use Ampache\Module\Database\Query\ShoutboxQuery;
-use Ampache\Module\Database\Query\SmartplaylistQuery;
-use Ampache\Module\Database\Query\SongPreviewQuery;
-use Ampache\Module\Database\Query\SongQuery;
-use Ampache\Module\Database\Query\TagQuery;
-use Ampache\Module\Database\Query\UserQuery;
-use Ampache\Module\Database\Query\VideoQuery;
-use Ampache\Module\Database\Query\WantedQuery;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\TmpBrowseRepositoryInterface;
 
 /**

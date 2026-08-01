@@ -23,7 +23,9 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Database\Query;
+
+use Ampache\Repository\Model\User;
 
 /**
  * A saved Song search.

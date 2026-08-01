@@ -27,9 +27,9 @@ namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Smartlist;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;

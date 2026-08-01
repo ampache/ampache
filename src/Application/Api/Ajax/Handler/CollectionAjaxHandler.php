@@ -29,11 +29,11 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Collection;
-use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\User;
 
 /**

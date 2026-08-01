@@ -28,7 +28,7 @@ declare(strict_types=1);
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\Ui;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var list<int> $object_ids */
 
 if ($browse->is_show_header()) {

@@ -27,7 +27,6 @@ namespace Ampache\Module\Database\Query;
 
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Query;
 
 final class SongQuery implements QueryInterface
 {

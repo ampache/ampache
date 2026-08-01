@@ -27,8 +27,8 @@ namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Url;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\SongRepositoryInterface;
 use Generator;
 
 final class PlaylistImporter
@@ -73,11 +73,10 @@ final class PlaylistImporter
                 $url_data = Stream_Url::parse($file);
                 // Check to see if it's a url from this ampache instance
                 if (array_key_exists('id', $url_data) && ($web_path !== '' && $web_path !== '0') && str_starts_with($file, $web_path)) {
-                    $sql        = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
-                    $db_results = Dba::read($sql, [$url_data['id']]);
-                    if (Dba::num_rows($db_results) && (int) $url_data['id'] > 0) {
-                        debug_event(self::class, "import_playlist identified: {" . $url_data['id'] . "}", 5);
-                        $songs[$track] = (int) $url_data['id'];
+                    $song_id = (int) $url_data['id'];
+                    if ($song_id > 0 && self::getSongRepository()->hasId($song_id)) {
+                        debug_event(self::class, "import_playlist identified: {" . $song_id . "}", 5);
+                        $songs[$track] = $song_id;
                         $track++;
                         $found = true;
                     }
@@ -97,31 +96,22 @@ final class PlaylistImporter
                     }
 
                     // First, try to find the file as absolute path
-                    $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
-                    $db_results = Dba::read($sql, [$file]);
-                    $results    = Dba::fetch_assoc($db_results);
-
-                    if (array_key_exists('id', $results) && (int) ($results['id'] ?? 0) > 0) {
-                        debug_event(self::class, "import_playlist identified: {" . (int) $results['id'] . "}", 5);
-                        $songs[$track] = (int) $results['id'];
-                        $track++;
-                        $found = true;
-                    } else {
+                    $song_id = self::getSongRepository()->findIdByFile($file);
+                    if ($song_id === null) {
                         // Not found in absolute path, create it from relative path
                         $file = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $file;
                         // Normalize the file path. realpath requires the files to exists.
                         $file = realpath($file);
                         if ($file) {
-                            $db_results = Dba::read($sql, [$file]);
-                            $results    = Dba::fetch_assoc($db_results);
-
-                            if (array_key_exists('id', $results) && (int) ($results['id'] ?? 0) > 0) {
-                                debug_event(self::class, "import_playlist identified: {" . (int) $results['id'] . "}", 5);
-                                $songs[$track] = (int) $results['id'];
-                                $track++;
-                                $found = true;
-                            }
+                            $song_id = self::getSongRepository()->findIdByFile($file);
                         }
+                    }
+
+                    if ($song_id !== null && $song_id > 0) {
+                        debug_event(self::class, "import_playlist identified: {" . $song_id . "}", 5);
+                        $songs[$track] = $song_id;
+                        $track++;
+                        $found = true;
                     }
                 }
 
@@ -236,5 +226,15 @@ final class PlaylistImporter
                 }
             }
         }
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

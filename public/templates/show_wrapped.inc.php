@@ -24,9 +24,9 @@
 // show_wrapped.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;

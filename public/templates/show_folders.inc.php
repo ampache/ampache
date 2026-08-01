@@ -40,7 +40,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var Ampache\Repository\Model\Folder|null $folder */
 /** @var string[] $object_ids */
 

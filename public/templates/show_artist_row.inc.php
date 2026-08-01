@@ -42,7 +42,7 @@ global $dic;
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
 /** @var Ampache\Repository\Model\Artist $libitem */
-/** @var Ampache\Repository\Model\Browse|null $browse */
+/** @var Ampache\Module\Database\Query\Browse|null $browse */
 /** @var bool $show_direct_play */
 /** @var bool $show_playlist_add */
 /** @var bool $hide_genres */

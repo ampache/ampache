@@ -41,7 +41,7 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\library_item $libitem */
-/** @var Ampache\Repository\Model\Browse|null $browse */
+/** @var Ampache\Module\Database\Query\Browse|null $browse */
 /** @var Collection|null $collection */
 /** @var int $collection_track */
 /** @var array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int} $object */

@@ -33,7 +33,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Democratic;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var Democratic $democratic */
 
 /* HINT: Democratic Playlist Name */

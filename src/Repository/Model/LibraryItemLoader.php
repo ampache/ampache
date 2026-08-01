@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;

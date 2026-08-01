@@ -27,8 +27,8 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Share;

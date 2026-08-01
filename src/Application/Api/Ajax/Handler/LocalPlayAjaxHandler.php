@@ -29,10 +29,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 

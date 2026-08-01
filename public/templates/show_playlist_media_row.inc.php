@@ -40,7 +40,7 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\library_item $libitem */
-/** @var Ampache\Repository\Model\Browse|null $browse */
+/** @var Ampache\Module\Database\Query\Browse|null $browse */
 /** @var Playlist|null $playlist */
 /** @var int $playlist_track */
 /** @var int $search */

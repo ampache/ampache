@@ -31,6 +31,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
@@ -45,7 +46,6 @@ use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
 /**

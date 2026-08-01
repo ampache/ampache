@@ -27,10 +27,10 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\Random;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\Random;
 use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var VideoRepositoryInterface $videoRepository */

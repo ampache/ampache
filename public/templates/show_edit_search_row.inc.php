@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 // show_edit_search_row.inc.php
 
-use Ampache\Repository\Model\Search;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\User;
 
 /** @var Search $libitem */

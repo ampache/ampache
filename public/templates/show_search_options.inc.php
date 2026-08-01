@@ -33,7 +33,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var string|null $search_type */
 
 Ui::show_box_top(T_('Options'), 'info-box');

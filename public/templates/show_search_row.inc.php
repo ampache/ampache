@@ -29,11 +29,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 

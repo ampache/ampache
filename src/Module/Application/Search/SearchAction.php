@@ -27,12 +27,12 @@ namespace Ampache\Module\Application\Search;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Search;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

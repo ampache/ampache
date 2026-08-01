@@ -40,7 +40,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var list<int> $object_ids */
 /** @var string[] $hide_columns */
 /** @var string $argument_param */

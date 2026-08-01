@@ -38,7 +38,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var list<int> $object_ids */
 
 $is_table          = !$browse->is_grid_view();

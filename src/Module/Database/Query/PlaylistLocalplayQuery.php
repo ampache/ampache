@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database\Query;
 
-use Ampache\Repository\Model\Query;
-
 final class PlaylistLocalplayQuery implements QueryInterface
 {
     public const array FILTERS = [

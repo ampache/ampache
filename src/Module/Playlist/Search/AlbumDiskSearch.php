@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Playlist\Search;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Search;
+use Ampache\Module\Database\Query\Search;
 
 final class AlbumDiskSearch implements SearchInterface
 {

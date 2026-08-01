@@ -29,7 +29,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Broadcast;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var list<int> $object_ids */
 
 if ($browse->is_show_header()) {

@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Playlist\Search;
 
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\CatalogRepositoryInterface;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;

@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog;
@@ -31,6 +31,8 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**

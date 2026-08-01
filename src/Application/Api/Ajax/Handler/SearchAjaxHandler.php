@@ -31,6 +31,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;
@@ -40,7 +41,6 @@ use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 

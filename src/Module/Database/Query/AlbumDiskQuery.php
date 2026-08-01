@@ -28,7 +28,6 @@ namespace Ampache\Module\Database\Query;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Query;
 
 final class AlbumDiskQuery implements QueryInterface
 {

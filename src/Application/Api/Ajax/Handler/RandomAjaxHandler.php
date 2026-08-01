@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Database\Query\Random;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
@@ -33,7 +34,6 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
 
