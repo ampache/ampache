@@ -34,6 +34,7 @@ use Ampache\Config\Init\Exception\GetTextNotAvailableException;
 use Ampache\Config\Init\Exception\RequireAuthException;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\EnvironmentInterface;
+use Throwable;
 
 /**
  * This class performs the complete init process to build a working ampache application environment
@@ -65,17 +66,23 @@ final readonly class Init
             $redirectionUrl = 'update.php';
         } catch (RequireAuthException $error) {
             $redirectionUrl = 'login.php';
-        } finally {
-            if ($error == null) {
-                return;
-            }
+        } catch (Throwable $error) {
+            // startup failed in a way nothing above expected, so the debug page is the only place that can explain it
+            debug_event(self::class, 'Initialization failed: ' . $error->getMessage(), 1);
 
-            if ($this->environment->isCli()) {
-                throw $error;
-            }
-
-            $this->redirect((string) $redirectionUrl);
+            $redirectionUrl = 'test.php';
         }
+
+        // returning from a finally block would discard an exception no catch above matched, so this stays outside one
+        if ($error === null) {
+            return;
+        }
+
+        if ($this->environment->isCli()) {
+            throw $error;
+        }
+
+        $this->redirect((string) $redirectionUrl);
     }
 
     private function redirect(string $destination): void

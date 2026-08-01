@@ -79,6 +79,17 @@ final class AdminUpdateDatabaseCommand extends Command
             return;
         }
 
+        // an empty or partial schema has no version to migrate from, so the installer is the only way forward
+        if (!Dba::check_database_inserted()) {
+            $interactor->error(
+                T_('Unable to query the database, check your Ampache config'),
+                true
+            );
+            $interactor->eol();
+
+            return;
+        }
+
         /* HINT: db version string (e.g. 5.2.0 Build: 006) */
         $interactor->info(
             sprintf(T_('Database version: %s'), $this->retrieveVersion()),

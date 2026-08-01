@@ -34,7 +34,39 @@ use PDO;
  */
 final class Environment implements EnvironmentInterface
 {
+    /** @var list<string> extensions Ampache needs that composer.json does not declare */
+    public const array ADDITIONAL_EXTENSIONS = [
+        'gettext',
+        'pdo_mysql',
+        'zlib',
+    ];
+
+    /** @var array<string, string> the `ext-` suggestions of composer.json and what they are needed for */
+    public const array OPTIONAL_EXTENSIONS = [
+        'http' => 'Yourls plugin',
+        'ldap' => 'Needed to support ldap authentication',
+        'sockets' => 'Needed for upnp functions',
+        'xmlreader' => 'Needed for upnp functions',
+    ];
     public const float PHP_VERSION = 8.5;
+
+    /** @var list<string> the `ext-` requirements of composer.json, kept in step by EnvironmentTest */
+    public const array REQUIRED_EXTENSIONS = [
+        'curl',
+        'dom',
+        'fileinfo',
+        'gd',
+        'iconv',
+        'intl',
+        'json',
+        'libxml',
+        'mbstring',
+        'openssl',
+        'pdo',
+        'simplexml',
+        'xml',
+        'zip',
+    ];
 
     public function check(): bool
     {
@@ -232,6 +264,38 @@ final class Environment implements EnvironmentInterface
                 || $post_max < 1
             )
         );
+    }
+
+    /**
+     * Every php extension Ampache asks for, required ones first, with whether this server has it
+     *
+     * @return list<array{name: string, loaded: bool, required: bool, description: string}>
+     */
+    public function getExtensionStatus(): array
+    {
+        $required = array_merge(self::REQUIRED_EXTENSIONS, self::ADDITIONAL_EXTENSIONS);
+        sort($required);
+
+        $result = [];
+        foreach ($required as $name) {
+            $result[] = [
+                'name' => $name,
+                'loaded' => extension_loaded($name),
+                'required' => true,
+                'description' => '',
+            ];
+        }
+
+        foreach (self::OPTIONAL_EXTENSIONS as $name => $description) {
+            $result[] = [
+                'name' => $name,
+                'loaded' => extension_loaded($name),
+                'required' => false,
+                'description' => $description,
+            ];
+        }
+
+        return $result;
     }
 
     public function getHttpPort(): int
