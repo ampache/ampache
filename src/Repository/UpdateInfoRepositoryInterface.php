@@ -30,6 +30,18 @@ use Ampache\Repository\Model\UpdateInfoEnum;
 interface UpdateInfoRepositoryInterface
 {
     /**
+     * Reads every cached total, keyed by the table or metric it counts
+     *
+     * @return array<string, int>
+     */
+    public function getAllCounts(): array;
+
+    /**
+     * Reads one cached total, or 0 when nothing has stored it yet
+     */
+    public function getCountByKey(string $key): int;
+
+    /**
      * Reads the stored version of every installed plugin, keyed by plugin name
      *
      * @return array<string, int>
@@ -47,6 +59,11 @@ interface UpdateInfoRepositoryInterface
      * Drops the stored version of one plugin, which is what marks it uninstalled
      */
     public function removePluginVersion(string $pluginName): void;
+
+    /**
+     * Stores one cached total, replacing whatever was there
+     */
+    public function setCountByKey(string $key, float|int $value): void;
 
     /**
      * Stores the version of an installed plugin

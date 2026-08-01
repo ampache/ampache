@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
@@ -32,6 +33,8 @@ use Ampache\Repository\Model\User;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class SearchRepositoryTest extends TestCase
 {
@@ -263,6 +266,17 @@ class SearchRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
+        // `new User()` reaches Catalog::get_catalogs() through the `global $dic` bridge
+        $catalogRepository = $this->createMock(CatalogRepositoryInterface::class);
+        $catalogRepository->method('getIds')->willReturn([]);
+
+        $globalDic = $this->createMock(ContainerInterface::class);
+        $globalDic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            CatalogRepositoryInterface::class => $catalogRepository,
+            default => $this->createMock(LoggerInterface::class),
+        });
+        $GLOBALS['dic'] = $globalDic;
+
         $this->connection     = $this->createMock(DatabaseConnectionInterface::class);
         $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
 

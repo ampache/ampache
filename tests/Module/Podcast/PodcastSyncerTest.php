@@ -26,7 +26,8 @@ namespace Ampache\Module\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Repository\CatalogMapRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -36,10 +37,13 @@ use ArrayIterator;
 use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 
 class PodcastSyncerTest extends TestCase
 {
+    private CatalogMapRepositoryInterface&MockObject $catalogMapRepository;
     private ConfigContainerInterface&MockObject $configContainer;
     private ModelFactoryInterface&MockObject $modelFactory;
     private PodcastDeleterInterface&MockObject $podcastDeleter;
@@ -231,6 +235,15 @@ class PodcastSyncerTest extends TestCase
         $this->podcastDeleter           = $this->createMock(PodcastDeleterInterface::class);
         $this->podcastEpisodeRepository = $this->createMock(PodcastEpisodeRepositoryInterface::class);
         $this->configContainer          = $this->createMock(ConfigContainerInterface::class);
+        $this->catalogMapRepository     = $this->createMock(CatalogMapRepositoryInterface::class);
+
+        // Catalog::update_mapping() reaches the container, and debug_event() pulls the logger off the same one
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            CatalogMapRepositoryInterface::class => $this->catalogMapRepository,
+            default => $this->createMock(LoggerInterface::class),
+        });
+        $GLOBALS['dic'] = $dic;
 
         $this->subject = new PodcastSyncer(
             $this->podcastRepository,

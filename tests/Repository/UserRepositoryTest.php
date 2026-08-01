@@ -44,6 +44,16 @@ class UserRepositoryTest extends TestCase
     private LoggerInterface&MockObject $logger;
     private UserRepository $subject;
 
+    public function testCountByCatalogFilterGroupCountsTheAssignedUsers(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT COUNT(1) AS `count` FROM `user` WHERE `catalog_filter_group` = ?', [4])
+            ->willReturn('3');
+
+        static::assertSame(3, $this->subject->countByCatalogFilterGroup(4));
+    }
+
     public function testCreateLeavesOmittedColumnsOutOfTheStatement(): void
     {
         // an absent optional column has to stay out of the INSERT so the schema default applies to it
@@ -175,6 +185,24 @@ class UserRepositoryTest extends TestCase
             ->willReturn(false);
 
         static::assertSame(0, $this->subject->idByUsername('some-user'));
+    }
+
+    public function testResetCatalogFilterGroupPutsThemBackOnDefault(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` = ?', [4]);
+
+        $this->subject->resetCatalogFilterGroup(4);
+    }
+
+    public function testResetMissingCatalogFilterGroupsSweepsEveryDanglingUser(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` NOT IN (SELECT `id` FROM `catalog_filter_group`);');
+
+        $this->subject->resetMissingCatalogFilterGroups();
     }
 
     public function testRetrievePasswordFromUserReturnsAnEmptyStringForAnUnknownUser(): void

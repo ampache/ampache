@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\Image\ShowUserAvatarAction;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;

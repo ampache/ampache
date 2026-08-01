@@ -27,15 +27,16 @@ namespace Ampache\Repository;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Generator;
+use PDO;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -67,6 +68,45 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
+    }
+
+    /**
+     * Counts the episodes of one podcast still held by a catalog, which decides whether the podcast moves too
+     */
+    public function countByPodcastAndCatalog(int $podcastId, int $catalogId): int
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(`id`) FROM `podcast_episode` WHERE `podcast` = ? AND `catalog` = ?;',
+            [$podcastId, $catalogId]
+        );
+    }
+
+    /**
+     * Records a set of episodes in the `deleted_podcast_episode` archive and removes them
+     *
+     * @param list<int> $episodeIds
+     */
+    public function deleteByIdsWithArchive(array $episodeIds): void
+    {
+        if ($episodeIds === []) {
+            return;
+        }
+
+        $idList = implode(',', array_map(intval(...), $episodeIds));
+
+        // keep details about deletions, but losing the record must not stop the delete itself
+        try {
+            $this->connection->query(
+                'REPLACE INTO `deleted_podcast_episode` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast` FROM `podcast_episode` WHERE `id` IN (' . $idList . ');'
+            );
+        } catch (DatabaseException) {
+            $this->logger->warning(
+                'deleteByIdsWithArchive could not record deleted_podcast_episode ' . $idList,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+        }
+
+        $this->connection->query('DELETE FROM `podcast_episode` WHERE `id` IN (' . $idList . ');');
     }
 
     /**
@@ -110,6 +150,18 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
         }
 
         return $item;
+    }
+
+    /**
+     * Reads the id of the episode holding this file
+     */
+    public function findIdByFile(string $file): ?int
+    {
+        $episodeId = $this->connection->fetchOne('SELECT `id` FROM `podcast_episode` WHERE `file` = ?;', [$file]);
+
+        return ($episodeId === false || $episodeId === null)
+            ? null
+            : (int) $episodeId;
     }
 
     /**
@@ -234,6 +286,68 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     }
 
     /**
+     * Reads every episode file of one catalog keyed by episode id, for the scanner's in-process cache
+     *
+     * @return array<int, string>
+     */
+    public function getFilesByCatalog(int $catalogId, int $limit = 0, int $offset = 0): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id`, `file` FROM `podcast_episode` WHERE `catalog` = ? AND `file` IS NOT NULL ORDER BY `id` DESC' . (($limit > 0) ? sprintf(' LIMIT %d, %d', $offset, $limit) : '') . ';',
+            [$catalogId]
+        );
+
+        $files = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $files[(int) $row['id']] = (string) $row['file'];
+        }
+
+        return $files;
+    }
+
+    /**
+     * Reads the episodes whose file sits under a base folder path
+     *
+     * @return list<int>
+     */
+    public function getIdsByFilePrefix(string $folderPath): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `podcast_episode` WHERE `file` LIKE ?',
+            [$folderPath . '%']
+        );
+
+        $episodeIds = [];
+        while ($episodeId = $result->fetchColumn()) {
+            $episodeIds[] = (int) $episodeId;
+        }
+
+        return $episodeIds;
+    }
+
+    /**
+     * Reads the most recently published episodes of one catalog, newest first
+     *
+     * @return list<int>
+     */
+    public function getNewestIdsByCatalog(int $catalogId, int $count): array
+    {
+        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`catalog` = ? ORDER BY `podcast_episode`.`pubdate` DESC';
+        if ($count > 0) {
+            $sql .= ' LIMIT ' . $count;
+        }
+
+        $result = $this->connection->query($sql, [$catalogId]);
+
+        $episodeIds = [];
+        while ($episodeId = $result->fetchColumn()) {
+            $episodeIds[] = (int) $episodeId;
+        }
+
+        return $episodeIds;
+    }
+
+    /**
      * Returns a number of random, completed podcast episodes from the whole library
      *
      * @return list<int>
@@ -280,6 +394,31 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     }
 
     /**
+     * Reads a page of the podcast_episodes a verify pass walks, newest path first
+     *
+     * @return list<array{id: int, file: string, min_update_time: int}>
+     */
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array
+    {
+        $sql = ($onlyStale)
+            ? 'SELECT `podcast_episode`.`id`, `podcast_episode`.`file`, `podcast_episode`.`update_time` AS `min_update_time` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = ? AND `podcast_episode`.`update_time` < `catalog`.`last_update` ORDER BY `podcast_episode`.`file` DESC LIMIT '
+            : 'SELECT `podcast_episode`.`id`, `podcast_episode`.`file`, `podcast_episode`.`update_time` AS `min_update_time` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = ? ORDER BY `podcast_episode`.`file` DESC LIMIT ';
+
+        $result = $this->connection->query($sql . $limit . ';', [$catalogId]);
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = [
+                'id' => (int) $row['id'],
+                'file' => (string) $row['file'],
+                'min_update_time' => (int) $row['min_update_time'],
+            ];
+        }
+
+        return $rows;
+    }
+
+    /**
      * Stores the path the episode was downloaded to
      */
     public function setFile(int $episodeId, string $file): void
@@ -288,6 +427,23 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
             'UPDATE `podcast_episode` SET `file` = ? WHERE `id` = ?',
             [$file, $episodeId]
         );
+    }
+
+    /**
+     * Moves a podcast episode to another catalog and to the file it now lives in
+     */
+    public function setFileAndCatalog(int $objectId, string $file, int $catalogId): bool
+    {
+        try {
+            $this->connection->query(
+                'UPDATE `podcast_episode` SET `file` = ?, `catalog` = ? WHERE `id` = ?;',
+                [$file, $catalogId, $objectId]
+            );
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -331,6 +487,51 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     }
 
     /**
+     * Rebuilds every episode's play and skip totals from `object_count`, and the played flag that follows them
+     *
+     * Each total is cleared against rows of its own count type, so an episode that was only ever skipped keeps
+     * the skips it has.
+     */
+    public function updateAllCounts(): void
+    {
+        $statements = [
+            "UPDATE `podcast_episode` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream');",
+            "UPDATE `podcast_episode` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'skip' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'skip');",
+            "UPDATE `podcast_episode` SET `podcast_episode`.`played` = 0 WHERE `podcast_episode`.`played` = 1 AND `podcast_episode`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream');",
+            "UPDATE `podcast_episode` SET `podcast_episode`.`played` = 1 WHERE `podcast_episode`.`played` = 0 AND `podcast_episode`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream');",
+            "UPDATE `podcast_episode`, (SELECT SUM(`total`) AS `total_count`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `podcast_episode`.`total_count` = `object_count`.`total_count` WHERE `podcast_episode`.`total_count` != `object_count`.`total_count` AND `podcast_episode`.`id` = `object_count`.`object_id`;",
+            "UPDATE `podcast_episode` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;",
+        ];
+
+        foreach ($statements as $sql) {
+            $this->runMaintenance($sql);
+        }
+    }
+
+    /**
+     * Writes back what reading the downloaded file told us about it, and marks the episode complete
+     *
+     * @param array<string, mixed> $values
+     */
+    public function updateFromTags(int $episodeId, string $file, array $values, int $updateTime): void
+    {
+        $this->connection->query(
+            "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `update_time` = ?, `state` = 'completed' WHERE `id` = ?",
+            [
+                $file,
+                $values['size'],
+                $values['time'],
+                $values['bitrate'],
+                $values['rate'],
+                (in_array($values['mode'], ['vbr', 'cbr', 'abr'])) ? $values['mode'] : 'vbr',
+                $values['channels'],
+                $updateTime,
+                $episodeId,
+            ]
+        );
+    }
+
+    /**
      * Updates the state of an episode
      */
     public function updateState(
@@ -341,5 +542,22 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
             'UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?',
             [$state->value, $episode->getId()]
         );
+    }
+
+    /**
+     * Runs one count-maintenance statement, where a failure must not take the rest of the sweep down with it
+     *
+     * @param list<mixed> $params
+     */
+    private function runMaintenance(string $sql, array $params = []): void
+    {
+        try {
+            $this->connection->query($sql, $params);
+        } catch (DatabaseException) {
+            $this->logger->warning(
+                'count maintenance failed: ' . $sql,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+        }
     }
 }

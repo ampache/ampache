@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -32,7 +33,6 @@ use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Metadata;

@@ -204,6 +204,26 @@ final readonly class LabelRepository implements LabelRepositoryInterface
         return $labels;
     }
 
+    /**
+     * Reads the labels of one category, together with every label still missing an mbid
+     *
+     * @return list<int>
+     */
+    public function getIdsByCategory(string $category): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `label` WHERE `category` = ? OR `mbid` IS NULL',
+            [$category]
+        );
+
+        $labelIds = [];
+        while ($labelId = $result->fetchColumn()) {
+            $labelIds[] = (int) $labelId;
+        }
+
+        return $labelIds;
+    }
+
     public function lookup(string $labelName, int $labelId = 0): int
     {
         $ret  = -1;

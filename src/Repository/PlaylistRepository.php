@@ -281,6 +281,27 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
     }
 
     /**
+     * Reads the playlists holding media of one catalog, optionally only the ones with no original-size art
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalog(int $catalogId, bool $missingArtOnly = false): array
+    {
+        $sql = ($missingArtOnly)
+            ? "SELECT DISTINCT `playlist_data`.`playlist` FROM `playlist_data` LEFT JOIN `image` ON `playlist_data`.`playlist` = `image`.`object_id` AND `image`.`object_type` = 'playlist' AND `image`.`size` = 'original' LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `live_stream` ON `live_stream`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'live_stream' LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'podcast_episode' LEFT JOIN `video` ON `video`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'video' WHERE (`song`.`catalog` = ? OR `live_stream`.`catalog` = ? OR `podcast_episode`.`catalog` = ? OR `video`.`catalog` = ?) AND `image`.`object_id` IS NULL;"
+            : "SELECT DISTINCT `playlist_data`.`playlist` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `live_stream` ON `live_stream`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'live_stream' LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'podcast_episode' LEFT JOIN `video` ON `video`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'video' WHERE `song`.`catalog` = ? OR `live_stream`.`catalog` = ? OR `podcast_episode`.`catalog` = ? OR `video`.`catalog` = ?;";
+
+        $result = $this->connection->query($sql, [$catalogId, $catalogId, $catalogId, $catalogId]);
+
+        $playlistIds = [];
+        while ($playlistId = $result->fetchColumn()) {
+            $playlistIds[] = (int) $playlistId;
+        }
+
+        return $playlistIds;
+    }
+
+    /**
      * Reads the entries of one media type in a playlist, in track order or at random
      *
      * @return list<array<string, mixed>>

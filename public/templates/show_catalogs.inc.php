@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 // show_catalogs.inc.php
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Catalog;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */

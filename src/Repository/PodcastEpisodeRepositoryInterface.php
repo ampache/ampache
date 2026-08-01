@@ -42,6 +42,18 @@ interface PodcastEpisodeRepositoryInterface
     public function collectGarbage(): void;
 
     /**
+     * Counts the episodes of one podcast still held by a catalog, which decides whether the podcast moves too
+     */
+    public function countByPodcastAndCatalog(int $podcastId, int $catalogId): int;
+
+    /**
+     * Records a set of episodes in the `deleted_podcast_episode` archive and removes them
+     *
+     * @param list<int> $episodeIds
+     */
+    public function deleteByIdsWithArchive(array $episodeIds): void;
+
+    /**
      * Deletes a podcast-episode
      *
      * Before deleting the episode, a backup of the episodes meta-data is created
@@ -52,6 +64,11 @@ interface PodcastEpisodeRepositoryInterface
      * Finds a single item by its id
      */
     public function findById(int $itemId): ?Podcast_Episode;
+
+    /**
+     * Reads the id of the episode holding this file
+     */
+    public function findIdByFile(string $file): ?int;
 
     /**
      * Returns the calculated count of available episodes for the given podcast
@@ -84,6 +101,27 @@ interface PodcastEpisodeRepositoryInterface
     public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit = null): Traversable;
 
     /**
+     * Reads every episode file of one catalog keyed by episode id, for the scanner's in-process cache
+     *
+     * @return array<int, string>
+     */
+    public function getFilesByCatalog(int $catalogId, int $limit = 0, int $offset = 0): array;
+
+    /**
+     * Reads the episodes whose file sits under a base folder path
+     *
+     * @return list<int>
+     */
+    public function getIdsByFilePrefix(string $folderPath): array;
+
+    /**
+     * Reads the most recently published episodes of one catalog, newest first
+     *
+     * @return list<int>
+     */
+    public function getNewestIdsByCatalog(int $catalogId, int $count): array;
+
+    /**
      * Returns a number of random, completed podcast episodes from the whole library
      *
      * @return list<int>
@@ -98,9 +136,21 @@ interface PodcastEpisodeRepositoryInterface
     public function getRandomByPodcast(int $podcastId, int $userId, ?int $count = 1): array;
 
     /**
+     * Reads a page of the episodes a verify pass walks, newest path first
+     *
+     * @return list<array{id: int, file: string, min_update_time: int}>
+     */
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array;
+
+    /**
      * Stores the path the episode was downloaded to
      */
     public function setFile(int $episodeId, string $file): void;
+
+    /**
+     * Moves a podcast episode to another catalog and to the file it now lives in
+     */
+    public function setFileAndCatalog(int $objectId, string $file, int $catalogId): bool;
 
     /**
      * Flags the episode as played
@@ -116,6 +166,18 @@ interface PodcastEpisodeRepositoryInterface
      * Writes the editable properties of an existing episode
      */
     public function update(Podcast_Episode $episode): void;
+
+    /**
+     * Rebuilds every episode's play and skip totals from `object_count`, and the played flag that follows them
+     */
+    public function updateAllCounts(): void;
+
+    /**
+     * Writes back what reading the downloaded file told us about it, and marks the episode complete
+     *
+     * @param array<string, mixed> $values
+     */
+    public function updateFromTags(int $episodeId, string $file, array $values, int $updateTime): void;
 
     public function updateState(
         Podcast_Episode $episode,

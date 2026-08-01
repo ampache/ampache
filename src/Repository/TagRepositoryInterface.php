@@ -102,6 +102,20 @@ interface TagRepositoryInterface
     public function getRowsByIds(array $tagIds): array;
 
     /**
+     * Reads the distinct genres tagged on the songs of one album
+     *
+     * @return list<string>
+     */
+    public function getSongTagNamesByAlbum(int $albumId): array;
+
+    /**
+     * Reads the distinct genres tagged on the songs one artist is mapped onto
+     *
+     * @return list<string>
+     */
+    public function getSongTagNamesByArtist(int $artistId): array;
+
+    /**
      * Reads the ids of tags applied to a given object type
      *
      * @return list<int>

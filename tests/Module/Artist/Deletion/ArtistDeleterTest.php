@@ -29,6 +29,7 @@ use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
@@ -52,6 +53,7 @@ class ArtistDeleterTest extends TestCase
     private AlbumRepositoryInterface&MockObject $albumRepository;
     private ArtCleanupInterface&MockObject $artCleanup;
     private ArtistRepositoryInterface&MockObject $artistRepository;
+    private CatalogCounterInterface&MockObject $catalogCounter;
     private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LabelRepositoryInterface&MockObject $labelRepository;
@@ -209,6 +211,8 @@ class ArtistDeleterTest extends TestCase
         $this->folderRepository       = $this->createMock(FolderRepositoryInterface::class);
         $this->songRepository         = $this->createMock(SongRepositoryInterface::class);
 
+        $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
+
         $this->subject = new ArtistDeleter(
             $this->albumDeleter,
             $this->artistRepository,
@@ -221,6 +225,7 @@ class ArtistDeleterTest extends TestCase
             $this->labelRepository,
             $this->artCleanup,
             $this->folderRepository,
+            $this->catalogCounter,
         );
     }
 }

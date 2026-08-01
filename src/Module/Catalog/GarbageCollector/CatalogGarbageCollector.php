@@ -25,7 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Label\LabelGarbageCollectorInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Statistics\Stats;
@@ -35,7 +39,6 @@ use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
@@ -43,8 +46,10 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
@@ -73,6 +78,10 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         private PlaylistRepositoryInterface $playlistRepository,
         private SearchRepositoryInterface $searchRepository,
         private LabelGarbageCollectorInterface $labelGarbageCollector,
+        private SongRepositoryInterface $songRepository,
+        private PodcastRepositoryInterface $podcastRepository,
+        private CatalogCounterInterface $catalogCounter,
+        private ConfigContainerInterface $configContainer,
     ) {}
 
     public function collect(): void
@@ -105,5 +114,34 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
 
         $this->metadataManager->collectGarbage();
         $this->podcastEpisodeRepository->collectGarbage();
+
+        $this->recount();
+    }
+
+    /**
+     * Puts every stored count back in step with the rows that are left
+     *
+     * The live paths keep these right as things are played and deleted; this is the repair for a database
+     * that drifted, which is why it belongs to garbage collection rather than to a periodic sweep.
+     */
+    private function recount(): void
+    {
+        // a rebuild is a join, so rows that lost their last play are zeroed first or they keep the old total
+        $this->songRepository->resetCountsWithoutHistory();
+        $this->songRepository->updateAllCounts();
+        $this->videoRepository->updateAllCounts();
+        $this->podcastEpisodeRepository->updateAllCounts();
+        $this->podcastRepository->updateAllCounts();
+
+        $this->albumRepository->updateAllCounts();
+        $this->albumRepository->updateAllSkipCounts();
+        $this->artistRepository->updateAllCounts();
+        $this->artistRepository->updateAllSkipCounts();
+        $this->folderRepository->update_folder_counts();
+
+        $this->catalogCounter->refreshServerCounts(
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)
+        );
+        User::update_counts();
     }
 }

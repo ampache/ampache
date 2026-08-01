@@ -30,14 +30,13 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\SongFieldEnum;
 use Ampache\Repository\Model\Video;
 use AmpacheApi\AmpacheApi;
 use Exception;
@@ -117,7 +116,7 @@ class Catalog_remote extends Catalog
      *     password?: ?string,
      * } $data
      */
-    public static function create_type(string $catalog_id, array $data): bool
+    public static function create_type(int $catalog_id, array $data): bool
     {
         $uri      = rtrim(trim($data['uri'] ?? ''), '/');
         $username = $data['username'] ?? '';
@@ -138,10 +137,8 @@ class Catalog_remote extends Catalog
         $password = hash('sha256', $password);
 
         // Make sure this uri isn't already in use by an existing catalog
-        $sql        = 'SELECT `id` FROM `catalog_remote` WHERE `uri` = ?';
-        $db_results = Dba::read($sql, [$uri]);
-
-        if (Dba::num_rows($db_results) !== 0) {
+        $catalogRepository = self::getCatalogRepository();
+        if ($catalogRepository->subTypeValueExists(CatalogTypeEnum::REMOTE, 'uri', $uri)) {
             debug_event('remote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             /* HINT: remote URI */
             AmpError::add('general', sprintf(T_('This path belongs to an existing remote Catalog: %s'), $uri));
@@ -149,10 +146,11 @@ class Catalog_remote extends Catalog
             return false;
         }
 
-        $sql = 'INSERT INTO `catalog_remote` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)';
-        Dba::write($sql, [$uri, $username, $password, $catalog_id]);
-
-        return true;
+        return $catalogRepository->insertSubType(
+            CatalogTypeEnum::REMOTE,
+            ['uri' => $uri, 'username' => $username, 'password' => $password],
+            $catalog_id
+        );
     }
 
     /**
@@ -222,9 +220,13 @@ class Catalog_remote extends Catalog
             $max_bitrate = $user_bit_rate;
         }
 
-        $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
-        $db_results = Dba::read($sql, [$this->getId()]);
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach (self::getSongRepository()->getFilesByCatalog($this->getId()) as $songId => $songFile) {
+            // substring_index(file, '.', -1) hands back the whole name when there is no dot in it
+            $row = [
+                'id' => $songId,
+                'file' => $songFile,
+                'extension' => (str_contains($songFile, '.')) ? substr($songFile, (int) strrpos($songFile, '.') + 1) : $songFile,
+            ];
             $file_target = ($row['id'] && $cache_target === $row['extension'])
                 ? Catalog::get_cache_path($row['id'], $this->getId(), $cache_path, $cache_target)
                 : null;
@@ -299,39 +301,32 @@ class Catalog_remote extends Catalog
             return null;
         }
 
+        $songRepository = self::getSongRepository();
+
         // Check by remote id urls first
         if ($remote_id !== '' && $remote_id !== '0') {
-            $sql        = 'SELECT `id` FROM `song` WHERE `file` LIKE ?;';
-            $db_results = Dba::read($sql, [$this->uri . '/play/index.php?%&type=song%&oid=' . $remote_id . '&%']);
-            if ($results = Dba::fetch_assoc($db_results)) {
-                Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
-                Song::update_song_map([$remote_id], 'remote_' . $this->getId(), (int) $results['id']);
+            $songId = $songRepository->findIdByFilePattern($this->uri . '/play/index.php?%&type=song%&oid=' . $remote_id . '&%');
+            if ($songId !== null) {
+                $songRepository->setField($songId, SongFieldEnum::FILE, $db_file);
+                Song::update_song_map([$remote_id], 'remote_' . $this->getId(), $songId);
 
-                return (int) $results['id'];
+                return $songId;
             }
         }
 
         // Update old urls to the new format if needed
         foreach ($song_urls as $old_url) {
             // Check for old formats and update the URL to the current version
-            $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?;';
-            $db_results = Dba::read($sql, [$old_url]);
-            if ($results = Dba::fetch_assoc($db_results)) {
-                Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
+            $songId = $songRepository->findIdByFile($old_url);
+            if ($songId !== null) {
+                $songRepository->setField($songId, SongFieldEnum::FILE, $db_file);
 
-                return (int) $results['id'];
+                return $songId;
             }
         }
 
         // Check current format
-        $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        $db_results = Dba::read($sql, [$db_file]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int) $results['id'];
-        }
-
-        return null;
+        return $songRepository->findIdByFile($db_file);
     }
 
     /**
@@ -348,10 +343,10 @@ class Catalog_remote extends Catalog
             return 0;
         }
 
-        $dead       = 0;
-        $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, [$this->getId()]);
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $dead           = 0;
+        $songRepository = self::getSongRepository();
+        foreach ($songRepository->getFilesByCatalog($this->getId()) as $songId => $songFile) {
+            $row = ['id' => $songId, 'file' => $songFile];
             debug_event('remote.catalog', 'Starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             try {
                 if (filter_var($row['file'], FILTER_VALIDATE_URL)) {
@@ -374,7 +369,7 @@ class Catalog_remote extends Catalog
                 } else {
                     debug_event('remote.catalog', 'removing song', 5);
                     $dead++;
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
+                    $songRepository->delete((int) $row['id']);
                 }
             } catch (Exception $error) {
                 // FIXME: What to do, what to do
@@ -532,12 +527,7 @@ class Catalog_remote extends Catalog
      */
     public function install(): bool
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-
-        $sql = sprintf('CREATE TABLE `catalog_remote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE %s NOT NULL, `username` VARCHAR(255) COLLATE %s NOT NULL, `password` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $collation, $engine, $charset, $collation);
-        Dba::query($sql);
+        self::getCatalogRepository()->createSubTypeTable(CatalogTypeEnum::REMOTE, ['uri' => 'VARCHAR(255)', 'username' => 'VARCHAR(255)', 'password' => 'VARCHAR(255)']);
 
         return true;
     }
@@ -548,10 +538,7 @@ class Catalog_remote extends Catalog
      */
     public function is_installed(): bool
     {
-        $sql        = "SHOW TABLES LIKE 'catalog_remote'";
-        $db_results = Dba::query($sql);
-
-        return (Dba::num_rows($db_results) > 0);
+        return self::getCatalogRepository()->subTypeTableExists(CatalogTypeEnum::REMOTE);
     }
 
     /**

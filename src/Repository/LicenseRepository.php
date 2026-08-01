@@ -25,9 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\License;
 use Generator;
+use Override;
 use PDO;
 
 /**
@@ -39,9 +42,23 @@ use PDO;
  */
 final readonly class LicenseRepository extends BaseRepository implements LicenseRepositoryInterface
 {
-    public function __construct(DatabaseConnectionInterface $connection)
-    {
+    public function __construct(
+        DatabaseConnectionInterface $connection,
+        private readonly CatalogCounterInterface $catalogCounter,
+    ) {
         parent::__construct($connection);
+    }
+
+    /**
+     * Removes a license and keeps the stored total in step
+     *
+     * @param License $record
+     */
+    #[Override]
+    public function delete(object $record): void
+    {
+        parent::delete($record);
+        $this->catalogCounter->count(CountableTableEnum::LICENSE);
     }
 
     /**
@@ -111,6 +128,7 @@ final readonly class LicenseRepository extends BaseRepository implements License
             );
 
             $result = $this->connection->getLastInsertedId();
+            $this->catalogCounter->count(CountableTableEnum::LICENSE);
         } else {
             $this->connection->query(
                 'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ?, `order` = ? WHERE `id` = ?',

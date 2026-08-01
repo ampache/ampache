@@ -46,6 +46,11 @@ interface AlbumRepositoryInterface
     public function collectGarbageForAlbums(array $albumIds): void;
 
     /**
+     * Removes the album_map rows whose album, artist or song has gone, leaving the albums themselves alone
+     */
+    public function collectOrphanedAlbumMaps(): void;
+
+    /**
      * Inserts a new album row and returns its id, or 0 when the write failed
      *
      * @param array{name: string, prefix: ?string, year: int, mbid: ?string, mbid_group: ?string, release_type: ?string, release_status: ?string, album_artist: ?int, original_year: ?string, barcode: ?string, catalog_number: ?string, version: ?string, catalog: int} $properties
@@ -60,11 +65,23 @@ interface AlbumRepositoryInterface
     ): void;
 
     /**
+     * Removes an album that has no songs left, together with the maps that only existed for it
+     */
+    public function deleteEmpty(int $albumId): void;
+
+    /**
      * Finds the album that already carries exactly these properties, matching what create() would write
      *
      * @param array{name: string, prefix: ?string, year: int, mbid: ?string, mbid_group: ?string, release_type: ?string, release_status: ?string, album_artist: ?int, original_year: ?string, barcode: ?string, catalog_number: ?string, version: ?string, catalog: int} $properties
      */
     public function findByProperties(array $properties): ?int;
+
+    /**
+     * Reads the albums that hold no songs at all, with the artist each was credited to
+     *
+     * @return list<array{id: int, album_artist: ?int}>
+     */
+    public function findEmpty(): array;
 
     /**
      * Reads the artist an album should be credited to when it has no album_artist but only one distinct song artist
@@ -130,6 +147,29 @@ interface AlbumRepositoryInterface
         string $name,
         int $artistId,
     ): array;
+
+    /**
+     * Reads the albums of one catalog, optionally only the ones with no original-size art
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalog(int $catalogId, bool $missingArtOnly = false): array;
+
+    /**
+     * Reads a page of the albums holding songs in the given catalogs, by name
+     *
+     * @param array<int|string>|null $catalogIds every catalog when null or empty
+     * @return list<int>
+     */
+    public function getIdsByCatalogs(?array $catalogIds, int $size = 0, int $offset = 0): array;
+
+    /**
+     * Reads a page of the albums holding songs in the given catalogs, grouped by their album artist
+     *
+     * @param array<int|string>|null $catalogIds every catalog when null or empty
+     * @return list<int>
+     */
+    public function getIdsByCatalogsOrderedByArtist(?array $catalogIds, int $size = 0, int $offset = 0): array;
 
     /**
      * Reads the albums that carry no album_artist, which the scanner then tries to fill in
@@ -230,6 +270,13 @@ interface AlbumRepositoryInterface
     ): array;
 
     /**
+     * Reads a page of the albums a verify pass walks, taking the file and update time from their songs
+     *
+     * @return list<array{id: int, file: string, min_update_time: int}>
+     */
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $lastUpdate): array;
+
+    /**
      * Whether the album is one of the placeholders the scanner parks songs on when their real album is unknown
      */
     public function isOrphan(int $albumId): bool;
@@ -253,6 +300,11 @@ interface AlbumRepositoryInterface
      * Recomputes the cached totals on every album and disk, and backfills any album_disk the scanner missed
      */
     public function updateAllCounts(): void;
+
+    /**
+     * Rolls the skip totals of every album and album disk up from their songs
+     */
+    public function updateAllSkipCounts(): void;
 
     /**
      * Recomputes the cached totals on one album and its disks, after a song on it changed

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Label\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
@@ -41,6 +42,7 @@ use Psr\Log\LoggerInterface;
 class LabelDeleterTest extends TestCase
 {
     private ArtCleanupInterface&MockObject $artCleanup;
+    private CatalogCounterInterface&MockObject $catalogCounter;
     private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LabelRepositoryInterface&MockObject $labelRepository;
@@ -97,12 +99,15 @@ class LabelDeleterTest extends TestCase
         $this->artCleanup             = $this->createMock(ArtCleanupInterface::class);
         $this->folderRepository       = $this->createMock(FolderRepositoryInterface::class);
 
+        $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
+
         $this->subject = new LabelDeleter(
             $this->shoutRepository,
             $this->labelRepository,
             $this->userActivityRepository,
             $this->artCleanup,
             $this->folderRepository,
+            $this->catalogCounter,
         );
     }
 }

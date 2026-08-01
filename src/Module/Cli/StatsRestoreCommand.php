@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Repository\Model\Catalog;
 
 final class StatsRestoreCommand extends Command
 {
@@ -60,7 +60,9 @@ final class StatsRestoreCommand extends Command
             /* HINT: %1 archived row count, %2 rebuilt album/artist/podcast row count */
             $interactor->red(sprintf(T_('%d rows restored, %d album/artist/podcast rows rebuilt'), $result['rows'], $result['derived']), true);
             $interactor->white(T_('Updating counts'), true);
-            Catalog::update_counts();
+            // restoring history moves every play counter, so the repair pass is what puts them back in step
+            global $dic;
+            $dic->get(CatalogGarbageCollectorInterface::class)->collect();
         } else {
             $interactor->green(sprintf(T_('%d rows would be restored (dry-run)'), $result['rows']), true);
         }

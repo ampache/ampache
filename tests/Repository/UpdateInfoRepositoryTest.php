@@ -39,6 +39,32 @@ class UpdateInfoRepositoryTest extends TestCase
     private DatabaseConnectionInterface&MockObject $connection;
     private UpdateInfoRepository $subject;
 
+    public function testGetAllCountsCastsEveryValue(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `key`, `value` FROM `update_info`;')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn(['key' => 'song', 'value' => '42'], false);
+
+        static::assertSame(['song' => 42], $this->subject->getAllCounts());
+    }
+
+    public function testGetCountByKeyFallsBackToZero(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `value` FROM `update_info` WHERE `key` = ?', ['song'])
+            ->willReturn(false);
+
+        static::assertSame(0, $this->subject->getCountByKey('song'));
+    }
+
     public function testGetValeByKeyReturnsNullIfNothingWasFound(): void
     {
         $key = UpdateInfoEnum::CRON_DATE;
@@ -73,6 +99,15 @@ class UpdateInfoRepositoryTest extends TestCase
             (string) $value,
             $this->subject->getValueByKey($key),
         );
+    }
+
+    public function testSetCountByKeyReplacesTheRow(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('REPLACE INTO `update_info` SET `key` = ?, `value` = ?;', ['song', 42]);
+
+        $this->subject->setCountByKey('song', 42);
     }
 
     public function testSetValueInsertIfUpdateFails(): void

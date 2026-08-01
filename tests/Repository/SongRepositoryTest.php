@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\SongDataFieldEnum;
 use Ampache\Repository\Model\SongFieldEnum;
 use PDOStatement;
@@ -60,6 +60,26 @@ class SongRepositoryTest extends TestCase
             ->willThrowException(new QueryFailedException());
 
         $this->subject->collectGarbageForSongs([42, 666]);
+    }
+
+    public function testDeleteByCatalogReportsAFailedDelete(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('DELETE FROM `song` WHERE `catalog` = ?', [7])
+            ->willThrowException(new QueryFailedException('nope'));
+
+        static::assertFalse($this->subject->deleteByCatalog(7));
+    }
+
+    public function testDeleteByIdsCastsEveryIdAndSkipsAnEmptyList(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('DELETE FROM `song` WHERE `id` IN (1,0,3)');
+
+        $this->subject->deleteByIds([1, 'x', 3]);
+        $this->subject->deleteByIds([]);
     }
 
     public function testDeleteRecordsTheDeletionAndRemovesTheSong(): void
@@ -102,6 +122,32 @@ class SongRepositoryTest extends TestCase
             });
 
         static::assertFalse($this->subject->delete(666));
+    }
+
+    public function testFindIdByFilePatternTakesTheFirstMatch(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `id` FROM `song` WHERE `file` LIKE ? LIMIT 1', ['http://host/play%oid=7&%'])
+            ->willReturn('666');
+
+        static::assertSame(666, $this->subject->findIdByFilePattern('http://host/play%oid=7&%'));
+    }
+
+    public function testFindIdsWithMissingAlbumReadsBothTheStaleMapAndTheMissingRow(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `id` FROM `song` WHERE (`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` FROM `album`)) OR `song`.`album` NOT IN (SELECT `id` FROM `album`));')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('666', false);
+
+        static::assertSame([666], $this->subject->findIdsWithMissingAlbum());
     }
 
     public function testFindOwnerIdReturnsFalseWhenTheSongDoesNotExist(): void
@@ -204,6 +250,119 @@ class SongRepositoryTest extends TestCase
         );
     }
 
+    public function testGetEnabledIdsByCatalogOrdersOnlyWhenAsked(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled` = '1' ",
+                [7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('666', false);
+
+        static::assertSame([666], $this->subject->getEnabledIdsByCatalog(7));
+    }
+
+    public function testGetEnabledIdsJoinsTheCatalogOnlyWhenDisabledCatalogsAreHidden(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with("SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`enabled` = '1' AND `catalog`.`enabled` = '1' AND `song`.`catalog` IN (1,0) ORDER BY `song`.`album`, `song`.`id` LIMIT 10")
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetchColumn')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getEnabledIds([1, 'x9'], 10, 0, true));
+    }
+
+    public function testGetFileRowsByCatalogCarriesTheTitleAVerifyCompares(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?', [7])
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn(['id' => '1', 'file' => '/a.mp3', 'title' => 'A'], false);
+
+        static::assertSame([['id' => 1, 'file' => '/a.mp3', 'title' => 'A']], $this->subject->getFileRowsByCatalog(7));
+    }
+
+    public function testGetFilesByCatalogKeysTheFilesBySongId(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id`, `file` FROM `song` WHERE `catalog` = ? AND `file` IS NOT NULL ORDER BY `id` DESC;',
+                [7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn(['id' => '666', 'file' => '/music/song.mp3'], false);
+
+        static::assertSame([666 => '/music/song.mp3'], $this->subject->getFilesByCatalog(7));
+    }
+
+    public function testGetIdsByFilePrefixBindsTheWildcard(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `song` WHERE `file` LIKE ?',
+                ["/music/o'brien%"]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetchColumn')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getIdsByFilePrefix("/music/o'brien"));
+    }
+
+    public function testResetCountsWithoutHistoryMovesEveryCounterAgainstItsOwnCountType(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(4))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->resetCountsWithoutHistory();
+
+        // a rebuild join cannot reach a song whose rows are gone, so this is the only thing that moves it
+        static::assertStringContainsString('`total_count` = 0', $calls[0]);
+        static::assertStringContainsString("`count_type` = 'stream'", $calls[0]);
+        static::assertStringContainsString('`total_skip` = 0', $calls[1]);
+        static::assertStringContainsString("`count_type` = 'skip'", $calls[1]);
+        static::assertSame('UPDATE `song` SET `played` = 0 WHERE `played` = 1 AND `total_count` = 0;', $calls[2]);
+        // and back to played when the history is there, which video and podcast_episode always had
+        static::assertStringContainsString('`played` = 1', $calls[3]);
+    }
+
     public function testSetDataFieldReturnsFalseWhenTheWriteFailed(): void
     {
         $this->connection->expects(static::once())
@@ -248,6 +407,34 @@ class SongRepositoryTest extends TestCase
             ->with('UPDATE `song` SET `title` = ? WHERE `id` = ?', ['some-title', 666]);
 
         static::assertTrue($this->subject->setField(666, SongFieldEnum::TITLE, 'some-title'));
+    }
+
+    public function testSetFieldWritesTheFileColumn(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `song` SET `file` = ? WHERE `id` = ?', ['/new/path.mp3', 666]);
+
+        static::assertTrue($this->subject->setField(666, SongFieldEnum::FILE, '/new/path.mp3'));
+    }
+
+    public function testUpdateAllCountsRunsTheThreeSongSweeps(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(3))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateAllCounts();
+
+        foreach ($calls as $sql) {
+            static::assertStringStartsWith('UPDATE `song`', $sql);
+        }
     }
 
     protected function setUp(): void

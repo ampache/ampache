@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\SongDataFieldEnum;
 use Ampache\Repository\Model\SongFieldEnum;
@@ -49,12 +49,41 @@ interface SongRepositoryInterface
      */
     public function collectOrphanedGarbage(?string $ignorePattern): void;
 
+    /**
+     * Counts the songs of one album still held by a catalog, which decides whether the album moves with them
+     */
+    public function countByAlbumAndCatalog(int $albumId, int $catalogId): int;
+
     public function delete(int $songId): bool;
+
+    /**
+     * Removes every songs of one catalog, for a catalog that is being deleted
+     */
+    public function deleteByCatalog(int $catalogId): bool;
+
+    /**
+     * Removes a set of songs by id, without recording them in the `deleted_song` archive
+     *
+     * @param list<int> $songIds
+     */
+    public function deleteByIds(array $songIds): void;
+
+    /**
+     * Records a set of songs in the `deleted_song` archive and removes them
+     *
+     * @param list<int> $songIds
+     */
+    public function deleteByIdsWithArchive(array $songIds): void;
 
     /**
      * Reads the id of the song holding this file
      */
     public function findIdByFile(string $file): ?int;
+
+    /**
+     * Reads the id of the song whose file matches a pattern, for a remote url that carries its own id
+     */
+    public function findIdByFilePattern(string $pattern): ?int;
 
     /**
      * Reads the id of the song carrying this MusicBrainz id
@@ -79,6 +108,13 @@ interface SongRepositoryInterface
         string $artistMbid,
         string $albumMbid,
     ): ?int;
+
+    /**
+     * Reads the songs whose album row has gone, which have to be re-read from their tags to be fixed
+     *
+     * @return list<int>
+     */
+    public function findIdsWithMissingAlbum(): array;
 
     /**
      * The uploader of the song: an id, null when it was not user-uploaded, false when there is no
@@ -185,6 +221,57 @@ interface SongRepositoryInterface
     public function getDisabled(): Iterator;
 
     /**
+     * Reads a page of the enabled songs across every catalog, or the given ones
+     *
+     * @param array<int|string>|null $catalogIds every catalog when null or empty
+     * @return list<int>
+     */
+    public function getEnabledIds(?array $catalogIds, int $size = 0, int $offset = 0, bool $catalogDisable = false): array;
+
+    /**
+     * Reads a page of the enabled songs of one catalog, optionally ordered by album
+     *
+     * @return list<int>
+     */
+    public function getEnabledIdsByCatalog(int $catalogId, int $size = 0, int $offset = 0, bool $byAlbum = false): array;
+
+    /**
+     * Reads the file and title of every song of one catalog, which a remote verify compares against
+     *
+     * @return list<array{id: int, file: string, title: string}>
+     */
+    public function getFileRowsByCatalog(int $catalogId): array;
+
+    /**
+     * Reads every song file of one catalog keyed by song id, for the scanner's in-process cache
+     *
+     * @return array<int, string>
+     */
+    public function getFilesByCatalog(int $catalogId, int $limit = 0, int $offset = 0): array;
+
+    /**
+     * Reads the ids of every song of one catalog, enabled or not
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalog(int $catalogId): array;
+
+    /**
+     * Reads the ids of the songs of one catalog whose file carries one of the given extensions
+     *
+     * @param list<string> $extensions without the dot, as the cache preferences name them
+     * @return list<int>
+     */
+    public function getIdsByCatalogAndExtension(int $catalogId, array $extensions): array;
+
+    /**
+     * Reads the songs whose file sits under a base folder path
+     *
+     * @return list<int>
+     */
+    public function getIdsByFilePrefix(string $folderPath): array;
+
+    /**
      * Reads the artists mapped onto a song, or the artists mapped onto an album
      *
      * @return list<int>
@@ -249,6 +336,13 @@ interface SongRepositoryInterface
     ): array;
 
     /**
+     * Reads a page of the songs a verify pass walks, newest path first
+     *
+     * @return list<array{id: int, file: string, min_update_time: int}>
+     */
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array;
+
+    /**
      * Whether a song row exists
      */
     public function hasId(int $songId): bool;
@@ -278,6 +372,16 @@ interface SongRepositoryInterface
     public function migrateArtist(int $newArtistId, int $oldArtistId): bool;
 
     /**
+     * Rewrites the leading path of every file of one catalog, for a catalog that moved on disk
+     */
+    public function replaceFilePathForCatalog(int $catalogId, string $oldPath, string $newPath): void;
+
+    /**
+     * Zeroes the play counters of songs that have no history left, which a rebuild cannot reach
+     */
+    public function resetCountsWithoutHistory(): void;
+
+    /**
      * Writes a single `song_data` column, returning false when the write failed
      */
     public function setDataField(int $songId, SongDataFieldEnum $field, string $value): bool;
@@ -286,6 +390,16 @@ interface SongRepositoryInterface
      * Writes a single `song` column, returning false when the write failed
      */
     public function setField(int $songId, SongFieldEnum $field, int|string|null $value): bool;
+
+    /**
+     * Moves a song to another catalog and to the file it now lives in
+     */
+    public function setFileAndCatalog(int $songId, string $file, int $catalogId): bool;
+
+    /**
+     * Rebuilds every song's play and skip totals from `object_count`, and the played flag that follows them
+     */
+    public function updateAllCounts(): void;
 
     /**
      * Rewrites a song row and its extended row from a freshly read file

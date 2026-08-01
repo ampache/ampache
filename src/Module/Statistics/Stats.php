@@ -29,15 +29,21 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use PDOStatement;
 use RuntimeException;
 
@@ -89,15 +95,20 @@ class Stats
             Dba::write("TRUNCATE `object_count_archive`;");
         }
 
-        // song.total_count
-        $sql = "UPDATE `song`, (SELECT SUM(`total`) AS `total_count`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'stream') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `song`.`total_count` = `object_count`.`total_count` WHERE `song`.`total_count` != `object_count`.`total_count` AND `song`.`id` = `object_count`.`object_id`;";
-        Dba::write($sql);
-        // song.total_skip
-        $sql = "UPDATE `song`, (SELECT SUM(`total`) AS `total_skip`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'skip') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `song`.`total_skip` = `object_count`.`total_skip` WHERE `song`.`total_skip` != `object_count`.`total_skip` AND `song`.`id` = `object_count`.`object_id`;";
-        Dba::write($sql);
-        // song.played
-        $sql = "UPDATE `song` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;";
-        Dba::write($sql);
+        // a rebuild only reaches rows that still have history, so the counters left behind are zeroed first
+        $songRepository = self::getSongRepository();
+        $songRepository->resetCountsWithoutHistory();
+        $songRepository->updateAllCounts();
+
+        self::getVideoRepository()->updateAllCounts();
+        self::getPodcastEpisodeRepository()->updateAllCounts();
+        self::getPodcastRepository()->updateAllCounts();
+
+        // album, album_disk and artist roll up from the songs, so they follow once those are right
+        self::getAlbumRepository()->updateAllCounts();
+        self::getAlbumRepository()->updateAllSkipCounts();
+        self::getArtistRepository()->updateAllCounts();
+        self::getArtistRepository()->updateAllSkipCounts();
     }
 
     /**
@@ -172,7 +183,10 @@ class Stats
      */
     public static function count(string $type, int $object_id, string $count_type, ?int $date = null): void
     {
-        $played = ($count_type === 'down')
+        // 'down' turns a play into a skip; 'remove' takes the play back without recording one
+        $takesAPlayBack = ($count_type === 'down' || $count_type === 'remove');
+        $skip           = ($count_type === 'down') ? ', `total_skip` = `total_skip` + 1' : '';
+        $played         = ($takesAPlayBack)
             ? ''
             : sprintf(', `last_played` = GREATEST(COALESCE(`last_played`, 0), %d)', $date ?? time());
 
@@ -180,16 +194,16 @@ class Stats
             case 'podcast_episode':
             case 'song':
             case 'video':
-                $sql = ($count_type == 'down')
-                    ? "UPDATE `$type` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = `total_skip` + 1 WHERE `id` = ?;"
+                $sql = ($takesAPlayBack)
+                    ? "UPDATE `$type` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END" . $skip . " WHERE `id` = ?;"
                     : "UPDATE `$type` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1" . $played . " WHERE `id` = ?;";
                 Dba::write($sql, [$object_id]);
                 // update the folder the object lives in AND every ancestor folder
                 $folder_ids = self::getFolderTree($type, $object_id);
                 if ($folder_ids !== []) {
                     $idlist = implode(', ', $folder_ids);
-                    $sql    = ($count_type == 'down')
-                        ? "UPDATE `folder` SET `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = `total_skip` + 1 WHERE `id` IN ($idlist);"
+                    $sql    = ($takesAPlayBack)
+                        ? "UPDATE `folder` SET `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END" . $skip . " WHERE `id` IN ($idlist);"
                         : "UPDATE `folder` SET `total_count` = `total_count` + 1 WHERE `id` IN ($idlist);";
                     Dba::write($sql);
                 }
@@ -199,15 +213,15 @@ class Stats
             case 'album':
             case 'artist':
             case 'podcast':
-                $sql = ($count_type === 'down')
-                    ? sprintf('UPDATE `%s` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = `total_skip` + 1 WHERE `id` = ?;', $type)
+                $sql = ($takesAPlayBack)
+                    ? sprintf('UPDATE `%s` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END%s WHERE `id` = ?;', $type, $skip)
                     : sprintf('UPDATE `%s` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1%s WHERE `id` = ?;', $type, $played);
                 Dba::write($sql, [$object_id]);
                 break;
         }
 
         if (
-            $count_type === 'down'
+            $takesAPlayBack
             && in_array($type, ['song', 'podcast_episode', 'video'], true)
         ) {
             $sql = sprintf('UPDATE `%s` SET `played` = 0 WHERE `id` = ? AND `total_count` = 0 and `played` = 1;', $type);
@@ -230,7 +244,7 @@ class Stats
                 while ($row = Dba::fetch_assoc($db_results)) {
                     // reduce the counts for these objects too
                     if (in_array($row['object_type'], ['song', 'album', 'artist', 'video', 'podcast', 'podcast_episode'])) {
-                        self::count($row['object_type'], (int) $row['object_id'], 'down');
+                        self::count($row['object_type'], (int) $row['object_id'], 'remove');
                     }
                 }
 
@@ -1374,6 +1388,26 @@ class Stats
     }
 
     /**
+     * @deprecated inject dependency
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
+    }
+
+    /**
      * Collect the folder an object lives in as well as every ancestor folder above it.
      * `folder`.`path` is the comma separated chain of parent ids, so the tree is resolved without recursing.
      *
@@ -1397,6 +1431,36 @@ class Stats
         return array_values(array_unique($results));
     }
 
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
+    }
+
     private static function getUserActivityPoster(): UserActivityPosterInterface
     {
         global $dic;
@@ -1409,5 +1473,15 @@ class Stats
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getVideoRepository(): VideoRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(VideoRepositoryInterface::class);
     }
 }

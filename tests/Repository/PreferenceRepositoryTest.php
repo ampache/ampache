@@ -71,36 +71,6 @@ class PreferenceRepositoryTest extends TestCase
         static::assertSame([], $this->subject->getAllPreferences(true));
     }
 
-    public function testRepairDefaultFilterGroupDoesNothingWhenItAlreadySitsAtZero(): void
-    {
-        $this->connection->expects(static::once())
-            ->method('fetchRow')
-            ->willReturn(['id' => '0', 'name' => 'DEFAULT']);
-
-        $this->connection->expects(static::never())->method('query');
-
-        static::assertFalse($this->subject->repairDefaultFilterGroup());
-    }
-
-    public function testRepairDefaultFilterGroupReseatsItAndBumpsTheAutoIncrement(): void
-    {
-        // autoincrement starts at 1, so a re-inserted group lands off id 0 and every catalog filter stops matching
-        $this->connection->method('fetchRow')->willReturn(['id' => '3', 'name' => 'DEFAULT']);
-        $this->connection->method('fetchOne')->willReturn('7');
-
-        $this->connection->expects(static::exactly(3))
-            ->method('query')
-            ->with(
-                ...self::withConsecutive(
-                    ["INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT');"],
-                    ["UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT';"],
-                    ['ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = 8;'],
-                )
-            );
-
-        static::assertTrue($this->subject->repairDefaultFilterGroup());
-    }
-
     public function testRepairLanguagePreferencesFallsBackToEnglish(): void
     {
         $this->connection->method('fetchOne')->willReturn(false);

@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Song\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Rating;
@@ -45,6 +47,7 @@ final readonly class SongDeleter implements SongDeleterInterface
         private UserActivityRepositoryInterface $userActivityRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
+        private CatalogCounterInterface $catalogCounter,
     ) {}
 
     public function delete(Song $song, bool $parent = false): bool
@@ -63,6 +66,7 @@ final readonly class SongDeleter implements SongDeleterInterface
                     $this->userActivityRepository->collectGarbage('song', $songId);
                     $this->songRepository->collectGarbage($song);
                     $this->folderRepository->collectGarbage();
+                    $this->catalogCounter->count(CountableTableEnum::SONG);
                 }
             }
         } else {

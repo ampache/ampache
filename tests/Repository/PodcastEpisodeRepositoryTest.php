@@ -91,6 +91,16 @@ class PodcastEpisodeRepositoryTest extends TestCase
         $this->subject->deleteEpisode($episode);
     }
 
+    public function testFindIdByFileReturnsTheEpisode(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `id` FROM `podcast_episode` WHERE `file` = ?;', ['/podcast/ep.mp3'])
+            ->willReturn('666');
+
+        static::assertSame(666, $this->subject->findIdByFile('/podcast/ep.mp3'));
+    }
+
     public function testGetEpisodeCountReturnsValue(): void
     {
         $podcastId = 666;
@@ -368,6 +378,44 @@ class PodcastEpisodeRepositoryTest extends TestCase
         );
     }
 
+    public function testGetNewestIdsByCatalogAppliesTheCountAsALimit(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`catalog` = ? ORDER BY `podcast_episode`.`pubdate` DESC LIMIT 5',
+                [7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('666', false);
+
+        static::assertSame([666], $this->subject->getNewestIdsByCatalog(7, 5));
+    }
+
+    public function testGetNewestIdsByCatalogOmitsTheLimitForACountOfZero(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`catalog` = ? ORDER BY `podcast_episode`.`pubdate` DESC',
+                [7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetchColumn')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getNewestIdsByCatalog(7, 0));
+    }
+
     public function testSetFileStoresThePath(): void
     {
         $this->connection->expects(static::once())
@@ -393,6 +441,63 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->with('UPDATE `podcast_episode` SET `update_time` = ? WHERE `id` = ?;', [1234, 666]);
 
         $this->subject->setUpdateTime(666, 1234);
+    }
+
+    public function testUpdateAllCountsClearsEachTotalAgainstItsOwnCountType(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(6))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateAllCounts();
+
+        // an episode that was only ever skipped has no stream row, and must keep the skips it has
+        static::assertStringContainsString('`total_skip` = 0', $calls[1]);
+        static::assertStringNotContainsString("`count_type` = 'stream'", $calls[1]);
+        static::assertStringContainsString('`total_count` = 0', $calls[0]);
+        static::assertStringNotContainsString("`count_type` = 'skip'", $calls[0]);
+    }
+
+    public function testUpdateAllCountsRunsTheSixEpisodeSweeps(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(6))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateAllCounts();
+
+        foreach ($calls as $sql) {
+            static::assertStringStartsWith('UPDATE `podcast_episode`', $sql);
+        }
+    }
+
+    public function testUpdateFromTagsFallsBackToVbrForAnUnknownMode(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `update_time` = ?, `state` = 'completed' WHERE `id` = ?",
+                ['/podcast/ep.mp3', 1024, 60, 128, 44100, 'vbr', 2, 123456, 666]
+            );
+
+        $this->subject->updateFromTags(
+            666,
+            '/podcast/ep.mp3',
+            ['size' => 1024, 'time' => 60, 'bitrate' => 128, 'rate' => 44100, 'mode' => 'nonsense', 'channels' => 2],
+            123456
+        );
     }
 
     public function testUpdateStateUpdates(): void

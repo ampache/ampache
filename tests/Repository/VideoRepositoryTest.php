@@ -33,11 +33,13 @@ use Ampache\Repository\Model\Video;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class VideoRepositoryTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private ModelFactoryInterface&MockObject $modelFactory;
     private VideoRepository $subject;
 
@@ -76,6 +78,15 @@ class VideoRepositoryTest extends TestCase
             ->with(static::stringContains('NOT IN (SELECT `id` FROM `catalog`)'));
 
         $this->subject->collectGarbage();
+    }
+
+    public function testDeleteByCatalogRemovesTheCatalogsVideos(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('DELETE FROM `video` WHERE `catalog` = ?', [7]);
+
+        static::assertTrue($this->subject->deleteByCatalog(7));
     }
 
     public function testDeleteRecordsThenRemovesTheRow(): void
@@ -140,6 +151,73 @@ class VideoRepositoryTest extends TestCase
         static::assertSame($video, $this->subject->findById(666));
     }
 
+    public function testFindIdByFileReturnsNullWhenNoVideoHoldsIt(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `id` FROM `video` WHERE `file` = ?;', ['/media/none.mkv'])
+            ->willReturn(false);
+
+        static::assertNull($this->subject->findIdByFile('/media/none.mkv'));
+    }
+
+    public function testGetFilesByCatalogKeysTheFilesByVideoId(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id`, `file` FROM `video` WHERE `catalog` = ? AND `file` IS NOT NULL ORDER BY `id` DESC;',
+                [7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn(['id' => '3', 'file' => '/media/clip.mkv'], false);
+
+        static::assertSame([3 => '/media/clip.mkv'], $this->subject->getFilesByCatalog(7));
+    }
+
+    public function testGetIdsByCatalogReadsTheCatalogsVideos(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` WHERE `video`.`catalog` = ?',
+                [7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('666', false);
+
+        static::assertSame([666], $this->subject->getIdsByCatalog(7));
+    }
+
+    public function testGetIdsByFilePrefixBindsTheWildcard(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `video` WHERE `file` LIKE ?',
+                ['/media/%']
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetchColumn')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getIdsByFilePrefix('/media/'));
+    }
+
     public function testGetItemCountReturnsTheCount(): void
     {
         $this->connection->expects(static::once())
@@ -190,6 +268,15 @@ class VideoRepositoryTest extends TestCase
         static::assertSame(666, $this->subject->insert($params));
     }
 
+    public function testSetFileStoresThePathTheVideoIsServedFrom(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `video` SET `file` = ? WHERE `id` = ?', ['/new/clip.mkv', 3]);
+
+        $this->subject->setFile(3, '/new/clip.mkv');
+    }
+
     public function testSetPlayedBindsTheFlagAsAnInt(): void
     {
         $this->connection->expects(static::once())
@@ -226,6 +313,31 @@ class VideoRepositoryTest extends TestCase
         $this->subject->update($video, true);
     }
 
+    public function testUpdateAllCountsRunsEverySweepAndCarriesOnAfterAFailure(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(6))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+                if (count($calls) === 1) {
+                    throw new QueryFailedException('nope');
+                }
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->logger->expects(static::once())
+            ->method('warning');
+
+        $this->subject->updateAllCounts();
+
+        foreach ($calls as $sql) {
+            static::assertStringStartsWith('UPDATE `video`', $sql);
+        }
+    }
+
     public function testUpdateCountsRunsAllFourStatements(): void
     {
         $this->connection->expects(static::exactly(4))
@@ -254,11 +366,13 @@ class VideoRepositoryTest extends TestCase
         $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
         $this->configContainer = $this->createMock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
+        $this->logger          = $this->createMock(LoggerInterface::class);
 
         $this->subject = new VideoRepository(
             $this->connection,
             $this->configContainer,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->logger
         );
     }
 }

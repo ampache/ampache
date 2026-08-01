@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Database\Exception\InsertIdInvalidException;
@@ -33,7 +34,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\SongDataFieldEnum;
 use Ampache\Repository\Model\SongFieldEnum;
@@ -129,6 +129,17 @@ final readonly class SongRepository implements SongRepositoryInterface
         }
     }
 
+    /**
+     * Counts the songs of one album still held by a catalog, which decides whether the album moves with them
+     */
+    public function countByAlbumAndCatalog(int $albumId, int $catalogId): int
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(`id`) FROM `song` WHERE `album` = ? AND `catalog` = ?;',
+            [$albumId, $catalogId]
+        );
+    }
+
     public function delete(int $songId): bool
     {
         // keep details about deletions, but losing the record must not stop the delete itself
@@ -157,11 +168,81 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * Removes every songs of one catalog, for a catalog that is being deleted
+     */
+    public function deleteByCatalog(int $catalogId): bool
+    {
+        try {
+            $this->connection->query('DELETE FROM `song` WHERE `catalog` = ?', [$catalogId]);
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Removes a set of songs by id, without recording them in the `deleted_song` archive
+     *
+     * @param list<int> $songIds
+     */
+    public function deleteByIds(array $songIds): void
+    {
+        if ($songIds === []) {
+            return;
+        }
+
+        $this->connection->query(
+            'DELETE FROM `song` WHERE `id` IN (' . implode(',', array_map(intval(...), $songIds)) . ')'
+        );
+    }
+
+    /**
+     * Records a set of songs in the `deleted_song` archive and removes them
+     *
+     * @param list<int> $songIds
+     */
+    public function deleteByIdsWithArchive(array $songIds): void
+    {
+        if ($songIds === []) {
+            return;
+        }
+
+        $idList = implode(',', array_map(intval(...), $songIds));
+
+        // keep details about deletions, but losing the record must not stop the delete itself
+        try {
+            $this->connection->query(
+                'REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` IN (' . $idList . ');'
+            );
+        } catch (DatabaseException) {
+            $this->logger->warning(
+                'deleteByIdsWithArchive could not record deleted_song ' . $idList,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+        }
+
+        $this->connection->query('DELETE FROM `song` WHERE `id` IN (' . $idList . ');');
+    }
+
+    /**
      * Reads the id of the song holding this file
      */
     public function findIdByFile(string $file): ?int
     {
         $songId = $this->connection->fetchOne('SELECT `song`.`id` FROM `song` WHERE `song`.`file` = ? LIMIT 1', [$file]);
+
+        return ($songId === false)
+            ? null
+            : (int) $songId;
+    }
+
+    /**
+     * Reads the id of the song whose file matches a pattern, for a remote url that carries its own id
+     */
+    public function findIdByFilePattern(string $pattern): ?int
+    {
+        $songId = $this->connection->fetchOne('SELECT `id` FROM `song` WHERE `file` LIKE ? LIMIT 1', [$pattern]);
 
         return ($songId === false)
             ? null
@@ -254,6 +335,25 @@ final readonly class SongRepository implements SongRepositoryInterface
         return ($songId === false)
             ? null
             : (int) $songId;
+    }
+
+    /**
+     * Reads the songs whose album row has gone, which have to be re-read from their tags to be fixed
+     *
+     * @return list<int>
+     */
+    public function findIdsWithMissingAlbum(): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `song` WHERE (`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` FROM `album`)) OR `song`.`album` NOT IN (SELECT `id` FROM `album`));'
+        );
+
+        $songIds = [];
+        while ($songId = $result->fetchColumn()) {
+            $songIds[] = (int) $songId;
+        }
+
+        return $songIds;
     }
 
     /**
@@ -554,6 +654,168 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * Reads a page of the enabled songs across every catalog, or the given ones
+     *
+     * @param array<int|string>|null $catalogIds every catalog when null or empty
+     * @return list<int>
+     */
+    public function getEnabledIds(?array $catalogIds, int $size = 0, int $offset = 0, bool $catalogDisable = false): array
+    {
+        // the catalog join mirrors the stored server song count, so a total and a page agree
+        $sql = ($catalogDisable)
+            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`enabled` = '1' AND `catalog`.`enabled` = '1' "
+            : "SELECT `song`.`id` FROM `song` WHERE `song`.`enabled` = '1' ";
+        if ($catalogIds !== null && $catalogIds !== []) {
+            $sql .= sprintf('AND `song`.`catalog` IN (%s) ', implode(',', array_map(intval(...), $catalogIds)));
+        }
+
+        // the id tiebreaker keeps the order total, so a paging client can't see a row twice or skip one
+        $result = $this->connection->query(
+            $sql . 'ORDER BY `song`.`album`, `song`.`id` ' . $this->limitClause($size, $offset)
+        );
+
+        $songIds = [];
+        while ($songId = $result->fetchColumn()) {
+            $songIds[] = (int) $songId;
+        }
+
+        return $songIds;
+    }
+
+    /**
+     * Reads a page of the enabled songs of one catalog, optionally ordered by album
+     *
+     * @return list<int>
+     */
+    public function getEnabledIdsByCatalog(int $catalogId, int $size = 0, int $offset = 0, bool $byAlbum = false): array
+    {
+        $result = $this->connection->query(
+            "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled` = '1' " . (($byAlbum) ? 'ORDER BY `album` ' : '') . $this->limitClause($size, $offset),
+            [$catalogId]
+        );
+
+        $songIds = [];
+        while ($songId = $result->fetchColumn()) {
+            $songIds[] = (int) $songId;
+        }
+
+        return $songIds;
+    }
+
+    /**
+     * Reads the file and title of every song of one catalog, which a remote verify compares against
+     *
+     * @return list<array{id: int, file: string, title: string}>
+     */
+    public function getFileRowsByCatalog(int $catalogId): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?',
+            [$catalogId]
+        );
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = [
+                'id' => (int) $row['id'],
+                'file' => (string) $row['file'],
+                'title' => (string) $row['title'],
+            ];
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Reads every song file of one catalog keyed by song id, for the scanner's in-process cache
+     *
+     * @return array<int, string>
+     */
+    public function getFilesByCatalog(int $catalogId, int $limit = 0, int $offset = 0): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id`, `file` FROM `song` WHERE `catalog` = ? AND `file` IS NOT NULL ORDER BY `id` DESC' . (($limit > 0) ? sprintf(' LIMIT %d, %d', $offset, $limit) : '') . ';',
+            [$catalogId]
+        );
+
+        $files = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $files[(int) $row['id']] = (string) $row['file'];
+        }
+
+        return $files;
+    }
+
+    /**
+     * Reads the ids of every song of one catalog, enabled or not
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalog(int $catalogId): array
+    {
+        $result = $this->connection->query('SELECT `id` FROM `song` WHERE `catalog` = ?', [$catalogId]);
+
+        $songIds = [];
+        while ($songId = $result->fetchColumn()) {
+            $songIds[] = (int) $songId;
+        }
+
+        return $songIds;
+    }
+
+    /**
+     * Reads the ids of the songs of one catalog whose file carries one of the given extensions
+     *
+     * @param list<string> $extensions without the dot, as the cache preferences name them
+     * @return list<int>
+     */
+    public function getIdsByCatalogAndExtension(int $catalogId, array $extensions): array
+    {
+        if ($extensions === []) {
+            return [];
+        }
+
+        $params = [$catalogId];
+        $like   = [];
+        foreach ($extensions as $extension) {
+            $like[]   = '`file` LIKE ?';
+            $params[] = '%.' . $extension;
+        }
+
+        $result = $this->connection->query(
+            'SELECT `id` FROM `song` WHERE `catalog` = ? AND (' . implode(' OR ', $like) . ');',
+            $params
+        );
+
+        $songIds = [];
+        while ($songId = $result->fetchColumn()) {
+            $songIds[] = (int) $songId;
+        }
+
+        return $songIds;
+    }
+
+    /**
+     * Reads the songs whose file sits under a base folder path
+     *
+     * @return list<int>
+     */
+    public function getIdsByFilePrefix(string $folderPath): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `song` WHERE `file` LIKE ?',
+            [$folderPath . '%']
+        );
+
+        $songIds = [];
+        while ($songId = $result->fetchColumn()) {
+            $songIds[] = (int) $songId;
+        }
+
+        return $songIds;
+    }
+
+    /**
      * Reads the artists mapped onto a song, or the artists mapped onto an album
      *
      * @return list<int>
@@ -721,6 +983,20 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * Reads a page of the songs a verify pass walks, newest path first
+     *
+     * @return list<array{id: int, file: string, min_update_time: int}>
+     */
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array
+    {
+        $sql = ($onlyStale)
+            ? 'SELECT `song`.`id`, `song`.`file`, `song`.`update_time` AS `min_update_time` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = ? AND `song`.`update_time` < `catalog`.`last_update` ORDER BY `song`.`file` DESC LIMIT '
+            : 'SELECT `song`.`id`, `song`.`file`, `song`.`update_time` AS `min_update_time` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = ? ORDER BY `song`.`file` DESC LIMIT ';
+
+        return $this->readVerifyRows($sql . $limit . ';', $catalogId);
+    }
+
+    /**
      * Whether a song row exists
      */
     public function hasId(int $songId): bool
@@ -823,6 +1099,45 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * Rewrites the leading path of every file of one catalog, for a catalog that moved on disk
+     */
+    public function replaceFilePathForCatalog(int $catalogId, string $oldPath, string $newPath): void
+    {
+        $this->connection->query(
+            'UPDATE `song` SET `file` = REPLACE(`file`, ?, ?) WHERE `catalog` = ?',
+            [$oldPath, $newPath, $catalogId]
+        );
+    }
+
+    /**
+     * Puts the play counters of songs whose history changed back in step, which a rebuild cannot reach
+     *
+     * The rebuilds are `UPDATE `song`, (SELECT …) … WHERE `song`.`id` = …`, so a song with no
+     * `object_count` rows is absent from the derived table and keeps whatever counter it already had.
+     * The `played` flag moves in both directions here for the same reason.
+     */
+    public function resetCountsWithoutHistory(): void
+    {
+        $statements = [
+            "UPDATE `song` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'stream');",
+            "UPDATE `song` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'skip');",
+            'UPDATE `song` SET `played` = 0 WHERE `played` = 1 AND `total_count` = 0;',
+            "UPDATE `song` SET `played` = 1 WHERE `played` = 0 AND `id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'stream');",
+        ];
+
+        foreach ($statements as $sql) {
+            try {
+                $this->connection->query($sql);
+            } catch (DatabaseException) {
+                $this->logger->warning(
+                    'count maintenance failed: ' . $sql,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
+        }
+    }
+
+    /**
      * Writes a single `song_data` column
      */
     public function setDataField(int $songId, SongDataFieldEnum $field, string $value): bool
@@ -857,6 +1172,46 @@ final readonly class SongRepository implements SongRepositoryInterface
         }
 
         return true;
+    }
+
+    /**
+     * Moves a song to another catalog and to the file it now lives in
+     */
+    public function setFileAndCatalog(int $songId, string $file, int $catalogId): bool
+    {
+        try {
+            $this->connection->query(
+                'UPDATE `song` SET `file` = ?, `catalog` = ? WHERE `id` = ?;',
+                [$file, $catalogId, $songId]
+            );
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Rebuilds every song's play and skip totals from `object_count`, and the played flag that follows them
+     */
+    public function updateAllCounts(): void
+    {
+        $statements = [
+            "UPDATE `song`, (SELECT SUM(`total`) AS `total_count`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'stream') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `song`.`total_count` = `object_count`.`total_count` WHERE `song`.`total_count` != `object_count`.`total_count` AND `song`.`id` = `object_count`.`object_id`;",
+            "UPDATE `song`, (SELECT SUM(`total`) AS `total_skip`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'skip') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `song`.`total_skip` = `object_count`.`total_skip` WHERE `song`.`total_skip` != `object_count`.`total_skip` AND `song`.`id` = `object_count`.`object_id`;",
+            "UPDATE `song` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;",
+        ];
+
+        foreach ($statements as $sql) {
+            try {
+                $this->connection->query($sql);
+            } catch (DatabaseException) {
+                $this->logger->warning(
+                    'count maintenance failed: ' . $sql,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
+        }
     }
 
     /**
@@ -926,5 +1281,45 @@ final readonly class SongRepository implements SongRepositoryInterface
             'UPDATE `song` SET `update_time` = ? WHERE `id` = ?;',
             [$time, $songId]
         );
+    }
+
+    /**
+     * Builds the LIMIT clause for a paged read, where an offset with no size runs to the end of the result
+     */
+    private function limitClause(int $size, int $offset): string
+    {
+        if ($offset > 0 && $size > 0) {
+            return sprintf('LIMIT %d, %d', $offset, $size);
+        }
+
+        if ($size > 0) {
+            return 'LIMIT ' . $size;
+        }
+
+        // MySQL has no notation for the last row, so an open-ended offset takes the largest possible BIGINT
+        return ($offset > 0)
+            ? sprintf('LIMIT %d, 18446744073709551615', $offset)
+            : '';
+    }
+
+    /**
+     * Reads the id, file and update time of a verify page
+     *
+     * @return list<array{id: int, file: string, min_update_time: int}>
+     */
+    private function readVerifyRows(string $sql, int $catalogId): array
+    {
+        $result = $this->connection->query($sql, [$catalogId]);
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = [
+                'id' => (int) $row['id'],
+                'file' => (string) $row['file'],
+                'min_update_time' => (int) $row['min_update_time'],
+            ];
+        }
+
+        return $rows;
     }
 }

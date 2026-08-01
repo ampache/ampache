@@ -179,6 +179,25 @@ class LabelRepositoryTest extends TestCase
         );
     }
 
+    public function testGetIdsByCategoryAlsoTakesTheLabelsWithNoMbid(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `label` WHERE `category` = ? OR `mbid` IS NULL',
+                ['tag_generated']
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('42', false);
+
+        static::assertSame([42], $this->subject->getIdsByCategory('tag_generated'));
+    }
+
     public function testLookupReturnsNegativeValueOnEmptyName(): void
     {
         self::assertSame(

@@ -36,6 +36,11 @@ interface LiveStreamRepositoryInterface
     public function delete(Live_Stream $liveStream): void;
 
     /**
+     * Removes every live streams of one catalog, for a catalog that is being deleted
+     */
+    public function deleteByCatalog(int $catalogId): bool;
+
+    /**
      * Returns all items
      *
      * If a user is provided, the result will be limited to catalogs the user has access to

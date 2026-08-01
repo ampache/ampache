@@ -51,6 +51,13 @@ interface FolderRepositoryInterface
      */
     public function getAll(): array;
 
+    /**
+     * Reads the folders of one catalog keyed by lowercased path, for the scanner's in-process cache
+     *
+     * @return array<string, int>
+     */
+    public function getByCatalogKeyedByPathName(int $catalogId): array;
+
     public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): Folder|Podcast_Episode|Song|Video|null;
 
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;

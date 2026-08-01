@@ -29,8 +29,8 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 
 final readonly class CatalogAjaxHandler implements AjaxHandlerInterface

@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Podcast\Exception\InvalidCatalogException;
 use Ampache\Module\Podcast\Exception\InvalidFeedUrlException;
 use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\PodcastRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

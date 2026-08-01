@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Label\LabelGarbageCollectorInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -32,6 +34,7 @@ use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -53,6 +56,8 @@ class CatalogGarbageCollectorTest extends TestCase
     private ArtCleanupInterface&MockObject $artCleanup;
     private ArtistRepositoryInterface&MockObject $artistRepository;
     private BookmarkRepositoryInterface&MockObject $bookmarkRepository;
+    private CatalogCounterInterface&MockObject $catalogCounter;
+    private ConfigContainerInterface&MockObject $configContainer;
     private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LabelGarbageCollectorInterface&MockObject $labelGarbageCollector;
@@ -60,8 +65,10 @@ class CatalogGarbageCollectorTest extends TestCase
     private MetadataManagerInterface&MockObject $metadataManager;
     private PlaylistRepositoryInterface&MockObject $playlistRepository;
     private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
     private SearchRepositoryInterface&MockObject $searchRepository;
     private ShoutRepositoryInterface&MockObject $shoutRepository;
+    private SongRepositoryInterface&MockObject $songRepository;
     private CatalogGarbageCollector $subject;
     private TagRepositoryInterface&MockObject $tagRepository;
     private UserActivityRepositoryInterface&MockObject $userActivityRepository;
@@ -109,6 +116,10 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->playlistRepository       = $this->createMock(PlaylistRepositoryInterface::class);
         $this->searchRepository         = $this->createMock(SearchRepositoryInterface::class);
         $this->labelGarbageCollector    = $this->createMock(LabelGarbageCollectorInterface::class);
+        $this->songRepository           = $this->createMock(SongRepositoryInterface::class);
+        $this->podcastRepository        = $this->createMock(PodcastRepositoryInterface::class);
+        $this->catalogCounter           = $this->createMock(CatalogCounterInterface::class);
+        $this->configContainer          = $this->createMock(ConfigContainerInterface::class);
         $this->tagRepository            = $this->createMock(TagRepositoryInterface::class);
         $this->dic                      = $this->createMock(ContainerInterface::class);
 
@@ -117,8 +128,9 @@ class CatalogGarbageCollectorTest extends TestCase
             TagRepositoryInterface::class => $this->tagRepository,
             UserRepositoryInterface::class => $this->userRepository,
             RatingRepositoryInterface::class => $this->createMock(RatingRepositoryInterface::class),
-            SongRepositoryInterface::class => $this->createMock(SongRepositoryInterface::class),
+            SongRepositoryInterface::class => $this->songRepository,
             UserflagRepositoryInterface::class => $this->createMock(UserflagRepositoryInterface::class),
+            CatalogCounterInterface::class => $this->catalogCounter,
             default => $this->createMock(LoggerInterface::class),
         });
 
@@ -143,6 +155,10 @@ class CatalogGarbageCollectorTest extends TestCase
             $this->playlistRepository,
             $this->searchRepository,
             $this->labelGarbageCollector,
+            $this->songRepository,
+            $this->podcastRepository,
+            $this->catalogCounter,
+            $this->configContainer,
         );
     }
 }

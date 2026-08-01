@@ -61,16 +61,6 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
     ) {}
 
     /**
-     * Adds every catalog the default filter group is missing, so a new catalog is visible without a manual edit
-     */
-    public function addMissingCatalogsToDefaultFilterGroup(): void
-    {
-        $this->connection->query(
-            'INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) SELECT 0, `catalog`.`id`, `catalog`.`enabled` FROM `catalog` WHERE `catalog`.`id` NOT IN (SELECT `catalog_id` AS `id` FROM `catalog_filter_group_map` WHERE `group_id` = 0);'
-        );
-    }
-
-    /**
      * Adds a preference a user is missing; duplicates are ignored so the caller can be optimistic
      */
     public function addUserPreference(int $userId, int $preferenceId, string $name, int|string|null $value): void
@@ -639,28 +629,6 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
     public function rename(string $oldName, string $newName): void
     {
         $this->connection->query('UPDATE `preference` SET `name` = ? WHERE `name` = ?', [$newName, $oldName]);
-    }
-
-    /**
-     * Puts the DEFAULT catalog filter group back at id 0, where the rest of the schema assumes it lives
-     *
-     * Autoincrement starts at 1, so a group inserted normally lands in the wrong place and every catalog filter
-     * silently stops matching. Returns whether the repair had to run.
-     */
-    public function repairDefaultFilterGroup(): bool
-    {
-        $row = $this->connection->fetchRow("SELECT `id`, `name` FROM `catalog_filter_group` WHERE `name` = 'DEFAULT';");
-        if (is_array($row) && array_key_exists('id', $row) && ($row['id'] ?? '') == 0) {
-            return false;
-        }
-
-        $this->connection->query("INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT');");
-        $this->connection->query("UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT';");
-
-        $increment = (int) $this->connection->fetchOne('SELECT MAX(`id`) AS `filter_count` FROM `catalog_filter_group`;') + 1;
-        $this->connection->query(sprintf('ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = %d;', $increment));
-
-        return true;
     }
 
     /**

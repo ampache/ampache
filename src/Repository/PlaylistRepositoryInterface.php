@@ -100,6 +100,13 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
     public function findSearchNames(int $userId, bool $ownedOnly): array;
 
     /**
+     * Reads the playlists holding media of one catalog, optionally only the ones with no original-size art
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalog(int $catalogId, bool $missingArtOnly = false): array;
+
+    /**
      * Reads the entries of one media type in a playlist, in track order or at random
      *
      * @return list<array<string, mixed>>

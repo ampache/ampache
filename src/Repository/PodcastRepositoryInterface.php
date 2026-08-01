@@ -36,6 +36,11 @@ interface PodcastRepositoryInterface
     public function delete(Podcast $podcast): void;
 
     /**
+     * Removes every podcasts of one catalog, for a catalog that is being deleted
+     */
+    public function deleteByCatalog(int $catalogId): bool;
+
+    /**
      * Retrieve all podcast objects and maintain db-order
      *
      * @return Traversable<Podcast>
@@ -53,6 +58,13 @@ interface PodcastRepositoryInterface
     public function findById(int $podcastId): ?Podcast;
 
     /**
+     * Reads the podcasts of one catalog
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalog(int $catalogId): array;
+
+    /**
      * Persists the podcast-item in the database
      *
      * If the item is new, it will be created. Otherwise, an update will happen
@@ -65,4 +77,14 @@ interface PodcastRepositoryInterface
      * Returns a new podcast item
      */
     public function prototype(): Podcast;
+
+    /**
+     * Points a podcast at another catalog, for a podcast whose episodes have all moved
+     */
+    public function setCatalog(int $podcastId, int $catalogId): bool;
+
+    /**
+     * Rolls each podcast's play and skip totals up from the episodes it holds
+     */
+    public function updateAllCounts(): void;
 }

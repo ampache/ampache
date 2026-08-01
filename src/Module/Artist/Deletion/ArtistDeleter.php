@@ -29,6 +29,8 @@ use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
@@ -57,6 +59,7 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
         private LabelRepositoryInterface $labelRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
+        private CatalogCounterInterface $catalogCounter,
     ) {}
 
     /**
@@ -108,5 +111,8 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
         $this->shoutRepository->collectGarbage('artist', $artistId);
         $this->userActivityRepository->collectGarbage('artist', $artistId);
         $this->folderRepository->collectGarbage();
+
+        $this->catalogCounter->count(CountableTableEnum::ARTIST);
+        $this->catalogCounter->count(CountableTableEnum::LABEL);
     }
 }

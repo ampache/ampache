@@ -27,10 +27,10 @@ namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\UserFieldEnum;
 use PDO;
@@ -134,6 +134,17 @@ final readonly class UserRepository implements UserRepositoryInterface
 
         return (int) $this->connection->fetchOne(
             "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `album`.`catalog` IN (" . $idList . ')'
+        );
+    }
+
+    /**
+     * Counts the users assigned to a catalog filter group
+     */
+    public function countByCatalogFilterGroup(int $groupId): int
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(1) AS `count` FROM `user` WHERE `catalog_filter_group` = ?',
+            [$groupId]
         );
     }
 
@@ -780,6 +791,27 @@ final readonly class UserRepository implements UserRepositoryInterface
         return ($userId === false)
             ? 0
             : (int) $userId;
+    }
+
+    /**
+     * Puts the users of one catalog filter group back on DEFAULT, after that group is deleted
+     */
+    public function resetCatalogFilterGroup(int $groupId): void
+    {
+        $this->connection->query(
+            'UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` = ?',
+            [$groupId]
+        );
+    }
+
+    /**
+     * Puts every user pointing at a catalog filter group that no longer exists back on DEFAULT
+     */
+    public function resetMissingCatalogFilterGroups(): void
+    {
+        $this->connection->query(
+            'UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` NOT IN (SELECT `id` FROM `catalog_filter_group`);'
+        );
     }
 
     /**

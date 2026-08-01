@@ -30,10 +30,10 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Label;
 
 /** @var Label $label */

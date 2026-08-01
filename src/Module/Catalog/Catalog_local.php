@@ -32,7 +32,6 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
@@ -40,14 +39,15 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumFieldEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\SongFieldEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Error;
@@ -138,7 +138,7 @@ class Catalog_local extends Catalog
      *     path?: string,
      * } $data
      */
-    public static function create_type(string $catalog_id, array $data): bool
+    public static function create_type(int $catalog_id, array $data): bool
     {
         // Clean up the path just in case
         $path = rtrim(rtrim(trim($data['path'] ?? ''), '/'), '\\');
@@ -150,10 +150,8 @@ class Catalog_local extends Catalog
         }
 
         // Make sure this path isn't already in use by an existing catalog
-        $sql        = 'SELECT `id` FROM `catalog_local` WHERE `path` = ?';
-        $db_results = Dba::read($sql, [$path]);
-
-        if (Dba::num_rows($db_results) !== 0) {
+        $catalogRepository = self::getCatalogRepository();
+        if ($catalogRepository->subTypeValueExists(CatalogTypeEnum::LOCAL, 'path', $path)) {
             debug_event('local.catalog', 'Cannot add catalog with duplicate path ' . $path, 1);
             /* HINT: directory (file path) */
             AmpError::add('general', sprintf(T_('This path belongs to an existing local Catalog: %s'), $path));
@@ -161,10 +159,7 @@ class Catalog_local extends Catalog
             return false;
         }
 
-        $sql = 'INSERT INTO `catalog_local` (`path`, `catalog_id`) VALUES (?, ?)';
-        Dba::write($sql, [$path, $catalog_id]);
-
-        return true;
+        return $catalogRepository->insertSubType(CatalogTypeEnum::LOCAL, ['path' => $path], $catalog_id);
     }
 
     /**
@@ -177,14 +172,11 @@ class Catalog_local extends Catalog
     public static function get_from_path(string $path): ?int
     {
         // First pull a list of all of the paths for the different catalogs
-        $sql        = "SELECT `catalog_id`, `path` FROM `catalog_local`";
-        $db_results = Dba::read($sql);
-
         $catalog_paths  = [];
         $component_path = $path;
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $catalog_paths[$row['path']] = (int) $row['catalog_id'];
+        foreach (self::getCatalogRepository()->getSubTypePaths(CatalogTypeEnum::LOCAL) as $catalogId => $catalogPath) {
+            $catalog_paths[$catalogPath] = $catalogId;
         }
 
         // Break it down into its component parts and start looking for a catalog
@@ -499,8 +491,8 @@ class Catalog_local extends Catalog
 
         $parent_id = self::getFolderRepository()->lookupByPathName($parentPath, $this->getId());
 
-        // This can happen with upper/lower case and accent duplicates
-        if (self::getFolderRepository()->lookup($folderPath, $this->getId(), $parent_id) !== 0) {
+        // This can happen with upper/lower case and accent duplicates, and lookup() matches on the name
+        if (self::getFolderRepository()->lookup($folderName, $this->getId(), $parent_id) !== 0) {
             return null;
         }
 
@@ -699,82 +691,60 @@ class Catalog_local extends Catalog
             return false;
         }
 
-        $sql    = "SELECT `id` FROM `song` WHERE `catalog` = ? ";
-        $params = [$this->getId()];
-        $join   = 'AND (';
+        $extensions = [];
         if ($m4a) {
-            $sql .= $join . " `file` LIKE '%.m4a' ";
-            $join = 'OR';
+            $extensions[] = 'm4a';
         }
 
         if ($flac) {
-            $sql .= $join . " `file` LIKE '%.flac' ";
-            $join = 'OR';
+            $extensions[] = 'flac';
         }
 
         if ($mpc) {
-            $sql .= $join . " `file` LIKE '%.mpc' ";
-            $join = 'OR';
+            $extensions[] = 'mpc';
         }
 
         if ($ogg) {
-            $sql .= $join . " `file` LIKE '%.ogg' ";
-            $join = 'OR';
+            $extensions[] = 'ogg';
         }
 
         if ($oga) {
-            $sql .= $join . " `file` LIKE '%.oga' ";
-            $join = 'OR';
+            $extensions[] = 'oga';
         }
 
         if ($opus) {
-            $sql .= $join . " `file` LIKE '%.opus' ";
-            $join = 'OR';
+            $extensions[] = 'opus';
         }
 
         if ($wav) {
-            $sql .= $join . " `file` LIKE '%.wav' ";
-            $join = 'OR';
+            $extensions[] = 'wav';
         }
 
         if ($wma) {
-            $sql .= $join . " `file` LIKE '%.wma' ";
-            $join = 'OR';
+            $extensions[] = 'wma';
         }
 
         if ($aif) {
-            $sql .= $join . " `file` LIKE '%.aif' ";
-            $join = 'OR';
+            $extensions[] = 'aif';
         }
 
         if ($aiff) {
-            $sql .= $join . " `file` LIKE '%.aiff' ";
-            $join = 'OR';
+            $extensions[] = 'aiff';
         }
 
         if ($ape) {
-            $sql .= $join . " `file` LIKE '%.ape' ";
-            $join = 'OR';
+            $extensions[] = 'ape';
         }
 
         if ($shn) {
-            $sql .= $join . " `file` LIKE '%.shn' ";
+            $extensions[] = 'shn';
         }
 
         if ($mp3) {
-            $sql .= $join . " `file` LIKE '%.mp3' ";
+            $extensions[] = 'mp3';
         }
 
-        if ($sql === "SELECT `id` FROM `song` WHERE `catalog` = ? ") {
-            return false;
-        }
-
-        $sql .= ');';
-        $db_results = Dba::read($sql, $params);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
+        $results = self::getSongRepository()->getIdsByCatalogAndExtension($this->getId(), $extensions);
 
         foreach ($results as $song_id) {
             $target_file     = Catalog::get_cache_path($song_id, $this->getId(), $cache_path, $cache_target);
@@ -959,25 +929,13 @@ class Catalog_local extends Catalog
         if ($dead_count !== 0) {
             $this->count += $dead_count;
 
-            // Batch archive to deleted tables before deletion (more efficient than per-file)
-            switch ($media_type) {
-                case 'song':
-                    $sql = "REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` IN (" . implode(',', $dead) . ");";
-                    Dba::write($sql);
-                    break;
-                case 'video':
-                    $sql = "REPLACE INTO `deleted_video` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip` FROM `video` WHERE `id` IN (" . implode(',', $dead) . ");";
-                    Dba::write($sql);
-                    break;
-                case 'podcast_episode':
-                    $sql = "REPLACE INTO `deleted_podcast_episode` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast` FROM `podcast_episode` WHERE `id` IN (" . implode(',', $dead) . ");";
-                    Dba::write($sql);
-                    break;
-            }
-
-            // Batch delete from main table
-            $sql = sprintf('DELETE FROM `%s` WHERE `id` IN (', $media_type) . implode(',', $dead) . ")";
-            Dba::write($sql);
+            $dead = array_values($dead);
+            // one batched archive and delete per media type, rather than a pair of statements per file
+            match ($media_type) {
+                'video' => self::getVideoRepository()->deleteByIdsWithArchive($dead),
+                'podcast_episode' => self::getPodcastEpisodeRepository()->deleteByIdsWithArchive($dead),
+                default => self::getSongRepository()->deleteByIdsWithArchive($dead),
+            };
         }
 
         $this->getMetadataManager()->collectGarbage();
@@ -999,24 +957,11 @@ class Catalog_local extends Catalog
             debug_event('local.catalog', 'clean_file: {' . $object_id . '} File not found or empty ' . $file, 5);
             /* HINT: filename (file path) */
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
-            $params = [$object_id];
-            switch ($media_type) {
-                case 'song':
-                    $sql = "REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` = ?;";
-                    Dba::write($sql, $params);
-                    break;
-                case 'video':
-                    $sql = "REPLACE INTO `deleted_video` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip` FROM `video` WHERE `id` = ?;";
-                    Dba::write($sql, $params);
-                    break;
-                case 'podcast_episode':
-                    $sql = "REPLACE INTO `deleted_podcast_episode` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast` FROM `podcast_episode` WHERE `id` = ?;";
-                    Dba::write($sql, $params);
-                    break;
-            }
-
-            $sql = sprintf('DELETE FROM `%s` WHERE `id` = ?', $media_type);
-            Dba::write($sql, $params);
+            match ($media_type) {
+                'video' => self::getVideoRepository()->deleteByIdsWithArchive([$object_id]),
+                'podcast_episode' => self::getPodcastEpisodeRepository()->deleteByIdsWithArchive([$object_id]),
+                default => self::getSongRepository()->deleteByIdsWithArchive([$object_id]),
+            };
 
             return true;
         } elseif (!Core::is_readable(Core::conv_lc_file($file))) {
@@ -1121,12 +1066,7 @@ class Catalog_local extends Catalog
      */
     public function install(): bool
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-
-        $sql = sprintf('CREATE TABLE `catalog_local` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `path` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $engine, $charset, $collation);
-        Dba::query($sql);
+        self::getCatalogRepository()->createSubTypeTable(CatalogTypeEnum::LOCAL, ['path' => 'VARCHAR(255)']);
 
         return true;
     }
@@ -1137,10 +1077,7 @@ class Catalog_local extends Catalog
      */
     public function is_installed(): bool
     {
-        $sql        = "SHOW TABLES LIKE 'catalog_local'";
-        $db_results = Dba::query($sql);
-
-        return (Dba::num_rows($db_results) > 0);
+        return self::getCatalogRepository()->subTypeTableExists(CatalogTypeEnum::LOCAL);
     }
 
     /**
@@ -1159,13 +1096,8 @@ class Catalog_local extends Catalog
             return false;
         }
 
-        $sql    = "UPDATE `catalog_local` SET `path` = ? WHERE `catalog_id` = ?";
-        $params = [$new_path, $this->getId()];
-        Dba::write($sql, $params);
-
-        $sql    = "UPDATE `song` SET `file` = REPLACE(`file`, '" . Dba::escape($this->path) . "', '" . Dba::escape($new_path) . "') WHERE `catalog` = ?";
-        $params = [$this->getId()];
-        Dba::write($sql, $params);
+        self::getCatalogRepository()->updateSubTypePath(CatalogTypeEnum::LOCAL, $this->getId(), $new_path);
+        self::getSongRepository()->replaceFilePathForCatalog($this->getId(), $this->path, $new_path);
 
         return true;
     }
@@ -1195,38 +1127,33 @@ class Catalog_local extends Catalog
                 }
 
                 if (self::_move_file($object, $new_file, $newCatalogId, $interactor)) {
-                    if ($object->catalog !== $newCatalog->id) {
-                        // update mapping for new catalogs
-                        $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
+                    if ($object->catalog === $newCatalogId) {
+                        return true;
+                    }
 
-                        if (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== null) {
-                            if ($object instanceof Song) {
-                                $sql        = "SELECT `id` FROM `song` WHERE `album` = ? AND `catalog` = ?;";
-                                $db_results = Dba::read($sql);
-                                // you have moved all the songs so update the album catalog too
-                                if (Dba::num_rows($db_results) === 0) {
-                                    Dba::write("UPDATE `album` SET `catalog` = ? WHERE `id` = ?;", [$newCatalogId, $object->album]);
-                                }
+                    $oldCatalogId = $object->catalog;
+                    if (!self::getCatalogMapRepository()->setCatalog((string) $media_type, $object->getId(), $newCatalogId)) {
+                        return true;
+                    }
 
-                                $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
+                    if ($object instanceof Song) {
+                        // the album follows its songs, but only once the last of them has left the old catalog
+                        if (self::getSongRepository()->countByAlbumAndCatalog($object->album, $oldCatalogId) === 0) {
+                            self::getAlbumRepository()->setField($object->album, AlbumFieldEnum::CATALOG, $newCatalogId);
 
-                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->album]) !== null);
-                            }
+                            return self::getCatalogMapRepository()->setCatalog('album', $object->album, $newCatalogId);
+                        }
 
-                            if ($object instanceof Podcast_Episode) {
-                                $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND `catalog` = ?;";
-                                $db_results = Dba::read($sql);
-                                // you have moved all the episodes so update the podcast catalog too
-                                if (Dba::num_rows($db_results) === 0) {
-                                    Dba::write("UPDATE `album` SET `catalog` = ? WHERE `id` = ?;", [$newCatalogId, $object->podcast]);
-                                }
+                        return true;
+                    }
 
-                                $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
+                    if ($object instanceof Podcast_Episode) {
+                        $podcastId = $object->getPodcastId();
+                        // the podcast follows its episodes, but only once the last of them has left the old catalog
+                        if (self::getPodcastEpisodeRepository()->countByPodcastAndCatalog($podcastId, $oldCatalogId) === 0) {
+                            self::getPodcastRepository()->setCatalog($podcastId, $newCatalogId);
 
-                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->getPodcastId()]) !== null);
-                            }
-
-                            return true;
+                            return self::getCatalogMapRepository()->setCatalog('podcast', $podcastId, $newCatalogId);
                         }
                     }
 
@@ -1386,16 +1313,18 @@ class Catalog_local extends Catalog
                     return false;
                 }
 
-                if ($object->catalog !== $newCatalog->id) {
-                    // update mapping for new catalogs
-                    $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
+                $updated = match ($media_type) {
+                    'video' => self::getVideoRepository()->setFileAndCatalog($object->getId(), $new_file, $newCatalogId),
+                    'podcast_episode' => self::getPodcastEpisodeRepository()->setFileAndCatalog($object->getId(), $new_file, $newCatalogId),
+                    default => self::getSongRepository()->setFileAndCatalog($object->getId(), $new_file, $newCatalogId),
+                };
 
-                    return (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== null);
+                // the file always moves; the mapping only has to follow when the file landed in another catalog
+                if ($updated && $object->catalog !== $newCatalogId) {
+                    return self::getCatalogMapRepository()->setCatalog((string) $media_type, $object->getId(), $newCatalogId);
                 }
 
-                $sql = sprintf('UPDATE `%s` SET `file` = ?, `catalog` = ? WHERE `id` = ?;', $media_type);
-
-                return (Dba::write($sql, [$new_file, $newCatalogId, $object->getId()]) !== null);
+                return $updated;
             default:
                 return false;
         }
@@ -1524,10 +1453,14 @@ class Catalog_local extends Catalog
         $missing = [];
         $count   = $chunk * $chunk_size;
 
-        $sql        = sprintf('SELECT `id`, `file` FROM `%s` WHERE `catalog` = ? LIMIT %d, %d;', $media_type, $count, $chunk_size);
-        $db_results = Dba::read($sql, [$this->getId()]);
+        $files = match ($media_type) {
+            'video' => self::getVideoRepository()->getFilesByCatalog($this->getId(), $chunk_size, $count),
+            'podcast_episode' => self::getPodcastEpisodeRepository()->getFilesByCatalog($this->getId(), $chunk_size, $count),
+            default => self::getSongRepository()->getFilesByCatalog($this->getId(), $chunk_size, $count),
+        };
 
-        while ($results = Dba::fetch_assoc($db_results)) {
+        foreach ($files as $mediaId => $mediaFile) {
+            $results   = ['id' => $mediaId, 'file' => $mediaFile];
             $file_info = filesize(Core::conv_lc_file($results['file']));
             if ($file_info === false || $file_info < 1) {
                 $interactor?->info(
@@ -1588,14 +1521,7 @@ class Catalog_local extends Catalog
      */
     private function _get_catalog_id_from_file(string $file_path): int
     {
-        $sql        = "SELECT `catalog_id` FROM `catalog_local` WHERE ? LIKE CONCAT(`path`, '%')";
-        $db_results = Dba::read($sql, [$file_path]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int) $results['catalog_id'];
-        }
-
-        return 0;
+        return self::getCatalogRepository()->findCatalogIdByPathPrefix(CatalogTypeEnum::LOCAL, $file_path) ?? 0;
     }
 
     /**
@@ -1713,8 +1639,7 @@ class Catalog_local extends Catalog
                         debug_event(self::class, 'song path updated: ' . $fullpath, 5);
                         unlink($song->file); // delete the original on success
                         // Update the catalog
-                        $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?;";
-                        Dba::write($sql, [$fullpath, $song->id]);
+                        self::getSongRepository()->setField($song->id, SongFieldEnum::FILE, $fullpath);
                     }
                 }
             }
@@ -1876,9 +1801,7 @@ class Catalog_local extends Catalog
         }
 
         // Update the catalog
-        $sql = "UPDATE `song` SET `file` = ?, catalog = ? WHERE `id` = ?;";
-
-        return (Dba::write($sql, [$new_file, $newCatalogId, $media->id]) !== null);
+        return self::getSongRepository()->setFileAndCatalog($media->id, $new_file, $newCatalogId);
     }
 
     /**
@@ -1920,14 +1843,16 @@ class Catalog_local extends Catalog
 
             try {
                 if (is_dir($full_file)) {
-                    $lc_dir = strtolower(Core::conv_lc_file($file));
+                    // the cache is keyed on a lowercased path, but the row stores the real one; `path_name` is
+                    // read back by filemtime() and rmdir(), which are case-sensitive on every real filesystem
+                    $lc_dir = strtolower(Core::conv_lc_file($full_file));
                     if (isset($this->_filecache[$lc_dir])) {
                         // set mod time on scan
                         self::getFolderRepository()->update_utime(
                             (int) $this->_filecache[$lc_dir],
                             filemtime($full_file) ?: time()
                         );
-                    } elseif ($this->add_folder($file, $lc_dir, $path) !== null) {
+                    } elseif ($this->add_folder($file, $full_file, $path) !== null) {
                         $this->count++;
                         $interactor?->info(
                             sprintf('Added %s, closing handle', $full_file),
@@ -1958,31 +1883,22 @@ class Catalog_local extends Catalog
      */
     private function _verify_chunk(string $tableName, int $chunk, int $chunk_size, bool $verify_by_time, bool $last_update): int
     {
-        $count = $chunk * $chunk_size;
-        $sql   = match ($tableName) {
-            'album' => ($last_update)
-                ? "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND `song`.`update_time` < " . $this->last_update . (' GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT ' . $chunk_size)
-                : 'SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT ' . $chunk_size,
-            default => ($last_update)
-                ? sprintf('SELECT `%s`.`id`, `%s`.`file`, `%s`.`update_time` AS `min_update_time` FROM `%s` LEFT JOIN `catalog` ON `%s`.`catalog` = `catalog`.`id` WHERE `%s`.`catalog` = ? AND `%s`.`update_time` < `catalog`.`last_update` ORDER BY `%s`.`file` DESC LIMIT %d', $tableName, $tableName, $tableName, $tableName, $tableName, $tableName, $tableName, $tableName, $chunk_size)
-                : sprintf('SELECT `%s`.`id`, `%s`.`file`, `%s`.`update_time` AS `min_update_time` FROM `%s` LEFT JOIN `catalog` ON `%s`.`catalog` = `catalog`.`id` WHERE `%s`.`catalog` = ? ORDER BY `%s`.`file` DESC LIMIT %d', $tableName, $tableName, $tableName, $tableName, $tableName, $tableName, $tableName, $chunk_size),
+        $count      = $chunk * $chunk_size;
+        $verifyRows = match ($tableName) {
+            'album' => self::getAlbumRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update, $this->last_update),
+            'video' => self::getVideoRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update),
+            'podcast_episode' => self::getPodcastEpisodeRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update),
+            default => self::getSongRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update),
         };
 
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
         if ($tableName !== 'podcast_episode' && database_object::isCacheEnabled()) {
-            $media_ids  = [];
-            $db_results = Dba::read($sql, [$this->getId()]);
-            $className  = ObjectTypeToClassNameMapper::map($tableName);
-            while ($row = Dba::fetch_assoc($db_results, false)) {
-                $media_ids[] = $row['id'];
-            }
-
-            $className::build_cache($media_ids);
+            $className = ObjectTypeToClassNameMapper::map($tableName);
+            $className::build_cache(array_column($verifyRows, 'id'));
         }
 
-        $changed    = 0;
-        $db_results = Dba::read($sql, [$this->getId()]);
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $changed = 0;
+        foreach ($verifyRows as $row) {
             $count++;
             if (Ui::check_ticker()) {
                 $file = str_replace(['(', ')', "'"], '', $row['file']);
@@ -2030,7 +1946,7 @@ class Catalog_local extends Catalog
                     }
 
                     // check the modification time on the file to see if it's worth checking the tags.
-                    if ((int) ($row['min_update_time'] ?? 0) > $file_time) {
+                    if ($row['min_update_time'] > $file_time) {
                         //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
                         switch ($tableName) {
                             case 'song':

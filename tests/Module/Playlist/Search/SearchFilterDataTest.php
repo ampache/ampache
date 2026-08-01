@@ -25,9 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playlist\Search;
 
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * `Search::filter_data()` is the single sanitisation point for search rule input. The `user_numeric` rules
@@ -60,6 +64,17 @@ class SearchFilterDataTest extends TestCase
 
     protected function setUp(): void
     {
+        // `new User()` reaches Catalog::get_catalogs() through the `global $dic` bridge
+        $catalogRepository = $this->createMock(CatalogRepositoryInterface::class);
+        $catalogRepository->method('getIds')->willReturn([]);
+
+        $globalDic = $this->createMock(ContainerInterface::class);
+        $globalDic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            CatalogRepositoryInterface::class => $catalogRepository,
+            default => $this->createMock(LoggerInterface::class),
+        });
+        $GLOBALS['dic'] = $globalDic;
+
         // id 0 means no database read for the search; the -1 user is served from hardcoded data, so this is DB-free
         $this->subject = new Search(0, 'song', new User(-1));
     }

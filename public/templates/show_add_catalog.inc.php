@@ -26,6 +26,7 @@ declare(strict_types=1);
 // show_add_catalog.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\Catalog_beets;
 use Ampache\Module\Catalog\Catalog_beetsremote;
 use Ampache\Module\Catalog\Catalog_dropbox;
@@ -36,7 +37,6 @@ use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Catalog;
 
 $default_rename = "%T - %t";
 $default_sort   = "%a/%A";

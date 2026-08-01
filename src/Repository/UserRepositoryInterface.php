@@ -48,6 +48,11 @@ interface UserRepositoryInterface
     public function countAlbumDisksForCatalogs(array $catalogIds): int;
 
     /**
+     * Counts the users assigned to a catalog filter group
+     */
+    public function countByCatalogFilterGroup(int $groupId): int;
+
+    /**
      * Counts the rows of a table a user is allowed to see, honouring the catalog filter when one applies
      */
     public function countForUser(string $table, int $userId, bool $filtered): int;
@@ -236,6 +241,16 @@ interface UserRepositoryInterface
      * Lookup for a user id with a certain name
      */
     public function idByUsername(string $username): int;
+
+    /**
+     * Puts the users of one catalog filter group back on DEFAULT, after that group is deleted
+     */
+    public function resetCatalogFilterGroup(int $groupId): void;
+
+    /**
+     * Puts every user pointing at a catalog filter group that no longer exists back on DEFAULT
+     */
+    public function resetMissingCatalogFilterGroups(): void;
 
     /**
      * Get the current hashed user password

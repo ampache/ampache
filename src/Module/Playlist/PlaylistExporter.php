@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Playlist;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Smartlist;

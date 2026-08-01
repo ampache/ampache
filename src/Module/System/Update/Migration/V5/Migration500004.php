@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Catalog;
 use Generator;
 
 /**

@@ -37,6 +37,38 @@ final readonly class UpdateInfoRepository implements UpdateInfoRepositoryInterfa
     public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
+     * Reads every cached total, keyed by the table or metric it counts
+     *
+     * The keys are table names and metric names rather than an enum: they are open-ended and are only ever
+     * bound as values, never interpolated.
+     *
+     * @return array<string, int>
+     */
+    public function getAllCounts(): array
+    {
+        $result = $this->connection->query('SELECT `key`, `value` FROM `update_info`;');
+
+        $counts = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $counts[(string) $row['key']] = (int) $row['value'];
+        }
+
+        return $counts;
+    }
+
+    /**
+     * Reads one cached total, or 0 when nothing has stored it yet
+     */
+    public function getCountByKey(string $key): int
+    {
+        $value = $this->connection->fetchOne('SELECT `value` FROM `update_info` WHERE `key` = ?', [$key]);
+
+        return ($value === false || $value === null)
+            ? 0
+            : (int) $value;
+    }
+
+    /**
      * Reads the stored version of every installed plugin, keyed by plugin name
      *
      * @return array<string, int>
@@ -82,6 +114,14 @@ final readonly class UpdateInfoRepository implements UpdateInfoRepositoryInterfa
             'DELETE FROM `update_info` WHERE `key` = ?',
             ['Plugin_' . $pluginName]
         );
+    }
+
+    /**
+     * Stores one cached total, replacing whatever was there
+     */
+    public function setCountByKey(string $key, float|int $value): void
+    {
+        $this->connection->query('REPLACE INTO `update_info` SET `key` = ?, `value` = ?;', [$key, $value]);
     }
 
     /**

@@ -29,8 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**

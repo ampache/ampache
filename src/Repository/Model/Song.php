@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Label\LabelNameFilterInterface;
 use Ampache\Module\Metadata\MetadataEnabledInterface;

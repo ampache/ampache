@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
 use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
@@ -703,10 +704,11 @@ class Preference extends database_object
      */
     public static function fix_user_preferences(int $user_id): void
     {
-        $repository = self::getPreferenceRepository();
+        $repository       = self::getPreferenceRepository();
+        $filterRepository = self::getCatalogFilterRepository();
 
         // Check default group (autoincrement starts at 1 so force it to be 0)
-        if ($repository->repairDefaultFilterGroup()) {
+        if ($filterRepository->repairDefaultGroup()) {
             debug_event(self::class, 'fix_preferences restore DEFAULT catalog_filter_group', 2);
         }
 
@@ -714,7 +716,7 @@ class Preference extends database_object
         $repository->repairLanguagePreferences();
 
         // Make sure all current catalogs are in the default group map
-        $repository->addMissingCatalogsToDefaultFilterGroup();
+        $filterRepository->addMissingCatalogsToDefaultGroup();
 
         /* Get All Preferences for the current user */
         $results      = [];
@@ -1820,6 +1822,16 @@ class Preference extends database_object
         self::getPreferenceRepository()->updateLevel((int) $preference_id, $level);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getCatalogFilterRepository(): CatalogFilterRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogFilterRepositoryInterface::class);
     }
 
     /**

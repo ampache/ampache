@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Song\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\RatingRepositoryInterface;
@@ -42,6 +43,7 @@ use Psr\Log\LoggerInterface;
 class SongDeleterTest extends TestCase
 {
     private ArtCleanupInterface&MockObject $artCleanup;
+    private CatalogCounterInterface&MockObject $catalogCounter;
     private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LoggerInterface&MockObject $logger;
@@ -218,6 +220,8 @@ class SongDeleterTest extends TestCase
         $this->artCleanup             = $this->createMock(ArtCleanupInterface::class);
         $this->folderRepository       = $this->createMock(FolderRepositoryInterface::class);
 
+        $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
+
         $this->subject = new SongDeleter(
             $this->logger,
             $this->shoutRepository,
@@ -225,6 +229,7 @@ class SongDeleterTest extends TestCase
             $this->userActivityRepository,
             $this->artCleanup,
             $this->folderRepository,
+            $this->catalogCounter,
         );
     }
 }

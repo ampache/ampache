@@ -33,12 +33,6 @@ use Ampache\Repository\Model\User;
 interface PreferenceRepositoryInterface
 {
     /**
-     * Adds every catalog the default filter group is missing, so a new catalog is visible without a manual edit
-     */
-    public function addMissingCatalogsToDefaultFilterGroup(): void
-    ;
-
-    /**
      * Adds a preference a user is missing; duplicates are ignored so the caller can be optimistic
      */
     public function addUserPreference(int $userId, int $preferenceId, string $name, int|string|null $value): void
@@ -222,15 +216,6 @@ interface PreferenceRepositoryInterface
      * Renames a preference
      */
     public function rename(string $oldName, string $newName): void;
-
-    /**
-     * Puts the DEFAULT catalog filter group back at id 0, where the rest of the schema assumes it lives
-     *
-     * Autoincrement starts at 1, so a group inserted normally lands in the wrong place and every catalog filter
-     * silently stops matching. Returns whether the repair had to run.
-     */
-    public function repairDefaultFilterGroup(): bool
-    ;
 
     /**
      * Resets any `lang` preference that names a locale Ampache does not ship, so the UI does not fall over

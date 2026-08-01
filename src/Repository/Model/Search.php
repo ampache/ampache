@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Playlist\Search\AlbumDiskSearch;
 use Ampache\Module\Playlist\Search\AlbumSearch;
 use Ampache\Module\Playlist\Search\ArtistSearch;

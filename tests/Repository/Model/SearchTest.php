@@ -26,7 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Repository\CatalogRepositoryInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class SearchTest extends MockeryTestCase
 {
@@ -73,5 +77,19 @@ class SearchTest extends MockeryTestCase
             $column = trim(str_ireplace([' DESC', ' ASC'], '', $column));
             $this->assertStringContainsString($column, $select[1], sprintf('%s is ordered by %s but does not select it', $type, $column));
         }
+    }
+
+    protected function setUp(): void
+    {
+        // Search::prepare() builds a user, which reaches Catalog::get_catalogs() through the `global $dic` bridge
+        $catalogRepository = $this->createMock(CatalogRepositoryInterface::class);
+        $catalogRepository->method('getIds')->willReturn([]);
+
+        $globalDic = $this->createMock(ContainerInterface::class);
+        $globalDic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            CatalogRepositoryInterface::class => $catalogRepository,
+            default => $this->createMock(LoggerInterface::class),
+        });
+        $GLOBALS['dic'] = $globalDic;
     }
 }
