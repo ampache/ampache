@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -132,7 +133,7 @@ abstract class AbstractUserDeleteMethod implements MethodInterface
             return $response;
         }
 
-        Catalog::count_table('user');
+        Catalog::count_table(CountableTableEnum::USER);
 
         $response->getBody()->write(
             $output->success($apiVersion, 'successfully deleted: ' . $username)

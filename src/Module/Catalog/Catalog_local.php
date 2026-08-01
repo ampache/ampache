@@ -828,13 +828,16 @@ class Catalog_local extends Catalog
 
         $gather_type = $this->gather_types;
         $media_type  = 'song';
+        $countable   = CountableTableEnum::SONG;
         if ($gather_type == 'podcast') {
             $media_type = 'podcast_episode';
+            $countable  = CountableTableEnum::PODCAST_EPISODE;
         } elseif ($gather_type == 'video') {
             $media_type = 'video';
+            $countable  = CountableTableEnum::VIDEO;
         }
 
-        $total = self::count_table($media_type, $this->getId());
+        $total = self::count_table($countable, $this->getId());
         if ($total === 0) {
             return $missing;
         }
@@ -1357,20 +1360,24 @@ class Catalog_local extends Catalog
         if (!$verify_by_album && $gather_type == 'music') {
             Song::clear_cache();
             $media_type = 'song';
-            $total      = self::count_table($media_type, $this->getId(), $update_time, $limit);
+            $countable  = CountableTableEnum::SONG;
+            $total      = self::count_table($countable, $this->getId(), $update_time, $limit);
         } elseif ($verify_by_album && $gather_type == 'music') {
             $chunk_size = 1000;
             Album::clear_cache();
             $media_type = 'album';
-            $total      = self::count_table($media_type, $this->getId(), $update_time, $limit);
+            $countable  = CountableTableEnum::ALBUM;
+            $total      = self::count_table($countable, $this->getId(), $update_time, $limit);
         } elseif ($gather_type == 'podcast') {
             Podcast_Episode::clear_cache();
             $media_type = 'podcast_episode';
-            $total      = self::count_table($media_type, $this->getId(), $update_time, $limit);
+            $countable  = CountableTableEnum::PODCAST_EPISODE;
+            $total      = self::count_table($countable, $this->getId(), $update_time, $limit);
         } elseif ($gather_type == 'video') {
             Video::clear_cache();
             $media_type = 'video';
-            $total      = self::count_table($media_type, $this->getId(), $update_time, $limit);
+            $countable  = CountableTableEnum::VIDEO;
+            $total      = self::count_table($countable, $this->getId(), $update_time, $limit);
         } else {
             return $this->count;
         }
@@ -1378,7 +1385,7 @@ class Catalog_local extends Catalog
         // count with no limit after 0
         if ($total === 0 && ($update_time > 0 || $limit > 0)) {
             $last_update = false;
-            $total       = self::count_table($media_type, $this->getId());
+            $total       = self::count_table($countable, $this->getId());
         }
 
         $count  = 1;

@@ -552,18 +552,13 @@ abstract class Catalog extends database_object
      *
      * Count and/or Update a table count when adding/removing from the server
      */
-    public static function count_table(string $table, ?int $catalog_id = 0, ?int $update_time = 0, ?int $limit = 0): int
+    public static function count_table(CountableTableEnum $table, ?int $catalog_id = 0, ?int $update_time = 0, ?int $limit = 0): int
     {
-        $countable = CountableTableEnum::tryFrom($table);
-        if ($countable === null) {
-            return 0;
-        }
-
         $counter = self::getCatalogCounter();
 
         return ((int) $catalog_id > 0)
-            ? $counter->countForCatalog($countable, (int) $catalog_id, (int) $update_time, (int) $limit)
-            : $counter->count($countable);
+            ? $counter->countForCatalog($table, (int) $catalog_id, (int) $update_time, (int) $limit)
+            : $counter->count($table);
     }
 
     /**

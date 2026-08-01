@@ -37,6 +37,13 @@ interface UpdateInfoRepositoryInterface
     public function getAllCounts(): array;
 
     /**
+     * Reads every cached total without losing fractions, keyed by the table or metric it counts
+     *
+     * @return array<string, float>
+     */
+    public function getAllFloatCounts(): array;
+
+    /**
      * Reads one cached total, or 0 when nothing has stored it yet
      */
     public function getCountByKey(string $key): int;
@@ -64,6 +71,13 @@ interface UpdateInfoRepositoryInterface
      * Stores one cached total, replacing whatever was there
      */
     public function setCountByKey(string $key, float|int $value): void;
+
+    /**
+     * Stores several cached totals in one statement
+     *
+     * @param array<string, float|int> $counts
+     */
+    public function setCounts(array $counts): void;
 
     /**
      * Stores the version of an installed plugin

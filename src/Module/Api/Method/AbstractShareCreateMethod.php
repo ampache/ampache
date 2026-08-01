@@ -36,6 +36,7 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
@@ -185,7 +186,7 @@ abstract class AbstractShareCreateMethod implements MethodInterface
             return $response;
         }
 
-        Catalog::count_table('share');
+        Catalog::count_table(CountableTableEnum::SHARE);
 
         $response->getBody()->write(
             $output->shares($apiVersion, [$share], $user, false)

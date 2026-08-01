@@ -39,6 +39,74 @@ class CatalogCounterTest extends TestCase
     private UpdateInfoRepositoryInterface&MockObject $updateInfoRepository;
     private UserRepositoryInterface&MockObject $userRepository;
 
+    public function testAdjustDoesNothingWhenEveryDeltaIsZero(): void
+    {
+        $this->connection->expects(static::never())->method('query');
+        $this->updateInfoRepository->expects(static::never())->method('setCounts');
+        $this->updateInfoRepository->expects(static::never())->method('setCountByKey');
+
+        $this->subject->adjust(CountableTableEnum::SONG, 0);
+    }
+
+    public function testAdjustMovesTheStoredTotalsWithoutReadingAnyTable(): void
+    {
+        $this->connection->expects(static::never())->method('query');
+
+        $stored = [];
+        $this->updateInfoRepository->method('setCounts')
+            ->willReturnCallback(function (array $counts) use (&$stored): void {
+                $stored = array_merge($stored, $counts);
+            });
+        $this->updateInfoRepository->method('getAllFloatCounts')->willReturn([
+            'song' => 41.0,
+            'song_time' => 400.0,
+            'song_size' => 8.5,
+            'video' => 0.0,
+            'video_time' => 0.0,
+            'video_size' => 0.0,
+            'podcast_episode' => 0.0,
+            'podcast_episode_time' => 0.0,
+            'podcast_episode_size' => 0.0,
+        ]);
+
+        $this->subject->adjust(CountableTableEnum::SONG, -1, -200, -4.0);
+
+        static::assertSame(40, $stored['song']);
+        static::assertSame(200, $stored['song_time']);
+        static::assertSame(4.5, $stored['song_size']);
+
+        // the totals follow from the adjusted contribution, still with no table read
+        static::assertSame(40, $stored['items']);
+        static::assertSame(200, $stored['time']);
+        static::assertSame(4.5, $stored['size']);
+    }
+
+    public function testAdjustNeverDrivesATotalBelowZero(): void
+    {
+        $stored = [];
+        $this->updateInfoRepository->method('setCounts')
+            ->willReturnCallback(function (array $counts) use (&$stored): void {
+                $stored = array_merge($stored, $counts);
+            });
+        $this->updateInfoRepository->method('getAllFloatCounts')->willReturn([
+            'song' => 0.0,
+            'song_time' => 0.0,
+            'song_size' => 0.0,
+            'video' => 0.0,
+            'video_time' => 0.0,
+            'video_size' => 0.0,
+            'podcast_episode' => 0.0,
+            'podcast_episode_time' => 0.0,
+            'podcast_episode_size' => 0.0,
+        ]);
+
+        $this->subject->adjust(CountableTableEnum::SONG, -5, -100, -3.0);
+
+        static::assertSame(0, $stored['song']);
+        static::assertSame(0, $stored['song_time']);
+        static::assertSame(0.0, $stored['song_size']);
+    }
+
     public function testCountCatalogReachesPodcastEpisodesThroughTheirPodcast(): void
     {
         $this->connection->expects(static::once())
@@ -65,26 +133,6 @@ class CatalogCounterTest extends TestCase
             ['items' => 0, 'time' => 0, 'size' => 0],
             $this->subject->countCatalog(0, 'music')
         );
-    }
-
-    public function testCountCountsTheWholeTableAndStoresTheTotal(): void
-    {
-        $this->connection->method('fetchOne')->willReturn('42');
-        $this->connection->method('query')->willReturn($this->createMock(PDOStatement::class));
-
-        $stored = [];
-        $this->updateInfoRepository->method('setCountByKey')
-            ->willReturnCallback(function (string $key, float|int $value) use (&$stored): void {
-                $stored[$key] = $value;
-            });
-
-        static::assertSame(42, $this->subject->count(CountableTableEnum::SONG));
-
-        // a media table's count moves items/time/size with it, so they are stored in the same breath
-        static::assertSame(42, $stored['song']);
-        static::assertArrayHasKey('items', $stored);
-        static::assertArrayHasKey('time', $stored);
-        static::assertArrayHasKey('size', $stored);
     }
 
     public function testCountForCatalogChainsEveryNarrowingWithAnd(): void
@@ -133,6 +181,64 @@ class CatalogCounterTest extends TestCase
             ->with('label', 4);
 
         static::assertSame(4, $this->subject->count(CountableTableEnum::LABEL));
+    }
+
+    public function testCountReadsOnlyItsOwnTableAndSumsTheRestFromStorage(): void
+    {
+        $statement = $this->createMock(PDOStatement::class);
+        $statement->method('fetch')->willReturn([42, 600, 12.5]);
+
+        // exactly one aggregate: the sibling media tables must not be re-read
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willReturn($statement);
+
+        $stored = [];
+        $this->updateInfoRepository->method('setCounts')
+            ->willReturnCallback(function (array $counts) use (&$stored): void {
+                $stored = array_merge($stored, $counts);
+            });
+        $this->updateInfoRepository->method('getAllFloatCounts')->willReturn([
+            'song' => 42.0,
+            'song_time' => 600.0,
+            'song_size' => 12.5,
+            'video' => 3.0,
+            'video_time' => 100.0,
+            'video_size' => 7.5,
+            'podcast_episode' => 1.0,
+            'podcast_episode_time' => 50.0,
+            'podcast_episode_size' => 2.0,
+        ]);
+
+        static::assertSame(42, $this->subject->count(CountableTableEnum::SONG));
+
+        static::assertSame(42, $stored['song']);
+        static::assertSame(600, $stored['song_time']);
+        static::assertSame(12.5, $stored['song_size']);
+
+        // items/time/size are the three stored contributions added together
+        static::assertSame(46, $stored['items']);
+        static::assertSame(750, $stored['time']);
+        static::assertSame(22.0, $stored['size']);
+    }
+
+    public function testCountRereadsAMediaTableThatHasNoStoredContributionYet(): void
+    {
+        $statement = $this->createMock(PDOStatement::class);
+        $statement->method('fetch')->willReturn([42, 600, 12.5]);
+
+        // song for the count itself, then video and podcast_episode because neither has been stored
+        $this->connection->expects(static::exactly(3))
+            ->method('query')
+            ->willReturn($statement);
+
+        $this->updateInfoRepository->method('getAllFloatCounts')->willReturn([
+            'song' => 42.0,
+            'song_time' => 600.0,
+            'song_size' => 12.5,
+        ]);
+
+        static::assertSame(42, $this->subject->count(CountableTableEnum::SONG));
     }
 
     public function testCountVideosBindsTheCatalogId(): void

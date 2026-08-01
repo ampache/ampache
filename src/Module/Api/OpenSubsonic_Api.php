@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Database\Query\Smartlist;
@@ -758,7 +759,7 @@ class OpenSubsonic_Api
             if ($episode->isNew()) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } elseif ($episode->remove()) {
-                Catalog::count_table('podcast_episode');
+                Catalog::count_table(CountableTableEnum::PODCAST_EPISODE);
 
                 self::_responseOutput($input, __FUNCTION__);
             } else {

@@ -37,6 +37,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Repository\Model\User;
@@ -129,7 +130,7 @@ final class PodcastCreateMethod implements MethodInterface
             return $this->writeBadRequest($response, $output, $apiVersion);
         }
 
-        Catalog::count_table('podcast');
+        Catalog::count_table(CountableTableEnum::PODCAST);
 
         $response->getBody()->write(
             $output->podcasts($apiVersion, [$podcast->getId()], $user, $input['auth'], false, false)

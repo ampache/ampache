@@ -57,6 +57,23 @@ final readonly class UpdateInfoRepository implements UpdateInfoRepositoryInterfa
     }
 
     /**
+     * Reads every cached total without losing fractions, keyed by the table or metric it counts
+     *
+     * @return array<string, float>
+     */
+    public function getAllFloatCounts(): array
+    {
+        $result = $this->connection->query('SELECT `key`, `value` FROM `update_info`;');
+
+        $counts = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $counts[(string) $row['key']] = (float) $row['value'];
+        }
+
+        return $counts;
+    }
+
+    /**
      * Reads one cached total, or 0 when nothing has stored it yet
      */
     public function getCountByKey(string $key): int
@@ -122,6 +139,29 @@ final readonly class UpdateInfoRepository implements UpdateInfoRepositoryInterfa
     public function setCountByKey(string $key, float|int $value): void
     {
         $this->connection->query('REPLACE INTO `update_info` SET `key` = ?, `value` = ?;', [$key, $value]);
+    }
+
+    /**
+     * Stores several cached totals in one statement
+     *
+     * @param array<string, float|int> $counts
+     */
+    public function setCounts(array $counts): void
+    {
+        if ($counts === []) {
+            return;
+        }
+
+        $params = [];
+        foreach ($counts as $key => $value) {
+            $params[] = $key;
+            $params[] = $value;
+        }
+
+        $this->connection->query(
+            'REPLACE INTO `update_info` (`key`, `value`) VALUES ' . implode(', ', array_fill(0, count($counts), '(?, ?)')),
+            $params
+        );
     }
 
     /**

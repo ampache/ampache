@@ -33,6 +33,7 @@ use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -115,7 +116,7 @@ final class SongDeleteMethod implements MethodInterface
             return $response;
         }
 
-        Catalog::count_table('song');
+        Catalog::count_table(CountableTableEnum::SONG);
 
         $response->getBody()->write(
             $output->success($apiVersion, 'song ' . $objectId . ' deleted')

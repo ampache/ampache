@@ -30,6 +30,7 @@ use Ampache\Module\Application\Image\ShowUserAvatarAction;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Module\Statistics\Stats;
@@ -216,7 +217,7 @@ class User extends database_object
         // Populates any missing preferences, in this case all of them
         Preference::fix_user_preferences($insert_id);
 
-        Catalog::count_table('user');
+        Catalog::count_table(CountableTableEnum::USER);
 
         return $insert_id;
     }
@@ -525,7 +526,7 @@ class User extends database_object
         $userRepository->delete($this->id, (string) $this->username);
         self::remove_from_cache('user', $this->id);
 
-        Catalog::count_table('user');
+        Catalog::count_table(CountableTableEnum::USER);
         $userRepository->collectGarbage();
 
         return true;

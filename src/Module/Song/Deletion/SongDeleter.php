@@ -66,7 +66,13 @@ final readonly class SongDeleter implements SongDeleterInterface
                     $this->userActivityRepository->collectGarbage('song', $songId);
                     $this->songRepository->collectGarbage($song);
                     $this->folderRepository->collectGarbage();
-                    $this->catalogCounter->count(CountableTableEnum::SONG);
+                    // a disabled song was never in the enabled-only totals, so removing it moves nothing
+                    if ($song->enabled) {
+                        // one known row moves the totals by what it held; without those values, recount
+                        (isset($song->time, $song->size))
+                            ? $this->catalogCounter->adjust(CountableTableEnum::SONG, -1, -$song->time, -($song->size / 1024 / 1024))
+                            : $this->catalogCounter->count(CountableTableEnum::SONG);
+                    }
                 }
             }
         } else {

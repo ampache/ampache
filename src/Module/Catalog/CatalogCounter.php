@@ -69,6 +69,7 @@ final class CatalogCounter implements CatalogCounterInterface
         CountableTableEnum::VIDEO,
         CountableTableEnum::PODCAST_EPISODE,
     ];
+
     /**
      * Every key the server reports a count for, so a caller always gets the whole shape
      *
@@ -118,6 +119,11 @@ final class CatalogCounter implements CatalogCounterInterface
         'video' => 0,
     ];
 
+    private const string SIZE_SUFFIX = '_size';
+
+    // the `update_info` keys holding each media table's own contribution to `time` and `size`
+    private const string TIME_SUFFIX = '_time';
+
     /** @var array<string, int> the `update_info` rows already read this request */
     private array $countCache = [];
 
@@ -127,17 +133,52 @@ final class CatalogCounter implements CatalogCounterInterface
         private readonly UserRepositoryInterface $userRepository,
     ) {}
 
+    /**
+     * Applies a known change to a table's totals without reading anything
+     *
+     * A caller that removed or added rows it can measure knows the deltas already, so nothing is scanned.
+     * Drift is repaired by CatalogGarbageCollector::collect(), which recounts from the tables.
+     */
+    public function adjust(CountableTableEnum $table, int $items, int $time = 0, float $size = 0.0): void
+    {
+        if ($items === 0 && $time === 0 && $size === 0.0) {
+            return;
+        }
+
+        $stored = $this->updateInfoRepository->getAllFloatCounts();
+
+        if (!in_array($table, self::MEDIA_TABLES, true)) {
+            $this->setStoredCounts([$table->value => max(0, (int) ($stored[$table->value] ?? 0) + $items)]);
+
+            return;
+        }
+
+        $moved = [
+            $table->value => max(0, (int) ($stored[$table->value] ?? 0) + $items),
+            $table->value . self::TIME_SUFFIX => max(0, (int) ($stored[$table->value . self::TIME_SUFFIX] ?? 0) + $time),
+            $table->value . self::SIZE_SUFFIX => max(0.0, ($stored[$table->value . self::SIZE_SUFFIX] ?? 0.0) + $size),
+        ];
+
+        $this->setStoredCounts($moved);
+
+        // the map was read before the write, so hand the sum the values that are now stored
+        $this->sumMediaTotals(false, array_merge($stored, $moved));
+    }
+
     public function count(CountableTableEnum $table): int
     {
+        // a media table's own count comes out of the same aggregate that feeds items/time/size
+        if (in_array($table, self::MEDIA_TABLES, true)) {
+            $totals = $this->refreshMediaTable($table, false);
+            $this->sumMediaTotals(false);
+
+            return $totals['items'];
+        }
+
         $count = $this->countRows($table, 0, 0, 0);
 
         // a catalog id of 0 means the whole table, which is the only shape worth caching
         $this->setStoredCount($table->value, $count);
-
-        // items, time and size are the media tables added together, so they move whenever one of them does
-        if (in_array($table, self::MEDIA_TABLES, true)) {
-            $this->refreshMediaTotals(false);
-        }
 
         return $count;
     }
@@ -226,37 +267,18 @@ final class CatalogCounter implements CatalogCounterInterface
         return array_merge(self::SERVER_COUNTS, $stored);
     }
 
-    public function refreshMediaTotals(bool $skipDisabledCatalogs, bool $storePerTable = false): void
+    public function refreshMediaTotals(bool $skipDisabledCatalogs): void
     {
-        $items = 0;
-        $time  = 0;
-        $size  = 0;
         foreach (self::MEDIA_TABLES as $table) {
-            $sql = ($skipDisabledCatalogs)
-                ? sprintf("SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` LEFT JOIN `catalog` ON `%s`.`catalog` = `catalog`.`id` WHERE `%s`.`enabled` = '1' AND `catalog`.`enabled` = '1'", $table->value, $table->value, $table->value)
-                : sprintf("SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `%s`.`enabled` = '1'", $table->value, $table->value);
-
-            $row = $this->connection->query($sql)->fetch(PDO::FETCH_NUM);
-            if ($row === false) {
-                continue;
-            }
-
-            $items += (int) ($row[0] ?? 0);
-            $time += (int) ($row[1] ?? 0);
-            $size += $row[2] ?? 0;
-            if ($storePerTable) {
-                $this->setStoredCount($table->value, (int) ($row[0] ?? 0));
-            }
+            $this->refreshMediaTable($table, $skipDisabledCatalogs);
         }
 
-        $this->setStoredCount('items', $items);
-        $this->setStoredCount('time', $time);
-        $this->setStoredCount('size', $size);
+        $this->sumMediaTotals($skipDisabledCatalogs);
     }
 
     public function refreshServerCounts(bool $skipDisabledCatalogs): void
     {
-        $this->refreshMediaTotals($skipDisabledCatalogs, true);
+        $this->refreshMediaTotals($skipDisabledCatalogs);
 
         foreach (self::LIST_TABLES as $table) {
             $this->setStoredCount(
@@ -312,5 +334,89 @@ final class CatalogCounter implements CatalogCounterInterface
             : ') AS `table_count`;';
 
         return (int) $this->connection->fetchOne($sql, $params);
+    }
+
+    /**
+     * Reads one media table's own contribution to items, time and size, and stores it
+     *
+     * Storing each table separately is what lets a change to one of them leave the other two alone.
+     *
+     * @return array{items: int, time: int, size: float}
+     */
+    private function refreshMediaTable(CountableTableEnum $table, bool $skipDisabledCatalogs): array
+    {
+        $sql = ($skipDisabledCatalogs)
+            ? sprintf("SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` LEFT JOIN `catalog` ON `%s`.`catalog` = `catalog`.`id` WHERE `%s`.`enabled` = '1' AND `catalog`.`enabled` = '1'", $table->value, $table->value, $table->value)
+            : sprintf("SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `%s`.`enabled` = '1'", $table->value, $table->value);
+
+        $row = $this->connection->query($sql)->fetch(PDO::FETCH_NUM);
+        if ($row === false) {
+            $row = [0, 0, 0];
+        }
+
+        $totals = [
+            'items' => (int) ($row[0] ?? 0),
+            'time' => (int) ($row[1] ?? 0),
+            'size' => (float) ($row[2] ?? 0),
+        ];
+
+        $this->setStoredCounts([
+            $table->value => $totals['items'],
+            $table->value . self::TIME_SUFFIX => $totals['time'],
+            $table->value . self::SIZE_SUFFIX => $totals['size'],
+        ]);
+
+        return $totals;
+    }
+
+    /**
+     * Stores several totals in one statement, keeping the read cache in step
+     *
+     * @param array<string, float|int> $counts
+     */
+    private function setStoredCounts(array $counts): void
+    {
+        $this->updateInfoRepository->setCounts($counts);
+
+        foreach ($counts as $key => $value) {
+            $this->countCache[$key] = (int) $value;
+        }
+    }
+
+    /**
+     * Adds the stored per-table contributions together into items, time and size
+     *
+     * A table with no stored contribution yet is read once, so an install that predates those keys
+     * heals itself rather than reporting a total that is short by a whole table.
+     *
+     * @param null|array<string, float> $stored the already-read totals, when the caller has them
+     */
+    private function sumMediaTotals(bool $skipDisabledCatalogs, ?array $stored = null): void
+    {
+        $stored ??= $this->updateInfoRepository->getAllFloatCounts();
+
+        $items = 0;
+        $time  = 0;
+        $size  = 0.0;
+        foreach (self::MEDIA_TABLES as $table) {
+            if (!array_key_exists($table->value . self::TIME_SUFFIX, $stored)) {
+                $totals = $this->refreshMediaTable($table, $skipDisabledCatalogs);
+                $items += $totals['items'];
+                $time += $totals['time'];
+                $size += $totals['size'];
+
+                continue;
+            }
+
+            $items += (int) ($stored[$table->value] ?? 0);
+            $time += (int) $stored[$table->value . self::TIME_SUFFIX];
+            $size += $stored[$table->value . self::SIZE_SUFFIX] ?? 0.0;
+        }
+
+        $this->setStoredCounts([
+            'items' => $items,
+            'time' => $time,
+            'size' => $size,
+        ]);
     }
 }

@@ -32,6 +32,7 @@ use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Repository\Model\User;
@@ -92,7 +93,7 @@ final class PodcastCreate4Method
             return false;
         }
 
-        Catalog::count_table('podcast');
+        Catalog::count_table(CountableTableEnum::PODCAST);
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

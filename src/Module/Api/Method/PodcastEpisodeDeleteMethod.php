@@ -38,6 +38,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -134,7 +135,7 @@ final class PodcastEpisodeDeleteMethod implements MethodInterface
             return $response;
         }
 
-        Catalog::count_table('podcast_episode');
+        Catalog::count_table(CountableTableEnum::PODCAST_EPISODE);
 
         $response->getBody()->write(
             $output->success($apiVersion, 'podcast_episode ' . $objectId . ' deleted')

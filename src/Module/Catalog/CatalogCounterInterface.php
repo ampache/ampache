@@ -34,6 +34,11 @@ namespace Ampache\Module\Catalog;
 interface CatalogCounterInterface
 {
     /**
+     * Applies a known change to a table's totals without reading anything
+     */
+    public function adjust(CountableTableEnum $table, int $items, int $time = 0, float $size = 0.0): void;
+
+    /**
      * Counts the whole table and refreshes its cached total
      */
     public function count(CountableTableEnum $table): int;
@@ -81,12 +86,9 @@ interface CatalogCounterInterface
     public function getStoredCounts(int $userId): array;
 
     /**
-     * Recounts the media tables and stores `items`, `time` and `size`, the three totals derived from them
-     *
-     * `$storePerTable` also stores each media table's own count; a caller that has just counted one of them
-     * has already stored that.
+     * Recounts every media table and stores its own contribution, then the `items`, `time` and `size` totals
      */
-    public function refreshMediaTotals(bool $skipDisabledCatalogs, bool $storePerTable = false): void;
+    public function refreshMediaTotals(bool $skipDisabledCatalogs): void;
 
     /**
      * Recounts every media table and every list table, and stores the totals the server reports

@@ -55,6 +55,23 @@ class UpdateInfoRepositoryTest extends TestCase
         static::assertSame(['song' => 42], $this->subject->getAllCounts());
     }
 
+    public function testGetAllFloatCountsKeepsTheFraction(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `key`, `value` FROM `update_info`;')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn(['key' => 'song_size', 'value' => '988.59661198'], false);
+
+        // the integer read would round every stored megabyte contribution towards zero
+        static::assertSame(['song_size' => 988.59661198], $this->subject->getAllFloatCounts());
+    }
+
     public function testGetCountByKeyFallsBackToZero(): void
     {
         $this->connection->expects(static::once())
@@ -108,6 +125,29 @@ class UpdateInfoRepositoryTest extends TestCase
             ->with('REPLACE INTO `update_info` SET `key` = ?, `value` = ?;', ['song', 42]);
 
         $this->subject->setCountByKey('song', 42);
+    }
+
+    public function testSetCountsIssuesNoStatementForAnEmptyList(): void
+    {
+        $this->connection->expects(static::never())->method('query');
+
+        $this->subject->setCounts([]);
+    }
+
+    public function testSetCountsWritesEveryPairAsAPlaceholder(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'REPLACE INTO `update_info` (`key`, `value`) VALUES (?, ?), (?, ?), (?, ?)',
+                ['song', 86, 'song_time', 28194, 'song_size', 988.59661198]
+            );
+
+        $this->subject->setCounts([
+            'song' => 86,
+            'song_time' => 28194,
+            'song_size' => 988.59661198,
+        ]);
     }
 
     public function testSetValueInsertIfUpdateFails(): void

@@ -35,6 +35,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -132,7 +133,7 @@ final class UserCreate5Method implements MethodInterface
         if ($user_id > 0) {
             $result = $output->success($apiVersion, 'successfully created: ' . $username);
 
-            Catalog::count_table('user');
+            Catalog::count_table(CountableTableEnum::USER);
 
             return $response->withBody(
                 $this->streamFactory->createStream($result)
