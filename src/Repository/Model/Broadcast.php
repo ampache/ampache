@@ -35,7 +35,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\BroadcastRepositoryInterface;
 
-class Broadcast extends database_object implements library_item, displayable_item, container_item
+class Broadcast extends database_object implements library_item, displayable_item, container_item, ModelInterface
 {
     protected const string DB_TABLENAME = 'broadcast';
 
@@ -324,6 +324,23 @@ class Broadcast extends database_object implements library_item, displayable_ite
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    /**
+     * Persists the object
+     *
+     * An object that has not been saved yet receives the id its row was given
+     */
+    public function save(): void
+    {
+        $result = self::getBroadcastRepository()->persist($this);
+
+        if ($result !== null) {
+            $this->id = $result;
+        }
+
+        // memory_cache is on by default, so the row this object just wrote has to leave the request cache
+        self::remove_from_cache('broadcast', $this->id);
     }
 
     /**

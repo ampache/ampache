@@ -64,6 +64,13 @@ interface BroadcastRepositoryInterface
     /**
      * Writes the editable properties of an existing broadcast
      */
+    /**
+     * Writes the broadcast, inserting it when it has no id yet
+     *
+     * Returns the id a new row was given, or null when an existing one was updated.
+     */
+    public function persist(Broadcast $broadcast): ?int;
+
     public function update(Broadcast $broadcast): void;
 
     /**

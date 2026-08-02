@@ -120,6 +120,22 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     /**
      * Writes the editable properties of an existing broadcast
      */
+    /**
+     * Writes the broadcast, inserting it when it has no id yet
+     *
+     * Returns the id a new row was given, or null when an existing one was updated.
+     */
+    public function persist(Broadcast $broadcast): ?int
+    {
+        if (!$broadcast->isNew()) {
+            $this->update($broadcast);
+
+            return null;
+        }
+
+        return $this->create($broadcast->user, (string) $broadcast->name, (string) $broadcast->description);
+    }
+
     public function update(Broadcast $broadcast): void
     {
         $this->connection->query(

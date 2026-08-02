@@ -141,6 +141,26 @@ class BroadcastRepositoryTest extends TestCase
         static::assertSame([1, 2], $this->subject->getIdsByUser(42));
     }
 
+    public function testPersistInsertsABroadcastThatHasNoIdYet(): void
+    {
+        $broadcast              = new Broadcast(0);
+        $broadcast->user        = 42;
+        $broadcast->name        = 'some-name';
+        $broadcast->description = 'some-description';
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, \'1\')',
+                [42, 'some-name', 'some-description']
+            );
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(666);
+
+        static::assertSame(666, $this->subject->persist($broadcast));
+    }
+
     public function testUpdateListenersWritesTheCount(): void
     {
         $broadcast = $this->createMock(Broadcast::class);
