@@ -186,7 +186,7 @@ class Api
         Method\PreferenceEditMethod::REST_ACTION => Method\PreferenceEditMethod::class,
         Method\PlayerMethod::ACTION => Method\PlayerMethod::class,
         Method\PlayerMethod::REST_ACTION => Method\PlayerMethod::class,
-        Method\RandomMethod::ACTION => Method\RandomMethod::class,
+        Method\Api8\Random8Method::ACTION => Method\Api8\Random8Method::class,
         Method\Api8\Rate8Method::ACTION => Method\Api8\Rate8Method::class,
         Method\Api8\RecordPlay8Method::ACTION => Method\Api8\RecordPlay8Method::class,
         Method\RegisterMethod::ACTION => Method\RegisterMethod::class,

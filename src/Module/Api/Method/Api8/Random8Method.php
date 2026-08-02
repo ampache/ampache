@@ -23,12 +23,13 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method;
+namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -40,7 +41,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Picks a random song, podcast episode or video and redirects to its stream url.
  */
-final class RandomMethod implements MethodInterface
+final class Random8Method implements MethodInterface
 {
     public const string ACTION = 'random';
 
