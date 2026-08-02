@@ -25,9 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playback;
 
-use function DI\autowire;
-
-return [
-    StreamProxyInterface::class => autowire(StreamProxy::class),
-    PlaylistUrlResolverInterface::class => autowire(PlaylistUrlResolver::class),
-];
+interface PlaylistUrlResolverInterface
+{
+    /**
+     * Resolves a station url that points at an m3u or pls playlist into the stream url it names.
+     *
+     * A url that is not a playlist, or a playlist that cannot be read, is returned unchanged so playback still tries it.
+     */
+    public function resolve(string $url): string;
+}

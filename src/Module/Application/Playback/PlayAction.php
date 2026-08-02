@@ -39,6 +39,7 @@ use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Module\Playback\Democratic;
+use Ampache\Module\Playback\PlaylistUrlResolverInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\StreamProxyInterface;
@@ -81,6 +82,7 @@ final readonly class PlayAction implements ApplicationActionInterface
         private LoggerInterface $logger,
         private Stats $stats,
         private StreamProxyInterface $streamProxy,
+        private PlaylistUrlResolverInterface $playlistUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -645,8 +647,12 @@ final readonly class PlayAction implements ApplicationActionInterface
 
         if ($media instanceof Live_Stream) {
             // a station has a catalog id but no file of its own, so it never reaches the file-backed handling below
-            if (!empty($media->url) && !$this->streamProxy->proxy($media->url)) {
-                header('Location: ' . $media->url, true, 303);
+            if (!empty($media->url)) {
+                // a directory usually hands out an m3u or pls, which has to be read for the stream url it names
+                $station_url = $this->playlistUrlResolver->resolve($media->url);
+                if (!$this->streamProxy->proxy($station_url)) {
+                    header('Location: ' . $station_url, true, 303);
+                }
             }
 
             return null;
