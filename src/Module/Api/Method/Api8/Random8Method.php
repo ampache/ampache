@@ -23,12 +23,13 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method;
+namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -40,7 +41,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Picks a random song, podcast episode or video and redirects to its stream url.
  */
-final class RandomMethod implements MethodInterface
+final class Random8Method implements MethodInterface
 {
     public const string ACTION = 'random';
 
@@ -58,7 +59,11 @@ final class RandomMethod implements MethodInterface
      *
      * Picks a random song, podcast episode or video from the whole library and redirects (302) to its stream url.
      *
-     * type = (string) 'artist', 'album', 'playlist', 'podcast_episode', 'search', 'song', 'video' (default: song)
+     * type = (string) 'album', 'album_artist', 'album_disk', 'artist', 'catalog', 'favorite', 'genre', 'label', 'playlist', 'podcast_episode', 'rating', 'search', 'song', 'song_artist', 'video' (default: song)
+     * NOTE 'favorite' and 'rating' read the filter as a flag/star value rather than an object id:
+     *      favorite: 1 (or omitted) = flagged, 0 = not flagged
+     *      rating:   1-5 = that many stars or more, 0 = unrated, omitted = any rated song
+     * filter = (string) $object_id of the album, artist, playlist, search or podcast to pick from //optional
      * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb) //optional SONG ONLY
      * format = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding //optional SONG ONLY
      * offset = (integer) time offset in seconds //optional
@@ -85,7 +90,7 @@ final class RandomMethod implements MethodInterface
         int $apiVersion,
     ): ResponseInterface {
         $object_type = (string) ($input['type'] ?? 'song');
-        if (!in_array($object_type, ['artist', 'album', 'playlist', 'podcast_episode', 'search', 'song', 'video'], true)) {
+        if (!in_array($object_type, ['album', 'album_artist', 'album_disk', 'artist', 'catalog', 'favorite', 'genre', 'label', 'playlist', 'podcast_episode', 'rating', 'search', 'song', 'song_artist', 'video'], true)) {
             throw new RequestParamMissingException(
                 sprintf('Bad Request: %s', 'type')
             );
@@ -98,7 +103,7 @@ final class RandomMethod implements MethodInterface
         }
 
         $objectId = match ($object_type) {
-            'artist', 'album', 'playlist', 'search', 'song' => Random::get_single_song($object_type, $user, (int) $object_id),
+            'album', 'album_artist', 'album_disk', 'artist', 'catalog', 'favorite', 'genre', 'label', 'playlist', 'rating', 'search', 'song', 'song_artist' => Random::get_single_song($object_type, $user, ($object_id === null) ? null : (int) $object_id),
             // a filter picks a random episode from that single podcast, otherwise the whole library is used
             'podcast_episode' => (((int) $object_id) > 0)
                 ? $this->podcastEpisodeRepository->getRandomByPodcast((int) $object_id, $user->getId(), 1)[0] ?? 0
@@ -129,9 +134,10 @@ final class RandomMethod implements MethodInterface
             $params .= '&frame=' . $timeOffset;
         }
 
-        // artist, album, playlist and search all resolve to a random song from within that object
+        // every container type resolves to a random song from within it; `artist` accepts either artist credit,
+        // where `song_artist` and `album_artist` narrow it to one
         $media = match ($object_type) {
-            'artist', 'album', 'playlist', 'search', 'song' => $this->modelFactory->createSong($objectId),
+            'album', 'album_artist', 'album_disk', 'artist', 'catalog', 'favorite', 'genre', 'label', 'playlist', 'rating', 'search', 'song', 'song_artist' => $this->modelFactory->createSong($objectId),
             'podcast_episode' => $this->modelFactory->createPodcastEpisode($objectId),
             'video' => $this->modelFactory->createVideo($objectId),
         };

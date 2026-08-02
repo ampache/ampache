@@ -25,10 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
@@ -70,10 +73,11 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
 
         $walbum->load_all();
 
-        // Title for this album
+        // the prefix marks the box as an album Ampache does not hold, so it is not mistaken for one in the library
         $this->ui->showBoxTop(
             sprintf(
-                '%s&nbsp;(%d)&nbsp;-&nbsp;%s',
+                '%s:&nbsp;%s&nbsp;(%d)&nbsp;-&nbsp;%s',
+                T_('Wanted'),
                 scrub_out($walbum->name),
                 $walbum->year,
                 $walbum->get_f_parent_link()
@@ -81,44 +85,85 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
             'info-box missing'
         );
 
-        // you might not send an artist name
-        $options = [
-            'mb_albumid_group' => (string) $walbum->mbid,
-            'album' => (string) $walbum->name,
-            'keyword' => (string) $walbum->name,
-        ];
-        if (isset($artist)) {
-            $options['artist']  = $artist->get_fullname();
-            $options['keyword'] = $artist->get_fullname() . ' ' . $walbum->name;
-        }
+        // a stored cover means the providers are not asked again on every load of this page
+        $art       = $this->modelFactory->createArt($walbum->id, 'wanted');
+        $image_url = ($walbum->id !== 0 && Art::has_db($walbum->id, 'wanted'))
+            ? Art::url($walbum->id, 'wanted')
+            : null;
 
-        $art    = $this->modelFactory->createArt(0);
-        $images = $this->artCollector->collect(
-            $art,
-            $options,
-            1
-        );
-
-        $imageList = '';
-
-        if ($images !== [] && !empty($images[0]['url'])) {
-            $name = (isset($artist))
-                ? '[' . $artist->get_fullname() . '] ' . scrub_out($walbum->name)
-                : scrub_out($walbum->name);
-
-            $image = $images[0]['url'];
-
-            $imageList = sprintf(
-                '<a href="%1$s" rel="prettyPhoto"><img src="%1$s" alt="%2$s" alt="%2$s" height="128" width="128" /></a>',
-                $image,
-                $name
+        if ($image_url === null) {
+            // the artist is always part of the search; on album name alone this regularly found art from another release
+            $images = $this->artCollector->collect(
+                $art,
+                [
+                    'mb_albumid_group' => (string) $walbum->mbid,
+                    'album' => (string) $walbum->name,
+                    'artist' => $walbum->get_parent_fullname(),
+                    'keyword' => trim($walbum->get_parent_fullname() . ' ' . $walbum->name),
+                ],
+                1
             );
+
+            if ($images !== [] && !empty($images[0]['url'])) {
+                $image_url = $images[0]['url'];
+                // only a saved wanted album has an id to key the art on; a prototype keeps using the provider url
+                if ($walbum->id !== 0) {
+                    $art->insert_url($image_url);
+                    if (Art::has_db($walbum->id, 'wanted')) {
+                        $image_url = Art::url($walbum->id, 'wanted') ?? $image_url;
+                    }
+                }
+            }
         }
 
-        printf(
-            '<div class="item_art">%s</div>',
-            $imageList
-        );
+        // the same links a regular album carries, with Deezer and iTunes in place of DuckDuckGo and Wikipedia
+        $artist_name = rawurlencode($walbum->get_parent_fullname());
+        $album_name  = rawurlencode((string) $walbum->name);
+
+        // links above the art inside one floated block, the layout show_album.inc.php uses
+        print('<div class="item_right_info"><div class="external_links">');
+        if (AmpConfig::get('external_links_google')) {
+            printf('<a href="https://www.google.com/search?q=%%22%s%%22+%%22%s%%22" target="_blank">%s</a>', $artist_name, $album_name, Ui::get_icon('google', sprintf(T_('Search on %s ...'), 'Google')));
+        }
+
+        printf('<a href="https://www.deezer.com/search/%s%%20%s" target="_blank">%s</a>', $artist_name, $album_name, Ui::get_icon('deezer', sprintf(T_('Search on %s ...'), 'Deezer')));
+        printf('<a href="https://music.apple.com/search?term=%s%%20%s" target="_blank">%s</a>', $artist_name, $album_name, Ui::get_icon('itunes', sprintf(T_('Search on %s ...'), 'iTunes')));
+
+        if (AmpConfig::get('external_links_lastfm')) {
+            printf('<a href="https://www.last.fm/search?q=%%22%s%%22+%%22%s%%22&type=album" target="_blank">%s</a>', $artist_name, $album_name, Ui::get_icon('lastfm', sprintf(T_('Search on %s ...'), 'Last.fm')));
+        }
+
+        if (AmpConfig::get('external_links_bandcamp')) {
+            printf('<a href="https://bandcamp.com/search?q=%s+%s&item_type=a" target="_blank">%s</a>', $artist_name, $album_name, Ui::get_icon('bandcamp', sprintf(T_('Search on %s ...'), 'Bandcamp')));
+        }
+
+        if (AmpConfig::get('external_links_discogs')) {
+            $discogs_artist = ($walbum->get_parent_fullname() === 'Various Artists')
+                ? rawurlencode('Various')
+                : $artist_name;
+            printf('<a href="https://www.discogs.com/search/?q=%s+%s&type=master" target="_blank">%s</a>', $discogs_artist, $album_name, Ui::get_icon('discogs', sprintf(T_('Search on %s ...'), 'Discogs')));
+        }
+
+        if (AmpConfig::get('external_links_musicbrainz')) {
+            $musicbrainz = ($walbum->mbid)
+                ? 'https://musicbrainz.org/release-group/' . $walbum->mbid
+                : 'https://musicbrainz.org/search?query=%22' . $album_name . '%22&type=release';
+            printf('<a href="%s" target="_blank">%s</a>', $musicbrainz, Ui::get_icon('musicbrainz', sprintf(T_('Search on %s ...'), 'Musicbrainz')));
+        }
+
+        print('</div>');
+
+        if ($image_url !== null) {
+            printf(
+                '<div class="item_art"><a href="%1$s" rel="prettyPhoto"><img src="%1$s" alt="%2$s" height="128" width="128" /></a></div>',
+                $image_url,
+                scrub_out('[' . $walbum->get_parent_fullname() . '] ' . $walbum->name)
+            );
+        } else {
+            print('<div class="item_art missing_art"></div>');
+        }
+
+        print('</div>');
 
         printf(
             '<div id="information_actions"><h3>%1$s</h3><ul><li><div id="wanted_action_%2$d">',

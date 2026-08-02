@@ -736,6 +736,8 @@ class Art extends database_object
             InterfaceImplementationChecker::is_library_item($type)
             || $type == 'folder'
             || $type == 'user'
+            // a wanted album is not in the library, but its gathered art is stored so it is not fetched every time
+            || $type == 'wanted'
         );
     }
 
@@ -1174,15 +1176,20 @@ class Art extends database_object
         $results = self::getImageRepository()->getOriginalRow($this->object_type, $this->object_id, $this->kind);
 
         if ($results !== []) {
-            if (AmpConfig::get('album_art_store_disk')) {
-                $this->raw = (string) self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
-            } else {
-                if (empty($results['image'])) {
-                    return false;
-                }
-                $this->raw = $results['image'];
+            $raw = (AmpConfig::get('album_art_store_disk'))
+                ? (string) self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime'])
+                : '';
+
+            // insert() keeps the image in the database whenever the disk write fails, so the read has to look there too
+            if ($raw === '') {
+                $raw = (string) ($results['image'] ?? '');
             }
 
+            if ($raw === '') {
+                return false;
+            }
+
+            $this->raw      = $raw;
             $this->raw_mime = $results['mime'];
             $this->id       = (int) $results['id'];
             $this->width    = (int) $results['width'];

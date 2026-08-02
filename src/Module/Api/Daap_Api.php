@@ -35,6 +35,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
+use CurlHandle;
 
 /**
  * DAAP Class
@@ -443,18 +444,12 @@ class Daap_Api
                         CURLOPT_HEADER => false,
                         CURLOPT_RETURNTRANSFER => false,
                         CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_WRITEFUNCTION => [
-                            'Ampache\Module\Api\Daap_Api',
-                            'output_body'
-                        ],
-                        CURLOPT_HEADERFUNCTION => [
-                            'Ampache\Module\Api\Daap_Api',
-                            'output_header'
-                        ],
+                        CURLOPT_WRITEFUNCTION => self::output_body(...),
+                        CURLOPT_HEADERFUNCTION => self::output_header(...),
                         // Ignore invalid certificate
                         // Default trusted chain is crap anyway and currently no custom CA option
                         CURLOPT_SSL_VERIFYPEER => false,
-                        CURLOPT_SSL_VERIFYHOST => false,
+                        CURLOPT_SSL_VERIFYHOST => 0,
                         CURLOPT_TIMEOUT => 0
                     ]
                 );
@@ -501,22 +496,20 @@ class Daap_Api
         header("HTTP/1.0 204 Logout Successful", true, 204);
     }
 
-    /**
-     * @param resource $curl
-     */
-    public static function output_body($curl, string $data): int
+    public static function output_body(CurlHandle $curl, string $data): int
     {
+        unset($curl);
+
         echo $data;
         ob_flush();
 
         return strlen($data);
     }
 
-    /**
-     * @param resource $curl
-     */
-    public static function output_header($curl, string $header): int
+    public static function output_header(CurlHandle $curl, string $header): int
     {
+        unset($curl);
+
         $rheader = trim($header);
         $rhpart  = explode(':', $rheader);
         if (!empty($rheader) && count($rhpart) > 1) {

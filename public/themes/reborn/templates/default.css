@@ -1635,9 +1635,12 @@ div.box.box_rules {
     margin: 30px 0 30px 0;
 }
 
-#content .missing {
+#content .missing_art {
+    width: 128px;
+    height: 128px;
     background-repeat: no-repeat;
     background-position: center;
+    background-size: contain;
 }
 
 .cel_song,
