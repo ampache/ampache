@@ -92,6 +92,9 @@ class Broadcast_Server implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn): void
     {
+        $role = ($this->isBroadcaster($conn)) ? 'broadcaster' : 'listener';
+        debug_event(self::class, 'Connection closed (' . $role . '), resourceId ' . $conn->resourceId, 5);
+
         if ($this->isBroadcaster($conn)) {
             $this->unregisterBroadcast($conn);
         } else {

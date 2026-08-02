@@ -741,7 +741,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property Ratchet\\ConnectionInterface\:\:\$resourceId\.$#'
 			identifier: property.notFound
-			count: 14
+			count: 15
 			path: src/Module/Broadcast/Broadcast_Server.php
 
 		-

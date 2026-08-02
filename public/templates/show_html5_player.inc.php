@@ -688,10 +688,13 @@ if ($isVideo === false) {
                                 <a href="javascript:SwapSlideshow();"><?php echo Ui::get_material_symbol('slideshow', addslashes(T_('Slideshow'))); ?></a>
                             </div>
                         <?php } ?>
-                        <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+                        <?php
+                        $isBroadcasting = false;
+                        if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                             <div id="broadcast" class="broadcast action_button">
                                 <?php if (AmpConfig::get('broadcast_by_default')) {
-                                    $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0);
+                                    $isBroadcasting = true;
+                                    $broadcasts     = Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0);
                                     if (count($broadcasts) < 1) {
                                         $broadcast_id = Broadcast::create(addslashes(T_('My Broadcast')));
                                     } else {
@@ -722,6 +725,13 @@ if ($isVideo === false) {
                             </div>
                             <div id="vizfullbtn" class="action_button" style="visibility: hidden">
                                 <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_material_symbol('fullscreen', addslashes(T_('Visualizer full-screen'))); ?></a>
+                            </div>
+                        <?php } ?>
+                        <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+                            <div id="broadcast_listeners_wrap" class="action_button">
+                                <?php if ($isBroadcasting) {
+                                    echo Broadcast::get_listeners_html();
+                                } ?>
                             </div>
                         <?php } ?>
                     <?php } ?>
