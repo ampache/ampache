@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
@@ -44,6 +45,7 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
+        private ArtCollectorInterface $artCollector,
         private WantedRepositoryInterface $wantedRepository,
     ) {}
 
@@ -81,6 +83,28 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
             ),
             'info-box missing'
         );
+
+        // the artist is always part of the search; on album name alone this regularly found art from another release
+        $images = $this->artCollector->collect(
+            $this->modelFactory->createArt(0),
+            [
+                'mb_albumid_group' => (string) $walbum->mbid,
+                'album' => (string) $walbum->name,
+                'artist' => $walbum->get_parent_fullname(),
+                'keyword' => trim($walbum->get_parent_fullname() . ' ' . $walbum->name),
+            ],
+            1
+        );
+
+        if ($images !== [] && !empty($images[0]['url'])) {
+            printf(
+                '<div class="item_art"><a href="%1$s" rel="prettyPhoto"><img src="%1$s" alt="%2$s" height="128" width="128" /></a></div>',
+                $images[0]['url'],
+                scrub_out('[' . $walbum->get_parent_fullname() . '] ' . $walbum->name)
+            );
+        } else {
+            print('<div class="item_art missing_art"></div>');
+        }
 
         // the same links a regular album carries, with Deezer and iTunes in place of DuckDuckGo and Wikipedia
         $artist_name = rawurlencode($walbum->get_parent_fullname());

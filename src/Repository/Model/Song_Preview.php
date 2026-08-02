@@ -161,14 +161,22 @@ class Song_Preview extends database_object implements Media, displayable_item, c
      */
     public static function insert(array $results): ?int
     {
-        if ((int) $results['disk'] == 0) {
-            $results['disk'] = Album::sanitize_disk($results['disk']);
+        $disk  = (int) ($results['disk'] ?? 0);
+        $track = trim((string) ($results['track'] ?? ''));
+
+        if ($disk === 0) {
+            $disk = Album::sanitize_disk($results['disk'] ?? null);
         }
 
-        if ((int) $results['track'] == 0) {
-            $results['disk']  = Album::sanitize_disk($results['track'][0]);
-            $results['track'] = substr((string) $results['track'], 1);
+        // a vinyl track number carries its side as a letter ("B1"), so the letter names the disk and the rest the track
+        if ($track !== '' && (int) $track === 0) {
+            $disk  = Album::sanitize_disk($track[0]);
+            $track = substr($track, 1);
         }
+
+        // both columns are integers, so a side letter with no number after it ("B") has to land as 0 and not ''
+        $results['disk']  = $disk;
+        $results['track'] = (int) $track;
 
         return self::getSongPreviewRepository()->insert($results);
     }

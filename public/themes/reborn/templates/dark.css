@@ -482,7 +482,7 @@ input:invalid {
     border-color: #ff9d00;
 }
 
-#content .missing {
+#content .missing_art {
     background-image: url('../images/missing.png');
 }
 
