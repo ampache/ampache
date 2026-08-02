@@ -380,6 +380,19 @@ class Song_Preview extends database_object implements Media, displayable_item, c
     }
 
     /**
+     * stream
+     */
+    /**
+     * The provider url to stream from, resolved fresh because a signed preview url expires within minutes.
+     */
+    public function getStreamUrl(): ?string
+    {
+        $file = $this->getProviderUrl() ?? $this->file;
+
+        return (empty($file)) ? null : $file;
+    }
+
+    /**
      * getYear
      */
     public function getYear(): string
@@ -433,21 +446,6 @@ class Song_Preview extends database_object implements Media, displayable_item, c
         unset($user_id, $agent, $location, $date);
 
         return false;
-    }
-
-    /**
-     * stream
-     */
-    public function stream(): void
-    {
-        // a provider signs its preview url with a short expiry, so the stored one is a cache and not the authority
-        $file = $this->getProviderUrl() ?? $this->file;
-        if (empty($file)) {
-            return;
-        }
-
-        // the file is the provider's own url, so the client fetches the sample rather than Ampache
-        header('Location: ' . $file, true, 303);
     }
 
     public function update(array $data): ?int

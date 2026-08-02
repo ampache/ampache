@@ -153,10 +153,7 @@ class WebPlayer
             $json['media_type'] = $url_data['type'];
             // Remote-catalog media streams from another origin: play/index.php 302-redirects to the source server.
             // Cross-origin media routed through Web Audio (createMediaElementSource) is silenced by the browser, so flag it and skip the audio graph.
-            if ($media instanceof Song_Preview) {
-                // a preview is always the provider's own url, reached by a 303 from play/index.php
-                $json['remote'] = true;
-            } elseif ($media instanceof Song || $media instanceof Video || $media instanceof Podcast_Episode) {
+            if ($media instanceof Song || $media instanceof Video || $media instanceof Podcast_Episode) {
                 $mediaCatalog   = Catalog::create_from_id($media->catalog);
                 $json['remote'] = ($mediaCatalog instanceof Catalog_remote || $mediaCatalog instanceof Catalog_subsonic);
             }
