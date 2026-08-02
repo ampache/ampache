@@ -781,7 +781,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             // No catalog, must be song preview or something like that => just redirect to file
             if ($type == "song_preview") {
                 /** @var Song_Preview $media */
-                $media->stream(); // header redirect using preview plugin ($plugin->_plugin->stream_song_preview())
+                $media->stream(); // 303 to the provider url the preview plugin stored, so the client fetches the sample
             } else {
                 header('Location: ' . $media->file, true, 303);
             }

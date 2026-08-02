@@ -90,14 +90,13 @@ class AmpacheExample extends AmpachePlugin
      * get_lyrics(Song $song): ?array                                              PluginGetLyricsInterface
      * get_metadata(array $gather_types, array $media_info): array                 PluginGetMetadataInterface
      * get_photos(string $search, string $category = 'concert'): array             (no interface)
-     * get_song_preview(string $track_mbid, string $artist_name, string $title): array   PluginSongPreviewInterface
+     * get_song_preview(string $track_mbid, string $artist_name, string $title): list<SongPreviewResult>  PluginSongPreviewInterface
      * process_wanted(Wanted $wanted): bool                                        PluginProcessWantedInterface
      * save_mediaplay(Song $song): bool                                            PluginSaveMediaplayInterface
      * save_rating(Rating $rating, int $new_rating): void                          (no interface)
      * set_flag(Song $song, bool $flagged): void                                   PluginSaveMediaplayInterface
      * shortener(string $url): ?string                                             PluginShortenerInterface
      * stream_control(array $media_ids): bool                                      PluginStreamControlInterface
-     * stream_song_preview(string $file): void                                     PluginSongPreviewInterface
      */
     public function PLUGIN_FUNCTION(): void
     {
