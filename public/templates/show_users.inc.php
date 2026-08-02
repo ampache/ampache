@@ -51,6 +51,11 @@ $t_delete      = T_('Delete');
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
+<form method="get" action="<?php echo $admin_path; ?>/users.php" style="margin-bottom: 8px;">
+    <input type="hidden" name="action" value="show" />
+    <input type="text" name="search" value="<?php echo scrub_out((string) $browse->get_filter('alpha_match')); ?>" placeholder="<?php echo T_('Username, fullname or e-mail'); ?>" />
+    <input type="submit" value="<?php echo T_('Search'); ?>" />
+</form>
 <table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="user">
 <colgroup>
   <col id="col_username" />
