@@ -240,8 +240,6 @@ class Preference extends database_object
      * plugin and module preferences might not be there but they need to be kept if you're using them
      */
     public const array PLUGIN_LIST = [
-        '7digital_api_key',
-        '7digital_secret_api_key',
         'amazon_base_url',
         'amazon_developer_associate_tag',
         'amazon_developer_private_api_key',
@@ -1480,8 +1478,6 @@ class Preference extends database_object
     {
         $sql        = "UPDATE `preference` SET `preference`.`description` = ? WHERE `preference`.`name` = ? AND `preference`.`description` != ?;";
         $pref_array = [
-            '7digital_api_key' => '7digital consumer key',
-            '7digital_secret_api_key' => '7digital secret',
             'album_group' => 'Album - Group multiple disks',
             'album_release_type_sort' => 'Album - Group per release type sort',
             'album_release_type' => 'Album - Group per release type',
