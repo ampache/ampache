@@ -452,8 +452,8 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; This setting allows/disallows zip download of specific object types
 ; If empty, all supported object types can be zipped.
 ; Otherwise, only the given object list can be zipped.
-; POSSIBLE VALUES: artist, album, album_disk, playlist, search, song, tmp_playlist
-; DEFAULT: none
+; POSSIBLE VALUES: artist, album, album_disk, playlist, search, song, tmp_playlist, video
+; DEFAULT: none (every supported type)
 ;allow_zip_types = "album, album_disk"
 
 ; Art Zip Add
