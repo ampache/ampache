@@ -96,20 +96,11 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
             1
         );
 
-        if ($images !== [] && !empty($images[0]['url'])) {
-            printf(
-                '<div class="item_art"><a href="%1$s" rel="prettyPhoto"><img src="%1$s" alt="%2$s" height="128" width="128" /></a></div>',
-                $images[0]['url'],
-                scrub_out('[' . $walbum->get_parent_fullname() . '] ' . $walbum->name)
-            );
-        } else {
-            print('<div class="item_art missing_art"></div>');
-        }
-
         // the same links a regular album carries, with Deezer and iTunes in place of DuckDuckGo and Wikipedia
         $artist_name = rawurlencode($walbum->get_parent_fullname());
         $album_name  = rawurlencode((string) $walbum->name);
 
+        // links above the art inside one floated block, the layout show_album.inc.php uses
         print('<div class="item_right_info"><div class="external_links">');
         if (AmpConfig::get('external_links_google')) {
             printf('<a href="https://www.google.com/search?q=%%22%s%%22+%%22%s%%22" target="_blank">%s</a>', $artist_name, $album_name, Ui::get_icon('google', sprintf(T_('Search on %s ...'), 'Google')));
@@ -140,7 +131,19 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
             printf('<a href="%s" target="_blank">%s</a>', $musicbrainz, Ui::get_icon('musicbrainz', sprintf(T_('Search on %s ...'), 'Musicbrainz')));
         }
 
-        print('</div></div>');
+        print('</div>');
+
+        if ($images !== [] && !empty($images[0]['url'])) {
+            printf(
+                '<div class="item_art"><a href="%1$s" rel="prettyPhoto"><img src="%1$s" alt="%2$s" height="128" width="128" /></a></div>',
+                $images[0]['url'],
+                scrub_out('[' . $walbum->get_parent_fullname() . '] ' . $walbum->name)
+            );
+        } else {
+            print('<div class="item_art missing_art"></div>');
+        }
+
+        print('</div>');
 
         printf(
             '<div id="information_actions"><h3>%1$s</h3><ul><li><div id="wanted_action_%2$d">',

@@ -30,7 +30,10 @@ use Ampache\Module\Database\database_object;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\Plugin;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
+use Ampache\Plugin\PluginSongPreviewInterface;
 use Ampache\Repository\SongPreviewRepositoryInterface;
 
 class Song_Preview extends database_object implements Media, displayable_item, container_item
@@ -437,12 +440,14 @@ class Song_Preview extends database_object implements Media, displayable_item, c
      */
     public function stream(): void
     {
-        if (empty($this->file)) {
+        // a provider signs its preview url with a short expiry, so the stored one is a cache and not the authority
+        $file = $this->getProviderUrl() ?? $this->file;
+        if (empty($file)) {
             return;
         }
 
-        // the stored file is the provider's own url, so the client fetches the sample rather than Ampache
-        header('Location: ' . $this->file, true, 303);
+        // the file is the provider's own url, so the client fetches the sample rather than Ampache
+        header('Location: ' . $file, true, 303);
     }
 
     public function update(array $data): ?int
@@ -458,6 +463,34 @@ class Song_Preview extends database_object implements Media, displayable_item, c
         global $dic;
 
         return $dic->get(MissingArtistRetrieverInterface::class);
+    }
+
+    /**
+     * Asks the preview plugins for a url that is valid right now, returning null when none of them answers.
+     */
+    private function getProviderUrl(): ?string
+    {
+        $user = Core::get_global('user');
+        if (!$user instanceof User || $this->title === null) {
+            return null;
+        }
+
+        $artist_name = $this->get_parent_fullname();
+        if ($artist_name === '') {
+            return null;
+        }
+
+        foreach (Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_PROVIDER) as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->_plugin instanceof PluginSongPreviewInterface && $plugin->load($user)) {
+                $file = $plugin->_plugin->get_song_preview((string) $this->mbid, $artist_name, $this->title)[0]->file ?? null;
+                if (!empty($file)) {
+                    return $file;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
