@@ -42,6 +42,47 @@ class ShowActionTest extends MockeryTestCase
     private ?ShowAction $subject;
     private UiInterface|MockInterface|null $ui;
 
+    public function testRunAppliesSearchFilter(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $browse     = $this->mock(Browse::class);
+
+        $objects = ['some-object'];
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['search' => '  bob  ']);
+
+        $this->modelFactory->shouldReceive('createBrowse')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($browse);
+
+        $this->ui->shouldReceive('showHeader')->withNoArgs()->once();
+        $this->ui->shouldReceive('showQueryStats')->withNoArgs()->once();
+        $this->ui->shouldReceive('showFooter')->withNoArgs()->once();
+
+        $browse->shouldReceive('set_type')->with('user')->once();
+        $browse->shouldReceive('set_sort')->with('username', 'ASC')->once();
+        $browse->shouldReceive('set_filter')
+            ->with('alpha_match', 'bob')
+            ->once();
+        $browse->shouldReceive('get_objects')->withNoArgs()->once()->andReturn($objects);
+        $browse->shouldReceive('show_objects')->with($objects)->once();
+        $browse->shouldReceive('store')->withNoArgs()->once();
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
     public function testRunRendersList(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
@@ -54,6 +95,11 @@ class ShowActionTest extends MockeryTestCase
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([]);
 
         $this->modelFactory->shouldReceive('createBrowse')
             ->withNoArgs()
