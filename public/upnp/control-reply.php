@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Api\Upnp\ControlReplyApplication;
+use Ampache\Module\Api\Upnp\ControlReplyApplication;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');

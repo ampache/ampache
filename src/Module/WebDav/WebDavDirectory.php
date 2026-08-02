@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\WebDav;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Media;

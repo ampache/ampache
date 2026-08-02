@@ -1,0 +1,19 @@
+[Unit]
+Description=ampache_websocket
+After=network.target remote-fs.target nss-lookup.target
+Documentation=https://ampache.org/docs/
+
+[Service]
+PrivateTmp=true
+KillMode=mixed
+Type=simple
+User=www-data
+Group=www-data
+ExecStart=php bin/cli run:websocket -p 8100
+WorkingDirectory=/var/www/html
+ProtectSystem=yes
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

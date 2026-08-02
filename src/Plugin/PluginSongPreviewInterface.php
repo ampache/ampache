@@ -28,12 +28,9 @@ namespace Ampache\Plugin;
 interface PluginSongPreviewInterface extends AmpachePluginInterface
 {
     /**
-     * Get song preview.
+     * Every sample this provider can find for the track
+     *
+     * @return list<SongPreviewResult>
      */
     public function get_song_preview(string $track_mbid, string $artist_name, string $title): array;
-
-    /**
-     * stream_song_preview
-     */
-    public function stream_song_preview(string $file): void;
 }

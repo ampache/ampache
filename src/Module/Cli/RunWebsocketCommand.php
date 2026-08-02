@@ -28,6 +28,7 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Broadcast\WebSocketFactoryInterface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 use Override;
 
 final class RunWebsocketCommand extends Command
@@ -37,8 +38,9 @@ final class RunWebsocketCommand extends Command
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly WebSocketFactoryInterface $webSocketFactory,
+        private readonly BroadcastRepositoryInterface $broadcastRepository,
     ) {
-        parent::__construct('run:websocket', T_('Run a Websocket'));
+        parent::__construct('run:websocket', T_('Run the websocket server that listen-along broadcasting needs'));
 
         $this
             ->option('-p|--port', T_('Listening port, default 8100'), 'intval', self::DEFAULT_PORT)
@@ -61,11 +63,33 @@ final class RunWebsocketCommand extends Command
             true
         );
 
+        // the browser's Origin is the site's host, which is not always the one websocket_address names
+        $webPathHost = parse_url((string) $this->configContainer->getWebPath(), PHP_URL_HOST);
+        $allowed     = ($webPathHost !== null && $webPathHost !== false && $webPathHost !== $host)
+            ? [$webPathHost]
+            : [];
+
+        if ($allowed !== []) {
+            $this->io()->info(
+                sprintf('Also accepting connections from %s', $allowed[0]),
+                true
+            );
+        }
+
+        // no broadcast can have survived the last server, so its rows stop claiming to be live
+        $stale = $this->broadcastRepository->resetStartedState();
+        if ($stale > 0) {
+            $this->io()->info(
+                sprintf('Cleared %d broadcast(s) left running by a previous server', $stale),
+                true
+            );
+        }
+
         $app               = $this->webSocketFactory->createApp($host, $port, '0.0.0.0');
         $brserver          = $this->webSocketFactory->createBroadcastServer();
         $brserver->verbose = $verbose;
 
-        $app->route('/broadcast', $brserver);
+        $app->route('/broadcast', $brserver, $allowed);
         $app->route('/echo', $this->webSocketFactory->createEchoServer(), ['*']);
         $app->run();
     }

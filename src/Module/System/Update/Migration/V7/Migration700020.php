@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V7;
 
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Preference;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
 /**

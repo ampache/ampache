@@ -26,11 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Art\Art;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;

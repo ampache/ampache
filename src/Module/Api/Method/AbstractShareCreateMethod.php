@@ -35,18 +35,19 @@ use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -185,7 +186,7 @@ abstract class AbstractShareCreateMethod implements MethodInterface
             return $response;
         }
 
-        Catalog::count_table('share');
+        Catalog::count_table(CountableTableEnum::SHARE);
 
         $response->getBody()->write(
             $output->shares($apiVersion, [$share], $user, false)

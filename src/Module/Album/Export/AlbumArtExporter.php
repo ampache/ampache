@@ -30,8 +30,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
 use Ampache\Module\Album\Export\Writer\MetadataWriterInterface;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Repository\CollectionRepositoryInterface;
 
 /**

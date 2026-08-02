@@ -26,8 +26,8 @@ declare(strict_types=1);
 // show_export.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Catalog;
 
 /** @var array<int, Catalog> $catalogs */
 /** @var array<string, string> $exportTypes */

@@ -25,10 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -57,6 +58,20 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
         );
 
         $this->catalogCounter->count(CountableTableEnum::LIVE_STREAM);
+    }
+
+    /**
+     * Removes every live streams of one catalog, for a catalog that is being deleted
+     */
+    public function deleteByCatalog(int $catalogId): bool
+    {
+        try {
+            $this->connection->query('DELETE FROM `live_stream` WHERE `catalog` = ?', [$catalogId]);
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

@@ -30,13 +30,13 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var list<int> $object_ids */
 /** @var string $limit_threshold */
 
@@ -114,7 +114,7 @@ foreach ($object_ids as $artist_id) {
 
     $show_direct_play  = $show_direct_play_cfg;
     $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
-    if ($directplay_limit > 0) {
+    if ($directplay_limit > 0 && $is_table) {
         $show_playlist_add = ($libitem->song_count <= $directplay_limit);
         if ($show_direct_play) {
             $show_direct_play = $show_playlist_add;

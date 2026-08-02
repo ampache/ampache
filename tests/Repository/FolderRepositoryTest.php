@@ -30,10 +30,12 @@ use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class FolderRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private FolderRepository $subject;
 
     public function testCollectGarbageRunsCleanupQueries(): void
@@ -75,6 +77,28 @@ class FolderRepositoryTest extends TestCase
         static::assertSame(
             [1 => 'Music', 2 => 'Podcasts'],
             $this->subject->getAll(),
+        );
+    }
+
+    public function testGetByCatalogKeyedByPathNameLowercasesTheKey(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id`, `path_name` FROM `folder` WHERE `catalog` = ? AND `path_name` IS NOT NULL;',
+                [7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn(['id' => '4', 'path_name' => '/Music/Some Artist'], false);
+
+        static::assertSame(
+            ['/music/some artist' => 4],
+            $this->subject->getByCatalogKeyedByPathName(7)
         );
     }
 
@@ -344,6 +368,56 @@ class FolderRepositoryTest extends TestCase
         static::assertNull($this->subject->persist($folder));
     }
 
+    public function testUpdateFolderCountsGivesEveryAncestorTheTotalOfItsSubtree(): void
+    {
+        $direct = $this->createMock(PDOStatement::class);
+        $tree   = $this->createMock(PDOStatement::class);
+        $writes = [];
+
+        $this->connection->method('query')
+            ->willReturnCallback(function (string $sql, array $params = []) use ($direct, $tree, &$writes): PDOStatement {
+                if (str_contains($sql, 'FROM `folder_map` AS `smap`')) {
+                    return $direct;
+                }
+
+                if ($sql === 'SELECT `id`, `path` FROM `folder`;') {
+                    return $tree;
+                }
+
+                if (str_contains($sql, 'SET `total_count` = ?, `total_skip` = ?')) {
+                    $writes[(int) $params[2]] = [(int) $params[0], (int) $params[1]];
+                }
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        // only the two leaf folders hold media
+        $direct->method('fetch')->willReturn(
+            ['folder_id' => '4', 'total_count' => '2', 'total_skip' => '1'],
+            ['folder_id' => '5', 'total_count' => '3', 'total_skip' => '0'],
+            false
+        );
+
+        // 1 -> 2 -> 4 and 1 -> 2 -> 5, plus an empty sibling
+        $tree->method('fetch')->willReturn(
+            ['id' => '1', 'path' => ''],
+            ['id' => '2', 'path' => '1'],
+            ['id' => '3', 'path' => '1'],
+            ['id' => '4', 'path' => '1,2'],
+            ['id' => '5', 'path' => '1,2'],
+            false
+        );
+
+        $this->subject->update_folder_counts();
+
+        // Stats::count() increments every ancestor as a track plays, so the rebuild has to match that
+        static::assertSame([2, 1], $writes[4]);
+        static::assertSame([3, 0], $writes[5]);
+        static::assertSame([5, 1], $writes[2]);
+        static::assertSame([5, 1], $writes[1]);
+        static::assertArrayNotHasKey(3, $writes);
+    }
+
     public function testUpdateUtimeUsesProvidedTime(): void
     {
         $this->connection->expects(static::once())
@@ -359,7 +433,8 @@ class FolderRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
-        $this->subject = new FolderRepository($this->connection);
+        $this->subject = new FolderRepository($this->connection, $this->logger);
     }
 }

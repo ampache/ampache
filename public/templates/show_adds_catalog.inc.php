@@ -23,8 +23,8 @@
 
 // show_adds_catalog.inc.php
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Catalog;
 
 /** @var Catalog $this */
 

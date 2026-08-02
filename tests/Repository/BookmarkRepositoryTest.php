@@ -28,7 +28,9 @@ use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\User;
 use DateTime;
 use PDOStatement;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class BookmarkRepositoryTest extends TestCase
@@ -36,6 +38,7 @@ class BookmarkRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface $connection;
+    private LoggerInterface&MockObject $logger;
     private BookmarkRepository $subject;
 
     public function testCollectGarbageCollects(): void
@@ -178,9 +181,11 @@ class BookmarkRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new BookmarkRepository(
-            $this->connection
+            $this->connection,
+            $this->logger,
         );
     }
 }

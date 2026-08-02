@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Catalog;
 
 /**
  * Add `song_artist` and `album_artist` maps to catalog_map

@@ -26,13 +26,13 @@ declare(strict_types=1);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Art;
+use Ampache\Module\System\Plugin\Plugin;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
 use MusicBrainz\MusicBrainz;

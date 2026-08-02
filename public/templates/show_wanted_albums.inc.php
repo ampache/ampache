@@ -26,8 +26,8 @@ declare(strict_types=1);
 // show_wanted_albums.inc.php
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\WantedRepositoryInterface;
 
 global $dic;

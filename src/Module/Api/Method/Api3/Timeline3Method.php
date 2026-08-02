@@ -27,7 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Repository\Model\Preference;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 

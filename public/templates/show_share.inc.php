@@ -26,9 +26,9 @@ declare(strict_types=1);
 // show_share.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 

@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogLoaderInterface;
 use Ampache\Module\Catalog\Exception\CatalogLoadingException;
 use Ampache\Module\Podcast\Exception\PodcastFolderException;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;

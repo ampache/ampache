@@ -25,9 +25,12 @@ namespace Ampache\Module\User\PrivateMessage;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PreferenceRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class PrivateMessageCreatorTest extends TestCase
 {
@@ -70,6 +73,15 @@ class PrivateMessageCreatorTest extends TestCase
 
     protected function setUp(): void
     {
+        // `Preference` reads through the `global $dic` bridge
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            PreferenceRepositoryInterface::class => $this->createMock(PreferenceRepositoryInterface::class),
+            default => $this->createMock(LoggerInterface::class),
+        });
+
+        $GLOBALS['dic'] = $dic;
+
         $this->pmRepository    = $this->createMock(PrivateMessageRepositoryInterface::class);
         $this->utilityFactory  = $this->createMock(UtilityFactoryInterface::class);
         $this->configContainer = $this->createMock(ConfigContainerInterface::class);

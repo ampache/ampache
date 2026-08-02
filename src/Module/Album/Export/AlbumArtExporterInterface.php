@@ -27,7 +27,7 @@ namespace Ampache\Module\Album\Export;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Album\Export\Writer\MetadataWriterInterface;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
 
 interface AlbumArtExporterInterface
 {

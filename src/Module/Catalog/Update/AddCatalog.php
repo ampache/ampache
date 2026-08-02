@@ -28,7 +28,7 @@ namespace Ampache\Module\Catalog\Update;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
 
 final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInterface
 {

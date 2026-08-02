@@ -28,10 +28,10 @@ namespace Ampache\Module\Application\Admin\Catalog;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

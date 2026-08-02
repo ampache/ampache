@@ -32,9 +32,9 @@ use PDO;
 /**
  * @template TModel as ModelInterface
  */
-abstract class BaseRepository
+abstract readonly class BaseRepository
 {
-    protected DatabaseConnectionInterface $connection;
+    public function __construct(protected DatabaseConnectionInterface $connection) {}
 
     /**
      * This function deletes the items entry

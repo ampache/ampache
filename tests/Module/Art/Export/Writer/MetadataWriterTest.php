@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Art\Export\Writer;
 
-use Ampache\Repository\Model\Art;
+use Ampache\Module\Art\Art;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 

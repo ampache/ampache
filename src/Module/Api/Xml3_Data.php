@@ -25,21 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Art\Art;
+use Ampache\Module\Playback\Democratic;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\User\Activity\Useractivity;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;
 use Traversable;

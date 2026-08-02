@@ -26,8 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
+use Ampache\Repository\BookmarkRepositoryInterface;
 
 /**
  * This manage bookmark on playable items
@@ -73,14 +74,7 @@ class Bookmark extends database_object
                 return;
             }
 
-            $sql        = "SELECT * FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?";
-            $db_results = Dba::read($sql, [$object_type, $object_id, $user_id]);
-
-            if (!$db_results) {
-                return;
-            }
-
-            $info = Dba::fetch_assoc($db_results);
+            $info = self::getBookmarkRepository()->getRowByObject($object_type, $object_id, $user_id);
         }
 
         $this->comment       = $info['comment'] ?? null;
@@ -104,17 +98,15 @@ class Bookmark extends database_object
      */
     public static function create(array $data, int $userId, int $updateDate): void
     {
-        $comment = scrub_in((string) $data['comment']);
-        if (AmpConfig::get('bookmark_latest', false)) {
-            // delete duplicates first
-            $sql = "DELETE FROM `bookmark` WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?;";
-            Dba::write($sql, [$userId, $comment, $data['object_type'], $data['object_id']]);
-        }
-
-        //insert the new bookmark
-        $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        Dba::write($sql, [$userId, $data['position'], $comment, $data['object_type'], $data['object_id'], $updateDate, $updateDate]);
+        self::getBookmarkRepository()->create(
+            $userId,
+            (int) $data['position'],
+            (string) scrub_in((string) $data['comment']),
+            $data['object_type'],
+            (int) $data['object_id'],
+            $updateDate,
+            (bool) AmpConfig::get('bookmark_latest', false)
+        );
     }
 
     /**
@@ -126,9 +118,12 @@ class Bookmark extends database_object
      */
     public static function edit(int $bookmarkId, array $data, int $updateDate): void
     {
-        $sql = "UPDATE `bookmark` SET `position` = ?, `comment` = ?, `update_date` = ? WHERE `id` = ?";
-
-        Dba::write($sql, [$data['position'], scrub_in((string) $data['comment']), $updateDate, $bookmarkId]);
+        self::getBookmarkRepository()->updateWithComment(
+            $bookmarkId,
+            (int) $data['position'],
+            (string) scrub_in((string) $data['comment']),
+            $updateDate
+        );
     }
 
     /**
@@ -144,22 +139,28 @@ class Bookmark extends database_object
      */
     public static function getBookmarks(array $data): array
     {
-        $bookmarks = [];
+        $repository = self::getBookmarkRepository();
         if ($data['object_type'] !== 'bookmark') {
-            $comment_sql = (empty($data['comment'])) ? "" : "AND `comment` = '" . scrub_in($data['comment']) . "'";
-            $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql . ' ORDER BY `update_date` DESC;';
-            $db_results  = Dba::read($sql, [$data['user'], $data['object_type'], $data['object_id']]);
-        } else {
-            // bookmarks are per user
-            $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `id` = ?;";
-            $db_results = Dba::read($sql, [$data['user'], $data['object_id']]);
+            return $repository->findIdsByObject(
+                (int) $data['user'],
+                $data['object_type'],
+                (int) $data['object_id'],
+                (empty($data['comment'])) ? null : (string) scrub_in($data['comment'])
+            );
         }
 
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $bookmarks[] = (int) $results['id'];
-        }
+        // bookmarks are per user
+        return $repository->findIdsByBookmarkId((int) $data['user'], (int) $data['object_id']);
+    }
 
-        return $bookmarks;
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
     }
 
     public function getId(): int

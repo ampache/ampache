@@ -62,12 +62,26 @@ interface in `src/Plugin`; implement it so the call sites can type check the plu
 | `get_lyrics(Song $song): ?array` | `PluginGetLyricsInterface` |
 | `get_metadata(array $gather_types, array $media_info): array` | `PluginGetMetadataInterface` |
 | `get_photos(string $search, string $category = 'concert'): array` | none |
-| `get_song_preview(string $track_mbid, string $artist_name, string $title): array` | `PluginSongPreviewInterface` |
+| `get_song_preview(string $track_mbid, string $artist_name, string $title): list<SongPreviewResult>` | `PluginSongPreviewInterface` |
 | `process_wanted(Wanted $wanted): bool` | `PluginProcessWantedInterface` |
 | `save_mediaplay(Song $song): bool` | `PluginSaveMediaplayInterface` |
 | `save_rating(Rating $rating, int $new_rating): void` | none |
 | `set_flag(Song $song, bool $flagged): void` | `PluginSaveMediaplayInterface` |
 | `shortener(string $url): ?string` | `PluginShortenerInterface` |
 | `stream_control(array $media_ids): bool` | `PluginStreamControlInterface` |
-| `stream_song_preview(string $file): void` | `PluginSongPreviewInterface` |
+
+## Song preview providers
+
+A preview provider finds a short sample for a track on the wanted list. `AmpacheItunes` and
+`AmpacheDeezer` are the bundled examples; copy either one to add another.
+
+* No provider indexes MusicBrainz ids, so the track is looked up by artist and title text and the
+  mbid is only used for logging.
+* Return every candidate as a `SongPreviewResult` (`file`, `title`, `artist`) and hand the list to
+  `SongPreviewResult::rank()`, which drops anything that isn't close enough to what was asked for
+  and sorts the rest best match first. The caller takes the first entry, so a bad match is worse
+  than no result at all.
+* `file` is the provider's own url. Ampache stores it and `Song_Preview::stream()` answers with a
+  `303` to it, so the client fetches the sample directly and no preview traffic — or provider
+  credential — passes through Ampache. A plugin never streams the audio itself.
 

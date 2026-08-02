@@ -26,12 +26,15 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Repository\ImageRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class ShoutRendererTest extends TestCase
 {
@@ -117,6 +120,15 @@ class ShoutRendererTest extends TestCase
 
     protected function setUp(): void
     {
+        // `Art` reads the image table through the `global $dic` bridge
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            ImageRepositoryInterface::class => $this->createMock(ImageRepositoryInterface::class),
+            default => $this->createMock(LoggerInterface::class),
+        });
+
+        $GLOBALS['dic'] = $dic;
+
         $this->privilegeChecker  = $this->createMock(PrivilegeCheckerInterface::class);
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
         $this->shoutObjectLoader = $this->createMock(ShoutObjectLoaderInterface::class);

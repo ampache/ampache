@@ -32,15 +32,15 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Database\Query\Random;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Random;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 use Psr\Http\Message\ResponseInterface;
 
 /**

@@ -27,8 +27,8 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Override;
 

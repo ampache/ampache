@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
 
 interface PodcastCreatorInterface

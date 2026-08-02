@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Folder\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Folder;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 

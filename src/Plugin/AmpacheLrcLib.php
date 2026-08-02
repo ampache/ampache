@@ -29,7 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Preference;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Collator;

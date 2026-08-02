@@ -29,7 +29,7 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 

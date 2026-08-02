@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Database\BaseModel;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
@@ -32,16 +33,13 @@ use Ampache\Repository\MetadataRepositoryInterface;
 /**
  * Represents metadata linked to library-items
  */
-class Metadata
+class Metadata extends BaseModel
 {
     /** @var string Tag Data */
     private string $data = '';
 
     /** @var int Id of the linked MetadataField */
     private int $field = 0;
-
-    /** @var int Database primary key */
-    private int $id = 0;
 
     private ?MetadataField $metadataField = null;
 
@@ -85,14 +83,6 @@ class Metadata
     }
 
     /**
-     * Returns the metadata id
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
      * Returns the object-id
      */
     public function getObjectId(): int
@@ -106,14 +96,6 @@ class Metadata
     public function getType(): string
     {
         return $this->type;
-    }
-
-    /**
-     * Returns `true` if the object is new
-     */
-    public function isNew(): bool
-    {
-        return $this->id === 0;
     }
 
     /**

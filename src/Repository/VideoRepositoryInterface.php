@@ -40,9 +40,26 @@ interface VideoRepositoryInterface
     public function delete(Video $video): bool;
 
     /**
+     * Removes every videos of one catalog, for a catalog that is being deleted
+     */
+    public function deleteByCatalog(int $catalogId): bool;
+
+    /**
+     * Records a set of videos in the `deleted_video` archive and removes them
+     *
+     * @param list<int> $videoIds
+     */
+    public function deleteByIdsWithArchive(array $videoIds): void;
+
+    /**
      * Loads a single video, or null when the id matches nothing
      */
     public function findById(int $objectId): ?Video;
+
+    /**
+     * Reads the id of the video holding this file
+     */
+    public function findIdByFile(string $file): ?int;
 
     /**
      * Returns the recorded details of every deleted video
@@ -50,6 +67,27 @@ interface VideoRepositoryInterface
      * @return list<array<string, mixed>>
      */
     public function getDeletedRows(): array;
+
+    /**
+     * Reads every video file of one catalog keyed by video id, for the scanner's in-process cache
+     *
+     * @return array<int, string>
+     */
+    public function getFilesByCatalog(int $catalogId, int $limit = 0, int $offset = 0): array;
+
+    /**
+     * Reads the videos of one catalog
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalog(int $catalogId): array;
+
+    /**
+     * Reads the videos whose file sits under a base folder path
+     *
+     * @return list<int>
+     */
+    public function getIdsByFilePrefix(string $folderPath): array;
 
     /**
      * Return the number of entries in the database...
@@ -75,11 +113,28 @@ interface VideoRepositoryInterface
     public function getRowsByIds(array $videoIds): array;
 
     /**
+     * Reads a page of the videos a verify pass walks, newest path first
+     *
+     * @return list<array{id: int, file: string, min_update_time: int}>
+     */
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array;
+
+    /**
      * Inserts a new video row and returns its id
      *
      * @param list<mixed> $params
      */
     public function insert(array $params): int;
+
+    /**
+     * Stores the path or url a video is served from
+     */
+    public function setFile(int $videoId, string $file): void;
+
+    /**
+     * Moves a video to another catalog and to the file it now lives in
+     */
+    public function setFileAndCatalog(int $objectId, string $file, int $catalogId): bool;
 
     /**
      * Flags the video as played, or clears the flag
@@ -95,6 +150,11 @@ interface VideoRepositoryInterface
      * Writes the title, and the release date only when the caller supplied one
      */
     public function update(Video $video, bool $withReleaseDate): void;
+
+    /**
+     * Rebuilds every video's play and skip totals from `object_count`, and the played flag that follows them
+     */
+    public function updateAllCounts(): void;
 
     /**
      * Re-derives the play/skip counters and the played flag from the recorded stats

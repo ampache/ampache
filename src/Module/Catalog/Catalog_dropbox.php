@@ -27,16 +27,15 @@ namespace Ampache\Module\Catalog;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\SongFieldEnum;
 use Ampache\Repository\Model\Video;
 use Exception;
 use Kunnu\Dropbox\Dropbox;
@@ -106,7 +105,7 @@ class Catalog_dropbox extends Catalog
      *     getchunk?: string|int|null,
      * } $data
      */
-    public static function create_type(string $catalog_id, array $data): bool
+    public static function create_type(int $catalog_id, array $data): bool
     {
         $apikey    = trim($data['apikey'] ?? '');
         $secret    = trim($data['secret'] ?? '');
@@ -128,20 +127,19 @@ class Catalog_dropbox extends Catalog
         }
 
         // Make sure this catalog isn't already in use by an existing catalog
-        $sql        = 'SELECT `id` FROM `catalog_dropbox` WHERE `apikey` = ?';
-        $db_results = Dba::read($sql, [$apikey]);
-
-        if (Dba::num_rows($db_results) !== 0) {
+        $catalogRepository = self::getCatalogRepository();
+        if ($catalogRepository->subTypeValueExists(CatalogTypeEnum::DROPBOX, 'apikey', $apikey)) {
             debug_event('dropbox.catalog', 'Cannot add catalog with duplicate key ' . $apikey, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $apikey));
 
             return false;
         }
 
-        $sql = 'INSERT INTO `catalog_dropbox` (`apikey`, `secret`, `authtoken`, `path`, `getchunk`, `catalog_id`) VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, [$apikey, $secret, $authtoken, $path, $getchunk, $catalog_id]);
-
-        return true;
+        return $catalogRepository->insertSubType(
+            CatalogTypeEnum::DROPBOX,
+            ['apikey' => $apikey, 'secret' => $secret, 'authtoken' => $authtoken, 'path' => $path, 'getchunk' => $getchunk],
+            $catalog_id
+        );
     }
 
     private static function _connect_dropbox(string $apikey, string $secret, string $authtoken = ''): ?Dropbox
@@ -311,15 +309,9 @@ class Catalog_dropbox extends Catalog
      */
     public function check_remote_file(string $file): ?int
     {
-        $is_audio_file = Catalog::is_audio_file($file);
-        $sql           = $is_audio_file ? 'SELECT `id` FROM `song` WHERE `file` = ?' : 'SELECT `id` FROM `video` WHERE `file` = ?';
-
-        $db_results = Dba::read($sql, [$file]);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int) $results['id'];
-        }
-
-        return null;
+        return (Catalog::is_audio_file($file))
+            ? self::getSongRepository()->findIdByFile($file)
+            : self::getVideoRepository()->findIdByFile($file);
     }
 
     /**
@@ -336,9 +328,9 @@ class Catalog_dropbox extends Catalog
             return $dead;
         }
 
-        $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, [$this->getId()]);
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $songRepository = self::getSongRepository();
+        foreach ($songRepository->getFilesByCatalog($this->getId()) as $songId => $songFile) {
+            $row = ['id' => $songId, 'file' => $songFile];
             debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             $file = $row['file'];
             try {
@@ -346,7 +338,7 @@ class Catalog_dropbox extends Catalog
             } catch (DropboxClientException $error) {
                 if ($error->getCode() == 409) {
                     $dead++;
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
+                    $songRepository->delete((int) $row['id']);
                 } else {
                     AmpError::add('general', T_('API Error: cannot connect to Dropbox.'));
                 }
@@ -432,11 +424,12 @@ class Catalog_dropbox extends Catalog
                 // Download File
                 $res = $this->download($dropbox, $song->file, 40960, $outfile);
                 if ($res) {
-                    $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
-                    Dba::write($sql, [$outfile, $song->id]);
+                    $songRepository = self::getSongRepository();
+                    // the art gatherer reads the file off disk, so the row points at the download while it runs
+                    $songRepository->setField($song->id, SongFieldEnum::FILE, $outfile);
                     parent::gather_art([$song->id]);
 
-                    Dba::write($sql, [$song->file, $song->id]);
+                    $songRepository->setField($song->id, SongFieldEnum::FILE, $song->file);
                     $search_count++;
                     if (Ui::check_ticker()) {
                         Ui::update_text('count_art_' . $this->getId(), $search_count);
@@ -576,8 +569,7 @@ class Catalog_dropbox extends Catalog
             }
 
             $results['file'] = $path;
-            $sql             = "UPDATE `video` SET `file` = ? WHERE `id` = ?";
-            Dba::write($sql, [$results['file'], $video_id]);
+            self::getVideoRepository()->setFile($video_id, $results['file']);
 
             return $video_id;
         }
@@ -593,12 +585,7 @@ class Catalog_dropbox extends Catalog
      */
     public function install(): bool
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-
-        $sql = sprintf('CREATE TABLE `catalog_dropbox` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `apikey` VARCHAR(255) COLLATE %s NOT NULL, `secret` VARCHAR(255) COLLATE %s NOT NULL, `path` VARCHAR(255) COLLATE %s NOT NULL, `authtoken` VARCHAR(2048) COLLATE %s NOT NULL, `getchunk` TINYINT(1) NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $collation, $collation, $engine, $charset, $collation);
-        Dba::query($sql);
+        self::getCatalogRepository()->createSubTypeTable(CatalogTypeEnum::DROPBOX, ['apikey' => 'VARCHAR(255)', 'secret' => 'VARCHAR(255)', 'path' => 'VARCHAR(255)', 'authtoken' => 'VARCHAR(2048)', 'getchunk' => 'TINYINT(1)']);
 
         return true;
     }
@@ -609,10 +596,7 @@ class Catalog_dropbox extends Catalog
      */
     public function is_installed(): bool
     {
-        $sql        = "SHOW TABLES LIKE 'catalog_dropbox'";
-        $db_results = Dba::query($sql);
-
-        return (Dba::num_rows($db_results) > 0);
+        return self::getCatalogRepository()->subTypeTableExists(CatalogTypeEnum::DROPBOX);
     }
 
     /**
@@ -733,9 +717,8 @@ class Catalog_dropbox extends Catalog
             return 0;
         }
         try {
-            $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, [$this->getId()]);
-            while ($row = Dba::fetch_assoc($db_results)) {
+            $songRepository = self::getSongRepository();
+            foreach ($songRepository->getFileRowsByCatalog($this->getId()) as $row) {
                 debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $path     = $row['file'];
                 $filesize = 40960;
@@ -772,7 +755,7 @@ class Catalog_dropbox extends Catalog
                 } else {
                     debug_event('dropbox.catalog', 'removing song', 5);
                     Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
+                    $songRepository->delete((int) $row['id']);
                 }
             }
 
@@ -834,11 +817,10 @@ class Catalog_dropbox extends Catalog
             $song_id         = Song::insert($results);
             if ($song_id) {
                 parent::gather_art([$song_id]);
-            }
 
-            $results['file'] = $path;
-            $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
-            Dba::write($sql, [$results['file'], $song_id]);
+                $results['file'] = $path;
+                self::getSongRepository()->setField($song_id, SongFieldEnum::FILE, $results['file']);
+            }
         } else {
             debug_event(
                 'dropbox.catalog',

@@ -28,7 +28,7 @@ declare(strict_types=1);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-/** @var Ampache\Repository\Model\Catalog $catalog */
+/** @var Ampache\Module\Catalog\Catalog $catalog */
 
 /* HINT: Catalog Name */
 Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), scrub_out($catalog->name) . ' (' . $catalog->get_f_info() . ')'), 'box box_edit_catalog'); ?>

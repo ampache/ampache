@@ -334,6 +334,12 @@ class ApplicationRunnerTest extends MockeryTestCase
             ->once()
             ->andReturn($emitter);
 
+        $this->logger->shouldReceive('warning')
+            ->with(
+                sprintf('Unknown action "%s", falling back to "%s"', $action, $default_action),
+                [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
+            )
+            ->once();
         $this->logger->shouldReceive('debug')
             ->with(
                 sprintf('Found handler "%s" for action "%s"', $handler_name, $default_action),

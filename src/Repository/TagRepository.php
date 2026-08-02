@@ -26,9 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\TagCountTypeEnum;
 use Ampache\Repository\Model\User;
 use PDO;
@@ -40,7 +42,10 @@ final readonly class TagRepository implements TagRepositoryInterface
      */
     private const array CATALOG_TYPES = ['artist', 'album', 'album_disk', 'song', 'video'];
 
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private CatalogCounterInterface $catalogCounter,
+    ) {}
 
     public function addMap(int $tagId, string $objectType, int $objectId, int $userId): int
     {
@@ -84,7 +89,11 @@ final readonly class TagRepository implements TagRepositoryInterface
     {
         $this->connection->query('REPLACE INTO `tag` SET `name` = ?', [$name]);
 
-        return $this->connection->getLastInsertedId();
+        // the id has to be taken before anything else runs a statement, or the counter's queries lose it
+        $tagId = $this->connection->getLastInsertedId();
+        $this->catalogCounter->count(CountableTableEnum::TAG);
+
+        return $tagId;
     }
 
     public function decrementCount(int $tagId, TagCountTypeEnum $type): void
@@ -100,6 +109,7 @@ final readonly class TagRepository implements TagRepositoryInterface
         $this->connection->query('DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?', [$tagId]);
         $this->connection->query('DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?', [$tagId]);
         $this->connection->query('DELETE FROM `tag` WHERE `tag`.`id` = ? ', [$tagId]);
+        $this->catalogCounter->count(CountableTableEnum::TAG);
     }
 
     public function findIdByName(string $name): ?int
@@ -218,6 +228,32 @@ final readonly class TagRepository implements TagRepositoryInterface
         }
 
         return $rows;
+    }
+
+    /**
+     * Reads the distinct genres tagged on the songs of one album
+     *
+     * @return list<string>
+     */
+    public function getSongTagNamesByAlbum(int $albumId): array
+    {
+        return $this->getSongTagNames(
+            "SELECT `tag`.`name` FROM `tag` JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id` JOIN `song` ON `tag_map`.`object_id` = `song`.`id` WHERE `song`.`album` = ? AND `tag_map`.`object_type` = 'song' GROUP BY `tag`.`id`, `tag`.`name`;",
+            $albumId
+        );
+    }
+
+    /**
+     * Reads the distinct genres tagged on the songs one artist is mapped onto
+     *
+     * @return list<string>
+     */
+    public function getSongTagNamesByArtist(int $artistId): array
+    {
+        return $this->getSongTagNames(
+            "SELECT `tag`.`name` FROM `tag` JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id` JOIN `song` ON `tag_map`.`object_id` = `song`.`id` WHERE `song`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = 'song') AND `tag_map`.`object_type` = 'song' GROUP BY `tag`.`id`, `tag`.`name`;",
+            $artistId
+        );
     }
 
     public function getTagIds(string $objectType, int $count, int $offset): array
@@ -448,6 +484,23 @@ final readonly class TagRepository implements TagRepositoryInterface
             ),
             [$type->value]
         );
+    }
+
+    /**
+     * Reads the tag names of a song-tag statement taking one bound object id
+     *
+     * @return list<string>
+     */
+    private function getSongTagNames(string $sql, int $objectId): array
+    {
+        $result = $this->connection->query($sql, [$objectId]);
+
+        $names = [];
+        while ($name = $result->fetchColumn()) {
+            $names[] = (string) $name;
+        }
+
+        return $names;
     }
 
     /**

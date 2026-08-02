@@ -30,7 +30,6 @@ use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Useractivity;
 
 final readonly class UserActivityRenderer implements UserActivityRendererInterface
 {

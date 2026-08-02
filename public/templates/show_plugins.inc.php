@@ -26,7 +26,7 @@ declare(strict_types=1);
 // show_plugins.inc.php
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Plugin;
+use Ampache\Module\System\Plugin\Plugin;
 
 /** @var list<string> $plugins */
 

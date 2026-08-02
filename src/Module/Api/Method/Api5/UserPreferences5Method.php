@@ -28,7 +28,7 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\Preference;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PreferenceRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;

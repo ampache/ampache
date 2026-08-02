@@ -40,7 +40,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var Ampache\Repository\Model\Folder|null $folder */
 /** @var string[] $object_ids */
 
@@ -137,7 +137,7 @@ foreach ($object_ids as $object) {
     // The temporary playlist queues the item itself, so a folder holding nothing playable has nothing to offer;
     // the add-to-list dialog is a different question, because a collection curates the folder rather than plays it
     $show_temp_add = $access25;
-    if ($libitem instanceof Folder && $directplay_limit > 0) {
+    if ($libitem instanceof Folder && $directplay_limit > 0 && !$browse->is_grid_view()) {
         $show_temp_add = $access25 && $libitem->playable && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
     } ?>
             <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu" data-object-type="<?php echo $object_type; ?>" data-object-id="<?php echo $libitem->getId(); ?>">

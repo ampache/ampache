@@ -28,12 +28,12 @@ namespace Ampache\Module\Util;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginGetMetadataInterface;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;
@@ -1060,7 +1060,7 @@ final class VaInfo implements VaInfoInterface
         if (array_key_exists('asf', $this->_raw) && is_array($this->_raw['asf'])) {
             $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
             foreach ($this->_raw['asf']['extended_content_description_object']['content_descriptors'] as $wmaTag) {
-                $value = str_replace("\x00", '', $wmaTag['value']);
+                $value = str_replace("\x00", '', (string) ($wmaTag['value'] ?? ''));
                 //$this->logger->debug('asf tag: ' . strtolower($wmaTag['name'] ?? '') . ' value: ' . print_r($value ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
                 switch (strtolower($this->trimAscii($wmaTag['name']))) {
                     case 'wm/artists':

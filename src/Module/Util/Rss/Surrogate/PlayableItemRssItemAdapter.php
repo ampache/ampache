@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Surrogate;
 
-use Ampache\Repository\Model\Art;
+use Ampache\Module\Art\Art;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;

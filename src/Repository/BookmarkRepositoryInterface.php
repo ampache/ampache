@@ -36,12 +36,39 @@ interface BookmarkRepositoryInterface
      */
     public function collectGarbage(): void;
 
+    /**
+     * Stores a new bookmark, dropping the user's previous one for that object when only the latest is kept
+     */
+    public function create(
+        int $userId,
+        int $position,
+        string $comment,
+        string $objectType,
+        int $objectId,
+        int $updateDate,
+        bool $latestOnly,
+    ): void;
+
     public function delete(int $bookmarkId): void;
 
     /**
      * Finds a single item by id
      */
     public function findById(int $itemId): ?Bookmark;
+
+    /**
+     * Reads one of a user's bookmarks by its own id, which is how a `bookmark` object type addresses it
+     *
+     * @return list<int>
+     */
+    public function findIdsByBookmarkId(int $userId, int $bookmarkId): array;
+
+    /**
+     * Reads the ids a user has bookmarked against one object, newest first
+     *
+     * @return list<int>
+     */
+    public function findIdsByObject(int $userId, string $objectType, int $objectId, ?string $comment): array;
 
     /**
      * @return int[]
@@ -54,9 +81,21 @@ interface BookmarkRepositoryInterface
     public function getByUserAndComment(User $user, string $comment): array;
 
     /**
+     * Reads the bookmark a user holds against one object
+     *
+     * @return array<string, mixed>
+     */
+    public function getRowByObject(string $objectType, int $objectId, int $userId): array;
+
+    /**
      * Migrate an object associate stats to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
 
     public function update(int $bookmarkId, int $position, DateTimeInterface $date): void;
+
+    /**
+     * Updates the position and the comment of a bookmark, which is what the edit dialog sends
+     */
+    public function updateWithComment(int $bookmarkId, int $position, string $comment, int $updateDate): void;
 }

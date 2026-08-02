@@ -33,9 +33,10 @@ use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
@@ -140,7 +141,7 @@ final class RegisterMethod implements MethodInterface
                 ? 'Please wait for an administrator to activate your account'
                 : 'successfully created: ' . $username;
 
-            Catalog::count_table('user');
+            Catalog::count_table(CountableTableEnum::USER);
 
             $response->getBody()->write(
                 $output->success($apiVersion, $text)

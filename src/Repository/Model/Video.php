@@ -26,13 +26,18 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -394,6 +399,16 @@ class Video extends database_object implements
     /**
      * @deprecated inject dependency
      */
+    private static function getStats(): Stats
+    {
+        global $dic;
+
+        return $dic->get(Stats::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
     private static function getVideoRepository(): VideoRepositoryInterface
     {
         global $dic;
@@ -403,7 +418,7 @@ class Video extends database_object implements
 
     public function check_play_history(int $user, string $agent, int $date): bool
     {
-        return Stats::has_played_history('video', $this, $user, $agent, $date);
+        return self::getStats()->has_played_history('video', $this, $user, $agent, $date);
     }
 
     /**
@@ -822,7 +837,7 @@ class Video extends database_object implements
             return false;
         }
 
-        Stats::insert('video', $this->id, $user_id, $agent, $location, 'stream', $date);
+        self::getStats()->insert('video', $this->id, $user_id, $agent, $location, 'stream', $date);
 
         if ($this->played) {
             return true;

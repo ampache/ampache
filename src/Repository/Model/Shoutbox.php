@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Database\BaseModel;
 use Ampache\Repository\ShoutRepository;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;

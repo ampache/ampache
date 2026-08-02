@@ -31,21 +31,21 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Plugin\AmpacheLastfm;
 use Ampache\Plugin\Ampachelibrefm;
 use Ampache\Plugin\PluginDisplayOnFooterInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
 /**
@@ -75,6 +75,7 @@ class Ui implements UiInterface
 
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
+        private readonly MetadataFieldRepositoryInterface $metadataFieldRepository,
     ) {}
 
     /**
@@ -368,17 +369,25 @@ class Ui implements UiInterface
      */
     public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
-        $title      = $title ?? T_(ucfirst($name));
-        $symbol_key = $name;
-        $filepath   = __DIR__ . '/../../../resources/images/material-symbols/' . $name . '.svg';
-        if (!is_file($filepath)) {
-            // fall back to error icon if icon is missing
-            debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
-            $symbol_key = 'icon_error';
-            $filepath   = __DIR__ . '/../../../resources/images/icon_error.svg';
+        // Same icons repeat all over a page: translate each name once.
+        static $title_cache = [];
+        $title              = $title ?? $title_cache[$name] ??= T_(ucfirst($name));
+        $symbol_key         = $name;
+        // Skip the per-call disk stat once the symbol is cached. Hundreds of calls per page.
+        if (array_key_exists($name, self::$_symbol_cache)) {
+            $symbol = self::$_symbol_cache[$name];
+        } else {
+            $filepath = __DIR__ . '/../../../resources/images/material-symbols/' . $name . '.svg';
+            if (!is_file($filepath)) {
+                // fall back to error icon if icon is missing
+                debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
+                $symbol_key = 'icon_error';
+                $filepath   = __DIR__ . '/../../../resources/images/icon_error.svg';
+            }
+
+            $symbol = self::_load_symbol_parts($symbol_key, $filepath);
         }
 
-        $symbol = self::_load_symbol_parts($symbol_key, $filepath);
         if ($symbol === null) {
             return '';
         }
@@ -1374,7 +1383,7 @@ class Ui implements UiInterface
                 // array keys are cast to int by php so the stored comma separated string ids need the same treatment
                 $ids     = array_map('intval', array_filter(explode(',', (string) $value), 'is_numeric'));
                 $options = [];
-                foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
+                foreach ($this->metadataFieldRepository->getPropertyList() as $propertyId => $propertyName) {
                     $selected  = (in_array((int) $propertyId, $ids, true)) ? ' selected="selected"' : '';
                     $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . scrub_out($propertyName) . '</option>';
                 }
@@ -1654,15 +1663,5 @@ class Ui implements UiInterface
     public function showQueryStats(): void
     {
         require self::find_template('show_query_stats.inc.php');
-    }
-
-    /**
-     * @todo inject dependency
-     */
-    private function getMetadataFieldRepository(): MetadataFieldRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(MetadataFieldRepositoryInterface::class);
     }
 }

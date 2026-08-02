@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V7;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Catalog;
 
 /**
  * Fix up Orphan Album Disk objects to be unique and update from tags

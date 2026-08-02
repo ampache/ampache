@@ -77,6 +77,13 @@ interface LabelRepositoryInterface
      */
     public function getByArtist(int $artistId): array;
 
+    /**
+     * Reads the labels of one category, together with every label still missing an mbid
+     *
+     * @return list<int>
+     */
+    public function getIdsByCategory(string $category): array;
+
     public function lookup(string $labelName, int $labelId = 0): int;
 
     /**

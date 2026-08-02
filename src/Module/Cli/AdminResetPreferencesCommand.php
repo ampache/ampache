@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Repository\Model\Preference;
+use Ampache\Module\System\Preference;
 use Override;
 
 final class AdminResetPreferencesCommand extends Command

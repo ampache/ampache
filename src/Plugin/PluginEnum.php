@@ -31,13 +31,13 @@ namespace Ampache\Plugin;
 final class PluginEnum
 {
     public const array LIST = [
-        '7digital' => Ampache7digital::class,
         'amazon' => AmpacheAmazon::class,
         'audiomuse' => AmpacheAudioMuse::class,
         'bitly' => AmpacheBitly::class,
         'bluesky' => AmpacheBluesky::class,
         'catalogfavorites' => AmpacheCatalogFavorites::class,
         'chartlyrics' => Ampachechartlyrics::class,
+        'deezer' => AmpacheDeezer::class,
         'discogs' => AmpacheDiscogs::class,
         'facebook' => AmpacheFacebook::class,
         'flickr' => Ampacheflickr::class,
@@ -47,6 +47,7 @@ final class PluginEnum
         'gravatar' => AmpacheGravatar::class,
         'headphones' => AmpacheHeadphones::class,
         'homedashboard' => AmpacheHomeDashboard::class,
+        'itunes' => AmpacheItunes::class,
         'lastfm' => AmpacheLastfm::class,
         'libravatar' => AmpacheLibravatar::class,
         'librefm' => Ampachelibrefm::class,

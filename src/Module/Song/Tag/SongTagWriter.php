@@ -27,14 +27,14 @@ namespace Ampache\Module\Song\Tag;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Log\LoggerInterface;

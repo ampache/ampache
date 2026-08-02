@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Playlist\Search;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Search;
+use Ampache\Module\Database\Query\Search;
 
 final class SongSearch implements SearchInterface
 {
@@ -122,21 +122,20 @@ final class SongSearch implements SearchInterface
                     $where[] = match ($operator_sql) {
                         '!=', 'NOT' => "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` = ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)",
                         'NOT LIKE' => "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)",
+                        'NOT SOUNDS LIKE' => "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` SOUNDS LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)",
                         default => sprintf("`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)", $operator_sql),
                     };
                     $parameters[] = $input;
                     break;
                 case 'album_genre':
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album` = `album`.`id`";
-                    $where[]        = ($operator_sql == "NOT LIKE")
-                        ? "`album`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)"
-                        : sprintf("`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)", $operator_sql);
-                    $parameters[] = $input;
+                    $negate         = in_array($operator_sql, ['NOT LIKE', 'NOT SOUNDS LIKE'], true);
+                    $where[]        = sprintf("`album`.`id` %sIN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)", ($negate) ? 'NOT ' : '', ($negate) ? substr($operator_sql, 4) : $operator_sql);
+                    $parameters[]   = $input;
                     break;
                 case 'artist_genre':
-                    $where[] = ($operator_sql == "NOT LIKE")
-                        ? "`artist`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)"
-                        : sprintf("`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)", $operator_sql);
+                    $negate         = in_array($operator_sql, ['NOT LIKE', 'NOT SOUNDS LIKE'], true);
+                    $where[]        = sprintf("`artist`.`id` %sIN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)", ($negate) ? 'NOT ' : '', ($negate) ? substr($operator_sql, 4) : $operator_sql);
                     $parameters[]   = $input;
                     $join['artist'] = true;
                     break;
@@ -169,7 +168,7 @@ final class SongSearch implements SearchInterface
                     break;
                 case 'song_artist':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = sprintf("NOT ((`artist`.`name` %s ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) %s ?))", $operator_sql, $operator_sql);
+                        $where[] = "NOT ((`artist`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) SOUNDS LIKE ?))";
                     } else {
                         $where[] = sprintf("(`artist`.`name` %s ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) %s ?)", $operator_sql, $operator_sql);
                     }
@@ -179,7 +178,7 @@ final class SongSearch implements SearchInterface
                     break;
                 case 'album_artist':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = "(NOT ((`artist`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) SOUNDS LIKE ?) AND `album_map`.`object_type` = 'album'))";
+                        $where[] = "(NOT (`album_artist`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`album_artist`.`prefix`, ''), ' ', `album_artist`.`name`)) SOUNDS LIKE ?))";
                     } else {
                         $where[] = sprintf("((`album_artist`.`name` %s ? OR LTRIM(CONCAT(COALESCE(`album_artist`.`prefix`, ''), ' ', `album_artist`.`name`)) %s ?))", $operator_sql, $operator_sql);
                     }
@@ -463,7 +462,12 @@ final class SongSearch implements SearchInterface
                     $join['album'] = true;
                     break;
                 case 'favorite_artist':
-                    $where[]    = sprintf("(`artist`.`name` %s ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) %s ?) AND `favorite_artist_", $operator_sql, $operator_sql) . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_artist_" . $search_user_id . "`.`object_type` = 'artist'";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT ((`artist`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) SOUNDS LIKE ?) AND `favorite_artist_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_artist_" . $search_user_id . "`.`object_type` = 'artist')";
+                    } else {
+                        $where[] = sprintf("(`artist`.`name` %s ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) %s ?) AND `favorite_artist_", $operator_sql, $operator_sql) . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_artist_" . $search_user_id . "`.`object_type` = 'artist'";
+                    }
+
                     $parameters = array_merge($parameters, [$input, $input]);
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
@@ -591,7 +595,7 @@ final class SongSearch implements SearchInterface
                             : sprintf('LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = %s) AS `favorite_', $other_userid) . $my_type . "_" . $other_userid . sprintf('` ON `song`.`%s` = `favorite_', $column) . $my_type . "_" . $other_userid . "`.`object_id` AND `favorite_" . $my_type . "_" . $other_userid . "`.`object_type` = '" . $my_type . "'";
                     } else {
                         $unrated = ($operator_sql == 'unrated');
-                        $where[] = ($unrated) ? "`" . $my_type . sprintf("`.`%s` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '", $column) . $my_type . sprintf("' AND `rating`.`user` = %s)", $other_userid) : "`rating_" . $my_type . "_" . $other_userid . sprintf('`.%s AND `rating_', $operator_sql) . $my_type . "_" . $other_userid . sprintf('`.`user` = %s AND `rating_', $other_userid) . $my_type . "_" . $other_userid . "`.`object_type` = '" . $my_type . "'";
+                        $where[] = ($unrated) ? sprintf("`song`.`%s` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '", $column) . $my_type . sprintf("' AND `rating`.`user` = %s)", $other_userid) : "`rating_" . $my_type . "_" . $other_userid . sprintf('`.%s AND `rating_', $operator_sql) . $my_type . "_" . $other_userid . sprintf('`.`user` = %s AND `rating_', $other_userid) . $my_type . "_" . $other_userid . "`.`object_type` = '" . $my_type . "'";
                         if (!array_key_exists('rating', $table)) {
                             $table['rating'] = '';
                         }

@@ -26,7 +26,7 @@ declare(strict_types=1);
 // show_catalog_types.inc.php
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
 
 /** @var array<string, class-string> $catalog_types */
 

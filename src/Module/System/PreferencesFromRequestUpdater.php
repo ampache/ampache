@@ -30,7 +30,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Stream;
-use Ampache\Repository\Model\Preference;
 use DateTimeZone;
 
 final readonly class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdaterInterface

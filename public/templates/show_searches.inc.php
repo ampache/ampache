@@ -30,11 +30,11 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var list<int> $object_ids */ ?>
 <div id="information_actions">
     <ul>

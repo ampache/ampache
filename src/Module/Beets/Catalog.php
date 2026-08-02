@@ -28,7 +28,6 @@ namespace Ampache\Module\Beets;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -41,7 +40,7 @@ use Ampache\Repository\Model\Video;
  *
  * @author raziel
  */
-abstract class Catalog extends \Ampache\Repository\Model\Catalog
+abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 {
     protected int $addedSongs = 0;
     protected string $description;
@@ -237,15 +236,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function getAllSongfiles(): array
     {
-        $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?";
-        $db_results = Dba::read($sql, [$this->id]);
-
-        $files = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $files[(int) $row['id']] = (string) $row['file'];
-        }
-
-        return $files;
+        return self::getSongRepository()->getFilesByCatalog($this->id);
     }
 
     /**
@@ -341,9 +332,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     protected function deleteSongs(array $songs): void
     {
-        $ids = implode(',', array_keys($songs));
-        $sql = sprintf('DELETE FROM `song` WHERE `id` IN (%s)', $ids);
-        Dba::write($sql);
+        self::getSongRepository()->deleteByIds(array_map(intval(...), array_keys($songs)));
     }
 
     /**
@@ -351,14 +340,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     protected function getIdFromPath(string $path): int
     {
-        $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
-        $db_results = Dba::read($sql, [$path]);
-        $row        = Dba::fetch_row($db_results);
-        if ($row === []) {
-            return 0;
-        }
-
-        return (int) $row[0];
+        return self::getSongRepository()->findIdByFile($path) ?? 0;
     }
 
     /**

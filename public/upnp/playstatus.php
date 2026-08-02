@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Api\Upnp\PlayStatusApplication;
+use Ampache\Module\Api\Upnp\PlayStatusApplication;
 use Psr\Container\ContainerInterface;
 
 // Send response to client to close connection

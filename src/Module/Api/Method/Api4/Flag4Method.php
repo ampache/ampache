@@ -27,11 +27,11 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 
 /**
  * Class Flag4Method

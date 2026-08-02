@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V4;
 
+use Ampache\Module\System\Preference;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Preference;
 
 /**
  * Increase copyright column size to fix issue #1861

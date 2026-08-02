@@ -25,6 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
+use Ampache\Module\Art\Art;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Podcast\Exception\FeedNotLoadableException;
 use Ampache\Module\Podcast\Exception\InvalidCatalogException;
 use Ampache\Module\Podcast\Exception\InvalidFeedUrlException;
@@ -33,8 +36,6 @@ use Ampache\Module\Podcast\Exception\PodcastFolderException;
 use Ampache\Module\Podcast\Feed\Exception\FeedLoadingException;
 use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Log\LoggerInterface;
@@ -119,7 +120,7 @@ final readonly class PodcastCreator implements PodcastCreatorInterface
         }
 
         Catalog::update_map($catalog->getId(), 'podcast', $podcast->getId());
-        Catalog::count_table('user');
+        Catalog::count_table(CountableTableEnum::USER);
 
         if ($feed['episodes']) {
             $this->podcastSyncer->addEpisodes($podcast, $feed['episodes']);

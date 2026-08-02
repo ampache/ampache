@@ -25,11 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Beets\Catalog;
 use Ampache\Module\Beets\JsonHandler;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Dba;
 use Override;
 
 /**
@@ -61,7 +59,7 @@ class Catalog_beetsremote extends Catalog
      *     uri?: string,
      * } $data
      */
-    public static function create_type(string $catalog_id, array $data): bool
+    public static function create_type(int $catalog_id, array $data): bool
     {
         // TODO: This Method should be required / provided by parent
         $uri = $data['uri'] ?? '';
@@ -73,20 +71,16 @@ class Catalog_beetsremote extends Catalog
         }
 
         // Make sure this uri isn't already in use by an existing catalog
-        $selectSql  = 'SELECT `id` FROM `catalog_beets` WHERE `uri` = ?';
-        $db_results = Dba::read($selectSql, [$uri]);
-
-        if (Dba::num_rows($db_results) !== 0) {
+        // the duplicate check named `catalog_beets` and a column it does not have, so it never found one
+        $catalogRepository = self::getCatalogRepository();
+        if ($catalogRepository->subTypeValueExists(CatalogTypeEnum::BEETSREMOTE, 'uri', $uri)) {
             debug_event('beetsremote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             AmpError::add('general', sprintf(T_('This path belongs to an existing Beets Catalog: %s'), $uri));
 
             return false;
         }
 
-        $insertSql = 'INSERT INTO `catalog_beetsremote` (`uri`, `catalog_id`) VALUES (?, ?)';
-        Dba::write($insertSql, [$uri, $catalog_id]);
-
-        return true;
+        return $catalogRepository->insertSubType(CatalogTypeEnum::BEETSREMOTE, ['uri' => $uri], $catalog_id);
     }
 
     /**
@@ -146,12 +140,7 @@ class Catalog_beetsremote extends Catalog
      */
     public function install(): bool
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-
-        $sql = sprintf('CREATE TABLE `catalog_beetsremote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $engine, $charset, $collation);
-        Dba::query($sql);
+        self::getCatalogRepository()->createSubTypeTable(CatalogTypeEnum::BEETSREMOTE, ['uri' => 'VARCHAR(255)']);
 
         return true;
     }
@@ -162,10 +151,7 @@ class Catalog_beetsremote extends Catalog
      */
     public function is_installed(): bool
     {
-        $sql        = "SHOW TABLES LIKE 'catalog_beetsremote'";
-        $db_results = Dba::query($sql);
-
-        return (Dba::num_rows($db_results) > 0);
+        return self::getCatalogRepository()->subTypeTableExists(CatalogTypeEnum::BEETSREMOTE);
     }
 
     /**

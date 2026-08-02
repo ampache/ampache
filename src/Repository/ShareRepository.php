@@ -28,12 +28,14 @@ namespace Ampache\Repository;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Manages share related database access
@@ -45,6 +47,7 @@ final readonly class ShareRepository implements ShareRepositoryInterface
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
     ) {}
 
     /**
@@ -57,7 +60,10 @@ final readonly class ShareRepository implements ShareRepositoryInterface
                 'DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < UNIX_TIMESTAMP()) OR (`max_counter` > 0 AND `counter` >= `max_counter`)',
             );
         } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
+            $this->logger->debug(
+                'collectGarbage error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 

@@ -26,24 +26,31 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
-use Ampache\Module\System\Dba;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ArtistFieldEnum;
-use Ampache\Repository\Model\Catalog;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 final readonly class ArtistRepository implements ArtistRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Maps an artist onto a song or album; duplicates are ignored so the scanner can call it unconditionally
      */
     public function addArtistMap(int $artistId, string $objectType, int $objectId): void
     {
-        debug_event(self::class, 'addArtistMap artist_id {' . $artistId . '} ' . $objectType . ' {' . $objectId . '}', 5);
+        $this->logger->debug(
+            'addArtistMap artist_id {' . $artistId . '} ' . $objectType . ' {' . $objectId . '}',
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
 
         $this->connection->query(
             'INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);',
@@ -56,7 +63,10 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        debug_event(self::class, 'collectGarbage', 5);
+        $this->logger->debug(
+            'collectGarbage',
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
         $queries = [
             ['DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);', ['album']],
             ['DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `album`);', ['album']],
@@ -71,7 +81,10 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
                 $params = $query[1];
                 $this->connection->query($sql, $params);
             } catch (DatabaseException) {
-                debug_event(self::class, 'collectGarbage error', 5);
+                $this->logger->debug(
+                    'collectGarbage error',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
             }
         }
     }
@@ -89,6 +102,31 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     }
 
     /**
+     * Removes the artist_map rows the scanner orphans when a song changes artist, leaving the artists alone
+     *
+     * The album half is one statement rather than collectGarbage()'s two, because the scanner sweeps
+     * an album with no album_artist and an album with no songs together.
+     */
+    public function collectOrphanedMaps(): void
+    {
+        $queries = [
+            "DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND (`artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL) OR `artist_map`.`object_id` NOT IN (SELECT `album` FROM `song`));",
+            "DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `song`);",
+        ];
+
+        foreach ($queries as $sql) {
+            try {
+                $this->connection->query($sql);
+            } catch (DatabaseException) {
+                $this->logger->debug(
+                    'collectOrphanedMaps error',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
+        }
+    }
+
+    /**
      * Inserts a new artist row and returns its id, or null when the write failed
      */
     public function create(string $name, ?string $prefix, ?string $mbid, ?int $userId): ?int
@@ -99,7 +137,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
                 [$name, $prefix, $mbid, $userId]
             );
         } catch (DatabaseException) {
-            // the caller reads null as "no artist" and gives up, which is what the old falsy `Dba::write()` gave it
+            // the caller reads null as "no artist" and gives up
             return null;
         }
 
@@ -133,6 +171,29 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         }
 
         return new Artist((int) $rowId);
+    }
+
+    /**
+     * Reads the mbids carried by more than one artist, with the lowest and highest id sharing each
+     *
+     * @return list<array{mbid: string, minid: int, maxid: int}>
+     */
+    public function findDuplicateMbidGroups(): array
+    {
+        $result = $this->connection->query(
+            'SELECT `mbid`, MIN(`id`) AS `minid`, MAX(`id`) AS `maxid` FROM `artist` WHERE `mbid` IS NOT NULL GROUP BY `mbid` HAVING COUNT(`mbid`) > 1;'
+        );
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = [
+                'mbid' => (string) $row['mbid'],
+                'minid' => (int) $row['minid'],
+                'maxid' => (int) $row['maxid'],
+            ];
+        }
+
+        return $rows;
     }
 
     /**
@@ -201,6 +262,38 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         }
 
         return $albumIds;
+    }
+
+    /**
+     * Reads the artists mapped onto the given catalogs, with the catalog they came from
+     *
+     * @param array<int|string> $catalogIds
+     * @return list<array{id: int, f_name: string, name: string, album_count: int, song_count: int, catalog_id: int, has_art: int}>
+     */
+    public function getArrayRowsByCatalogs(array $catalogIds): array
+    {
+        $catalogIds = array_map(intval(...), $catalogIds);
+
+        $sql = (count($catalogIds) === 1)
+            ? "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `catalog_map`.`catalog_id` AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . $catalogIds[0] . " LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL ORDER BY `f_name`;"
+            : "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, MIN(`catalog_map`.`catalog_id`) AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . implode(',', $catalogIds) . ") LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL GROUP BY `artist`.`id`, `f_name`, `artist`.`name`, `artist`.`album_count`, `artist`.`song_count`, `image`.`object_id` ORDER BY `f_name`;";
+
+        $result = $this->connection->query($sql);
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = [
+                'id' => (int) $row['id'],
+                'f_name' => (string) $row['f_name'],
+                'name' => (string) $row['name'],
+                'album_count' => (int) $row['album_count'],
+                'song_count' => (int) $row['song_count'],
+                'catalog_id' => (int) $row['catalog_id'],
+                'has_art' => (int) $row['has_art'],
+            ];
+        }
+
+        return $rows;
     }
 
     /**
@@ -306,6 +399,57 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     }
 
     /**
+     * Reads the artists holding songs in one catalog, optionally only the ones with no original-size art
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalog(int $catalogId, bool $missingArtOnly = false): array
+    {
+        $sql = ($missingArtOnly)
+            ? "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist' AND `image`.`size` = 'original' WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL"
+            : 'SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` WHERE `song`.`catalog` = ?';
+
+        return $this->getIdList($sql, [$catalogId]);
+    }
+
+    /**
+     * Reads the artists a catalog gained since the given time, plus every artist whose counts are empty
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalogAddedSince(int $catalogId, int $additionTime): array
+    {
+        return $this->getIdList(
+            'SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE `artist`.`id` IN (SELECT DISTINCT `song`.`artist` FROM `song` WHERE `song`.`catalog` = ? AND `addition_time` > ?) OR (`album_count` = 0 AND `song_count` = 0) ',
+            [$catalogId, $additionTime]
+        );
+    }
+
+    /**
+     * Reads a random sample of the artists that have never had similar artists looked up
+     *
+     * @return list<int>
+     */
+    public function getIdsMissingRecommendation(int $limit): array
+    {
+        return $this->getIdList(
+            "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `object_id` FROM `recommendation` WHERE `object_type` = 'artist') ORDER BY RAND() LIMIT " . $limit . ';'
+        );
+    }
+
+    /**
+     * Reads the artists carrying an mbid that has not been re-checked against the plugins for a month
+     *
+     * @return list<int>
+     */
+    public function getIdsWithStaleMbid(): array
+    {
+        return $this->getIdList(
+            "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE (`artist`.`last_update` < (UNIX_TIMESTAMP() - 2629800) AND `artist`.`mbid` LIKE '%-%-%-%-%') ORDER BY RAND();"
+        );
+    }
+
+    /**
      * Reads the prefix, basename and display name of an artist, or null when there is no such row
      *
      * @return array{id: string, name: string, prefix: string, basename: string}|null
@@ -396,13 +540,40 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         }
 
         $sql .= "ORDER BY RAND() LIMIT " . $count;
-        $db_results = Dba::read($sql);
+        $dbResults = $this->connection->query($sql);
 
-        while ($row = Dba::fetch_assoc($db_results)) {
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
             $results[] = (int) $row['artist_id'];
         }
 
         return $results;
+    }
+
+    /**
+     * Reads a page of whole artist rows for the artists holding songs in the given catalogs, by name
+     *
+     * @param array<int|string>|null $catalogIds every catalog when null or empty
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByCatalogs(?array $catalogIds, int $size = 0, int $offset = 0): array
+    {
+        $where = ($catalogIds !== null && $catalogIds !== [])
+            ? ' AND `song`.`catalog` IN (' . implode(',', array_map(intval(...), $catalogIds)) . ')'
+            : 'WHERE `artist`.`album_count` > 0';
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`mbid`, `artist`.`summary`, `artist`.`placeformed`, `artist`.`yearformed`, `artist`.`last_update`, `artist`.`user`, `artist`.`manual_update`, `artist`.`time`, `artist`.`album_count`, `artist`.`song_count`, `artist`.`album_disk_count`, `artist`.`total_count`, `artist`.`total_skip`, `artist`.`addition_time`, `artist`.`weight` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` %s GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` ',
+                $where
+            ) . $this->limitClause($size, $offset)
+        );
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 
     /**
@@ -470,7 +641,10 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
      */
     public function removeArtistMap(int $artistId, string $objectType, int $objectId): void
     {
-        debug_event(self::class, 'removeArtistMap artist_id {' . $artistId . '} ' . $objectType . ' {' . $objectId . '}', 5);
+        $this->logger->debug(
+            'removeArtistMap artist_id {' . $artistId . '} ' . $objectType . ' {' . $objectId . '}',
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
 
         $this->connection->query(
             'DELETE FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = ? AND `object_id` = ?;',
@@ -540,6 +714,17 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     }
 
     /**
+     * Rolls every artist's skip total up from the songs mapped onto them
+     *
+     * The rollup is a join, so an artist with no skips left is zeroed separately or it keeps the old total.
+     */
+    public function updateAllSkipCounts(): void
+    {
+        $this->runMaintenance("UPDATE `artist` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `artist_map`.`artist_id` FROM `object_count` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' AND `artist_map`.`artist_id` IS NOT NULL UNION SELECT `artist_map`.`artist_id` FROM `object_count_summary` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'song' AND `object_count_summary`.`count_type` = 'skip' AND `artist_map`.`artist_id` IS NOT NULL);");
+        $this->runMaintenance("UPDATE `artist`, (SELECT SUM(`total`) AS `total_skip`, `artist_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `artist_map`.`artist_id` AS `artist_id` FROM `object_count` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `artist_map`.`artist_id` UNION ALL SELECT `object_count_summary`.`count` AS `total`, `artist_map`.`artist_id` AS `artist_id` FROM `object_count_summary` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'song' AND `object_count_summary`.`count_type` = 'skip') AS `combined_count` GROUP BY `artist_id`) AS `object_count` SET `artist`.`total_skip` = `object_count`.`total_skip` WHERE `artist`.`total_skip` != `object_count`.`total_skip` AND `artist`.`id` = `object_count`.`artist_id`;");
+    }
+
+    /**
      * Recomputes the cached totals on one artist, after something mapped to it changed
      */
     public function updateCounts(int $artistId): void
@@ -581,6 +766,43 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     }
 
     /**
+     * Reads the first column of every row of an artist-id statement
+     *
+     * @param list<mixed> $params
+     * @return list<int>
+     */
+    private function getIdList(string $sql, array $params = []): array
+    {
+        $result = $this->connection->query($sql, $params);
+
+        $artistIds = [];
+        while ($artistId = $result->fetchColumn()) {
+            $artistIds[] = (int) $artistId;
+        }
+
+        return $artistIds;
+    }
+
+    /**
+     * Builds the LIMIT clause for a paged read, where an offset with no size runs to the end of the result
+     */
+    private function limitClause(int $size, int $offset): string
+    {
+        if ($offset > 0 && $size > 0) {
+            return sprintf('LIMIT %d, %d', $offset, $size);
+        }
+
+        if ($size > 0) {
+            return 'LIMIT ' . $size;
+        }
+
+        // MySQL has no notation for the last row, so an open-ended offset takes the largest possible BIGINT
+        return ($offset > 0)
+            ? sprintf('LIMIT %d, 18446744073709551615', $offset)
+            : '';
+    }
+
+    /**
      * Runs one count-maintenance statement, where a failure must not take the rest of the sweep down with it
      *
      * @param list<mixed> $params
@@ -590,7 +812,10 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         try {
             $this->connection->query($sql, $params);
         } catch (DatabaseException) {
-            debug_event(self::class, 'count maintenance failed: ' . $sql, 3);
+            $this->logger->warning(
+                'count maintenance failed: ' . $sql,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 }

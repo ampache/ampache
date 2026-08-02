@@ -50,4 +50,18 @@ enum CountableTableEnum: string
     case TAG             = 'tag';
     case USER            = 'user';
     case VIDEO           = 'video';
+
+    /**
+     * Whether the table's rows carry the catalog they belong to, so the count can be narrowed to one
+     *
+     * `artist` is shared across catalogs and has no column of its own; narrowing it means an EXISTS
+     * probe against `catalog_map`, which no caller needs yet. The rest simply are not catalog-scoped.
+     */
+    public function hasCatalogColumn(): bool
+    {
+        return match ($this) {
+            self::ALBUM, self::ALBUM_DISK, self::LIVE_STREAM, self::PODCAST, self::PODCAST_EPISODE, self::SONG, self::VIDEO => true,
+            self::ARTIST, self::CATALOG, self::LABEL, self::LICENSE, self::PLAYLIST, self::SEARCH, self::SHARE, self::TAG, self::USER => false,
+        };
+    }
 }

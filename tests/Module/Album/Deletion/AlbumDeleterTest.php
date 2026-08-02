@@ -27,23 +27,29 @@ namespace Ampache\Module\Album\Deletion;
 
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserflagRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class AlbumDeleterTest extends TestCase
 {
     private AlbumRepositoryInterface&MockObject $albumRepository;
     private ArtCleanupInterface&MockObject $artCleanup;
+    private CatalogCounterInterface&MockObject $catalogCounter;
+    private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LoggerInterface&MockObject $logger;
     private ModelFactoryInterface&MockObject $modelFactory;
@@ -194,6 +200,17 @@ class AlbumDeleterTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->dic = $this->createMock(ContainerInterface::class);
+
+        // Rating::garbage_collection() reaches its repository through the `global $dic` bridge
+        $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            RatingRepositoryInterface::class => $this->createMock(RatingRepositoryInterface::class),
+            UserflagRepositoryInterface::class => $this->createMock(UserflagRepositoryInterface::class),
+            default => $this->createMock(LoggerInterface::class),
+        });
+
+        $GLOBALS['dic'] = $this->dic;
+
         $this->albumRepository        = $this->createMock(AlbumRepositoryInterface::class);
         $this->modelFactory           = $this->createMock(ModelFactoryInterface::class);
         $this->logger                 = $this->createMock(LoggerInterface::class);
@@ -203,6 +220,8 @@ class AlbumDeleterTest extends TestCase
         $this->userActivityRepository = $this->createMock(UserActivityRepositoryInterface::class);
         $this->artCleanup             = $this->createMock(ArtCleanupInterface::class);
         $this->folderRepository       = $this->createMock(FolderRepositoryInterface::class);
+
+        $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
 
         $this->subject = new AlbumDeleter(
             $this->albumRepository,
@@ -214,6 +233,7 @@ class AlbumDeleterTest extends TestCase
             $this->userActivityRepository,
             $this->artCleanup,
             $this->folderRepository,
+            $this->catalogCounter,
         );
     }
 }

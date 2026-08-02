@@ -46,6 +46,11 @@ interface WantedRepositoryInterface
     /**
      * This cleans out unused wanted items
      */
+    /**
+     * Marks a wanted item as accepted
+     */
+    public function accept(string $musicbrainzId): void;
+
     public function collectGarbage(): void;
 
     /**

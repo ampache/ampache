@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\Folder;
 use Override;
 use Sabre\DAV\Collection;
