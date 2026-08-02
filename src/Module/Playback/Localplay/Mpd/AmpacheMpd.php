@@ -217,14 +217,14 @@ class AmpacheMpd extends localplay_controller
                     $data['link'] = $song->get_f_link();
                     break;
                 case 'demo_id':
-                    $democratic   = new Democratic($url_data['demo_id']);
+                    $democratic   = new Democratic((int) $url_data['demo_id']);
                     $data['name'] = T_('Democratic') . ' - ' . $democratic->name;
                     $data['link'] = '';
                     break;
                 case 'random':
                     $className = ObjectTypeToClassNameMapper::map($url_data['random_type']);
                     /** @var library_item $random */
-                    $random       = new $className($url_data['random_id']);
+                    $random       = new $className((int) $url_data['random_id']);
                     $data['name'] = T_('Random') . ' - ' . scrub_out($random->get_fullname());
                     $data['link'] = '';
                     break;
