@@ -94,10 +94,11 @@ final readonly class ShowAction extends AbstractShowAction
             return null;
         }
 
-        $item = $this->libraryItemLoader->load(
-            LibraryItemEnum::from($objectType),
-            $objectId
-        );
+        // art is also stored for types that are not library items (a wanted album), so the name may be unavailable
+        $itemType = LibraryItemEnum::tryFrom($objectType);
+        $item     = ($itemType !== null)
+            ? $this->libraryItemLoader->load($itemType, $objectId)
+            : null;
 
         if ($item instanceof Song || $item instanceof Video || $item instanceof Podcast_Episode) {
             $filename = $item->title;

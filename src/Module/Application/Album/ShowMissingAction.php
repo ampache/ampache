@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
@@ -84,17 +85,36 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
             'info-box missing'
         );
 
-        // the artist is always part of the search; on album name alone this regularly found art from another release
-        $images = $this->artCollector->collect(
-            $this->modelFactory->createArt(0),
-            [
-                'mb_albumid_group' => (string) $walbum->mbid,
-                'album' => (string) $walbum->name,
-                'artist' => $walbum->get_parent_fullname(),
-                'keyword' => trim($walbum->get_parent_fullname() . ' ' . $walbum->name),
-            ],
-            1
-        );
+        // a stored cover means the providers are not asked again on every load of this page
+        $art       = $this->modelFactory->createArt($walbum->id, 'wanted');
+        $image_url = ($walbum->id !== 0 && Art::has_db($walbum->id, 'wanted'))
+            ? Art::url($walbum->id, 'wanted')
+            : null;
+
+        if ($image_url === null) {
+            // the artist is always part of the search; on album name alone this regularly found art from another release
+            $images = $this->artCollector->collect(
+                $art,
+                [
+                    'mb_albumid_group' => (string) $walbum->mbid,
+                    'album' => (string) $walbum->name,
+                    'artist' => $walbum->get_parent_fullname(),
+                    'keyword' => trim($walbum->get_parent_fullname() . ' ' . $walbum->name),
+                ],
+                1
+            );
+
+            if ($images !== [] && !empty($images[0]['url'])) {
+                $image_url = $images[0]['url'];
+                // only a saved wanted album has an id to key the art on; a prototype keeps using the provider url
+                if ($walbum->id !== 0) {
+                    $art->insert_url($image_url);
+                    if (Art::has_db($walbum->id, 'wanted')) {
+                        $image_url = Art::url($walbum->id, 'wanted') ?? $image_url;
+                    }
+                }
+            }
+        }
 
         // the same links a regular album carries, with Deezer and iTunes in place of DuckDuckGo and Wikipedia
         $artist_name = rawurlencode($walbum->get_parent_fullname());
@@ -133,10 +153,10 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
 
         print('</div>');
 
-        if ($images !== [] && !empty($images[0]['url'])) {
+        if ($image_url !== null) {
             printf(
                 '<div class="item_art"><a href="%1$s" rel="prettyPhoto"><img src="%1$s" alt="%2$s" height="128" width="128" /></a></div>',
-                $images[0]['url'],
+                $image_url,
                 scrub_out('[' . $walbum->get_parent_fullname() . '] ' . $walbum->name)
             );
         } else {
