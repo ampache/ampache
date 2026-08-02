@@ -87,7 +87,7 @@ class Song_Preview extends database_object implements Media, displayable_item, c
         $this->track       = isset($info['track']) ? (int) $info['track'] : null;
 
         if ($this->file) {
-            $data       = pathinfo($this->file);
+            $data       = pathinfo((string) parse_url($this->file, PHP_URL_PATH));
             $this->type = (isset($data['extension']))
                 ? strtolower($data['extension'])
                 : 'mp3';

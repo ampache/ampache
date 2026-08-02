@@ -32,7 +32,9 @@ use Ampache\Repository\Model\Song_Preview;
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
+            <th class="cel_play essential"></th>
             <th class="cel_song"><?php echo T_('Song Title'); ?></th>
+            <th class="cel_add essential"></th>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_track"><?php echo T_('Track'); ?></th>
