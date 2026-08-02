@@ -47,7 +47,7 @@ final class ShowAction extends AbstractUserAction
         $browse->set_type('user');
         $browse->set_sort('username', 'ASC');
         // filter on username, fullname or email (see UserQuery alpha_match)
-        $search = trim((string)($request->getQueryParams()['search'] ?? ''));
+        $search = trim((string) ($request->getQueryParams()['search'] ?? ''));
         if ($search !== '') {
             $browse->set_filter('alpha_match', $search);
         }
