@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Database\Query\Query;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
@@ -86,9 +87,28 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 $filter = false;
                 // data set by the filter box (browse_filters.inc.php)
                 if (isset($_REQUEST['key'])) {
-                    // user typed a "start with" word
+                    // user typed a word to match the name against
                     if (isset($_REQUEST['multi_alpha_filter'])) {
-                        $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
+                        // the mode is remembered on the browse, so an empty box doesn't reset it on the next render
+                        $browse->set_match_mode((string) ($_REQUEST['multi_alpha_filter_match'] ?? ''));
+                        $match = (in_array($_REQUEST['multi_alpha_filter_match'] ?? '', Query::MATCH_MODES, true))
+                            ? $browse->get_match_mode()
+                            : (string) $_REQUEST['key'];
+
+                        // only one of these may be set: every filter emits sql, so two would AND together
+                        foreach (Query::MATCH_MODES as $unwanted) {
+                            if ($unwanted !== $match) {
+                                $browse->clear_filter($unwanted);
+                            }
+                        }
+
+                        $value = (string) $_REQUEST['multi_alpha_filter'];
+                        if ($value === '') {
+                            $browse->clear_filter($match);
+                        } else {
+                            $browse->set_filter($match, $value);
+                        }
+
                         $filter = true;
                     }
 

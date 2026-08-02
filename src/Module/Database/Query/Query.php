@@ -43,6 +43,9 @@ use Ampache\Repository\TmpBrowseRepositoryInterface;
  */
 class Query
 {
+    /** @var string[] The name matches the filter box offers, in the order it lists them */
+    public const array MATCH_MODES = ['starts_with', 'like'];
+
     private const array SORT_ORDER = [
         'active' => 'ASC',
         'last_count' => 'ASC',
@@ -77,6 +80,7 @@ class Query
         'join' => null,
         'limit' => 0,
         'mashup' => null,
+        'match_mode' => 'starts_with', // which name match the filter box is set to, kept apart from the filter it sets
         'offset' => 0,
         'params' => [], // parameters for custom sql
         'select' => [],
@@ -248,6 +252,23 @@ class Query
     }
 
     /**
+     * clear_filter
+     * drops a filter so it stops contributing to the query; every set filter emits sql, so an unwanted one
+     * has to be removed rather than blanked
+     */
+    public function clear_filter(string $key): void
+    {
+        if (!isset($this->_state['filter'][$key])) {
+            return;
+        }
+
+        unset($this->_state['filter'][$key]);
+
+        $this->_state['total'] = null;
+        $this->set_start(0);
+    }
+
+    /**
      * Get content div name
      */
     public function get_content_div(): string
@@ -267,6 +288,20 @@ class Query
     public function get_filter(string $key): int|string|null
     {
         return $this->_state['filter'][$key] ?? null;
+    }
+
+    /**
+     * get_match_mode
+     * the name match the filter box is set to; it outlives the filter itself so emptying the box does not
+     * silently put the box back to the default on the next render
+     */
+    public function get_match_mode(): string
+    {
+        $mode = $this->_state['match_mode'] ?? null;
+
+        return (in_array($mode, self::MATCH_MODES, true))
+            ? $mode
+            : self::MATCH_MODES[0];
     }
 
     /**
@@ -697,6 +732,16 @@ class Query
     public function set_limit(int $limit): void
     {
         $this->_state['limit'] = abs($limit);
+    }
+
+    /**
+     * set_match_mode
+     */
+    public function set_match_mode(string $mode): void
+    {
+        if (in_array($mode, self::MATCH_MODES, true)) {
+            $this->_state['match_mode'] = $mode;
+        }
     }
 
     /**
