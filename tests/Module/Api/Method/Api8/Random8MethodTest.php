@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method;
+namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
@@ -41,11 +41,11 @@ use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 
-class RandomMethodTest extends MockeryTestCase
+class Random8MethodTest extends MockeryTestCase
 {
     private ModelFactoryInterface|MockInterface|null $modelFactory;
     private PodcastEpisodeRepositoryInterface|MockInterface|null $podcastEpisodeRepository;
-    private ?RandomMethod $subject;
+    private ?Random8Method $subject;
     private VideoRepositoryInterface|MockInterface|null $videoRepository;
 
     /**
@@ -265,7 +265,7 @@ class RandomMethodTest extends MockeryTestCase
             $gatekeeper,
             $response,
             $output,
-            ['type' => 'genre'],
+            ['type' => 'not-a-type'],
             $user,
             $apiVersion
         );
@@ -278,7 +278,7 @@ class RandomMethodTest extends MockeryTestCase
         $this->podcastEpisodeRepository = $this->mock(PodcastEpisodeRepositoryInterface::class);
         $this->videoRepository          = $this->mock(VideoRepositoryInterface::class);
 
-        $this->subject = new RandomMethod(
+        $this->subject = new Random8Method(
             $this->modelFactory,
             $this->podcastEpisodeRepository,
             $this->videoRepository

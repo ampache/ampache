@@ -346,6 +346,24 @@ class Wanted extends database_object
         return $this->f_user ?? '';
     }
 
+    /**
+     * Return the plain name of the parent object (if appliccable)
+     */
+    public function get_parent_fullname(): string
+    {
+        if ($this->artist) {
+            return (string) new Artist($this->artist)->get_fullname();
+        }
+
+        if ($this->artist_mbid !== null) {
+            $wartist = self::getMissingArtistRetriever()->retrieve($this->artist_mbid);
+
+            return $wartist['name'] ?? '';
+        }
+
+        return '';
+    }
+
     public function getId(): int
     {
         return $this->id;

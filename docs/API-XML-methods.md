@@ -6050,6 +6050,41 @@ Sync and download new podcast episodes
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/update_podcast.xml)
 
+### upload
+
+Add a media file to the catalog named by the `upload_catalog` preference.
+
+Send the file either as a multipart form field named `upl`, or as the raw request body, in which case `filename` names it.
+
+**ACCESS REQUIRED:** the `allow_upload` preference, at the access level set by `upload_access_level`
+
+**NOTE** send a real `Content-Type` (e.g. `audio/mpeg`) with a raw body. A form-encoded content type makes PHP parse the file as request variables, which can emit a `max_input_vars` warning ahead of the response.
+
+**NOTE** an artist or album owned by another user is refused, and a file that fails to be added is removed from the catalog directory again. A name already present in the catalog is refused rather than renamed, only the file name is used (any path in it is ignored), and a request body larger than PHP's `upload_max_filesize`/`post_max_size` is rejected.
+
+| Input         | Type    | Description                                           | Optional |
+|---------------|---------|-------------------------------------------------------|---------:|
+| 'filename'    | string  | File name, required when the file is the request body |      YES |
+| 'license'     | integer | $license_id, required when `licensing` is enabled     |      YES |
+| 'artist_id'   | integer | $artist_id                                            |      YES |
+| 'artist_name' | string  | Create or reuse an artist you own                     |      YES |
+| 'album_id'    | integer | $album_id                                             |      YES |
+| 'album_name'  | string  | Create or reuse an album you own                      |      YES |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 ### url_to_song
 
 This takes a url and returns the song object in question
@@ -6642,18 +6677,20 @@ Get an art image.
 
 ### random
 
-Picks a random song, podcast episode or video from the whole library and redirects (302) to its stream url. **Ampache 8.0.0+**
+Picks a random object and redirects (302) to its stream url. **Ampache 8.0.0+**
 
-Mirrors [stream](#stream)'s transcode parameters but takes no `filter`/`id`; only single-file media types are supported.
-Picking a random item from a container (album, artist, playlist, search) is what the search/browse/playlist methods are for.
+Mirrors [stream](#stream)'s transcode parameters. A container type resolves to a random song from within it, so `filter` names that container.
 
-| Input     | Type    | Description                                                                    | Optional |
-|-----------|---------|--------------------------------------------------------------------------------|---------:|
-| 'type'    | string  | `song`, `podcast_episode`, `video` (default: song)                             |      YES |
-| 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb) **song only**          |      YES |
-| 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) **song only**       |      YES |
-| 'offset'  | integer | time offset in seconds                                                         |      YES |
-| 'stats'   | boolean | `0`, `1`, if false disable stat recording when playing the object (default: 1) |      YES |
+**NOTE** `filter` is read against the table named by `type`, and those id spaces overlap - album `7` and album_disk `7` are different objects. A client browsing disks (`album_group` off) holds album_disk ids and must send `type=album_disk`.
+
+| Input     | Type    | Description                                                                                                                                                                                                                                   | Optional |
+|-----------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------:|
+| 'type'    | string  | `album`, `album_artist`, `album_disk`, `artist`, `catalog`, `favorite`, `genre`, `label`, `playlist`, `podcast_episode`, `rating`, `search`, `song`, `song_artist`, `video` (default: song)                                                   |      YES |
+| 'filter'  | string  | $object_id of the container to pick from; a `smart_` prefixed id selects a smartlist. `favorite` reads it as `1`/omitted = flagged, `0` = not flagged; `rating` as `1`-`5` = that many stars or more, `0` = unrated, omitted = any rated song |      YES |
+| 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb) **song only**                                                                                                                                                                         |      YES |
+| 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) **song only**                                                                                                                                                                      |      YES |
+| 'offset'  | integer | time offset in seconds                                                                                                                                                                                                                        |      YES |
+| 'stats'   | boolean | `0`, `1`, if false disable stat recording when playing the object (default: 1)                                                                                                                                                                |      YES |
 
 * return file (HTTP 302 Found; redirects to the stream url)
 * throws (HTTP 400 Bad Request)

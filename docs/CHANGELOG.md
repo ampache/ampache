@@ -151,6 +151,20 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Changed (8.0.0)
 
+* Playback
+  * Radio stations, remote-catalog media and song previews stream through Ampache instead of redirecting the client to the source server, so the web player can apply the equalizer, ReplayGain and the visualizer to them
+  * A radio station may be added as an `m3u`, `m3u8`, `pls`, `asx` or `xspf` url; the stream url inside it is read when the station is played, so a directory that rotates its mirrors keeps working
+  * **NOTE** a radio station now uses your server's bandwidth for as long as it plays
+* Wanted albums
+  * Database 800043
+    * `image` accepts a `wanted` object type, so a wanted album keeps the cover it gathered instead of asking the art providers on every page load
+  * The box title is prefixed `Wanted:` so an album Ampache does not hold is not mistaken for one in the library
+  * Cover art is searched on artist and album name together; on the album name alone it regularly matched an unrelated release
+  * The placeholder image fills the art slot when no cover is found, instead of sitting behind the whole box
+  * The external links sit above the art in one block, the same layout a regular album uses
+  * The external link row a regular album carries, with Deezer and iTunes searches in place of DuckDuckGo and Wikipedia
+  * Preview tracks carry play, play next, play last and add-to-playlist buttons instead of listing as plain text
+  * Garbage collection removes a wanted album once the library holds it, matched on release-group `mbid` or on name and album artist
 * Database 800014
   * Dropped four redundant `object_count` indexes: `object_count_full_index` (an exact duplicate of `object_count_UNIQUE_IDX`), `object_type` and `object_count_type_IDX` (leading-column prefixes of that key), and `date` (a prefix of `object_count_date_IDX`)
 * Caching
@@ -235,6 +249,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* Turning on `album_art_store_disk` without setting `local_metadata_dir` hid every cover; the art was still written to the database but only ever read back from disk
+* Art stored for something that is not a library item, such as a wanted album, returned an empty image
+* Uploading a file with an album name always failed after the file had been copied into the catalog, leaving it on disk but absent from the library
+* Batch download was refused for every object type unless `allow_zip_types` named them; leaving it unset now allows all supported types, as `ampache.cfg.php.dist` documents
+* Settings that exist as both a config option and a preference read the config file value, ignoring the preference; `Allow Downloads` had no config option at all, so batch download stayed off however it was set
 * Deleting a catalog filter from a link that carried no filter name confirmed it with a blank name and logged a runtime error; the confirmation now reads `Catalog Filter`
 * A media file with no readable artist tag is imported under `Unknown (Orphaned)`, the same placeholder an untitled album already uses. The scan used to fail its insert and log a database error for that file on every run, so it could never be added
 * A song preview is played straight from the provider's url instead of being proxied through Ampache, so no preview traffic passes through the server

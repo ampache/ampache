@@ -60,6 +60,7 @@ robots.txt
 verify.env
 web.config
 *.log
+*.mp3
 *.phpproj
 *.pyc
 *.save

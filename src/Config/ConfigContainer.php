@@ -31,6 +31,22 @@ namespace Ampache\Config;
  */
 final class ConfigContainer implements ConfigContainerInterface
 {
+    /**
+     * Every object type batch download can build a zip from, used when `allow_zip_types` names none.
+     *
+     * @var list<string>
+     */
+    private const array DEFAULT_ZIP_TYPES = [
+        'album',
+        'album_disk',
+        'artist',
+        'playlist',
+        'search',
+        'song',
+        'tmp_playlist',
+        'video',
+    ];
+
     /** @var array<string, mixed> $configuration */
     private array $configuration;
 
@@ -45,7 +61,8 @@ final class ConfigContainer implements ConfigContainerInterface
 
     public function get(string $configKey): mixed
     {
-        return $this->configuration[$configKey] ?? null;
+        // this container holds a snapshot taken before the user's preferences were merged, so the live value wins
+        return AmpConfig::get($configKey) ?? $this->configuration[$configKey] ?? null;
     }
 
     public function getComposerBinaryPath(): string
@@ -92,19 +109,25 @@ final class ConfigContainer implements ConfigContainerInterface
      */
     public function getTypesAllowedForZip(): array
     {
-        $typeList = $this->configuration[ConfigurationKeyEnum::ALLOWED_ZIP_TYPES] ?? null;
+        $typeList = $this->get(ConfigurationKeyEnum::ALLOWED_ZIP_TYPES);
 
-        if ($typeList === null) {
-            return [];
-        }
         if (!is_array($typeList)) {
-            $typeList = explode(',', $typeList);
+            $typeList = ($typeList === null || $typeList === '')
+                ? []
+                : explode(',', (string) $typeList);
         }
 
-        return array_map(
-            'trim',
-            $typeList
+        $typeList = array_values(
+            array_filter(
+                array_map('trim', $typeList),
+                static fn(string $type): bool => $type !== ''
+            )
         );
+
+        // naming no type means every supported one, which is what ampache.cfg.php.dist documents
+        return ($typeList === [])
+            ? self::DEFAULT_ZIP_TYPES
+            : $typeList;
     }
 
     /**
@@ -137,7 +160,7 @@ final class ConfigContainer implements ConfigContainerInterface
 
     public function isFeatureEnabled(string $feature): bool
     {
-        $value = $this->configuration[$feature] ?? false;
+        $value = $this->get($feature) ?? false;
 
         return (
             $value === 'true'

@@ -39,8 +39,10 @@ use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Module\Playback\Democratic;
+use Ampache\Module\Playback\PlaylistUrlResolverInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\StreamProxyInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -49,6 +51,7 @@ use Ampache\Module\System\Preference;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
@@ -78,6 +81,8 @@ final readonly class PlayAction implements ApplicationActionInterface
         private UserRepositoryInterface $userRepository,
         private LoggerInterface $logger,
         private Stats $stats,
+        private StreamProxyInterface $streamProxy,
+        private PlaylistUrlResolverInterface $playlistUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -610,6 +615,9 @@ final readonly class PlayAction implements ApplicationActionInterface
             }
         } elseif ($type == 'song_preview') {
             $media = new Song_Preview((int) $object_id);
+        } elseif ($type == 'live_stream') {
+            $media = new Live_Stream((int) $object_id);
+
         } elseif ($type == 'podcast_episode') {
             $media = new Podcast_Episode((int) $object_id);
         } else {
@@ -635,6 +643,19 @@ final readonly class PlayAction implements ApplicationActionInterface
                     $media->get_stream_name()
                 )
             );
+        }
+
+        if ($media instanceof Live_Stream) {
+            // a station has a catalog id but no file of its own, so it never reaches the file-backed handling below
+            if (!empty($media->url)) {
+                // a directory usually hands out an m3u or pls, which has to be read for the stream url it names
+                $station_url = $this->playlistUrlResolver->resolve($media->url);
+                if (!$this->streamProxy->proxy($station_url)) {
+                    header('Location: ' . $station_url, true, 303);
+                }
+            }
+
+            return null;
         }
 
         $transcode     = false;
@@ -765,7 +786,10 @@ final readonly class PlayAction implements ApplicationActionInterface
                         }
                     }
 
-                    header('Location: ' . $remoteStreamingUrl);
+                    // proxied rather than redirected so the client sees a same-origin stream it can route through Web Audio
+                    if (!$this->streamProxy->proxy($remoteStreamingUrl)) {
+                        header('Location: ' . $remoteStreamingUrl);
+                    }
 
                     return null;
                 }
@@ -778,12 +802,16 @@ final readonly class PlayAction implements ApplicationActionInterface
                 return null;
             }
         } else {
-            // No catalog, must be song preview or something like that => just redirect to file
-            if ($type == "song_preview") {
-                /** @var Song_Preview $media */
-                $media->stream(); // 303 to the provider url the preview plugin stored, so the client fetches the sample
-            } else {
-                header('Location: ' . $media->file, true, 303);
+            // No catalog, so the media is a preview or another directly referenced url
+            $remote_url = ($type == "song_preview" && $media instanceof Song_Preview)
+                ? $media->getStreamUrl()
+                : $media->file;
+
+            if (!empty($remote_url)) {
+                // proxied rather than redirected so the client sees a same-origin stream it can route through Web Audio
+                if (!$this->streamProxy->proxy($remote_url)) {
+                    header('Location: ' . $remote_url, true, 303);
+                }
             }
 
             return null;

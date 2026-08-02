@@ -44,6 +44,20 @@ class ConfigContainerTest extends MockeryTestCase
         ];
     }
 
+    /**
+     * @return array<string, array{0: array<string, mixed>}>
+     */
+    public static function unsetZipTypesDataProvider(): array
+    {
+        return [
+            'absent' => [[]],
+            'null' => [[ConfigurationKeyEnum::ALLOWED_ZIP_TYPES => null]],
+            'empty string' => [[ConfigurationKeyEnum::ALLOWED_ZIP_TYPES => '']],
+            'empty array' => [[ConfigurationKeyEnum::ALLOWED_ZIP_TYPES => []]],
+            'separators only' => [[ConfigurationKeyEnum::ALLOWED_ZIP_TYPES => ' , ']],
+        ];
+    }
+
     public function testGetComposerBinaryPathReturnsDefault(): void
     {
         $this->assertSame(
@@ -162,11 +176,15 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
-    public function testGetTypesAllowedForZipReturnsEmptyArrayIfNotSet(): void
+    /**
+     * Naming no type means every supported one, as ampache.cfg.php.dist documents.
+     */
+    #[DataProvider('unsetZipTypesDataProvider')]
+    public function testGetTypesAllowedForZipReturnsEverySupportedTypeIfNotSet(array $configuration): void
     {
         self::assertSame(
-            [],
-            $this->createSubject([])->getTypesAllowedForZip()
+            ['album', 'album_disk', 'artist', 'playlist', 'search', 'song', 'tmp_playlist', 'video'],
+            $this->createSubject($configuration)->getTypesAllowedForZip()
         );
     }
 

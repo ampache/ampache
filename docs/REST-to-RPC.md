@@ -279,6 +279,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | GET    | `system-preferences/{preference_name}`               | `?action=system_preference&filter={preference_name}`                             |                    |
 | GET    | `system-preferences`                                 | `?action=system_preferences`                                                     |                    |
 | GET    | `update`                                             | `?action=system_update`                                                          |                    |
+| POST   | `upload`                                             | `?action=upload`                                                                 |                    |
 | POST   | `users/{user_id}/follow`                             | `?action=toggle_follow&filter={user_id}`                                         |                    |
 | GET    | `users/{user_id}/followers`                          | `?action=followers&filter={user_id}`                                             |                    |
 | GET    | `users/{user_id}/following`                          | `?action=following&filter={user_id}`                                             |                    |
