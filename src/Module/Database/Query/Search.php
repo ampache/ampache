@@ -179,6 +179,10 @@ class Search extends playlist_object
     public User $search_user; // user running the search
     public ?string $type = 'public'; // override playlist_object
     private string $order_by;
+
+    /** @var null|array<string, string> $rule_type_map */
+    private ?array $rule_type_map = null; // lazy name => type lookup built from the rule list for this object type
+
     private SearchInterface $searchType;
 
     /** @var string[] $stars */
@@ -828,34 +832,44 @@ class Search extends playlist_object
     /**
      * get_rule_type
      *
-     * Iterate over $this->types to validate the rule name and return the rule type
-     * (text, date, etc)
+     * Validate the rule name and return the rule type (text, date, etc)
+     *
+     * Every name offered by a _get_types_* list must resolve here or the rule is dropped and the search returns everything
      */
     public function get_rule_type_by_name(string $name): ?string
     {
         //debug_event(self::class, 'get_rule_type: ' . $name, 5);
-        return match ($name) {
+        $ruleType = match ($name) {
             'anywhere', 'title', 'album', 'song', 'song_artist', 'album_artist', 'composer', 'comment', 'lyrics',
             'label', 'file', 'playlist_name', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'genre', 'album_genre',
-            'artist_genre', 'song_genre', 'podcast', 'podcast_episode', 'category', 'username' => 'text',
+            'artist_genre', 'song_genre', 'podcast', 'podcast_episode', 'category', 'username', 'summary',
+            'placeformed', 'release_type', 'release_status', 'version', 'barcode', 'catalog_number', 'favorite',
+            'favorite_album', 'favorite_artist' => 'text',
             'id', 'track', 'year', 'original_year', 'time', 'disk_count', 'song_count', 'album_count', 'artist_count',
             'episode_count', 'played_times', 'skipped_times', 'played_or_skipped_times', 'myplayed_times',
             'myskipped_times', 'myplayed_or_skipped_times', 'play_skip_ratio', 'myrating', 'rating', 'albumrating',
-            'artistrating', 'songrating', 'podcastrating', 'podcast_episoderating' => 'numeric',
+            'artistrating', 'songrating', 'podcastrating', 'podcast_episoderating', 'yearformed', 'bitrate',
+            'image_width', 'image_height', 'video_count', 'genre_count_song', 'genre_count_album',
+            'genre_count_artist', 'weight_song', 'weight_album', 'weight_artist', 'weight_podcast',
+            'weight_podcast_episode' => 'numeric',
             'played', 'myplayed', 'myplayedalbum', 'myplayedartist', 'my_flagged_song', 'my_flagged_album',
-            'my_flagged_artist', 'my_flagged_podcast', 'my_flagged_podcast_episode' => 'boolean',
+            'my_flagged_artist', 'my_flagged_podcast', 'my_flagged_podcast_episode', 'has_image',
+            'waveform' => 'boolean',
             'none', 'no_genre', 'no_license', 'possible_duplicate', 'duplicate_tracks', 'possible_duplicate_album',
-            'orphaned_album' => 'is_true',
+            'orphaned_album', 'duplicate_mbid_group' => 'is_true',
             'last_play', 'last_skip', 'last_play_or_skip', 'days_added', 'days_updated' => 'days',
             'recent_played' => 'recent_played',
             'recent_added' => 'recent_added', 'recent_updated' => 'recent_updated',
             'playlist', 'smartplaylist' => 'boolean_subsearch',
-            'catalog', 'license', 'state' => 'boolean_numeric',
+            'catalog', 'license', 'state', 'type', 'owner' => 'boolean_numeric',
             'other_user', 'other_user_album', 'other_user_artist' => 'user_numeric',
             'metadata' => 'multiple',
             'added', 'updated', 'pubdate' => 'date',
             default => null,
         };
+
+        // fall back to the rule list the search form itself is built from so a new rule can never be silently dropped
+        return $ruleType ?? $this->_get_rule_type_map()[$name] ?? null;
     }
 
     /**
@@ -1086,6 +1100,8 @@ class Search extends playlist_object
             $rule_name = $this->_set_rule_name($data["rule_" . $ruleID]);
             $rule_type = $this->get_rule_type_by_name($rule_name);
             if ($rule_type === null) {
+                debug_event(self::class, sprintf('set_rules: dropped unknown %s rule "%s"', $this->objectType, $rule_name), 3);
+
                 continue;
             }
 
@@ -1350,6 +1366,24 @@ class Search extends playlist_object
             ],
             'title' => $group,
         ];
+    }
+
+    /**
+     * _get_rule_type_map
+     *
+     * Build the name => type lookup from the rules offered for this object type
+     * @return array<string, string>
+     */
+    private function _get_rule_type_map(): array
+    {
+        if ($this->rule_type_map === null) {
+            $this->rule_type_map = [];
+            foreach ($this->get_rule_types() as $ruleType) {
+                $this->rule_type_map[$ruleType['name']] = $ruleType['type'];
+            }
+        }
+
+        return $this->rule_type_map;
     }
 
     /**
@@ -1640,7 +1674,8 @@ class Search extends playlist_object
         ];
         $rule_type[] = $this->_get_rule_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
         $users       = $this->getUserRepository()->getValidArray();
-        $rule_type[] = $this->_get_rule_select('owner', T_('Owner'), 'user_numeric', $users, $t_playlist);
+        // owner compares against `playlist`.`user` so it needs the is/is not operators, not the rating ones in user_numeric
+        $rule_type[] = $this->_get_rule_select('owner', T_('Owner'), 'boolean_numeric', $users, $t_playlist);
         $rule_type[] = $this->_get_rule_numeric('id', T_('Database ID'), 'numeric', $t_playlist);
 
         return $rule_type;

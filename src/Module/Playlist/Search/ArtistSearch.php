@@ -118,15 +118,13 @@ final readonly class ArtistSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'genre':
-                    $where[] = ($operator_sql == "NOT LIKE")
-                        ? "`artist`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)"
-                        : sprintf("`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)", $operator_sql);
+                    $negate       = in_array($operator_sql, ['NOT LIKE', 'NOT SOUNDS LIKE'], true);
+                    $where[]      = sprintf("`artist`.`id` %sIN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)", ($negate) ? 'NOT ' : '', ($negate) ? substr($operator_sql, 4) : $operator_sql);
                     $parameters[] = $input;
                     break;
                 case 'song_genre':
-                    $where[] = ($operator_sql == "NOT LIKE")
-                        ? "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)"
-                        : sprintf("`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)", $operator_sql);
+                    $negate       = in_array($operator_sql, ['NOT LIKE', 'NOT SOUNDS LIKE'], true);
+                    $where[]      = sprintf("`song`.`id` %sIN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)", ($negate) ? 'NOT ' : '', ($negate) ? substr($operator_sql, 4) : $operator_sql);
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
@@ -149,7 +147,7 @@ final readonly class ArtistSearch implements SearchInterface
                     break;
                 case 'playlist_name':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = sprintf("(NOT (`artist`.`id` IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `playlist`.`name` %s ?) OR `artist`.`id` IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`album` AND `artist_map`.`object_type` = 'album' WHERE `playlist`.`name` %s ?)))", $operator_sql, $operator_sql);
+                        $where[] = sprintf("(NOT (`artist`.`id` IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `playlist`.`name` %s ?) OR `artist`.`id` IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`album` AND `artist_map`.`object_type` = 'album' WHERE `playlist`.`name` %s ?)))", 'SOUNDS LIKE', 'SOUNDS LIKE');
                     } else {
                         $where[] = sprintf("(`artist`.`id` IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `playlist`.`name` %s ?) OR `artist`.`id` IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`album` AND `artist_map`.`object_type` = 'album' WHERE `playlist`.`name` %s ?))", $operator_sql, $operator_sql);
                     }
@@ -283,6 +281,10 @@ final readonly class ArtistSearch implements SearchInterface
                         ? ""
                         : "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user_flag`.`object_type` = '" . $my_type . "' AND `user_flag`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `my_flagged__" . $my_type . "_" . $search_user_id . "` ON `" . $my_type . sprintf('`.`%s` = `my_flagged__', $column) . $my_type . "_" . $search_user_id . "`.`object_id` AND `my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[] = "`my_flagged__" . $my_type . "_" . $search_user_id . ('`.`object_id` ' . $operator_sql);
+                    if ($my_type == 'song') {
+                        $join['song'] = true;
+                    }
+
                     if ($my_type == 'album') {
                         $join['album'] = true;
                     }
@@ -481,9 +483,9 @@ final readonly class ArtistSearch implements SearchInterface
                             $table['rating'] = '';
                         }
 
-                        $table['rating'] .= (strpos($table['rating'], "rating_" . $my_type . "_" . $search_user_id))
+                        $table['rating'] .= (strpos($table['rating'], "rating_" . $my_type . "_" . $other_userid))
                             ? ""
-                            : "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $search_user_id . "` ON `rating_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' AND `rating_" . $my_type . "_" . $search_user_id . sprintf('`.`object_id` = `%s`.`%s` AND `rating_', $my_type, $column) . $my_type . "_" . $search_user_id . "`.`user` = " . $search_user_id;
+                            : "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $other_userid . "` ON `rating_" . $my_type . "_" . $other_userid . "`.`object_type` = '" . $my_type . "' AND `rating_" . $my_type . "_" . $other_userid . sprintf('`.`object_id` = `%s`.`%s` AND `rating_', $my_type, $column) . $my_type . "_" . $other_userid . "`.`user` = " . $other_userid;
                     }
 
                     break;
@@ -624,9 +626,7 @@ final readonly class ArtistSearch implements SearchInterface
         ///    $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`user`='" . $search_user_id . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` ON `object_count`.`object_id` = `artist`.`id`";
         ///}
         if (array_key_exists('image', $join)) {
-            $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
-            $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song'";
-            $where_sql             = "(" . $where_sql . ") AND `image`.`object_type`='artist' AND `image`.`size`='original'";
+            $table['image'] = "LEFT JOIN `image` ON `image`.`object_id` = `artist`.`id` AND `image`.`object_type` = 'artist' AND `image`.`size` = 'original'";
         }
 
         if ($album_artist) {

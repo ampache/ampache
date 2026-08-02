@@ -680,11 +680,16 @@ class Song extends database_object implements
             $artist_id   = (int) Artist::check($artist, $artist_mbid, $user_upload);
         }
 
+        // `song`.`artist` is NOT NULL, so a file with no usable artist tag lands on the same placeholder an album does
+        if ($artist_id === null) {
+            $artist_id = (int) Artist::check('', null, $user_upload);
+        }
+
         if (isset($results['album_id'])) {
             $album_id = (int) ($results['album_id']);
         } else {
             $album_id = (empty($album))
-                ? Album::check($catalog, '', $year, null, null, ($albumartist_id ?? $artist_id ?? null))
+                ? Album::check($catalog, '', $year, null, null, ($albumartist_id ?? $artist_id))
                 : Album::check($catalog, $album, $year, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         }
 

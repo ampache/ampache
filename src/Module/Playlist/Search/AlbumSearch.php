@@ -91,6 +91,7 @@ final class AlbumSearch implements SearchInterface
                 case 'release_status':
                 case 'barcode':
                 case 'catalog_number':
+                case 'version':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
                         $where[] = "NOT (`album`.`" . $rule[0] . "` SOUNDS LIKE ?)";
                     } else {
@@ -102,7 +103,6 @@ final class AlbumSearch implements SearchInterface
                 case 'catalog':
                 case 'id':
                 case 'year':
-                case 'version':
                     $where[]      = "`album`.`" . $rule[0] . sprintf('` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
@@ -205,7 +205,7 @@ final class AlbumSearch implements SearchInterface
                 case 'my_flagged_artist':
                     // combine these as they all do the same thing just different tables
                     $looking      = str_replace('my_flagged_', '', $rule[0]);
-                    $column       = ($looking == 'album') ? 'id' : $looking;
+                    $column       = 'id';
                     $my_type      = $looking;
                     $operator_sql = ((int) $operator_sql === 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
@@ -222,7 +222,7 @@ final class AlbumSearch implements SearchInterface
                     }
 
                     if ($my_type == 'artist') {
-                        $join['artist'] = true;
+                        $join['album_map'] = true;
                     }
 
                     break;
@@ -250,7 +250,7 @@ final class AlbumSearch implements SearchInterface
                     $where[]      = "`" . $my_type . sprintf('`.`weight` %s ?', $operator_sql);
                     $parameters[] = $input;
                     if ($my_type == 'artist') {
-                        $join['artist'] = true;
+                        $join['album_map'] = true;
                     }
 
                     if ($my_type == 'song') {
@@ -405,9 +405,9 @@ final class AlbumSearch implements SearchInterface
                             $table['rating'] = '';
                         }
 
-                        $table['rating'] .= (strpos($table['rating'], "rating_" . $my_type . "_" . $search_user_id))
+                        $table['rating'] .= (strpos($table['rating'], "rating_" . $my_type . "_" . $other_userid))
                             ? ""
-                            : "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $search_user_id . "` ON `rating_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' AND `rating_" . $my_type . "_" . $search_user_id . sprintf('`.`object_id` = `%s`.`%s` AND `rating_', $my_type, $column) . $my_type . "_" . $search_user_id . "`.`user` = " . $search_user_id;
+                            : "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $other_userid . "` ON `rating_" . $my_type . "_" . $other_userid . "`.`object_type` = '" . $my_type . "' AND `rating_" . $my_type . "_" . $other_userid . sprintf('`.`object_id` = `%s`.`%s` AND `rating_', $my_type, $column) . $my_type . "_" . $other_userid . "`.`user` = " . $other_userid;
                     }
 
                     break;
@@ -422,9 +422,8 @@ final class AlbumSearch implements SearchInterface
                     $table['addition_' . $key] = sprintf('LEFT JOIN (SELECT `id` FROM `album` ORDER BY %s DESC LIMIT ', $operator_sql) . (int) $input . sprintf(') AS `addition_time_%s` ON `album`.`id` = `addition_time_%s`.`id`', $key, $key);
                     break;
                 case 'genre':
-                    $where[] = ($operator_sql == "NOT LIKE")
-                        ? "`album`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)"
-                        : sprintf("`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)", $operator_sql);
+                    $negate       = in_array($operator_sql, ['NOT LIKE', 'NOT SOUNDS LIKE'], true);
+                    $where[]      = sprintf("`album`.`id` %sIN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)", ($negate) ? 'NOT ' : '', ($negate) ? substr($operator_sql, 4) : $operator_sql);
                     $parameters[] = $input;
                     break;
                 case 'genre_count_album':
@@ -445,9 +444,8 @@ final class AlbumSearch implements SearchInterface
                     $where[] = "`album`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'song_genre':
-                    $where[] = ($operator_sql == "NOT LIKE")
-                        ? "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)"
-                        : sprintf("`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)", $operator_sql);
+                    $negate       = in_array($operator_sql, ['NOT LIKE', 'NOT SOUNDS LIKE'], true);
+                    $where[]      = sprintf("`song`.`id` %sIN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)", ($negate) ? 'NOT ' : '', ($negate) ? substr($operator_sql, 4) : $operator_sql);
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;

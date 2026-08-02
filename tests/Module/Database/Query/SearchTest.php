@@ -35,6 +35,45 @@ use Psr\Log\LoggerInterface;
 class SearchTest extends MockeryTestCase
 {
     /**
+     * rule names the search form offers that get_rule_type_by_name() once failed to resolve, with their basetype
+     *
+     * @return list<array{string, string}>
+     */
+    public static function ruleNameProvider(): array
+    {
+        return [
+            ['summary', 'text'],
+            ['placeformed', 'text'],
+            ['release_type', 'text'],
+            ['release_status', 'text'],
+            ['version', 'text'],
+            ['barcode', 'text'],
+            ['catalog_number', 'text'],
+            ['favorite', 'text'],
+            ['favorite_album', 'text'],
+            ['favorite_artist', 'text'],
+            ['yearformed', 'numeric'],
+            ['bitrate', 'numeric'],
+            ['image_width', 'numeric'],
+            ['image_height', 'numeric'],
+            ['video_count', 'numeric'],
+            ['genre_count_song', 'numeric'],
+            ['genre_count_album', 'numeric'],
+            ['genre_count_artist', 'numeric'],
+            ['weight_song', 'numeric'],
+            ['weight_album', 'numeric'],
+            ['weight_artist', 'numeric'],
+            ['weight_podcast', 'numeric'],
+            ['weight_podcast_episode', 'numeric'],
+            ['has_image', 'boolean'],
+            ['waveform', 'boolean'],
+            ['duplicate_mbid_group', 'is_true'],
+            ['type', 'boolean_numeric'],
+            ['owner', 'boolean_numeric'],
+        ];
+    }
+
+    /**
      * every type that Search::set_order_by() can sort by popularity weight
      *
      * @return list<array{string}>
@@ -50,6 +89,18 @@ class SearchTest extends MockeryTestCase
             ['song'],
             ['video'],
         ];
+    }
+
+    /**
+     * set_rules() drops a rule whose name does not resolve, so an unresolvable name makes the search return every
+     * object instead of a filtered list
+     */
+    #[DataProvider('ruleNameProvider')]
+    public function testEveryOfferedRuleNameResolvesToItsBaseType(string $rule, string $expected): void
+    {
+        $search = new Search(0, 'song');
+
+        $this->assertSame($expected, $search->get_rule_type_by_name($rule), sprintf('rule "%s" does not resolve and would be dropped', $rule));
     }
 
     /**
