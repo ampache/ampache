@@ -56,7 +56,7 @@
         "adhocore/cli": "^1.6",
         "ampache/ampacheapi-php": "^2",
         "ampache/php-discogs-api": "^0.3.0",
-        "cboden/ratchet": "0.4.*",
+        "cboden/ratchet": "0.4.*@dev",
         "clue/multicast-react": "^1.1.0",
         "gettext/gettext": "^5",
         "gettext/translator": "^1.2",

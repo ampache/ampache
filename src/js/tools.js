@@ -59,6 +59,44 @@ export function hideFilters(element, string, group_release) {
 /************************************************************/
 
 
+// An href="#" link jumps the document to the top, which moves the page out from under the dialog being
+// placed. Callers pass either the click event or the element, so only an event has a default to suppress.
+function suppressDialogNavigation(source) {
+    if (source && typeof source.preventDefault === "function") {
+        source.preventDefault();
+    }
+}
+
+// The element a popup dialog hangs off, given either the click event or the element itself.
+function dialogAnchor(source) {
+    if (source && source.nodeType) {
+        return source;
+    }
+
+    return (source && (source.currentTarget || source.target)) || null;
+}
+
+// The broadcast button lives in the position:fixed web player, so a document coordinate for it is only valid
+// at the scroll offset it was taken at. Place this one against the viewport so it tracks the button it hangs
+// off; the playlist and share dialogs hang off page content and keep jQuery UI's own document placement.
+function positionDialogNear(selector, source, offsetLeft) {
+    var anchor = dialogAnchor(source);
+    if (!anchor || typeof anchor.getBoundingClientRect !== "function") {
+        return;
+    }
+
+    var frame = $(selector).closest(".ui-dialog");
+    if (frame.length === 0) {
+        return;
+    }
+
+    var rect = anchor.getBoundingClientRect();
+    var left = Math.min(Math.max(rect.left + offsetLeft, 10), window.innerWidth - frame.outerWidth() - 10);
+    var top = Math.min(Math.max(rect.top, 10), window.innerHeight - frame.outerHeight() - 10);
+
+    frame.css({position: "fixed", top: Math.max(top, 10) + "px", left: Math.max(left, 10) + "px"});
+}
+
 var closeplaylist;
 export function overlayclickclose() {
     if (closeplaylist) {
@@ -68,6 +106,7 @@ export function overlayclickclose() {
 }
 
 export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
+    suppressDialogNavigation(e);
     $("#playlistdialog").dialog("close");
 
     var parent = window;
@@ -90,7 +129,9 @@ export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
         autoOpen: false,
         position: {
             my: "left+10 top",
-            of: e
+            at: "left top",
+            of: dialogAnchor(e),
+            collision: "flip"
         },
         open() {
             closeplaylist = 1;
@@ -190,6 +231,7 @@ export function shoverlayclickclose(e) {
 
 var closebroadcasts;
 export function showBroadcastsDialog(e) {
+    suppressDialogNavigation(e);
     $("#broadcastsdialog").dialog("close");
 
     var parent = window;
@@ -206,12 +248,15 @@ export function showBroadcastsDialog(e) {
         autoOpen: false,
         position: {
             my: "left-180 top",
-            of: e
+            at: "left top",
+            of: dialogAnchor(e),
+            collision: "flip"
         },
         open() {
             closebroadcasts = 1;
             $(document).on("click.broadcastsdialog", broverlayclickclose);
             $(this).load(parent.contentUrl, function() {
+                positionDialogNear("#broadcastsdialog", e, -180);
                 $("#broadcastsdialog").focus();
             });
         },
@@ -226,6 +271,7 @@ export function showBroadcastsDialog(e) {
     });
 
     $("#broadcastsdialog").dialog("open");
+    positionDialogNear("#broadcastsdialog", e, -180);
     closebroadcasts = 0;
 }
 
@@ -246,6 +292,7 @@ export function handleBroadcastAction(url, id) {
 /************************************************************/
 
 export function showShareDialog(e, object_type, object_id) {
+    suppressDialogNavigation(e);
     $("#sharedialog").dialog("close");
 
     var parent = window;
@@ -262,7 +309,9 @@ export function showShareDialog(e, object_type, object_id) {
         autoOpen: false,
         position: {
             my: "left+10 top",
-            of: e
+            at: "left top",
+            of: dialogAnchor(e),
+            collision: "flip"
         },
         open() {
             closeshare = 1;
