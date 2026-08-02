@@ -151,6 +151,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Changed (8.0.0)
 
+* The browse filter box matches a name in more than one way
+  * A **Starts With** / **Contains** menu sits above the box; Contains matches anywhere in the name, so a browse no longer has to be abandoned for the search page to find something by a word in the middle of its title
+  * Only one match applies at a time and the choice is remembered per browse, so emptying the box does not put it back to Starts With
+  * The private message browse gained the Contains match with everything else
+  * `browse_filter` is on by default for new installs; existing users keep whatever they have set
+  * The Users admin page lost its own search form, which the filter box now covers exactly: in Contains mode it matches username, fullname or email, the same three columns the form searched
 * Playback
   * Radio stations, remote-catalog media and song previews stream through Ampache instead of redirecting the client to the source server, so the web player can apply the equalizer, ReplayGain and the visualizer to them
   * A radio station may be added as an `m3u`, `m3u8`, `pls`, `asx` or `xspf` url; the stream url inside it is read when the station is played, so a directory that rotates its mirrors keeps working
@@ -249,6 +255,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* The broadcast button took two clicks to show its menu on a scrolled page: its `href="#"` jumped the document to the top as the dialog opened, so the menu was placed where the button had been a moment earlier and landed below the fold. The popup dialogs no longer navigate, and the broadcast one is placed against the window so it tracks the button in the fixed player
+* The websocket server logged a dozen PHP 8.5 deprecation errors on every connection, drowning the broadcast log; `cboden/ratchet` moves to the `0.4.x` branch, which supports PHP 8.5, and `ratchet/rfc6455` to v0.4.1
+* A database connection dropped by the server (idle timeout, restart, killed thread) was kept and reused, so every following query failed with `MySQL server has gone away`; the handle is discarded and the retry reconnects. This broke long running processes worst of all: the websocket server could not register a broadcast or authorise a listener once its connection had timed out
 * Turning on `album_art_store_disk` without setting `local_metadata_dir` hid every cover; the art was still written to the database but only ever read back from disk
 * Art stored for something that is not a library item, such as a wanted album, returned an empty image
 * Uploading a file with an album name always failed after the file had been copied into the catalog, leaving it on disk but absent from the library
