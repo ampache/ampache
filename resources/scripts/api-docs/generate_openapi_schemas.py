@@ -45,7 +45,7 @@ SOURCES: dict[str, Path] = {
     "json8": JSON8_DATA,
     "preference_builder": REPO_ROOT / "src" / "Module" / "Api" / "Method" / "PreferenceItemBuilder.php",
     "api": REPO_ROOT / "src" / "Module" / "Api" / "Api.php",
-    "search_model": REPO_ROOT / "src" / "Repository" / "Model" / "Search.php",
+    "search_model": REPO_ROOT / "src" / "Module" / "Database" / "Query" / "Search.php",
     "localplay": REPO_ROOT / "src" / "Module" / "Playback" / "Localplay" / "LocalPlay.php",
 }
 
@@ -366,6 +366,27 @@ _IMAGE_RESPONSE = {
 }
 
 # action -> {"set": responses to install, "drop": status codes to remove}
+# Actions that carry a media file rather than parameters. apply_request_bodies() mirrors an
+# operation's query parameters into a JSON/form body, which would replace the binary body these
+# need, so the body is declared here and that step leaves the operation alone.
+_UPLOAD_REQUEST_BODY = {
+    "required": True,
+    "description": "The media file, either as the raw request body or as a multipart field named `upl`.",
+    "content": {
+        "application/octet-stream": {"schema": {"type": "string", "format": "binary"}},
+        "multipart/form-data": {
+            "schema": {
+                "type": "object",
+                "properties": {"upl": {"type": "string", "format": "binary"}},
+            }
+        },
+    },
+}
+
+BINARY_REQUEST_BODIES: dict[str, dict] = {
+    "upload": _UPLOAD_REQUEST_BODY,
+}
+
 BINARY_RESPONSES: dict[str, dict] = {
     "stream": {"set": {"302": _REDIRECT_RESPONSE}, "drop": ["200"]},
     "download": {"set": {"302": _REDIRECT_RESPONSE, "200": _ZIP_RESPONSE}, "drop": []},
@@ -479,6 +500,7 @@ SUCCESS_ACTIONS: dict[str, tuple[str, ...]] = {
         "update_artist_info",
         "update_from_tags",
         "update_podcast",
+        "upload",
     ),
     "put": (
         "collection_add",
@@ -1533,6 +1555,13 @@ def apply_request_bodies(spec: dict) -> list[str]:
     for path, operations in sorted(spec.get("paths", {}).items()):
         for method, operation in operations.items():
             if method not in WRITE_HTTP_METHODS:
+                continue
+
+            binary_body = BINARY_REQUEST_BODIES.get(actions.get((path, method), ""))
+            if binary_body is not None:
+                operation["requestBody"] = copy.deepcopy(binary_body)
+                applied.append(f"{method.upper()} {path}")
+
                 continue
 
             # `auth` is supplied by a security scheme, never a body field. Parameters lifted into

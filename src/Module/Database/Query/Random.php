@@ -110,7 +110,7 @@ class Random
      * Randomly picks a song from the album
      * @return int[]
      */
-    public static function get_album(int $limit, ?User $user = null): array
+    public static function get_album(int $limit, ?User $user = null, int $object_id = 0, bool $disk = false): array
     {
         $results = [];
 
@@ -137,6 +137,14 @@ class Random
                 : sprintf('AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
         }
 
+        // a filter narrows the pick to that one album, or to a single disk of it when `$disk` is set
+        if ($object_id > 0) {
+            $column     = ($disk) ? 'album_disk' : 'album';
+            $where_sql .= ($where_sql === "")
+                ? sprintf('WHERE `song`.`%s` = %d ', $column, $object_id)
+                : sprintf('AND `song`.`%s` = %d ', $column, $object_id);
+        }
+
         $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
         $db_results = Dba::read($sql);
 
@@ -152,7 +160,7 @@ class Random
      * Randomly picks a song from the artist
      * @return int[]
      */
-    public static function get_artist(int $limit, ?User $user = null): array
+    public static function get_artist(int $limit, ?User $user = null, int $object_id = 0, string $role = 'any'): array
     {
         $results = [];
 
@@ -179,6 +187,22 @@ class Random
                 : sprintf('AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
         }
 
+        // a filter narrows the pick to that one artist. artist_map splits the credit: an `object_type` of `song`
+        // is the song artist, `album` is the album artist, and `any` accepts either.
+        if ($object_id > 0) {
+            $song_credit  = sprintf("`song`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_id` = %d AND `object_type` = 'song')", $object_id);
+            $album_credit = sprintf("`song`.`album` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_id` = %d AND `object_type` = 'album')", $object_id);
+            $credit_sql   = match ($role) {
+                'song' => $song_credit,
+                'album' => $album_credit,
+                default => sprintf('(%s OR %s)', $song_credit, $album_credit),
+            };
+
+            $where_sql .= ($where_sql === "")
+                ? 'WHERE ' . $credit_sql . ' '
+                : 'AND ' . $credit_sql . ' ';
+        }
+
         $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
         $db_results = Dba::read($sql);
 
@@ -187,6 +211,17 @@ class Random
         }
 
         return $results;
+    }
+
+    /**
+     * get_catalog
+     * Randomly picks a song from one catalog
+     * @return int[]
+     */
+    public static function get_catalog(int $limit, ?User $user = null, int $object_id = 0): array
+    {
+        // song carries its own catalog column, so this never needs a catalog_map join
+        return self::_get_filtered($limit, $user, sprintf('`song`.`catalog` = %d', $object_id));
     }
 
     /**
@@ -228,6 +263,65 @@ class Random
     }
 
     /**
+     * get_favorite
+     * Randomly picks a song the user has flagged
+     * @return int[]
+     */
+    public static function get_favorite(int $limit, ?User $user = null, bool $flagged = true): array
+    {
+        $user ??= Core::get_global('user');
+        if (!$user instanceof User) {
+            return [];
+        }
+
+        // the song's own flag; a flagged album or artist does not make its songs favourites
+        return self::_get_filtered(
+            $limit,
+            $user,
+            sprintf(
+                "`song`.`id` %s (SELECT `object_id` FROM `user_flag` WHERE `user` = %d AND `object_type` = 'song')",
+                ($flagged) ? 'IN' : 'NOT IN',
+                $user->getId()
+            )
+        );
+    }
+
+    /**
+     * get_genre
+     * Randomly picks a song carrying one genre
+     * @return int[]
+     */
+    public static function get_genre(int $limit, ?User $user = null, int $object_id = 0): array
+    {
+        // the song's own genre, matching how a song browse filters on `tag`; an album or artist tag is not inherited
+        return self::_get_filtered(
+            $limit,
+            $user,
+            sprintf("`song`.`id` IN (SELECT `object_id` FROM `tag_map` WHERE `tag_id` = %d AND `object_type` = 'song')", $object_id)
+        );
+    }
+
+    /**
+     * get_label
+     * Randomly picks a song released on one label
+     * @return int[]
+     */
+    public static function get_label(int $limit, ?User $user = null, int $object_id = 0): array
+    {
+        // label_asso records the label against an artist, an album, or both, so either association counts
+        return self::_get_filtered(
+            $limit,
+            $user,
+            sprintf(
+                '(`song`.`artist` IN (SELECT `artist` FROM `label_asso` WHERE `label` = %d AND `artist` IS NOT NULL) '
+                . 'OR `song`.`album` IN (SELECT `album` FROM `label_asso` WHERE `label` = %d AND `album` IS NOT NULL))',
+                $object_id,
+                $object_id
+            )
+        );
+    }
+
+    /**
      * get_play_url
      * This returns the special play URL for random play
      */
@@ -264,6 +358,42 @@ class Random
     }
 
     /**
+     * get_rating
+     * Randomly picks a song the user rated at or above the given star count
+     * @return int[]
+     */
+    public static function get_rating(int $limit, ?User $user = null, int $stars = 1): array
+    {
+        $user ??= Core::get_global('user');
+        if (!$user instanceof User) {
+            return [];
+        }
+
+        // a star count rather than an object id: 0 asks for the unrated, 1-5 for anything at or above that many stars
+        if ($stars === 0) {
+            return self::_get_filtered(
+                $limit,
+                $user,
+                sprintf("`song`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `user` = %d AND `object_type` = 'song')", $user->getId())
+            );
+        }
+
+        $stars = ($stars > 0 && $stars <= 5)
+            ? $stars
+            : 1;
+
+        return self::_get_filtered(
+            $limit,
+            $user,
+            sprintf(
+                "`song`.`id` IN (SELECT `object_id` FROM `rating` WHERE `user` = %d AND `object_type` = 'song' AND `rating` >= %d)",
+                $user->getId(),
+                $stars
+            )
+        );
+    }
+
+    /**
      * get_search
      * Get a random song from a search (that you own)
      * @return int[]
@@ -294,8 +424,16 @@ class Random
     public static function get_single_song(string $random_type, User $user, ?int $object_id = 0): int
     {
         $song_ids = match ($random_type) {
-            'album' => self::get_album(1, $user),
-            'artist' => self::get_artist(1, $user),
+            'album' => self::get_album(1, $user, (int) $object_id),
+            'album_disk' => self::get_album(1, $user, (int) $object_id, true),
+            'catalog' => self::get_catalog(1, $user, (int) $object_id),
+            'genre' => self::get_genre(1, $user, (int) $object_id),
+            'label' => self::get_label(1, $user, (int) $object_id),
+            'favorite' => self::get_favorite(1, $user, $object_id === null || $object_id !== 0),
+            'rating' => self::get_rating(1, $user, $object_id ?? 1),
+            'artist' => self::get_artist(1, $user, (int) $object_id),
+            'song_artist' => self::get_artist(1, $user, (int) $object_id, 'song'),
+            'album_artist' => self::get_artist(1, $user, (int) $object_id, 'album'),
             'playlist' => self::get_playlist($user, (int) $object_id),
             'search' => self::get_search($user, (int) $object_id),
             default => self::get_default(1, $user),
@@ -496,6 +634,44 @@ class Random
             'sql' => $sql,
             'parameters' => $search_info['parameters'],
         ];
+    }
+
+    /**
+     * Picks random songs subject to the catalog and rating rules every random query honours, plus one extra clause.
+     *
+     * @return int[]
+     */
+    private static function _get_filtered(int $limit, ?User $user, string $filter_sql): array
+    {
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+
+        if (!$user instanceof User) {
+            return [];
+        }
+
+        $user_id   = $user->getId();
+        $where_sql = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? "WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") AND "
+            : "WHERE ";
+
+        $rating_filter = AmpConfig::get_rating_filter();
+        if ($rating_filter > 0 && $rating_filter <= 5) {
+            $where_sql .= sprintf(
+                '`song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) AND ',
+                $rating_filter,
+                $user_id
+            );
+        }
+
+        $results    = [];
+        $db_results = Dba::read(sprintf('SELECT `song`.`id` FROM `song` %s%s ORDER BY RAND() LIMIT %d', $where_sql, $filter_sql, $limit));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
     }
 
     /**

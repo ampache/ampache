@@ -18,6 +18,11 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 * REST
   * New `folders` action (`Folders8Method`) for browsing the catalog's virtual folder tree; `filter` takes either a folder id or a path name, so REST paths `folders`, `folders/{folder_id}` and `folders{path}` all reach it
   * New `playlist_remove` action (`PlaylistRemove8Method`)
+* `upload` (API8 only)
+  * New `upload` action adds a media file to the catalog named by the `upload_catalog` preference, so uploading is no longer web-only
+  * The file is sent either as a multipart form field named `upl`, or as the raw request body with `filename` naming it
+  * Optional `license`, `artist_id`, `artist_name`, `album_id` and `album_name` behave exactly as the web upload form does, including refusing an artist or album owned by another user
+  * Requires the `allow_upload` preference and the access level named by `upload_access_level`; a file that fails to be added is removed from the catalog directory again
 * `collection` (API8 only)
   * New actions `collections`, `collection`, `collection_items`, `collection_create`, `collection_edit`, `collection_delete`, `collection_add` and `collection_remove`. A collection is a hand-curated list of objects of any type, so it is the way to curate anything a playlist cannot hold; the members are not restricted to media
   * `collection_create` takes an optional `object_type` that pins the collection to one type, after which `collection_add` refuses anything else. Leave it out for a mixed collection
@@ -32,7 +37,13 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 * `sonic_match` (API8 only)
   * New action (`SonicMatch8Method`) returning songs that sound like the song in `filter`, each carrying a `similarity` score. Similarity comes from analysing the audio, which needs a sonic-analysis plugin, so with none enabled the request is refused (`4703`) rather than answered with an empty list. The score shares the OpenSubsonic `sonicMatch` scale — 0.0-1.0 where 1.0 is the same recording, and -1 when the backend gives no comparable score — so a client reads the same number from either API. REST path `songs/{song_id}/sonic-match`
 * `random` (API8 only)
-  * New action (`RandomMethod`) that picks a random `song`, `podcast_episode`, or `video` from the whole library and redirects (302) to its stream url — mirrors `stream`'s params (`bitrate`/`format`/`offset`/`stats`, song only) but takes no `filter`/`id`. API8 only: API6 is shared with Ampache7, which does not serve it
+  * New action (`Random8Method`) that picks a random object and redirects (302) to its stream url — mirrors `stream`'s params (`bitrate`/`format`/`offset`/`stats`, song only). API8 only: API6 is shared with Ampache7, which does not serve it
+  * `type` takes `album`, `album_artist`, `album_disk`, `artist`, `catalog`, `favorite`, `genre`, `label`, `playlist`, `podcast_episode`, `rating`, `search`, `song`, `song_artist` or `video`; a container type resolves to a random song from within it
+  * `genre` matches the song's own tag, as a song browse does — an album or artist tag is not inherited. `label` accepts either the artist or the album association recorded in `label_asso`
+  * `favorite` picks from the songs you have flagged, and `rating` from the songs you have rated. Both read the song's own flag or rating; a flagged album does not make its songs favourites
+  * **NOTE** `favorite` and `rating` read `filter` as a flag or star value rather than an object id — `favorite`: `1` or omitted for flagged, `0` for not flagged; `rating`: `1`-`5` for that many stars or more, `0` for unrated, omitted for any rated song
+  * `filter` names that container. `artist` accepts either artist credit, where `song_artist` and `album_artist` narrow it to one
+  * **NOTE** `filter` is read against the table named by `type`, and those id spaces overlap — an album id and an album_disk id of the same number are different objects
 * `download` (API8 only)
   * New `zip` parameter: when `type`/`filter` identify a container object (`album`, `artist`, `playlist`, `podcast`) and zipping is enabled (`ZipHandlerInterface::isZipable()`), downloads the whole container as a zip instead of a single stream redirect — reuses the same `ZipHandlerInterface` used by the `batch.php` GUI download
 * `share_create` (API8)

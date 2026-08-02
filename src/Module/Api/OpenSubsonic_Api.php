@@ -4170,18 +4170,12 @@ class OpenSubsonic_Api
                         CURLOPT_HEADER => false,
                         CURLOPT_RETURNTRANSFER => false,
                         CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_WRITEFUNCTION => [
-                            'Ampache\Module\Api\OpenSubsonic_Api',
-                            '_output_body'
-                        ],
-                        CURLOPT_HEADERFUNCTION => [
-                            'Ampache\Module\Api\OpenSubsonic_Api',
-                            '_output_header'
-                        ],
+                        CURLOPT_WRITEFUNCTION => self::_output_body(...),
+                        CURLOPT_HEADERFUNCTION => self::_output_header(...),
                         // Ignore invalid certificate
                         // Default trusted chain is crap anyway and currently no custom CA option
                         CURLOPT_SSL_VERIFYPEER => false,
-                        CURLOPT_SSL_VERIFYHOST => false,
+                        CURLOPT_SSL_VERIFYHOST => 0,
                         CURLOPT_TIMEOUT => 0
                     ]
                 );

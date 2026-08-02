@@ -173,8 +173,11 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $missing_objects = [];
                     if ($similars = Recommendation::get_artists_like($artist->id, 10, !AmpConfig::get('wanted'))) {
                         foreach ($similars as $similar) {
-                            // used within the template
-                            $object_ids[] = $similar['id'] ?: $similar;
+                            if (!empty($similar['id'])) {
+                                $object_ids[] = (int) $similar['id'];
+                            } elseif (!empty($similar['mbid'])) {
+                                $missing_objects[] = $similar;
+                            }
                         }
                     }
 

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
 use PDOStatement;
@@ -38,15 +39,44 @@ class WantedRepositoryTest extends TestCase
     private LoggerInterface&MockObject $logger;
     private WantedRepository $subject;
 
-    public function testCollectGarbagePerformsCleanup(): void
+    public function testCollectGarbageContinuesAfterAFailedQuery(): void
     {
-        $this->connection->expects(static::once())
+        $this->connection->expects(static::exactly(3))
             ->method('query')
-            ->with(
-                'DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'
-            );
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        $this->logger->expects(static::exactly(3))
+            ->method('debug');
 
         $this->subject->collectGarbage();
+    }
+
+    public function testCollectGarbagePerformsCleanup(): void
+    {
+        $queries = [];
+
+        $this->connection->expects(static::exactly(3))
+            ->method('query')
+            ->willReturnCallback(function (string $query) use (&$queries): PDOStatement {
+                $queries[] = $query;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->collectGarbage();
+
+        static::assertSame(
+            'DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)',
+            $queries[0]
+        );
+        static::assertSame(
+            'DELETE FROM `wanted` WHERE `wanted`.`mbid` IS NOT NULL AND EXISTS (SELECT 1 FROM `album` WHERE `album`.`mbid_group` = `wanted`.`mbid`)',
+            $queries[1]
+        );
+        static::assertSame(
+            "DELETE FROM `wanted` WHERE `wanted`.`artist` IS NOT NULL AND `wanted`.`name` IS NOT NULL AND EXISTS (SELECT 1 FROM `album` WHERE `album`.`album_artist` = `wanted`.`artist` AND (`album`.`name` = `wanted`.`name` OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = `wanted`.`name`))",
+            $queries[2]
+        );
     }
 
     public function testDeleteByMusicbrainzIdDeletesUser(): void

@@ -484,7 +484,7 @@ input:invalid {
     border-color: #1990db;
 }
 
-#content .missing {
+#content .missing_art {
     background-image: url('../images/missing.png');
 }
 

@@ -91,7 +91,7 @@ return [
     Method\NowPlayingMethod::class => autowire(),
     Method\SongsMethod::class => autowire(),
     Method\UsersMethod::class => autowire(),
-    Method\RandomMethod::class => autowire(),
+    Method\Api8\Random8Method::class => autowire(),
     Method\LabelsMethod::class => autowire(),
     Method\LicensesMethod::class => autowire(),
     Method\LiveStreamsMethod::class => autowire(),

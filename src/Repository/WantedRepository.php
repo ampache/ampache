@@ -60,16 +60,27 @@ final readonly class WantedRepository implements WantedRepositoryInterface
 
     /**
      * This cleans out unused wanted items
+     *
+     * The two album tests match what Wanted::get_missing_albums() treats as present, so a row is dropped exactly
+     * when the album would no longer be offered as missing.
      */
     public function collectGarbage(): void
     {
-        try {
-            $this->connection->query('DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
-        } catch (DatabaseException) {
-            $this->logger->debug(
-                'collectGarbage error',
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
+        $queries = [
+            'DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)',
+            'DELETE FROM `wanted` WHERE `wanted`.`mbid` IS NOT NULL AND EXISTS (SELECT 1 FROM `album` WHERE `album`.`mbid_group` = `wanted`.`mbid`)',
+            "DELETE FROM `wanted` WHERE `wanted`.`artist` IS NOT NULL AND `wanted`.`name` IS NOT NULL AND EXISTS (SELECT 1 FROM `album` WHERE `album`.`album_artist` = `wanted`.`artist` AND (`album`.`name` = `wanted`.`name` OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = `wanted`.`name`))",
+        ];
+
+        foreach ($queries as $query) {
+            try {
+                $this->connection->query($query);
+            } catch (DatabaseException) {
+                $this->logger->debug(
+                    'collectGarbage error',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
         }
     }
 
