@@ -30,33 +30,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class QueryTest extends MockeryTestCase
 {
-    public function testMatchModeDefaultsToStartsWith(): void
-    {
-        $this->assertSame('starts_with', $this->subject()->get_match_mode());
-    }
-
-    public function testMatchModeRemembersAnOfferedMode(): void
-    {
-        $query = $this->subject();
-        $query->set_match_mode('like');
-
-        $this->assertSame('like', $query->get_match_mode());
-    }
-
-    /**
-     * A rejected mode has to leave the previous one alone: the filter box posts whatever arrives in the
-     * request, and falling back to the default would silently switch the user's choice back.
-     */
-    #[DataProvider('refusedModeDataProvider')]
-    public function testMatchModeRefusesAnythingElse(string $refused): void
-    {
-        $query = $this->subject();
-        $query->set_match_mode('like');
-        $query->set_match_mode($refused);
-
-        $this->assertSame('like', $query->get_match_mode());
-    }
-
     /**
      * @return list<array{0: string}>
      */
@@ -77,6 +50,33 @@ class QueryTest extends MockeryTestCase
         $query->clear_filter('like');
 
         $this->assertNull($query->get_filter('like'));
+    }
+
+    public function testMatchModeDefaultsToStartsWith(): void
+    {
+        $this->assertSame('starts_with', $this->subject()->get_match_mode());
+    }
+
+    /**
+     * A rejected mode has to leave the previous one alone: the filter box posts whatever arrives in the
+     * request, and falling back to the default would silently switch the user's choice back.
+     */
+    #[DataProvider('refusedModeDataProvider')]
+    public function testMatchModeRefusesAnythingElse(string $refused): void
+    {
+        $query = $this->subject();
+        $query->set_match_mode('like');
+        $query->set_match_mode($refused);
+
+        $this->assertSame('like', $query->get_match_mode());
+    }
+
+    public function testMatchModeRemembersAnOfferedMode(): void
+    {
+        $query = $this->subject();
+        $query->set_match_mode('like');
+
+        $this->assertSame('like', $query->get_match_mode());
     }
 
     public function testMatchModesAreTheOnesTheFilterBoxOffers(): void
