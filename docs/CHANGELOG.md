@@ -47,6 +47,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The same checkboxes, gestures and action bar on the song lists, which covers the songs browse as well as the song lists on album, artist and search pages
   * A selection of songs can be downloaded as a single zip, when `allow_zip_types` includes `song` and batch download is permitted
   * `batch.php` accepts a comma separated `id` list, so one zip can hold the medias of several items instead of only one
+* Song previews work again
+  * New `iTunes` and `Deezer` plugins find a 30 second sample for a wanted album's tracks; neither needs an api key or an account
+  * Neither provider indexes MusicBrainz ids, so a track is matched on artist and title and a wrong match is possible
 * A "Create Playlist" button on the playlists browse. Until now a playlist could only come into existence as a side effect of adding something to one
 * Database
   * New `api_enable_8` preference to enable/disable API v8 responses per user
@@ -161,7 +164,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * `playable_item` interface split into `displayable_item` and `container_item` as part of a large interface cleanup
 * The server counts (the totals in the API handshake and on the admin debug page) can no longer go stale because of an unrecognised table name. `Catalog::count_table()` takes a fixed list of countable tables instead of a free-text string, which silently counted zero and left the stored total untouched
 * Refreshing those totals no longer re-reads the whole `song`, `video` and `podcast_episode` tables. Each table's share of `items`, `time` and `size` is stored on its own, so adding or removing a song leaves the other two tables alone, and a deletion that already knows what it removed adjusts the totals without reading anything. One count went from four full table scans to one, and a song deletion to none
-* Internal namespaces reorganised: `Ampache\Application` is gone (its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`), and `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have all left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums. The api version 5, 6 and 8 output formatters are container services rather than static classes. Only relevant if you carry local patches
+* A song browse reads the artists of every song on the page in one `artist_map` query instead of one per song; a 50 song page went from 143 queries to 95
+* The stored waveform is no longer read alongside a song's comment, lyrics and replaygain, so a browse stops pulling a blob per song that nothing on the page draws. Asking for a waveform explicitly now returns it, which it did not before, so a saved waveform is reused instead of being regenerated from the audio on every request
+* Internal namespaces reorganised: `Ampache\Application` is gone (its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`), and `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have all left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums. The api version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes. Only relevant if you carry local patches
 * API version 8 has been added to the list of API versions
 * Docker: build using `docker/Dockerfilephp85`
 * Theme
@@ -203,6 +208,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The `ext-pthreads` suggestion, along with the unreferenced `ScrobblerAsync` class that was the only thing to ever extend `Thread`; the extension has no PHP 8 support and needs a thread-safe (ZTS) build that no distribution ships
 * `docker/Dockerfilephp82`, `Dockerfilephp83`, `Dockerfilephp84` removed (replaced by `Dockerfilephp85`)
 * The periodic count sweep (`Catalog::update_counts()`) is gone, along with the 30 minute timer it kept in `update_info`. Counts are maintained as things change and repaired by garbage collection (`bin/cli run:updateCatalog -g`), so they are no longer stale between sweeps
+* The `7digital` preview plugin, whose api no longer exists. `Song preview` is now provided by the new `iTunes` and `Deezer` plugins
+* Database 800040
+  * The `7digital_api_key` and `7digital_secret_api_key` preferences are removed
 * The popup web player is removed (`web_player.php`, `create_web_player.inc.php`). Playback is always the embedded player at the bottom of the page. **NOTE** if you used the popup to keep the player in a separate window, there is no replacement for it
 * Database 800039
   * `folder` rows holding a bare directory name are removed; the next catalog scan recreates them with their real path
@@ -218,6 +226,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 ### Fixed (8.0.0)
 
 * Deleting a catalog filter from a link that carried no filter name confirmed it with a blank name and logged a runtime error; the confirmation now reads `Catalog Filter`
+* A media file with no readable artist tag is imported under `Unknown (Orphaned)`, the same placeholder an untitled album already uses. The scan used to fail its insert and log a database error for that file on every run, so it could never be added
+* A song preview is played straight from the provider's url instead of being proxied through Ampache, so no preview traffic passes through the server
+* Grid views (including the mashup dashboards) dropped the play and add buttons from any tile holding more items than `direct_play_limit`, which shifted the rest of that tile's controls out of place. A tile now always carries its full set; the limit still applies in the list views
 * Cleaning a remote, Subsonic, Dropbox or Seafile catalog removed songs without recording them in the deleted-song archive, so they could not be restored and left no trace; they are archived the same way a local catalog's are
 * Adding a second Beets (remote) catalog for a URL that already had one was allowed; the duplicate check looked in the wrong table for a column it does not have
 * Moving a file between catalogs (`run:updateCatalogFile -m`, `run:updateCatalogFolder -m`)
@@ -326,6 +337,16 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Upload
   * An artist created while uploading was never mapped to the upload catalog, so it was missing from an artist browse filtered to that catalog until the next catalog update; the artists of an uploaded song are now mapped as the song is added
 * Rating or favouriting a playlist, collection, folder, search or live stream logged an SQL error on every click, because only the media tables carry the `weight` column those writes adjust
+* Search
+  * The `does not sound like` operator returned nothing on the `Genre`, `Song Genre`, `Album Genre`, `Artist Genre`, `Playlist Name`, `Song Artist` and `Album Artist` rules
+  * `Another User` rating rules (`has rated 5 stars` .. `has not rated`) returned nothing on album, album disk, artist, podcast and podcast episode searches, and on the song `Another User (Album)`/`Another User (Artist)` rules
+  * `My Favorite Songs` and `My Favorite Artists` returned nothing on album, album disk and artist searches
+  * The playlist `Owner` rule offered rating operators instead of `is`/`is not`, so it never matched an owner
+  * Album disk searches ignored the `Added`, `Updated`, `Duplicate Tracks` and `Smart Playlist` rules
+  * Podcast and podcast episode searches ignored the `Recently Played` rule
+  * Artist searches on `Image Width` and `Image Height` returned nothing
+  * The genre search offered two rules both labelled `Album Count`; the second is the artist count and now says `Artist Count`
+  * The genre rules counting a genre's own contents shared their labels with the object's own counts, so an artist search offered two `Song Count` rules. They are now `Song Count (Genre)`, `Album Count (Genre)` and `Artist Count (Genre)`
 
 ## Ampache 7.10.1
 
