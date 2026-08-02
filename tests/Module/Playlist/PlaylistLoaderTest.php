@@ -24,8 +24,11 @@ namespace Ampache\Module\Playlist;
 
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class PlaylistLoaderTest extends TestCase
 {
@@ -52,6 +55,15 @@ class PlaylistLoaderTest extends TestCase
 
     protected function setUp(): void
     {
+        // `Playlist` reads through the `global $dic` bridge
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            PlaylistRepositoryInterface::class => $this->createMock(PlaylistRepositoryInterface::class),
+            default => $this->createMock(LoggerInterface::class),
+        });
+
+        $GLOBALS['dic'] = $dic;
+
         $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
 
         $this->subject = new PlaylistLoader($this->modelFactory);

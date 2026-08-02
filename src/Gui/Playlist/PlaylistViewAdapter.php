@@ -34,13 +34,13 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
-use Ampache\Repository\Model\Userflag;
 
 final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 {

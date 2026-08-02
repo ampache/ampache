@@ -34,7 +34,6 @@ use DI\ContainerBuilder;
 $builder = new ContainerBuilder();
 $builder->addDefinitions(
     require_once __DIR__ . '/service_definition.php',
-    require_once __DIR__ . '/../Application/service_definition.php',
     require_once __DIR__ . '/../Module/Util/service_definition.php',
     require_once __DIR__ . '/../Module/WebDav/service_definition.php',
     require_once __DIR__ . '/../Module/Authentication/service_definition.php',
@@ -63,6 +62,7 @@ $builder->addDefinitions(
     require_once __DIR__ . '/../Module/Shout/service_definition.php',
     require_once __DIR__ . '/../Module/Podcast/service_definition.php',
     require_once __DIR__ . '/../Module/Metadata/service_definition.php',
+    require_once __DIR__ . '/../Module/Statistics/service_definition.php',
 );
 
 return $builder->build();

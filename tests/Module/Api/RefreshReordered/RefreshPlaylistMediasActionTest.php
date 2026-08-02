@@ -27,8 +27,8 @@ namespace Ampache\Module\Api\RefreshReordered;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Mockery\MockInterface;

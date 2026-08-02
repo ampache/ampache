@@ -43,6 +43,11 @@ interface ArtistRepositoryInterface
     public function collectGarbageForArtist(int $artistId): void;
 
     /**
+     * Removes the artist_map rows the scanner orphans when a song changes artist, leaving the artists alone
+     */
+    public function collectOrphanedMaps(): void;
+
+    /**
      * Inserts a new artist row and returns its id, or null when the write failed
      */
     public function create(string $name, ?string $prefix, ?string $mbid, ?int $userId): ?int;
@@ -58,6 +63,13 @@ interface ArtistRepositoryInterface
      * This finds an artist based on its name
      */
     public function findByName(string $name): ?Artist;
+
+    /**
+     * Reads the mbids carried by more than one artist, with the lowest and highest id sharing each
+     *
+     * @return list<array{mbid: string, minid: int, maxid: int}>
+     */
+    public function findDuplicateMbidGroups(): array;
 
     /**
      * Finds the single artist carrying this MusicBrainz id
@@ -82,6 +94,14 @@ interface ArtistRepositoryInterface
      * @return list<int>
      */
     public function getAlbumIds(int $artistId): array;
+
+    /**
+     * Reads the artists mapped onto the given catalogs, with the catalog they came from
+     *
+     * @param array<int|string> $catalogIds
+     * @return list<array{id: int, f_name: string, name: string, album_count: int, song_count: int, catalog_id: int, has_art: int}>
+     */
+    public function getArrayRowsByCatalogs(array $catalogIds): array;
 
     /**
      * Reads the prefixed display name of an artist, or null when there is no such row
@@ -109,6 +129,34 @@ interface ArtistRepositoryInterface
      * @return list<array{id: int, f_name: string, name: string, album_count: int, song_count: int, has_art: int}>
      */
     public function getIdArrayRows(?int $catalogId, bool $albumArtist): array;
+
+    /**
+     * Reads the artists holding songs in one catalog, optionally only the ones with no original-size art
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalog(int $catalogId, bool $missingArtOnly = false): array;
+
+    /**
+     * Reads the artists a catalog gained since the given time, plus every artist whose counts are empty
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalogAddedSince(int $catalogId, int $additionTime): array;
+
+    /**
+     * Reads a random sample of the artists that have never had similar artists looked up
+     *
+     * @return list<int>
+     */
+    public function getIdsMissingRecommendation(int $limit): array;
+
+    /**
+     * Reads the artists carrying an mbid that has not been re-checked against the plugins for a month
+     *
+     * @return list<int>
+     */
+    public function getIdsWithStaleMbid(): array;
 
     /**
      * Reads the prefix, basename and display name of an artist, or null when there is no such row
@@ -141,6 +189,14 @@ interface ArtistRepositoryInterface
         int $userId,
         ?int $count = 1,
     ): array;
+
+    /**
+     * Reads a page of whole artist rows for the artists holding songs in the given catalogs, by name
+     *
+     * @param array<int|string>|null $catalogIds every catalog when null or empty
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByCatalogs(?array $catalogIds, int $size = 0, int $offset = 0): array;
 
     /**
      * Reads whole artist rows for the in-process cache, in one statement instead of one per object
@@ -184,6 +240,13 @@ interface ArtistRepositoryInterface
      * Recomputes the cached totals on every artist
      */
     public function updateAllCounts(): void;
+
+    /**
+     * Rolls every artist's skip total up from the songs mapped onto them
+     *
+     * The rollup is a join, so an artist with no skips left is zeroed separately or it keeps the old total.
+     */
+    public function updateAllSkipCounts(): void;
 
     /**
      * Recomputes the cached totals on one artist, after something mapped to it changed

@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Art;
 
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

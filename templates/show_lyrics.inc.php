@@ -26,8 +26,8 @@ declare(strict_types=1);
 // show_lyrics.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Song;
 
 /** @var Song $song */

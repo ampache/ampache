@@ -29,11 +29,11 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\FileSystem;
 use Ampache\Module\Util\Upload;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Psr\Container\ContainerInterface;
 

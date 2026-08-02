@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -34,10 +35,14 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use PDO;
 use PDOStatement;
+use Psr\Log\LoggerInterface;
 
 final readonly class FolderRepository implements FolderRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * This cleans out unused folders
@@ -54,13 +59,16 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $this->connection->query('DELETE FROM `folder` WHERE `id` NOT IN (SELECT `folder_id` FROM `folder_map`) AND `parent` IS NOT NULL AND `user` IS NULL;');
             $this->update_folder_counts();
         } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
+            $this->logger->debug(
+                'collectGarbage error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 
     public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent_id = null): ?Folder
     {
-        //debug_event(self::class, 'CREATE ' . $folderName . ' ' . $folderPath . ' ' . $parent_id, 5);
+        //$this->logger->debug('CREATE ' . $folderName . ' ' . $folderPath . ' ' . $parent_id, [LegacyLogger::CONTEXT_TYPE => self::class]);
         $folderId = Folder::create([
             'name' => $folderName,
             'catalog' => $catalogId,
@@ -125,6 +133,26 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $folders;
     }
 
+    /**
+     * Reads the folders of one catalog keyed by lowercased path, for the scanner's in-process cache
+     *
+     * @return array<string, int>
+     */
+    public function getByCatalogKeyedByPathName(int $catalogId): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id`, `path_name` FROM `folder` WHERE `catalog` = ? AND `path_name` IS NOT NULL;',
+            [$catalogId]
+        );
+
+        $folders = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $folders[strtolower((string) $row['path_name'])] = (int) $row['id'];
+        }
+
+        return $folders;
+    }
+
     public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): Folder|Podcast_Episode|Song|Video|null
     {
         $sql    = 'SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`name` = ?';
@@ -143,7 +171,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $sql .= 'AND `folder_map`.`folder_id` IS NULL ';
         }
 
-        //debug_event(self::class, 'getByName ' . sprintf('SQL %s', $sql) . print_r([$folderName, $catalogId, $parent], true), 5);
+        //$this->logger->debug('getByName ' . sprintf('SQL %s', $sql) . print_r([$folderName, $catalogId, $parent], true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
         $result = $this->connection->query($sql . 'LIMIT 1;', $params);
 
@@ -177,7 +205,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $params[] = $parentPath;
         }
 
-        //debug_event(self::class, 'getByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
+        //$this->logger->debug('getByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
         $rowId = $this->connection->fetchOne($sql, $params);
         if ($rowId === false) {
@@ -292,7 +320,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
                 $params[] = $parent_id;
             }
 
-            //debug_event(self::class, 'lookup' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
+            //$this->logger->debug('lookup' . sprintf('SQL %s', $sql) . print_r($params, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
             $result = $this->connection->fetchOne($sql, $params);
 
@@ -313,7 +341,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $ret    = 0;
             $sql    = 'SELECT `id` FROM `folder` WHERE `path_name` = ? AND `catalog` = ?';
             $params = [$name, $catalogId];
-            //debug_event(self::class, 'lookupByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
+            //$this->logger->debug('lookupByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
             $result = $this->connection->fetchOne($sql, $params);
 
@@ -384,7 +412,9 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     public function update_folder_counts(): void
     {
         $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query("UPDATE `folder` JOIN (SELECT `counting`.`folder_id`, SUM(`counting`.`total_count`) AS `total_count`, SUM(`counting`.`total_skip`) AS `total_skip` FROM (SELECT `smap`.`folder_id`, COALESCE(`song`.`total_count`, 0) AS `total_count`, COALESCE(`song`.`total_skip`, 0) AS `total_skip` FROM `folder_map` AS `smap` JOIN `song` ON `smap`.`object_type` = 'song' AND `smap`.`object_id` = `song`.`id` UNION ALL SELECT `vmap`.`folder_id`, COALESCE(`video`.`total_count`, 0), COALESCE(`video`.`total_skip`, 0) FROM `folder_map` AS vmap JOIN `video` ON `vmap`.`object_type` = 'video' AND `vmap`.`object_id` = `video`.`id` UNION ALL SELECT `pmap`.`folder_id`, COALESCE(`podcast_episode`.`total_count`, 0), COALESCE(`podcast_episode`.`total_skip`, 0) FROM `folder_map` AS `pmap` JOIN `podcast_episode` ON `pmap`.`object_type` = 'podcast_episode' AND `pmap`.`object_id` = `podcast_episode`.`id`) AS `counting` GROUP BY `counting`.`folder_id`) AS `total` ON `total`.`folder_id` = `folder`.`id` SET `folder`.`total_count` = `total`.`total_count`, `folder`.`total_skip` = `total`.`total_skip`; ");
+
+        $this->rollUpPlayCounts();
+
         $this->connection->query("UPDATE `folder` SET `playable` = 1 WHERE `playable` = 0 AND `id` IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != 'folder');");
         $this->connection->query("UPDATE `folder` SET `playable` = 0 WHERE `playable` = 1 AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != 'folder');");
     }
@@ -433,5 +463,52 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * Sets each folder's play totals to the sum of every media item in its whole subtree
+     *
+     * `Stats::count()` walks the ancestry and increments every parent as a track plays, so a folder's
+     * total covers what is under it, not only what is mapped directly to it. The accumulation is done in
+     * PHP because the ancestry lives in a comma-separated `path`, and matching it in SQL means
+     * `FIND_IN_SET` over a folder-by-folder join that no index can help.
+     */
+    private function rollUpPlayCounts(): void
+    {
+        $result = $this->connection->query(
+            "SELECT `counting`.`folder_id`, SUM(`counting`.`total_count`) AS `total_count`, SUM(`counting`.`total_skip`) AS `total_skip` FROM (SELECT `smap`.`folder_id`, COALESCE(`song`.`total_count`, 0) AS `total_count`, COALESCE(`song`.`total_skip`, 0) AS `total_skip` FROM `folder_map` AS `smap` JOIN `song` ON `smap`.`object_type` = 'song' AND `smap`.`object_id` = `song`.`id` UNION ALL SELECT `vmap`.`folder_id`, COALESCE(`video`.`total_count`, 0), COALESCE(`video`.`total_skip`, 0) FROM `folder_map` AS `vmap` JOIN `video` ON `vmap`.`object_type` = 'video' AND `vmap`.`object_id` = `video`.`id` UNION ALL SELECT `pmap`.`folder_id`, COALESCE(`podcast_episode`.`total_count`, 0), COALESCE(`podcast_episode`.`total_skip`, 0) FROM `folder_map` AS `pmap` JOIN `podcast_episode` ON `pmap`.`object_type` = 'podcast_episode' AND `pmap`.`object_id` = `podcast_episode`.`id`) AS `counting` GROUP BY `counting`.`folder_id`;"
+        );
+
+        $direct = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $direct[(int) $row['folder_id']] = [(int) $row['total_count'], (int) $row['total_skip']];
+        }
+
+        $result = $this->connection->query('SELECT `id`, `path` FROM `folder`;');
+
+        $totals = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $folderId       = (int) $row['id'];
+            [$count, $skip] = $direct[$folderId] ?? [0, 0];
+            if ($count === 0 && $skip === 0) {
+                continue;
+            }
+
+            // the folder itself, then every ancestor its path names
+            foreach ([$folderId, ...array_map(intval(...), array_filter(explode(',', (string) $row['path'])))] as $id) {
+                $totals[$id] ??= [0, 0];
+                $totals[$id][0] += $count;
+                $totals[$id][1] += $skip;
+            }
+        }
+
+        $this->connection->query('UPDATE `folder` SET `total_count` = 0, `total_skip` = 0 WHERE `total_count` > 0 OR `total_skip` > 0;');
+
+        foreach ($totals as $folderId => [$count, $skip]) {
+            $this->connection->query(
+                'UPDATE `folder` SET `total_count` = ?, `total_skip` = ? WHERE `id` = ?;',
+                [$count, $skip, $folderId]
+            );
+        }
     }
 }

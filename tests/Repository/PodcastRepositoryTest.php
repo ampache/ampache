@@ -32,6 +32,7 @@ use DateTime;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class PodcastRepositoryTest extends TestCase
@@ -39,8 +40,18 @@ class PodcastRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private ModelFactoryInterface&MockObject $modelFactory;
     private PodcastRepository $subject;
+
+    public function testDeleteByCatalogRemovesTheCatalogsPodcasts(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('DELETE FROM `podcast` WHERE `catalog` = ?', [7]);
+
+        static::assertTrue($this->subject->deleteByCatalog(7));
+    }
 
     public function testDeleteDeletesPodcast(): void
     {
@@ -177,6 +188,25 @@ class PodcastRepositoryTest extends TestCase
             $podcast,
             $this->subject->findById($podcastId)
         );
+    }
+
+    public function testGetIdsByCatalogReadsTheCatalogsPodcasts(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `podcast`.`id` FROM `podcast` WHERE `podcast`.`catalog` = ?',
+                [7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('666', false);
+
+        static::assertSame([666], $this->subject->getIdsByCatalog(7));
     }
 
     public function testPersistCreateItem(): void
@@ -368,14 +398,34 @@ class PodcastRepositoryTest extends TestCase
         );
     }
 
+    public function testUpdateAllCountsRollsBothTotalsUpFromTheEpisodes(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateAllCounts();
+
+        static::assertStringContainsString('`podcast`.`total_count`', $calls[0]);
+        static::assertStringContainsString('`podcast`.`total_skip`', $calls[1]);
+    }
+
     protected function setUp(): void
     {
         $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
         $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger       = $this->createMock(LoggerInterface::class);
 
         $this->subject = new PodcastRepository(
             $this->modelFactory,
             $this->connection,
+            $this->logger,
         );
     }
 }

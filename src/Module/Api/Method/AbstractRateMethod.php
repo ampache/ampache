@@ -33,9 +33,9 @@ use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 

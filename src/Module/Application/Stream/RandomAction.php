@@ -28,7 +28,7 @@ namespace Ampache\Module\Application\Stream;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Repository\Model\Random;
+use Ampache\Module\Database\Query\Random;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;

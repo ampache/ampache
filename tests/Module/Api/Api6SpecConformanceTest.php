@@ -106,7 +106,7 @@ class Api6SpecConformanceTest extends TestCase
     {
         $source = (string) file_get_contents(__DIR__ . '/../../../src/Module/Api/Json6_Data.php');
 
-        $pattern = sprintf('#(/\*\*(?:(?!\*/).)*?\*/)\s*public static function %s\(#s', preg_quote($builder, '#'));
+        $pattern = sprintf('#(/\*\*(?:(?!\*/).)*?\*/)\s*public (?:static )?function %s\(#s', preg_quote($builder, '#'));
         self::assertSame(1, preg_match($pattern, $source, $matches), sprintf('no docblock for %s()', $builder));
 
         // flatten the docblock to a single line, then isolate the item shape

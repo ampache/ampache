@@ -27,9 +27,9 @@ declare(strict_types=1);
 
 // Gotta do some math here!
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Art;
 
 /** @var array<int, array{'raw'?: string, 'db'?: int, 'url'?: string, 'title'?: string, 'mime'?: string}> $images */
 /** @var int $object_id */

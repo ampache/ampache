@@ -28,8 +28,8 @@ namespace Ampache\Config\Init;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\Init\Exception\ConfigFileNotFoundException;
 use Ampache\Config\Init\Exception\ConfigFileNotParsableException;
+use Ampache\Module\System\Preference;
 use Ampache\Module\Util\EnvironmentInterface;
-use Ampache\Repository\Model\Preference;
 use DateTimeZone;
 
 final readonly class InitializationHandlerConfig implements InitializationHandlerInterface

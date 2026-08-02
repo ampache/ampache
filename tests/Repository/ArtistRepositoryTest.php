@@ -29,8 +29,10 @@ use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ArtistFieldEnum;
+use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class ArtistRepositoryTest extends TestCase
@@ -38,6 +40,7 @@ class ArtistRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private ArtistRepository $subject;
 
     public function testAddArtistMapInsertsIgnoringDuplicates(): void
@@ -67,6 +70,27 @@ class ArtistRepositoryTest extends TestCase
             );
 
         $this->subject->collectGarbage();
+    }
+
+    public function testCollectOrphanedMapsSweepsBothHalvesAndCarriesOnAfterAFailure(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+                if (count($calls) === 1) {
+                    throw new QueryFailedException('nope');
+                }
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->collectOrphanedMaps();
+
+        static::assertStringContainsString("`artist_map`.`object_type` = 'album'", $calls[0]);
+        static::assertStringContainsString("`artist_map`.`object_type` = 'song'", $calls[1]);
     }
 
     public function testCreateReturnsNullWhenTheInsertFailed(): void
@@ -132,6 +156,25 @@ class ArtistRepositoryTest extends TestCase
         );
     }
 
+    public function testFindDuplicateMbidGroupsReturnsTheLowestAndHighestIdPerMbid(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `mbid`, MIN(`id`) AS `minid`, MAX(`id`) AS `maxid` FROM `artist` WHERE `mbid` IS NOT NULL GROUP BY `mbid` HAVING COUNT(`mbid`) > 1;')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn(['mbid' => 'some-mbid', 'minid' => '4', 'maxid' => '9'], false);
+
+        static::assertSame(
+            [['mbid' => 'some-mbid', 'minid' => 4, 'maxid' => 9]],
+            $this->subject->findDuplicateMbidGroups()
+        );
+    }
+
     public function testFindIdByNamePicksTheStatementFromTheMbidFlag(): void
     {
         // the two statements differ only in the mbid predicate, and the caller tries them in that order
@@ -144,6 +187,114 @@ class ArtistRepositoryTest extends TestCase
             ->willReturn('666');
 
         static::assertSame(666, $this->subject->findIdByName('some-artist', 'some-artist feat. someone', true));
+    }
+
+    public function testGetArrayRowsByCatalogsBindsOneCatalogIntoTheSingleCatalogShape(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(static::stringContains("`catalog_map`.`catalog_id` = 7 LEFT JOIN `image`"))
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn(
+                [
+                    'id' => '666',
+                    'f_name' => 'The Band',
+                    'name' => 'Band',
+                    'album_count' => '2',
+                    'song_count' => '20',
+                    'catalog_id' => '7',
+                    'has_art' => '666',
+                ],
+                false
+            );
+
+        static::assertSame(
+            [[
+                'id' => 666,
+                'f_name' => 'The Band',
+                'name' => 'Band',
+                'album_count' => 2,
+                'song_count' => 20,
+                'catalog_id' => 7,
+                'has_art' => 666,
+            ]],
+            $this->subject->getArrayRowsByCatalogs(['7'])
+        );
+    }
+
+    public function testGetArrayRowsByCatalogsCastsEveryCatalogOfAList(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(static::stringContains('`catalog_map`.`catalog_id` IN (1,0) LEFT JOIN `image`'))
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getArrayRowsByCatalogs([1, 'x9']));
+    }
+
+    public function testGetIdsByCatalogAddedSinceBindsBothTheCatalogAndTheTime(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE `artist`.`id` IN (SELECT DISTINCT `song`.`artist` FROM `song` WHERE `song`.`catalog` = ? AND `addition_time` > ?) OR (`album_count` = 0 AND `song_count` = 0) ',
+                [7, 123456]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('42', false);
+
+        static::assertSame([42], $this->subject->getIdsByCatalogAddedSince(7, 123456));
+    }
+
+    public function testGetIdsMissingRecommendationTakesNoCatalogParameter(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `object_id` FROM `recommendation` WHERE `object_type` = 'artist') ORDER BY RAND() LIMIT 500;",
+                []
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetchColumn')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getIdsMissingRecommendation(500));
+    }
+
+    public function testGetRowsByCatalogsFiltersOnTheSongCatalogWhenGivenAList(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(static::stringContains(' AND `song`.`catalog` IN (4) GROUP BY '))
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getRowsByCatalogs(['4']));
     }
 
     public function testGetUploaderIdReturnsZeroWhenTheArtistWasNotUploaded(): void
@@ -196,6 +347,25 @@ class ArtistRepositoryTest extends TestCase
         static::assertTrue($this->subject->setField(666, ArtistFieldEnum::MBID, 'some-mbid'));
     }
 
+    public function testUpdateAllSkipCountsZeroesAnArtistWithNoSkipsBeforeRollingTheRestUp(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateAllSkipCounts();
+
+        // the rollup is a join, so an artist whose last skip was deleted is only reached by the first statement
+        static::assertStringContainsString('`total_skip` = 0', $calls[0]);
+        static::assertStringContainsString('`artist_map`.`artist_id` AS `artist_id`', $calls[1]);
+    }
+
     public function testUpdateInfoStampsTheManualFlagAsAnInt(): void
     {
         // `manual_update` is a tinyint and PDO binds false as an empty string, which MySQL rejects for the column
@@ -225,9 +395,11 @@ class ArtistRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new ArtistRepository(
-            $this->connection
+            $this->connection,
+            $this->logger,
         );
     }
 }

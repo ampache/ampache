@@ -28,10 +28,10 @@ namespace Ampache\Module\Application\Admin\Filter;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -84,12 +84,11 @@ final class AddFilterAction extends AbstractFilterAction
 
         $catalogs = Catalog::get_all_catalogs();
 
-        /** @var array<string, int> $catalog_array */
+        /** @var array<int, int> $catalog_array */
         $catalog_array = [];
 
         foreach ($catalogs as $catalog_id) {
-            $catalog_name                 = Catalog::getName($catalog_id);
-            $catalog_array[$catalog_name] = (int) filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
+            $catalog_array[$catalog_id] = (int) filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
         }
 
         // Attempt to create the filter

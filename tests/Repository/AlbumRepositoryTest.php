@@ -32,6 +32,7 @@ use Ampache\Repository\Model\AlbumFieldEnum;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class AlbumRepositoryTest extends TestCase
@@ -39,6 +40,7 @@ class AlbumRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private AlbumRepository $subject;
 
     public function testAddAlbumMapInsertsIgnoringDuplicates(): void
@@ -70,6 +72,25 @@ class AlbumRepositoryTest extends TestCase
             );
 
         $this->subject->collectGarbage();
+    }
+
+    public function testCollectOrphanedAlbumMapsTouchesOnlyTheMapTable(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(4))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->collectOrphanedAlbumMaps();
+
+        foreach ($calls as $sql) {
+            static::assertStringStartsWith('DELETE FROM `album_map`', $sql);
+        }
     }
 
     public function testCreateReturnsTheNewId(): void
@@ -118,6 +139,36 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->delete($album);
     }
 
+    public function testDeleteEmptyCarriesOnAfterAFailedStatement(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(3))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+                if (count($calls) === 1) {
+                    throw new QueryFailedException('nope');
+                }
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->logger->expects(static::once())
+            ->method('warning');
+
+        $this->subject->deleteEmpty(666);
+
+        static::assertSame(
+            [
+                'DELETE FROM `album` WHERE `id` = ?',
+                'DELETE FROM `album_map` WHERE `album_id` = ?',
+                "DELETE FROM `artist_map` WHERE `object_id` = ? AND `object_type` = 'album'",
+            ],
+            $calls
+        );
+    }
+
     public function testFindByPropertiesMatchesUnsetPropertiesAgainstNull(): void
     {
         // an unset property has to be matched as NULL, or a partially tagged release collides with a fully tagged one
@@ -137,6 +188,32 @@ class AlbumRepositoryTest extends TestCase
         $this->connection->method('fetchOne')->willReturn(false);
 
         static::assertNull($this->subject->findByProperties($this->createProperties()));
+    }
+
+    public function testFindEmptyKeepsANullAlbumArtistNull(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `id`, `album_artist` FROM `album` WHERE NOT EXISTS (SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`);')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(3))
+            ->method('fetch')
+            ->willReturn(
+                ['id' => '666', 'album_artist' => '42'],
+                ['id' => '667', 'album_artist' => null],
+                false
+            );
+
+        static::assertSame(
+            [
+                ['id' => 666, 'album_artist' => 42],
+                ['id' => 667, 'album_artist' => null],
+            ],
+            $this->subject->findEmpty()
+        );
     }
 
     public function testGetAlbumArtistIdReturnsAlbumArtistId(): void
@@ -257,6 +334,73 @@ class AlbumRepositoryTest extends TestCase
         );
     }
 
+    public function testGetIdsByCatalogReadsTheAlbumsWithNoArt(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                "SELECT `album`.`id` FROM `album` LEFT JOIN `image` ON `album`.`id` = `image`.`object_id` AND `object_type` = 'album' AND `image`.`size` = 'original' WHERE `album`.`catalog` = ? AND `image`.`object_id` IS NULL",
+                [7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('666', false);
+
+        static::assertSame([666], $this->subject->getIdsByCatalog(7, true));
+    }
+
+    public function testGetIdsByCatalogsCastsEveryCatalogIdAndPages(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (1,0) GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 20, 10')
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetchColumn')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getIdsByCatalogs([1, 'x9'], 10, 20));
+    }
+
+    public function testGetIdsByCatalogsOrderedByArtistGroupsBySongAlbumForACatalogList(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `song`.`album` AS `id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (3) GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` ')
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetchColumn')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getIdsByCatalogsOrderedByArtist([3]));
+    }
+
+    public function testGetIdsByCatalogsRunsToTheEndForAnOffsetWithNoSize(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `album`.`id` FROM `album` GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 5, 18446744073709551615')
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetchColumn')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getIdsByCatalogs(null, 0, 5));
+    }
+
     public function testGetNamesReturnsArrayWithDefaultsIfEmpty(): void
     {
         $albumId = 666;
@@ -295,6 +439,50 @@ class AlbumRepositoryTest extends TestCase
         self::assertSame(
             $data,
             $this->subject->getNames($albumId)
+        );
+    }
+
+    public function testGetRandomSongsReturnsIds(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ORDER BY RAND()',
+                [666]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(3))
+            ->method('fetchColumn')
+            ->willReturn('42', '33', false);
+
+        static::assertSame(
+            [42, 33],
+            $this->subject->getRandomSongs(666)
+        );
+    }
+
+    public function testGetSongsByAlbumDiskReturnsIdsInDiskTrackOrder(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`',
+                [666]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('42', false);
+
+        static::assertSame(
+            [42],
+            $this->subject->getSongsByAlbumDisk(666)
         );
     }
 
@@ -403,6 +591,43 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->updateAllCounts();
     }
 
+    public function testUpdateAllSkipCountsRollsUpBothAlbumAndAlbumDisk(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateAllSkipCounts();
+
+        static::assertStringStartsWith('UPDATE `album`,', $calls[0]);
+        static::assertStringStartsWith('UPDATE `album_disk`,', $calls[1]);
+    }
+
+    public function testUpdateAllSkipCountsSumsTheWholeAlbumButGroupsTheDisk(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateAllSkipCounts();
+
+        // grouping the album rollup by disk would give a multi-disk album one disk's total
+        static::assertStringContainsString('GROUP BY `song`.`album`)', $calls[0]);
+        static::assertStringContainsString('GROUP BY `song`.`album`, `song`.`disk`)', $calls[1]);
+    }
+
     public function testUpdateCountsBindsTheAlbumIntoEveryStatement(): void
     {
         $bound = [];
@@ -425,9 +650,11 @@ class AlbumRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new AlbumRepository(
-            $this->connection
+            $this->connection,
+            $this->logger,
         );
     }
 

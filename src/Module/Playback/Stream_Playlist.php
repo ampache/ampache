@@ -27,6 +27,7 @@ namespace Ampache\Module\Playback;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\System\Core;
@@ -34,9 +35,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Broadcast;
-use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
@@ -840,43 +839,32 @@ class Stream_Playlist
     private function _add_urls(array $urls): void
     {
         debug_event(self::class, "Adding urls to {" . $this->id . "}...", 5);
-        $sql         = '';
-        $fields      = [];
-        $values      = [];
-        $holders_arr = [];
+        // Group rows by their non-null column set: one INSERT per identical signature.
+        // Mixing rows with different columns desyncs the column list vs the placeholders.
+        $groups = [];
 
         foreach ($urls as $url) {
             $this->urls[] = $url;
-            $fields       = [];
-            $fields[]     = '`sid`';
-            $values[]     = $this->id;
-            $holders      = [];
-            $holders[]    = '?';
+            $fields       = ['`sid`'];
+            $values       = [$this->id];
 
             foreach ($url->properties as $field) {
                 if ($url->$field !== null) {
-                    $fields[]  = '`' . $field . '`';
-                    $values[]  = $url->$field;
-                    $holders[] = '?';
+                    $fields[] = '`' . $field . '`';
+                    $values[] = $url->$field;
                 }
             }
 
-            $holders_arr[] = $holders;
+            $groups[implode(',', $fields)][] = $values;
         }
 
-        $holders_chunks = array_chunk($holders_arr, 500);
-        foreach ($holders_chunks as $holders_arr_temp) {
-            $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES ';
+        foreach ($groups as $fieldList => $rows) {
+            $rowHolder = '(' . implode(',', array_fill(0, count($rows[0]), '?')) . ')';
 
-            foreach ($holders_arr_temp as $placeholder) {
-                $sql .= '(' . implode(',', $placeholder) . '),';
+            foreach (array_chunk($rows, 500) as $chunk) {
+                $sql = 'INSERT INTO `stream_playlist` (' . $fieldList . ') VALUES ' . implode(',', array_fill(0, count($chunk), $rowHolder)) . ';';
+                Dba::write($sql, array_merge(...$chunk));
             }
-
-            // remove last comma
-            $sql = substr($sql, 0, -1);
-            $sql .= ';';
         }
-
-        Dba::write($sql, $values);
     }
 }

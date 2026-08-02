@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Plugin;
 
-use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Generator;
 

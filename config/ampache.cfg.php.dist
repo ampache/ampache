@@ -908,7 +908,8 @@ wanted_types = "album,official"
 ;label_ignore_pattern = "^\[no label\]|^not on label\b"
 
 ; Broadcasts
-; Allow users to broadcast music.
+; Allow users to broadcast music so other users can listen along in step with them.
+; Needs the websocket server running as well: bin/cli run:websocket -- see docs/BROADCAST.md
 ; This feature requires advanced server configuration, please take a look on the wiki for more information.
 ; DEFAULT: "false"
 ;broadcast = "true"
@@ -926,8 +927,11 @@ live_stream = "true"
 podcast = "true"
 
 ; Web Socket address
-; Declare the web socket server address
-; DEFAULT: determined automatically
+; The address the BROWSER opens for listen-along broadcasting, so it must be reachable from the
+; browser, and must use wss:// when Ampache is served over https or the browser blocks it.
+; Broadcasting also needs the websocket server running: bin/cli run:websocket
+; See docs/BROADCAST.md
+; DEFAULT: determined automatically (wss when web_path is https, otherwise ws)
 ;websocket_address = "ws://localhost:8100"
 
 ; Refresh Limit

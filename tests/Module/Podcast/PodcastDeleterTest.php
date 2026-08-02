@@ -24,6 +24,8 @@ namespace Ampache\Module\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -31,6 +33,7 @@ use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class PodcastDeleterTest extends TestCase
@@ -108,6 +111,16 @@ class PodcastDeleterTest extends TestCase
         $this->config                    = $this->createMock(ConfigContainerInterface::class);
         $this->podcastEpisodeRepository  = $this->createMock(PodcastEpisodeRepositoryInterface::class);
         $this->logger                    = $this->createMock(LoggerInterface::class);
+
+        // Catalog::count_table() reaches the counter through the `global $dic` bridge
+        $catalogCounter = $this->createMock(CatalogCounterInterface::class);
+
+        $globalDic = $this->createMock(ContainerInterface::class);
+        $globalDic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            CatalogCounterInterface::class => $catalogCounter,
+            default => $this->createMock(LoggerInterface::class),
+        });
+        $GLOBALS['dic'] = $globalDic;
 
         $this->subject = new PodcastDeleter(
             $this->podcastRepository,

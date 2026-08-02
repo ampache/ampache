@@ -26,9 +26,12 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Generator;
+use Psr\Log\LoggerInterface;
 
 /**
  * Manages podcast related database access
@@ -40,6 +43,7 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
     ) {}
 
     /**
@@ -51,6 +55,20 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
             'DELETE FROM `podcast` WHERE `id` = ?',
             [$podcast->getId()]
         );
+    }
+
+    /**
+     * Removes every podcasts of one catalog, for a catalog that is being deleted
+     */
+    public function deleteByCatalog(int $catalogId): bool
+    {
+        try {
+            $this->connection->query('DELETE FROM `podcast` WHERE `catalog` = ?', [$catalogId]);
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -98,6 +116,26 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
         }
 
         return $podcast;
+    }
+
+    /**
+     * Reads the podcasts of one catalog
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalog(int $catalogId): array
+    {
+        $result = $this->connection->query(
+            'SELECT `podcast`.`id` FROM `podcast` WHERE `podcast`.`catalog` = ?',
+            [$catalogId]
+        );
+
+        $podcastIds = [];
+        while ($podcastId = $result->fetchColumn()) {
+            $podcastIds[] = (int) $podcastId;
+        }
+
+        return $podcastIds;
     }
 
     /**
@@ -162,5 +200,54 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
     public function prototype(): Podcast
     {
         return new Podcast();
+    }
+
+    /**
+     * Points a podcast at another catalog, for a podcast whose episodes have all moved
+     */
+    public function setCatalog(int $podcastId, int $catalogId): bool
+    {
+        try {
+            $this->connection->query(
+                'UPDATE `podcast` SET `catalog` = ? WHERE `id` = ?;',
+                [$catalogId, $podcastId]
+            );
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Rolls each podcast's play and skip totals up from the episodes it holds
+     */
+    public function updateAllCounts(): void
+    {
+        $statements = [
+            "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_count`) AS `total_count`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_count` = `object_count`.`total_count` WHERE `podcast`.`total_count` != `object_count`.`total_count` AND `podcast`.`id` = `object_count`.`podcast`;",
+            "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_skip`) AS `total_skip`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_skip` = `object_count`.`total_skip` WHERE `podcast`.`total_skip` != `object_count`.`total_skip` AND `podcast`.`id` = `object_count`.`podcast`;",
+        ];
+
+        foreach ($statements as $sql) {
+            $this->runMaintenance($sql);
+        }
+    }
+
+    /**
+     * Runs one count-maintenance statement, where a failure must not take the rest of the sweep down with it
+     *
+     * @param list<mixed> $params
+     */
+    private function runMaintenance(string $sql, array $params = []): void
+    {
+        try {
+            $this->connection->query($sql, $params);
+        } catch (DatabaseException) {
+            $this->logger->warning(
+                'count maintenance failed: ' . $sql,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+        }
     }
 }

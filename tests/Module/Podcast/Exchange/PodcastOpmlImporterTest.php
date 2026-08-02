@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast\Exchange;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Podcast\Exception\FeedNotLoadableException;
 use Ampache\Module\Podcast\Exception\InvalidFeedUrlException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\Catalog;
 use ArrayIterator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

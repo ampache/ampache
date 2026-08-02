@@ -34,8 +34,8 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -161,7 +161,6 @@ final class CatalogAction5Method implements MethodInterface
         }
 
         Catalog::update_catalog_map($catalog_media_type);
-        Catalog::update_counts();
 
         return $response->withBody(
             $this->streamFactory->createStream(

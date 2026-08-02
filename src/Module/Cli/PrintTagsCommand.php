@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
-use Ampache\Repository\Model\Catalog;
 use Exception;
 use Override;
 

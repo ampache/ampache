@@ -26,9 +26,9 @@ declare(strict_types=1);
 // show_localplay_status.inc.php
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Browse;
 
 /** @var Localplay $localplay */
 /** @var int[] $objects */

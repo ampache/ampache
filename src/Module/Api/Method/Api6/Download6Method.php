@@ -31,8 +31,8 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Database\Query\Random;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 

@@ -33,13 +33,13 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var list<int> $object_ids */
 /** @var string $limit_threshold */
 /** @var bool $group_release */
@@ -130,7 +130,7 @@ foreach ($object_ids as $album_id) {
         continue;
     }
 
-    if ($directplay_limit > 0) {
+    if ($directplay_limit > 0 && $is_table) {
         $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
     } ?>
         <tr id="album_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="album" data-object-id="<?php echo $libitem->id; ?>">

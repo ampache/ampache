@@ -28,9 +28,9 @@ namespace Ampache\Module\Application\Stream;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -46,6 +46,7 @@ final class PlayItemAction extends AbstractStreamAction
         LoggerInterface $logger,
         private readonly ConfigContainerInterface $configContainer,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
+        private readonly Stats $stats,
     ) {
         parent::__construct($logger, $configContainer);
     }
@@ -119,7 +120,7 @@ final class PlayItemAction extends AbstractStreamAction
                     && in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM, LibraryItemEnum::COLLECTION])
                 ) {
                     $client = $_REQUEST['client'] ?? substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
-                    Stats::insert($objectType->value, (int) $object_id, $user->getId(), $client, [], 'stream', time());
+                    $this->stats->insert($objectType->value, (int) $object_id, $user->getId(), $client, [], 'stream', time());
                 }
             }
         }

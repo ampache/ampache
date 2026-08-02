@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\TagCountTypeEnum;
 use PDOStatement;
@@ -36,6 +37,7 @@ class TagRepositoryTest extends TestCase
 {
     use ConsecutiveParams;
 
+    private CatalogCounterInterface&MockObject $catalogCounter;
     private DatabaseConnectionInterface&MockObject $connection;
     private TagRepository $subject;
 
@@ -61,6 +63,39 @@ class TagRepositoryTest extends TestCase
         $this->connection->expects(static::exactly(15))->method('query');
 
         $this->subject->collectGarbage();
+    }
+
+    public function testCreateTakesTheInsertIdBeforeTheCounterRunsItsOwnQueries(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('REPLACE INTO `tag` SET `name` = ?', ['some-genre'])
+            ->willReturnCallback(function () use (&$calls): PDOStatement {
+                $calls[] = 'insert';
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturnCallback(function () use (&$calls): int {
+                $calls[] = 'id';
+
+                return 42;
+            });
+
+        $this->catalogCounter->expects(static::once())
+            ->method('count')
+            ->willReturnCallback(function () use (&$calls): int {
+                $calls[] = 'count';
+
+                return 1;
+            });
+
+        static::assertSame(42, $this->subject->create('some-genre'));
+        static::assertSame(['insert', 'id', 'count'], $calls);
     }
 
     public function testDecrementCountRefusesToGoNegative(): void
@@ -92,6 +127,44 @@ class TagRepositoryTest extends TestCase
         $this->connection->method('fetchOne')->willReturn(false);
 
         static::assertNull($this->subject->findIdByName('some-tag'));
+    }
+
+    public function testGetSongTagNamesByAlbumReadsTheGenresOfItsSongs(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                "SELECT `tag`.`name` FROM `tag` JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id` JOIN `song` ON `tag_map`.`object_id` = `song`.`id` WHERE `song`.`album` = ? AND `tag_map`.`object_type` = 'song' GROUP BY `tag`.`id`, `tag`.`name`;",
+                [666]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('Rock', false);
+
+        static::assertSame(['Rock'], $this->subject->getSongTagNamesByAlbum(666));
+    }
+
+    public function testGetSongTagNamesByArtistGoesThroughTheArtistMap(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::stringContains("`song`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = 'song')"),
+                [42]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('fetchColumn')
+            ->willReturn(false);
+
+        static::assertSame([], $this->subject->getSongTagNamesByArtist(42));
     }
 
     public function testGetTagIdsAppendsAnOffsetOnlyAlongsideACount(): void
@@ -188,8 +261,11 @@ class TagRepositoryTest extends TestCase
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
 
+        $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
+
         $this->subject = new TagRepository(
-            $this->connection
+            $this->connection,
+            $this->catalogCounter
         );
     }
 }

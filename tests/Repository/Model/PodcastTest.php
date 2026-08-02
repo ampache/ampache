@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Catalog\Catalog;
 use DateTime;
 use Generator;
 use LogicException;

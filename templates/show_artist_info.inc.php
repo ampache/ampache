@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 // show_artist_info.inc.php
 
-use Ampache\Repository\Model\Art;
+use Ampache\Module\Art\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Wanted;
 

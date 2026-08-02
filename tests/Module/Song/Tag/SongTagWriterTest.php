@@ -27,8 +27,8 @@ namespace Ampache\Module\Song\Tag;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Util\UtilityFactoryInterface;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use PHPUnit\Framework\MockObject\MockObject;

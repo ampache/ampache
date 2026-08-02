@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Database\database_object;
 
 /**
  * This is the class responsible for handling the PrivateMsg object

@@ -27,7 +27,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Preference;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
 use Override;

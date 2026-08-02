@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database\Query;
 
-use Ampache\Repository\Model\Query;
-
 /**
  * The members of one collection, in curated order
  *

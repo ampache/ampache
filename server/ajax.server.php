@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Api\Ajax\AjaxApplication;
+use Ampache\Module\Api\Ajax\AjaxApplication;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */

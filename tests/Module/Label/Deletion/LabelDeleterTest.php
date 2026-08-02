@@ -26,17 +26,24 @@ declare(strict_types=1);
 namespace Ampache\Module\Label\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserflagRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class LabelDeleterTest extends TestCase
 {
     private ArtCleanupInterface&MockObject $artCleanup;
+    private CatalogCounterInterface&MockObject $catalogCounter;
+    private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LabelRepositoryInterface&MockObject $labelRepository;
     private ShoutRepositoryInterface&MockObject $shoutRepository;
@@ -75,11 +82,24 @@ class LabelDeleterTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->dic = $this->createMock(ContainerInterface::class);
+
+        // Rating::garbage_collection() reaches its repository through the `global $dic` bridge
+        $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            RatingRepositoryInterface::class => $this->createMock(RatingRepositoryInterface::class),
+            UserflagRepositoryInterface::class => $this->createMock(UserflagRepositoryInterface::class),
+            default => $this->createMock(LoggerInterface::class),
+        });
+
+        $GLOBALS['dic'] = $this->dic;
+
         $this->shoutRepository        = $this->createMock(ShoutRepositoryInterface::class);
         $this->labelRepository        = $this->createMock(LabelRepositoryInterface::class);
         $this->userActivityRepository = $this->createMock(UserActivityRepositoryInterface::class);
         $this->artCleanup             = $this->createMock(ArtCleanupInterface::class);
         $this->folderRepository       = $this->createMock(FolderRepositoryInterface::class);
+
+        $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
 
         $this->subject = new LabelDeleter(
             $this->shoutRepository,
@@ -87,6 +107,7 @@ class LabelDeleterTest extends TestCase
             $this->userActivityRepository,
             $this->artCleanup,
             $this->folderRepository,
+            $this->catalogCounter,
         );
     }
 }

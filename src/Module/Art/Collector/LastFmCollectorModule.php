@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Art\Art;
 use Ampache\Module\LastFm\Exception\LastFmQueryFailedException;
 use Ampache\Module\LastFm\LastFmQueryInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\Art;
 use Exception;
 use Psr\Log\LoggerInterface;
 

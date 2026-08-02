@@ -27,7 +27,6 @@ namespace Ampache\Module\Database\Query;
 
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Query;
 use Ampache\Repository\Model\User;
 
 final class SmartplaylistQuery implements QueryInterface

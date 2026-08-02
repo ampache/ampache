@@ -79,7 +79,9 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $websocket_address = AmpConfig::get('websocket_address');
         if (empty($websocket_address)) {
-            $websocket_address = 'ws://' . Core::get_server('SERVER_NAME') . ':8100';
+            // a page served over https may only open a wss socket, so the scheme has to follow the site's
+            $scheme            = (str_starts_with((string) AmpConfig::get('web_path'), 'https://')) ? 'wss' : 'ws';
+            $websocket_address = $scheme . '://' . Core::get_server('SERVER_NAME') . ':8100';
         }
 
         return $websocket_address . '/broadcast';

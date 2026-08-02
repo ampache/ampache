@@ -26,6 +26,18 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Api\Json5_Data;
+use Ampache\Module\Api\Json6_Data;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Xml6_Data;
+use Ampache\Module\Api\Xml8_Data;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Override;
 
 class ApiOutputFactoryTest extends MockeryTestCase
@@ -51,6 +63,38 @@ class ApiOutputFactoryTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->subject = new ApiOutputFactory();
+        // the formatters are final, so the factory gets real ones built from mocked repositories
+        $this->subject = new ApiOutputFactory(
+            json5Data: new Json5_Data(...$this->repositories()),
+            json6Data: new Json6_Data(...$this->repositories()),
+            json8Data: new Json8_Data(...$this->repositories()),
+            xml5Data: new Xml5_Data(...$this->repositories()),
+            xml6Data: new Xml6_Data(...$this->repositories()),
+            xml8Data: new Xml8_Data(...$this->repositories()),
+        );
+    }
+
+    /**
+     * Every formatter takes the same six repositories, so each one gets its own set of mocks
+     *
+     * @return array{
+     *     AlbumRepositoryInterface,
+     *     BookmarkRepositoryInterface,
+     *     LabelRepositoryInterface,
+     *     LicenseRepositoryInterface,
+     *     PodcastRepositoryInterface,
+     *     SongRepositoryInterface,
+     * }
+     */
+    private function repositories(): array
+    {
+        return [
+            $this->mock(AlbumRepositoryInterface::class),
+            $this->mock(BookmarkRepositoryInterface::class),
+            $this->mock(LabelRepositoryInterface::class),
+            $this->mock(LicenseRepositoryInterface::class),
+            $this->mock(PodcastRepositoryInterface::class),
+            $this->mock(SongRepositoryInterface::class),
+        ];
     }
 }

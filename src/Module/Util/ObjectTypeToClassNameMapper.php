@@ -25,14 +25,15 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Module\Art\Art;
+use Ampache\Module\Database\database_object;
+use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\Collection;
-use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LibraryItemLoader;
@@ -43,7 +44,6 @@ use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Repository\Model\Share;
-use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;

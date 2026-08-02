@@ -25,14 +25,19 @@ namespace Ampache\Module\Folder\Deletion;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserflagRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class FolderDeleterTest extends TestCase
 {
     private ArtCleanupInterface&MockObject $artCleanup;
+    private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private ShoutRepositoryInterface&MockObject $shoutRepository;
     private FolderDeleter $subject;
@@ -70,6 +75,17 @@ class FolderDeleterTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->dic = $this->createMock(ContainerInterface::class);
+
+        // Rating::garbage_collection() reaches its repository through the `global $dic` bridge
+        $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            RatingRepositoryInterface::class => $this->createMock(RatingRepositoryInterface::class),
+            UserflagRepositoryInterface::class => $this->createMock(UserflagRepositoryInterface::class),
+            default => $this->createMock(LoggerInterface::class),
+        });
+
+        $GLOBALS['dic'] = $this->dic;
+
         $this->shoutRepository        = $this->createMock(ShoutRepositoryInterface::class);
         $this->folderRepository       = $this->createMock(FolderRepositoryInterface::class);
         $this->userActivityRepository = $this->createMock(UserActivityRepositoryInterface::class);

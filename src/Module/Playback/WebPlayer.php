@@ -26,11 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Playback;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;

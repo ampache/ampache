@@ -25,12 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Podcast\Exception\PodcastFolderException;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\PodcastRepositoryInterface;

@@ -25,11 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
-use Ampache\Repository\Model\database_object;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
+use Psr\Log\LoggerInterface;
 
 /**
  * Manages database access related to Wanted-items/recommendations
@@ -40,7 +42,21 @@ use Ampache\Repository\Model\Wanted;
  */
 final readonly class WantedRepository implements WantedRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
+
+    /**
+     * Marks a wanted item as accepted
+     */
+    public function accept(string $musicbrainzId): void
+    {
+        $this->connection->query(
+            'UPDATE `wanted` SET `accepted` = 1 WHERE `mbid` = ?',
+            [$musicbrainzId]
+        );
+    }
 
     /**
      * This cleans out unused wanted items
@@ -50,7 +66,10 @@ final readonly class WantedRepository implements WantedRepositoryInterface
         try {
             $this->connection->query('DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
         } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
+            $this->logger->debug(
+                'collectGarbage error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 

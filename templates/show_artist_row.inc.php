@@ -27,22 +27,22 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Userflag;
 
 global $dic;
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
 /** @var Ampache\Repository\Model\Artist $libitem */
-/** @var Ampache\Repository\Model\Browse|null $browse */
+/** @var Ampache\Module\Database\Query\Browse|null $browse */
 /** @var bool $show_direct_play */
 /** @var bool $show_playlist_add */
 /** @var bool $hide_genres */

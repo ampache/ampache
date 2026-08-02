@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Override;
 

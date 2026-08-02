@@ -126,6 +126,25 @@ class PlaylistRepositoryTest extends TestCase
         $this->subject->deleteTrackByNumber($this->playlist(666), 3);
     }
 
+    public function testGetIdsByCatalogRepeatsTheCatalogForEveryMediaType(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::stringContains('WHERE `song`.`catalog` = ? OR `live_stream`.`catalog` = ? OR `podcast_episode`.`catalog` = ? OR `video`.`catalog` = ?;'),
+                [7, 7, 7, 7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('666', false);
+
+        static::assertSame([666], $this->subject->getIdsByCatalog(7));
+    }
+
     public function testGetLastTrackNumberReadsTheMaximum(): void
     {
         $this->connection->expects(static::once())

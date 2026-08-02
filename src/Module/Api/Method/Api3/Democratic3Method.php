@@ -27,7 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Repository\Model\Democratic;
+use Ampache\Module\Playback\Democratic;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 

@@ -26,11 +26,13 @@ declare(strict_types=1);
 namespace Ampache\Module\Label\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
@@ -42,6 +44,7 @@ final readonly class LabelDeleter implements LabelDeleterInterface
         private UserActivityRepositoryInterface $userActivityRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
+        private CatalogCounterInterface $catalogCounter,
     ) {}
 
     public function delete(
@@ -56,5 +59,6 @@ final readonly class LabelDeleter implements LabelDeleterInterface
         $this->shoutRepository->collectGarbage('label', $labelId);
         $this->userActivityRepository->collectGarbage('label', $labelId);
         $this->folderRepository->collectGarbage();
+        $this->catalogCounter->count(CountableTableEnum::LABEL);
     }
 }

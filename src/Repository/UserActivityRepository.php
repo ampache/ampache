@@ -26,10 +26,19 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Dba;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
+use PDO;
+use Psr\Log\LoggerInterface;
 
-final class UserActivityRepository implements UserActivityRepositoryInterface
+final readonly class UserActivityRepository implements UserActivityRepositoryInterface
 {
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
+
     /**
      * Remove activities for items that no longer exist.
      */
@@ -53,20 +62,38 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
 
         if ($object_type !== null) {
             if (in_array($object_type, $types, true)) {
-                $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, [$object_type, $object_id]);
+                $this->connection->query(
+                    'DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?',
+                    [$object_type, $object_id]
+                );
             } else {
-                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                $this->logger->critical(
+                    'Garbage collect on type `' . $object_type . '` is not supported.',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
             }
         } else {
+            $statements = [];
             foreach ($types as $type) {
-                Dba::write(sprintf('DELETE FROM `user_activity` WHERE `object_type` = ? AND `user_activity`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`);', $type, $type), [$type], true);
+                $statements[] = [sprintf('DELETE FROM `user_activity` WHERE `object_type` = ? AND `user_activity`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`);', $type, $type), [$type]];
             }
 
             // accidental plays
-            Dba::write("DELETE FROM `user_activity` WHERE `object_type` IN ('album', 'artist') AND `action` = 'play';", [], true);
+            $statements[] = ["DELETE FROM `user_activity` WHERE `object_type` IN ('album', 'artist') AND `action` = 'play';", []];
             // deleted users
-            Dba::write("DELETE FROM `user_activity` WHERE `user` NOT IN (SELECT `id` FROM `user`);", [], true);
+            $statements[] = ['DELETE FROM `user_activity` WHERE `user` NOT IN (SELECT `id` FROM `user`);', []];
+
+            // one missing table must not take the rest of the sweep down with it
+            foreach ($statements as $statement) {
+                try {
+                    $this->connection->query($statement[0], $statement[1]);
+                } catch (DatabaseException) {
+                    $this->logger->debug(
+                        'collectGarbage error: ' . $statement[0],
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                }
+            }
         }
     }
 
@@ -78,8 +105,8 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         string $action,
         int $user_id = 0,
     ): void {
-        Dba::write(
-            "DELETE FROM `user_activity` WHERE `activity_date` = ? AND `action` = ? AND `user` = ?",
+        $this->connection->query(
+            'DELETE FROM `user_activity` WHERE `activity_date` = ? AND `action` = ? AND `user` = ?',
             [$date, $action, $user_id]
         );
     }
@@ -104,9 +131,9 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         }
 
         $sql .= "ORDER BY `activity_date` DESC LIMIT " . $limit;
-        $db_results = Dba::read($sql, $params);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $dbResults = $this->connection->query($sql, $params);
+        $results   = [];
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
             $results[] = (int) $row['id'];
         }
 
@@ -130,13 +157,51 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         }
 
         $sql .= "ORDER BY `user_activity`.`activity_date` DESC LIMIT " . $limit;
-        $db_results = Dba::read($sql, $params);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $dbResults = $this->connection->query($sql, $params);
+        $results   = [];
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
             $results[] = (int) $row['id'];
         }
 
         return $results;
+    }
+
+    /**
+     * Reads whole activity rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param list<int|string> $activityIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $activityIds): array
+    {
+        if ($activityIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT * FROM `user_activity` WHERE `id` IN (%s)',
+                implode(',', array_map(intval(...), $activityIds))
+            )
+        );
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Moves the activity of an object onto another one
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
+    {
+        $this->connection->query(
+            'UPDATE `user_activity` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            [$newObjectId, $objectType, $oldObjectId]
+        );
     }
 
     /**
@@ -151,8 +216,8 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         int $objectId,
         int $date,
     ): void {
-        Dba::write(
-            "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)",
+        $this->connection->query(
+            'INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)',
             [$userId, $action, $object_type, $objectId, $date]
         );
     }

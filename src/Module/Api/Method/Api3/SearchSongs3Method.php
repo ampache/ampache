@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Repository\Model\Search;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\User;
 
 /**

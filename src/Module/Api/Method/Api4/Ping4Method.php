@@ -29,10 +29,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 

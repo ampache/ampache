@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Search;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\User;
 
 /**

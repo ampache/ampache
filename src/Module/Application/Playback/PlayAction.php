@@ -33,23 +33,23 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_subsonic;
+use Ampache\Module\Database\Query\Random;
+use Ampache\Module\Playback\Democratic;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\System\Preference;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -77,6 +77,7 @@ final readonly class PlayAction implements ApplicationActionInterface
         private NetworkCheckerInterface $networkChecker,
         private UserRepositoryInterface $userRepository,
         private LoggerInterface $logger,
+        private Stats $stats,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -749,9 +750,9 @@ final readonly class PlayAction implements ApplicationActionInterface
                         $location = Session::get_geolocation($sessionkey);
                         if ($is_download) {
                             if ($share_id === 0) {
-                                Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                                $this->stats->insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                             } else {
-                                Stats::insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
+                                $this->stats->insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
                             }
                         } elseif (!$share_id && $record_stats) {
                             // internal scrobbling (user_activity and object_count tables)
@@ -780,7 +781,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             // No catalog, must be song preview or something like that => just redirect to file
             if ($type == "song_preview") {
                 /** @var Song_Preview $media */
-                $media->stream(); // header redirect using preview plugin ($plugin->_plugin->stream_song_preview())
+                $media->stream(); // 303 to the provider url the preview plugin stored, so the client fetches the sample
             } else {
                 header('Location: ' . $media->file, true, 303);
             }
@@ -882,9 +883,9 @@ final readonly class PlayAction implements ApplicationActionInterface
                         'Registering download stats for {' . $media->get_stream_name() . '}...',
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
-                    Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                    $this->stats->insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                 } else {
-                    Stats::insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
+                    $this->stats->insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
                 }
             }
 
@@ -1213,9 +1214,9 @@ final readonly class PlayAction implements ApplicationActionInterface
                                 'Registering download stats for {' . $media->get_stream_name() . '}...',
                                 [LegacyLogger::CONTEXT_TYPE => self::class]
                             );
-                            Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                            $this->stats->insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                         } else {
-                            Stats::insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
+                            $this->stats->insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
                         }
                     } elseif (!$share_id && $record_stats) {
                         $this->logger->notice(

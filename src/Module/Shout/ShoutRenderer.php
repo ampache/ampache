@@ -27,11 +27,11 @@ namespace Ampache\Module\Shout;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
 

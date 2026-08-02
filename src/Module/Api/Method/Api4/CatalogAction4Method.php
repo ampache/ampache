@@ -28,8 +28,8 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 
 /**
@@ -101,7 +101,6 @@ final class CatalogAction4Method
                 Album::update_album_artist();
             }
             Catalog::update_catalog_map($catalog_media_type);
-            Catalog::update_counts();
 
             Api4::message('success', 'successfully started: ' . $task, null, $input['api_format']);
         } else {

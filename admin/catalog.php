@@ -44,8 +44,10 @@ use Ampache\Module\Application\Admin\Catalog\ShowCustomizeCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowDeleteCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowDisabledAction;
 use Ampache\Module\Application\Admin\Catalog\UpdateAllCatalogsAction;
+use Ampache\Module\Application\Admin\Catalog\UpdateAllFileTagsActions;
 use Ampache\Module\Application\Admin\Catalog\UpdateCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\UpdateCatalogSettingsAction;
+use Ampache\Module\Application\Admin\Catalog\UpdateFileTagsAction;
 use Ampache\Module\Application\Admin\Catalog\UpdateFromAction;
 use Ampache\Module\Application\ApplicationRunner;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -74,6 +76,8 @@ $dic->get(ApplicationRunner::class)->run(
         GarbageCollectAction::REQUEST_KEY => GarbageCollectAction::class,
         ScanCatalogFoldersAction::REQUEST_KEY => ScanCatalogFoldersAction::class,
         ScanAllCatalogFoldersActions::REQUEST_KEY => ScanAllCatalogFoldersActions::class,
+        UpdateFileTagsAction::REQUEST_KEY => UpdateFileTagsAction::class,
+        UpdateAllFileTagsActions::REQUEST_KEY => UpdateAllFileTagsActions::class,
         GatherMediaArtAction::REQUEST_KEY => GatherMediaArtAction::class,
         ImportToCatalogAction::REQUEST_KEY => ImportToCatalogAction::class,
         AddCatalogAction::REQUEST_KEY => AddCatalogAction::class,

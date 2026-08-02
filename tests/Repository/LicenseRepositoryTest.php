@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\License;
 use PDO;
@@ -38,6 +39,7 @@ class LicenseRepositoryTest extends TestCase
     use ConsecutiveParams;
     use RepositoryTestTrait;
 
+    private CatalogCounterInterface&MockObject $catalogCounter;
     private DatabaseConnectionInterface&MockObject $connection;
     private LicenseRepository $subject;
 
@@ -225,8 +227,11 @@ class LicenseRepositoryTest extends TestCase
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
 
+        $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
+
         $this->subject = new LicenseRepository(
-            $this->connection
+            $this->connection,
+            $this->catalogCounter
         );
     }
 }

@@ -29,7 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Repository\Model\Preference;
+use Ampache\Module\System\Preference;
 use Exception;
 use Gettext\Translations;
 use Psr\Http\Message\ResponseFactoryInterface;

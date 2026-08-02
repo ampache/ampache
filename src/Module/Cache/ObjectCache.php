@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cache;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Catalog;
 
 final class ObjectCache implements ObjectCacheInterface
 {

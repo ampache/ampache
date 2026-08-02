@@ -26,11 +26,13 @@ declare(strict_types=1);
 namespace Ampache\Module\Song\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\FolderRepositoryInterface;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -45,6 +47,7 @@ final readonly class SongDeleter implements SongDeleterInterface
         private UserActivityRepositoryInterface $userActivityRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
+        private CatalogCounterInterface $catalogCounter,
     ) {}
 
     public function delete(Song $song, bool $parent = false): bool
@@ -63,6 +66,13 @@ final readonly class SongDeleter implements SongDeleterInterface
                     $this->userActivityRepository->collectGarbage('song', $songId);
                     $this->songRepository->collectGarbage($song);
                     $this->folderRepository->collectGarbage();
+                    // a disabled song was never in the enabled-only totals, so removing it moves nothing
+                    if ($song->enabled) {
+                        // one known row moves the totals by what it held; without those values, recount
+                        (isset($song->time, $song->size))
+                            ? $this->catalogCounter->adjust(CountableTableEnum::SONG, -1, -$song->time, -($song->size / 1024 / 1024))
+                            : $this->catalogCounter->count(CountableTableEnum::SONG);
+                    }
                 }
             }
         } else {

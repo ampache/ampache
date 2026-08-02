@@ -27,11 +27,11 @@ namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Catalog;
 use PDOStatement;
 
 final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalogInterface
@@ -324,7 +324,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             $this->catalogGarbageCollector->collect();
             Catalog::clean_empty_albums();
             Album::update_album_artist();
-            Catalog::update_counts();
             if (in_array($catalogName, [null, '', '0'], true)) {
                 $catalog?->count_scan_folders($interactor);
             }

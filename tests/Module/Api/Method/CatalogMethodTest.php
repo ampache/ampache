@@ -29,6 +29,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\User;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;

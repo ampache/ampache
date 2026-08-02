@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog;
 
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 
 interface CatalogLoaderInterface
