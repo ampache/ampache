@@ -6677,18 +6677,20 @@ Get an art image.
 
 ### random
 
-Picks a random song, podcast episode or video from the whole library and redirects (302) to its stream url. **Ampache 8.0.0+**
+Picks a random object and redirects (302) to its stream url. **Ampache 8.0.0+**
 
-Mirrors [stream](#stream)'s transcode parameters but takes no `filter`/`id`; only single-file media types are supported.
-Picking a random item from a container (album, artist, playlist, search) is what the search/browse/playlist methods are for.
+Mirrors [stream](#stream)'s transcode parameters. A container type resolves to a random song from within it, so `filter` names that container.
 
-| Input     | Type    | Description                                                                    | Optional |
-|-----------|---------|--------------------------------------------------------------------------------|---------:|
-| 'type'    | string  | `song`, `podcast_episode`, `video` (default: song)                             |      YES |
-| 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb) **song only**          |      YES |
-| 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) **song only**       |      YES |
-| 'offset'  | integer | time offset in seconds                                                         |      YES |
-| 'stats'   | boolean | `0`, `1`, if false disable stat recording when playing the object (default: 1) |      YES |
+**NOTE** `filter` is read against the table named by `type`, and those id spaces overlap - album `7` and album_disk `7` are different objects. A client browsing disks (`album_group` off) holds album_disk ids and must send `type=album_disk`.
+
+| Input     | Type    | Description                                                                                                                                                                                                                                   | Optional |
+|-----------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------:|
+| 'type'    | string  | `album`, `album_artist`, `album_disk`, `artist`, `catalog`, `favorite`, `genre`, `label`, `playlist`, `podcast_episode`, `rating`, `search`, `song`, `song_artist`, `video` (default: song)                                                   |      YES |
+| 'filter'  | string  | $object_id of the container to pick from; a `smart_` prefixed id selects a smartlist. `favorite` reads it as `1`/omitted = flagged, `0` = not flagged; `rating` as `1`-`5` = that many stars or more, `0` = unrated, omitted = any rated song |      YES |
+| 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb) **song only**                                                                                                                                                                         |      YES |
+| 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) **song only**                                                                                                                                                                      |      YES |
+| 'offset'  | integer | time offset in seconds                                                                                                                                                                                                                        |      YES |
+| 'stats'   | boolean | `0`, `1`, if false disable stat recording when playing the object (default: 1)                                                                                                                                                                |      YES |
 
 * return file (HTTP 302 Found; redirects to the stream url)
 * throws (HTTP 400 Bad Request)

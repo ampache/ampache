@@ -96,6 +96,7 @@ where the generator stops deriving and starts asserting, so each is a small main
 | `WIRING_BY_PARAM` | `(action, param, value)` -> schema, where the shape depends on a request parameter baked into the path (e.g. `/albums/search` -> `type=album`) |
 | `SUCCESS_ACTIONS` | the mutation/command actions that answer `{"success": "..."}`, folded into the two tables above |
 | `BINARY_RESPONSES` | `stream`/`download`/`get_art`, documented as redirects or image bodies |
+| `BINARY_REQUEST_BODIES` | actions that carry a file rather than parameters (`upload`). `apply_request_bodies()` would otherwise replace the binary body with one mirroring the query parameters, so the body is declared here and that step skips the operation |
 | `MANUAL_SCHEMAS` | schemas with no single docblock behind them (`IndexResponse`, the democratic and localplay variants, ...) |
 | `REF_REUSE` | replace an inlined shape with a `$ref` to an existing schema (`AlbumObject.tracks` -> `SongObject`) |
 | `PROPERTY_DESCRIPTIONS` | prose for a property whose meaning the type alone does not convey |

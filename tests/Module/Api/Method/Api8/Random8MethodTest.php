@@ -265,7 +265,7 @@ class Random8MethodTest extends MockeryTestCase
             $gatekeeper,
             $response,
             $output,
-            ['type' => 'genre'],
+            ['type' => 'not-a-type'],
             $user,
             $apiVersion
         );

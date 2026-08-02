@@ -84086,26 +84086,34 @@
       "get": {
         "parameters": [
           {
-            "description": "Object type to pick a random item from (default: song)",
+            "description": "Object type to pick a random item from (default: song). `artist` accepts either artist credit; `song_artist` and `album_artist` narrow it to one",
             "in": "query",
             "name": "type",
             "required": false,
             "schema": {
               "default": "song",
               "enum": [
-                "artist",
                 "album",
+                "album_artist",
+                "album_disk",
+                "artist",
+                "catalog",
+                "favorite",
+                "genre",
+                "label",
                 "playlist",
                 "podcast_episode",
+                "rating",
                 "search",
                 "song",
+                "song_artist",
                 "video"
               ],
               "type": "string"
             }
           },
           {
-            "description": "Optional parent object id to pick from (e.g. an artist, album or playlist); a `smart_` prefixed id selects a smartlist",
+            "description": "Parent object id to pick from. It is read against the table named by `type`, and those id spaces overlap, so an album id and an album_disk id of the same number are different objects. `favorite` reads it as 1 (or omitted) for flagged and 0 for not flagged; `rating` as 1-5 for that many stars or more, 0 for unrated, omitted for any rated song",
             "in": "query",
             "name": "filter",
             "required": false,
