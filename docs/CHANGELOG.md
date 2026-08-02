@@ -47,6 +47,16 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The same checkboxes, gestures and action bar on the song lists, which covers the songs browse as well as the song lists on album, artist and search pages
   * A selection of songs can be downloaded as a single zip, when `allow_zip_types` includes `song` and batch download is permitted
   * `batch.php` accepts a comma separated `id` list, so one zip can hold the medias of several items instead of only one
+* Broadcasting is documented and easier to get working
+  * New `docs/BROADCAST.md` covers the whole feature: the config, the `bin/cli run:websocket` server it needs, reverse proxy and TLS, and how to test each step
+  * New `docs/examples/ampache_websocket.service` systemd unit, so the websocket server can run as a service like the other jobs
+  * The websocket address defaults to `wss://` when Ampache is served over https; a plain `ws://` default was blocked by the browser as mixed content and reported nothing on the page
+  * The broadcast socket also accepts connections from the host in `web_path`, not only the host in `websocket_address`; a mismatch was refused with `403` that never appeared in the interface
+  * `run:broadcast` (a UPnP announcement) and `run:websocket` (broadcasting) now say which is which in their help
+  * New `broadcast_private` preference (Streaming) decides whether a user's new broadcasts require a listener session; it is on by default, matching what every broadcast did before, and can now be turned off per user
+  * The Broadcasts browse has **All** and **Live** views; a broadcast only counts as live when it is started and still holds the key a listener connects with
+  * Starting the websocket server clears any broadcast a previous server left marked as running, so a crash no longer leaves rows claiming to be live forever
+  * Garbage collection clears the state of broadcasts that cannot be running, leaving a broadcast that still holds its listener key alone in case it is live
 * Song previews work again
   * New `iTunes` and `Deezer` plugins find a 30 second sample for a wanted album's tracks; neither needs an api key or an account
   * Neither provider indexes MusicBrainz ids, so a track is matched on artist and title and a wrong match is possible

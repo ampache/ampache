@@ -28,6 +28,7 @@ namespace Ampache\Module\Database\Query;
 final class BroadcastQuery implements QueryInterface
 {
     public const array FILTERS = [
+        'started',
     ];
 
     protected string $base   = "SELECT %%SELECT%% FROM `broadcast` ";
@@ -80,6 +81,12 @@ final class BroadcastQuery implements QueryInterface
      */
     public function get_sql_filter(Query $query, string $filter, mixed $value): string
     {
+        if ($filter === 'started') {
+            return ((int) $value === 0)
+                ? " (`broadcast`.`started` = 0 OR `broadcast`.`key` IS NULL OR `broadcast`.`key` = '') AND "
+                : " `broadcast`.`started` = 1 AND `broadcast`.`key` IS NOT NULL AND `broadcast`.`key` != '' AND ";
+        }
+
         return '';
     }
 

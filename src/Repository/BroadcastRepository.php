@@ -26,8 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Manages broadcast related database access
@@ -39,16 +42,38 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
     ) {}
+
+    /**
+     * Starts or stops the broadcast, resetting the current song and listener count
+     */
+    /**
+     * Clears the started state of broadcasts that cannot be running
+     *
+     * Only the rows that are provably dead are touched: a broadcast with no `key` has nothing a listener
+     * could register with, so it is a leftover whatever `started` claims. A row that still holds its key
+     * is left alone, because this runs while the server may be up and that one may be a live broadcast.
+     */
+    public function collectGarbage(): void
+    {
+        try {
+            $this->connection->query(
+                'UPDATE `broadcast` SET `started` = 0, `song` = 0, `listeners` = 0 WHERE `started` = 1 AND (`key` IS NULL OR `key` = \'\')'
+            );
+        } catch (DatabaseException) {
+            $this->logger->debug('collectGarbage error', [LegacyLogger::CONTEXT_TYPE => self::class]);
+        }
+    }
 
     /**
      * Creates a new broadcast owned by the given user and returns its id
      */
-    public function create(int $userId, string $name, string $description): int
+    public function create(int $userId, string $name, string $description, bool $isPrivate = false): int
     {
         $this->connection->query(
-            'INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, \'1\')',
-            [$userId, $name, $description]
+            'INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, ?)',
+            [$userId, $name, $description, ($isPrivate) ? 1 : 0]
         );
 
         return $this->connection->getLastInsertedId();
@@ -133,7 +158,23 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
             return null;
         }
 
-        return $this->create($broadcast->user, (string) $broadcast->name, (string) $broadcast->description);
+        return $this->create($broadcast->user, (string) $broadcast->name, (string) $broadcast->description, $broadcast->is_private);
+    }
+
+    /**
+     * Clears the started state of every broadcast
+     *
+     * A broadcast only exists for as long as its websocket connection does, so nothing can still be
+     * running once the server that held those connections has gone. Called when the server starts, which
+     * is what stops a crash leaving rows that claim to be live forever.
+     */
+    public function resetStartedState(): int
+    {
+        $result = $this->connection->query(
+            'UPDATE `broadcast` SET `started` = 0, `key` = \'\', `song` = 0, `listeners` = 0 WHERE `started` = 1'
+        );
+
+        return $result->rowCount();
     }
 
     public function update(Broadcast $broadcast): void
@@ -171,9 +212,6 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
         );
     }
 
-    /**
-     * Starts or stops the broadcast, resetting the current song and listener count
-     */
     public function updateState(Broadcast $broadcast, int $started, string $key): void
     {
         $this->connection->query(

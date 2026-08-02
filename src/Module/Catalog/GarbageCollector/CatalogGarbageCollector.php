@@ -39,6 +39,7 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Song;
@@ -64,6 +65,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
     public function __construct(
         private AlbumRepositoryInterface $albumRepository,
         private BookmarkRepositoryInterface $bookmarkRepository,
+        private BroadcastRepositoryInterface $broadcastRepository,
         private ShoutRepositoryInterface $shoutRepository,
         private UserActivityRepositoryInterface $userActivityRepository,
         private UserRepositoryInterface $userRepository,
@@ -91,6 +93,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         $this->albumRepository->collectGarbage();
         $this->videoRepository->collectGarbage();
         $this->bookmarkRepository->collectGarbage();
+        $this->broadcastRepository->collectGarbage();
         $this->wantedRepository->collectGarbage();
         $this->artCleanup->collectGarbage();
         Stats::garbage_collection();

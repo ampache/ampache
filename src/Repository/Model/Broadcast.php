@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -80,10 +81,14 @@ class Broadcast extends database_object implements library_item, displayable_ite
     public static function create(string $name, string $description = ''): int
     {
         if (!empty($name)) {
+            $user = Core::get_global('user');
+
+            // a broadcast requires a session to listen unless the owner turned that off
             return self::getBroadcastRepository()->create(
-                (int) Core::get_global('user')?->getId(),
+                (int) $user?->getId(),
                 $name,
-                $description
+                $description,
+                (bool) ($user?->getPreferenceValue(ConfigurationKeyEnum::BROADCAST_PRIVATE) ?? true)
             );
         }
 

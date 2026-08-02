@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // show_broadcasts.inc.php
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Broadcast;
@@ -34,7 +35,15 @@ use Ampache\Repository\Model\Broadcast;
 
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
-} ?>
+}
+
+$web_path       = AmpConfig::get_web_path();
+$started_filter = $browse->get_filter('started'); ?>
+<div class="browse_filters">
+    <a href="<?php echo $web_path; ?>/browse.php?action=broadcast" class="<?php echo ($started_filter === null) ? 'current' : ''; ?>"><?php echo T_('All'); ?></a>
+    <a href="<?php echo $web_path; ?>/browse.php?action=broadcast&amp;started=1" class="<?php echo ((int) $started_filter === 1) ? 'current' : ''; ?>"><?php echo T_('Live'); ?></a>
+</div>
+<?php ?>
 <table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="broadcast">
     <thead>
         <tr class="th-top">

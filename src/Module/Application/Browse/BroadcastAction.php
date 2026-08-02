@@ -52,6 +52,12 @@ final readonly class BroadcastAction implements ApplicationActionInterface
         $browse->set_simple_browse(true);
         $browse->set_sort('id', 'ASC');
 
+        // a broadcast row outlives the transmission, so `started` is how a listener finds the live ones
+        $started = $request->getQueryParams()['started'] ?? null;
+        if ($started !== null) {
+            $browse->set_filter('started', (int) $started);
+        }
+
         $this->ui->showHeader();
 
         $this->ui->show('show_form_browse.inc.php');

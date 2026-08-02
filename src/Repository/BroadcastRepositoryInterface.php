@@ -35,9 +35,17 @@ use Ampache\Repository\Model\Broadcast;
 interface BroadcastRepositoryInterface
 {
     /**
+     * Starts or stops the broadcast, resetting the current song and listener count
+     */
+    /**
+     * Clears the started state of broadcasts that cannot be running, leaving live ones alone
+     */
+    public function collectGarbage(): void;
+
+    /**
      * Creates a new broadcast owned by the given user and returns its id
      */
-    public function create(int $userId, string $name, string $description): int;
+    public function create(int $userId, string $name, string $description, bool $isPrivate = false): int;
 
     /**
      * Deletes a single item
@@ -71,6 +79,13 @@ interface BroadcastRepositoryInterface
      */
     public function persist(Broadcast $broadcast): ?int;
 
+    /**
+     * Clears the started state of every broadcast, since none can outlive the websocket server
+     *
+     * @return int the number of rows that still claimed to be running
+     */
+    public function resetStartedState(): int;
+
     public function update(Broadcast $broadcast): void;
 
     /**
@@ -83,8 +98,5 @@ interface BroadcastRepositoryInterface
      */
     public function updateSong(Broadcast $broadcast, int $songId): void;
 
-    /**
-     * Starts or stops the broadcast, resetting the current song and listener count
-     */
     public function updateState(Broadcast $broadcast, int $started, string $key): void;
 }

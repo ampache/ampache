@@ -30,6 +30,7 @@ use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
@@ -56,6 +57,7 @@ class CatalogGarbageCollectorTest extends TestCase
     private ArtCleanupInterface&MockObject $artCleanup;
     private ArtistRepositoryInterface&MockObject $artistRepository;
     private BookmarkRepositoryInterface&MockObject $bookmarkRepository;
+    private BroadcastRepositoryInterface&MockObject $broadcastRepository;
     private CatalogCounterInterface&MockObject $catalogCounter;
     private ConfigContainerInterface&MockObject $configContainer;
     private ContainerInterface&MockObject $dic;
@@ -80,6 +82,7 @@ class CatalogGarbageCollectorTest extends TestCase
     {
         $this->albumRepository->expects(static::once())->method('collectGarbage');
         $this->bookmarkRepository->expects(static::once())->method('collectGarbage');
+        $this->broadcastRepository->expects(static::once())->method('collectGarbage');
         $this->shoutRepository->expects(static::once())->method('collectGarbage');
         $this->userActivityRepository->expects(static::once())->method('collectGarbage');
         $this->userRepository->expects(static::once())->method('collectGarbage');
@@ -102,6 +105,7 @@ class CatalogGarbageCollectorTest extends TestCase
     {
         $this->albumRepository          = $this->createMock(AlbumRepositoryInterface::class);
         $this->bookmarkRepository       = $this->createMock(BookmarkRepositoryInterface::class);
+        $this->broadcastRepository      = $this->createMock(BroadcastRepositoryInterface::class);
         $this->shoutRepository          = $this->createMock(ShoutRepositoryInterface::class);
         $this->userActivityRepository   = $this->createMock(UserActivityRepositoryInterface::class);
         $this->userRepository           = $this->createMock(UserRepositoryInterface::class);
@@ -141,6 +145,7 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->subject = new CatalogGarbageCollector(
             $this->albumRepository,
             $this->bookmarkRepository,
+            $this->broadcastRepository,
             $this->shoutRepository,
             $this->userActivityRepository,
             $this->userRepository,
