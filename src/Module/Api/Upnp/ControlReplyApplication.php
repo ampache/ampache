@@ -31,6 +31,10 @@ use Ampache\Module\Api\Upnp_Api;
 
 final class ControlReplyApplication implements ApiApplicationInterface
 {
+    public function __construct(
+        private Upnp_Api $upnpApi,
+    ) {}
+
     public function run(): void
     {
         if (!AmpConfig::get('upnp_backend')) {
@@ -141,7 +145,7 @@ final class ControlReplyApplication implements ApiApplicationInterface
                     } else {
                         $filter = '*'; // Some devices don't seem to specify a sensible filter (may remove)
                         //$items[] = [];
-                        $items[]              = Upnp_Api::_musicMetadata('');
+                        $items[]              = $this->upnpApi->_musicMetadata('');
                         $items[]              = Upnp_Api::_videoMetadata('');
                         [$totMatches, $items] = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                         debug_event('control-reply', 'Root items returning' . $items[0] . $items[1], 5);
@@ -168,14 +172,14 @@ final class ControlReplyApplication implements ApiApplicationInterface
                             switch ($reqObjectURL['host'] ?? '') {
                                 case 'music':
                                     if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                                        $items = Upnp_Api::_musicMetadata($reqObjectURL['path'] ?? '');
+                                        $items = $this->upnpApi->_musicMetadata($reqObjectURL['path'] ?? '');
                                         //debug_event('control-reply', 'Metadata count '. (string) $totMatches . ' '. (string) count($items), 5);
                                         //debug_event('control-reply', 'Export items ' . var_export($items,true), 5);
                                         $totMatches = 1;
                                         $numRet     = 1;
                                     } else {
                                         debug_event('control-reply', 'Listrequest ', 5);
-                                        [$totMatches, $items] = Upnp_Api::_musicChilds(
+                                        [$totMatches, $items] = $this->upnpApi->_musicChilds(
                                             $reqObjectURL['path'] ?? '',
                                             $reqObjectURL['query'] ?? '',
                                             $upnpRequest['startingindex'],

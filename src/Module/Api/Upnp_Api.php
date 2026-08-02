@@ -66,8 +66,15 @@ use XMLReader;
  * object.item.textItem
  * object.container
  */
-class Upnp_Api
+final class Upnp_Api
 {
+    public function __construct(
+        private AlbumRepositoryInterface $albumRepository,
+        private LiveStreamRepositoryInterface $liveStreamRepository,
+        private PodcastRepositoryInterface $podcastRepository,
+        private SongRepositoryInterface $songRepository,
+    ) {}
+
     public static function _callSearch($criteria, $filter, $start, $count): array
     {
         $type = self::_parse_upnp_filter($filter);
@@ -217,394 +224,6 @@ class Upnp_Api
             'nrAudioChannels' => '2', // Just say its stereo as we don't have the real info
             'description' => self::_replaceSpecialSymbols($song->comment),
         ];
-    }
-
-    public static function _musicChilds($prmPath, $prmQuery, $start, $count): array
-    {
-        $mediaItems = [];
-        $maxCount   = 0;
-        $queryData  = [];
-        parse_str($prmQuery, $queryData);
-
-        debug_event(self::class, 'MusicChilds: [' . $prmPath . '] [' . $prmQuery . ']' . '[' . $start . '] [' . $count . ']', 5);
-
-        $parent    = 'amp://music' . $prmPath;
-        $pathreq   = explode('/', $prmPath);
-        $pathcount = count($pathreq);
-        if ($pathreq[0] == '') {
-            array_shift($pathreq);
-        }
-        debug_event(self::class, 'MusicChilds4: [' . $pathreq[0] . ']', 5);
-        $counts = Catalog::get_server_counts(0);
-
-        switch ($pathreq[0]) {
-            case 'artists':
-                switch ($pathcount) {
-                    case 1: // Get artists list
-                        $artists              = Catalog::get_artists(null, $count, $start);
-                        [$maxCount, $artists] = [$counts['artist'], $artists];
-                        foreach ($artists as $artist) {
-                            $mediaItems[] = self::_itemArtist($artist, $parent);
-                        }
-                        break;
-                    case 2: // Get artist's albums list
-                        $artist = new Artist((int) $pathreq[1]);
-                        if ($artist->isNew() === false) {
-                            $album_ids              = self::getAlbumRepository()->getAlbumByArtist($artist->id);
-                            [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
-                            foreach ($album_ids as $album_id) {
-                                $album = new Album($album_id);
-                                if ($album->isNew()) {
-                                    continue;
-                                }
-
-                                $mediaItems[] = self::_itemAlbum($album, $parent);
-                            }
-                        }
-                        break;
-                }
-                break;
-            case 'albums':
-                switch ($pathcount) {
-                    case 1: // Get albums list
-                        $album_ids              = Catalog::get_albums($count, $start);
-                        [$maxCount, $album_ids] = [$counts['album'], $album_ids];
-                        foreach ($album_ids as $album_id) {
-                            $album = new Album($album_id);
-                            if ($album->isNew()) {
-                                continue;
-                            }
-
-                            $mediaItems[] = self::_itemAlbum($album, $parent);
-                        }
-                        break;
-                    case 2: // Get album's songs list
-                        $album = new Album((int) $pathreq[1]);
-                        if ($album->isNew() === false) {
-                            $song_ids              = self::getSongRepository()->getByAlbum($album->id);
-                            [$maxCount, $song_ids] = self::_slice($song_ids, $start, $count);
-                            foreach ($song_ids as $song_id) {
-                                $song = new Song($song_id);
-                                if ($song->isNew() === false) {
-                                    $song->fill_ext_info();
-                                    $mediaItems[] = self::_itemSong($song, $parent);
-                                }
-                            }
-                        }
-                        break;
-                }
-                break;
-            case 'songs':
-                // Get songs list
-                if ($pathcount == 1) {
-                    $song_ids = Catalog::get_all_song_ids($count, $start);
-                    $maxCount = $counts['song'];
-                    foreach ($song_ids as $song_id) {
-                        $song = new Song($song_id);
-                        if ($song->isNew() === false) {
-                            $song->fill_ext_info();
-                            $mediaItems[] = self::_itemSong($song, $parent);
-                        }
-                    }
-                }
-                break;
-            case 'playlists':
-                switch ($pathcount) {
-                    case 1: // Get playlists list
-                        $pl_ids              = Playlist::get_playlists();
-                        [$maxCount, $pl_ids] = self::_slice($pl_ids, $start, $count);
-                        foreach ($pl_ids as $pl_id) {
-                            $playlist     = new Playlist($pl_id);
-                            $mediaItems[] = self::_itemPlaylist($playlist, $parent);
-                        }
-                        break;
-                    case 2: // Get playlist's songs list
-                        $playlist = new Playlist((int) $pathreq[1]);
-                        if ($playlist->isNew() === false) {
-                            $items              = $playlist->get_items();
-                            [$maxCount, $items] = self::_slice($items, $start, $count);
-                            foreach ($items as $item) {
-                                if ($item['object_type'] == LibraryItemEnum::SONG) {
-                                    $song = new Song($item['object_id']);
-                                    if ($song->isNew() === false) {
-                                        $song->fill_ext_info();
-                                        $mediaItems[] = self::_itemSong($song, $parent);
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                }
-                break;
-            case 'smartplaylists':
-                switch ($pathcount) {
-                    case 1: // Get playlists list
-                        $searches              = Search::get_searches();
-                        [$maxCount, $searches] = self::_slice($searches, $start, $count);
-                        foreach ($searches as $search) {
-                            $playlist     = new Search($search['id'], 'song');
-                            $mediaItems[] = self::_itemPlaylist($playlist, $parent);
-                        }
-                        break;
-                    case 2: // Get playlist's songs list
-                        $playlist = new Search((int) $pathreq[1], 'song');
-                        if ($playlist->isNew() === false) {
-                            $items              = $playlist->get_items();
-                            [$maxCount, $items] = self::_slice($items, $start, $count);
-                            foreach ($items as $item) {
-                                if ($item['object_type'] == LibraryItemEnum::SONG) {
-                                    $song = new Song($item['object_id']);
-                                    if ($song->isNew() === false) {
-                                        $song->fill_ext_info();
-                                        $mediaItems[] = self::_itemSong($song, $parent);
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                }
-                break;
-            case 'live_streams':
-                // Get radios list
-                if ($pathcount == 1) {
-                    /** @var User|null $user */
-                    $user   = (!empty(Core::get_global('user'))) ? Core::get_global('user') : null;
-                    $radios = self::getLiveStreamRepository()->findAll(
-                        $user
-                    );
-
-                    [$maxCount, $radios] = self::_slice($radios, $start, $count);
-                    foreach ($radios as $radio_id) {
-                        $radio        = new Live_Stream($radio_id);
-                        $mediaItems[] = self::_itemLiveStream($radio, $parent);
-                    }
-                }
-                break;
-            case 'podcasts':
-                switch ($pathcount) {
-                    case 1: // Get podcasts list
-                        $podcasts              = Catalog::get_podcasts();
-                        [$maxCount, $podcasts] = self::_slice($podcasts, $start, $count);
-                        foreach ($podcasts as $podcast) {
-                            $mediaItems[] = self::_itemPodcast($podcast, $parent);
-                        }
-                        break;
-                    case 2: // Get podcast episodes list
-                        $podcast = self::getPodcastRepository()->findById((int) $pathreq[1]);
-                        if ($podcast !== null) {
-                            $episodes = $podcast->getEpisodeIds();
-
-                            [$maxCount, $episodes] = self::_slice($episodes, $start, $count);
-                            foreach ($episodes as $episode_id) {
-                                $episode      = new Podcast_Episode($episode_id);
-                                $mediaItems[] = self::_itemPodcastEpisode($episode, $parent);
-                            }
-                        }
-                        break;
-                }
-                break;
-            default:
-                $mediaItems[] = self::_musicMetadata('artists');
-                $mediaItems[] = self::_musicMetadata('albums');
-                $mediaItems[] = self::_musicMetadata('songs');
-                $mediaItems[] = self::_musicMetadata('playlists');
-                $mediaItems[] = self::_musicMetadata('smartplaylists');
-                if (AmpConfig::get('live_stream')) {
-                    $mediaItems[] = self::_musicMetadata('live_streams');
-                }
-                if (AmpConfig::get('podcast')) {
-                    $mediaItems[] = self::_musicMetadata('podcasts');
-                }
-                [$maxCount, $mediaItems] = self::_slice($mediaItems, $start, $count);
-                break;
-        }
-
-        if ($maxCount == 0) {
-            $maxCount = count($mediaItems);
-        }
-
-        return [
-            $maxCount,
-            $mediaItems,
-        ];
-    }
-
-    /**
-     */
-    public static function _musicMetadata(string $prmPath): ?array
-    {
-        $root    = 'amp://music';
-        $pathreq = explode('/', $prmPath);
-        if ($pathreq[0] == '') {
-            array_shift($pathreq);
-        }
-
-        $meta   = null;
-        $counts = Catalog::get_server_counts(0);
-
-        switch ($pathreq[0]) {
-            case 'artists':
-                switch (count($pathreq)) {
-                    case 1:
-                        $meta = [
-                            'id' => $root . '/artists',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts['artist'],
-                            'dc:title' => T_('Artists'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $artist = new Artist((int) $pathreq[1]);
-                        if ($artist->isNew() === false) {
-                            $meta = self::_itemArtist($artist, $root . '/artists');
-                        }
-                        break;
-                }
-                break;
-            case 'albums':
-                switch (count($pathreq)) {
-                    case 1:
-                        $meta = [
-                            'id' => $root . '/albums',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts['album'],
-                            'dc:title' => T_('Albums'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $album = new Album((int) $pathreq[1]);
-                        if ($album->isNew() === false) {
-                            $meta = self::_itemAlbum($album, $root . '/albums');
-                        }
-                        break;
-                }
-                break;
-            case 'songs':
-                switch (count($pathreq)) {
-                    case 1:
-                        $meta = [
-                            'id' => $root . '/songs',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts['song'],
-                            'dc:title' => T_('Songs'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $song = new Song((int) $pathreq[1]);
-                        if ($song->isNew() === false) {
-                            $song->fill_ext_info();
-                            $meta = self::_itemSong($song, $root . '/songs');
-                        }
-                        break;
-                }
-                break;
-            case 'playlists':
-                switch (count($pathreq)) {
-                    case 1:
-                        $meta = [
-                            'id' => $root . '/playlists',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts['playlist'],
-                            'dc:title' => T_('Playlists'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $playlist = new Playlist((int) $pathreq[1]);
-                        if ($playlist->isNew() === false) {
-                            $meta = self::_itemPlaylist($playlist, $root . '/playlists');
-                        }
-                        break;
-                }
-                break;
-            case 'smartplaylists':
-                switch (count($pathreq)) {
-                    case 1:
-                        $meta = [
-                            'id' => $root . '/smartplaylists',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts['search'],
-                            'dc:title' => T_('Smart Playlists'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $playlist = new Search((int) $pathreq[1], 'song');
-                        if ($playlist->isNew() === false) {
-                            $meta = self::_itemSmartPlaylist($playlist, $root . '/smartplaylists');
-                        }
-                        break;
-                }
-                break;
-            case 'live_streams':
-                switch (count($pathreq)) {
-                    case 1:
-                        $meta = [
-                            'id' => $root . '/live_streams',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts['live_stream'],
-                            'dc:title' => T_('Radio Stations'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $radio = new Live_Stream((int) $pathreq[1]);
-                        if ($radio->isNew() === false) {
-                            $meta = self::_itemLiveStream($radio, $root . '/live_streams');
-                        }
-                        break;
-                }
-                break;
-            case 'podcasts':
-                switch (count($pathreq)) {
-                    case 1:
-                        $meta = [
-                            'id' => $root . '/podcasts',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts['podcast'],
-                            'dc:title' => T_('Podcasts'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $podcast = self::getPodcastRepository()->findById((int) $pathreq[1]);
-                        if ($podcast !== null) {
-                            $meta = self::_itemPodcast($podcast, $root . '/podcasts');
-                        }
-                        break;
-                    case 3:
-                        $episode = new Podcast_Episode((int) $pathreq[2]);
-                        if ($episode->isNew() === false) {
-                            $meta = self::_itemPodcastEpisode($episode, $root . '/podcasts/' . $pathreq[1]);
-                        }
-                        break;
-                }
-                break;
-            default:
-                $meta = [
-                    'id' => $root,
-                    'parentID' => '0',
-                    'restricted' => '1',
-                    'searchable' => '1',
-                    'childCount' => '5',
-                    'dc:title' => T_('Music'),
-                    'upnp:class' => 'object.container', //.storageFolder',
-                    'upnp:storageUsed' => '-1',
-                ];
-                break;
-        }
-
-        return $meta;
     }
 
     public static function _slice($items, $start, $count): array
@@ -1597,46 +1216,6 @@ class Upnp_Api
     }
 
     /**
-     * @deprecated
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getLiveStreamRepository(): LiveStreamRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(LiveStreamRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
-    }
-
-    /**
      * @return string[]
      */
     private static function gettokens(string $str): array
@@ -1695,5 +1274,393 @@ class Upnp_Api
         }
 
         return $tokens;
+    }
+
+    public function _musicChilds($prmPath, $prmQuery, $start, $count): array
+    {
+        $mediaItems = [];
+        $maxCount   = 0;
+        $queryData  = [];
+        parse_str($prmQuery, $queryData);
+
+        debug_event(self::class, 'MusicChilds: [' . $prmPath . '] [' . $prmQuery . ']' . '[' . $start . '] [' . $count . ']', 5);
+
+        $parent    = 'amp://music' . $prmPath;
+        $pathreq   = explode('/', $prmPath);
+        $pathcount = count($pathreq);
+        if ($pathreq[0] == '') {
+            array_shift($pathreq);
+        }
+        debug_event(self::class, 'MusicChilds4: [' . $pathreq[0] . ']', 5);
+        $counts = Catalog::get_server_counts(0);
+
+        switch ($pathreq[0]) {
+            case 'artists':
+                switch ($pathcount) {
+                    case 1: // Get artists list
+                        $artists              = Catalog::get_artists(null, $count, $start);
+                        [$maxCount, $artists] = [$counts['artist'], $artists];
+                        foreach ($artists as $artist) {
+                            $mediaItems[] = self::_itemArtist($artist, $parent);
+                        }
+                        break;
+                    case 2: // Get artist's albums list
+                        $artist = new Artist((int) $pathreq[1]);
+                        if ($artist->isNew() === false) {
+                            $album_ids              = $this->albumRepository->getAlbumByArtist($artist->id);
+                            [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
+                            foreach ($album_ids as $album_id) {
+                                $album = new Album($album_id);
+                                if ($album->isNew()) {
+                                    continue;
+                                }
+
+                                $mediaItems[] = self::_itemAlbum($album, $parent);
+                            }
+                        }
+                        break;
+                }
+                break;
+            case 'albums':
+                switch ($pathcount) {
+                    case 1: // Get albums list
+                        $album_ids              = Catalog::get_albums($count, $start);
+                        [$maxCount, $album_ids] = [$counts['album'], $album_ids];
+                        foreach ($album_ids as $album_id) {
+                            $album = new Album($album_id);
+                            if ($album->isNew()) {
+                                continue;
+                            }
+
+                            $mediaItems[] = self::_itemAlbum($album, $parent);
+                        }
+                        break;
+                    case 2: // Get album's songs list
+                        $album = new Album((int) $pathreq[1]);
+                        if ($album->isNew() === false) {
+                            $song_ids              = $this->songRepository->getByAlbum($album->id);
+                            [$maxCount, $song_ids] = self::_slice($song_ids, $start, $count);
+                            foreach ($song_ids as $song_id) {
+                                $song = new Song($song_id);
+                                if ($song->isNew() === false) {
+                                    $song->fill_ext_info();
+                                    $mediaItems[] = self::_itemSong($song, $parent);
+                                }
+                            }
+                        }
+                        break;
+                }
+                break;
+            case 'songs':
+                // Get songs list
+                if ($pathcount == 1) {
+                    $song_ids = Catalog::get_all_song_ids($count, $start);
+                    $maxCount = $counts['song'];
+                    foreach ($song_ids as $song_id) {
+                        $song = new Song($song_id);
+                        if ($song->isNew() === false) {
+                            $song->fill_ext_info();
+                            $mediaItems[] = self::_itemSong($song, $parent);
+                        }
+                    }
+                }
+                break;
+            case 'playlists':
+                switch ($pathcount) {
+                    case 1: // Get playlists list
+                        $pl_ids              = Playlist::get_playlists();
+                        [$maxCount, $pl_ids] = self::_slice($pl_ids, $start, $count);
+                        foreach ($pl_ids as $pl_id) {
+                            $playlist     = new Playlist($pl_id);
+                            $mediaItems[] = self::_itemPlaylist($playlist, $parent);
+                        }
+                        break;
+                    case 2: // Get playlist's songs list
+                        $playlist = new Playlist((int) $pathreq[1]);
+                        if ($playlist->isNew() === false) {
+                            $items              = $playlist->get_items();
+                            [$maxCount, $items] = self::_slice($items, $start, $count);
+                            foreach ($items as $item) {
+                                if ($item['object_type'] == LibraryItemEnum::SONG) {
+                                    $song = new Song($item['object_id']);
+                                    if ($song->isNew() === false) {
+                                        $song->fill_ext_info();
+                                        $mediaItems[] = self::_itemSong($song, $parent);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                }
+                break;
+            case 'smartplaylists':
+                switch ($pathcount) {
+                    case 1: // Get playlists list
+                        $searches              = Search::get_searches();
+                        [$maxCount, $searches] = self::_slice($searches, $start, $count);
+                        foreach ($searches as $search) {
+                            $playlist     = new Search($search['id'], 'song');
+                            $mediaItems[] = self::_itemPlaylist($playlist, $parent);
+                        }
+                        break;
+                    case 2: // Get playlist's songs list
+                        $playlist = new Search((int) $pathreq[1], 'song');
+                        if ($playlist->isNew() === false) {
+                            $items              = $playlist->get_items();
+                            [$maxCount, $items] = self::_slice($items, $start, $count);
+                            foreach ($items as $item) {
+                                if ($item['object_type'] == LibraryItemEnum::SONG) {
+                                    $song = new Song($item['object_id']);
+                                    if ($song->isNew() === false) {
+                                        $song->fill_ext_info();
+                                        $mediaItems[] = self::_itemSong($song, $parent);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                }
+                break;
+            case 'live_streams':
+                // Get radios list
+                if ($pathcount == 1) {
+                    /** @var User|null $user */
+                    $user   = (!empty(Core::get_global('user'))) ? Core::get_global('user') : null;
+                    $radios = $this->liveStreamRepository->findAll(
+                        $user
+                    );
+
+                    [$maxCount, $radios] = self::_slice($radios, $start, $count);
+                    foreach ($radios as $radio_id) {
+                        $radio        = new Live_Stream($radio_id);
+                        $mediaItems[] = self::_itemLiveStream($radio, $parent);
+                    }
+                }
+                break;
+            case 'podcasts':
+                switch ($pathcount) {
+                    case 1: // Get podcasts list
+                        $podcasts              = Catalog::get_podcasts();
+                        [$maxCount, $podcasts] = self::_slice($podcasts, $start, $count);
+                        foreach ($podcasts as $podcast) {
+                            $mediaItems[] = self::_itemPodcast($podcast, $parent);
+                        }
+                        break;
+                    case 2: // Get podcast episodes list
+                        $podcast = $this->podcastRepository->findById((int) $pathreq[1]);
+                        if ($podcast !== null) {
+                            $episodes = $podcast->getEpisodeIds();
+
+                            [$maxCount, $episodes] = self::_slice($episodes, $start, $count);
+                            foreach ($episodes as $episode_id) {
+                                $episode      = new Podcast_Episode($episode_id);
+                                $mediaItems[] = self::_itemPodcastEpisode($episode, $parent);
+                            }
+                        }
+                        break;
+                }
+                break;
+            default:
+                $mediaItems[] = $this->_musicMetadata('artists');
+                $mediaItems[] = $this->_musicMetadata('albums');
+                $mediaItems[] = $this->_musicMetadata('songs');
+                $mediaItems[] = $this->_musicMetadata('playlists');
+                $mediaItems[] = $this->_musicMetadata('smartplaylists');
+                if (AmpConfig::get('live_stream')) {
+                    $mediaItems[] = $this->_musicMetadata('live_streams');
+                }
+                if (AmpConfig::get('podcast')) {
+                    $mediaItems[] = $this->_musicMetadata('podcasts');
+                }
+                [$maxCount, $mediaItems] = self::_slice($mediaItems, $start, $count);
+                break;
+        }
+
+        if ($maxCount == 0) {
+            $maxCount = count($mediaItems);
+        }
+
+        return [
+            $maxCount,
+            $mediaItems,
+        ];
+    }
+
+    /**
+     */
+    public function _musicMetadata(string $prmPath): ?array
+    {
+        $root    = 'amp://music';
+        $pathreq = explode('/', $prmPath);
+        if ($pathreq[0] == '') {
+            array_shift($pathreq);
+        }
+
+        $meta   = null;
+        $counts = Catalog::get_server_counts(0);
+
+        switch ($pathreq[0]) {
+            case 'artists':
+                switch (count($pathreq)) {
+                    case 1:
+                        $meta = [
+                            'id' => $root . '/artists',
+                            'parentID' => $root,
+                            'restricted' => '1',
+                            'childCount' => $counts['artist'],
+                            'dc:title' => T_('Artists'),
+                            'upnp:class' => 'object.container',
+                        ];
+                        break;
+                    case 2:
+                        $artist = new Artist((int) $pathreq[1]);
+                        if ($artist->isNew() === false) {
+                            $meta = self::_itemArtist($artist, $root . '/artists');
+                        }
+                        break;
+                }
+                break;
+            case 'albums':
+                switch (count($pathreq)) {
+                    case 1:
+                        $meta = [
+                            'id' => $root . '/albums',
+                            'parentID' => $root,
+                            'restricted' => '1',
+                            'childCount' => $counts['album'],
+                            'dc:title' => T_('Albums'),
+                            'upnp:class' => 'object.container',
+                        ];
+                        break;
+                    case 2:
+                        $album = new Album((int) $pathreq[1]);
+                        if ($album->isNew() === false) {
+                            $meta = self::_itemAlbum($album, $root . '/albums');
+                        }
+                        break;
+                }
+                break;
+            case 'songs':
+                switch (count($pathreq)) {
+                    case 1:
+                        $meta = [
+                            'id' => $root . '/songs',
+                            'parentID' => $root,
+                            'restricted' => '1',
+                            'childCount' => $counts['song'],
+                            'dc:title' => T_('Songs'),
+                            'upnp:class' => 'object.container',
+                        ];
+                        break;
+                    case 2:
+                        $song = new Song((int) $pathreq[1]);
+                        if ($song->isNew() === false) {
+                            $song->fill_ext_info();
+                            $meta = self::_itemSong($song, $root . '/songs');
+                        }
+                        break;
+                }
+                break;
+            case 'playlists':
+                switch (count($pathreq)) {
+                    case 1:
+                        $meta = [
+                            'id' => $root . '/playlists',
+                            'parentID' => $root,
+                            'restricted' => '1',
+                            'childCount' => $counts['playlist'],
+                            'dc:title' => T_('Playlists'),
+                            'upnp:class' => 'object.container',
+                        ];
+                        break;
+                    case 2:
+                        $playlist = new Playlist((int) $pathreq[1]);
+                        if ($playlist->isNew() === false) {
+                            $meta = self::_itemPlaylist($playlist, $root . '/playlists');
+                        }
+                        break;
+                }
+                break;
+            case 'smartplaylists':
+                switch (count($pathreq)) {
+                    case 1:
+                        $meta = [
+                            'id' => $root . '/smartplaylists',
+                            'parentID' => $root,
+                            'restricted' => '1',
+                            'childCount' => $counts['search'],
+                            'dc:title' => T_('Smart Playlists'),
+                            'upnp:class' => 'object.container',
+                        ];
+                        break;
+                    case 2:
+                        $playlist = new Search((int) $pathreq[1], 'song');
+                        if ($playlist->isNew() === false) {
+                            $meta = self::_itemSmartPlaylist($playlist, $root . '/smartplaylists');
+                        }
+                        break;
+                }
+                break;
+            case 'live_streams':
+                switch (count($pathreq)) {
+                    case 1:
+                        $meta = [
+                            'id' => $root . '/live_streams',
+                            'parentID' => $root,
+                            'restricted' => '1',
+                            'childCount' => $counts['live_stream'],
+                            'dc:title' => T_('Radio Stations'),
+                            'upnp:class' => 'object.container',
+                        ];
+                        break;
+                    case 2:
+                        $radio = new Live_Stream((int) $pathreq[1]);
+                        if ($radio->isNew() === false) {
+                            $meta = self::_itemLiveStream($radio, $root . '/live_streams');
+                        }
+                        break;
+                }
+                break;
+            case 'podcasts':
+                switch (count($pathreq)) {
+                    case 1:
+                        $meta = [
+                            'id' => $root . '/podcasts',
+                            'parentID' => $root,
+                            'restricted' => '1',
+                            'childCount' => $counts['podcast'],
+                            'dc:title' => T_('Podcasts'),
+                            'upnp:class' => 'object.container',
+                        ];
+                        break;
+                    case 2:
+                        $podcast = $this->podcastRepository->findById((int) $pathreq[1]);
+                        if ($podcast !== null) {
+                            $meta = self::_itemPodcast($podcast, $root . '/podcasts');
+                        }
+                        break;
+                    case 3:
+                        $episode = new Podcast_Episode((int) $pathreq[2]);
+                        if ($episode->isNew() === false) {
+                            $meta = self::_itemPodcastEpisode($episode, $root . '/podcasts/' . $pathreq[1]);
+                        }
+                        break;
+                }
+                break;
+            default:
+                $meta = [
+                    'id' => $root,
+                    'parentID' => '0',
+                    'restricted' => '1',
+                    'searchable' => '1',
+                    'childCount' => '5',
+                    'dc:title' => T_('Music'),
+                    'upnp:class' => 'object.container', //.storageFolder',
+                    'upnp:storageUsed' => '-1',
+                ];
+                break;
+        }
+
+        return $meta;
     }
 }

@@ -46,6 +46,7 @@ return [
     Xml6_Data::class => autowire(),
     Xml8_Data::class => autowire(),
     ApiHandlerInterface::class => autowire(ApiHandler::class),
+    Upnp_Api::class => autowire(),
     Upnp\UpnpApplication::class => autowire(),
     Upnp\PlayStatusApplication::class => autowire(),
     Upnp\CmControlReplyApplication::class => autowire(),
