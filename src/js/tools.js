@@ -59,6 +59,14 @@ export function hideFilters(element, string, group_release) {
 /************************************************************/
 
 
+// An href="#" link jumps the document to the top, which moves the page out from under the dialog being
+// placed. Callers pass either the click event or the element, so only an event has a default to suppress.
+function suppressDialogNavigation(source) {
+    if (source && typeof source.preventDefault === "function") {
+        source.preventDefault();
+    }
+}
+
 // The element a popup dialog hangs off, given either the click event or the element itself.
 function dialogAnchor(source) {
     if (source && source.nodeType) {
@@ -68,9 +76,9 @@ function dialogAnchor(source) {
     return (source && (source.currentTarget || source.target)) || null;
 }
 
-// jQuery UI places a dialog at a document coordinate, which it derives by adding the current scroll offset.
-// The anchor is often inside the position:fixed web player, and opening the dialog scrolls the page, so that
-// coordinate is stale before it is painted and the dialog lands below the fold. Place it against the viewport.
+// The broadcast button lives in the position:fixed web player, so a document coordinate for it is only valid
+// at the scroll offset it was taken at. Place this one against the viewport so it tracks the button it hangs
+// off; the playlist and share dialogs hang off page content and keep jQuery UI's own document placement.
 function positionDialogNear(selector, source, offsetLeft) {
     var anchor = dialogAnchor(source);
     if (!anchor || typeof anchor.getBoundingClientRect !== "function") {
@@ -98,6 +106,7 @@ export function overlayclickclose() {
 }
 
 export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
+    suppressDialogNavigation(e);
     $("#playlistdialog").dialog("close");
 
     var parent = window;
@@ -128,7 +137,6 @@ export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
             closeplaylist = 1;
             $(document).on("click.playlistdialog", overlayclickclose);
             $(this).load(parent.contentUrl, function() {
-                positionDialogNear("#playlistdialog", e, 10);
                 $("#playlistdialog").focus();
             });
         },
@@ -143,7 +151,6 @@ export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
     });
 
     $("#playlistdialog").dialog("open");
-    positionDialogNear("#playlistdialog", e, 10);
     closeplaylist = 0;
 }
 
@@ -224,6 +231,7 @@ export function shoverlayclickclose(e) {
 
 var closebroadcasts;
 export function showBroadcastsDialog(e) {
+    suppressDialogNavigation(e);
     $("#broadcastsdialog").dialog("close");
 
     var parent = window;
@@ -284,6 +292,7 @@ export function handleBroadcastAction(url, id) {
 /************************************************************/
 
 export function showShareDialog(e, object_type, object_id) {
+    suppressDialogNavigation(e);
     $("#sharedialog").dialog("close");
 
     var parent = window;
@@ -308,7 +317,6 @@ export function showShareDialog(e, object_type, object_id) {
             closeshare = 1;
             $(document).on("click.sharedialog", shoverlayclickclose);
             $(this).load(parent.contentUrl, function() {
-                positionDialogNear("#sharedialog", e, 10);
                 $("#sharedialog").focus();
             });
         },
@@ -323,7 +331,6 @@ export function showShareDialog(e, object_type, object_id) {
     });
 
     $("#sharedialog").dialog("open");
-    positionDialogNear("#sharedialog", e, 10);
     closeshare = 0;
 }
 
