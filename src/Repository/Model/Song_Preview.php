@@ -30,10 +30,7 @@ use Ampache\Module\Database\database_object;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Plugin\Plugin;
-use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
-use Ampache\Plugin\PluginSongPreviewInterface;
 use Ampache\Repository\SongPreviewRepositoryInterface;
 
 class Song_Preview extends database_object implements Media, displayable_item, container_item
@@ -432,17 +429,12 @@ class Song_Preview extends database_object implements Media, displayable_item, c
      */
     public function stream(): void
     {
-        $user = Core::get_global('user');
-        if (!$user instanceof User || empty($this->file)) {
+        if (empty($this->file)) {
             return;
         }
 
-        foreach (Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_STREAM_PROVIDER) as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin instanceof PluginSongPreviewInterface && $plugin->load($user)) {
-                $plugin->_plugin->stream_song_preview($this->file);
-            }
-        }
+        // the stored file is the provider's own url, so the client fetches the sample rather than Ampache
+        header('Location: ' . $this->file, true, 303);
     }
 
     public function update(array $data): ?int
