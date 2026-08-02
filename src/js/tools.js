@@ -59,6 +59,36 @@ export function hideFilters(element, string, group_release) {
 /************************************************************/
 
 
+// The element a popup dialog hangs off, given either the click event or the element itself.
+function dialogAnchor(source) {
+    if (source && source.nodeType) {
+        return source;
+    }
+
+    return (source && (source.currentTarget || source.target)) || null;
+}
+
+// jQuery UI places a dialog at a document coordinate, which it derives by adding the current scroll offset.
+// The anchor is often inside the position:fixed web player, and opening the dialog scrolls the page, so that
+// coordinate is stale before it is painted and the dialog lands below the fold. Place it against the viewport.
+function positionDialogNear(selector, source, offsetLeft) {
+    var anchor = dialogAnchor(source);
+    if (!anchor || typeof anchor.getBoundingClientRect !== "function") {
+        return;
+    }
+
+    var frame = $(selector).closest(".ui-dialog");
+    if (frame.length === 0) {
+        return;
+    }
+
+    var rect = anchor.getBoundingClientRect();
+    var left = Math.min(Math.max(rect.left + offsetLeft, 10), window.innerWidth - frame.outerWidth() - 10);
+    var top = Math.min(Math.max(rect.top, 10), window.innerHeight - frame.outerHeight() - 10);
+
+    frame.css({position: "fixed", top: Math.max(top, 10) + "px", left: Math.max(left, 10) + "px"});
+}
+
 var closeplaylist;
 export function overlayclickclose() {
     if (closeplaylist) {
@@ -90,12 +120,15 @@ export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
         autoOpen: false,
         position: {
             my: "left+10 top",
-            of: e
+            at: "left top",
+            of: dialogAnchor(e),
+            collision: "flip"
         },
         open() {
             closeplaylist = 1;
             $(document).on("click.playlistdialog", overlayclickclose);
             $(this).load(parent.contentUrl, function() {
+                positionDialogNear("#playlistdialog", e, 10);
                 $("#playlistdialog").focus();
             });
         },
@@ -110,6 +143,7 @@ export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
     });
 
     $("#playlistdialog").dialog("open");
+    positionDialogNear("#playlistdialog", e, 10);
     closeplaylist = 0;
 }
 
@@ -206,12 +240,15 @@ export function showBroadcastsDialog(e) {
         autoOpen: false,
         position: {
             my: "left-180 top",
-            of: e
+            at: "left top",
+            of: dialogAnchor(e),
+            collision: "flip"
         },
         open() {
             closebroadcasts = 1;
             $(document).on("click.broadcastsdialog", broverlayclickclose);
             $(this).load(parent.contentUrl, function() {
+                positionDialogNear("#broadcastsdialog", e, -180);
                 $("#broadcastsdialog").focus();
             });
         },
@@ -226,6 +263,7 @@ export function showBroadcastsDialog(e) {
     });
 
     $("#broadcastsdialog").dialog("open");
+    positionDialogNear("#broadcastsdialog", e, -180);
     closebroadcasts = 0;
 }
 
@@ -262,12 +300,15 @@ export function showShareDialog(e, object_type, object_id) {
         autoOpen: false,
         position: {
             my: "left+10 top",
-            of: e
+            at: "left top",
+            of: dialogAnchor(e),
+            collision: "flip"
         },
         open() {
             closeshare = 1;
             $(document).on("click.sharedialog", shoverlayclickclose);
             $(this).load(parent.contentUrl, function() {
+                positionDialogNear("#sharedialog", e, 10);
                 $("#sharedialog").focus();
             });
         },
@@ -282,6 +323,7 @@ export function showShareDialog(e, object_type, object_id) {
     });
 
     $("#sharedialog").dialog("open");
+    positionDialogNear("#sharedialog", e, 10);
     closeshare = 0;
 }
 
