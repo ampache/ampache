@@ -145,6 +145,29 @@ class PlaylistRepositoryTest extends TestCase
         static::assertSame([666], $this->subject->getIdsByCatalog(7));
     }
 
+    public function testGetItemsOfTypeReadsTheDurationColumnForATimedType(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(static::stringContains('`song`.`time` FROM `playlist_data`'))
+            ->willReturn($this->createMock(PDOStatement::class));
+
+        $this->subject->getItemsOfType(666, 'song', 42, false, true, false);
+    }
+
+    public function testGetItemsOfTypeSubstitutesZeroForATypeWithNoDurationColumn(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(static::logicalAnd(
+                static::stringContains('0 AS `time` FROM `playlist_data`'),
+                static::logicalNot(static::stringContains('`live_stream`.`time`'))
+            ))
+            ->willReturn($this->createMock(PDOStatement::class));
+
+        $this->subject->getItemsOfType(666, 'live_stream', 42, false, true, false);
+    }
+
     public function testGetLastTrackNumberReadsTheMaximum(): void
     {
         $this->connection->expects(static::once())
