@@ -77,6 +77,7 @@ final readonly class PlayAction implements ApplicationActionInterface
         private NetworkCheckerInterface $networkChecker,
         private UserRepositoryInterface $userRepository,
         private LoggerInterface $logger,
+        private Stats $stats,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -749,9 +750,9 @@ final readonly class PlayAction implements ApplicationActionInterface
                         $location = Session::get_geolocation($sessionkey);
                         if ($is_download) {
                             if ($share_id === 0) {
-                                Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                                $this->stats->insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                             } else {
-                                Stats::insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
+                                $this->stats->insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
                             }
                         } elseif (!$share_id && $record_stats) {
                             // internal scrobbling (user_activity and object_count tables)
@@ -882,9 +883,9 @@ final readonly class PlayAction implements ApplicationActionInterface
                         'Registering download stats for {' . $media->get_stream_name() . '}...',
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
-                    Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                    $this->stats->insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                 } else {
-                    Stats::insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
+                    $this->stats->insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
                 }
             }
 
@@ -1213,9 +1214,9 @@ final readonly class PlayAction implements ApplicationActionInterface
                                 'Registering download stats for {' . $media->get_stream_name() . '}...',
                                 [LegacyLogger::CONTEXT_TYPE => self::class]
                             );
-                            Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                            $this->stats->insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                         } else {
-                            Stats::insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
+                            $this->stats->insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
                         }
                     } elseif (!$share_id && $record_stats) {
                         $this->logger->notice(

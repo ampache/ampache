@@ -1281,6 +1281,16 @@ class Song extends database_object implements
     /**
      * @deprecated inject dependency
      */
+    private static function getStats(): Stats
+    {
+        global $dic;
+
+        return $dic->get(Stats::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
     private static function getUserActivityPoster(): UserActivityPosterInterface
     {
         global $dic;
@@ -1305,7 +1315,7 @@ class Song extends database_object implements
      */
     public function check_play_history(int $user, string $agent, int $date): bool
     {
-        return Stats::has_played_history('song', $this, $user, $agent, $date);
+        return self::getStats()->has_played_history('song', $this, $user, $agent, $date);
     }
 
     /**
@@ -2185,16 +2195,16 @@ class Song extends database_object implements
         }
 
         // insert stats for each object type
-        if (Stats::insert('song', $this->id, $user_id, $agent, $location, 'stream', $date)) {
+        if (self::getStats()->insert('song', $this->id, $user_id, $agent, $location, 'stream', $date)) {
             // followup on some stats too
-            Stats::insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
+            self::getStats()->insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
             if ($this->album_disk) {
                 Stats::count('album_disk', $this->album_disk, 'up', $date);
             }
             // insert plays for song and album artists
             $artists = array_unique(array_merge(self::get_parent_array($this->id), self::get_parent_array($this->album, 'album')));
             foreach ($artists as $artist_id) {
-                Stats::insert('artist', $artist_id, $user_id, $agent, $location, 'stream', $date);
+                self::getStats()->insert('artist', $artist_id, $user_id, $agent, $location, 'stream', $date);
             }
 
             // running total of the user stream data

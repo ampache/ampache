@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
@@ -45,6 +46,7 @@ use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use PDOStatement;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
@@ -55,7 +57,7 @@ use RuntimeException;
  * but that's not good, all done through here.
  *
  */
-class Stats
+final class Stats
 {
     /**
      * Tables carrying a `weight` column; playing, rating and flagging bump it, other types must not be handed to it.
@@ -77,39 +79,17 @@ class Stats
     public ?string $object_type = null;
     public int $user;
 
-    /**
-     * clear
-     *
-     * This clears all stats for play history  for the site or an individual user
-     */
-    public static function clear(int $user_id = 0): void
-    {
-        // the archive goes too, or Stats::restore() would resurrect history that was deliberately cleared
-        if ($user_id > 0) {
-            Dba::write("DELETE FROM `object_count` WHERE `user` = ?;", [$user_id]);
-            Dba::write("DELETE FROM `object_count_summary` WHERE `user` = ?;", [$user_id]);
-            Dba::write("DELETE FROM `object_count_archive` WHERE `user` = ?;", [$user_id]);
-        } else {
-            Dba::write("TRUNCATE `object_count`;");
-            Dba::write("TRUNCATE `object_count_summary`;");
-            Dba::write("TRUNCATE `object_count_archive`;");
-        }
-
-        // a rebuild only reaches rows that still have history, so the counters left behind are zeroed first
-        $songRepository = self::getSongRepository();
-        $songRepository->resetCountsWithoutHistory();
-        $songRepository->updateAllCounts();
-
-        self::getVideoRepository()->updateAllCounts();
-        self::getPodcastEpisodeRepository()->updateAllCounts();
-        self::getPodcastRepository()->updateAllCounts();
-
-        // album, album_disk and artist roll up from the songs, so they follow once those are right
-        self::getAlbumRepository()->updateAllCounts();
-        self::getAlbumRepository()->updateAllSkipCounts();
-        self::getArtistRepository()->updateAllCounts();
-        self::getArtistRepository()->updateAllSkipCounts();
-    }
+    public function __construct(
+        private AlbumRepositoryInterface $albumRepository,
+        private ArtistRepositoryInterface $artistRepository,
+        private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        private PodcastRepositoryInterface $podcastRepository,
+        private SongRepositoryInterface $songRepository,
+        private UserActivityPosterInterface $userActivityPoster,
+        private UserActivityRepositoryInterface $userActivityRepository,
+        private VideoRepositoryInterface $videoRepository,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * consolidate
@@ -1011,109 +991,6 @@ class Stats
     }
 
     /**
-     * has_played_history
-     * this checks to see if the current object has been played recently by the user
-     */
-    public static function has_played_history(string $object_type, Podcast_Episode|Video|Song $object, int $user_id, string $agent, int $date): bool
-    {
-        // if it's already recorded (but from a different agent), don't do it again
-        if (self::is_already_inserted($object_type, $object->id, $user_id, '', $date, true)) {
-            return false;
-        }
-
-        $previous = self::get_last_play($user_id, $agent, $date);
-        // no previous data?
-        if (!$previous['object_id'] || !$previous['object_type']) {
-            return true;
-        }
-
-        $last_time = self::get_time($previous['object_id'], $previous['object_type']);
-        $diff      = $date - (int) $previous['date'];
-        $item_time = $object->time;
-        $skip_time = AmpConfig::get_skip_timer($last_time);
-
-        // if your last song is 30 seconds and your skip timer is 40 you don't want to keep skipping it.
-        if ($last_time > 0 && $last_time < $skip_time) {
-            return true;
-        }
-
-        // this object was your last play and the length between plays is too short.
-        if ($previous['object_id'] == $object->id && $diff < ($item_time)) {
-            debug_event(self::class, 'Repeated the same ' . $object::class . ' too quickly (' . $diff . '/' . ($item_time) . 's), not recording stats for {' . $object->id . '}', 3);
-
-            return false;
-        }
-
-        // when the difference between recordings is too short, the previous object has been skipped, so note that
-        if (($diff < $skip_time || ($diff < $skip_time && $last_time > $skip_time))) {
-            debug_event(self::class, 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', 3);
-            self::skip_last_play($previous['date'], $previous['agent'], $previous['user'], $previous['object_id'], $previous['object_type']);
-            // delete song, podcast_episode and video from user_activity to keep stats in line
-            self::getUseractivityRepository()->deleteByDate($previous['date'], 'play', (int) $previous['user']);
-        }
-
-        return true;
-    }
-
-    /**
-     * insert
-     * This inserts a new record for the specified object
-     * with the specified information, amazing!
-     * @param array{latitude?: float|string, longitude?: float|string, name?: string,} $location
-     */
-    public static function insert(
-        string $input_type,
-        int $object_id,
-        int $user_id,
-        string $agent = '',
-        array $location = [],
-        string $count_type = 'stream',
-        ?int $date = null,
-    ): bool {
-        if (AmpConfig::get('use_auth') && $user_id < User::INTERNAL_SYSTEM_USER_ID) {
-            debug_event(self::class, 'Invalid user given ' . $user_id, 3);
-
-            return false;
-        }
-
-        if ($date == null) {
-            $date = time();
-        }
-
-        $type = self::validate_type($input_type);
-        if (self::is_already_inserted($type, $object_id, $user_id, $agent, $date)) {
-            return false;
-        }
-
-        $latitude   = (isset($location['latitude'])) ? (float) $location['latitude'] : null;
-        $longitude  = (isset($location['longitude'])) ? (float) $location['longitude'] : null;
-        $geoname    = $location['name'] ?? null;
-        $sql        = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, [$type, $object_id, $count_type, $date, $user_id, $agent, $latitude, $longitude, $geoname]);
-
-        // the count was inserted
-        if ($db_results instanceof PDOStatement) {
-            if (
-                in_array($type, ['song', 'album', 'album_disk', 'artist', 'video', 'podcast', 'podcast_episode'], true)
-                && $count_type === 'stream' && $user_id !== 0
-                && $agent !== 'debug'
-            ) {
-                self::count($type, $object_id, 'up', $date);
-                // don't register activity for album or artist plays
-                if (!in_array($type, ['album', 'album_disk', 'artist', 'podcast'], true)) {
-                    self::getUserActivityPoster()->post($user_id, 'play', $type, $object_id, (int) $date);
-                }
-            }
-
-            return true;
-        }
-
-        debug_event(self::class, 'Unable to insert statistics for ' . $user_id . ':' . $object_id, 3);
-
-        return false;
-    }
-
-    /**
      * is_already_inserted
      * Check if the same stat has not already been inserted within a graceful delay
      */
@@ -1388,26 +1265,6 @@ class Stats
     }
 
     /**
-     * @deprecated inject dependency
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getArtistRepository(): ArtistRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ArtistRepositoryInterface::class);
-    }
-
-    /**
      * Collect the folder an object lives in as well as every ancestor folder above it.
      * `folder`.`path` is the comma separated chain of parent ids, so the tree is resolved without recursing.
      *
@@ -1432,56 +1289,139 @@ class Stats
     }
 
     /**
-     * @deprecated inject dependency
+     * clear
+     *
+     * This clears all stats for play history  for the site or an individual user
      */
-    private static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
+    public function clear(int $user_id = 0): void
     {
-        global $dic;
+        // the archive goes too, or Stats::restore() would resurrect history that was deliberately cleared
+        if ($user_id > 0) {
+            Dba::write("DELETE FROM `object_count` WHERE `user` = ?;", [$user_id]);
+            Dba::write("DELETE FROM `object_count_summary` WHERE `user` = ?;", [$user_id]);
+            Dba::write("DELETE FROM `object_count_archive` WHERE `user` = ?;", [$user_id]);
+        } else {
+            Dba::write("TRUNCATE `object_count`;");
+            Dba::write("TRUNCATE `object_count_summary`;");
+            Dba::write("TRUNCATE `object_count_archive`;");
+        }
 
-        return $dic->get(PodcastEpisodeRepositoryInterface::class);
+        // a rebuild only reaches rows that still have history, so the counters left behind are zeroed first
+        $songRepository = $this->songRepository;
+        $songRepository->resetCountsWithoutHistory();
+        $songRepository->updateAllCounts();
+
+        $this->videoRepository->updateAllCounts();
+        $this->podcastEpisodeRepository->updateAllCounts();
+        $this->podcastRepository->updateAllCounts();
+
+        // album, album_disk and artist roll up from the songs, so they follow once those are right
+        $this->albumRepository->updateAllCounts();
+        $this->albumRepository->updateAllSkipCounts();
+        $this->artistRepository->updateAllCounts();
+        $this->artistRepository->updateAllSkipCounts();
     }
 
     /**
-     * @deprecated inject dependency
+     * has_played_history
+     * this checks to see if the current object has been played recently by the user
      */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
+    public function has_played_history(string $object_type, Podcast_Episode|Video|Song $object, int $user_id, string $agent, int $date): bool
     {
-        global $dic;
+        // if it's already recorded (but from a different agent), don't do it again
+        if (self::is_already_inserted($object_type, $object->id, $user_id, '', $date, true)) {
+            return false;
+        }
 
-        return $dic->get(PodcastRepositoryInterface::class);
+        $previous = self::get_last_play($user_id, $agent, $date);
+        // no previous data?
+        if (!$previous['object_id'] || !$previous['object_type']) {
+            return true;
+        }
+
+        $last_time = self::get_time($previous['object_id'], $previous['object_type']);
+        $diff      = $date - (int) $previous['date'];
+        $item_time = $object->time;
+        $skip_time = AmpConfig::get_skip_timer($last_time);
+
+        // if your last song is 30 seconds and your skip timer is 40 you don't want to keep skipping it.
+        if ($last_time > 0 && $last_time < $skip_time) {
+            return true;
+        }
+
+        // this object was your last play and the length between plays is too short.
+        if ($previous['object_id'] == $object->id && $diff < ($item_time)) {
+            $this->logger->warning('Repeated the same ' . $object::class . ' too quickly (' . $diff . '/' . ($item_time) . 's), not recording stats for {' . $object->id . '}', [LegacyLogger::CONTEXT_TYPE => self::class]);
+
+            return false;
+        }
+
+        // when the difference between recordings is too short, the previous object has been skipped, so note that
+        if (($diff < $skip_time || ($diff < $skip_time && $last_time > $skip_time))) {
+            $this->logger->warning('Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', [LegacyLogger::CONTEXT_TYPE => self::class]);
+            self::skip_last_play($previous['date'], $previous['agent'], $previous['user'], $previous['object_id'], $previous['object_type']);
+            // delete song, podcast_episode and video from user_activity to keep stats in line
+            $this->userActivityRepository->deleteByDate($previous['date'], 'play', (int) $previous['user']);
+        }
+
+        return true;
     }
 
     /**
-     * @deprecated inject dependency
+     * insert
+     * This inserts a new record for the specified object
+     * with the specified information, amazing!
+     * @param array{latitude?: float|string, longitude?: float|string, name?: string,} $location
      */
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
+    public function insert(
+        string $input_type,
+        int $object_id,
+        int $user_id,
+        string $agent = '',
+        array $location = [],
+        string $count_type = 'stream',
+        ?int $date = null,
+    ): bool {
+        if (AmpConfig::get('use_auth') && $user_id < User::INTERNAL_SYSTEM_USER_ID) {
+            $this->logger->warning('Invalid user given ' . $user_id, [LegacyLogger::CONTEXT_TYPE => self::class]);
 
-        return $dic->get(SongRepositoryInterface::class);
-    }
+            return false;
+        }
 
-    private static function getUserActivityPoster(): UserActivityPosterInterface
-    {
-        global $dic;
+        if ($date == null) {
+            $date = time();
+        }
 
-        return $dic->get(UserActivityPosterInterface::class);
-    }
+        $type = self::validate_type($input_type);
+        if (self::is_already_inserted($type, $object_id, $user_id, $agent, $date)) {
+            return false;
+        }
 
-    private static function getUseractivityRepository(): UserActivityRepositoryInterface
-    {
-        global $dic;
+        $latitude   = (isset($location['latitude'])) ? (float) $location['latitude'] : null;
+        $longitude  = (isset($location['longitude'])) ? (float) $location['longitude'] : null;
+        $geoname    = $location['name'] ?? null;
+        $sql        = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, [$type, $object_id, $count_type, $date, $user_id, $agent, $latitude, $longitude, $geoname]);
 
-        return $dic->get(UserActivityRepositoryInterface::class);
-    }
+        // the count was inserted
+        if ($db_results instanceof PDOStatement) {
+            if (
+                in_array($type, ['song', 'album', 'album_disk', 'artist', 'video', 'podcast', 'podcast_episode'], true)
+                && $count_type === 'stream' && $user_id !== 0
+                && $agent !== 'debug'
+            ) {
+                self::count($type, $object_id, 'up', $date);
+                // don't register activity for album or artist plays
+                if (!in_array($type, ['album', 'album_disk', 'artist', 'podcast'], true)) {
+                    $this->userActivityPoster->post($user_id, 'play', $type, $object_id, (int) $date);
+                }
+            }
 
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getVideoRepository(): VideoRepositoryInterface
-    {
-        global $dic;
+            return true;
+        }
 
-        return $dic->get(VideoRepositoryInterface::class);
+        $this->logger->warning('Unable to insert statistics for ' . $user_id . ':' . $object_id, [LegacyLogger::CONTEXT_TYPE => self::class]);
+
+        return false;
     }
 }

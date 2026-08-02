@@ -399,6 +399,16 @@ class Video extends database_object implements
     /**
      * @deprecated inject dependency
      */
+    private static function getStats(): Stats
+    {
+        global $dic;
+
+        return $dic->get(Stats::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
     private static function getVideoRepository(): VideoRepositoryInterface
     {
         global $dic;
@@ -408,7 +418,7 @@ class Video extends database_object implements
 
     public function check_play_history(int $user, string $agent, int $date): bool
     {
-        return Stats::has_played_history('video', $this, $user, $agent, $date);
+        return self::getStats()->has_played_history('video', $this, $user, $agent, $date);
     }
 
     /**
@@ -827,7 +837,7 @@ class Video extends database_object implements
             return false;
         }
 
-        Stats::insert('video', $this->id, $user_id, $agent, $location, 'stream', $date);
+        self::getStats()->insert('video', $this->id, $user_id, $agent, $location, 'stream', $date);
 
         if ($this->played) {
             return true;

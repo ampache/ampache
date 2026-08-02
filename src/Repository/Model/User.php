@@ -499,6 +499,16 @@ class User extends database_object
     /**
      * @deprecated inject dependency
      */
+    private static function getStats(): Stats
+    {
+        global $dic;
+
+        return $dic->get(Stats::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
     private static function getUserRepository(): UserRepositoryInterface
     {
         global $dic;
@@ -992,7 +1002,7 @@ class User extends database_object
                     }
                     break;
                 case 'clear_stats':
-                    Stats::clear($this->id);
+                    self::getStats()->clear($this->id);
                     break;
             }
         }

@@ -44,6 +44,7 @@ final readonly class ClearStatsAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
+        private Stats $stats,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -57,7 +58,7 @@ final readonly class ClearStatsAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        Stats::clear();
+        $this->stats->clear();
         $url   = sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin'));
         $title = T_('No Problem');
         $body  = T_('Catalog statistics have been cleared');

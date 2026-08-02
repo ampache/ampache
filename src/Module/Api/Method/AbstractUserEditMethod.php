@@ -72,6 +72,7 @@ abstract class AbstractUserEditMethod implements MethodInterface
         PrivilegeCheckerInterface $privilegeChecker,
         UserKeyGeneratorInterface $userKeyGenerator,
         UserStateTogglerInterface $userStateToggler,
+        private readonly Stats $stats,
     ) {
         $this->configContainer  = $configContainer;
         $this->privilegeChecker = $privilegeChecker;
@@ -225,7 +226,7 @@ abstract class AbstractUserEditMethod implements MethodInterface
         }
 
         if ($clearStats) {
-            Stats::clear($userId);
+            $this->stats->clear($userId);
         }
 
         $response->getBody()->write(
