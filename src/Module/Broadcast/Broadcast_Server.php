@@ -173,8 +173,8 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $msg = $cmd . ':' . $value . ';';
         foreach ($clients as $client) {
-            $sid = $this->sids[$client->resourceId];
-            if ($sid) {
+            $sid = $this->sids[$client->resourceId] ?? '';
+            if ($sid !== '') {
                 Session::extend($sid, AccessTypeEnum::STREAM->value);
             }
 
@@ -344,7 +344,14 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $broadcast = $this->getRunningBroadcast($broadcast_id);
 
-        if ($broadcast && (!$broadcast->is_private || !AmpConfig::get('require_session') || Session::exists(AccessTypeEnum::STREAM->value, $this->sids[$from->resourceId]))) {
+        if (
+            $broadcast
+            && (
+                !$broadcast->is_private
+                || !AmpConfig::get('require_session')
+                || Session::exists(AccessTypeEnum::STREAM->value, $this->sids[$from->resourceId] ?? '')
+            )
+        ) {
             $this->listeners[$broadcast->id][] = $from;
 
             // Send current song and song position to
