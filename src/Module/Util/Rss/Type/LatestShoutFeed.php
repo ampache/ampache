@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Type;
 
+use Ampache\Module\Art\Art;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\ShoutRepositoryInterface;

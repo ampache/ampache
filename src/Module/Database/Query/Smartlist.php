@@ -1,0 +1,44 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Ampache\Module\Database\Query;
+
+use Ampache\Repository\Model\User;
+
+/**
+ * A saved Song search.
+ *
+ * A `Search` has an `objectType` that decides what its rules return, but it only ever lives for the life of the object.
+ * This subtype makes an explicit type choice instead of leaving it to each caller.
+ */
+class Smartlist extends Search
+{
+    public function __construct(
+        int $search_id = 0,
+        ?User $user = null,
+    ) {
+        parent::__construct($search_id, 'song', $user);
+    }
+}

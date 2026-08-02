@@ -26,9 +26,9 @@ declare(strict_types=1);
 // browse_filters.inc.php
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\User;
 
 /** @var Browse $browse */

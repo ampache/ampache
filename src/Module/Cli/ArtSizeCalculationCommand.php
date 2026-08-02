@@ -27,9 +27,9 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Art\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Art;
 use Override;
 
 final class ArtSizeCalculationCommand extends Command

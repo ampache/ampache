@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepository;
@@ -44,7 +47,8 @@ class Podcast extends database_object implements
     library_item,
     displayable_item,
     container_item,
-    CatalogItemInterface
+    CatalogItemInterface,
+    ModelInterface
 {
     protected const string DB_TABLENAME = 'podcast';
 
@@ -379,6 +383,9 @@ class Podcast extends database_object implements
         if ($id !== null) {
             $this->id = $id;
         }
+
+        // memory_cache is on by default, so the row this object just wrote has to leave the request cache
+        self::remove_from_cache('podcast', $this->id);
     }
 
     /**

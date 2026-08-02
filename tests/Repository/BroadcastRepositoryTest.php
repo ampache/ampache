@@ -30,6 +30,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class BroadcastRepositoryTest extends TestCase
 {
@@ -37,13 +38,23 @@ class BroadcastRepositoryTest extends TestCase
     private ModelFactoryInterface&MockObject $modelFactory;
     private BroadcastRepository $subject;
 
+    public function testCollectGarbageOnlyClearsRowsThatCannotBeRunning(): void
+    {
+        // a live broadcast also has started = 1, so only the ones with no key may be touched here
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `broadcast` SET `started` = 0, `song` = 0, `listeners` = 0 WHERE `started` = 1 AND (`key` IS NULL OR `key` = \'\')');
+
+        $this->subject->collectGarbage();
+    }
+
     public function testCreateInsertsAndReturnsTheNewId(): void
     {
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, \'1\')',
-                [42, 'some-name', 'some-description']
+                'INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, ?)',
+                [42, 'some-name', 'some-description', 0]
             );
 
         $this->connection->expects(static::once())
@@ -141,6 +152,41 @@ class BroadcastRepositoryTest extends TestCase
         static::assertSame([1, 2], $this->subject->getIdsByUser(42));
     }
 
+    public function testPersistInsertsABroadcastThatHasNoIdYet(): void
+    {
+        $broadcast              = new Broadcast(0);
+        $broadcast->user        = 42;
+        $broadcast->name        = 'some-name';
+        $broadcast->description = 'some-description';
+        $broadcast->is_private  = true;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, ?)',
+                [42, 'some-name', 'some-description', 1]
+            );
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(666);
+
+        static::assertSame(666, $this->subject->persist($broadcast));
+    }
+
+    public function testResetStartedStateClearsEveryRunningRow(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+        $result->method('rowCount')->willReturn(2);
+
+        // nothing can still be running once the server holding those connections has gone
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `broadcast` SET `started` = 0, `key` = \'\', `song` = 0, `listeners` = 0 WHERE `started` = 1')
+            ->willReturn($result);
+
+        static::assertSame(2, $this->subject->resetStartedState());
+    }
+
     public function testUpdateListenersWritesTheCount(): void
     {
         $broadcast = $this->createMock(Broadcast::class);
@@ -212,7 +258,8 @@ class BroadcastRepositoryTest extends TestCase
 
         $this->subject = new BroadcastRepository(
             $this->modelFactory,
-            $this->connection
+            $this->connection,
+            $this->createMock(LoggerInterface::class)
         );
     }
 }

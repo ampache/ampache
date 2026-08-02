@@ -39,6 +39,7 @@ enum SongFieldEnum: string
     case COMPOSER    = 'composer';
     case DISK        = 'disk';
     case ENABLED     = 'enabled';
+    case FILE        = 'file';
     case LICENSE     = 'license';
     case MBID        = 'mbid';
     case MODE        = 'mode';

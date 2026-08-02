@@ -32,7 +32,8 @@ use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -105,7 +106,7 @@ final class ShareDeleteMethod implements MethodInterface
 
         $this->shareRepository->delete($share);
 
-        Catalog::count_table('share');
+        Catalog::count_table(CountableTableEnum::SHARE);
 
         $response->getBody()->write(
             $output->success($apiVersion, 'share ' . $objectId . ' deleted')

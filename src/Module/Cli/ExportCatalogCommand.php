@@ -26,11 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogLoaderInterface;
 use Ampache\Module\Catalog\Exception\CatalogLoadingException;
 use Ampache\Module\Catalog\Export\CatalogExportFactoryInterface;
 use Ampache\Module\Catalog\Export\CatalogExportTypeEnum;
-use Ampache\Repository\Model\Catalog;
 use Override;
 
 final class ExportCatalogCommand extends Command

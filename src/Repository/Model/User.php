@@ -27,11 +27,18 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\Image\ShowUserAvatarAction;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
+use Ampache\Module\Database\database_object;
+use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Module\System\Preference;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Plugin\PluginGetAvatarUrlInterface;
@@ -210,7 +217,7 @@ class User extends database_object
         // Populates any missing preferences, in this case all of them
         Preference::fix_user_preferences($insert_id);
 
-        Catalog::count_table('user');
+        Catalog::count_table(CountableTableEnum::USER);
 
         return $insert_id;
     }
@@ -492,6 +499,16 @@ class User extends database_object
     /**
      * @deprecated inject dependency
      */
+    private static function getStats(): Stats
+    {
+        global $dic;
+
+        return $dic->get(Stats::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
     private static function getUserRepository(): UserRepositoryInterface
     {
         global $dic;
@@ -519,7 +536,7 @@ class User extends database_object
         $userRepository->delete($this->id, (string) $this->username);
         self::remove_from_cache('user', $this->id);
 
-        Catalog::count_table('user');
+        Catalog::count_table(CountableTableEnum::USER);
         $userRepository->collectGarbage();
 
         return true;
@@ -985,7 +1002,7 @@ class User extends database_object
                     }
                     break;
                 case 'clear_stats':
-                    Stats::clear($this->id);
+                    self::getStats()->clear($this->id);
                     break;
             }
         }

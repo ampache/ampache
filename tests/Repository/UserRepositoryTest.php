@@ -29,8 +29,11 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\UserFieldEnum;
+use PDO;
+use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class UserRepositoryTest extends TestCase
@@ -38,7 +41,18 @@ class UserRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private UserRepository $subject;
+
+    public function testCountByCatalogFilterGroupCountsTheAssignedUsers(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT COUNT(1) AS `count` FROM `user` WHERE `catalog_filter_group` = ?', [4])
+            ->willReturn('3');
+
+        static::assertSame(3, $this->subject->countByCatalogFilterGroup(4));
+    }
 
     public function testCreateLeavesOmittedColumnsOutOfTheStatement(): void
     {
@@ -105,6 +119,41 @@ class UserRepositoryTest extends TestCase
         static::assertNull($this->subject->findActiveSessionIp('some-user', 123456, false));
     }
 
+    public function testFindByApiKeyFallsBackToTheSessionAndThenTheHashedKeys(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        // no plain key, no api session, and no user whose hashed key matches
+        $this->connection->expects(static::exactly(2))
+            ->method('fetchOne')
+            ->willReturn(false);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `id`, `apikey`, `username` FROM `user`')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(['id' => '1', 'apikey' => 'some-key', 'username' => 'some-user'], false);
+
+        static::assertNull($this->subject->findByApiKey('some-api-key'));
+    }
+
+    public function testGetValidationByUsernameReturnsNullForAClearedValidation(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `validation` FROM `user` WHERE `username` = ?',
+                ['some-user']
+            )
+            ->willReturn(null);
+
+        static::assertNull($this->subject->getValidationByUsername('some-user'));
+    }
+
     public function testHasOtherAdminIgnoresDisabledAccountsWhenAsked(): void
     {
         $this->connection->expects(static::once())
@@ -123,6 +172,50 @@ class UserRepositoryTest extends TestCase
         $this->connection->method('fetchOne')->willReturn(false);
 
         static::assertFalse($this->subject->hasOtherAdmin(666, false));
+    }
+
+    public function testIdByUsernameReturnsZeroForAnUnknownName(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `id` FROM `user` WHERE `username` = ?',
+                ['some-user']
+            )
+            ->willReturn(false);
+
+        static::assertSame(0, $this->subject->idByUsername('some-user'));
+    }
+
+    public function testResetCatalogFilterGroupPutsThemBackOnDefault(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` = ?', [4]);
+
+        $this->subject->resetCatalogFilterGroup(4);
+    }
+
+    public function testResetMissingCatalogFilterGroupsSweepsEveryDanglingUser(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` NOT IN (SELECT `id` FROM `catalog_filter_group`);');
+
+        $this->subject->resetMissingCatalogFilterGroups();
+    }
+
+    public function testRetrievePasswordFromUserReturnsAnEmptyStringForAnUnknownUser(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `password` FROM `user` WHERE `id` = ?',
+                [666]
+            )
+            ->willReturn(false);
+
+        static::assertSame('', $this->subject->retrievePasswordFromUser(666));
     }
 
     public function testSetFieldClearsATokenWithNull(): void
@@ -164,9 +257,11 @@ class UserRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new UserRepository(
-            $this->connection
+            $this->connection,
+            $this->logger,
         );
     }
 }

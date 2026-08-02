@@ -7,9 +7,9 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Broadcast;
-use Ampache\Repository\Model\Preference;
 
 /** @var bool $isVideo  */
 

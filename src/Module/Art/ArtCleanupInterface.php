@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Art;
 
 use Ahc\Cli\IO\Interactor;
-use Ampache\Repository\Model\Art;
 
 interface ArtCleanupInterface
 {

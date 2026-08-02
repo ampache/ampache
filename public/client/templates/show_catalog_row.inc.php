@@ -32,7 +32,7 @@ $web_path = AmpConfig::get_web_path('/client');
 
 $admin_path = AmpConfig::get_web_path('/admin');
 
-/** @var Ampache\Repository\Model\Catalog $catalog */
+/** @var Ampache\Module\Catalog\Catalog $catalog */
 
 if ($catalog->enabled) {
     $icon     = 'unpublished';

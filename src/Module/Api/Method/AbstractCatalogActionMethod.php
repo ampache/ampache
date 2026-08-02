@@ -34,8 +34,8 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -186,7 +186,6 @@ abstract class AbstractCatalogActionMethod implements MethodInterface
                     Album::update_album_artist();
                 }
                 Catalog::update_catalog_map($catalogMediaType);
-                Catalog::update_counts();
                 break;
         }
 

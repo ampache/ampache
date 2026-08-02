@@ -27,11 +27,11 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Plugin\PluginDisplayHomeInterface;
-use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 
 $web_path   = AmpConfig::get_web_path('/client');

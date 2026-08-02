@@ -34,7 +34,7 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Repository\Model\Preference;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;

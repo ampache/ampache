@@ -28,6 +28,7 @@ namespace Ampache\Repository;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class PreferenceRepositoryTest extends TestCase
@@ -35,6 +36,7 @@ class PreferenceRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private PreferenceRepository $subject;
 
     public function testAddUserPreferenceIgnoresARowThatAlreadyExists(): void
@@ -67,36 +69,6 @@ class PreferenceRepositoryTest extends TestCase
             ->willReturn($this->emptyResult());
 
         static::assertSame([], $this->subject->getAllPreferences(true));
-    }
-
-    public function testRepairDefaultFilterGroupDoesNothingWhenItAlreadySitsAtZero(): void
-    {
-        $this->connection->expects(static::once())
-            ->method('fetchRow')
-            ->willReturn(['id' => '0', 'name' => 'DEFAULT']);
-
-        $this->connection->expects(static::never())->method('query');
-
-        static::assertFalse($this->subject->repairDefaultFilterGroup());
-    }
-
-    public function testRepairDefaultFilterGroupReseatsItAndBumpsTheAutoIncrement(): void
-    {
-        // autoincrement starts at 1, so a re-inserted group lands off id 0 and every catalog filter stops matching
-        $this->connection->method('fetchRow')->willReturn(['id' => '3', 'name' => 'DEFAULT']);
-        $this->connection->method('fetchOne')->willReturn('7');
-
-        $this->connection->expects(static::exactly(3))
-            ->method('query')
-            ->with(
-                ...self::withConsecutive(
-                    ["INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT');"],
-                    ["UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT';"],
-                    ['ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = 8;'],
-                )
-            );
-
-        static::assertTrue($this->subject->repairDefaultFilterGroup());
     }
 
     public function testRepairLanguagePreferencesFallsBackToEnglish(): void
@@ -141,9 +113,11 @@ class PreferenceRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new PreferenceRepository(
-            $this->connection
+            $this->connection,
+            $this->logger
         );
     }
 

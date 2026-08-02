@@ -31,17 +31,17 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
-use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\library_item $libitem */
-/** @var Ampache\Repository\Model\Browse|null $browse */
+/** @var Ampache\Module\Database\Query\Browse|null $browse */
 /** @var Collection|null $collection */
 /** @var int $collection_track */
 /** @var array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int} $object */

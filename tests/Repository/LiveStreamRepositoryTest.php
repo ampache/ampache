@@ -39,6 +39,15 @@ class LiveStreamRepositoryTest extends TestCase
     private ModelFactoryInterface&MockObject $modelFactory;
     private LiveStreamRepository $subject;
 
+    public function testDeleteByCatalogRemovesTheCatalogsLiveStreams(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('DELETE FROM `live_stream` WHERE `catalog` = ?', [7]);
+
+        static::assertTrue($this->subject->deleteByCatalog(7));
+    }
+
     public function testDeleteRefreshesTheCachedTotal(): void
     {
         $liveStream = $this->createMock(Live_Stream::class);

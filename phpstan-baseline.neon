@@ -1747,64 +1747,64 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Browse\:\:set_type\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Browse\:\:set_type\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Browse.php
+			path: src/Module/Database/Query/Browse.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Browse\:\:show_objects\(\) has parameter \$argument with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Browse\:\:show_objects\(\) has parameter \$argument with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Browse.php
+			path: src/Module/Database/Query/Browse.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Catalog\:\:gather_art\(\) has parameter \$songs with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Catalog\\Catalog\:\:gather_art\(\) has parameter \$songs with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Catalog.php
+			path: src/Module/Catalog/Catalog.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Catalog\:\:gather_art\(\) has parameter \$videos with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Catalog\\Catalog\:\:gather_art\(\) has parameter \$videos with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Catalog.php
+			path: src/Module/Catalog/Catalog.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Catalog\:\:get_artists\(\) has parameter \$catalogs with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Catalog\\Catalog\:\:get_artists\(\) has parameter \$catalogs with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Catalog.php
+			path: src/Module/Catalog/Catalog.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Catalog\:\:update_song_from_tags\(\) has parameter \$results with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Catalog\\Catalog\:\:update_song_from_tags\(\) has parameter \$results with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Catalog.php
+			path: src/Module/Catalog/Catalog.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Catalog\:\:update_song_from_tags\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Catalog\\Catalog\:\:update_song_from_tags\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Catalog.php
+			path: src/Module/Catalog/Catalog.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Catalog\:\:update_video_from_tags\(\) has parameter \$results with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Catalog\\Catalog\:\:update_video_from_tags\(\) has parameter \$results with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Catalog.php
+			path: src/Module/Catalog/Catalog.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Catalog\:\:update_video_from_tags\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Catalog\\Catalog\:\:update_video_from_tags\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Catalog.php
+			path: src/Module/Catalog/Catalog.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Democratic\:\:get_cool_songs\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Playback\\Democratic\:\:get_cool_songs\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Democratic.php
+			path: src/Module/Playback/Democratic.php
 
 		-
 			message: '#^Method Ampache\\Repository\\Model\\Label\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
@@ -1819,82 +1819,82 @@ parameters:
 			path: src/Repository/Model/Live_Stream.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Preference\:\:fix_preferences\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\System\\Preference\:\:fix_preferences\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Preference.php
+			path: src/Module/System/Preference.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Preference\:\:update\(\) has parameter \$value with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\System\\Preference\:\:update\(\) has parameter \$value with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Preference.php
+			path: src/Module/System/Preference.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Query\:\:_post_process\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Query\:\:_post_process\(\) has parameter \$data with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Query.php
+			path: src/Module/Database/Query/Query.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Query\:\:_serialize\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Query\:\:_serialize\(\) has parameter \$data with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Query.php
+			path: src/Module/Database/Query/Query.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Query\:\:_set_base_sql\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Query\:\:_set_base_sql\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Query.php
+			path: src/Module/Database/Query/Query.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Query\:\:get_allowed_filters\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Query\:\:get_allowed_filters\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Query.php
+			path: src/Module/Database/Query/Query.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Query\:\:get_total\(\) has parameter \$object_ids with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Query\:\:get_total\(\) has parameter \$object_ids with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Query.php
+			path: src/Module/Database/Query/Query.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Query\:\:set_type\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Query\:\:set_type\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Query.php
+			path: src/Module/Database/Query/Query.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Search\:\:filter_data\(\) has parameter \$operator with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Search\:\:filter_data\(\) has parameter \$operator with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 2
-			path: src/Repository/Model/Search.php
+			path: src/Module/Database/Query/Search.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Search\:\:get_random_items\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Search\:\:get_random_items\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Search.php
+			path: src/Module/Database/Query/Search.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Search\:\:prepare\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Search\:\:prepare\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Search.php
+			path: src/Module/Database/Query/Search.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Search\:\:query\(\) has parameter \$search_sql with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Search\:\:query\(\) has parameter \$search_sql with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Search.php
+			path: src/Module/Database/Query/Search.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Search\:\:year_search\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\Query\\Search\:\:year_search\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/Search.php
+			path: src/Module/Database/Query/Search.php
 
 		-
 			message: '#^Method Ampache\\Repository\\Model\\Share\:\:update\(\) has parameter \$data with no value type specified in iterable type array\.$#'
@@ -1951,10 +1951,10 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\User_Playlist\:\:add_items\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Playback\\User_Playlist\:\:add_items\(\) has parameter \$data with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/User_Playlist.php
+			path: src/Module/Playback/User_Playlist.php
 
 		-
 			message: '#^PHPDoc tag @var for variable \$group has no value type specified in iterable type array\.$#'
@@ -1975,22 +1975,22 @@ parameters:
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\database_object\:\:add_to_cache\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\database_object\:\:add_to_cache\(\) has parameter \$data with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/database_object.php
+			path: src/Module/Database/database_object.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\database_object\:\:get_from_cache\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\database_object\:\:get_from_cache\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/database_object.php
+			path: src/Module/Database/database_object.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\database_object\:\:get_info\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Database\\database_object\:\:get_info\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Repository/Model/database_object.php
+			path: src/Module/Database/database_object.php
 
 		-
 			message: '#^Method Ampache\\Repository\\Model\\playlist_object\:\:gather_art\(\) return type has no value type specified in iterable type array\.$#'

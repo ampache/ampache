@@ -22,20 +22,27 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Label\LabelGarbageCollectorInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserflagRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
@@ -50,6 +57,9 @@ class CatalogGarbageCollectorTest extends TestCase
     private ArtCleanupInterface&MockObject $artCleanup;
     private ArtistRepositoryInterface&MockObject $artistRepository;
     private BookmarkRepositoryInterface&MockObject $bookmarkRepository;
+    private BroadcastRepositoryInterface&MockObject $broadcastRepository;
+    private CatalogCounterInterface&MockObject $catalogCounter;
+    private ConfigContainerInterface&MockObject $configContainer;
     private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LabelGarbageCollectorInterface&MockObject $labelGarbageCollector;
@@ -57,8 +67,10 @@ class CatalogGarbageCollectorTest extends TestCase
     private MetadataManagerInterface&MockObject $metadataManager;
     private PlaylistRepositoryInterface&MockObject $playlistRepository;
     private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
     private SearchRepositoryInterface&MockObject $searchRepository;
     private ShoutRepositoryInterface&MockObject $shoutRepository;
+    private SongRepositoryInterface&MockObject $songRepository;
     private CatalogGarbageCollector $subject;
     private TagRepositoryInterface&MockObject $tagRepository;
     private UserActivityRepositoryInterface&MockObject $userActivityRepository;
@@ -70,6 +82,7 @@ class CatalogGarbageCollectorTest extends TestCase
     {
         $this->albumRepository->expects(static::once())->method('collectGarbage');
         $this->bookmarkRepository->expects(static::once())->method('collectGarbage');
+        $this->broadcastRepository->expects(static::once())->method('collectGarbage');
         $this->shoutRepository->expects(static::once())->method('collectGarbage');
         $this->userActivityRepository->expects(static::once())->method('collectGarbage');
         $this->userRepository->expects(static::once())->method('collectGarbage');
@@ -92,6 +105,7 @@ class CatalogGarbageCollectorTest extends TestCase
     {
         $this->albumRepository          = $this->createMock(AlbumRepositoryInterface::class);
         $this->bookmarkRepository       = $this->createMock(BookmarkRepositoryInterface::class);
+        $this->broadcastRepository      = $this->createMock(BroadcastRepositoryInterface::class);
         $this->shoutRepository          = $this->createMock(ShoutRepositoryInterface::class);
         $this->userActivityRepository   = $this->createMock(UserActivityRepositoryInterface::class);
         $this->userRepository           = $this->createMock(UserRepositoryInterface::class);
@@ -106,6 +120,10 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->playlistRepository       = $this->createMock(PlaylistRepositoryInterface::class);
         $this->searchRepository         = $this->createMock(SearchRepositoryInterface::class);
         $this->labelGarbageCollector    = $this->createMock(LabelGarbageCollectorInterface::class);
+        $this->songRepository           = $this->createMock(SongRepositoryInterface::class);
+        $this->podcastRepository        = $this->createMock(PodcastRepositoryInterface::class);
+        $this->catalogCounter           = $this->createMock(CatalogCounterInterface::class);
+        $this->configContainer          = $this->createMock(ConfigContainerInterface::class);
         $this->tagRepository            = $this->createMock(TagRepositoryInterface::class);
         $this->dic                      = $this->createMock(ContainerInterface::class);
 
@@ -113,6 +131,10 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
             TagRepositoryInterface::class => $this->tagRepository,
             UserRepositoryInterface::class => $this->userRepository,
+            RatingRepositoryInterface::class => $this->createMock(RatingRepositoryInterface::class),
+            SongRepositoryInterface::class => $this->songRepository,
+            UserflagRepositoryInterface::class => $this->createMock(UserflagRepositoryInterface::class),
+            CatalogCounterInterface::class => $this->catalogCounter,
             default => $this->createMock(LoggerInterface::class),
         });
 
@@ -123,6 +145,7 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->subject = new CatalogGarbageCollector(
             $this->albumRepository,
             $this->bookmarkRepository,
+            $this->broadcastRepository,
             $this->shoutRepository,
             $this->userActivityRepository,
             $this->userRepository,
@@ -137,6 +160,10 @@ class CatalogGarbageCollectorTest extends TestCase
             $this->playlistRepository,
             $this->searchRepository,
             $this->labelGarbageCollector,
+            $this->songRepository,
+            $this->podcastRepository,
+            $this->catalogCounter,
+            $this->configContainer,
         );
     }
 }

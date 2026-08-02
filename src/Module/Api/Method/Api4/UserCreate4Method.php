@@ -28,7 +28,8 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 
@@ -93,7 +94,7 @@ final class UserCreate4Method
 
         if ($user_id > 0) {
             Api4::message('success', 'successfully created: ' . $username, null, $input['api_format']);
-            Catalog::count_table('user');
+            Catalog::count_table(CountableTableEnum::USER);
 
             return true;
         }

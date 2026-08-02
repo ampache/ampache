@@ -26,9 +26,9 @@ declare(strict_types=1);
 // show_rules.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Search;
 
 $web_path = AmpConfig::get_web_path('/client');
 

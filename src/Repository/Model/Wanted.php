@@ -28,9 +28,10 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 use Ampache\Module\Wanted\WantedManagerInterface;
@@ -269,8 +270,7 @@ class Wanted extends database_object
     public function accept(): void
     {
         if (Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) {
-            $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
-            Dba::write($sql, [$this->mbid]);
+            $this->getWantedRepository()->accept((string) $this->mbid);
             $this->accepted = 1;
 
             /** @var User $user */

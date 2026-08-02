@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Playlist\Search;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Search;
+use Ampache\Module\Database\Query\Search;
 
 final class PodcastSearch implements SearchInterface
 {
@@ -217,6 +217,11 @@ final class PodcastSearch implements SearchInterface
                     }
 
                     break;
+                case 'recent_played':
+                    $key                     = md5($input . $operator_sql);
+                    $where[]                 = sprintf('`played_%s`.`object_id` IS NOT NULL', $key);
+                    $table['played_' . $key] = sprintf("LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'podcast' ORDER BY %s DESC LIMIT ", $operator_sql) . (int) $input . sprintf(') AS `played_%s` ON `podcast`.`id` = `played_%s`.`object_id`', $key, $key);
+                    break;
                 case 'played':
                     $where[]                 = sprintf("`podcast_episode`.`played` = '%s'", $operator_sql);
                     $join['podcast_episode'] = true;
@@ -344,9 +349,9 @@ final class PodcastSearch implements SearchInterface
                             $table['rating'] = '';
                         }
 
-                        $table['rating'] .= (strpos($table['rating'], "rating_" . $my_type . "_" . $search_user_id))
+                        $table['rating'] .= (strpos($table['rating'], "rating_" . $my_type . "_" . $other_userid))
                             ? ""
-                            : "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $search_user_id . "` ON `rating_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' AND `rating_" . $my_type . "_" . $search_user_id . sprintf('`.`object_id` = `%s`.`%s` AND `rating_', $my_type, $column) . $my_type . "_" . $search_user_id . "`.`user` = " . $search_user_id;
+                            : "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $other_userid . "` ON `rating_" . $my_type . "_" . $other_userid . "`.`object_type` = '" . $my_type . "' AND `rating_" . $my_type . "_" . $other_userid . sprintf('`.`object_id` = `%s`.`%s` AND `rating_', $my_type, $column) . $my_type . "_" . $other_userid . "`.`user` = " . $other_userid;
                     }
 
                     break;

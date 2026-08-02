@@ -27,11 +27,11 @@ namespace Ampache\Module\Art\Export;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Art\Export\Exception\ArtExportException;
 use Ampache\Module\Art\Export\Writer\MetadataWriterInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\ImageRepositoryInterface;
-use Ampache\Repository\Model\Art;
 use Psr\Log\LoggerInterface;
 
 /**

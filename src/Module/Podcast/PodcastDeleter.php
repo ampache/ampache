@@ -27,9 +27,10 @@ namespace Ampache\Module\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -74,7 +75,7 @@ final readonly class PodcastDeleter implements PodcastDeleterInterface
 
         $this->podcastRepository->delete($podcast);
 
-        Catalog::count_table('podcast');
+        Catalog::count_table(CountableTableEnum::PODCAST);
     }
 
     /**
@@ -99,6 +100,6 @@ final readonly class PodcastDeleter implements PodcastDeleterInterface
             $this->podcastEpisodeRepository->deleteEpisode($episode);
         }
 
-        Catalog::count_table('podcast_episode');
+        Catalog::count_table(CountableTableEnum::PODCAST_EPISODE);
     }
 }

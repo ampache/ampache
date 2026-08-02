@@ -27,15 +27,15 @@ namespace Ampache\Plugin;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\Plugin;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
-use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 use Override;
 
 class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInterface

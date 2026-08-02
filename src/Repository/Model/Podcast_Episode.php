@@ -26,9 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
@@ -180,6 +182,16 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
+     * @deprecated inject dependency
+     */
+    private static function getStats(): Stats
+    {
+        global $dic;
+
+        return $dic->get(Stats::class);
+    }
+
+    /**
      * Updates the state of an episode
      */
     public function change_state(PodcastEpisodeStateEnum $state): void
@@ -189,7 +201,7 @@ class Podcast_Episode extends database_object implements
 
     public function check_play_history(int $user, string $agent, int $date): bool
     {
-        return Stats::has_played_history('podcast_episode', $this, $user, $agent, $date);
+        return self::getStats()->has_played_history('podcast_episode', $this, $user, $agent, $date);
     }
 
     /**
@@ -568,8 +580,8 @@ class Podcast_Episode extends database_object implements
             return false;
         }
 
-        if (Stats::insert('podcast_episode', $this->id, $user_id, $agent, $location, 'stream', $date)) {
-            Stats::insert('podcast', $this->podcast, $user_id, $agent, $location, 'stream', $date);
+        if (self::getStats()->insert('podcast_episode', $this->id, $user_id, $agent, $location, 'stream', $date)) {
+            self::getStats()->insert('podcast', $this->podcast, $user_id, $agent, $location, 'stream', $date);
         }
 
         if (!$this->played && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {

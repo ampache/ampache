@@ -27,13 +27,18 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
+use Psr\Log\LoggerInterface;
 
 final readonly class BookmarkRepository implements BookmarkRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Remove bookmark for items that no longer exist.
@@ -57,9 +62,37 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
                     )
                 );
             } catch (DatabaseException) {
-                debug_event(self::class, 'collectGarbage error', 5);
+                $this->logger->debug(
+                    'collectGarbage error',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
             }
         }
+    }
+
+    /**
+     * Stores a new bookmark, dropping the user's previous one for that object when only the latest is kept
+     */
+    public function create(
+        int $userId,
+        int $position,
+        string $comment,
+        string $objectType,
+        int $objectId,
+        int $updateDate,
+        bool $latestOnly,
+    ): void {
+        if ($latestOnly) {
+            $this->connection->query(
+                'DELETE FROM `bookmark` WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?;',
+                [$userId, $comment, $objectType, $objectId]
+            );
+        }
+
+        $this->connection->query(
+            'INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [$userId, $position, $comment, $objectType, $objectId, $updateDate, $updateDate]
+        );
     }
 
     public function delete(int $bookmarkId): void
@@ -82,6 +115,50 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
         }
 
         return $bookmark;
+    }
+
+    /**
+     * Reads one of a user's bookmarks by its own id, which is how a `bookmark` object type addresses it
+     *
+     * @return list<int>
+     */
+    public function findIdsByBookmarkId(int $userId, int $bookmarkId): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `bookmark` WHERE `user` = ? AND `id` = ?;',
+            [$userId, $bookmarkId]
+        );
+
+        $bookmarkIds = [];
+        while ($rowId = $result->fetchColumn()) {
+            $bookmarkIds[] = (int) $rowId;
+        }
+
+        return $bookmarkIds;
+    }
+
+    /**
+     * Reads the ids a user has bookmarked against one object, newest first
+     *
+     * @return list<int>
+     */
+    public function findIdsByObject(int $userId, string $objectType, int $objectId, ?string $comment): array
+    {
+        $sql    = 'SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? ';
+        $params = [$userId, $objectType, $objectId];
+        if ($comment !== null && $comment !== '') {
+            $sql .= 'AND `comment` = ? ';
+            $params[] = $comment;
+        }
+
+        $result = $this->connection->query($sql . 'ORDER BY `update_date` DESC;', $params);
+
+        $bookmarkIds = [];
+        while ($bookmarkId = $result->fetchColumn()) {
+            $bookmarkIds[] = (int) $bookmarkId;
+        }
+
+        return $bookmarkIds;
     }
 
     /**
@@ -126,6 +203,23 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
     }
 
     /**
+     * Reads the bookmark a user holds against one object
+     *
+     * @return array<string, mixed>
+     */
+    public function getRowByObject(string $objectType, int $objectId, int $userId): array
+    {
+        $row = $this->connection->fetchRow(
+            'SELECT * FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?',
+            [$objectType, $objectId, $userId]
+        );
+
+        return ($row === false)
+            ? []
+            : $row;
+    }
+
+    /**
      * Migrate an object associate stats to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
@@ -141,6 +235,17 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
         $this->connection->query(
             'UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `id` = ?',
             [$position, $date->getTimestamp(), $bookmarkId]
+        );
+    }
+
+    /**
+     * Updates the position and the comment of a bookmark, which is what the edit dialog sends
+     */
+    public function updateWithComment(int $bookmarkId, int $position, string $comment, int $updateDate): void
+    {
+        $this->connection->query(
+            'UPDATE `bookmark` SET `position` = ?, `comment` = ?, `update_date` = ? WHERE `id` = ?',
+            [$position, $comment, $updateDate, $bookmarkId]
         );
     }
 }

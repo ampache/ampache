@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Repository\Model\Plugin;
+use Ampache\Module\System\Plugin\Plugin;
 use Override;
 
 final class AdminUpdatePluginsCommand extends Command

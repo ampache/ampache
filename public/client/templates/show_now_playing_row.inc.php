@@ -27,15 +27,15 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Userflag;
 
 /** @var Song $media */
 /** @var Ampache\Repository\Model\User $np_user */

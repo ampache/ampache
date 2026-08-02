@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast\Exchange;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Podcast\Exception\InvalidCatalogException;
-use Ampache\Repository\Model\Catalog;
 
 interface PodcastOpmlImporterInterface
 {

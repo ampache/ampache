@@ -26,7 +26,7 @@
 /** @var Tag $libitem */
 /** @var Browse $browse */
 
-use Ampache\Repository\Model\Browse;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Repository\Model\Tag;
 
 switch ($browse->get_type()) {

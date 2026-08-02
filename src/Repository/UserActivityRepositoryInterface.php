@@ -63,6 +63,19 @@ interface UserActivityRepositoryInterface
     ): array;
 
     /**
+     * Reads whole activity rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param list<int|string> $activityIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $activityIds): array;
+
+    /**
+     * Moves the activity of an object onto another one
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
+
+    /**
      * Inserts the necessary data to register a generic action on an object
      *
      * @todo Replace when active record models are available

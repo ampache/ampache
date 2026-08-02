@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Song\Tag;
 
-use Ampache\Repository\Model\Rating;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 

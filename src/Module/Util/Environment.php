@@ -44,9 +44,9 @@ final class Environment implements EnvironmentInterface
     /** @var array<string, string> the `ext-` suggestions of composer.json and what they are needed for */
     public const array OPTIONAL_EXTENSIONS = [
         'http' => 'Yourls plugin',
-        'ldap' => 'Needed to support ldap authentication',
-        'sockets' => 'Needed for upnp functions',
-        'xmlreader' => 'Needed for upnp functions',
+        'ldap' => 'ldap',
+        'sockets' => 'upnp',
+        'xmlreader' => 'upnp',
     ];
     public const float PHP_VERSION = 8.5;
 

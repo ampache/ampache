@@ -26,14 +26,17 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\BroadcastRepositoryInterface;
 
-class Broadcast extends database_object implements library_item, displayable_item, container_item
+class Broadcast extends database_object implements library_item, displayable_item, container_item, ModelInterface
 {
     protected const string DB_TABLENAME = 'broadcast';
 
@@ -78,10 +81,14 @@ class Broadcast extends database_object implements library_item, displayable_ite
     public static function create(string $name, string $description = ''): int
     {
         if (!empty($name)) {
+            $user = Core::get_global('user');
+
+            // a broadcast requires a session to listen unless the owner turned that off
             return self::getBroadcastRepository()->create(
-                (int) Core::get_global('user')?->getId(),
+                (int) $user?->getId(),
                 $name,
-                $description
+                $description,
+                (bool) ($user?->getPreferenceValue(ConfigurationKeyEnum::BROADCAST_PRIVATE) ?? true)
             );
         }
 
@@ -322,6 +329,23 @@ class Broadcast extends database_object implements library_item, displayable_ite
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    /**
+     * Persists the object
+     *
+     * An object that has not been saved yet receives the id its row was given
+     */
+    public function save(): void
+    {
+        $result = self::getBroadcastRepository()->persist($this);
+
+        if ($result !== null) {
+            $this->id = $result;
+        }
+
+        // memory_cache is on by default, so the row this object just wrote has to leave the request cache
+        self::remove_from_cache('broadcast', $this->id);
     }
 
     /**

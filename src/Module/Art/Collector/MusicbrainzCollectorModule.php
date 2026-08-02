@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Art\Collector;
 
+use Ampache\Module\Art\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\Art;
 use Exception;
 use MusicBrainz\MusicBrainz;
 use Psr\Log\LoggerInterface;

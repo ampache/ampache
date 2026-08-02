@@ -27,13 +27,18 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Label;
 use DateTimeInterface;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 final readonly class LabelRepository implements LabelRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Associate a label with an album, ignoring a pairing already recorded (the scanner runs this per song).
@@ -75,7 +80,10 @@ final readonly class LabelRepository implements LabelRepositoryInterface
             $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`label` NOT IN (SELECT `label`.`id` FROM `label`)');
             $this->connection->query('DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL');
         } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
+            $this->logger->debug(
+                'collectGarbage error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 
@@ -194,6 +202,26 @@ final readonly class LabelRepository implements LabelRepositoryInterface
         }
 
         return $labels;
+    }
+
+    /**
+     * Reads the labels of one category, together with every label still missing an mbid
+     *
+     * @return list<int>
+     */
+    public function getIdsByCategory(string $category): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `label` WHERE `category` = ? OR `mbid` IS NULL',
+            [$category]
+        );
+
+        $labelIds = [];
+        while ($labelId = $result->fetchColumn()) {
+            $labelIds[] = (int) $labelId;
+        }
+
+        return $labelIds;
     }
 
     public function lookup(string $labelName, int $labelId = 0): int

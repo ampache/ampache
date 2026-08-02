@@ -26,10 +26,10 @@ declare(strict_types=1);
 // show_add_user.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Catalog;
 
 /** @var Ampache\Repository\Model\User $client */
 

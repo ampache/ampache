@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\System\Preference;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Preference;
 
 final class Migration600053 extends AbstractMigration
 {

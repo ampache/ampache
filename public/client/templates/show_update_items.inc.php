@@ -26,8 +26,8 @@ declare(strict_types=1);
 // show_update_items.inc.php
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Catalog\Catalog;
 
 /** @var int $object_id */
 /** @var int|null $catalog_id */

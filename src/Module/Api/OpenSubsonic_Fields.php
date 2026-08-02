@@ -25,15 +25,15 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Art\Art;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 

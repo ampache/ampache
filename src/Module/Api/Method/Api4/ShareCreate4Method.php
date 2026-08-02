@@ -31,11 +31,12 @@ use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
@@ -122,7 +123,7 @@ final class ShareCreate4Method
                 $description
             );
         }
-        Catalog::count_table('share');
+        Catalog::count_table(CountableTableEnum::SHARE);
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

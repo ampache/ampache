@@ -31,14 +31,14 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\System\Plugin\Plugin;
+use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 use Override;
 
 class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHomeInterface

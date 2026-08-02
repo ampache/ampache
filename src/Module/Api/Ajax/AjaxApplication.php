@@ -1,0 +1,100 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Ampache\Module\Api\Ajax;
+
+use Ampache\Module\Api\Ajax\Handler\AjaxHandlerInterface;
+use Ampache\Module\Api\Ajax\Handler\BrowseAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\CatalogAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\CollectionAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\DefaultAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\PlayerAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\PlaylistAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\PodcastAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\RandomAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\StatsAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\StreamAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\TagAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\UserAjaxHandler;
+use Ampache\Module\Api\ApiApplicationInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\System\Core;
+use Psr\Container\ContainerInterface;
+
+final readonly class AjaxApplication implements ApiApplicationInterface
+{
+    /** @var array<string, class-string> */
+    private const array HANDLER_LIST = [
+        'browse' => BrowseAjaxHandler::class,
+        'catalog' => CatalogAjaxHandler::class,
+        'collection' => CollectionAjaxHandler::class,
+        'democratic' => DemocraticPlaybackAjaxHandler::class,
+        'index' => IndexAjaxHandler::class,
+        'localplay' => LocalPlayAjaxHandler::class,
+        'player' => PlayerAjaxHandler::class,
+        'playlist' => PlaylistAjaxHandler::class,
+        'podcast' => PodcastAjaxHandler::class,
+        'random' => RandomAjaxHandler::class,
+        'search' => SearchAjaxHandler::class,
+        'song' => SongAjaxHandler::class,
+        'stats' => StatsAjaxHandler::class,
+        'stream' => StreamAjaxHandler::class,
+        'tag' => TagAjaxHandler::class,
+        'user' => UserAjaxHandler::class,
+    ];
+
+    public function __construct(
+        private ContainerInterface $dic,
+    ) {}
+
+    public function run(): void
+    {
+        xoutput_headers();
+
+        $page = $_REQUEST['page'] ?? null;
+        if ($page) {
+            debug_event('ajax.server', 'Called for page: {' . $page . '}', 5);
+        }
+
+        $user = Core::get_global('user');
+        if ($user === null) {
+            throw new AccessDeniedException();
+        }
+
+        $handlerClassName = ($page)
+            ? self::HANDLER_LIST[$page]
+            : DefaultAjaxHandler::class;
+
+        /** @var AjaxHandlerInterface $handler */
+        $handler = $this->dic->get($handlerClassName);
+
+        $handler->handle($user);
+    }
+}

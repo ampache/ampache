@@ -27,11 +27,11 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 
 /**
  * Class Stats3Method

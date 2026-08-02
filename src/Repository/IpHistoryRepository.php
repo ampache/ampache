@@ -28,11 +28,13 @@ namespace Ampache\Repository;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\User;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Generator;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 /**
  * Manages ip-history related database access
@@ -44,6 +46,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
     ) {}
 
     /**
@@ -57,7 +60,10 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
                 [86400 * (int) $this->configContainer->get('user_ip_cardinality')]
             );
         } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
+            $this->logger->debug(
+                'collectGarbage error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 

@@ -31,10 +31,12 @@ use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class MetadataFieldRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private MetadataFieldRepository $subject;
 
     public function testCollectGarbageExecutesQuery(): void
@@ -270,9 +272,11 @@ class MetadataFieldRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new MetadataFieldRepository(
-            $this->connection
+            $this->connection,
+            $this->logger,
         );
     }
 }

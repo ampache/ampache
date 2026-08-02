@@ -36,10 +36,10 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Preference;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -72,6 +72,7 @@ abstract class AbstractUserEditMethod implements MethodInterface
         PrivilegeCheckerInterface $privilegeChecker,
         UserKeyGeneratorInterface $userKeyGenerator,
         UserStateTogglerInterface $userStateToggler,
+        private readonly Stats $stats,
     ) {
         $this->configContainer  = $configContainer;
         $this->privilegeChecker = $privilegeChecker;
@@ -225,7 +226,7 @@ abstract class AbstractUserEditMethod implements MethodInterface
         }
 
         if ($clearStats) {
-            Stats::clear($userId);
+            $this->stats->clear($userId);
         }
 
         $response->getBody()->write(

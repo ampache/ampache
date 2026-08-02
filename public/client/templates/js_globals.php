@@ -24,9 +24,9 @@ declare(strict_types=1);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Preference;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Preference;
 
 global $dic;
 

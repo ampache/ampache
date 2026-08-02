@@ -27,10 +27,10 @@ namespace Ampache\Module\Application\Random;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\Random;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;

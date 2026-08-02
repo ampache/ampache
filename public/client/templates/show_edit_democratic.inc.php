@@ -26,9 +26,9 @@ declare(strict_types=1);
 // show_edit_democratic.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Democratic;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Democratic;
 
 /** @var Democratic $democratic */
 

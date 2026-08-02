@@ -29,7 +29,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Repository\Model\Democratic;
+use Ampache\Module\Playback\Democratic;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 

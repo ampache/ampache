@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Playback\Stream;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;

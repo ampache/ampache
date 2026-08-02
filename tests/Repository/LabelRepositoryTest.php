@@ -32,6 +32,7 @@ use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class LabelRepositoryTest extends TestCase
@@ -39,6 +40,7 @@ class LabelRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
+    private LoggerInterface&MockObject $logger;
     private LabelRepository $subject;
 
     public function testAddArtistAssocAdds(): void
@@ -175,6 +177,25 @@ class LabelRepositoryTest extends TestCase
             $this->subject->getByArtist($artistId),
             [$labelId => $labelName]
         );
+    }
+
+    public function testGetIdsByCategoryAlsoTakesTheLabelsWithNoMbid(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `label` WHERE `category` = ? OR `mbid` IS NULL',
+                ['tag_generated']
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('42', false);
+
+        static::assertSame([42], $this->subject->getIdsByCategory('tag_generated'));
     }
 
     public function testLookupReturnsNegativeValueOnEmptyName(): void
@@ -342,9 +363,11 @@ class LabelRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new LabelRepository(
             $this->connection,
+            $this->logger,
         );
     }
 }

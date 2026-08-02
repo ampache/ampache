@@ -29,7 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\User;
 
@@ -77,7 +78,7 @@ final class PodcastEpisodeDelete4Method
 
         if ($episode->remove()) {
             Api4::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
-            Catalog::count_table('podcast_episode');
+            Catalog::count_table(CountableTableEnum::PODCAST_EPISODE);
         } else {
             Api4::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['api_format']);
         }

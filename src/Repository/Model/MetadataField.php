@@ -25,18 +25,17 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Database\BaseModel;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 
 /**
  * Represents metadata fields
  */
-class MetadataField
+class MetadataField extends BaseModel
 {
     /**
      * Database ID
      */
-    private int $id = 0;
-
     /**
      * Tag name
      */
@@ -50,27 +49,11 @@ class MetadataField
     public function __construct(private readonly MetadataFieldRepositoryInterface $metadataFieldRepository) {}
 
     /**
-     * Returns the items id
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
      * Returns the name
      */
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * Returns `true` if the object is new
-     */
-    public function isNew(): bool
-    {
-        return $this->id === 0;
     }
 
     /**

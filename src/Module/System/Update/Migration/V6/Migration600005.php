@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Psr\Log\LoggerInterface;
 

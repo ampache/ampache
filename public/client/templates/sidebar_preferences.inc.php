@@ -36,9 +36,9 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
-use Ampache\Repository\Model\Preference;
 
 /** @var string $web_path */
 /** @var string $t_browse */

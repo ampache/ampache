@@ -26,19 +26,25 @@ declare(strict_types=1);
 namespace Ampache\Module\Song\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserflagRepositoryInterface;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class SongDeleterTest extends TestCase
 {
     private ArtCleanupInterface&MockObject $artCleanup;
+    private CatalogCounterInterface&MockObject $catalogCounter;
+    private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LoggerInterface&MockObject $logger;
     private ShoutRepositoryInterface&MockObject $shoutRepository;
@@ -196,12 +202,25 @@ class SongDeleterTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->dic = $this->createMock(ContainerInterface::class);
+
+        // Rating::garbage_collection() reaches its repository through the `global $dic` bridge
+        $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            RatingRepositoryInterface::class => $this->createMock(RatingRepositoryInterface::class),
+            UserflagRepositoryInterface::class => $this->createMock(UserflagRepositoryInterface::class),
+            default => $this->createMock(LoggerInterface::class),
+        });
+
+        $GLOBALS['dic'] = $this->dic;
+
         $this->logger                 = $this->createMock(LoggerInterface::class);
         $this->shoutRepository        = $this->createMock(ShoutRepositoryInterface::class);
         $this->songRepository         = $this->createMock(SongRepositoryInterface::class);
         $this->userActivityRepository = $this->createMock(UserActivityRepositoryInterface::class);
         $this->artCleanup             = $this->createMock(ArtCleanupInterface::class);
         $this->folderRepository       = $this->createMock(FolderRepositoryInterface::class);
+
+        $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
 
         $this->subject = new SongDeleter(
             $this->logger,
@@ -210,6 +229,7 @@ class SongDeleterTest extends TestCase
             $this->userActivityRepository,
             $this->artCleanup,
             $this->folderRepository,
+            $this->catalogCounter,
         );
     }
 }

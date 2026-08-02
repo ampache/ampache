@@ -44,6 +44,7 @@ final class StreamItemAction extends AbstractStreamAction
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
+        private readonly Stats $stats,
     ) {
         parent::__construct($logger, $configContainer);
     }
@@ -86,7 +87,7 @@ final class StreamItemAction extends AbstractStreamAction
                     && in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM])
                 ) {
                     $client = $_REQUEST['client'] ?? substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
-                    Stats::insert($objectType->value, (int) $object_id, $user->getId(), $client, [], 'stream', time());
+                    $this->stats->insert($objectType->value, (int) $object_id, $user->getId(), $client, [], 'stream', time());
                 }
             }
         }

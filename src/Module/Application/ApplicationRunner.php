@@ -60,6 +60,14 @@ final readonly class ApplicationRunner
         $action_name = htmlspecialchars($body['action'] ?? $request->getQueryParams()['action'] ?? '');
 
         if (array_key_exists($action_name, $action_list) === false) {
+            // a page that links to an action it never registered lands on its default one, so say which was asked for
+            if ($action_name !== '') {
+                $this->logger->warning(
+                    sprintf('Unknown action "%s", falling back to "%s"', $action_name, $default_action),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
+
             $action_name = $default_action;
         }
 

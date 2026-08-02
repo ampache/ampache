@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
 use Override;
 
 final class DeleteCatalogCommand extends Command

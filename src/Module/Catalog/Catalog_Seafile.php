@@ -26,16 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Catalog;
 
 use Ahc\Cli\IO\Interactor;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\SongFieldEnum;
 use Ampache\Repository\Model\Video;
 use Exception;
 use Override;
@@ -47,7 +45,6 @@ use Seafile\Client\Type\DirectoryItem;
 class Catalog_Seafile extends Catalog
 {
     private static string $description = 'Seafile Remote Catalog';
-    private static string $table_name  = 'catalog_seafile';
     private static string $type        = 'seafile';
     private static string $version     = '000001';
     public string $library_name;
@@ -104,7 +101,7 @@ class Catalog_Seafile extends Catalog
      *     password?: ?string,
      * } $data
      */
-    public static function create_type(string $catalog_id, array $data): bool
+    public static function create_type(int $catalog_id, array $data): bool
     {
         $server_uri     = rtrim(trim($data['server_uri'] ?? ''), '/');
         $library_name   = trim($data['library_name'] ?? '');
@@ -144,8 +141,16 @@ class Catalog_Seafile extends Catalog
 
         try {
             $api_key = SeafileAdapter::request_api_key($server_uri, $username, $password);
-            $sql     = "INSERT INTO `catalog_seafile` (`server_uri`, `api_key`, `library_name`, `api_call_delay`, `catalog_id`) VALUES (?, ?, ?, ?, ?)";
-            Dba::write($sql, [$server_uri, $api_key, $library_name, (int) ($api_call_delay), $catalog_id]);
+            self::getCatalogRepository()->insertSubType(
+                CatalogTypeEnum::SEAFILE,
+                [
+                    'server_uri' => $server_uri,
+                    'api_key' => $api_key,
+                    'library_name' => $library_name,
+                    'api_call_delay' => (int) $api_call_delay,
+                ],
+                $catalog_id
+            );
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
 
             return true;
@@ -284,14 +289,7 @@ class Catalog_Seafile extends Catalog
      */
     public function check_remote_song(string $file): ?int
     {
-        $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        $db_results = Dba::read($sql, [$file]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int) $results['id'];
-        }
-
-        return null;
+        return self::getSongRepository()->findIdByFile($file);
     }
 
     /**
@@ -306,9 +304,9 @@ class Catalog_Seafile extends Catalog
         set_time_limit(0);
 
         if ($this->seafile->prepare()) {
-            $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, [$this->getId()]);
-            while ($row = Dba::fetch_assoc($db_results)) {
+            $songRepository = self::getSongRepository();
+            foreach ($songRepository->getFilesByCatalog($this->getId()) as $songId => $songFile) {
+                $row = ['id' => $songId, 'file' => $songFile];
                 debug_event('seafile_catalog', 'Clean starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $file = $this->seafile->from_virtual_path($row['file']);
 
@@ -338,7 +336,7 @@ class Catalog_Seafile extends Catalog
                     Ui::update_text('', sprintf(T_('Removing song: "%s"'), $file['filename']));
                     debug_event('seafile_catalog', 'Clean removing song', 5);
                     $dead++;
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
+                    $songRepository->delete((int) $row['id']);
                 }
             }
 
@@ -466,12 +464,7 @@ class Catalog_Seafile extends Catalog
      */
     public function install(): bool
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-
-        $sql = "CREATE TABLE `" . self::$table_name . sprintf('` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `server_uri` VARCHAR(255) COLLATE %s NOT NULL, `api_key` VARCHAR(100) COLLATE %s NOT NULL, `library_name` VARCHAR(255) COLLATE %s NOT NULL, `api_call_delay` INT NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $collation, $engine, $charset, $collation);
-        Dba::query($sql);
+        self::getCatalogRepository()->createSubTypeTable(CatalogTypeEnum::SEAFILE, ['server_uri' => 'VARCHAR(255)', 'api_key' => 'VARCHAR(100)', 'library_name' => 'VARCHAR(255)', 'api_call_delay' => 'INT']);
 
         return true;
     }
@@ -482,10 +475,7 @@ class Catalog_Seafile extends Catalog
      */
     public function is_installed(): bool
     {
-        $sql        = "SHOW TABLES LIKE '" . self::$table_name . "'";
-        $db_results = Dba::query($sql);
-
-        return (Dba::num_rows($db_results) > 0);
+        return self::getCatalogRepository()->subTypeTableExists(CatalogTypeEnum::SEAFILE);
     }
 
     /**
@@ -563,9 +553,8 @@ class Catalog_Seafile extends Catalog
         $date    = time();
         $results = 0;
         if ($this->seafile->prepare()) {
-            $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, [$this->getId()]);
-            while ($row = Dba::fetch_assoc($db_results)) {
+            $songRepository = self::getSongRepository();
+            foreach ($songRepository->getFileRowsByCatalog($this->getId()) as $row) {
                 debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $fileinfo = $this->seafile->from_virtual_path($row['file']);
                 $file     = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
@@ -595,7 +584,7 @@ class Catalog_Seafile extends Catalog
                     debug_event('seafile_catalog', 'Verify removing song', 5);
                     Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
                     //$dead++;
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
+                    $songRepository->delete((int) $row['id']);
                 }
             }
 
@@ -701,7 +690,7 @@ class Catalog_Seafile extends Catalog
                     parent::gather_art([$added]);
                     // Restore the Seafile virtual path
                     $virtpath = $this->seafile->to_virtual_path($file);
-                    Dba::write("UPDATE `song` SET `file` = ? WHERE `id` = ?", [$virtpath, $added]);
+                    self::getSongRepository()->setField($added, SongFieldEnum::FILE, $virtpath);
                     $this->count++;
                 }
 

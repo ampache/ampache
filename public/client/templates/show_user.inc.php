@@ -29,24 +29,24 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Module\System\Preference;
+use Ampache\Module\User\Activity\Useractivity;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Plugin\PluginDisplayUserFieldInterface;
-use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
-use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Useractivity;
 
 /** @var UserActivityRendererInterface $userActivityRenderer */
 /** @var UserFollowStateRendererInterface $userFollowStateRenderer */

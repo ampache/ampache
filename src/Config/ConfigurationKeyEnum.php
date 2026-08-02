@@ -76,6 +76,7 @@ final class ConfigurationKeyEnum
     public const string BACKEND_WEBDAV                        = 'webdav_backend';
     public const string BROADCAST                             = 'broadcast';
     public const string BROADCAST_BY_DEFAULT                  = 'broadcast_by_default';
+    public const string BROADCAST_PRIVATE                     = 'broadcast_private';
     public const string BROWSE_FILTER                         = 'browse_filter';
     public const string BROWSER_NOTIFY                        = 'browser_notify';
     public const string BROWSER_NOTIFY_TIMEOUT                = 'browser_notify_timeout';

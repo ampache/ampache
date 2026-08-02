@@ -28,7 +28,7 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Repository\Model\Search;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\User;
 
 /**

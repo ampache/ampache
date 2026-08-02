@@ -28,10 +28,10 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 
 /**

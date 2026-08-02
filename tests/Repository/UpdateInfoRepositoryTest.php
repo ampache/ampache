@@ -39,6 +39,49 @@ class UpdateInfoRepositoryTest extends TestCase
     private DatabaseConnectionInterface&MockObject $connection;
     private UpdateInfoRepository $subject;
 
+    public function testGetAllCountsCastsEveryValue(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `key`, `value` FROM `update_info`;')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn(['key' => 'song', 'value' => '42'], false);
+
+        static::assertSame(['song' => 42], $this->subject->getAllCounts());
+    }
+
+    public function testGetAllFloatCountsKeepsTheFraction(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `key`, `value` FROM `update_info`;')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturn(['key' => 'song_size', 'value' => '988.59661198'], false);
+
+        // the integer read would round every stored megabyte contribution towards zero
+        static::assertSame(['song_size' => 988.59661198], $this->subject->getAllFloatCounts());
+    }
+
+    public function testGetCountByKeyFallsBackToZero(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `value` FROM `update_info` WHERE `key` = ?', ['song'])
+            ->willReturn(false);
+
+        static::assertSame(0, $this->subject->getCountByKey('song'));
+    }
+
     public function testGetValeByKeyReturnsNullIfNothingWasFound(): void
     {
         $key = UpdateInfoEnum::CRON_DATE;
@@ -73,6 +116,38 @@ class UpdateInfoRepositoryTest extends TestCase
             (string) $value,
             $this->subject->getValueByKey($key),
         );
+    }
+
+    public function testSetCountByKeyReplacesTheRow(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('REPLACE INTO `update_info` SET `key` = ?, `value` = ?;', ['song', 42]);
+
+        $this->subject->setCountByKey('song', 42);
+    }
+
+    public function testSetCountsIssuesNoStatementForAnEmptyList(): void
+    {
+        $this->connection->expects(static::never())->method('query');
+
+        $this->subject->setCounts([]);
+    }
+
+    public function testSetCountsWritesEveryPairAsAPlaceholder(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'REPLACE INTO `update_info` (`key`, `value`) VALUES (?, ?), (?, ?), (?, ?)',
+                ['song', 86, 'song_time', 28194, 'song_size', 988.59661198]
+            );
+
+        $this->subject->setCounts([
+            'song' => 86,
+            'song_time' => 28194,
+            'song_size' => 988.59661198,
+        ]);
     }
 
     public function testSetValueInsertIfUpdateFails(): void

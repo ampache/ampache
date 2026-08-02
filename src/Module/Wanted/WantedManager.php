@@ -27,11 +27,11 @@ namespace Ampache\Module\Wanted;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginProcessWantedInterface;
-use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\WantedRepositoryInterface;

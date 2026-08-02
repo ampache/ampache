@@ -30,10 +30,10 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Folder\Deletion\FolderDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\FolderRepositoryInterface;
-use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

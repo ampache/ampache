@@ -28,8 +28,11 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class ShareUiLinkRendererTest extends TestCase
 {
@@ -140,5 +143,14 @@ class ShareUiLinkRendererTest extends TestCase
             $this->zipHandler,
             $this->configContainer,
         );
+
+        // `Plugin` reads its stored version through the `global $dic` bridge
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            UpdateInfoRepositoryInterface::class => $this->createMock(UpdateInfoRepositoryInterface::class),
+            default => $this->createMock(LoggerInterface::class),
+        });
+
+        $GLOBALS['dic'] = $dic;
     }
 }

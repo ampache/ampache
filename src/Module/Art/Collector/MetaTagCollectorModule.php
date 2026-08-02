@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
+use Ampache\Module\Art\Art;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;

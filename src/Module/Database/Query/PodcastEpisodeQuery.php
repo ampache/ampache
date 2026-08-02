@@ -25,9 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database\Query;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Query;
 
 final class PodcastEpisodeQuery implements QueryInterface
 {

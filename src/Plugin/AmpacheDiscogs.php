@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Preference;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\User;
 use AmpacheDiscogs\Discogs;
 use Exception;

@@ -27,9 +27,11 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\MetadataField;
 use Generator;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 /**
  * Manages song metadata-fields related database access
@@ -38,7 +40,10 @@ use PDO;
  */
 final readonly class MetadataFieldRepository implements MetadataFieldRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection) {}
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * Remove metadata for songs which don't exist anymore
@@ -48,7 +53,10 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
         try {
             $this->connection->query('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL;');
         } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
+            $this->logger->debug(
+                'collectGarbage error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
     }
 

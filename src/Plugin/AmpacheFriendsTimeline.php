@@ -28,12 +28,12 @@ namespace Ampache\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\Plugin;
+use Ampache\Module\System\Preference;
+use Ampache\Module\User\Activity\Useractivity;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Override;
 

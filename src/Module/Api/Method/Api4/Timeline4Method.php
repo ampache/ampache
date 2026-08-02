@@ -29,7 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Repository\Model\Preference;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 

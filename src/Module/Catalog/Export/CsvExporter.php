@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\Export;
 
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 

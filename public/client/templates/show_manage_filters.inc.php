@@ -26,8 +26,8 @@ declare(strict_types=1);
 // show_manage_filters.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Catalog;
 
 $admin_path  = AmpConfig::get_web_path('/admin');
 $t_name      = T_('Filter Name');

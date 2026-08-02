@@ -27,8 +27,8 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Playback\Democratic;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Playlist;
 
 /** @var int[] $playlists */

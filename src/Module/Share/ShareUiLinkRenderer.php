@@ -30,12 +30,12 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Plugin\PluginEnum;
 use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\Plugin;
 
 final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
 {

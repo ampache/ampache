@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Exception;

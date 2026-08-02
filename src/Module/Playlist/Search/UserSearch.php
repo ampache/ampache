@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playlist\Search;
 
-use Ampache\Repository\Model\Search;
+use Ampache\Module\Database\Query\Search;
 
 final class UserSearch implements SearchInterface
 {

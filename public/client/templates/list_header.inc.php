@@ -34,7 +34,7 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
-use Ampache\Repository\Model\Browse;
+use Ampache\Module\Database\Query\Browse;
 
 /** @var Browse|null $browse */
 

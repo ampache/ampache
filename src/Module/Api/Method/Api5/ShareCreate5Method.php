@@ -37,12 +37,13 @@ use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -172,7 +173,7 @@ final class ShareCreate5Method implements MethodInterface
             );
         }
 
-        Catalog::count_table('share');
+        Catalog::count_table(CountableTableEnum::SHARE);
 
         return $response->withBody(
             $this->streamFactory->createStream(

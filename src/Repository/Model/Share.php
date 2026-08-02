@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;

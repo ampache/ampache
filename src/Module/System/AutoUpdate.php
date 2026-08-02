@@ -28,7 +28,6 @@ namespace Ampache\Module\System;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Ajax;
-use Ampache\Repository\Model\Preference;
 use Exception;
 use WpOrg\Requests\Requests;
 

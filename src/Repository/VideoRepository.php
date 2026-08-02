@@ -27,12 +27,14 @@ namespace Ampache\Repository;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Video;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 final readonly class VideoRepository implements VideoRepositoryInterface
 {
@@ -40,6 +42,7 @@ final readonly class VideoRepository implements VideoRepositoryInterface
         private DatabaseConnectionInterface $connection,
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
+        private LoggerInterface $logger,
     ) {}
 
     /**
@@ -81,6 +84,48 @@ final readonly class VideoRepository implements VideoRepositoryInterface
     }
 
     /**
+     * Removes every videos of one catalog, for a catalog that is being deleted
+     */
+    public function deleteByCatalog(int $catalogId): bool
+    {
+        try {
+            $this->connection->query('DELETE FROM `video` WHERE `catalog` = ?', [$catalogId]);
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Records a set of videos in the `deleted_video` archive and removes them
+     *
+     * @param list<int> $videoIds
+     */
+    public function deleteByIdsWithArchive(array $videoIds): void
+    {
+        if ($videoIds === []) {
+            return;
+        }
+
+        $idList = implode(',', array_map(intval(...), $videoIds));
+
+        // keep details about deletions, but losing the record must not stop the delete itself
+        try {
+            $this->connection->query(
+                'REPLACE INTO `deleted_video` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip` FROM `video` WHERE `id` IN (' . $idList . ');'
+            );
+        } catch (DatabaseException) {
+            $this->logger->warning(
+                'deleteByIdsWithArchive could not record deleted_video ' . $idList,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+        }
+
+        $this->connection->query('DELETE FROM `video` WHERE `id` IN (' . $idList . ');');
+    }
+
+    /**
      * Loads a single video, or null when the id matches nothing
      */
     public function findById(int $objectId): ?Video
@@ -92,6 +137,18 @@ final readonly class VideoRepository implements VideoRepositoryInterface
         }
 
         return $video;
+    }
+
+    /**
+     * Reads the id of the video holding this file
+     */
+    public function findIdByFile(string $file): ?int
+    {
+        $videoId = $this->connection->fetchOne('SELECT `id` FROM `video` WHERE `file` = ?;', [$file]);
+
+        return ($videoId === false || $videoId === null)
+            ? null
+            : (int) $videoId;
     }
 
     /**
@@ -109,6 +166,66 @@ final readonly class VideoRepository implements VideoRepositoryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * Reads every video file of one catalog keyed by video id, for the scanner's in-process cache
+     *
+     * @return array<int, string>
+     */
+    public function getFilesByCatalog(int $catalogId, int $limit = 0, int $offset = 0): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id`, `file` FROM `video` WHERE `catalog` = ? AND `file` IS NOT NULL ORDER BY `id` DESC' . (($limit > 0) ? sprintf(' LIMIT %d, %d', $offset, $limit) : '') . ';',
+            [$catalogId]
+        );
+
+        $files = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $files[(int) $row['id']] = (string) $row['file'];
+        }
+
+        return $files;
+    }
+
+    /**
+     * Reads the videos of one catalog
+     *
+     * @return list<int>
+     */
+    public function getIdsByCatalog(int $catalogId): array
+    {
+        $result = $this->connection->query(
+            'SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` WHERE `video`.`catalog` = ?',
+            [$catalogId]
+        );
+
+        $videoIds = [];
+        while ($videoId = $result->fetchColumn()) {
+            $videoIds[] = (int) $videoId;
+        }
+
+        return $videoIds;
+    }
+
+    /**
+     * Reads the videos whose file sits under a base folder path
+     *
+     * @return list<int>
+     */
+    public function getIdsByFilePrefix(string $folderPath): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `video` WHERE `file` LIKE ?',
+            [$folderPath . '%']
+        );
+
+        $videoIds = [];
+        while ($videoId = $result->fetchColumn()) {
+            $videoIds[] = (int) $videoId;
+        }
+
+        return $videoIds;
     }
 
     /**
@@ -165,6 +282,31 @@ final readonly class VideoRepository implements VideoRepositoryInterface
     }
 
     /**
+     * Reads a page of the videos a verify pass walks, newest path first
+     *
+     * @return list<array{id: int, file: string, min_update_time: int}>
+     */
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array
+    {
+        $sql = ($onlyStale)
+            ? 'SELECT `video`.`id`, `video`.`file`, `video`.`update_time` AS `min_update_time` FROM `video` LEFT JOIN `catalog` ON `video`.`catalog` = `catalog`.`id` WHERE `video`.`catalog` = ? AND `video`.`update_time` < `catalog`.`last_update` ORDER BY `video`.`file` DESC LIMIT '
+            : 'SELECT `video`.`id`, `video`.`file`, `video`.`update_time` AS `min_update_time` FROM `video` LEFT JOIN `catalog` ON `video`.`catalog` = `catalog`.`id` WHERE `video`.`catalog` = ? ORDER BY `video`.`file` DESC LIMIT ';
+
+        $result = $this->connection->query($sql . $limit . ';', [$catalogId]);
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = [
+                'id' => (int) $row['id'],
+                'file' => (string) $row['file'],
+                'min_update_time' => (int) $row['min_update_time'],
+            ];
+        }
+
+        return $rows;
+    }
+
+    /**
      * Inserts a new video row and returns its id
      *
      * @param list<mixed> $params
@@ -177,6 +319,31 @@ final readonly class VideoRepository implements VideoRepositoryInterface
         );
 
         return $this->connection->getLastInsertedId();
+    }
+
+    /**
+     * Stores the path or url a video is served from
+     */
+    public function setFile(int $videoId, string $file): void
+    {
+        $this->connection->query('UPDATE `video` SET `file` = ? WHERE `id` = ?', [$file, $videoId]);
+    }
+
+    /**
+     * Moves a video to another catalog and to the file it now lives in
+     */
+    public function setFileAndCatalog(int $objectId, string $file, int $catalogId): bool
+    {
+        try {
+            $this->connection->query(
+                'UPDATE `video` SET `file` = ?, `catalog` = ? WHERE `id` = ?;',
+                [$file, $catalogId, $objectId]
+            );
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -218,6 +385,28 @@ final readonly class VideoRepository implements VideoRepositoryInterface
         $params[] = $video->getId();
 
         $this->connection->query($sql, $params);
+    }
+
+    /**
+     * Rebuilds every video's play and skip totals from `object_count`, and the played flag that follows them
+     *
+     * Each total is cleared against rows of its own count type, so a video that was only ever skipped keeps
+     * the skips it has.
+     */
+    public function updateAllCounts(): void
+    {
+        $statements = [
+            "UPDATE `video` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'video' AND `count_type` = 'stream');",
+            "UPDATE `video` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'skip' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'video' AND `count_type` = 'skip');",
+            "UPDATE `video` SET `video`.`played` = 0 WHERE `video`.`played` = 1 AND `video`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'video' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'video' AND `count_type` = 'stream');",
+            "UPDATE `video` SET `video`.`played` = 1 WHERE `video`.`played` = 0 AND `video`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'video' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'video' AND `count_type` = 'stream');",
+            "UPDATE `video`, (SELECT SUM(`total`) AS `total_count`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'video' AND `count_type` = 'stream') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `video`.`total_count` = `object_count`.`total_count` WHERE `video`.`total_count` != `object_count`.`total_count` AND `video`.`id` = `object_count`.`object_id`;",
+            "UPDATE `video` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;",
+        ];
+
+        foreach ($statements as $sql) {
+            $this->runMaintenance($sql);
+        }
     }
 
     /**
@@ -271,5 +460,22 @@ final readonly class VideoRepository implements VideoRepositoryInterface
                 $videoId,
             ]
         );
+    }
+
+    /**
+     * Runs one count-maintenance statement, where a failure must not take the rest of the sweep down with it
+     *
+     * @param list<mixed> $params
+     */
+    private function runMaintenance(string $sql, array $params = []): void
+    {
+        try {
+            $this->connection->query($sql, $params);
+        } catch (DatabaseException) {
+            $this->logger->warning(
+                'count maintenance failed: ' . $sql,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+        }
     }
 }

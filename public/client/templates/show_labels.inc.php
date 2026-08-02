@@ -30,9 +30,9 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\Browse;
 
 global $dic;
 $labelRepository = $dic->get(LabelRepositoryInterface::class);

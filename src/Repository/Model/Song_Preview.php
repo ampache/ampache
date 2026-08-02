@@ -26,13 +26,12 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
-use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
-use Ampache\Plugin\PluginSongPreviewInterface;
+use Ampache\Repository\SongPreviewRepositoryInterface;
 
 class Song_Preview extends database_object implements Media, displayable_item, container_item
 {
@@ -119,17 +118,8 @@ class Song_Preview extends database_object implements Media, displayable_item, c
             return false;
         }
 
-        $idlist = '(' . implode(',', $song_ids) . ')';
-        if ($idlist == '()') {
-            return false;
-        }
-
-        // Song data cache
-        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` IN ' . $idlist . ' ORDER BY `disk`, `track`;';
-        $db_results = Dba::read($sql);
-
         $artists = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach (self::getSongPreviewRepository()->getRows(array_values($song_ids)) as $row) {
             parent::add_to_cache('song_preview', $row['id'], $row);
             if ($row['artist']) {
                 $artists[] = (int) $row['artist'];
@@ -146,8 +136,7 @@ class Song_Preview extends database_object implements Media, displayable_item, c
      */
     public static function garbage_collection(): void
     {
-        $sql = 'DELETE FROM `song_preview` USING `song_preview` LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` WHERE `session`.`id` IS NULL';
-        Dba::write($sql);
+        self::getSongPreviewRepository()->collectGarbage();
     }
 
     /**
@@ -157,12 +146,8 @@ class Song_Preview extends database_object implements Media, displayable_item, c
     public static function get_song_previews(string $album_mbid): array
     {
         $songs = [];
-
-        $sql        = "SELECT `id` FROM `song_preview` WHERE `session` = ? AND `album_mbid` = ? ORDER BY `disk`, `track`;";
-        $db_results = Dba::read($sql, [session_id(), $album_mbid]);
-
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $songs[] = new Song_Preview($results['id']);
+        foreach (self::getSongPreviewRepository()->findIdsBySession((string) session_id(), $album_mbid) as $previewId) {
+            $songs[] = new Song_Preview($previewId);
         }
 
         return $songs;
@@ -185,22 +170,17 @@ class Song_Preview extends database_object implements Media, displayable_item, c
             $results['track'] = substr((string) $results['track'], 1);
         }
 
-        $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        return self::getSongPreviewRepository()->insert($results);
+    }
 
-        $db_results = Dba::write($sql, [$results['file'], $results['album_mbid'], $results['artist'], $results['artist_mbid'], $results['title'], $results['disk'], $results['track'], $results['mbid'], $results['session']]);
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getSongPreviewRepository(): SongPreviewRepositoryInterface
+    {
+        global $dic;
 
-        if (!$db_results) {
-            debug_event(self::class, 'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
-
-            return null;
-        }
-
-        $preview_id = Dba::insert_id();
-        if (!$preview_id) {
-            return null;
-        }
-
-        return (int) $preview_id;
+        return $dic->get(SongPreviewRepositoryInterface::class);
     }
 
     public function check_play_history(int $user, string $agent, int $date): bool
@@ -449,17 +429,12 @@ class Song_Preview extends database_object implements Media, displayable_item, c
      */
     public function stream(): void
     {
-        $user = Core::get_global('user');
-        if (!$user instanceof User || empty($this->file)) {
+        if (empty($this->file)) {
             return;
         }
 
-        foreach (Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_STREAM_PROVIDER) as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin instanceof PluginSongPreviewInterface && $plugin->load($user)) {
-                $plugin->_plugin->stream_song_preview($this->file);
-            }
-        }
+        // the stored file is the provider's own url, so the client fetches the sample rather than Ampache
+        header('Location: ' . $this->file, true, 303);
     }
 
     public function update(array $data): ?int
@@ -490,17 +465,11 @@ class Song_Preview extends database_object implements Media, displayable_item, c
             return parent::get_from_cache('song_preview', $preview_id);
         }
 
-        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` = ? ORDER BY `disk`, `track`;';
-        $db_results = Dba::read($sql, [$preview_id]);
-
-        $results = Dba::fetch_assoc($db_results);
+        $repository = self::getSongPreviewRepository();
+        $results    = $repository->getRow($preview_id);
         if (!empty($results['id'])) {
             if (empty($results['artist_mbid'])) {
-                $sql        = 'SELECT `mbid` FROM `artist` WHERE `id` = ?';
-                $db_results = Dba::read($sql, [$results['artist']]);
-                if ($artist_res = Dba::fetch_assoc($db_results)) {
-                    $results['artist_mbid'] = $artist_res['mbid'];
-                }
+                $results['artist_mbid'] = $repository->findArtistMbid((int) $results['artist']);
             }
 
             parent::add_to_cache('song_preview', $preview_id, $results);

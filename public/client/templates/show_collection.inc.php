@@ -28,14 +28,14 @@ declare(strict_types=1);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Api\RefreshReordered\RefreshCollectionItemsAction;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 
 /** @var Collection $collection */
 /** @var array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int, time: int}> $object_ids */

@@ -25,11 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Beets\Catalog;
 use Ampache\Module\Beets\CliHandler;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Dba;
 use DateTime;
 use Exception;
 use Override;
@@ -63,7 +61,7 @@ class Catalog_beets extends Catalog
      *     beetsdb?: string,
      * } $data
      */
-    public static function create_type(string $catalog_id, array $data): bool
+    public static function create_type(int $catalog_id, array $data): bool
     {
         // TODO: This Method should be required / provided by parent
         $beetsdb = $data['beetsdb'] ?? '';
@@ -75,20 +73,15 @@ class Catalog_beets extends Catalog
         }
 
         // Make sure this uri isn't already in use by an existing catalog
-        $selectSql  = 'SELECT `id` FROM `catalog_beets` WHERE `beetsdb` = ?';
-        $db_results = Dba::read($selectSql, [$beetsdb]);
-
-        if (Dba::num_rows($db_results) !== 0) {
+        $catalogRepository = self::getCatalogRepository();
+        if ($catalogRepository->subTypeValueExists(CatalogTypeEnum::BEETS, 'beetsdb', $beetsdb)) {
             debug_event(self::class, 'Cannot add catalog with duplicate uri ' . $beetsdb, 1);
             AmpError::add('general', sprintf(T_('This path belongs to an existing Beets Catalog: %s'), $beetsdb));
 
             return false;
         }
 
-        $insertSql = 'INSERT INTO `catalog_beets` (`beetsdb`, `catalog_id`) VALUES (?, ?)';
-        Dba::write($insertSql, [$beetsdb, $catalog_id]);
-
-        return true;
+        return $catalogRepository->insertSubType(CatalogTypeEnum::BEETS, ['beetsdb' => $beetsdb], $catalog_id);
     }
 
     /**
@@ -152,12 +145,7 @@ class Catalog_beets extends Catalog
      */
     public function install(): bool
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-
-        $sql = sprintf('CREATE TABLE `catalog_beets` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `beetsdb` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $engine, $charset, $collation);
-        Dba::query($sql);
+        self::getCatalogRepository()->createSubTypeTable(CatalogTypeEnum::BEETS, ['beetsdb' => 'VARCHAR(255)']);
 
         return true;
     }
@@ -168,10 +156,7 @@ class Catalog_beets extends Catalog
      */
     public function is_installed(): bool
     {
-        $sql        = "SHOW TABLES LIKE 'catalog_beets'";
-        $db_results = Dba::query($sql);
-
-        return (Dba::num_rows($db_results) > 0);
+        return self::getCatalogRepository()->subTypeTableExists(CatalogTypeEnum::BEETS);
     }
 
     /**

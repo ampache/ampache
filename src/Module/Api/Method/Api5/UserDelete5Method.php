@@ -34,7 +34,8 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -103,7 +104,7 @@ final class UserDelete5Method implements MethodInterface
         if ($del_user !== null && $del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
             $result = $output->success($apiVersion, 'successfully deleted: ' . $username);
 
-            Catalog::count_table('user');
+            Catalog::count_table(CountableTableEnum::USER);
 
             return $response->withBody(
                 $this->streamFactory->createStream($result)

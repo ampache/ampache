@@ -34,7 +34,7 @@ use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var list<int> $object_ids */
 
 $web_path = AmpConfig::get_web_path('/client');
