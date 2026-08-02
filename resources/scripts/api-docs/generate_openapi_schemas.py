@@ -45,7 +45,7 @@ SOURCES: dict[str, Path] = {
     "json8": JSON8_DATA,
     "preference_builder": REPO_ROOT / "src" / "Module" / "Api" / "Method" / "PreferenceItemBuilder.php",
     "api": REPO_ROOT / "src" / "Module" / "Api" / "Api.php",
-    "search_model": REPO_ROOT / "src" / "Repository" / "Model" / "Search.php",
+    "search_model": REPO_ROOT / "src" / "Module" / "Database" / "Query" / "Search.php",
     "localplay": REPO_ROOT / "src" / "Module" / "Playback" / "Localplay" / "LocalPlay.php",
 }
 
