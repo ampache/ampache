@@ -151,6 +151,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Changed (8.0.0)
 
+* The browse filter box matches a name in more than one way
+  * A **Starts With** / **Contains** menu sits above the box; Contains matches anywhere in the name, so a browse no longer has to be abandoned for the search page to find something by a word in the middle of its title
+  * Only one match applies at a time and the choice is remembered per browse, so emptying the box does not put it back to Starts With
+  * The private message browse gained the Contains match with everything else
+  * `browse_filter` is on by default for new installs; existing users keep whatever they have set
+  * The Users admin page lost its own search form, which the filter box now covers exactly: in Contains mode it matches username, fullname or email, the same three columns the form searched
 * Playback
   * Radio stations, remote-catalog media and song previews stream through Ampache instead of redirecting the client to the source server, so the web player can apply the equalizer, ReplayGain and the visualizer to them
   * A radio station may be added as an `m3u`, `m3u8`, `pls`, `asx` or `xspf` url; the stream url inside it is read when the station is played, so a directory that rotates its mirrors keeps working
