@@ -37,7 +37,7 @@ if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 }
 
-$web_path       = AmpConfig::get_web_path();
+$web_path       = AmpConfig::get_web_path('/client');
 $started_filter = $browse->get_filter('started'); ?>
 <div class="browse_filters">
     <a href="<?php echo $web_path; ?>/browse.php?action=broadcast" class="<?php echo ($started_filter === null) ? 'current' : ''; ?>"><?php echo T_('All'); ?></a>
