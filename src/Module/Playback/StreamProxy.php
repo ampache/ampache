@@ -85,8 +85,6 @@ final readonly class StreamProxy implements StreamProxyInterface
             );
         }
 
-        curl_close($curl);
-
         return $success;
     }
 

@@ -51,7 +51,10 @@ use Ampache\Repository\Model\Song_Preview;
 <td class="cel_song"><?php echo scrub_out($libitem->title); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=song_preview&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_song_preview_' . $libitem->id); ?>
+        <?php
+        if (!empty($libitem->file)) {
+            echo Ajax::button('?action=basket&type=song_preview&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_song_preview_' . $libitem->id);
+        } ?>
     </span>
 </td>
 <td class="cel_artist"><?php echo $libitem->get_f_parent_link(); ?></td>
