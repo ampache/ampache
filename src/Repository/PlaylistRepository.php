@@ -56,6 +56,12 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
         'song_preview',
         'video',
     ];
+    /** @var list<string> the media types whose table carries a `time` column; a live stream never ends, so it has none */
+    private const array TIMED_TYPES = [
+        'podcast_episode',
+        'song',
+        'video',
+    ];
 
     /**
      * Appends entries. Each row is [object_id, object_type, track] and replaces any entry already at
@@ -318,7 +324,7 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
         $params = [$playlistId];
 
         if (in_array($objectType, self::CATALOG_TYPES, true)) {
-            $time = ($withTime)
+            $time = ($withTime && in_array($objectType, self::TIMED_TYPES, true))
                 ? sprintf('`%s`.`time`', $objectType)
                 : '0 AS `time`';
             $sql = sprintf(
