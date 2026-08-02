@@ -39,7 +39,7 @@ use Ampache\Repository\LiveStreamRepositoryInterface;
  * this can include podcasts or what-have-you
  *
  */
-class Live_Stream extends database_object implements Media, displayable_item, container_item, CatalogItemInterface
+class Live_Stream extends database_object implements Media, displayable_item, container_item, CatalogItemInterface, ModelInterface
 {
     protected const string DB_TABLENAME = 'live_stream';
 
@@ -389,6 +389,9 @@ class Live_Stream extends database_object implements Media, displayable_item, co
         if ($insert_id !== null) {
             $this->id = $insert_id;
         }
+
+        // memory_cache is on by default, so the row this object just wrote has to leave the request cache
+        self::remove_from_cache('live_stream', $this->id);
     }
 
     /**

@@ -40,7 +40,8 @@ class Folder extends database_object implements
     container_item,
     displayable_item,
     CatalogItemInterface,
-    WebDavDirectoryInterface
+    WebDavDirectoryInterface,
+    ModelInterface
 {
     protected const string DB_TABLENAME = 'folder';
 
@@ -512,6 +513,23 @@ class Folder extends database_object implements
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    /**
+     * Persists the object
+     *
+     * An object that has not been saved yet will receive the id it was given
+     */
+    public function save(): void
+    {
+        $result = self::getFolderRepository()->persist($this);
+
+        if ($result !== null) {
+            $this->id = $result;
+        }
+
+        // memory_cache is on by default, so the row this object just wrote has to leave the request cache
+        self::remove_from_cache('folder', $this->id);
     }
 
     /**

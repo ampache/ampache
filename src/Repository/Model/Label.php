@@ -40,7 +40,8 @@ use Ampache\Repository\SongRepositoryInterface;
 class Label extends database_object implements
     library_item,
     container_item,
-    displayable_item
+    displayable_item,
+    ModelInterface
 {
     protected const string DB_TABLENAME = 'label';
 
@@ -405,6 +406,23 @@ class Label extends database_object implements
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    /**
+     * Persists the object
+     *
+     * An object that has not been saved yet will receive the id it was given
+     */
+    public function save(): void
+    {
+        $result = self::getLabelRepository()->persist($this);
+
+        if ($result !== null) {
+            $this->id = $result;
+        }
+
+        // memory_cache is on by default, so the row this object just wrote has to leave the request cache
+        self::remove_from_cache('label', $this->id);
     }
 
     /**
