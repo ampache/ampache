@@ -229,6 +229,7 @@ class Api
         Method\Api8\UpdateFromTags8Method::ACTION => Method\Api8\UpdateFromTags8Method::class,
         Method\UpdatePodcastMethod::ACTION => Method\UpdatePodcastMethod::class,
         Method\UpdatePodcastMethod::REST_ACTION => Method\UpdatePodcastMethod::class,
+        Method\Api8\Upload8Method::ACTION => Method\Api8\Upload8Method::class,
         Method\UrlToSongMethod::ACTION => Method\UrlToSongMethod::class,
         Method\UserCreateMethod::ACTION => Method\UserCreateMethod::class,
         Method\UserCreateMethod::REST_ACTION => Method\UserCreateMethod::class,

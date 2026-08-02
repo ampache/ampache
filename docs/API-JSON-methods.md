@@ -5539,6 +5539,39 @@ Sync and download new podcast episodes
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/update_podcast.json)
 
+### upload
+
+Add a media file to the catalog named by the `upload_catalog` preference.
+
+Send the file either as a multipart form field named `upl`, or as the raw request body, in which case `filename` names it.
+
+**ACCESS REQUIRED:** the `allow_upload` preference, at the access level set by `upload_access_level`
+
+**NOTE** send a real `Content-Type` (e.g. `audio/mpeg`) with a raw body. A form-encoded content type makes PHP parse the file as request variables, which can emit a `max_input_vars` warning ahead of the response.
+
+**NOTE** an artist or album owned by another user is refused, and a file that fails to be added is removed from the catalog directory again. A name already present in the catalog is refused rather than renamed, only the file name is used (any path in it is ignored), and a request body larger than PHP's `upload_max_filesize`/`post_max_size` is rejected.
+
+| Input         | Type    | Description                                           | Optional |
+|---------------|---------|-------------------------------------------------------|---------:|
+| 'filename'    | string  | File name, required when the file is the request body |      YES |
+| 'license'     | integer | $license_id, required when `licensing` is enabled     |      YES |
+| 'artist_id'   | integer | $artist_id                                            |      YES |
+| 'artist_name' | string  | Create or reuse an artist you own                     |      YES |
+| 'album_id'    | integer | $album_id                                             |      YES |
+| 'album_name'  | string  | Create or reuse an album you own                      |      YES |
+
+* return object
+
+```JSON
+"success": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
 ### url_to_song
 
 This takes a url and returns the song object in question
