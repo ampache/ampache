@@ -736,6 +736,8 @@ class Art extends database_object
             InterfaceImplementationChecker::is_library_item($type)
             || $type == 'folder'
             || $type == 'user'
+            // a wanted album is not in the library, but its gathered art is stored so it is not fetched every time
+            || $type == 'wanted'
         );
     }
 

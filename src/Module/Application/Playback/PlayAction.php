@@ -50,6 +50,7 @@ use Ampache\Module\System\Preference;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
@@ -612,6 +613,8 @@ final readonly class PlayAction implements ApplicationActionInterface
             }
         } elseif ($type == 'song_preview') {
             $media = new Song_Preview((int) $object_id);
+        } elseif ($type == 'live_stream') {
+            $media = new Live_Stream((int) $object_id);
 
         } elseif ($type == 'podcast_episode') {
             $media = new Podcast_Episode((int) $object_id);
@@ -638,6 +641,15 @@ final readonly class PlayAction implements ApplicationActionInterface
                     $media->get_stream_name()
                 )
             );
+        }
+
+        if ($media instanceof Live_Stream) {
+            // a station has a catalog id but no file of its own, so it never reaches the file-backed handling below
+            if (!empty($media->url) && !$this->streamProxy->proxy($media->url)) {
+                header('Location: ' . $media->url, true, 303);
+            }
+
+            return null;
         }
 
         $transcode     = false;
@@ -768,7 +780,10 @@ final readonly class PlayAction implements ApplicationActionInterface
                         }
                     }
 
-                    header('Location: ' . $remoteStreamingUrl);
+                    // proxied rather than redirected so the client sees a same-origin stream it can route through Web Audio
+                    if (!$this->streamProxy->proxy($remoteStreamingUrl)) {
+                        header('Location: ' . $remoteStreamingUrl);
+                    }
 
                     return null;
                 }

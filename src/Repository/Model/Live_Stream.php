@@ -29,7 +29,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 
 /**
@@ -371,7 +374,14 @@ class Live_Stream extends database_object implements Media, displayable_item, co
      */
     public function play_url(string $additional_params = '', string $player = '', bool $local = false, ?string $sid = '', ?string $force_http = ''): string
     {
-        return $this->url . $additional_params;
+        $user_id = (Core::get_global('user') instanceof User)
+            ? (string) Core::get_global('user')->getId()
+            : '-1';
+
+        // the station is proxied rather than handed over, so the client only ever sees this server
+        $url = Stream::get_base_url($local) . 'type=live_stream&oid=' . $this->id . '&uid=' . $user_id . '&name=' . rawurlencode((string) $this->name);
+
+        return Stream_Url::format($url . $additional_params);
     }
 
     public function remove(): bool
