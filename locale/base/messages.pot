@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-07-31 12:06+1000\n"
+"POT-Creation-Date: 2026-08-02 13:28+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -950,25 +950,8 @@ msgstr ""
 msgid "User Catalog Filter"
 msgstr ""
 
-msgid "Search on Google ..."
-msgstr ""
-
-msgid "Search on DuckDuckGo ..."
-msgstr ""
-
-msgid "Search on Wikipedia ..."
-msgstr ""
-
-msgid "Search on Last.fm ..."
-msgstr ""
-
-msgid "Search on Bandcamp ..."
-msgstr ""
-
-msgid "Search on Discogs ..."
-msgstr ""
-
-msgid "Search on Musicbrainz ..."
+#, php-format
+msgid "Search on %s ..."
 msgstr ""
 
 msgid "Played"
@@ -1114,6 +1097,9 @@ msgid "No"
 msgstr ""
 
 msgid "New broadcast"
+msgstr ""
+
+msgid "Live"
 msgstr ""
 
 msgid "Started"
@@ -1317,19 +1303,10 @@ msgstr ""
 msgid "Open Basedir"
 msgstr ""
 
-msgid "Zlib Support"
+msgid "PHP Modules"
 msgstr ""
 
-msgid "GD Support"
-msgstr ""
-
-msgid "Iconv Support"
-msgstr ""
-
-msgid "Gettext Support"
-msgstr ""
-
-msgid "PHP intl extension"
+msgid "Required"
 msgstr ""
 
 msgid "Current Configuration"
@@ -1564,6 +1541,9 @@ msgid "Update User"
 msgstr ""
 
 msgid "Release Date"
+msgstr ""
+
+msgid "Something went wrong. Please check the logs for further information."
 msgstr ""
 
 msgid "Export Catalog"
@@ -2563,6 +2543,9 @@ msgstr ""
 msgid "No song found"
 msgstr ""
 
+msgid "Add to playlist"
+msgstr ""
+
 msgid "License"
 msgstr ""
 
@@ -2673,6 +2656,9 @@ msgstr ""
 msgid ""
 "This tests whether you have the JSON extension enabled. This extension is "
 "required by Ampache."
+msgstr ""
+
+msgid "PHP intl extension"
 msgstr ""
 
 msgid ""
@@ -3032,33 +3018,6 @@ msgid ""
 "required dependencies"
 msgstr ""
 
-msgid "Added to collection"
-msgstr ""
-
-#, php-format
-msgid ""
-"No Catalog configured yet. To start streaming your media, you now need to "
-"%1$s add a Catalog %2$s"
-msgstr ""
-
-msgid "Added to playlist"
-msgstr ""
-
-msgid "Received an empty UPnP request"
-msgstr ""
-
-msgid "root"
-msgstr ""
-
-msgid "The next song has started"
-msgstr ""
-
-msgid "The next song failed to start"
-msgstr ""
-
-msgid "UPnP"
-msgstr ""
-
 #, php-format
 msgid "Tried to clobber '%s' without setting clobber"
 msgstr ""
@@ -3150,6 +3109,33 @@ msgstr ""
 
 #, php-format
 msgid "Art files written: %d"
+msgstr ""
+
+msgid "Added to collection"
+msgstr ""
+
+#, php-format
+msgid ""
+"No Catalog configured yet. To start streaming your media, you now need to "
+"%1$s add a Catalog %2$s"
+msgstr ""
+
+msgid "Added to playlist"
+msgstr ""
+
+msgid "Received an empty UPnP request"
+msgstr ""
+
+msgid "root"
+msgstr ""
+
+msgid "The next song has started"
+msgstr ""
+
+msgid "The next song failed to start"
+msgstr ""
+
+msgid "UPnP"
 msgstr ""
 
 msgid "IP Address version mismatch"
@@ -3515,6 +3501,12 @@ msgstr ""
 msgid "Failed to update_art for "
 msgstr ""
 
+#, php-format
+msgid "%s and %d more item"
+msgid_plural "%s and %d more items"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Broadcast has been deleted"
 msgstr ""
 
@@ -3787,6 +3779,15 @@ msgstr ""
 msgid "The Video will be deleted"
 msgstr ""
 
+msgid "Edit/Find Art"
+msgstr ""
+
+msgid "Do you really want to reset art?"
+msgstr ""
+
+msgid "Reset Art"
+msgstr ""
+
 msgid "Unable to open"
 msgstr ""
 
@@ -3982,6 +3983,48 @@ msgstr ""
 msgid "There was an error trying to delete \"%s\""
 msgstr ""
 
+msgid "Failed to create the catalog, check the debug logs"
+msgstr ""
+
+msgid "day"
+msgid_plural "days"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"This subdirectory is not inside an existing Catalog. The update can not be "
+"processed."
+msgstr ""
+
+msgid "Updated"
+msgstr ""
+
+msgid "No Update Needed"
+msgstr ""
+
+msgid "Catalog Cleaned"
+msgstr ""
+
+#, php-format
+msgid "%d file removed."
+msgid_plural "%d files removed."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Catalog Verified"
+msgstr ""
+
+#, php-format
+msgid "%d file updated."
+msgid_plural "%d files updated."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "No username or password was specified"
 msgstr ""
 
@@ -4007,9 +4050,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Remote Catalog Updated"
-msgstr ""
-
-msgid "Updated"
 msgstr ""
 
 msgid "Completed updating remote Catalog(s)."
@@ -4135,9 +4175,6 @@ msgstr ""
 msgid "Could not find the Seafile library called \"%s\", no media was updated"
 msgstr ""
 
-msgid "Failed to create the catalog, check the debug logs"
-msgstr ""
-
 msgid "Catalog created"
 msgstr ""
 
@@ -4151,6 +4188,7 @@ msgstr ""
 msgid "Look for missing file media entries"
 msgstr ""
 
+#. HINT: filename (File path) OR table name (podcast, video, etc)
 #, php-format
 msgid "Missing: %s"
 msgstr ""
@@ -4396,6 +4434,9 @@ msgstr ""
 #. HINT: config version string (e.g. 62)
 #, php-format
 msgid "Config version: %s"
+msgstr ""
+
+msgid "Unable to query the database, check your Ampache config"
 msgstr ""
 
 msgid "Missing database tables have been created"
@@ -4704,7 +4745,7 @@ msgstr ""
 msgid "Final results seen by Ampache using %s:"
 msgstr ""
 
-msgid "Run a Websocket"
+msgid "Run the websocket server that listen-along broadcasting needs"
 msgstr ""
 
 msgid "Listening port, default 8100"
@@ -4895,6 +4936,284 @@ msgstr ""
 msgid "Table engine: %s"
 msgstr ""
 
+#, php-format
+msgid ""
+"This view has %d item and is too large to show all at once (limit %d). "
+"Enable paging or narrow your filters."
+msgid_plural ""
+"This view has %d items and is too large to show all at once (limit %d). "
+"Enable paging or narrow your filters."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Playlist Items"
+msgstr ""
+
+msgid "Collection Items"
+msgstr ""
+
+msgid "Current Playlist"
+msgstr ""
+
+msgid "Shoutbox Records"
+msgstr ""
+
+msgid "Wanted Albums"
+msgstr ""
+
+msgid "Private Messages"
+msgstr ""
+
+msgid "Browse was not found or expired, try reloading the page"
+msgstr ""
+
+msgid "0 Stars"
+msgstr ""
+
+msgid "1 Star"
+msgstr ""
+
+msgid "2 Stars"
+msgstr ""
+
+msgid "3 Stars"
+msgstr ""
+
+msgid "4 Stars"
+msgstr ""
+
+msgid "5 Stars"
+msgstr ""
+
+msgid "Album Data"
+msgstr ""
+
+msgid "Length (in minutes)"
+msgstr ""
+
+msgid "Disk Count"
+msgstr ""
+
+msgid "Song Count"
+msgstr ""
+
+msgid "Database ID"
+msgstr ""
+
+msgid "My Rating"
+msgstr ""
+
+msgid "Rating (Average)"
+msgstr ""
+
+msgid "My Rating (Song)"
+msgstr ""
+
+msgid "My Rating (Artist)"
+msgstr ""
+
+msgid "My Favorite Songs"
+msgstr ""
+
+msgid "My Favorite Albums"
+msgstr ""
+
+msgid "My Favorite Artists"
+msgstr ""
+
+msgid "Song popularity score"
+msgstr ""
+
+msgid "Album popularity score"
+msgstr ""
+
+msgid "Artist popularity score"
+msgstr ""
+
+msgid "Another User"
+msgstr ""
+
+msgid "Play History"
+msgstr ""
+
+#. HINT: Number of times object has been played
+msgid "# Played"
+msgstr ""
+
+#. HINT: Number of times object has been skipped
+msgid "# Skipped"
+msgstr ""
+
+#. HINT: Number of times object has been played OR skipped
+msgid "# Played or Skipped"
+msgstr ""
+
+msgid "My Last Play"
+msgstr ""
+
+msgid "My Last Skip"
+msgstr ""
+
+msgid "My Last Play or Skip"
+msgstr ""
+
+msgid "Played by Me"
+msgstr ""
+
+msgid "Played by Me (Artist)"
+msgstr ""
+
+#. HINT: Number of times object has been played
+msgid "# Played by Me"
+msgstr ""
+
+#. HINT: Number of times object has been skipped
+msgid "# Skipped by Me"
+msgstr ""
+
+#. HINT: Number of times object has been played OR skipped
+msgid "# Played or Skipped by Me"
+msgstr ""
+
+msgid "Song Genre"
+msgstr ""
+
+msgid "Song Count (Genre)"
+msgstr ""
+
+msgid "Album Count (Genre)"
+msgstr ""
+
+msgid "Artist Count (Genre)"
+msgstr ""
+
+msgid "File Data"
+msgstr ""
+
+msgid "Date Updated"
+msgstr ""
+
+msgid "Image Width"
+msgstr ""
+
+msgid "Image Height"
+msgstr ""
+
+msgid "Recently Added"
+msgstr ""
+
+msgid "Duplicate Album Tracks"
+msgstr ""
+
+msgid "Duplicate MusicBrainz Release Group"
+msgstr ""
+
+msgid "MusicBrainz"
+msgstr ""
+
+msgid "MusicBrainz ID (Artist)"
+msgstr ""
+
+msgid "MusicBrainz ID (Song)"
+msgstr ""
+
+msgid "Artist Data"
+msgstr ""
+
+msgid "Album Title"
+msgstr ""
+
+msgid "Album Count"
+msgstr ""
+
+msgid "My Rating (Album)"
+msgstr ""
+
+msgid "MusicBrainz ID (Album)"
+msgstr ""
+
+msgid "public"
+msgstr ""
+
+msgid "private"
+msgstr ""
+
+msgid "Episode Count"
+msgstr ""
+
+msgid "skipped"
+msgstr ""
+
+msgid "pending"
+msgstr ""
+
+msgid "completed"
+msgstr ""
+
+msgid "My Rating (Podcast)"
+msgstr ""
+
+msgid "My Rating (Podcast Episode)"
+msgstr ""
+
+msgid "My Favorite Podcasts"
+msgstr ""
+
+msgid "My Favorite Podcast Episodes"
+msgstr ""
+
+msgid "Podcast popularity score"
+msgstr ""
+
+msgid "Podcast Episode popularity score"
+msgstr ""
+
+msgid "Any searchable text"
+msgstr ""
+
+msgid "Song Data"
+msgstr ""
+
+msgid "Favorites (Album)"
+msgstr ""
+
+msgid "Favorites (Artist)"
+msgstr ""
+
+msgid "Another User (Album)"
+msgstr ""
+
+msgid "Another User (Artist)"
+msgstr ""
+
+#. HINT: Percentage of (Times Played / Times skipped) * 100
+msgid "Played/Skipped ratio"
+msgstr ""
+
+msgid "Played by Me (Album)"
+msgstr ""
+
+msgid "Album Genre"
+msgstr ""
+
+msgid "Artist Genre"
+msgstr ""
+
+msgid "No Music License"
+msgstr ""
+
+msgid "Recently Updated"
+msgstr ""
+
+msgid "Orphaned Album"
+msgstr ""
+
+msgid "Artist Count"
+msgstr ""
+
+msgid "Video Count"
+msgstr ""
+
 msgid "HTTPQ Active Instance"
 msgstr ""
 
@@ -4949,15 +5268,6 @@ msgstr ""
 msgid "Ampache podcast subscriptions"
 msgstr ""
 
-msgid "skipped"
-msgstr ""
-
-msgid "pending"
-msgstr ""
-
-msgid "completed"
-msgstr ""
-
 msgid "Advanced Share"
 msgstr ""
 
@@ -4985,12 +5295,6 @@ msgstr ""
 msgid "Catalog Block: %s"
 msgstr ""
 
-#, php-format
-msgid "%d file updated."
-msgid_plural "%d files updated."
-msgstr[0] ""
-msgstr[1] ""
-
 msgid "Examine File..."
 msgstr ""
 
@@ -5008,6 +5312,28 @@ msgstr ""
 
 #, php-format
 msgid "Don't overwrite an existing file: \"%s\""
+msgstr ""
+
+msgid " Stars"
+msgstr ""
+
+msgid "Average from all users"
+msgstr ""
+
+msgid "not rated yet"
+msgstr ""
+
+#, php-format
+msgid "%s of 5"
+msgstr ""
+
+msgid "Current rating"
+msgstr ""
+
+msgid "Unfavorite"
+msgstr ""
+
+msgid "Favorite"
 msgstr ""
 
 msgid "View changes"
@@ -5035,9 +5361,6 @@ msgid "Invalid configuration settings"
 msgstr ""
 
 msgid "Unable to connect to the database, check your Ampache config"
-msgstr ""
-
-msgid "Unable to query the database, check your Ampache config"
 msgstr ""
 
 msgid "Existing database was detected, unable to continue the installation"
@@ -5104,6 +5427,9 @@ msgstr ""
 #. HINT: Database version number
 #, php-format
 msgid "Unable to update the database schema from version %s"
+msgstr ""
+
+msgid "You have Plugins that need an update!"
 msgstr ""
 
 msgid "commented on"
@@ -5245,9 +5571,6 @@ msgstr ""
 msgid "Play date"
 msgstr ""
 
-msgid "Add to playlist"
-msgstr ""
-
 msgid "Add to list"
 msgstr ""
 
@@ -5299,21 +5622,6 @@ msgstr ""
 msgid "Allow API6 Only"
 msgstr ""
 
-msgid "1 Star"
-msgstr ""
-
-msgid "2 Stars"
-msgstr ""
-
-msgid "3 Stars"
-msgstr ""
-
-msgid "4 Stars"
-msgstr ""
-
-msgid "5 Stars"
-msgstr ""
-
 msgid "Keep last played track"
 msgstr ""
 
@@ -5355,15 +5663,6 @@ msgid "Click to grant %s access to Ampache"
 msgstr ""
 
 msgid "Unknown Artist"
-msgstr ""
-
-msgid "Song preview from 7digital"
-msgstr ""
-
-msgid "7digital consumer key"
-msgstr ""
-
-msgid "7digital secret"
 msgstr ""
 
 msgid "Amazon art search"
@@ -5421,6 +5720,9 @@ msgid "Catalog favorites media row display"
 msgstr ""
 
 msgid "Get lyrics from ChartLyrics"
+msgstr ""
+
+msgid "Song preview from Deezer"
 msgstr ""
 
 msgid "Discogs metadata integration"
@@ -5484,6 +5786,9 @@ msgid "Show Album dashboard sections on the homepage"
 msgstr ""
 
 msgid "Home Dashboard max items"
+msgstr ""
+
+msgid "Song preview from the iTunes Search API"
 msgstr ""
 
 msgid "Scrobble songs you play to your Last.FM account"
@@ -5684,15 +5989,6 @@ msgstr ""
 msgid "Artist MusicBrainzID"
 msgstr ""
 
-msgid "Edit/Find Art"
-msgstr ""
-
-msgid "Do you really want to reset art?"
-msgstr ""
-
-msgid "Reset Art"
-msgstr ""
-
 msgid "Broadcast"
 msgstr ""
 
@@ -5700,64 +5996,6 @@ msgid "Unbroadcast"
 msgstr ""
 
 msgid "Broadcast Edit"
-msgstr ""
-
-#, php-format
-msgid ""
-"This view has %d item and is too large to show all at once (limit %d). "
-"Enable paging or narrow your filters."
-msgid_plural ""
-"This view has %d items and is too large to show all at once (limit %d). "
-"Enable paging or narrow your filters."
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Playlist Items"
-msgstr ""
-
-msgid "Collection Items"
-msgstr ""
-
-msgid "Current Playlist"
-msgstr ""
-
-msgid "Shoutbox Records"
-msgstr ""
-
-msgid "Wanted Albums"
-msgstr ""
-
-msgid "Private Messages"
-msgstr ""
-
-msgid "day"
-msgid_plural "days"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "hour"
-msgid_plural "hours"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid ""
-"This subdirectory is not inside an existing Catalog. The update can not be "
-"processed."
-msgstr ""
-
-msgid "No Update Needed"
-msgstr ""
-
-msgid "Catalog Cleaned"
-msgstr ""
-
-#, php-format
-msgid "%d file removed."
-msgid_plural "%d files removed."
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Catalog Verified"
 msgstr ""
 
 msgid "Codec is required (e.g. MP3, OGG...)"
@@ -5772,252 +6010,10 @@ msgstr ""
 msgid "URL is invalid, must be mms://, https:// or http://"
 msgstr ""
 
-msgid "You have Plugins that need an update!"
-msgstr ""
-
-msgid "Browse was not found or expired, try reloading the page"
-msgstr ""
-
-msgid "0 Stars"
-msgstr ""
-
-msgid " Stars"
-msgstr ""
-
-msgid "Average from all users"
-msgstr ""
-
-msgid "not rated yet"
-msgstr ""
-
-#, php-format
-msgid "%s of 5"
-msgstr ""
-
-msgid "Current rating"
-msgstr ""
-
-msgid "Album Data"
-msgstr ""
-
-msgid "Length (in minutes)"
-msgstr ""
-
-msgid "Disk Count"
-msgstr ""
-
-msgid "Song Count"
-msgstr ""
-
-msgid "Database ID"
-msgstr ""
-
-msgid "My Rating"
-msgstr ""
-
-msgid "Rating (Average)"
-msgstr ""
-
-msgid "My Rating (Song)"
-msgstr ""
-
-msgid "My Rating (Artist)"
-msgstr ""
-
-msgid "My Favorite Songs"
-msgstr ""
-
-msgid "My Favorite Albums"
-msgstr ""
-
-msgid "My Favorite Artists"
-msgstr ""
-
-msgid "Song popularity score"
-msgstr ""
-
-msgid "Album popularity score"
-msgstr ""
-
-msgid "Artist popularity score"
-msgstr ""
-
-msgid "Another User"
-msgstr ""
-
-msgid "Play History"
-msgstr ""
-
-#. HINT: Number of times object has been played
-msgid "# Played"
-msgstr ""
-
-#. HINT: Number of times object has been skipped
-msgid "# Skipped"
-msgstr ""
-
-#. HINT: Number of times object has been played OR skipped
-msgid "# Played or Skipped"
-msgstr ""
-
-msgid "My Last Play"
-msgstr ""
-
-msgid "My Last Skip"
-msgstr ""
-
-msgid "My Last Play or Skip"
-msgstr ""
-
-msgid "Played by Me"
-msgstr ""
-
-msgid "Played by Me (Artist)"
-msgstr ""
-
-#. HINT: Number of times object has been played
-msgid "# Played by Me"
-msgstr ""
-
-#. HINT: Number of times object has been skipped
-msgid "# Skipped by Me"
-msgstr ""
-
-#. HINT: Number of times object has been played OR skipped
-msgid "# Played or Skipped by Me"
-msgstr ""
-
-msgid "Song Genre"
-msgstr ""
-
-msgid "Album Count"
-msgstr ""
-
-msgid "Artist Count"
-msgstr ""
-
-msgid "File Data"
-msgstr ""
-
-msgid "Date Updated"
-msgstr ""
-
-msgid "Image Width"
-msgstr ""
-
-msgid "Image Height"
-msgstr ""
-
-msgid "Recently Added"
-msgstr ""
-
-msgid "Duplicate Album Tracks"
-msgstr ""
-
-msgid "Duplicate MusicBrainz Release Group"
-msgstr ""
-
-msgid "MusicBrainz"
-msgstr ""
-
-msgid "MusicBrainz ID (Artist)"
-msgstr ""
-
-msgid "MusicBrainz ID (Song)"
-msgstr ""
-
-msgid "Artist Data"
-msgstr ""
-
-msgid "Album Title"
-msgstr ""
-
-msgid "My Rating (Album)"
-msgstr ""
-
-msgid "MusicBrainz ID (Album)"
-msgstr ""
-
-msgid "public"
-msgstr ""
-
-msgid "private"
-msgstr ""
-
-msgid "Episode Count"
-msgstr ""
-
-msgid "My Rating (Podcast)"
-msgstr ""
-
-msgid "My Rating (Podcast Episode)"
-msgstr ""
-
-msgid "My Favorite Podcasts"
-msgstr ""
-
-msgid "My Favorite Podcast Episodes"
-msgstr ""
-
-msgid "Podcast popularity score"
-msgstr ""
-
-msgid "Podcast Episode popularity score"
-msgstr ""
-
-msgid "Any searchable text"
-msgstr ""
-
-msgid "Song Data"
-msgstr ""
-
-msgid "Favorites (Album)"
-msgstr ""
-
-msgid "Favorites (Artist)"
-msgstr ""
-
-msgid "Another User (Album)"
-msgstr ""
-
-msgid "Another User (Artist)"
-msgstr ""
-
-#. HINT: Percentage of (Times Played / Times skipped) * 100
-msgid "Played/Skipped ratio"
-msgstr ""
-
-msgid "Played by Me (Album)"
-msgstr ""
-
-msgid "Album Genre"
-msgstr ""
-
-msgid "Artist Genre"
-msgstr ""
-
-msgid "No Music License"
-msgstr ""
-
-msgid "Recently Updated"
-msgstr ""
-
-msgid "Orphaned Album"
-msgstr ""
-
-msgid "Video Count"
-msgstr ""
-
 msgid "Share Edit"
 msgstr ""
 
 msgid "Track MusicBrainzID"
-msgstr ""
-
-msgid "Unfavorite"
-msgstr ""
-
-msgid "Favorite"
 msgstr ""
 
 msgid "User avatar"
@@ -6583,170 +6579,7 @@ msgstr ""
 
 msgid "Add to wanted list"
 msgstr ""
-
-#: ./untranslated-strings.txt:3
-msgid "Connected Users"
-msgstr ""
-
-#: ./untranslated-strings.txt:7
-msgid "Catalog Size"
-msgstr ""
-
-#: ./untranslated-strings.txt:11
-msgid "Catalog Time"
-msgstr ""
-
-#: ./untranslated-strings.txt:15
-msgid "Total Users"
-msgstr ""
-
-#: ./untranslated-strings.txt:118
-msgid "subsonic"
-msgstr ""
-
-#: ./untranslated-strings.txt:119
-msgid "7digital"
-msgstr ""
-
-#: ./untranslated-strings.txt:120
-msgid "Amazon"
-msgstr ""
-
-#: ./untranslated-strings.txt:121
-msgid "Bit.ly"
-msgstr ""
-
-#: ./untranslated-strings.txt:122
-msgid "Catalog Favorites"
-msgstr ""
-
-#: ./untranslated-strings.txt:123
-msgid "ChartLyrics"
-msgstr ""
-
-#: ./untranslated-strings.txt:124
-msgid "Discogs"
-msgstr ""
-
-#: ./untranslated-strings.txt:125
-msgid "Facebook"
-msgstr ""
-
-#: ./untranslated-strings.txt:126
-msgid "Flattr"
-msgstr ""
-
-#: ./untranslated-strings.txt:127
-msgid "Flickr"
-msgstr ""
-
-#: ./untranslated-strings.txt:129
-msgid "GoogleAnalytics"
-msgstr ""
-
-#: ./untranslated-strings.txt:130
-msgid "GoogleMaps"
-msgstr ""
-
-#: ./untranslated-strings.txt:131
-msgid "Gravatar"
-msgstr ""
-
-#: ./untranslated-strings.txt:132
-msgid "Headphones"
-msgstr ""
-
-#: ./untranslated-strings.txt:133
-msgid "Last.FM"
-msgstr ""
-
-#: ./untranslated-strings.txt:134
-msgid "Libravatar"
-msgstr ""
-
-#: ./untranslated-strings.txt:135
-msgid "Libre.FM"
-msgstr ""
-
-#: ./untranslated-strings.txt:136
-msgid "ListenBrainz"
-msgstr ""
-
-#: ./untranslated-strings.txt:137
-msgid "Lyrist Lyrics"
-msgstr ""
-
-#: ./untranslated-strings.txt:138
-msgid "Matomo"
-msgstr ""
-
-#: ./untranslated-strings.txt:141
-msgid "Paypal"
-msgstr ""
-
-#: ./untranslated-strings.txt:142
-msgid "Personal Favorites"
-msgstr ""
-
-#: ./untranslated-strings.txt:143
-msgid "Piwik"
-msgstr ""
-
-#: ./untranslated-strings.txt:144
-msgid "RatingMatch"
-msgstr ""
-
-#: ./untranslated-strings.txt:145
-msgid "RSSView"
-msgstr ""
-
-#: ./untranslated-strings.txt:146
-msgid "Shout Home"
-msgstr ""
-
-#: ./untranslated-strings.txt:147
-msgid "Stream Bandwidth"
-msgstr ""
-
-#: ./untranslated-strings.txt:148
-msgid "Stream Hits"
-msgstr ""
-
-#: ./untranslated-strings.txt:149
-msgid "Stream Time"
-msgstr ""
-
-#: ./untranslated-strings.txt:150
-msgid "TheAudioDb"
-msgstr ""
-
-#: ./untranslated-strings.txt:152
-msgid "Twitter"
-msgstr ""
-
-#: ./untranslated-strings.txt:153
-msgid "YOURLS"
-msgstr ""
-
-#: ./untranslated-strings.txt:154
-msgid "handshake"
-msgstr ""
-
-#: ./untranslated-strings.txt:155
-msgid "ping"
-msgstr ""
-
-#: ./untranslated-strings.txt:256
-msgid "average"
-msgstr ""
-
-#: ./untranslated-strings.txt:260
-msgid "Home Dashboard"
-msgstr ""
-
-#: ./untranslated-strings.txt:269
-msgid "Mpd"
-msgstr "" #######################################################################
+ #######################################################################
 
  # This file lists all translatable strings from the Ampache preference table
  # (descriptions and subcategories). It is generated from the source code by
@@ -7482,4 +7315,168 @@ msgstr ""
 
 #: Ampache preference subcategory
 msgid "Transcoding"
+msgstr ""
+
+#: ./untranslated-strings.txt:3
+msgid "Connected Users"
+msgstr ""
+
+#: ./untranslated-strings.txt:7
+msgid "Catalog Size"
+msgstr ""
+
+#: ./untranslated-strings.txt:11
+msgid "Catalog Time"
+msgstr ""
+
+#: ./untranslated-strings.txt:15
+msgid "Total Users"
+msgstr ""
+
+#: ./untranslated-strings.txt:118
+msgid "subsonic"
+msgstr ""
+
+#: ./untranslated-strings.txt:119
+msgid "7digital"
+msgstr ""
+
+#: ./untranslated-strings.txt:120
+msgid "Amazon"
+msgstr ""
+
+#: ./untranslated-strings.txt:121
+msgid "Bit.ly"
+msgstr ""
+
+#: ./untranslated-strings.txt:122
+msgid "Catalog Favorites"
+msgstr ""
+
+#: ./untranslated-strings.txt:123
+msgid "ChartLyrics"
+msgstr ""
+
+#: ./untranslated-strings.txt:124
+msgid "Discogs"
+msgstr ""
+
+#: ./untranslated-strings.txt:125
+msgid "Facebook"
+msgstr ""
+
+#: ./untranslated-strings.txt:126
+msgid "Flattr"
+msgstr ""
+
+#: ./untranslated-strings.txt:127
+msgid "Flickr"
+msgstr ""
+
+#: ./untranslated-strings.txt:129
+msgid "GoogleAnalytics"
+msgstr ""
+
+#: ./untranslated-strings.txt:130
+msgid "GoogleMaps"
+msgstr ""
+
+#: ./untranslated-strings.txt:131
+msgid "Gravatar"
+msgstr ""
+
+#: ./untranslated-strings.txt:132
+msgid "Headphones"
+msgstr ""
+
+#: ./untranslated-strings.txt:133
+msgid "Last.FM"
+msgstr ""
+
+#: ./untranslated-strings.txt:134
+msgid "Libravatar"
+msgstr ""
+
+#: ./untranslated-strings.txt:135
+msgid "Libre.FM"
+msgstr ""
+
+#: ./untranslated-strings.txt:136
+msgid "ListenBrainz"
+msgstr ""
+
+#: ./untranslated-strings.txt:137
+msgid "Lyrist Lyrics"
+msgstr ""
+
+#: ./untranslated-strings.txt:138
+msgid "Matomo"
+msgstr ""
+
+#: ./untranslated-strings.txt:141
+msgid "Paypal"
+msgstr ""
+
+#: ./untranslated-strings.txt:142
+msgid "Personal Favorites"
+msgstr ""
+
+#: ./untranslated-strings.txt:143
+msgid "Piwik"
+msgstr ""
+
+#: ./untranslated-strings.txt:144
+msgid "RatingMatch"
+msgstr ""
+
+#: ./untranslated-strings.txt:145
+msgid "RSSView"
+msgstr ""
+
+#: ./untranslated-strings.txt:146
+msgid "Shout Home"
+msgstr ""
+
+#: ./untranslated-strings.txt:147
+msgid "Stream Bandwidth"
+msgstr ""
+
+#: ./untranslated-strings.txt:148
+msgid "Stream Hits"
+msgstr ""
+
+#: ./untranslated-strings.txt:149
+msgid "Stream Time"
+msgstr ""
+
+#: ./untranslated-strings.txt:150
+msgid "TheAudioDb"
+msgstr ""
+
+#: ./untranslated-strings.txt:152
+msgid "Twitter"
+msgstr ""
+
+#: ./untranslated-strings.txt:153
+msgid "YOURLS"
+msgstr ""
+
+#: ./untranslated-strings.txt:154
+msgid "handshake"
+msgstr ""
+
+#: ./untranslated-strings.txt:155
+msgid "ping"
+msgstr ""
+
+#: ./untranslated-strings.txt:256
+msgid "average"
+msgstr ""
+
+#: ./untranslated-strings.txt:260
+msgid "Home Dashboard"
+msgstr ""
+
+#: ./untranslated-strings.txt:269
+msgid "Mpd"
 msgstr ""
