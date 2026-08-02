@@ -351,6 +351,13 @@ interface SongRepositoryInterface
     public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array;
 
     /**
+     * Reads the stored waveform, which is a blob every other read deliberately leaves behind
+     *
+     * @return array<string, mixed>
+     */
+    public function getWaveformRow(int $songId): array;
+
+    /**
      * Whether a song row exists
      */
     public function hasId(int $songId): bool;

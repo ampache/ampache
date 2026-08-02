@@ -72,6 +72,8 @@ class Song extends database_object implements
     MetadataEnabledInterface
 {
     protected const string DB_TABLENAME = 'song';
+    // the value Waveform passes to fill_ext_info() to reach the blob the other reads leave behind
+    private const string WAVEFORM_FILTER = 'waveform';
 
     /**
      * Uploader per song id, so a multi-column save resolves ownership once instead of per column
@@ -1327,7 +1329,16 @@ class Song extends database_object implements
      */
     public function fill_ext_info(string $data_filter = ''): void
     {
-        if ($this->isNew() || $this->song_data_loaded) {
+        if ($this->isNew()) {
+            return;
+        }
+
+        // the waveform is a blob no other read carries, so it loads on its own and guards on its own value
+        if ($data_filter === self::WAVEFORM_FILTER) {
+            if ($this->waveform !== null) {
+                return;
+            }
+        } elseif ($this->song_data_loaded) {
             return;
         }
 
@@ -1345,7 +1356,9 @@ class Song extends database_object implements
         }
 
         // don't repeat this process if you've got it all
-        $this->song_data_loaded = ($data_filter === '');
+        if ($data_filter === '') {
+            $this->song_data_loaded = true;
+        }
     }
 
     /**
@@ -2383,19 +2396,23 @@ class Song extends database_object implements
      */
     private function _get_ext_info(string $select = ''): array
     {
+        $repository = self::getSongRepository();
+
+        // a partial read never answers from the general row, which no longer carries the waveform
+        if ($select === self::WAVEFORM_FILTER) {
+            return $repository->getWaveformRow($this->id);
+        }
+
+        if ($select !== '') {
+            return $repository->getReplaygainRow($this->id);
+        }
+
         if (parent::is_cached('song_data', $this->id)) {
             return parent::get_from_cache('song_data', $this->id);
         }
 
-        // the only partial read a caller asks for is the replaygain set, so no columns go into the statement
-        $repository = self::getSongRepository();
-        $results    = (empty($select))
-            ? $repository->getDataRow($this->id)
-            : $repository->getReplaygainRow($this->id);
-
-        if (empty($select)) {
-            parent::add_to_cache('song_data', $this->id, $results);
-        }
+        $results = $repository->getDataRow($this->id);
+        parent::add_to_cache('song_data', $this->id, $results);
 
         return $results;
     }

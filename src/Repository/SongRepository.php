@@ -584,7 +584,7 @@ final readonly class SongRepository implements SongRepositoryInterface
     public function getDataRow(int $songId): array
     {
         $row = $this->connection->fetchRow(
-            'SELECT `comment`, `lyrics`, `label`, `language`, `waveform`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `disksubtitle` FROM `song_data` WHERE `song_id` = ?',
+            'SELECT `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `disksubtitle` FROM `song_data` WHERE `song_id` = ?',
             [$songId]
         );
 
@@ -607,7 +607,7 @@ final readonly class SongRepository implements SongRepositoryInterface
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT * FROM `song_data` WHERE `song_id` IN (%s)',
+                'SELECT `song_id`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `disksubtitle` FROM `song_data` WHERE `song_id` IN (%s)',
                 implode(',', array_map(intval(...), $songIds))
             )
         );
@@ -1025,6 +1025,23 @@ final readonly class SongRepository implements SongRepositoryInterface
             : 'SELECT `song`.`id`, `song`.`file`, `song`.`update_time` AS `min_update_time` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = ? ORDER BY `song`.`file` DESC LIMIT ';
 
         return $this->readVerifyRows($sql . $limit . ';', $catalogId);
+    }
+
+    /**
+     * Reads the stored waveform, which is a blob every other read deliberately leaves behind
+     *
+     * @return array<string, mixed>
+     */
+    public function getWaveformRow(int $songId): array
+    {
+        $row = $this->connection->fetchRow(
+            'SELECT `waveform` FROM `song_data` WHERE `song_id` = ?',
+            [$songId]
+        );
+
+        return ($row === false)
+            ? []
+            : $row;
     }
 
     /**
