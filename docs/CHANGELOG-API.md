@@ -18,6 +18,11 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 * REST
   * New `folders` action (`Folders8Method`) for browsing the catalog's virtual folder tree; `filter` takes either a folder id or a path name, so REST paths `folders`, `folders/{folder_id}` and `folders{path}` all reach it
   * New `playlist_remove` action (`PlaylistRemove8Method`)
+* `upload` (API8 only)
+  * New `upload` action adds a media file to the catalog named by the `upload_catalog` preference, so uploading is no longer web-only
+  * The file is sent either as a multipart form field named `upl`, or as the raw request body with `filename` naming it
+  * Optional `license`, `artist_id`, `artist_name`, `album_id` and `album_name` behave exactly as the web upload form does, including refusing an artist or album owned by another user
+  * Requires the `allow_upload` preference and the access level named by `upload_access_level`; a file that fails to be added is removed from the catalog directory again
 * `collection` (API8 only)
   * New actions `collections`, `collection`, `collection_items`, `collection_create`, `collection_edit`, `collection_delete`, `collection_add` and `collection_remove`. A collection is a hand-curated list of objects of any type, so it is the way to curate anything a playlist cannot hold; the members are not restricted to media
   * `collection_create` takes an optional `object_type` that pins the collection to one type, after which `collection_add` refuses anything else. Leave it out for a mixed collection
