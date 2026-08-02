@@ -27,6 +27,7 @@ namespace Ampache\Module\Catalog;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\AmpError;
@@ -349,15 +350,18 @@ class Catalog_remote extends Catalog
             $row = ['id' => $songId, 'file' => $songFile];
             debug_event('remote.catalog', 'Starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             try {
+                $song  = null;
+                $asked = true;
                 if (filter_var($row['file'], FILTER_VALIDATE_URL)) {
                     // lookup by url
                     $song = $this->remote_handle->send_command(self::CMD_URL_TO_SONG, ['url' => $row['file']]);
                 } else {
                     // lookup by remote id
                     $remote_id = Song::get_song_map_object_id($row['id'], 'remote_' . $this->getId());
-                    $song      = ($remote_id)
-                        ? $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id])
-                        : null;
+                    $asked     = (bool) $remote_id;
+                    if ($asked) {
+                        $song = $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id]);
+                    }
                 }
 
                 if (
@@ -366,14 +370,34 @@ class Catalog_remote extends Catalog
                     && ((int) $song->song->attributes()->id) > 0
                 ) {
                     debug_event('remote.catalog', 'keeping song', 5);
-                } else {
-                    debug_event('remote.catalog', 'removing song', 5);
-                    $dead++;
-                    $songRepository->delete((int) $row['id']);
+                    continue;
                 }
+
+                // last_error() distinguishes "the server says it no longer has this song" from "we never got a usable answer"
+                $api_error = ($asked)
+                    ? $this->remote_handle->last_error()
+                    : null;
+
+                if ($api_error !== null && $api_error['type'] === 'transport') {
+                    debug_event('remote.catalog', 'Remote server stopped answering, abandoning the clean: ' . $api_error['message'], 1);
+
+                    return $dead;
+                }
+
+                if ($api_error !== null && $api_error['code'] !== ErrorCodeEnum::NOT_FOUND) {
+                    debug_event('remote.catalog', 'Keeping ' . $row['id'] . ', server answered ' . $api_error['code'] . ': ' . $api_error['message'], 3);
+
+                    continue;
+                }
+
+                debug_event('remote.catalog', 'removing song', 5);
+                $dead++;
+                $songRepository->delete((int) $row['id']);
             } catch (Exception $error) {
-                // FIXME: What to do, what to do
-                debug_event('remote.catalog', 'url_to_song parsing error: ' . $error->getMessage(), 1);
+                // send_command only throws when the client itself refuses to send, which will be just as true for the next song
+                debug_event('remote.catalog', 'Abandoning the clean: ' . $error->getMessage(), 1);
+
+                return $dead;
             }
         }
 
@@ -611,7 +635,8 @@ class Catalog_remote extends Catalog
                     'debug_callback' => 'debug_event',
                     'api_secure' => (str_starts_with($this->uri, 'https://')),
                     'api_format' => 'xml',
-                    'server_version' => 6 // TODO Api::DEFAULT_VERSION after 8 is stable
+                    // the remote server may be older than this one and ApiHandler only rolls a version up, so 6 is the highest all of them answer
+                    'server_version' => 6
                 ]
             );
         } catch (Exception $exception) {

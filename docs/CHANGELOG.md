@@ -241,6 +241,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Grid views (including the mashup dashboards) dropped the play and add buttons from any tile holding more items than `direct_play_limit`, which shifted the rest of that tile's controls out of place. A tile now always carries its full set; the limit still applies in the list views
 * Cleaning a remote, Subsonic, Dropbox or Seafile catalog removed songs without recording them in the deleted-song archive, so they could not be restored and left no trace; they are archived the same way a local catalog's are
 * Adding a second Beets (remote) catalog for a URL that already had one was allowed; the duplicate check looked in the wrong table for a column it does not have
+* Ampache Remote Catalogs
+  * Cleaning a remote catalog deleted every song it could not confirm, so a server that was unreachable, or answering an expired session or a permission error, emptied the catalog; only a `Not Found` reply removes a song now
+  * A clean that loses contact with the remote server stops and keeps the songs it has not reached yet, instead of working through the rest of the catalog
 * Moving a file between catalogs (`run:updateCatalogFile -m`, `run:updateCatalogFolder -m`)
   * The album or podcast moved catalog as soon as the first of its files did, because the query deciding whether the rest had moved was missing its parameters
   * A moved podcast wrote its new catalog to the `album` table
