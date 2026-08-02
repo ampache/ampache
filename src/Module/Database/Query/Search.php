@@ -1461,9 +1461,9 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_text('genre', $t_genre, $t_genre);
         $rule_type[] = $this->_get_rule_text('song_genre', T_('Song Genre'), $t_genre);
         $rule_type[] = $this->_get_rule_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
-        $rule_type[] = $this->_get_rule_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
-        $rule_type[] = $this->_get_rule_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
-        $rule_type[] = $this->_get_rule_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_song', T_('Song Count (Genre)'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_album', T_('Album Count (Genre)'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_artist', T_('Artist Count (Genre)'), 'numeric', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
@@ -1582,9 +1582,9 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_text('genre', $t_genre, $t_genre);
         $rule_type[] = $this->_get_rule_text('song_genre', T_('Song Genre'), $t_genre);
         $rule_type[] = $this->_get_rule_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
-        $rule_type[] = $this->_get_rule_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
-        $rule_type[] = $this->_get_rule_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
-        $rule_type[] = $this->_get_rule_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_song', T_('Song Count (Genre)'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_album', T_('Album Count (Genre)'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_artist', T_('Artist Count (Genre)'), 'numeric', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
@@ -1916,9 +1916,9 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_text('album_genre', T_('Album Genre'), $t_genre);
         $rule_type[] = $this->_get_rule_text('artist_genre', T_('Artist Genre'), $t_genre);
         $rule_type[] = $this->_get_rule_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
-        $rule_type[] = $this->_get_rule_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
-        $rule_type[] = $this->_get_rule_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
-        $rule_type[] = $this->_get_rule_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_song', T_('Song Count (Genre)'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_album', T_('Album Count (Genre)'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_artist', T_('Artist Count (Genre)'), 'numeric', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
@@ -2035,7 +2035,7 @@ class Search extends playlist_object
 
         $rule_type[] = $this->_get_rule_text('title', T_('Genre'));
         $rule_type[] = $this->_get_rule_numeric('album_count', T_('Album Count'));
-        $rule_type[] = $this->_get_rule_numeric('artist_count', T_('Album Count'));
+        $rule_type[] = $this->_get_rule_numeric('artist_count', T_('Artist Count'));
         $rule_type[] = $this->_get_rule_numeric('song_count', T_('Song Count'));
         if (AmpConfig::get('video')) {
             $rule_type[] = $this->_get_rule_numeric('video_count', T_('Video Count'));
