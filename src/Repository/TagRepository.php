@@ -330,9 +330,10 @@ final readonly class TagRepository implements TagRepositoryInterface
                 : 'GROUP BY `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`artist`, `tag`.`album`, `tag`.`song` ';
         }
 
+        // allowlist: $order reaches ORDER BY as a raw identifier (see get_tags caller ?sort=)
         $sql .= ($order === 'count')
             ? 'ORDER BY `count` DESC'
-            : sprintf('ORDER BY `%s`', $order);
+            : sprintf('ORDER BY `%s`', (in_array($order, ['name', 'id', 'is_hidden'], true) ? $order : 'name'));
 
         if ($limit > 0) {
             $sql .= ' LIMIT ' . $limit;
