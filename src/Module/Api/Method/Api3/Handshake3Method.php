@@ -52,6 +52,7 @@ final class Handshake3Method implements MethodInterface
     public const string ACTION = 'handshake';
 
     public function __construct(
+        private NetworkCheckerInterface $networkChecker,
         private UserRepositoryInterface $userRepository,
         private UserTrackerInterface $userTracker,
     ) {}
@@ -124,11 +125,7 @@ final class Handshake3Method implements MethodInterface
         // Log this attempt
         debug_event(self::class, "Login$data_version Attempt, IP: $user_ip Time: $timestamp User: " . ($client->username ?? '') . " ($user_id)", 1);
 
-        // @todo replace by constructor injection
-        global $dic;
-        $networkAccessChecker = $dic->get(NetworkCheckerInterface::class);
-
-        if ($user_id > 0 && $networkAccessChecker->check(AccessTypeEnum::API, $user_id, AccessLevelEnum::GUEST)) {
+        if ($user_id > 0 && $this->networkChecker->check(AccessTypeEnum::API, $user_id, AccessLevelEnum::GUEST)) {
             // Authentication with user/password, we still need to check the password
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
