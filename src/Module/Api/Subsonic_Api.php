@@ -722,6 +722,20 @@ class Subsonic_Api
         }
 
         if ($playlistId !== null) {
+            // creating over an existing id rewrites that playlist, so it needs the same owner gate as updateplaylist
+            $playlist = new Playlist($playlistId);
+            if ($playlist->isNew()) {
+                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+
+            if (!$playlist->has_access($user)) {
+                $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+
+                return;
+            }
+
             $this->_updatePlaylist($playlistId, $name, $songIdList, [], true, true);
             $this->_responseOutput($input, __FUNCTION__);
         } elseif (!empty($name)) {
