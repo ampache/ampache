@@ -95,8 +95,7 @@ $playlist->display_art($size, false, false); ?>
             </a>
         </li>
 <?php }
-global $dic; // @todo remove after refactoring
-$zipHandler = $dic->get(ZipHandlerInterface::class);
+/** @var ZipHandlerInterface $zipHandler */
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('playlist')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=playlist&id=<?php echo $playlist->id; ?>" rel="nofollow">

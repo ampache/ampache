@@ -56,7 +56,10 @@ final readonly class PopularVideoAction implements ApplicationActionInterface
         $this->ui->showHeader();
         $this->ui->show(
             'show_form_popular.inc.php',
-            ['by_user' => $by_user]
+            [
+                'by_user' => $by_user,
+                'videoRepository' => $this->videoRepository
+            ]
         );
         $this->ui->showHeader();
 

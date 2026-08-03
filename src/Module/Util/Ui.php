@@ -35,6 +35,7 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\Plugin;
@@ -44,9 +45,14 @@ use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Plugin\AmpacheLastfm;
 use Ampache\Plugin\Ampachelibrefm;
 use Ampache\Plugin\PluginDisplayOnFooterInterface;
+use Ampache\Repository\CollectionRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 
 /**
  * A collection of methods related to the user interface
@@ -76,6 +82,15 @@ class Ui implements UiInterface
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly MetadataFieldRepositoryInterface $metadataFieldRepository,
+        private readonly AjaxUriRetrieverInterface $ajaxUriRetriever,
+        private readonly CollectionRepositoryInterface $collectionRepository,
+        private readonly EnvironmentInterface $environment,
+        private readonly FolderRepositoryInterface $folderRepository,
+        private readonly LibraryItemLoaderInterface $libraryItemLoader,
+        private readonly PlaylistLoaderInterface $playlistLoader,
+        private readonly PrivateMessageRepositoryInterface $privateMessageRepository,
+        private readonly VideoRepositoryInterface $videoRepository,
+        private readonly ZipHandlerInterface $zipHandler,
     ) {}
 
     /**
@@ -83,11 +98,17 @@ class Ui implements UiInterface
      *
      * Does some trickery with the output buffer to return the output of a
      * template.
+     *
+     * @param array<string, mixed> $context values the template renders with
      */
-    public static function ajax_include(string $template): string
+    public static function ajax_include(string $template, array $context = []): string
     {
+        $templatePath = self::find_template('') . $template;
+
         ob_start();
-        require self::find_template('') . $template;
+        extract($context);
+
+        require $templatePath;
         $output = ob_get_contents();
         ob_end_clean();
 
@@ -1630,6 +1651,17 @@ class Ui implements UiInterface
             exit;
         }
 
+        // header.inc.php and everything it requires render in this scope, so the services they use are named here
+        $ajaxUriRetriever         = $this->ajaxUriRetriever;
+        $collectionRepository     = $this->collectionRepository;
+        $environment              = $this->environment;
+        $folderRepository         = $this->folderRepository;
+        $libraryItemLoader        = $this->libraryItemLoader;
+        $playlistLoader           = $this->playlistLoader;
+        $privateMessageRepository = $this->privateMessageRepository;
+        $videoRepository          = $this->videoRepository;
+        $zipHandler               = $this->zipHandler;
+
         require_once self::find_template('header.inc.php');
     }
 
@@ -1663,5 +1695,18 @@ class Ui implements UiInterface
     public function showQueryStats(): void
     {
         require self::find_template('show_query_stats.inc.php');
+    }
+
+    public function showRightbar(): string
+    {
+        return self::ajax_include(
+            'rightbar.inc.php',
+            [
+                'collectionRepository' => $this->collectionRepository,
+                'libraryItemLoader' => $this->libraryItemLoader,
+                'playlistLoader' => $this->playlistLoader,
+                'zipHandler' => $this->zipHandler,
+            ]
+        );
     }
 }

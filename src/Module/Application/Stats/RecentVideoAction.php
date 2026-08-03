@@ -54,7 +54,10 @@ final readonly class RecentVideoAction implements ApplicationActionInterface
         $this->ui->showHeader();
         $this->ui->show(
             'show_form_recent.inc.php',
-            ['by_user' => $by_user]
+            [
+                'by_user' => $by_user,
+                'videoRepository' => $this->videoRepository
+            ]
         );
 
         define('TABLE_RENDERED', 1);

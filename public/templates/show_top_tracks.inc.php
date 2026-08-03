@@ -31,7 +31,7 @@ use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\Model\Artist;
@@ -90,10 +90,9 @@ $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
     </tr>
     </thead>
     <tbody>
-        <?php global $dic;
-$talFactory = $dic->get(TalFactoryInterface::class);
-$guiFactory = $dic->get(GuiFactoryInterface::class);
-$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+        <?php /** @var TalFactoryInterface $talFactory */
+/** @var GuiFactoryInterface $guiFactory */
+/** @var GuiGatekeeperInterface $gatekeeper */
 
 // One TAL view reused for all rows
 $songRowView = $talFactory->createTalView()->setTemplate('song_row.xhtml');

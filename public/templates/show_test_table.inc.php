@@ -48,9 +48,7 @@ function debug_wresult(bool $status = false, ?string $value = null, string $comm
 }
 
 // TODO remove me
-global $dic;
 /** @var EnvironmentInterface $environment */
-$environment = $dic->get(EnvironmentInterface::class);
 
 /** @var string $configfile */
 ?>

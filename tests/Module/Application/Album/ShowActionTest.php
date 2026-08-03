@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -50,6 +51,7 @@ class ShowActionTest extends MockeryTestCase
     private PrivilegeCheckerInterface&MockInterface $privilegeChecker;
     private ShowAction $subject;
     private UiInterface&MockInterface $ui;
+    private ZipHandlerInterface&MockInterface $zipHandler;
 
     public function testRunShowsAlbumEditabbleWithSingleDisc(): void
     {
@@ -278,6 +280,7 @@ class ShowActionTest extends MockeryTestCase
                     'album' => $album,
                     'isAlbumEditable' => $isEditAble,
                     'user' => $user,
+                    'zipHandler' => $this->zipHandler,
                 ]
             )
             ->once();
@@ -351,13 +354,15 @@ class ShowActionTest extends MockeryTestCase
         $this->logger           = $this->mock(LoggerInterface::class);
         $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
         $this->configContainer  = $this->mock(ConfigContainerInterface::class);
+        $this->zipHandler       = $this->mock(ZipHandlerInterface::class);
 
         $this->subject = new ShowAction(
             $this->modelFactory,
             $this->ui,
             $this->logger,
             $this->privilegeChecker,
-            $this->configContainer
+            $this->configContainer,
+            $this->zipHandler
         );
     }
 
@@ -411,6 +416,7 @@ class ShowActionTest extends MockeryTestCase
                     'album' => $album,
                     'isAlbumEditable' => $isEditAble,
                     'user' => $user,
+                    'zipHandler' => $this->zipHandler,
                 ]
             )
             ->once();

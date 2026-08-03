@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Preference;
+use Ampache\Module\Util\EnvironmentInterface;
 use Exception;
 use Gettext\Translations;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -43,6 +44,7 @@ final readonly class ConfigAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private ResponseFactoryInterface $responseFactory,
+        private EnvironmentInterface $environment,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -94,7 +96,9 @@ final readonly class ConfigAction implements ApplicationActionInterface
         }
 
         load_gettext();
-        // Load template
+        // show_test_table.inc.php renders into this scope from show_test.inc.php
+        $environment = $this->environment;
+
         require_once __DIR__ . '/../../../../public/templates/show_test.inc.php';
 
         return null;

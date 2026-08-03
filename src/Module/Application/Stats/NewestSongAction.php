@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,6 +44,7 @@ final readonly class NewestSongAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private ConfigContainerInterface $configContainer,
+        private VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -50,7 +52,10 @@ final readonly class NewestSongAction implements ApplicationActionInterface
         $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
         $this->ui->showHeader();
-        $this->ui->show('show_form_newest.inc.php');
+        $this->ui->show(
+            'show_form_newest.inc.php',
+            ['videoRepository' => $this->videoRepository]
+        );
 
         define('TABLE_RENDERED', 1);
 

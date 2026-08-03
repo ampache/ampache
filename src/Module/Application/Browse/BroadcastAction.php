@@ -28,7 +28,9 @@ namespace Ampache\Module\Application\Browse;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,6 +41,8 @@ final readonly class BroadcastAction implements ApplicationActionInterface
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
+        private FolderRepositoryInterface $folderRepository,
+        private VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -60,7 +64,13 @@ final readonly class BroadcastAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $this->ui->show('show_form_browse.inc.php');
+        $this->ui->show(
+            'show_form_browse.inc.php',
+            [
+                'folderRepository' => $this->folderRepository,
+                'videoRepository' => $this->videoRepository
+            ]
+        );
 
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);

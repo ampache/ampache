@@ -78,8 +78,7 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 }
-global $dic; // @todo remove after refactoring
-$zipHandler = $dic->get(ZipHandlerInterface::class);
+/** @var ZipHandlerInterface $zipHandler */
 $batch_dl   = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 $zip_album  = $batch_dl && $zipHandler->isZipable('album');
 $zip_albumD = $batch_dl && $zipHandler->isZipable('album_disk');

@@ -52,7 +52,10 @@ final readonly class NewestVideoAction implements ApplicationActionInterface
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
         $this->ui->showHeader();
-        $this->ui->show('show_form_newest.inc.php');
+        $this->ui->show(
+            'show_form_newest.inc.php',
+            ['videoRepository' => $this->videoRepository]
+        );
 
         define('TABLE_RENDERED', 1);
 

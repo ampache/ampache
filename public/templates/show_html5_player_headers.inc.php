@@ -8,14 +8,13 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 
-global $dic;
+/** @var AjaxUriRetrieverInterface $ajaxUriRetriever */
 
 $web_path        = AmpConfig::get_web_path();
 $ampache_version = AmpConfig::get('version');
 // Cache-bust the skin CSS by file mtime so edits load immediately (falls back to app version).
 $cssBust = static fn(string $file): string => is_file(__DIR__ . '/' . $file) ? (string) filemtime(__DIR__ . '/' . $file) : $ampache_version;
 
-$ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "path: '/', secure: true, samesite: 'Strict'"
     : "path: '/', samesite: 'Strict'";

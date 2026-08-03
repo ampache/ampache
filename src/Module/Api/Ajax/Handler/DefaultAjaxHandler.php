@@ -33,7 +33,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\container_item;
@@ -49,6 +49,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private AlbumRepositoryInterface $albumRepository,
         private SongRepositoryInterface $songRepository,
+        private UiInterface $ui,
     ) {}
 
     public function handle(User $user): void
@@ -62,7 +63,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'basket_refresh':
             case 'refresh_rightbar':
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'current_playlist':
                 if ($request_type === 'delete') {
@@ -70,7 +71,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     $user->playlist?->delete_track($request_id);
                 }
 
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'basket':
                 // Handle the users basketcases...
@@ -187,7 +188,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     }
                 }
 
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'set_rating':
                 /* Setting ratings */

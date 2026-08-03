@@ -64,8 +64,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 <?php } ?>
 <div id="information_actions">
     <ul>
-<?php global $dic; // @todo remove after refactoring
-$zipHandler = $dic->get(ZipHandlerInterface::class);
+<?php /** @var ZipHandlerInterface $zipHandler */
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('search')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=search&id=<?php echo $playlist->id; ?>" rel="nofollow">

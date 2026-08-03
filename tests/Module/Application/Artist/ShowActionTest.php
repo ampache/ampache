@@ -31,6 +31,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -47,6 +48,7 @@ class ShowActionTest extends MockeryTestCase
     private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?ShowAction $subject;
     private UiInterface|MockInterface|null $ui;
+    private ZipHandlerInterface|MockInterface|null $zipHandler;
 
     public function testRunsOutputsGroupedAlbums(): void
     {
@@ -77,6 +79,7 @@ class ShowActionTest extends MockeryTestCase
                     'object_ids' => [],
                     'multi_object_ids' => $multi_object_ids,
                     'gatekeeper' => $gatekeeper,
+                    'zipHandler' => $this->zipHandler,
                 ]
             )
             ->once();
@@ -148,6 +151,7 @@ class ShowActionTest extends MockeryTestCase
                     'object_ids' => $object_ids,
                     'multi_object_ids' => [],
                     'gatekeeper' => $gatekeeper,
+                    'zipHandler' => $this->zipHandler,
                 ]
             )
             ->once();
@@ -243,13 +247,15 @@ class ShowActionTest extends MockeryTestCase
         $this->ui              = $this->mock(UiInterface::class);
         $this->logger          = $this->mock(LoggerInterface::class);
         $this->albumRepository = $this->mock(AlbumRepositoryInterface::class);
+        $this->zipHandler      = $this->mock(ZipHandlerInterface::class);
 
         $this->subject = new ShowAction(
             $this->modelFactory,
             $this->configContainer,
             $this->ui,
             $this->logger,
-            $this->albumRepository
+            $this->albumRepository,
+            $this->zipHandler
         );
     }
 }

@@ -36,6 +36,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Preference;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -55,6 +56,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
         private ContainerInterface $dic,
         private UiInterface $ui,
         private ShareRepositoryInterface $shareRepository,
+        private AjaxUriRetrieverInterface $ajaxUriRetriever,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -120,7 +122,10 @@ final readonly class ConsumeAction implements ApplicationActionInterface
         } elseif ($action === 'stream') {
             $this->ui->show(
                 'show_share.inc.php',
-                ['share' => $share]
+                [
+                    'share' => $share,
+                    'ajaxUriRetriever' => $this->ajaxUriRetriever
+                ]
             );
         } else {
             throw new AccessDeniedException('Access Denied: unknown action.');

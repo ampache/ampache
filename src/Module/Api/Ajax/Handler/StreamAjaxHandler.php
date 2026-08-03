@@ -30,13 +30,14 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
 
 final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
+        private UiInterface $ui,
     ) {}
 
     public function handle(User $user): void
@@ -78,7 +79,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if (($new === 'localplay' && $current != 'localplay') || ($current == 'localplay' && $new !== 'localplay')) {
-                    $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                    $results['rightbar'] = $this->ui->showRightbar();
                 }
 
                 break;
@@ -129,9 +130,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 // we might not actually clear it in the session.
                 if ((array_key_exists('playlist_method', $_REQUEST) && $_REQUEST['playlist_method'] == 'clear') || (AmpConfig::get('playlist_method') == 'clear')) {
                     define('NO_SONGS', '1');
-                    ob_start();
-                    require_once Ui::find_template('rightbar.inc.php');
-                    $results['rightbar'] = ob_get_clean();
+                    $results['rightbar'] = $this->ui->showRightbar();
                 }
 
                 $web_path = AmpConfig::get_web_path();

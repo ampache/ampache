@@ -30,6 +30,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,6 +43,7 @@ final readonly class RemoveDuplicatesAction implements ApplicationActionInterfac
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
+        private ZipHandlerInterface $zipHandler,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -79,7 +81,8 @@ final readonly class RemoveDuplicatesAction implements ApplicationActionInterfac
             'show_playlist.inc.php',
             [
                 'playlist' => $playlist,
-                'object_ids' => $object_ids
+                'object_ids' => $object_ids,
+                'zipHandler' => $this->zipHandler
             ]
         );
 

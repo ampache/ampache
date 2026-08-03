@@ -258,6 +258,8 @@ final class DefaultAction implements ApplicationActionInterface
                 require_once __DIR__ . '/../../../../public/templates/show_install.inc.php';
                 break;
             case 'check':
+                // show_test_table.inc.php renders into this scope from show_install_check.inc.php
+                $environment = $this->environment;
                 require_once __DIR__ . '/../../../../public/templates/show_install_check.inc.php';
                 break;
             default:

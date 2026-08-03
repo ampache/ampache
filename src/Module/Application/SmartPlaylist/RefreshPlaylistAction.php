@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\SmartPlaylist;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,6 +40,7 @@ final readonly class RefreshPlaylistAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
+        private ZipHandlerInterface $zipHandler,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -59,7 +61,8 @@ final readonly class RefreshPlaylistAction implements ApplicationActionInterface
             'show_search.inc.php',
             [
                 'playlist' => $playlist,
-                'object_ids' => $playlist->get_items()
+                'object_ids' => $playlist->get_items(),
+                'zipHandler' => $this->zipHandler
             ]
         );
         $this->ui->showQueryStats();

@@ -30,6 +30,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
 use Override;
@@ -40,6 +41,7 @@ class UpdatePlaylistActionTest extends MockeryTestCase
     private ModelFactoryInterface|MockInterface $modelFactory;
     private UpdatePlaylistAction $subject;
     private UiInterface|MockInterface $ui;
+    private ZipHandlerInterface|MockInterface $zipHandler;
 
     public function testRunThrowsExceptionIfAccessDenied(): void
     {
@@ -82,10 +84,12 @@ class UpdatePlaylistActionTest extends MockeryTestCase
     {
         $this->ui           = $this->mock(UiInterface::class);
         $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->zipHandler   = $this->mock(ZipHandlerInterface::class);
 
         $this->subject = new UpdatePlaylistAction(
             $this->ui,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->zipHandler
         );
     }
 }

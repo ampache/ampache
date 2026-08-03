@@ -31,6 +31,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -47,6 +48,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private UiInterface $ui,
         private LoggerInterface $logger,
         private AlbumRepositoryInterface $albumRepository,
+        private ZipHandlerInterface $zipHandler,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -99,6 +101,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                     'object_ids' => $object_ids,
                     'multi_object_ids' => $multi_object_ids,
                     'gatekeeper' => $gatekeeper,
+                    'zipHandler' => $this->zipHandler,
                 ]
             );
         }

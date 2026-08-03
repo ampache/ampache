@@ -46,16 +46,12 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
-use Psr\Container\ContainerInterface;
-
-global $dic;
 
 /** @var bool $isAlbumEditable */
-/** @var ContainerInterface $dic */
+/** @var ZipHandlerInterface $zipHandler */
 /** @var User|null $current_user */
 
 $current_user = $current_user ?? Core::get_global('user');
-$zipHandler   = $dic->get(ZipHandlerInterface::class);
 $batch_dl     = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 $zip_album    = $batch_dl && $zipHandler->isZipable('album');
 // Title for this album

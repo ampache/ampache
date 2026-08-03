@@ -28,7 +28,9 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Share;
@@ -44,10 +46,12 @@ final class ShowEditObjectAction extends AbstractEditAction
 {
     public const string REQUEST_KEY = 'show_edit_object';
 
+    private MetadataManagerInterface $metadataManager;
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
     private UiInterface $ui;
     private UserRepositoryInterface $userRepository;
+    private ZipHandlerInterface $zipHandler;
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
@@ -58,12 +62,16 @@ final class ShowEditObjectAction extends AbstractEditAction
         ShareRepositoryInterface $shareRepository,
         UiInterface $ui,
         UserRepositoryInterface $userRepository,
+        MetadataManagerInterface $metadataManager,
+        ZipHandlerInterface $zipHandler,
     ) {
         parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->ui              = $ui;
         $this->userRepository  = $userRepository;
+        $this->metadataManager = $metadataManager;
+        $this->zipHandler      = $zipHandler;
     }
 
     protected function handle(
@@ -82,7 +90,9 @@ final class ShowEditObjectAction extends AbstractEditAction
             'show_edit_' . $object_type . '.inc.php',
             [
                 'libitem' => $libitem,
-                'users' => $users
+                'users' => $users,
+                'metadataManager' => $this->metadataManager,
+                'zipHandler' => $this->zipHandler
             ]
         );
 

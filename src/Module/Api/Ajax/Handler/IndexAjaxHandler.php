@@ -26,10 +26,13 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Statistics\Stats;
@@ -60,6 +63,9 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         private WantedRepositoryInterface $wantedRepository,
         private VideoRepositoryInterface $videoRepository,
         private WantedManagerInterface $wantedManager,
+        private GatekeeperFactoryInterface $gatekeeperFactory,
+        private GuiFactoryInterface $guiFactory,
+        private TalFactoryInterface $talFactory,
     ) {}
 
     public function handle(User $user): void
@@ -78,6 +84,10 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $artist       = new Artist((int) $this->requestParser->getFromRequest('artist'));
                 $object_ids   = $this->songRepository->getTopSongsByArtist($artist, (int) AmpConfig::get('popular_threshold', 10));
                 $hide_columns = ['cel_artist'];
+                // the row template renders into this scope, so the services it uses are named here
+                $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
+                $guiFactory = $this->guiFactory;
+                $talFactory = $this->talFactory;
                 ob_start();
                 require_once Ui::find_template('show_top_tracks.inc.php');
                 $results['top_tracks'] = ob_get_clean();
@@ -204,6 +214,10 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $object_ids   = array_slice($object_ids, 0, (int) AmpConfig::get('popular_threshold', 10));
                 $browse       = new Browse();
                 $hide_columns = [];
+                // the row template renders into this scope, so the services it uses are named here
+                $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
+                $guiFactory = $this->guiFactory;
+                $talFactory = $this->talFactory;
                 ob_start();
                 require_once Ui::find_template('show_similar_songs.inc.php');
                 $results['similar_songs'] = ob_get_clean();

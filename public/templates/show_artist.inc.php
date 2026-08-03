@@ -248,8 +248,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
     <?php }
     }
-global $dic; // @todo remove after refactoring
-$zipHandler = $dic->get(ZipHandlerInterface::class);
+/** @var ZipHandlerInterface $zipHandler */
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('artist')) {
     $download = "&nbsp;" . T_('Download'); ?>
         <li>
