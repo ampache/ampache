@@ -202,55 +202,6 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * build_map_cache
-     * This builds a cache of the mappings for the specified object, no limit is given
-     * @param int[]|string[] $ids
-     */
-    public static function build_map_cache(string $type, array $ids): bool
-    {
-        if (empty($ids)) {
-            return false;
-        }
-
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return false;
-        }
-
-        $tags    = [];
-        $tag_map = [];
-
-        foreach (self::getTagRepository()->getMapRows($type, $ids) as $row) {
-            $tags[$row['object_id']][$row['tag_id']] = [
-                'user' => $row['user'],
-                'id' => $row['tag_id'],
-                'name' => $row['name'],
-            ];
-
-            $tag_map[$row['object_id']] = [
-                'id' => $row['id'],
-                'tag_id' => $row['tag_id'],
-                'user' => $row['user'],
-                'object_type' => $type,
-                'object_id' => $row['object_id'],
-            ];
-        }
-
-        // Run through our original ids as we also want to cache NULL
-        // results
-        foreach ($ids as $tagid) {
-            if (!isset($tags[$tagid])) {
-                $tags[$tagid]    = null;
-                $tag_map[$tagid] = null;
-            }
-
-            parent::add_to_cache('tag_top_' . $type, $tagid, [$tags[$tagid]]);
-            parent::add_to_cache('tag_map_' . $type, $tagid, [$tag_map[$tagid]]);
-        }
-
-        return true;
-    }
-
-    /**
      * clean_to_existing
      * Clean tag list to existing tag list only
      * @param string[]|string $tags
@@ -362,20 +313,6 @@ class Tag extends database_object implements library_item, displayable_item, con
         }
 
         return self::getTagRepository()->getObjectTags($type, $object_id);
-    }
-
-    /**
-     * get_tag_ids
-     * This gets the objects from a specified tag and returns an array of object ids, nothing more
-     * @return int[]
-     */
-    public static function get_tag_ids(string $type, ?string $count = '', ?string $offset = ''): array
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return [];
-        }
-
-        return self::getTagRepository()->getTagIds($type, (int) $count, (int) $offset);
     }
 
     /**

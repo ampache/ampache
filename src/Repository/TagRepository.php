@@ -121,33 +121,6 @@ final readonly class TagRepository implements TagRepositoryInterface
             : (int) $tagId;
     }
 
-    public function getMapRows(string $objectType, array $objectIds): array
-    {
-        if ($objectIds === []) {
-            return [];
-        }
-
-        $idList = implode(',', array_map('intval', $objectIds));
-
-        $result = $this->connection->query(
-            'SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` IN (' . $idList . ')',
-            [$objectType]
-        );
-
-        $rows = [];
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $rows[] = [
-                'id' => (int) $row['id'],
-                'tag_id' => (int) $row['tag_id'],
-                'name' => (string) $row['name'],
-                'object_id' => (int) $row['object_id'],
-                'user' => (int) $row['user'],
-            ];
-        }
-
-        return $rows;
-    }
-
     public function getMergedCount(): int
     {
         return (int) $this->connection->fetchOne('SELECT COUNT(DISTINCT `tag_id`) AS `tag_count` FROM `tag_merge`;');
@@ -254,25 +227,6 @@ final readonly class TagRepository implements TagRepositoryInterface
             "SELECT `tag`.`name` FROM `tag` JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id` JOIN `song` ON `tag_map`.`object_id` = `song`.`id` WHERE `song`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = 'song') AND `tag_map`.`object_type` = 'song' GROUP BY `tag`.`id`, `tag`.`name`;",
             $artistId
         );
-    }
-
-    public function getTagIds(string $objectType, int $count, int $offset): array
-    {
-        $sql = 'SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = ? ';
-        if (AmpConfig::get('catalog_disable') && in_array($objectType, self::CATALOG_TYPES)) {
-            $sql .= 'AND ' . Catalog::get_enable_filter($objectType, '`tag_map`.`object_id`');
-        }
-
-        $sql .= $this->limitClause($count, $offset);
-
-        $result = $this->connection->query($sql, [$objectType]);
-
-        $tagIds = [];
-        while ($tagId = $result->fetchColumn()) {
-            $tagIds[] = (int) $tagId;
-        }
-
-        return $tagIds;
     }
 
     public function getTagObjects(string $objectType, int $tagId, int $count, int $offset, int $catalogId): array

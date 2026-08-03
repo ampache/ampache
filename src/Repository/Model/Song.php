@@ -564,11 +564,6 @@ class Song extends database_object implements
         return self::getSongRepository()->getSongMapValues($song_id, $type)[0] ?? null;
     }
 
-    public static function has_id(int|string $song_id): bool
-    {
-        return self::getSongRepository()->hasId((int) $song_id);
-    }
-
     /**
      * insert
      *
