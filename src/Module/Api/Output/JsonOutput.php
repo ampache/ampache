@@ -92,13 +92,14 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $artists
      * @param string[] $include
      */
     public function artists(int $apiVersion, array $artists, array $include, User $user, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Json4_Data::artists($artists, $include, $user, $auth),
             5 => $this->json5Data->artists($artists, $include, $user, $auth, $asObject),
             6 => $this->json6Data->artists($artists, $include, $user, $auth, $asObject),
             8 => $this->json8Data->artists($artists, $include, $user, $auth, $asObject),
