@@ -27,13 +27,14 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class PlaylistAddSong4Method
- */
-final class PlaylistAddSong4Method
+final class PlaylistAddSong4Method implements MethodInterface
 {
     public const string ACTION = 'playlist_add_song';
 
@@ -54,11 +55,18 @@ final class PlaylistAddSong4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function playlist_add_song(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter', 'song'], self::ACTION)) {
-            return false;
+            return $response;
         }
         ob_end_clean();
         $playlist = new Playlist((int) $input['filter']);
@@ -66,16 +74,16 @@ final class PlaylistAddSong4Method
         if (!$playlist->has_collaborate($user)) {
             Api4::message('error', 'Access denied to this playlist', '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int) $input['check'] == 1)) && $playlist->has_item($song)) {
             Api4::message('error', "Can't add a duplicate item when check is enabled", '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         $playlist->add_songs([$song]);
         Api4::message('success', 'song added to playlist', null, $input['api_format']);
 
-        return true;
+        return $response;
     }
 }

@@ -27,16 +27,17 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Flag4Method
- */
-final class Flag4Method
+final class Flag4Method implements MethodInterface
 {
     public const string ACTION = 'flag';
 
@@ -60,16 +61,23 @@ final class Flag4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function flag(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('ratings')) {
             Api4::message('error', 'Access Denied: Rating features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['type', 'id', 'flag'], self::ACTION)) {
-            return false;
+            return $response;
         }
         ob_end_clean();
         $type      = (string) $input['type'];
@@ -83,7 +91,7 @@ final class Flag4Method
         if (!Userflag::is_valid(strtolower($type))) {
             Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
@@ -95,18 +103,18 @@ final class Flag4Method
             if ($item->getId() === 0) {
                 Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
-                return false;
+                return $response;
             }
             $userflag = new Userflag((int) $object_id, $type);
             if ($userflag->set_flag($flag, $user_id)) {
                 $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
                 Api4::message('success', $message . $object_id, null, $input['api_format']);
 
-                return true;
+                return $response;
             }
             Api4::message('error', 'flag failed ' . $object_id, '400', $input['api_format']);
         }
 
-        return true;
+        return $response;
     }
 }

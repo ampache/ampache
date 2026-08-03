@@ -27,16 +27,21 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Scrobble4Method
- */
-final class Scrobble4Method
+final class Scrobble4Method implements MethodInterface
 {
     public const string ACTION = 'scrobble';
+
+    public function __construct(
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     /**
      * scrobble
@@ -69,11 +74,18 @@ final class Scrobble4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function scrobble(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['song', 'artist', 'album'], self::ACTION)) {
-            return false;
+            return $response;
         }
         ob_end_clean();
         $charset     = AmpConfig::get('site_charset', 'UTF-8');
@@ -85,13 +97,13 @@ final class Scrobble4Method
         $album_mbid  = html_entity_decode(scrub_out($input['album_mbid'] ?? $input['albummbid'] ?? ''), ENT_QUOTES, $charset); //optional
         $date        = (array_key_exists('date', $input)) ? (int) scrub_in((string) $input['date']) : time(); //optional
         $user_id     = $user->id;
-        $valid       = in_array($user->id, self::getUserRepository()->getValid());
+        $valid       = in_array($user->id, $this->userRepository->getValid());
 
         // validate supplied user
         if ($valid === false) {
             Api4::message('error', 'User_id not found', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         // validate minimum required options
@@ -99,7 +111,7 @@ final class Scrobble4Method
         if (!$song_name || !$album_name || !$artist_name) {
             Api4::message('error', 'Invalid input options', '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         // validate client string or fall back to 'api'
@@ -117,7 +129,7 @@ final class Scrobble4Method
             if ($item->isNew()) {
                 Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
-                return false;
+                return $response;
             }
             debug_event(self::class, 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . time(), 5);
 
@@ -130,16 +142,6 @@ final class Scrobble4Method
             Api4::message('success', 'successfully scrobbled: ' . $scrobble_id, null, $input['api_format']);
         }
 
-        return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return $response;
     }
 }
