@@ -37,6 +37,7 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\container_item;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Tag;
@@ -158,6 +159,11 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                                 $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
 
+                            break;
+                        case 'folder_random':
+                            $medias = (new Folder($request_id))->get_medias();
+                            shuffle($medias);
+                            $user->playlist?->add_medias($medias);
                             break;
                         case 'tag_random':
                             $object = new Tag($request_id);
