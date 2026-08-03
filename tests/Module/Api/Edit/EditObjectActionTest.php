@@ -59,6 +59,25 @@ class EditObjectActionTest extends TestCase
     private StreamFactoryInterface&MockObject $streamFactory;
     private EditObjectAction $subject;
 
+    public function testRunLoadsATypeThatCarriesNoRowSuffix(): void
+    {
+        $libitem = $this->createMock(library_item::class);
+
+        $this->libraryItemLoader->expects(static::once())
+            ->method('load')
+            ->with(LibraryItemEnum::SONG, 666)
+            ->willReturn($libitem);
+
+        $libitem->expects(static::once())
+            ->method('update')
+            ->willReturn(666);
+
+        $this->subject->run(
+            $this->createRequest(['type' => 'song', 'id' => '666'], ['id' => '666']),
+            $this->createGatekeeper()
+        );
+    }
+
     public function testRunLoadsTheItemThroughTheLoaderAndSavesTheScrubbedPostData(): void
     {
         $libitem    = $this->createMock(library_item::class);

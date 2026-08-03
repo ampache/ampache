@@ -86,7 +86,8 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $source_object_type = $this->readType($query, 'object_type');
             $object_type        = $source_object_type;
         } else {
-            $object_type = implode('_', explode('_', $source_object_type, -1));
+            // a type carrying no suffix strips to nothing, so it falls back to itself rather than resolving as an empty type
+            $object_type = implode('_', explode('_', $source_object_type, -1)) ?: $source_object_type;
         }
 
         $object_id = (int) $this->readString($query, 'id');
