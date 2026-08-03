@@ -173,7 +173,7 @@ final class Folders8Method implements MethodInterface
     {
         $filter = $this->requestedFolder($input);
         if ($this->isObjectId($filter)) {
-            return new Folder((int) $filter);
+            return $this->folderRepository->findById((int) $filter);
         }
 
         return ($filter === '/')
