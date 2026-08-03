@@ -291,19 +291,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * cache_local_file
-     */
-    public static function cache_local_file(Podcast_Episode|Song|Video $media, string $target_file, string $cache_target): void
-    {
-        // transcode to the new path
-        $transcode_settings = $media->get_transcode_settings($cache_target);
-
-        Stream::start_transcode($media, $transcode_settings, $target_file);
-
-        debug_event(self::class, 'Saved: ' . $media->id . ' to: {' . $target_file . '}', 5);
-    }
-
-    /**
      * cache_remote_file
      */
     public static function cache_remote_file(string $file_target, string $remote_url): bool
@@ -401,52 +388,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * check_length
-     * Check to make sure the string fits into the database
-     * max_length is the maximum number of characters that the (varchar) column can hold
-     */
-    public static function check_length(?string $string = null, int $max_length = 255): string
-    {
-        $string = (string) $string;
-        if (false !== $encoding = mb_detect_encoding($string, null, true)) {
-            $string = trim(mb_substr($string, 0, $max_length, $encoding));
-        } else {
-            $string = trim(substr($string, 0, $max_length));
-        }
-
-        return $string;
-    }
-
-    /**
-     * check_title
-     * this checks to make sure something is
-     * set on the title, if it isn't it looks at the
-     * filename and tries to set the title based on that
-     */
-    public static function check_title(string $title, string $file = ''): string
-    {
-        if (strlen(trim($title)) < 1) {
-            $title = $file;
-        }
-
-        return $title;
-    }
-
-    /**
-     * check_track
-     * Check to make sure the track number fits into the database: max 32767, min -32767
-     */
-    public static function check_track(string $track): int
-    {
-        $retval = ((int) $track > 32767 || (int) $track < -32767) ? (int) substr($track, -4, 4) : (int) $track;
-        if ((int) $track !== $retval) {
-            debug_event(self::class, "check_track: '{" . $track . "}' out of range. Changed into '{" . $retval . "}'", 4);
-        }
-
-        return $retval;
-    }
-
-    /**
      * clean_duplicate_artists
      *
      * Artists that have the same mbid shouldn't be duplicated but can be created and updated based on names
@@ -528,26 +469,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * count_catalog
-     *
-     * This returns the current number of songs, videos, podcast_episodes in this catalog.
-     * @return array{items: int, time: int, size: int}
-     */
-    public static function count_catalog(int $catalog_id): array
-    {
-        $catalog = self::create_from_id($catalog_id);
-        if (!$catalog instanceof Catalog) {
-            return [
-                'items' => 0,
-                'time' => 0,
-                'size' => 0,
-            ];
-        }
-
-        return self::getCatalogCounter()->countCatalog($catalog_id, $catalog->gather_types);
-    }
-
-    /**
      * count_table
      *
      * Count and/or Update a table count when adding/removing from the server
@@ -559,16 +480,6 @@ abstract class Catalog extends database_object
         return ((int) $catalog_id > 0)
             ? $counter->countForCatalog($table, (int) $catalog_id, (int) $update_time, (int) $limit)
             : $counter->count($table);
-    }
-
-    /**
-     * count_tags
-     *
-     * This returns the current number of unique tags in the database.
-     */
-    public static function count_tags(): int
-    {
-        return self::getCatalogCounter()->countTags();
     }
 
     /**
@@ -1409,17 +1320,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * get_unique_string
-     * Check to make sure the string doesn't have duplicate strings ({)e.g. "Enough Records; Enough Records")
-     */
-    public static function get_unique_string(string $str_array): string
-    {
-        $array = array_unique(array_map('trim', explode(';', $str_array)));
-
-        return implode('', $array);
-    }
-
-    /**
      * get_update_info
      *
      * return the counts from user_data or update_info to speed up responses
@@ -1738,52 +1638,6 @@ abstract class Catalog extends database_object
         $video_pattern  = "/\.(" . AmpConfig::get('catalog_video_pattern') . ")$/i";
 
         return ($ignore_check && preg_match($video_pattern, $file));
-    }
-
-    /**
-     * Migrate an object associate images to a new object
-     */
-    public static function migrate(string $object_type, int $old_object_id, int $new_object_id, int $song_id, int $catalog_id): bool
-    {
-        if ($old_object_id != $new_object_id) {
-            debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
-
-            Stats::migrate($object_type, $old_object_id, $new_object_id, $song_id);
-            Useractivity::migrate($object_type, $old_object_id, $new_object_id);
-            Recommendation::migrate($object_type, $old_object_id);
-            self::getShareRepository()->migrate($object_type, $old_object_id, $new_object_id);
-            self::getShoutRepository()->migrate($object_type, $old_object_id, $new_object_id);
-            Tag::migrate($object_type, $old_object_id, $new_object_id);
-            Userflag::migrate($object_type, $old_object_id, $new_object_id);
-            Rating::migrate($object_type, $old_object_id, $new_object_id);
-            Art::duplicate($object_type, $old_object_id, $new_object_id);
-            Playlist::migrate($object_type, $old_object_id, $new_object_id);
-            Label::migrate($object_type, $old_object_id, $new_object_id);
-            if ($object_type === 'artist') {
-                self::getWantedRepository()->migrateArtist($old_object_id, $new_object_id);
-                Artist::update_artist_count($new_object_id);
-                Artist::update_artist_count($old_object_id);
-                self::update_map($catalog_id, 'artist', $new_object_id);
-                self::garbage_collect_mapping(['artist']);
-            }
-
-            if ($object_type === 'album') {
-                self::clean_empty_albums(false);
-                Album::update_album_count($new_object_id);
-                Album::update_album_count($old_object_id);
-                self::update_map($catalog_id, 'album', $new_object_id);
-                self::update_map($catalog_id, 'album_disk', $new_object_id);
-                self::garbage_collect_mapping(['album', 'album_disk']);
-            }
-
-            self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
-            self::getBookmarkRepository()->migrate($object_type, $old_object_id, $new_object_id);
-            self::migrate_map($object_type, $old_object_id, $new_object_id);
-
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -2349,31 +2203,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @param array<string, mixed> $results
-     * @return array{
-     *     change: bool,
-     *     element: array<string, string>,
-     * }
-     */
-    public static function update_podcast_episode_from_tags(array $results, Podcast_Episode $podcast_episode): array
-    {
-        self::getPodcastEpisodeRepository()->updateFromTags(
-            $podcast_episode->id,
-            (string) $podcast_episode->file,
-            $results,
-            time()
-        );
-
-        $array            = [];
-        $array['change']  = true;
-        $array['element'] = [];
-
-        $array['element']['podcast_episode'] = '';
-
-        return $array;
-    }
-
-    /**
      * update_settings
      * This function updates the basic setting of the catalog
      * @param array{
@@ -2552,6 +2381,146 @@ abstract class Catalog extends database_object
         ];
     }
 
+    public static function update_video_from_tags(array $results, Video $video): array
+    {
+        /* Setup the vars */
+        $new_video                = new Video();
+        $new_video->file          = $results['file'];
+        $new_video->title         = $results['title'];
+        $new_video->size          = $results['size'];
+        $new_video->video_codec   = $results['video_codec'];
+        $new_video->audio_codec   = $results['audio_codec'];
+        $new_video->resolution_x  = $results['resolution_x'];
+        $new_video->resolution_y  = $results['resolution_y'];
+        $new_video->time          = $results['time'];
+        $new_video->release_date  = $results['release_date'] ?? null;
+        $new_video->bitrate       = $results['bitrate'];
+        $new_video->mode          = $results['mode'];
+        $new_video->channels      = $results['channels'];
+        $new_video->display_x     = $results['display_x'];
+        $new_video->display_y     = $results['display_y'];
+        $new_video->frame_rate    = $results['frame_rate'];
+        $new_video->video_bitrate = self::check_int($results['video_bitrate'], PHP_INT_MAX, 0);
+        $tags                     = Tag::get_object_tags('video', $video->id);
+        $video_tags               = [];
+        if ($tags) {
+            foreach ($tags as $tag) {
+                $video_tags[] = $tag['name'];
+            }
+        }
+
+        $new_video_tags = $results['genre'];
+
+        $info = Video::compare_video_information($video, $new_video);
+        if ($info['change']) {
+            debug_event(self::class, $video->file . " : differences found, updating database", 5);
+
+            Video::update_video($video->id, $new_video);
+
+            if ($video_tags != $new_video_tags) {
+                Tag::update_tag_list(implode(',', $new_video_tags), 'video', $video->id, true);
+            }
+
+            Video::update_video_counts($video->id);
+        } else {
+            // always update the time when you update
+            Video::update_utime($video->id);
+        }
+
+        return $info;
+    }
+
+    /**
+     * @deprecated
+     */
+    protected static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    protected static function getCatalogMapRepository(): CatalogMapRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogMapRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    protected static function getCatalogRepository(): CatalogRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    protected static function getFolderRepository(): FolderRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(FolderRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    protected static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    protected static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    protected static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * Get all tags from all Songs from [type] (artist, album, ...)
+     * @return string[]
+     */
+    protected static function getSongTags(string $type, int $object_id): array
+    {
+        return ($type == 'artist')
+            ? self::getTagRepository()->getSongTagNamesByArtist($object_id)
+            : self::getTagRepository()->getSongTagNamesByAlbum($object_id);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    protected static function getVideoRepository(): VideoRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(VideoRepositoryInterface::class);
+    }
+
     /**
      * update_song_from_tags
      * Updates the song info based on tags; this is called from a bunch of
@@ -2559,7 +2528,7 @@ abstract class Catalog extends database_object
      * static function.
      * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up.
      */
-    public static function update_song_from_tags(array $results, Song $song): array
+    protected static function update_song_from_tags(array $results, Song $song): array
     {
         //debug_event(self::class, "update_song_from_tags results: " . print_r($results, true), 4);
         $filtered_results = self::filter_tag_results($results, $song);
@@ -3066,146 +3035,6 @@ abstract class Catalog extends database_object
         return $info;
     }
 
-    public static function update_video_from_tags(array $results, Video $video): array
-    {
-        /* Setup the vars */
-        $new_video                = new Video();
-        $new_video->file          = $results['file'];
-        $new_video->title         = $results['title'];
-        $new_video->size          = $results['size'];
-        $new_video->video_codec   = $results['video_codec'];
-        $new_video->audio_codec   = $results['audio_codec'];
-        $new_video->resolution_x  = $results['resolution_x'];
-        $new_video->resolution_y  = $results['resolution_y'];
-        $new_video->time          = $results['time'];
-        $new_video->release_date  = $results['release_date'] ?? null;
-        $new_video->bitrate       = $results['bitrate'];
-        $new_video->mode          = $results['mode'];
-        $new_video->channels      = $results['channels'];
-        $new_video->display_x     = $results['display_x'];
-        $new_video->display_y     = $results['display_y'];
-        $new_video->frame_rate    = $results['frame_rate'];
-        $new_video->video_bitrate = self::check_int($results['video_bitrate'], PHP_INT_MAX, 0);
-        $tags                     = Tag::get_object_tags('video', $video->id);
-        $video_tags               = [];
-        if ($tags) {
-            foreach ($tags as $tag) {
-                $video_tags[] = $tag['name'];
-            }
-        }
-
-        $new_video_tags = $results['genre'];
-
-        $info = Video::compare_video_information($video, $new_video);
-        if ($info['change']) {
-            debug_event(self::class, $video->file . " : differences found, updating database", 5);
-
-            Video::update_video($video->id, $new_video);
-
-            if ($video_tags != $new_video_tags) {
-                Tag::update_tag_list(implode(',', $new_video_tags), 'video', $video->id, true);
-            }
-
-            Video::update_video_counts($video->id);
-        } else {
-            // always update the time when you update
-            Video::update_utime($video->id);
-        }
-
-        return $info;
-    }
-
-    /**
-     * @deprecated
-     */
-    protected static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    protected static function getCatalogMapRepository(): CatalogMapRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(CatalogMapRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    protected static function getCatalogRepository(): CatalogRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(CatalogRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    protected static function getFolderRepository(): FolderRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(FolderRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    protected static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastEpisodeRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    protected static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
-    protected static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
-    }
-
-    /**
-     * Get all tags from all Songs from [type] (artist, album, ...)
-     * @return string[]
-     */
-    protected static function getSongTags(string $type, int $object_id): array
-    {
-        return ($type == 'artist')
-            ? self::getTagRepository()->getSongTagNamesByArtist($object_id)
-            : self::getTagRepository()->getSongTagNamesByAlbum($object_id);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    protected static function getVideoRepository(): VideoRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(VideoRepositoryInterface::class);
-    }
-
     /**
      * Updates album tags from given song's album id
      */
@@ -3333,6 +3162,82 @@ abstract class Catalog extends database_object
         }
 
         return self::getCatalogRepository()->setField($catalog_id, $field, $value);
+    }
+
+    /**
+     * check_length
+     * Check to make sure the string fits into the database
+     * max_length is the maximum number of characters that the (varchar) column can hold
+     */
+    private static function check_length(?string $string = null, int $max_length = 255): string
+    {
+        $string = (string) $string;
+        if (false !== $encoding = mb_detect_encoding($string, null, true)) {
+            $string = trim(mb_substr($string, 0, $max_length, $encoding));
+        } else {
+            $string = trim(substr($string, 0, $max_length));
+        }
+
+        return $string;
+    }
+
+    /**
+     * check_title
+     * this checks to make sure something is
+     * set on the title, if it isn't it looks at the
+     * filename and tries to set the title based on that
+     */
+    private static function check_title(string $title, string $file = ''): string
+    {
+        if (strlen(trim($title)) < 1) {
+            $title = $file;
+        }
+
+        return $title;
+    }
+
+    /**
+     * check_track
+     * Check to make sure the track number fits into the database: max 32767, min -32767
+     */
+    private static function check_track(string $track): int
+    {
+        $retval = ((int) $track > 32767 || (int) $track < -32767) ? (int) substr($track, -4, 4) : (int) $track;
+        if ((int) $track !== $retval) {
+            debug_event(self::class, "check_track: '{" . $track . "}' out of range. Changed into '{" . $retval . "}'", 4);
+        }
+
+        return $retval;
+    }
+
+    /**
+     * count_catalog
+     *
+     * This returns the current number of songs, videos, podcast_episodes in this catalog.
+     * @return array{items: int, time: int, size: int}
+     */
+    private static function count_catalog(int $catalog_id): array
+    {
+        $catalog = self::create_from_id($catalog_id);
+        if (!$catalog instanceof Catalog) {
+            return [
+                'items' => 0,
+                'time' => 0,
+                'size' => 0,
+            ];
+        }
+
+        return self::getCatalogCounter()->countCatalog($catalog_id, $catalog->gather_types);
+    }
+
+    /**
+     * count_tags
+     *
+     * This returns the current number of unique tags in the database.
+     */
+    private static function count_tags(): int
+    {
+        return self::getCatalogCounter()->countTags();
     }
 
     /**
@@ -3533,6 +3438,77 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(WantedRepositoryInterface::class);
+    }
+
+    /**
+     * Migrate an object associate images to a new object
+     */
+    private static function migrate(string $object_type, int $old_object_id, int $new_object_id, int $song_id, int $catalog_id): bool
+    {
+        if ($old_object_id != $new_object_id) {
+            debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
+
+            Stats::migrate($object_type, $old_object_id, $new_object_id, $song_id);
+            Useractivity::migrate($object_type, $old_object_id, $new_object_id);
+            Recommendation::migrate($object_type, $old_object_id);
+            self::getShareRepository()->migrate($object_type, $old_object_id, $new_object_id);
+            self::getShoutRepository()->migrate($object_type, $old_object_id, $new_object_id);
+            Tag::migrate($object_type, $old_object_id, $new_object_id);
+            Userflag::migrate($object_type, $old_object_id, $new_object_id);
+            Rating::migrate($object_type, $old_object_id, $new_object_id);
+            Art::duplicate($object_type, $old_object_id, $new_object_id);
+            Playlist::migrate($object_type, $old_object_id, $new_object_id);
+            Label::migrate($object_type, $old_object_id, $new_object_id);
+            if ($object_type === 'artist') {
+                self::getWantedRepository()->migrateArtist($old_object_id, $new_object_id);
+                Artist::update_artist_count($new_object_id);
+                Artist::update_artist_count($old_object_id);
+                self::update_map($catalog_id, 'artist', $new_object_id);
+                self::garbage_collect_mapping(['artist']);
+            }
+
+            if ($object_type === 'album') {
+                self::clean_empty_albums(false);
+                Album::update_album_count($new_object_id);
+                Album::update_album_count($old_object_id);
+                self::update_map($catalog_id, 'album', $new_object_id);
+                self::update_map($catalog_id, 'album_disk', $new_object_id);
+                self::garbage_collect_mapping(['album', 'album_disk']);
+            }
+
+            self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
+            self::getBookmarkRepository()->migrate($object_type, $old_object_id, $new_object_id);
+            self::migrate_map($object_type, $old_object_id, $new_object_id);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array<string, mixed> $results
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>,
+     * }
+     */
+    private static function update_podcast_episode_from_tags(array $results, Podcast_Episode $podcast_episode): array
+    {
+        self::getPodcastEpisodeRepository()->updateFromTags(
+            $podcast_episode->id,
+            (string) $podcast_episode->file,
+            $results,
+            time()
+        );
+
+        $array            = [];
+        $array['change']  = true;
+        $array['element'] = [];
+
+        $array['element']['podcast_episode'] = '';
+
+        return $array;
     }
 
     /**
