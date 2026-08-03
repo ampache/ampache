@@ -24,9 +24,11 @@ namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Art\Art;
+use Ampache\PluginFactoryMockTrait;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
+use DI\Container;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -34,6 +36,8 @@ use Psr\Log\LoggerInterface;
 
 class ArtCollectorTest extends TestCase
 {
+    use PluginFactoryMockTrait;
+
     private ConfigContainerInterface&MockObject $configContainer;
     private ContainerInterface&MockObject $dic;
     private LibraryItemLoaderInterface&MockObject $libraryItemLoader;
@@ -105,7 +109,7 @@ class ArtCollectorTest extends TestCase
         );
 
         // `Plugin` reads its stored version through the `global $dic` bridge, which is not the mock above
-        $globalDic         = $this->createMock(ContainerInterface::class);
+        $globalDic         = $this->createMock(Container::class);
         $catalogRepository = $this->createMock(CatalogRepositoryInterface::class);
         $catalogRepository->method('getIds')->willReturn([]);
 
@@ -114,6 +118,8 @@ class ArtCollectorTest extends TestCase
             CatalogRepositoryInterface::class => $catalogRepository,
             default => $this->createMock(LoggerInterface::class),
         });
+
+        $globalDic->method('make')->willReturnCallback($this->buildWithMockedDependencies(...));
 
         $GLOBALS['dic'] = $globalDic;
     }

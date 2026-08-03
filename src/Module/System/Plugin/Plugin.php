@@ -64,7 +64,10 @@ class Plugin
             return;
         }
 
-        $this->_plugin = new $controller();
+        global $dic;
+
+        // make() rather than get(), because load() writes per-user state onto the instance
+        $this->_plugin = $dic->make($controller);
         $this->name    = $name;
     }
 

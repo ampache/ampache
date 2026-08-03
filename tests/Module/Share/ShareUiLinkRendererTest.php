@@ -27,16 +27,21 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\PluginFactoryMockTrait;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
+use DI\Container;
+use DI\FactoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class ShareUiLinkRendererTest extends TestCase
 {
+    use PluginFactoryMockTrait;
+
     private ConfigContainerInterface&MockObject $configContainer;
+    private FactoryInterface&MockObject $factory;
     private FunctionCheckerInterface&MockObject $functionChecker;
     private ShareUiLinkRenderer $subject;
     private ZipHandlerInterface&MockObject $zipHandler;
@@ -137,19 +142,22 @@ class ShareUiLinkRendererTest extends TestCase
         $this->functionChecker = $this->createMock(FunctionCheckerInterface::class);
         $this->zipHandler      = $this->createMock(ZipHandlerInterface::class);
         $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->factory         = $this->createMock(FactoryInterface::class);
 
         $this->subject = new ShareUiLinkRenderer(
             $this->functionChecker,
             $this->zipHandler,
             $this->configContainer,
+            $this->factory,
         );
 
-        // `Plugin` reads its stored version through the `global $dic` bridge
-        $dic = $this->createMock(ContainerInterface::class);
+        // `Plugin` reads its stored version through the `global $dic` bridge and builds plugins with make()
+        $dic = $this->createMock(Container::class);
         $dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
             UpdateInfoRepositoryInterface::class => $this->createMock(UpdateInfoRepositoryInterface::class),
             default => $this->createMock(LoggerInterface::class),
         });
+        $dic->method('make')->willReturnCallback($this->buildWithMockedDependencies(...));
 
         $GLOBALS['dic'] = $dic;
     }

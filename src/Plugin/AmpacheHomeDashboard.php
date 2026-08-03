@@ -60,6 +60,13 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
     #[Override]
     public string $version = '000002';
 
+    private AlbumRepositoryInterface $albumRepository;
+
+    /**
+     * Constructor
+     */
+    private BrowseFactoryInterface $browseFactory;
+
     private int $maxitems;
     private bool $newest;
     private int $order = 0;
@@ -71,22 +78,13 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
     // These are internal settings used by this class, run this->load to fill them out
     private User $user;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->description = T_('Show Album dashboard sections on the homepage');
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getBrowseFactory(): BrowseFactoryInterface
-    {
-        global $dic;
-
-        return $dic->get(BrowseFactoryInterface::class);
+    public function __construct(
+        BrowseFactoryInterface $browseFactory,
+        AlbumRepositoryInterface $albumRepository,
+    ) {
+        $this->browseFactory   = $browseFactory;
+        $this->albumRepository = $albumRepository;
+        $this->description     = T_('Show Album dashboard sections on the homepage');
     }
 
     /**
@@ -120,14 +118,14 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         $object_ids = [];
         if ($this->random) {
             $object_ids = ($album_group)
-                ? $this->getAlbumRepository()->getRandom($this->user->getId(), $limit)
-                : $this->getAlbumRepository()->getRandomAlbumDisk($this->user->getId(), $limit);
+                ? $this->albumRepository->getRandom($this->user->getId(), $limit)
+                : $this->albumRepository->getRandomAlbumDisk($this->user->getId(), $limit);
         }
 
         if ($object_ids !== []) {
             Ui::show_box_top(T_('Random') . "&nbsp" . Ajax::button('?page=index&action=dashboard_random&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'random', 'dashboard_random'), 'random');
             echo '<div id="dashboard_random">';
-            $browse = self::getBrowseFactory()->create();
+            $browse = $this->browseFactory->create();
             $browse->set_type($object_type);
             $browse->set_use_filters(false);
             $browse->set_show_header(false);
@@ -144,7 +142,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         if ($object_ids !== []) {
             Ui::show_box_top(T_('Newest') . "&nbsp" . Ajax::button('?page=index&action=dashboard_newest&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'newest', 'dashboard_newest'), 'newest');
             echo '<div id="dashboard_newest">';
-            $browse = self::getBrowseFactory()->create();
+            $browse = $this->browseFactory->create();
             $browse->set_type($object_type);
             $browse->set_use_filters(false);
             $browse->set_show_header(false);
@@ -161,7 +159,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         if ($object_ids !== []) {
             Ui::show_box_top(T_('Recent') . "&nbsp" . Ajax::button('?page=index&action=dashboard_recent&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'recent', 'dashboard_recent'), 'recent');
             echo '<div id="dashboard_recent">';
-            $browse = self::getBrowseFactory()->create();
+            $browse = $this->browseFactory->create();
             $browse->set_type($object_type);
             $browse->set_use_filters(false);
             $browse->set_show_header(false);
@@ -188,7 +186,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         if ($object_ids !== []) {
             Ui::show_box_top(T_('Trending') . "&nbsp" . Ajax::button('?page=index&action=dashboard_trending&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'trending', 'dashboard_trending'), 'trending');
             echo '<div id="dashboard_trending">';
-            $browse = self::getBrowseFactory()->create();
+            $browse = $this->browseFactory->create();
             $browse->set_type($object_type);
             $browse->set_use_filters(false);
             $browse->set_show_header(false);
@@ -211,7 +209,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
             $object_ids = array_slice($object_ids, 0, $limit);
             Ui::show_box_top(T_('Popular') . "&nbsp" . Ajax::button('?page=index&action=dashboard_popular&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'popular', 'dashboard_popular'), 'popular');
             echo '<div id="dashboard_popular">';
-            $browse = self::getBrowseFactory()->create();
+            $browse = $this->browseFactory->create();
             $browse->set_type($object_type);
             $browse->set_use_filters(false);
             $browse->set_show_header(false);
@@ -317,12 +315,5 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         }
 
         return true;
-    }
-
-    private function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
     }
 }
