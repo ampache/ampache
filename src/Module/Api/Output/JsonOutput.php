@@ -221,7 +221,7 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int, array{
      *    object_type: LibraryItemEnum,
      *    object_id: int,
@@ -237,6 +237,7 @@ final class JsonOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return match ($apiVersion) {
+            4 => Json4_Data::democratic($objectIds, $user, $auth),
             5 => $this->json5Data->democratic($objectIds, $user, $auth, $asObject),
             6 => $this->json6Data->democratic($objectIds, $user, $auth, $asObject),
             8 => $this->json8Data->democratic($objectIds, $user, $auth, $asObject),
@@ -310,7 +311,7 @@ final class JsonOutput implements ApiOutputInterface
      *
      * The json indexes have no full_xml flag, so it is dropped here.
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $objects
      */
     public function indexes(
@@ -323,6 +324,7 @@ final class JsonOutput implements ApiOutputInterface
         bool $include = false,
     ): string {
         return match ($apiVersion) {
+            4 => Json4_Data::indexes($objects, $objectType, $user, $auth, $include),
             5 => $this->json5Data->indexes($objects, $objectType, $user, $auth, $include),
             6 => $this->json6Data->indexes($objects, $objectType, $user, $auth, $include),
             8 => $this->json8Data->indexes($objects, $objectType, $user, $auth, $include),
@@ -662,7 +664,7 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<Shoutbox> $shouts
      */
     public function shouts(
@@ -671,6 +673,7 @@ final class JsonOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return match ($apiVersion) {
+            4 => Json4_Data::shouts(new ArrayIterator($shouts)),
             5 => $this->json5Data->shouts(new ArrayIterator($shouts), $asObject),
             6 => $this->json6Data->shouts($shouts, $asObject),
             8 => $this->json8Data->shouts($shouts, $asObject),
@@ -744,12 +747,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param int[] $activities Activity id list
      */
     public function timeline(int $apiVersion, array $activities): string
     {
         return match ($apiVersion) {
+            4 => Json4_Data::timeline($activities),
             5 => $this->json5Data->timeline($activities),
             6 => $this->json6Data->timeline($activities),
             8 => $this->json8Data->timeline($activities),

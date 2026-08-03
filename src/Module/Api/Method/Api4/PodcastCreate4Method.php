@@ -27,8 +27,9 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
@@ -36,13 +37,17 @@ use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PodcastCreate4Method
- */
-final class PodcastCreate4Method
+final class PodcastCreate4Method implements MethodInterface
 {
     public const string ACTION = 'podcast_create';
+
+    public function __construct(
+        private PodcastCreatorInterface $podcastCreator,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * podcast_create
@@ -59,19 +64,26 @@ final class PodcastCreate4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function podcast_create(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', 'Access Denied: podcast features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_podcast', $input['api_format'])) {
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['url', 'catalog'], self::ACTION)) {
-            return false;
+            return $response;
         }
 
         $catalog = Catalog::create_from_id((int) $input['catalog']);
@@ -79,40 +91,27 @@ final class PodcastCreate4Method
         if ($catalog === null) {
             Api4::message('error', 'Catalog not found', '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         try {
-            $podcast = self::getPodcastCreator()->create(
+            $podcast = $this->podcastCreator->create(
                 $input['url'],
                 $catalog
             );
         } catch (PodcastCreationException) {
             Api4::message('error', 'Bad Request', '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         Catalog::count_table(CountableTableEnum::PODCAST);
         ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::podcasts([$podcast->getId()], $user, $input['auth']);
-                break;
-            default:
-                echo Xml4_Data::podcasts([$podcast->getId()], $user, $input['auth']);
-        }
 
-        return true;
-    } // podcast_create
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getPodcastCreator(): PodcastCreatorInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastCreatorInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->podcasts($apiVersion, [$podcast->getId()], $user, $input['auth'])
+            )
+        );
     }
 }

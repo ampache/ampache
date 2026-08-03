@@ -27,8 +27,9 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Catalog\Catalog;
@@ -42,13 +43,19 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class ShareCreateMethod
- */
-final class ShareCreate4Method
+final class ShareCreate4Method implements MethodInterface
 {
     public const string ACTION = 'share_create';
+
+    public function __construct(
+        private FunctionCheckerInterface $functionChecker,
+        private PasswordGeneratorInterface $passwordGenerator,
+        private ShareCreatorInterface $shareCreator,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * share_create
@@ -71,16 +78,23 @@ final class ShareCreate4Method
      * } $input
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @param 4 $apiVersion
      */
-    public static function share_create(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('share')) {
             Api4::message('error', 'Access Denied: sharing features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['type', 'filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
 
         $object_id   = $input['filter'];
@@ -91,7 +105,7 @@ final class ShareCreate4Method
         if (!in_array($object_type, ['song', 'album', 'artist'])) {
             Api4::message('error', 'Wrong object type ' . $object_type, '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
         $results = [];
         if (!InterfaceImplementationChecker::is_library_item($object_type) || !$object_id) {
@@ -103,36 +117,33 @@ final class ShareCreate4Method
             if ($item->getId() === 0) {
                 Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
-                return false;
+                return $response;
             }
-            // @todo Replace by constructor injection
-            global $dic;
-            $functionChecker   = $dic->get(FunctionCheckerInterface::class);
-            $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
-            $shareCreator      = $dic->get(ShareCreatorInterface::class);
 
-            $results[] = $shareCreator->create(
+            $shareId = $this->shareCreator->create(
                 $user,
                 LibraryItemEnum::from($object_type),
                 (int) $object_id,
                 true,
-                $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
+                $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                 (int) $expire_days,
-                $passwordGenerator->generate_token(),
+                $this->passwordGenerator->generate_token(),
                 0,
                 $description
             );
+
+            // a failed create has no id to render
+            if ($shareId !== null) {
+                $results[] = $shareId;
+            }
         }
         Catalog::count_table(CountableTableEnum::SHARE);
         ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::shares($results, $user);
-                break;
-            default:
-                echo Xml4_Data::shares($results, $user);
-        }
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->shares($apiVersion, $results, $user)
+            )
+        );
     }
 }
