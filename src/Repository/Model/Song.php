@@ -2038,14 +2038,6 @@ class Song extends database_object implements
         $lan_user          = $this->getNetworkChecker()->check(AccessTypeEnum::NETWORK, (int) $uid, AccessLevelEnum::DEFAULT);
         $transcode         = AmpConfig::get('transcode', 'default');
 
-        // localplay hands the url to a standalone player, so ask for the original file explicitly
-        if (AmpConfig::get('play_type') === 'localplay') {
-            $transcode = 'never';
-            if (!str_contains($additional_params, '&format=')) {
-                $additional_params .= '&format=raw';
-            }
-        }
-
         // enforce or disable transcoding depending on local network ACL. Transcoding must also not be disabled with 'never'
         if (
             $downsample_remote
