@@ -26,15 +26,16 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Goodbye4Method
- */
-final class Goodbye4Method
+final class Goodbye4Method implements MethodInterface
 {
     public const string ACTION = 'goodbye';
 
@@ -50,11 +51,18 @@ final class Goodbye4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function goodbye(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['auth'], self::ACTION)) {
-            return false;
+            return $response;
         }
         debug_event(self::class, 'Goodbye Received from ' . $user->id . ' ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
 
@@ -66,11 +74,11 @@ final class Goodbye4Method
             ob_end_clean();
             Api4::message('success', 'goodbye: ' . $input['auth'], null, $input['api_format']);
 
-            return true;
+            return $response;
         }
         ob_end_clean();
         Api4::message('error', 'failed to end session: ' . $input['auth'], '400', $input['api_format']);
 
-        return false;
+        return $response;
     }
 }
