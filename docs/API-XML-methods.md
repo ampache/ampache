@@ -6704,6 +6704,8 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 
 **NOTE** `filter` is available in Ampache 7.9.0 and higher. `id` is deprecated and will be removed in **API9**.
 
+**NOTE** `length` requests an estimated Content-Length. The estimate is `duration x bitrate` and was measured 13% short to 7% over depending on codec, so it is unreliable unless the transcode is cached; an over-declared body is truncated in transit.
+
 | Input     | Type    | Description                                                                    | Optional |
 |-----------|---------|--------------------------------------------------------------------------------|---------:|
 | 'filter'  | string  | $object_id                                                                     |       NO |
@@ -6711,7 +6713,7 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 | 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb)                        |      YES |
 | 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format)                     |      YES |
 | 'offset'  | integer | Return results starting from this index position                               |      YES |
-| 'length'  | boolean | `0`, `1`                                                                       |      YES |
+| 'length'  | boolean | `0`, `1` estimated Content-Length (unreliable unless cached)                   |      YES |
 | 'stats'   | boolean | `0`, `1`, if false disable stat recording when playing the object (default: 1) |      YES |
 
 * return file (HTTP 200 OK)

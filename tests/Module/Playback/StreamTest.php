@@ -27,6 +27,7 @@ namespace Ampache\Module\Playback;
 
 use Ampache\Config\AmpConfig;
 use Ampache\MockeryTestCase;
+use Ampache\Repository\Model\Song;
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionMethod;
 
@@ -110,6 +111,36 @@ class StreamTest extends MockeryTestCase
         AmpConfig::set('encode_args_webm', '-f webm pipe:1', true);
 
         $this->assertSame(['webm'], Stream::get_available_encode_formats('video'));
+    }
+
+    /**
+     * A source rate below 1 kbps is bad scan data, and rounding it to kbps steps used to leave the encoder
+     * with `-b:a 0`, a command ffmpeg refuses so the stream arrived as an empty, playable-looking response
+     */
+    public function testGetMaxBitrateFloorsAnImplausibleSourceRateAtTheConfiguredMinimum(): void
+    {
+        AmpConfig::set('max_bit_rate', 0, true);
+        AmpConfig::set('min_bit_rate', 8000, true);
+        AmpConfig::set('transcode_bitrate', 192000, true);
+
+        $media          = new Song();
+        $media->bitrate = 748;
+        $media->type    = 'm4a';
+
+        $this->assertSame(8000, Stream::get_max_bitrate($media, ['format' => 'm4a'], []));
+    }
+
+    public function testGetMaxBitrateStillClampsToAUsableSourceRate(): void
+    {
+        AmpConfig::set('max_bit_rate', 0, true);
+        AmpConfig::set('min_bit_rate', 8000, true);
+        AmpConfig::set('transcode_bitrate', 192000, true);
+
+        $media          = new Song();
+        $media->bitrate = 128000;
+        $media->type    = 'mp3';
+
+        $this->assertSame(128000, Stream::get_max_bitrate($media, ['format' => 'mp3'], []));
     }
 
     public function testGetPlayerBitrateTreatsAnEmptyOverrideAsUnset(): void

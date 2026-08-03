@@ -471,9 +471,10 @@ final readonly class Session implements SessionInterface
             case 'api':
             case 'rpc':
             case 'stream':
+                // a stream key outlives its expiry so a url already handed to a player keeps working
                 $sql = (AmpConfig::get('perpetual_api_session'))
-                    ? "SELECT * FROM `session` WHERE `id` = ? AND (`expire` = 0 OR `expire` > ?) AND `type` in ('api', 'stream');"
-                    : "SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? AND `type` in ('api', 'stream');"; // TODO why are these together?
+                    ? "SELECT * FROM `session` WHERE `id` = ? AND (`expire` = 0 OR `expire` > ? OR `type` = 'stream') AND `type` in ('api', 'stream');"
+                    : "SELECT * FROM `session` WHERE `id` = ? AND (`expire` > ? OR `type` = 'stream') AND `type` in ('api', 'stream');"; // TODO why are these together?
                 $db_results = Dba::read($sql, [$key, time()]);
 
                 if (Dba::num_rows($db_results) !== 0) {

@@ -76,7 +76,7 @@ abstract class AbstractStreamMethod implements MethodInterface
      * bitrate = (integer) max bitrate for transcoding in bytes // Song only
      * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
      * offset  = (integer) time offset in seconds
-     * length  = (integer) 0,1
+     * length  = (integer) 0,1 // ask for an estimated Content-Length; unreliable unless the transcode is cached
      * stats   = (integer) 0,1, if false disable stat recording (default: 1) //optional
      *
      * @param array{

@@ -64,7 +64,7 @@ final class Stream5Method implements MethodInterface
      * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb) // Song only
      * format = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
      * offset = (integer) time offset in seconds
-     * length = (integer) 0,1
+     * length = (integer) 0,1 // ask for an estimated Content-Length; unreliable unless the transcode is cached
      *
      * @param array{
      *     id: string,

@@ -215,22 +215,26 @@ class AmpacheVlc extends localplay_controller
             $data['vlid'] = $song_id[$counter]; // vlid number of the files in the VLC playlist, needed for other operations
             $data['raw']  = $entry;
 
+            $data['name'] = '';
+            $data['link'] = '';
+
             $url_data = $this->parse_url($entry);
-            switch ($url_data['primary_key']) {
+            switch ($url_data['primary_key'] ?? '') {
                 case 'oid':
-                    $data['oid']  = $url_data['oid'];
-                    $song         = new Song($data['oid']);
-                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_parent_fullname();
-                    $data['link'] = $song->get_f_link();
+                    $data['oid'] = $url_data['oid'];
+                    $song        = new Song($data['oid']);
+                    if (!$song->isNew()) {
+                        $data['name'] = self::_join_parts([$song->get_fullname(), $song->get_album_fullname($song->album, true), $song->get_parent_fullname()]);
+                        $data['link'] = $song->get_f_link();
+                    }
+
                     break;
                 case 'demo_id':
-                    $democratic   = new Democratic($url_data['demo_id']);
-                    $data['name'] = T_('Democratic') . ' - ' . $democratic->name;
-                    $data['link'] = '';
+                    $democratic   = new Democratic((int) $url_data['demo_id']);
+                    $data['name'] = self::_join_parts([T_('Democratic'), $democratic->name]);
                     break;
                 case 'random':
-                    $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst((string) $url_data['type']));
-                    $data['link'] = '';
+                    $data['name'] = self::_join_parts([T_('Random'), scrub_out(ucfirst((string) ($url_data['random_type'] ?? '')))]);
                     break;
                 default:
                     // If we don't know it, look up by filename
@@ -536,6 +540,7 @@ class AmpacheVlc extends localplay_controller
         $array          = [];
         $array['track'] = 0;
         $oid            = '';
+        $track_name     = '';
 
         $array['track_title']  = '';
         $array['track_artist'] = '';
@@ -572,6 +577,7 @@ class AmpacheVlc extends localplay_controller
                 if ($track['vlid'] == $numtrack) {
                     $array['track'] = $track['track'];
                     $oid            = $track['oid'] ?? null;
+                    $track_name     = (string) ($track['name'] ?? '');
                     break;
                 }
             }
@@ -588,6 +594,9 @@ class AmpacheVlc extends localplay_controller
                 $array['track_artist'] = $song->get_parent_fullname();
                 $array['track_album']  = $song->get_album_fullname();
             }
+        } elseif (!empty($track_name)) {
+            // a democratic or random entry carries no oid, so reuse the name the queue already resolved for it
+            $array['track_title'] = $track_name;
         }
 
         return $array;

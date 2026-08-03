@@ -203,30 +203,33 @@ class AmpacheMpd extends localplay_controller
             $data = [];
 
             /* Required Elements */
-            $data['id']  = (int) $entry['Pos'];
-            $data['raw'] = $entry['file'];
+            $data['id']   = (int) $entry['Pos'];
+            $data['raw']  = $entry['file'];
+            $data['name'] = '';
+            $data['link'] = '';
 
             $url_data = $this->parse_url($entry['file']);
             $url_key  = $url_data['primary_key'] ?? '';
 
             switch ($url_key) {
                 case 'oid':
-                    $data['oid']  = (int) $url_data['oid'];
-                    $song         = new Song($data['oid']);
-                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_parent_fullname();
-                    $data['link'] = $song->get_f_link();
+                    $data['oid'] = (int) $url_data['oid'];
+                    $song        = new Song($data['oid']);
+                    if (!$song->isNew()) {
+                        $data['name'] = self::_join_parts([$song->get_fullname(), $song->get_album_fullname($song->album, true), $song->get_parent_fullname()]);
+                        $data['link'] = $song->get_f_link();
+                    }
+
                     break;
                 case 'demo_id':
-                    $democratic   = new Democratic($url_data['demo_id']);
-                    $data['name'] = T_('Democratic') . ' - ' . $democratic->name;
-                    $data['link'] = '';
+                    $democratic   = new Democratic((int) $url_data['demo_id']);
+                    $data['name'] = self::_join_parts([T_('Democratic'), $democratic->name]);
                     break;
                 case 'random':
-                    $className = ObjectTypeToClassNameMapper::map($url_data['random_type']);
+                    $className = ObjectTypeToClassNameMapper::map((string) ($url_data['random_type'] ?? 'song'));
                     /** @var library_item $random */
-                    $random       = new $className($url_data['random_id']);
-                    $data['name'] = T_('Random') . ' - ' . scrub_out($random->get_fullname());
-                    $data['link'] = '';
+                    $random       = new $className((int) $url_data['random_id']);
+                    $data['name'] = self::_join_parts([T_('Random'), scrub_out($random->get_fullname())]);
                     break;
                 default:
                     // If we don't know it, look up by filename
@@ -252,11 +255,8 @@ class AmpacheMpd extends localplay_controller
                                 break;
                         }
                     } else {
-                        $title_string = (isset($entry['Title']) && isset($entry['Album']) && isset($entry['Artist']))
-                            ? $entry['Title'] . ' - ' . $entry['Album'] . ' - ' . $entry['Artist']
-                            : T_('Unknown');
-                        $data['name'] = $title_string;
-                        $data['link'] = '';
+                        // fall back to whatever tags mpd reported; an empty name leaves the template showing the raw url
+                        $data['name'] = self::_join_parts([$entry['Title'] ?? null, $entry['Album'] ?? null, $entry['Artist'] ?? null]);
                     }
 
                     break;
@@ -586,18 +586,25 @@ class AmpacheMpd extends localplay_controller
 
         debug_event(self::class, 'Status result. Current song (' . $track . ') info: ' . json_encode($playlist_item), 5);
 
-        if ($url_data !== [] && array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
+        if (!empty($url_data['oid'])) {
             $song = new Song((int) $url_data['oid']);
-            if ($song->isNew()) {
-                $array['track_title']  = T_('Unknown');
-                $array['track_artist'] = T_('Unknown');
-                $array['track_album']  = T_('Unknown');
-            } else {
+            if (!$song->isNew()) {
                 $array['track_title']  = $song->title;
                 $array['track_artist'] = $song->get_parent_fullname();
                 $array['track_album']  = $song->get_album_fullname();
             }
-        } elseif (!empty($playlist_item)) {
+        } elseif (!empty($url_data['demo_id'])) {
+            $democratic           = new Democratic((int) $url_data['demo_id']);
+            $array['track_title'] = self::_join_parts([T_('Democratic'), $democratic->name]);
+        } elseif (!empty($url_data['random_id'])) {
+            $className = ObjectTypeToClassNameMapper::map((string) ($url_data['random_type'] ?? 'song'));
+            /** @var library_item $random */
+            $random               = new $className((int) $url_data['random_id']);
+            $array['track_title'] = self::_join_parts([T_('Random'), $random->get_fullname()]);
+        }
+
+        // an unresolved entry falls back to the tags mpd reported, then to the raw url
+        if ($array['track_title'] === '' && !empty($playlist_item)) {
             if (!empty($playlist_item['Title'])) {
                 $array['track_title'] = $playlist_item['Title'];
             } elseif (!empty($playlist_item['Name'])) {
