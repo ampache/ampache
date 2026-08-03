@@ -463,12 +463,14 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 3|4|5|6|8 $apiVersion
      * @param array<int|string> $playlists
      */
     public function playlists(int $apiVersion, array $playlists, User $user, string $auth, bool $songs = false, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            3 => Xml3_Data::playlists($playlists),
+            4 => Xml4_Data::playlists($playlists, $user, $auth),
             5 => $this->xml5Data->playlists($playlists, $user, $auth),
             6 => $this->xml6Data->playlists($playlists, $user, $auth, $songs),
             8 => $this->xml8Data->playlists($playlists, $user, $auth, $songs),
@@ -732,11 +734,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 3|4|5|6|8 $apiVersion
      */
     public function user(int $apiVersion, User $user, bool $fullInfo, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            3 => Xml3_Data::user($user),
+            4 => Xml4_Data::user($user, $fullInfo),
             5 => $this->xml5Data->user($user, $fullInfo),
             6 => $this->xml6Data->user($user, $fullInfo, $auth),
             8 => $this->xml8Data->user($user, $fullInfo, $auth),
@@ -746,12 +750,14 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 3|4|5|6|8 $apiVersion
      * @param array<int|string> $users
      */
     public function users(int $apiVersion, array $users): string
     {
         return match ($apiVersion) {
+            3 => Xml3_Data::users($users),
+            4 => Xml4_Data::users($users),
             5 => $this->xml5Data->users($users),
             6 => $this->xml6Data->users($users),
             8 => $this->xml8Data->users($users),

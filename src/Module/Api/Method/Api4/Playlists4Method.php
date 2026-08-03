@@ -27,66 +27,51 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Playlists4Method
+ * Returns the playlists and smartlists visible to the user.
  */
-final class Playlists4Method
+final class Playlists4Method implements MethodInterface
 {
     public const string ACTION = 'playlists';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * playlists
-     * MINIMUM_API_VERSION=380001
-     *
-     * This returns playlists based on the specified filter
-     *
-     * filter = (string) Alpha-numeric search term (match all if missing) //optional
-     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * show_dupes = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
-     * exact = (integer) 0,1, if true filter is exact rather than fuzzy //optional
-     * add = $browse->set_api_filter(date) //optional
-     * update = $browse->set_api_filter(date) //optional
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     hide_search?: int,
-     *     show_dupes?: int,
-     *     include?: int,
-     *     exact?: int,
-     *     add?: string,
-     *     update?: string,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function playlists(array $input, User $user): void
-    {
-        $hide       = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $hide = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1)
+            || AmpConfig::get('hide_search', false);
+
         $show_dupes = (array_key_exists('show_dupes', $input))
             ? make_bool($input['show_dupes'])
             : (bool) Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
 
         $browse = Api::getBrowse($user);
-        if ($hide === false) {
-            $browse->set_type('playlist_search');
-        } else {
-            $browse->set_type('playlist');
-        }
-
+        $browse->set_type(($hide === false) ? 'playlist_search' : 'playlist');
         $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
-        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1)
+            ? 'exact_match'
+            : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_filter('playlist_open', $user->getId());
 
@@ -98,20 +83,15 @@ final class Playlists4Method
         }
 
         $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
-
         $results = $browse->get_objects();
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json4_Data::set_offset((int) ($input['offset'] ?? 0));
-                Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::playlists($results, $user, $input['auth']);
-                break;
-            default:
-                Xml4_Data::set_offset((int) ($input['offset'] ?? 0));
-                Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::playlists($results, $user, $input['auth']);
-        }
+        $output->setOffset($apiVersion, (int) ($input['offset'] ?? 0));
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->playlists($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

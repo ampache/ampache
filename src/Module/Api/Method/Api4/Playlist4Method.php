@@ -26,69 +26,68 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Playlist4Method
+ * Returns a single playlist or smartlist.
  */
-final class Playlist4Method
+final class Playlist4Method implements MethodInterface
 {
     public const string ACTION = 'playlist';
 
-    /**
-     * playlist
-     * MINIMUM_API_VERSION=380001
-     *
-     * This returns a single playlist
-     *
-     * filter = (string) UID of playlist
-     *
-     * @param array{
-     *     filter: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function playlist(array $input, User $user): bool
-    {
-        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $list_id = scrub_in((string) $input['filter']);
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
-        if (str_replace('smart_', '', $list_id) === $list_id) {
-            // Playlists
-            $playlist = new Playlist((int) $list_id);
-        } else {
-            // Smartlists
-            $playlist = new Search((int) str_replace('smart_', '', $list_id), 'song', $user);
+    /**
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
+     */
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
+            return $response;
         }
+
+        $list_id = scrub_in((string) ($input['filter'] ?? ''));
+
+        $playlist = (str_replace('smart_', '', $list_id) === $list_id)
+            ? new Playlist((int) $list_id)
+            : new Search((int) str_replace('smart_', '', $list_id), 'song', $user);
+
         if ($playlist->isNew()) {
             Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
+
         if (
             $playlist->type !== 'public'
             && !$playlist->has_collaborate($user)
         ) {
             Api4::message('error', 'Access denied to this playlist', '401', $input['api_format']);
 
-            return false;
-        }
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::playlists([$list_id], $user, $input['auth']);
-                break;
-            default:
-                echo Xml4_Data::playlists([$list_id], $user, $input['auth']);
+            return $response;
         }
 
-        return true;
+        // the prefixed key is handed on as a string so a smartlist keeps its `smart_` prefix
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->playlists($apiVersion, [$list_id], $user, $input['auth'])
+            )
+        );
     }
 }

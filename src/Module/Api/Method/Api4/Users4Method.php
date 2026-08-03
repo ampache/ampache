@@ -26,62 +26,49 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class User4Method
+ * Returns every valid user.
  */
-final class Users4Method
+final class Users4Method implements MethodInterface
 {
     public const string ACTION = 'users';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+        private UserRepositoryInterface $userRepository,
+    ) {}
+
     /**
-     * users
-     * MINIMUM_API_VERSION=440000
-     *
-     * Get ids and usernames for your site
-     *
-     * @param array{
-     *     offset?: string,
-     *     limit?: string,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function users(array $input, User $user): bool
-    {
-        $results = self::getUserRepository()->getValid();
-        if (empty($results)) {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $results = $this->userRepository->getValid();
+        if ($results === []) {
             Api4::message('error', 'No Results', '404', $input['api_format']);
 
-            return false;
-        }
-        unset($user);
-
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::users($results);
-                break;
-            default:
-                echo Xml4_Data::users($results);
+            return $response;
         }
 
-        return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->users($apiVersion, $results)
+            )
+        );
     }
 }

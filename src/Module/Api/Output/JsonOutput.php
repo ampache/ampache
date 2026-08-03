@@ -459,12 +459,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $playlists
      */
     public function playlists(int $apiVersion, array $playlists, User $user, string $auth, bool $songs = false, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Json4_Data::playlists($playlists, $user, $auth, $songs),
             5 => $this->json5Data->playlists($playlists, $user, $auth, $songs, $asObject),
             6 => $this->json6Data->playlists($playlists, $user, $auth, $songs, $asObject),
             8 => $this->json8Data->playlists($playlists, $user, $auth, $songs, $asObject),
@@ -752,11 +753,12 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      */
     public function user(int $apiVersion, User $user, bool $fullInfo, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Json4_Data::user($user, $fullInfo),
             5 => $this->json5Data->user($user, $fullInfo, $asObject),
             6 => $this->json6Data->user($user, $fullInfo, $auth, $asObject),
             8 => $this->json8Data->user($user, $fullInfo, $auth, $asObject),
@@ -766,12 +768,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $users
      */
     public function users(int $apiVersion, array $users): string
     {
         return match ($apiVersion) {
+            4 => Json4_Data::users($users),
             // the version 5 builder only ever took integer ids
             5 => $this->json5Data->users(array_map(intval(...), $users)),
             6 => $this->json6Data->users($users),
