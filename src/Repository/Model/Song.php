@@ -1069,15 +1069,6 @@ class Song extends database_object implements
     }
 
     /**
-     * update_time
-     * updates the time field
-     */
-    public static function update_time(int $new_time, int $song_id): void
-    {
-        self::_update_item('time', $new_time, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
-    }
-
-    /**
      * update_title
      * updates the title field
      */

@@ -47,6 +47,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
+        private Graph $graph,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -82,7 +83,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $object_type = null;
         }
 
-        $graph     = new Graph();
+        $graph     = $this->graph;
         $user_id   = (int) $this->requestParser->getFromRequest('user_id');
         $object_id = (int) $this->requestParser->getFromRequest('object_id');
         $end_date  = (in_array($this->requestParser->getFromRequest('end_date'), ['', '0'], true))

@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -43,6 +44,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
 {
     protected function __construct(
         private LibraryItemLoaderInterface $libraryItemLoader,
+        private Graph $graph,
     ) {}
 
     /**
@@ -130,6 +132,9 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
             $user  = new User($user_id);
             $blink = $user->get_f_link();
         }
+
+        // named here because the template renders in this scope and cannot reach the container itself
+        $graph = $this->graph;
 
         require_once Ui::find_template('show_graphs.inc.php');
     }

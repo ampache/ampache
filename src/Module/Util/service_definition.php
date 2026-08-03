@@ -50,4 +50,6 @@ return [
     UtilityFactoryInterface::class => autowire(UtilityFactory::class),
     WebFetcherInterface::class => autowire(WebFetcher::class),
     RssFeedTypeFactoryInterface::class => autowire(RssFeedTypeFactory::class),
+    Waveform::class => autowire(),
+    Graph::class => autowire(),
 ];
