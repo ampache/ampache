@@ -25,17 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Rate3Method
- */
-final class Rate3Method
+final class Rate3Method implements MethodInterface
 {
     public const string ACTION = 'rate';
 
@@ -50,9 +51,16 @@ final class Rate3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function rate(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
@@ -72,5 +80,7 @@ final class Rate3Method
                 echo Xml3_Data::success();
             }
         }
+
+        return $response;
     }
 }

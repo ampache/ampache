@@ -28,6 +28,9 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api3;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -42,13 +45,16 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Handshake3Method
- */
-final class Handshake3Method
+final class Handshake3Method implements MethodInterface
 {
     public const string ACTION = 'handshake';
+
+    public function __construct(
+        private UserRepositoryInterface $userRepository,
+        private UserTrackerInterface $userTracker,
+    ) {}
 
     /**
      * handshake
@@ -69,9 +75,16 @@ final class Handshake3Method
      * } $input
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @param 3 $apiVersion
      */
-    public static function handshake(array $input): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $now_time   = time();
         $timestamp  = (int) preg_replace('/[^0-9]/', '', (string) ($input['timestamp'] ?? $now_time));
         $passphrase = $input['auth'];
@@ -88,14 +101,14 @@ final class Handshake3Method
             debug_event(self::class, 'Login Failed: version too old', 1);
             AmpError::add('api', 'Login Failed: version too old');
 
-            return false;
+            return $response;
         }
 
         $exists  = false;
         $user_id = -1;
         // Grab the correct userid
         if (!$username) {
-            $client   = self::getUserRepository()->findByApiKey(trim($passphrase));
+            $client   = $this->userRepository->findByApiKey(trim($passphrase));
             $username = false;
         } elseif (Session::exists('api', $input['auth'])) {
             $client   = User::get_from_username($username);
@@ -127,18 +140,18 @@ final class Handshake3Method
                     AmpError::add('api', 'Login Failed: timestamp out of range');
                     echo Xml3_Data::error(401, 'Error Invalid Handshake - ' . 'Login Failed: timestamp out of range');
 
-                    return false;
+                    return $response;
                 }
 
                 // Now we're sure that there is an ACL line that matches this user or ALL USERS, pull the user's password and then see what we come out with
-                $realpwd = self::getUserRepository()->retrievePasswordFromUser($client?->getId() ?? 0);
+                $realpwd = $this->userRepository->retrievePasswordFromUser($client?->getId() ?? 0);
 
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', 'Invalid Username/Password');
                     echo Xml3_Data::error(401, 'Error Invalid Handshake - ' . 'Invalid Username/Password');
 
-                    return false;
+                    return $response;
                 }
 
                 $sha1pass = hash('sha256', $timestamp . $realpwd);
@@ -183,7 +196,7 @@ final class Handshake3Method
 
                 // We're about to start. Record this user's IP.
                 if (AmpConfig::get('track_user_ip')) {
-                    self::getUserTracker()->trackIpAddress($client, 'handshake');
+                    $this->userTracker->trackIpAddress($client, 'handshake');
                 }
 
                 debug_event(self::class, 'Login Success, passphrase matched', 1);
@@ -218,33 +231,13 @@ final class Handshake3Method
                 ];
                 echo Api::keyed_array($results);
 
-                return true;
+                return $response;
             } // match
         }
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         echo Xml3_Data::error(401, 'Error Invalid Handshake - ' . 'Invalid Username/Password');
 
-        return false;
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getUserTracker(): UserTrackerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserTrackerInterface::class);
+        return $response;
     }
 }

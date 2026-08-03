@@ -25,14 +25,23 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-final class ArtistAlbums3Method
+final class ArtistAlbums3Method implements MethodInterface
 {
     public const string ACTION = 'artist_albums';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+        private AlbumRepositoryInterface $albumRepository,
+    ) {}
 
     /**
      * artist_albums
@@ -48,29 +57,31 @@ final class ArtistAlbums3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function artist_albums(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $artist  = new Artist((int) $input['filter']);
         $results = [];
         if ($artist->isNew() === false) {
-            $results = self::getAlbumRepository()->getAlbumByArtist($artist->id);
+            $results = $this->albumRepository->getAlbumByArtist($artist->id);
         }
 
         // Set the offset
-        Xml3_Data::set_offset($input['offset'] ?? 0);
-        Xml3_Data::set_limit($input['limit'] ?? 0);
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::albums($results, [], $user, $input['auth']);
-    }
 
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->albums($apiVersion, $results, [], $user, $input['auth'])
+            )
+        );
     }
 }

@@ -25,15 +25,20 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Playlist3Method
- */
-final class Playlist3Method
+final class Playlist3Method implements MethodInterface
 {
     public const string ACTION = 'playlist';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * playlist
@@ -44,13 +49,24 @@ final class Playlist3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function playlist(array $input, User $user): void
-    {
-        unset($user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $uid = scrub_in((string) $input['filter']);
 
         ob_end_clean();
-        echo Xml3_Data::playlists([$uid]);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->playlists($apiVersion, [$uid], $user, $input['auth'])
+            )
+        );
     }
 }

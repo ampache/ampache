@@ -26,17 +26,23 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Playback\Democratic;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Democratic3Method
- */
-final class Democratic3Method
+final class Democratic3Method implements MethodInterface
 {
     public const string ACTION = 'democratic';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * democratic
@@ -48,9 +54,16 @@ final class Democratic3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function democratic(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         // Load up democratic information
         $democratic = Democratic::get_current_playlist($user);
         $democratic->set_parent();
@@ -100,8 +113,12 @@ final class Democratic3Method
                 $results = $democratic->get_items();
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
-                echo Xml3_Data::democratic($results, $user, $input['auth']);
-                break;
+
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->democratic($apiVersion, $results, $user, $input['auth'])
+                    )
+                );
             case 'play':
                 $url     = $democratic->play_url($user);
                 $results = ['url' => $url];
@@ -111,5 +128,7 @@ final class Democratic3Method
                 echo Xml3_Data::error(405, 'Invalid Request');
                 break;
         } // switch on method
+
+        return $response;
     }
 }

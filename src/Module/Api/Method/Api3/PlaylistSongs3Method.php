@@ -25,17 +25,23 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PlaylistSongs3Method
- */
-final class PlaylistSongs3Method
+final class PlaylistSongs3Method implements MethodInterface
 {
     public const string ACTION = 'playlist_songs';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * playlist_songs
@@ -49,9 +55,16 @@ final class PlaylistSongs3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function playlist_songs(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $playlist = new Playlist((int) $input['filter']);
         $items    = $playlist->get_items();
 
@@ -62,9 +75,15 @@ final class PlaylistSongs3Method
             }
         }
 
-        Xml3_Data::set_offset($input['offset'] ?? 0);
-        Xml3_Data::set_limit($input['limit'] ?? 0);
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::songs($results, $user, $input['auth'], $items);
+
+        // version 3 threads playlist_data through songs(); the shared output contract has no slot for it
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                Xml3_Data::songs($results, $user, $input['auth'], $items)
+            )
+        );
     }
 }

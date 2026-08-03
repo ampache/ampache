@@ -231,7 +231,7 @@ final class XmlOutput implements ApiOutputInterface
      *
      * The json-only object flag does not apply to xml.
      *
-     * @param 4|5|6|8 $apiVersion
+     * @param 3|4|5|6|8 $apiVersion
      * @param array<int, array{
      *    object_type: LibraryItemEnum,
      *    object_id: int,
@@ -247,6 +247,7 @@ final class XmlOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return match ($apiVersion) {
+            3 => Xml3_Data::democratic($objectIds, $user, $auth),
             4 => Xml4_Data::democratic($objectIds, $user, $auth),
             5 => $this->xml5Data->democratic($objectIds, $user, $auth),
             6 => $this->xml6Data->democratic($objectIds, $user, $auth),
@@ -289,12 +290,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 4|5|6|8 $apiVersion
+     * @param 3|4|5|6|8 $apiVersion
      * @param array<int|string> $genres
      */
     public function genres(int $apiVersion, array $genres, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            3 => Xml3_Data::tags($genres),
             4 => Xml4_Data::tags($genres),
             5 => $this->xml5Data->genres($genres, $user),
             6 => $this->xml6Data->genres($genres, $user),
@@ -642,7 +644,7 @@ final class XmlOutput implements ApiOutputInterface
      *
      * The json-only object flag does not apply to xml.
      *
-     * @param 4|5|6|8 $apiVersion
+     * @param 3|4|5|6|8 $apiVersion
      * @param array<Shoutbox> $shouts
      */
     public function shouts(
@@ -651,6 +653,7 @@ final class XmlOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return match ($apiVersion) {
+            3 => Xml3_Data::shouts(new ArrayIterator($shouts)),
             4 => Xml4_Data::shouts(new ArrayIterator($shouts)),
             5 => $this->xml5Data->shouts(new ArrayIterator($shouts)),
             6 => $this->xml6Data->shouts($shouts),
@@ -728,12 +731,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 4|5|6|8 $apiVersion
+     * @param 3|4|5|6|8 $apiVersion
      * @param int[] $activities Activity id list
      */
     public function timeline(int $apiVersion, array $activities): string
     {
         return match ($apiVersion) {
+            3 => Xml3_Data::timeline($activities),
             4 => Xml4_Data::timeline($activities),
             5 => $this->xml5Data->timeline($activities),
             6 => $this->xml6Data->timeline($activities),
@@ -777,12 +781,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 4|5|6|8 $apiVersion
+     * @param 3|4|5|6|8 $apiVersion
      * @param array<int|string> $videos
      */
     public function videos(int $apiVersion, array $videos, User $user, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            3 => Xml3_Data::videos($videos),
             4 => Xml4_Data::videos($videos, $user, $auth),
             5 => $this->xml5Data->videos($videos, $user, $auth),
             6 => $this->xml6Data->videos($videos, $user, $auth),

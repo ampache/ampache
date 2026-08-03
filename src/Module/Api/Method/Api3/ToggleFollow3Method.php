@@ -26,16 +26,21 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class ToggleFollow3Method
- */
-final class ToggleFollow3Method
+final class ToggleFollow3Method implements MethodInterface
 {
     public const string ACTION = 'toggle_follow';
+
+    public function __construct(
+        private UserFollowTogglerInterface $userFollowToggler,
+    ) {}
 
     /**
      * toggle_follow
@@ -46,15 +51,22 @@ final class ToggleFollow3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function toggle_follow(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             if (!empty($username)) {
                 $leader = User::get_from_username($username);
                 if ($leader instanceof User) {
-                    self::getUserFollowToggler()->toggle(
+                    $this->userFollowToggler->toggle(
                         $leader,
                         $user
                     );
@@ -67,12 +79,7 @@ final class ToggleFollow3Method
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-    }
 
-    private static function getUserFollowToggler(): UserFollowTogglerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserFollowTogglerInterface::class);
+        return $response;
     }
 }

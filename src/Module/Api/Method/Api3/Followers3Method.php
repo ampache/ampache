@@ -26,16 +26,22 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserFollowerRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Followers3Method
- */
-final class Followers3Method
+final class Followers3Method implements MethodInterface
 {
     public const string ACTION = 'followers';
+
+    public function __construct(
+        private UserFollowerRepositoryInterface $userFollowerRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * followers
@@ -50,36 +56,39 @@ final class Followers3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function followers(array $input, User $user): void
-    {
-        unset($user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user instanceof User) {
-                    $results = self::getUserFollowerRepository()->getFollowers($user);
+                    $results = $this->userFollowerRepository->getFollowers($user);
                     ob_end_clean();
-                    echo Xml3_Data::users($results);
-                } else {
-                    debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->users($apiVersion, $results)
+                        )
+                    );
                 }
+                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+
             } else {
                 debug_event(self::class, 'Username required on followers function call.', 1);
             }
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-    }
 
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getUserFollowerRepository(): UserFollowerRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserFollowerRepositoryInterface::class);
+        return $response;
     }
 }
