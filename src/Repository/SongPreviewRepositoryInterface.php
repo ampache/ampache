@@ -55,14 +55,6 @@ interface SongPreviewRepositoryInterface
     public function getRow(int $previewId): array;
 
     /**
-     * Reads a set of preview rows in disk/track order
-     *
-     * @param list<int|string> $previewIds
-     * @return list<array<string, mixed>>
-     */
-    public function getRows(array $previewIds): array;
-
-    /**
      * Inserts a preview and returns its id, or `null` when the write failed
      *
      * @param array<string, mixed> $data

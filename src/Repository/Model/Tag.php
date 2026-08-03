@@ -110,74 +110,6 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * add_tag
-     * This function adds a new tag, for now we're going to limit the tagging a bit
-     */
-    public static function add_tag(string $value): ?int
-    {
-        if ($value === '') {
-            return null;
-        }
-
-        $insert_id = self::getTagRepository()->create($value);
-
-        parent::add_to_cache('tag_name', $value, [$insert_id]);
-
-        return $insert_id;
-    }
-
-    /**
-     * add_tag_map
-     * This adds a specific tag to the map for specified object
-     */
-    public static function add_tag_map(string $type, int|string $object_id, int|string $tag_id): int
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            debug_event(self::class, $type . " is not a library item.", 3);
-
-            return 0;
-        }
-
-        $tag_id  = (int) ($tag_id);
-        $item_id = (int) ($object_id);
-
-        if (!$tag_id || !$item_id) {
-            return 0;
-        }
-
-        // If tag merged to another one, add reference to the merge destination
-        $parent = new Tag($tag_id);
-        $merges = $parent->get_merged_tags();
-        if ($parent->is_hidden === 0) {
-            $merges[] = ['id' => $parent->id, 'name' => $parent->name];
-        }
-
-        $tagRepository = self::getTagRepository();
-        // only the four types with a counter column on `tag` get counted; the map itself accepts any library item
-        $countType = TagCountTypeEnum::tryFrom($type);
-        $insert_id = 0;
-        foreach ($merges as $tag) {
-            $insert_id = $tagRepository->addMap((int) $tag['id'], $type, $item_id, 0);
-            parent::add_to_cache(
-                'tag_map_' . $type,
-                $insert_id,
-                [
-                    'tag_id' => $tag_id,
-                    'user' => 0,
-                    'object_type' => $type,
-                    'object_id' => $item_id
-                ]
-            );
-
-            if ($countType instanceof TagCountTypeEnum) {
-                $tagRepository->incrementCount((int) $tag['id'], $countType);
-            }
-        }
-
-        return $insert_id;
-    }
-
-    /**
      * build_cache
      * This takes an array of object ids and caches all of their information
      * in a single query, cuts down on the connections
@@ -373,28 +305,6 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * remove_all_maps
-     * Clear all the tags from an object when there isn't anything there
-     */
-    public static function remove_all_maps(string $object_type, int $object_id): bool
-    {
-        if (!InterfaceImplementationChecker::is_library_item($object_type)) {
-            return false;
-        }
-
-        $tagRepository = self::getTagRepository();
-        $tagRepository->removeAllMaps($object_type, $object_id);
-
-        // only the four counted types have a column to put back in step; the rest never had one to begin with
-        $countType = TagCountTypeEnum::tryFrom($object_type);
-        if ($countType instanceof TagCountTypeEnum) {
-            $tagRepository->recountType($countType);
-        }
-
-        return true;
-    }
-
-    /**
      * tag_exists
      * This checks to see if a tag exists, this has nothing to do with objects or maps
      */
@@ -412,21 +322,6 @@ class Tag extends database_object implements library_item, displayable_item, con
         }
 
         return 0;
-    }
-
-    /**
-     * tag_map_exists
-     * This looks to see if the current mapping of the current object exists
-     */
-    public static function tag_map_exists(string $type, int $object_id, int $tag_id): bool
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            debug_event(self::class, 'Requested type is not a library item.', 3);
-
-            return false;
-        }
-
-        return self::getTagRepository()->mapExists($type, $object_id, $tag_id, 0);
     }
 
     /**
@@ -504,6 +399,74 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
+     * add_tag
+     * This function adds a new tag, for now we're going to limit the tagging a bit
+     */
+    private static function add_tag(string $value): ?int
+    {
+        if ($value === '') {
+            return null;
+        }
+
+        $insert_id = self::getTagRepository()->create($value);
+
+        parent::add_to_cache('tag_name', $value, [$insert_id]);
+
+        return $insert_id;
+    }
+
+    /**
+     * add_tag_map
+     * This adds a specific tag to the map for specified object
+     */
+    private static function add_tag_map(string $type, int|string $object_id, int|string $tag_id): int
+    {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
+            debug_event(self::class, $type . " is not a library item.", 3);
+
+            return 0;
+        }
+
+        $tag_id  = (int) ($tag_id);
+        $item_id = (int) ($object_id);
+
+        if (!$tag_id || !$item_id) {
+            return 0;
+        }
+
+        // If tag merged to another one, add reference to the merge destination
+        $parent = new Tag($tag_id);
+        $merges = $parent->get_merged_tags();
+        if ($parent->is_hidden === 0) {
+            $merges[] = ['id' => $parent->id, 'name' => $parent->name];
+        }
+
+        $tagRepository = self::getTagRepository();
+        // only the four types with a counter column on `tag` get counted; the map itself accepts any library item
+        $countType = TagCountTypeEnum::tryFrom($type);
+        $insert_id = 0;
+        foreach ($merges as $tag) {
+            $insert_id = $tagRepository->addMap((int) $tag['id'], $type, $item_id, 0);
+            parent::add_to_cache(
+                'tag_map_' . $type,
+                $insert_id,
+                [
+                    'tag_id' => $tag_id,
+                    'user' => 0,
+                    'object_type' => $type,
+                    'object_id' => $item_id
+                ]
+            );
+
+            if ($countType instanceof TagCountTypeEnum) {
+                $tagRepository->incrementCount((int) $tag['id'], $countType);
+            }
+        }
+
+        return $insert_id;
+    }
+
+    /**
      * @deprecated inject dependency
      */
     private static function getTagRepository(): TagRepositoryInterface
@@ -511,6 +474,43 @@ class Tag extends database_object implements library_item, displayable_item, con
         global $dic;
 
         return $dic->get(TagRepositoryInterface::class);
+    }
+
+    /**
+     * remove_all_maps
+     * Clear all the tags from an object when there isn't anything there
+     */
+    private static function remove_all_maps(string $object_type, int $object_id): bool
+    {
+        if (!InterfaceImplementationChecker::is_library_item($object_type)) {
+            return false;
+        }
+
+        $tagRepository = self::getTagRepository();
+        $tagRepository->removeAllMaps($object_type, $object_id);
+
+        // only the four counted types have a column to put back in step; the rest never had one to begin with
+        $countType = TagCountTypeEnum::tryFrom($object_type);
+        if ($countType instanceof TagCountTypeEnum) {
+            $tagRepository->recountType($countType);
+        }
+
+        return true;
+    }
+
+    /**
+     * tag_map_exists
+     * This looks to see if the current mapping of the current object exists
+     */
+    private static function tag_map_exists(string $type, int $object_id, int $tag_id): bool
+    {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
+            debug_event(self::class, 'Requested type is not a library item.', 3);
+
+            return false;
+        }
+
+        return self::getTagRepository()->mapExists($type, $object_id, $tag_id, 0);
     }
 
     /**
