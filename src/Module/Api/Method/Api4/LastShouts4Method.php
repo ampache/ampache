@@ -27,17 +27,22 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class LastShouts4Method
- */
-final class LastShouts4Method
+final class LastShouts4Method implements MethodInterface
 {
     public const string ACTION = 'last_shouts';
+
+    public function __construct(
+        private ShoutRepositoryInterface $shoutRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * last_shouts
@@ -54,16 +59,23 @@ final class LastShouts4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function last_shouts(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('sociable')) {
             Api4::message('error', 'Access Denied: social features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
+            return $response;
         }
         unset($user);
         $limit = (int) ($input['limit'] ?? 0);
@@ -76,27 +88,14 @@ final class LastShouts4Method
             $username = null;
         }
 
-        $results = self::getShoutRepository()->getTop($limit, $username);
+        $results = $this->shoutRepository->getTop($limit, $username);
 
         ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::shouts($results);
-                break;
-            default:
-                echo Xml4_Data::shouts($results);
-        }
 
-        return true;
-    }
-
-    /**
-     * @todo inject by constructor
-     */
-    private static function getShoutRepository(): ShoutRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ShoutRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->shouts($apiVersion, iterator_to_array($results))
+            )
+        );
     }
 }

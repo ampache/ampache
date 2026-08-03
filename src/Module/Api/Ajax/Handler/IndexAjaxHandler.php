@@ -34,15 +34,17 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
@@ -66,6 +68,9 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         private GatekeeperFactoryInterface $gatekeeperFactory,
         private GuiFactoryInterface $guiFactory,
         private TalFactoryInterface $talFactory,
+        private ZipHandlerInterface $zipHandler,
+        private BrowseFactoryInterface $browseFactory,
+        private FolderRepositoryInterface $folderRepository,
     ) {}
 
     public function handle(User $user): void
@@ -192,6 +197,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     }
 
                     ob_start();
+                    $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
                     require_once Ui::find_template('show_recommended_artists.inc.php');
                     $results['similar_artist'] = ob_get_clean();
                 }
@@ -212,7 +218,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 // randomize and slice
                 shuffle($object_ids);
                 $object_ids   = array_slice($object_ids, 0, (int) AmpConfig::get('popular_threshold', 10));
-                $browse       = new Browse();
+                $browse       = $this->browseFactory->create();
                 $hide_columns = [];
                 // the row template renders into this scope, so the services it uses are named here
                 $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
@@ -241,12 +247,13 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         $object_ids[] = $labelid;
                     }
 
-                    $browse = new Browse();
+                    $browse = $this->browseFactory->create();
                     $browse->set_type('label');
                     $browse->set_simple_browse(false);
                     $browse->save_objects($object_ids);
                     $browse->store();
                     ob_start();
+                    $labelRepository = $this->labelRepository;
                     require_once Ui::find_template('show_labels.inc.php');
                     $results['labels'] = ob_get_clean();
                 }
@@ -417,7 +424,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if ($object_ids !== []) {
-                    $browse = new Browse();
+                    $browse = $this->browseFactory->create();
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
@@ -430,7 +437,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     ? Stats::get_newest($object_type, $limit, 0, 0, $user)
                     : [];
                 if ($object_ids !== []) {
-                    $browse = new Browse();
+                    $browse = $this->browseFactory->create();
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
@@ -443,7 +450,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     ? Stats::get_recent($object_type, $limit)
                     : [];
                 if ($object_ids !== []) {
-                    $browse = new Browse();
+                    $browse = $this->browseFactory->create();
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
@@ -456,7 +463,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     ? Stats::get_top($object_type, $limit, $threshold)
                     : [];
                 if ($object_ids !== []) {
-                    $browse = new Browse();
+                    $browse = $this->browseFactory->create();
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
@@ -471,7 +478,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 if ($object_ids !== []) {
                     shuffle($object_ids);
                     $object_ids = array_slice($object_ids, 0, $limit);
-                    $browse     = new Browse();
+                    $browse     = $this->browseFactory->create();
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
@@ -506,6 +513,10 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 Ajax::set_include_override(true);
                 ob_start();
                 $_SESSION['state']['sidebar_tab'] = $button;
+                // sidebar_home renders in this scope
+                $folderRepository = $this->folderRepository;
+
+                $videoRepository = $this->videoRepository;
                 require_once Ui::find_template('sidebar.inc.php');
                 $results['sidebar-content'] = ob_get_contents();
                 ob_end_clean();
@@ -551,7 +562,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         ? []
                         : $label->get_albums();
 
-                    $browse = new Browse();
+                    $browse = $this->browseFactory->create();
                     $browse->set_type('album');
                     $browse->set_simple_browse(false);
                     $browse->set_use_filters(false);
@@ -574,7 +585,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         ? []
                         : $this->songRepository->getByLabel((string) $label->name);
 
-                    $browse = new Browse();
+                    $browse = $this->browseFactory->create();
                     $browse->set_type('song');
                     $browse->set_simple_browse(false);
                     $browse->save_objects($object_ids);
@@ -582,6 +593,10 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                     $hide_columns = [];
                     Ui::show_box_top(T_('Songs'), 'info-box');
+                    $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
+                    $guiFactory = $this->guiFactory;
+                    $talFactory = $this->talFactory;
+                    $zipHandler = $this->zipHandler;
                     require_once Ui::find_template('show_songs.inc.php');
                     Ui::show_box_bottom();
                 }

@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
@@ -49,6 +50,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private UiInterface $ui,
         private LoggerInterface $logger,
         private PodcastRepositoryInterface $podcastRepository,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -77,6 +79,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                     'object_ids' => $podcast->getEpisodeIds(),
                     'object_type' => 'podcast_episode',
                     'current_user' => $user,
+                    'browseFactory' => $this->browseFactory,
                 ]
             );
         }

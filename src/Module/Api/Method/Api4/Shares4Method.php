@@ -28,72 +28,62 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Shares4Method
+ * Returns every share.
  */
-final class Shares4Method
+final class Shares4Method implements MethodInterface
 {
     public const string ACTION = 'shares';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * shares
-     * MINIMUM_API_VERSION=420000
-     *
-     * Get information about shared media this user is allowed to manage.
-     *
-     * filter = (string) Alpha-numeric search term //optional
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     exact?: int,
-     *     add?: string,
-     *     update?: string,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function shares(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('share')) {
             Api4::message('error', 'Access Denied: sharing features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         $browse = Api::getBrowse($user);
         $browse->set_type('share');
         $browse->set_sort('title', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1)
+            ? 'exact_match'
+            : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 
         $results = $browse->get_objects();
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json4_Data::set_offset($input['offset'] ?? 0);
-                Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::shares($results, $user);
-                break;
-            default:
-                Xml4_Data::set_offset($input['offset'] ?? 0);
-                Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::shares($results, $user);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->shares($apiVersion, $results, $user)
+            )
+        );
     }
 }

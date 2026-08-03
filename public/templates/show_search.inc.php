@@ -31,7 +31,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -39,6 +39,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var Search $playlist */
 /** @var list<int> $object_ids */
 
@@ -47,7 +48,7 @@ $web_path = AmpConfig::get_web_path();
 ob_start();
 echo $playlist->getFullname();
 $title  = ob_get_contents();
-$browse = new Browse();
+$browse = $browseFactory->create();
 $browse->set_type('playlist_media');
 $browse->set_use_filters(false);
 $browse->add_supplemental_object('playlist', $playlist);

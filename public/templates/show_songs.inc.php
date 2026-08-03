@@ -33,7 +33,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -77,8 +77,7 @@ $cel_license = ($is_table) ? "cel_license" : 'grid_license';
 $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter';
 $css_class   = ($is_table) ? '' : ' gridview';
 
-global $dic;
-$zipHandler = $dic->get(ZipHandlerInterface::class);
+/** @var ZipHandlerInterface $zipHandler */
 
 // Multi select. Grid view has no room for a checkbox column and an empty browse has nothing to act on, so the
 // bar only appears on a populated table view where at least one of the batch actions is actually available.
@@ -211,10 +210,9 @@ if ($browse->is_show_header()) {
         </tr>
     </thead>
     <tbody id="sortableplaylist_<?php echo $browse->get_filter('album') ?? $browse->id; ?>">
-        <?php global $dic;
-$talFactory = $dic->get(TalFactoryInterface::class);
-$guiFactory = $dic->get(GuiFactoryInterface::class);
-$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+        <?php /** @var TalFactoryInterface $talFactory */
+/** @var GuiFactoryInterface $guiFactory */
+/** @var GuiGatekeeperInterface $gatekeeper */
 
 // repeating a browse's prefetch would also overwrite the threshold-adjusted play counts it cached
 if (empty($browse_cached)) {

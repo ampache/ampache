@@ -31,15 +31,15 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
 use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private BrowseFactoryInterface|MockInterface|null $browseFactory;
     private ?ShowAction $subject;
     private UiInterface|MockInterface|null $ui;
 
@@ -66,7 +66,7 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->withNoArgs()
             ->once()
             ->andReturn($browse);
@@ -111,12 +111,12 @@ class ShowActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->ui            = $this->mock(UiInterface::class);
+        $this->browseFactory = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new ShowAction(
             $this->ui,
-            $this->modelFactory
+            $this->browseFactory
         );
     }
 }

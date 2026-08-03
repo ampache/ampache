@@ -23,14 +23,19 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Database;
+namespace Ampache\Module\Database\Query;
 
-use Ampache\Module\Database\Query\BrowseFactory;
-use Ampache\Module\Database\Query\BrowseFactoryInterface;
-
-use function DI\autowire;
-
-return [
-    DatabaseCharsetUpdaterInterface::class => autowire(DatabaseCharsetUpdater::class),
-    BrowseFactoryInterface::class => autowire(BrowseFactory::class),
-];
+/**
+ * Builds a Browse with the services its templates render through.
+ *
+ * A browse is per-request state keyed on a browse id, so it cannot be a shared service; this is the
+ * only place one is constructed. It is deliberately separate from ModelFactory: the view services a
+ * browse renders with reach ModelFactoryInterface themselves, so building one there would be a cycle.
+ */
+interface BrowseFactoryInterface
+{
+    public function create(
+        ?int $browse_id = null,
+        bool $cached = true,
+    ): Browse;
+}

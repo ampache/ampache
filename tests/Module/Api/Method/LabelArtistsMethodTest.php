@@ -33,9 +33,9 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
@@ -45,9 +45,9 @@ use Psr\Http\Message\StreamInterface;
 
 class LabelArtistsMethodTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface|MockInterface|null $browseFactory;
     private ConfigContainerInterface|MockInterface|null $configContainer;
     private LabelRepositoryInterface|MockInterface|null $labelRepository;
-    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?LabelArtistsMethod $subject;
 
     /**
@@ -190,7 +190,7 @@ class LabelArtistsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($labelId);
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
@@ -282,14 +282,14 @@ class LabelArtistsMethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->labelRepository = $this->mock(LabelRepositoryInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
+        $this->labelRepository  = $this->mock(LabelRepositoryInterface::class);
+        $this->browseFactory    = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new LabelArtistsMethod(
             $this->configContainer,
             $this->labelRepository,
-            $this->modelFactory
+            $this->browseFactory
         );
     }
 }

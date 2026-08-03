@@ -31,6 +31,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -45,6 +46,7 @@ final class ShowPlaylistAction extends AbstractLocalPlayAction
     public function __construct(
         ConfigContainerInterface $configContainer,
         private readonly UiInterface $ui,
+        private BrowseFactoryInterface $browseFactory,
     ) {
         parent::__construct($configContainer);
         $this->configContainer = $configContainer;
@@ -72,7 +74,8 @@ final class ShowPlaylistAction extends AbstractLocalPlayAction
             'show_localplay_status.inc.php',
             [
                 'localplay' => $localplay,
-                'objects' => $objects
+                'objects' => $objects,
+                'browseFactory' => $this->browseFactory
             ]
         );
 

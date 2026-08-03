@@ -25,15 +25,20 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class User3Method
- */
-final class User3Method
+final class User3Method implements MethodInterface
 {
     public const string ACTION = 'user';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * user
@@ -44,21 +49,34 @@ final class User3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function user(array $input, User $user): void
-    {
-        unset($user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $username = $input['username'];
         if (!empty($username)) {
             $user = User::get_from_username($username);
             if ($user instanceof User) {
                 ob_end_clean();
-                echo Xml3_Data::user($user);
-            } else {
-                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->user($apiVersion, $user, false, $input['auth'])
+                    )
+                );
             }
+            debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+
         } else {
             debug_event(self::class, 'Username required on user function call.', 1);
         }
+
+        return $response;
     }
 }

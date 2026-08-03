@@ -25,29 +25,41 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class AdvancedSearch3Method
- */
-final class AdvancedSearch3Method
+final class AdvancedSearch3Method implements MethodInterface
 {
     public const string ACTION = 'advanced_search';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * advanced_search
      * Perform an advanced search given passed rules
      *
      * @param array<string, mixed> $input
+     * @param 3 $apiVersion
      */
-    public static function advanced_search(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         ob_end_clean();
 
-        Xml3_Data::set_offset($input['offset'] ?? 0);
-        Xml3_Data::set_limit($input['limit'] ?? 0);
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
         $data           = $input;
         $data['offset'] = 0;
@@ -64,14 +76,23 @@ final class AdvancedSearch3Method
 
         switch ($type) {
             case 'artist':
-                echo Xml3_Data::artists($results, [], $user, $input['auth']);
-                break;
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->artists($apiVersion, $results, [], $user, $input['auth'])
+                    )
+                );
             case 'album':
-                echo Xml3_Data::albums($results, [], $user, $input['auth']);
-                break;
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->albums($apiVersion, $results, [], $user, $input['auth'])
+                    )
+                );
             default:
-                echo Xml3_Data::songs($results, $user, $input['auth']);
-                break;
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->songs($apiVersion, $results, $user, $input['auth'])
+                    )
+                );
         }
     }
 }

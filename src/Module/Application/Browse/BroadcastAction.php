@@ -27,9 +27,9 @@ namespace Ampache\Module\Application\Browse;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\FolderRepositoryInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,7 +39,7 @@ final readonly class BroadcastAction implements ApplicationActionInterface
     public const string REQUEST_KEY = 'broadcast';
 
     public function __construct(
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private UiInterface $ui,
         private FolderRepositoryInterface $folderRepository,
         private VideoRepositoryInterface $videoRepository,
@@ -51,7 +51,7 @@ final readonly class BroadcastAction implements ApplicationActionInterface
             session_start();
         }
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
         $browse->set_type(self::REQUEST_KEY);
         $browse->set_simple_browse(true);
         $browse->set_sort('id', 'ASC');

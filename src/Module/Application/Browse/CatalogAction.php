@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\Browse;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -37,7 +37,7 @@ final readonly class CatalogAction implements ApplicationActionInterface
     public const string REQUEST_KEY = 'catalog';
 
     public function __construct(
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private UiInterface $ui,
     ) {}
 
@@ -47,7 +47,7 @@ final readonly class CatalogAction implements ApplicationActionInterface
             session_start();
         }
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
 
         $this->ui->showHeader();
 

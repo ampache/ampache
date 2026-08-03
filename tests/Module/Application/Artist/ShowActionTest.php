@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -43,6 +44,7 @@ use Psr\Log\LoggerInterface;
 class ShowActionTest extends MockeryTestCase
 {
     private AlbumRepositoryInterface|MockInterface|null $albumRepository;
+    private BrowseFactoryInterface&MockInterface $browseFactory;
     private ConfigContainerInterface|MockInterface|null $configContainer;
     private LoggerInterface|MockInterface|null $logger;
     private ModelFactoryInterface|MockInterface|null $modelFactory;
@@ -80,6 +82,7 @@ class ShowActionTest extends MockeryTestCase
                     'multi_object_ids' => $multi_object_ids,
                     'gatekeeper' => $gatekeeper,
                     'zipHandler' => $this->zipHandler,
+                    'browseFactory' => $this->browseFactory,
                 ]
             )
             ->once();
@@ -152,6 +155,7 @@ class ShowActionTest extends MockeryTestCase
                     'multi_object_ids' => [],
                     'gatekeeper' => $gatekeeper,
                     'zipHandler' => $this->zipHandler,
+                    'browseFactory' => $this->browseFactory,
                 ]
             )
             ->once();
@@ -243,6 +247,7 @@ class ShowActionTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->browseFactory   = $this->mock(BrowseFactoryInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->ui              = $this->mock(UiInterface::class);
         $this->logger          = $this->mock(LoggerInterface::class);
@@ -255,7 +260,8 @@ class ShowActionTest extends MockeryTestCase
             $this->ui,
             $this->logger,
             $this->albumRepository,
-            $this->zipHandler
+            $this->zipHandler,
+            $this->browseFactory
         );
     }
 }

@@ -34,8 +34,7 @@ use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LabelRepositoryInterface;
 
-global $dic;
-$labelRepository = $dic->get(LabelRepositoryInterface::class);
+/** @var LabelRepositoryInterface $labelRepository */
 
 /** @var Browse $browse */
 /** @var list<int> $object_ids */

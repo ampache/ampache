@@ -28,7 +28,7 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -41,15 +41,15 @@ final class AlbumsMethod implements MethodInterface
 {
     public const string ACTION = 'albums';
 
-    private ModelFactoryInterface $modelFactory;
+    private BrowseFactoryInterface $browseFactory;
     private StreamFactoryInterface $streamFactory;
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
-        ModelFactoryInterface $modelFactory,
+        BrowseFactoryInterface $browseFactory,
     ) {
         $this->streamFactory = $streamFactory;
-        $this->modelFactory  = $modelFactory;
+        $this->browseFactory = $browseFactory;
     }
 
     /**
@@ -89,7 +89,7 @@ final class AlbumsMethod implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
         $browse->set_user_id($user);
         $browse->set_type('album');
         $original_year = (AmpConfig::get('use_original_year')) ? "original_year" : "year";

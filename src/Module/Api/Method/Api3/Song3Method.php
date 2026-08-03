@@ -25,15 +25,20 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Song3Method
- */
-final class Song3Method
+final class Song3Method implements MethodInterface
 {
     public const string ACTION = 'song';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * song
@@ -44,12 +49,24 @@ final class Song3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function song(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $uid = scrub_in((string) $input['filter']);
 
         ob_end_clean();
-        echo Xml3_Data::songs([(int) $uid], $user, $input['auth']);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, [(int) $uid], $user, $input['auth'])
+            )
+        );
     }
 }

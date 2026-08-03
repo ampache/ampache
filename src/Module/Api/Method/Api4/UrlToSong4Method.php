@@ -27,49 +27,53 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class UrlToSong4Method
+ * Returns the song a play url points at.
  */
-final class UrlToSong4Method
+final class UrlToSong4Method implements MethodInterface
 {
     public const string ACTION = 'url_to_song';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * url_to_song
-     * MINIMUM_API_VERSION=380001
-     *
-     * This takes a url and returns the song object in question
-     *
-     * url = (string) $url
-     *
-     * @param array{
-     *     url: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function url_to_song(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['url'], self::ACTION)) {
-            return false;
-        }
-        $charset  = AmpConfig::get('site_charset', 'UTF-8');
-        $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
-        $url_data = Stream_Url::parse($song_url);
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::songs([(int) ($url_data['id'] ?? 0)], $user, $input['auth']);
-                break;
-            default:
-                echo Xml4_Data::songs([(int) ($url_data['id'] ?? 0)], $user, $input['auth']);
+            return $response;
         }
 
-        return true;
+        $song_url = html_entity_decode(
+            (string) ($input['url'] ?? ''),
+            ENT_QUOTES,
+            AmpConfig::get('site_charset', 'UTF-8')
+        );
+        $url_data = Stream_Url::parse($song_url);
+        $results  = [(int) ($url_data['id'] ?? 0)];
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

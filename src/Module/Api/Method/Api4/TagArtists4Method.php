@@ -26,41 +26,40 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class TagArtists4Method
+ * Deprecated alias of genreartists, kept for version 4 clients.
  */
-final class TagArtists4Method
+final class TagArtists4Method implements MethodInterface
 {
     public const string ACTION = 'tag_artists';
 
+    public function __construct(
+        private GenreArtists4Method $delegate,
+    ) {}
+
     /**
-     * tag_artists
-     * MINIMUM_API_VERSION=380001
-     *
-     * This returns the artists associated with the tag in question as defined by the UID
-     *
-     * filter = (string) UID of Album
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function tag_artists(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        // the alias checks the parameter under its own name so the error still says tag_artists
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
 
-        return GenreArtists4Method::genre_artists($input, $user);
+        return $this->delegate->handle($gatekeeper, $response, $output, $input, $user, $apiVersion);
     }
 }

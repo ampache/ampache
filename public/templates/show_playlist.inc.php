@@ -37,7 +37,7 @@ use Ampache\Module\Api\RefreshReordered\RefreshPlaylistMediasAction;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
@@ -48,6 +48,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var Playlist $playlist */
 /** @var list<int> $object_ids */
 
@@ -168,7 +169,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
 <?php Ui::show_box_bottom(); ?>
 <div id='reordered_list_<?php echo $playlist->id; ?>'>
 <?php
-    $browse = new Browse();
+    $browse = $browseFactory->create();
 $browse->set_type('playlist_media');
 $browse->set_use_filters(false);
 $browse->add_supplemental_object('playlist', $playlist);

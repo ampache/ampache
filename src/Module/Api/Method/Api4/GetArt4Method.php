@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Search;
@@ -33,11 +36,9 @@ use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class GetArt4Method
- */
-final class GetArt4Method
+final class GetArt4Method implements MethodInterface
 {
     public const string ACTION = 'get_art';
 
@@ -58,13 +59,20 @@ final class GetArt4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function get_art(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
-            return false;
+            return $response;
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
@@ -74,7 +82,7 @@ final class GetArt4Method
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {
             Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         $art = new Art($object_id, $type);
@@ -104,6 +112,9 @@ final class GetArt4Method
 
         Session::extend($input['auth'], AccessTypeEnum::API->value);
 
-        return $art->show($size, false);
+        $art->show($size, false);
+
+        // the legacy path returned null and let php's own status stand; a psr-7 response would force 200
+        return $response->withStatus((int) (http_response_code() ?: 200));
     }
 }

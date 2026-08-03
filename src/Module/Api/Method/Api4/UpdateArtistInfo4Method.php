@@ -26,16 +26,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class UpdateArtistInfoMethod
- */
-final class UpdateArtistInfo4Method
+final class UpdateArtistInfo4Method implements MethodInterface
 {
     public const string ACTION = 'update_artist_info';
 
@@ -53,21 +54,28 @@ final class UpdateArtistInfo4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function update_artist_info(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['id'], self::ACTION)) {
-            return false;
+            return $response;
         }
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_artist_info', $input['api_format'])) {
-            return false;
+            return $response;
         }
         $object_id = (int) $input['id'];
         $item      = new Artist($object_id);
         if ($item->isNew()) {
             Api4::message('error', 'The requested item was not found', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         $info = Recommendation::get_artist_info($object_id);
@@ -79,10 +87,10 @@ final class UpdateArtistInfo4Method
         ) {
             Api4::message('success', 'Updated artist info: ' . $object_id, null, $input['api_format']);
 
-            return true;
+            return $response;
         }
         Api4::message('error', 'Failed to update_artist_info or recommendations for ' . $object_id, '400', $input['api_format']);
 
-        return true;
+        return $response;
     }
 }

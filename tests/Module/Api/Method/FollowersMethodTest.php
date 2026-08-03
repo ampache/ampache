@@ -31,7 +31,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
@@ -45,8 +45,8 @@ use Psr\Http\Message\StreamInterface;
  */
 class FollowersMethodTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface|MockInterface|null $browseFactory;
     private ConfigContainerInterface|MockInterface|null $configContainer;
-    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?FollowersMethod $subject;
 
     /**
@@ -113,12 +113,12 @@ class FollowersMethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
+        $this->browseFactory    = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new FollowersMethod(
             $this->configContainer,
-            $this->modelFactory
+            $this->browseFactory
         );
     }
 }

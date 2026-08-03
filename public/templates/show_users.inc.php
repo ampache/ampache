@@ -36,6 +36,7 @@ use Ampache\Repository\Model\User;
 
 /** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var list<int> $object_ids */
+/** @var UserFollowStateRendererInterface $userFollowStateRenderer */
 
 $web_path = AmpConfig::get_web_path();
 
@@ -96,9 +97,6 @@ if ($browse->is_show_header()) {
 </thead>
 <tbody>
 <?php
-
-global $dic;
-$userFollowStateRenderer = $dic->get(UserFollowStateRendererInterface::class);
 
 foreach ($object_ids as $user_id) {
     $libitem = new User($user_id);

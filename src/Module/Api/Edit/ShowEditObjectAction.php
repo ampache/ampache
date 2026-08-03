@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -60,12 +61,13 @@ final class ShowEditObjectAction extends AbstractEditAction
         LibraryItemLoaderInterface $libraryItemLoader,
         LoggerInterface $logger,
         ShareRepositoryInterface $shareRepository,
+        BrowseFactoryInterface $browseFactory,
         UiInterface $ui,
         UserRepositoryInterface $userRepository,
         MetadataManagerInterface $metadataManager,
         ZipHandlerInterface $zipHandler,
     ) {
-        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository);
+        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository, $browseFactory);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->ui              = $ui;

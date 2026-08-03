@@ -26,18 +26,28 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\CollectionRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -45,6 +55,8 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
+use Ampache\Repository\WantedRepositoryInterface;
 
 /**
  * Browse Class
@@ -102,6 +114,22 @@ class Browse extends Query
     public ?int $duration = null;
 
     public function __construct(
+        private readonly AjaxUriRetrieverInterface $ajaxUriRetriever,
+        private readonly CollectionRepositoryInterface $collectionRepository,
+        private readonly GatekeeperFactoryInterface $gatekeeperFactory,
+        private readonly GuiFactoryInterface $guiFactory,
+        private readonly LabelRepositoryInterface $labelRepository,
+        private readonly LibraryItemLoaderInterface $libraryItemLoader,
+        private readonly LicenseRepositoryInterface $licenseRepository,
+        private readonly PodcastRepositoryInterface $podcastRepository,
+        private readonly ShoutObjectLoaderInterface $shoutObjectLoader,
+        private readonly ShoutRepositoryInterface $shoutRepository,
+        private readonly TalFactoryInterface $talFactory,
+        private readonly UiInterface $ui,
+        private readonly UserFollowStateRendererInterface $userFollowStateRenderer,
+        private readonly VideoRepositoryInterface $videoRepository,
+        private readonly WantedRepositoryInterface $wantedRepository,
+        private readonly ZipHandlerInterface $zipHandler,
         ?int $browse_id = 0,
         ?bool $cached = true,
     ) {
@@ -548,15 +576,12 @@ class Browse extends Query
      */
     public function show_next_link(string $argument_param = ''): void
     {
-        // FIXME Can be removed if Browse gets instantiated by the factory
-        global $dic;
-
         $limit       = $this->get_offset();
         $start       = $this->get_start();
         $total       = $this->get_total();
         $next_offset = $start + $limit;
         if ($next_offset <= $total) {
-            echo '<a class="jscroll-next" href="' . $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri() . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=' . $this->get_content_div() . '&show_header=false' . $argument_param . '">' . T_('More') . '</a>';
+            echo '<a class="jscroll-next" href="' . $this->ajaxUriRetriever->getAjaxUri() . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=' . $this->get_content_div() . '&show_header=false' . $argument_param . '">' . T_('More') . '</a>';
         }
     }
 
@@ -805,8 +830,8 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_catalogs.inc.php');
                 break;
             case 'shoutbox':
-                $shoutObjectLoader = $this->getShoutObjectLoader();
-                $shoutRepository   = $this->getShoutRepository();
+                $shoutObjectLoader = $this->shoutObjectLoader;
+                $shoutRepository   = $this->shoutRepository;
                 $box_title         = $this->get_title(T_('Shoutbox Records'));
                 $shouts            = [];
                 foreach ($object_ids as $shoutId) {
@@ -874,9 +899,8 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_pvmsgs.inc.php');
                 break;
             case 'podcast':
-                $podcastRepository = $this->getPodcastRepository();
-                $box_title         = $this->get_title(T_('Podcasts'));
-                $box_req           = Ui::find_template('show_podcasts.inc.php');
+                $box_title = $this->get_title(T_('Podcasts'));
+                $box_req   = Ui::find_template('show_podcasts.inc.php');
                 break;
             case 'podcast_episode':
                 $box_title = $this->get_title(T_('Podcast Episodes'));
@@ -891,6 +915,24 @@ class Browse extends Query
         }
 
         if (isset($box_req)) {
+            // the browse template and its row templates render in this scope, so the services they use are named here
+            $ajaxUriRetriever        = $this->ajaxUriRetriever;
+            $collectionRepository    = $this->collectionRepository;
+            $gatekeeper              = $this->gatekeeperFactory->createGuiGatekeeper();
+            $guiFactory              = $this->guiFactory;
+            $labelRepository         = $this->labelRepository;
+            $libraryItemLoader       = $this->libraryItemLoader;
+            $licenseRepository       = $this->licenseRepository;
+            $podcastRepository       = $this->podcastRepository;
+            $shoutObjectLoader       = $this->shoutObjectLoader;
+            $shoutRepository         = $this->shoutRepository;
+            $talFactory              = $this->talFactory;
+            $ui                      = $this->ui;
+            $userFollowStateRenderer = $this->userFollowStateRenderer;
+            $videoRepository         = $this->videoRepository;
+            $wantedRepository        = $this->wantedRepository;
+            $zipHandler              = $this->zipHandler;
+
             require $box_req;
         }
 
@@ -964,35 +1006,5 @@ class Browse extends Query
         }
 
         return $results;
-    }
-
-    /**
-     * @todo inject by constructor
-     */
-    private function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
-    }
-
-    /**
-     * @todo inject by constructor
-     */
-    private function getShoutObjectLoader(): ShoutObjectLoaderInterface
-    {
-        global $dic;
-
-        return $dic->get(ShoutObjectLoaderInterface::class);
-    }
-
-    /**
-     * @todo inject by constructor
-     */
-    private function getShoutRepository(): ShoutRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ShoutRepositoryInterface::class);
     }
 }

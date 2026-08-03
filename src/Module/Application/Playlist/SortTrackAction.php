@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Playlist;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -44,6 +45,7 @@ final readonly class SortTrackAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
         private ZipHandlerInterface $zipHandler,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,7 +66,8 @@ final readonly class SortTrackAction implements ApplicationActionInterface
             [
                 'playlist' => $playlist,
                 'object_ids' => $object_ids,
-                'zipHandler' => $this->zipHandler
+                'zipHandler' => $this->zipHandler,
+                'browseFactory' => $this->browseFactory
             ]
         );
 

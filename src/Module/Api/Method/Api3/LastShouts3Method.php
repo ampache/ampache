@@ -26,16 +26,22 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class LastShouts3Method
- */
-final class LastShouts3Method
+final class LastShouts3Method implements MethodInterface
 {
     public const string ACTION = 'last_shouts';
+
+    public function __construct(
+        private ShoutRepositoryInterface $shoutRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * last_shouts
@@ -47,10 +53,16 @@ final class LastShouts3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function last_shouts(array $input, User $user): void
-    {
-        unset($user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
             $limit = (int) AmpConfig::get('popular_threshold');
@@ -62,22 +74,19 @@ final class LastShouts3Method
                 $username = null;
             }
 
-            $results = self::getShoutRepository()->getTop($limit, $username);
+            $results = $this->shoutRepository->getTop($limit, $username);
 
             ob_end_clean();
-            echo Xml3_Data::shouts($results);
-        } else {
-            debug_event(self::class, 'Sociable feature is not enabled.', 3);
+
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->shouts($apiVersion, iterator_to_array($results))
+                )
+            );
         }
-    }
+        debug_event(self::class, 'Sociable feature is not enabled.', 3);
 
-    /**
-     * @todo inject by constructor
-     */
-    private static function getShoutRepository(): ShoutRepositoryInterface
-    {
-        global $dic;
 
-        return $dic->get(ShoutRepositoryInterface::class);
+        return $response;
     }
 }

@@ -34,6 +34,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
@@ -62,6 +63,7 @@ final class Stats5Method implements MethodInterface
         private ArtistRepositoryInterface $artistRepository,
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private StreamFactoryInterface $streamFactory,
     ) {}
 
@@ -221,7 +223,7 @@ final class Stats5Method implements MethodInterface
                         );
                         break;
                     case 'playlist':
-                        $browse = $this->modelFactory->createBrowse(null, false);
+                        $browse = $this->browseFactory->create(null, false);
                         $browse->set_user_id($user);
                         $browse->set_type('playlist_search');
                         $browse->set_sort('rand', null, false);
@@ -241,7 +243,7 @@ final class Stats5Method implements MethodInterface
                     case 'video':
                     case 'podcast':
                     case 'podcast_episode':
-                        $browse = $this->modelFactory->createBrowse(null, false);
+                        $browse = $this->browseFactory->create(null, false);
                         $browse->set_user_id($user);
                         $browse->set_type($type);
                         $browse->set_sort('rand', null, false);

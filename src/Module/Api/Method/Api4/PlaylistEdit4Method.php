@@ -26,13 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class PlaylistEdit4Method
- */
-final class PlaylistEdit4Method
+final class PlaylistEdit4Method implements MethodInterface
 {
     public const string ACTION = 'playlist_edit';
 
@@ -62,11 +63,18 @@ final class PlaylistEdit4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function playlist_edit(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
         $items = explode(',', html_entity_decode((string) ($input['items'] ?? '')));
         $order = explode(',', html_entity_decode((string) ($input['tracks'] ?? '')));
@@ -84,14 +92,14 @@ final class PlaylistEdit4Method
         if ($playlist->isNew()) {
             Api4::message('error', 'The requested item was not found', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         // don't continue if you didn't actually get a playlist or the access level
         if (!$playlist->has_access($user)) {
             Api4::message('error', 'Access denied to this playlist', '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
         $name = $input['name'] ?? $playlist->name;
         $type = $input['type'] ?? $playlist->type;
@@ -121,10 +129,10 @@ final class PlaylistEdit4Method
         if (!($name || $type) && !$change_made) {
             Api4::message('error', 'Nothing was changed', '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
         Api4::message('success', 'playlist changes saved', null, $input['api_format']);
 
-        return true;
+        return $response;
     }
 }

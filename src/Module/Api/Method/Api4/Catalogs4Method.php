@@ -25,40 +25,37 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Catalogs4Method
+ * Returns the catalogues the user can see.
  */
-final class Catalogs4Method
+final class Catalogs4Method implements MethodInterface
 {
     public const string ACTION = 'catalogs';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * catalogs
-     * MINIMUM_API_VERSION=420000
-     *
-     * Get information about catalogs this user is allowed to manage.
-     *
-     * filter = (string) set $filter_type 'music', 'video', 'podcast' //optional
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function catalogs(array $input, User $user): void
-    {
-        // filter for specific catalog types
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        // only the real catalog types filter; the video sub-types all collapse onto `video`
         $filter = (isset($input['filter']) && in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast']))
             ? $input['filter']
             : '';
@@ -68,17 +65,13 @@ final class Catalogs4Method
 
         $results = $user->get_catalogs((string) $filter);
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json4_Data::set_offset($input['offset'] ?? 0);
-                Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::catalogs($results);
-                break;
-            default:
-                Xml4_Data::set_offset($input['offset'] ?? 0);
-                Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::catalogs($results);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->catalogs($apiVersion, $results, $user)
+            )
+        );
     }
 }

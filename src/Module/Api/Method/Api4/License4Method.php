@@ -27,52 +27,52 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class License4Method
+ * Returns a single license.
  */
-final class License4Method
+final class License4Method implements MethodInterface
 {
     public const string ACTION = 'license';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * license
-     * MINIMUM_API_VERSION=420000
-     *
-     * This returns a single license based on UID
-     *
-     * filter = (string) UID of license
-     *
-     * @param array{
-     *     filter: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function license(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('licensing')) {
             Api4::message('error', 'Access Denied: licensing features are not enabled.', '400', $input['api_format']);
 
-            return false;
-        }
-        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        unset($user);
-        $results = [(int) scrub_in((string) $input['filter'])];
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::licenses($results);
-                break;
-            default:
-                echo Xml4_Data::licenses($results);
+            return $response;
         }
 
-        return true;
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
+            return $response;
+        }
+
+        $results = [(int) scrub_in((string) ($input['filter'] ?? ''))];
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->licenses($apiVersion, $results, $user)
+            )
+        );
     }
 }

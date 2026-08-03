@@ -26,13 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class PlaylistRemoveSong4Method
- */
-final class PlaylistRemoveSong4Method
+final class PlaylistRemoveSong4Method implements MethodInterface
 {
     public const string ACTION = 'playlist_remove_song';
 
@@ -59,18 +60,25 @@ final class PlaylistRemoveSong4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function playlist_remove_song(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
         ob_end_clean();
         $playlist = new Playlist((int) $input['filter']);
         if (!$playlist->has_collaborate($user)) {
             Api4::message('error', 'Access denied to this playlist', '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         if (array_key_exists('clear', $input) && (int) $input['clear'] === 1) {
@@ -81,7 +89,7 @@ final class PlaylistRemoveSong4Method
             if (!$playlist->has_item($song)) {
                 Api4::message('error', 'Song not found in playlist', '404', $input['api_format']);
 
-                return false;
+                return $response;
             }
             $playlist->delete_song($song);
             $playlist->regenerate_track_numbers();
@@ -91,13 +99,13 @@ final class PlaylistRemoveSong4Method
             if (!$playlist->has_item(null, $track)) {
                 Api4::message('error', 'Track ID not found in playlist', '404', $input['api_format']);
 
-                return false;
+                return $response;
             }
             $playlist->delete_track_number($track);
             $playlist->regenerate_track_numbers();
             Api4::message('success', 'song removed from playlist', null, $input['api_format']);
         }
 
-        return true;
+        return $response;
     }
 }

@@ -27,17 +27,22 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class PodcastEdit4Method
- */
-final class PodcastEdit4Method
+final class PodcastEdit4Method implements MethodInterface
 {
     public const string ACTION = 'podcast_edit';
+
+    public function __construct(
+        private PodcastRepositoryInterface $podcastRepository,
+    ) {}
 
     /**
      * podcast_edit
@@ -64,26 +69,33 @@ final class PodcastEdit4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function podcast_edit(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', 'Access Denied: podcast features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, 'edit_podcast', $input['api_format'])) {
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
         $podcast_id = $input['filter'];
-        $podcast    = self::getPodcastRepository()->findById((int) $podcast_id);
+        $podcast    = $this->podcastRepository->findById((int) $podcast_id);
         if ($podcast === null) {
             Api4::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         $feed        = (array_key_exists('feed', $input) && filter_var($input['feed'], FILTER_VALIDATE_URL)) ? filter_var($input['feed'], FILTER_VALIDATE_URL) : $podcast->getFeedUrl();
@@ -103,16 +115,6 @@ final class PodcastEdit4Method
 
         Api4::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['api_format']);
 
-        return true;
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
+        return $response;
     }
 }

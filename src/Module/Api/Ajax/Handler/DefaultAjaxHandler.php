@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
@@ -50,6 +50,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
         private AlbumRepositoryInterface $albumRepository,
         private SongRepositoryInterface $songRepository,
         private UiInterface $ui,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function handle(User $user): void
@@ -108,7 +109,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                         case 'browse_set':
                         case 'browse_set_random':
                             $songs   = [];
-                            $browse  = new Browse((int) $this->requestParser->getFromRequest('browse_id'));
+                            $browse  = $this->browseFactory->create((int) $this->requestParser->getFromRequest('browse_id'));
                             $objects = $browse->get_saved();
                             switch ($browse->get_type()) {
                                 case 'album':

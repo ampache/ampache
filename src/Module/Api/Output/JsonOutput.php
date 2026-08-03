@@ -40,6 +40,7 @@ use ArrayIterator;
 final class JsonOutput implements ApiOutputInterface
 {
     public function __construct(
+        private Json4_Data $json4Data,
         private Json5_Data $json5Data,
         private Json6_Data $json6Data,
         private Json8_Data $json8Data,
@@ -82,7 +83,7 @@ final class JsonOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return match ($apiVersion) {
-            4 => Json4_Data::albums($albums, $include, $user, $auth),
+            4 => $this->json4Data->albums($albums, $include, $user, $auth),
             5 => $this->json5Data->albums($albums, $include, $user, $auth),
             6 => $this->json6Data->albums($albums, $include, $user, $auth, $encode, $asObject),
             8 => $this->json8Data->albums($albums, $include, $user, $auth, $encode, $asObject),
@@ -92,13 +93,14 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $artists
      * @param string[] $include
      */
     public function artists(int $apiVersion, array $artists, array $include, User $user, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => $this->json4Data->artists($artists, $include, $user, $auth),
             5 => $this->json5Data->artists($artists, $include, $user, $auth, $asObject),
             6 => $this->json6Data->artists($artists, $include, $user, $auth, $asObject),
             8 => $this->json8Data->artists($artists, $include, $user, $auth, $asObject),
@@ -143,12 +145,14 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $catalogs
      */
     public function catalogs(int $apiVersion, array $catalogs, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            // the version 4 builder only ever took integer ids
+            4 => $this->json4Data->catalogs(array_map(intval(...), $catalogs)),
             // the version 5 builder only ever took integer ids
             5 => $this->json5Data->catalogs(array_map(intval(...), $catalogs), $asObject),
             6 => $this->json6Data->catalogs($catalogs, $asObject),
@@ -218,7 +222,7 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int, array{
      *    object_type: LibraryItemEnum,
      *    object_id: int,
@@ -234,6 +238,7 @@ final class JsonOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return match ($apiVersion) {
+            4 => $this->json4Data->democratic($objectIds, $user, $auth),
             5 => $this->json5Data->democratic($objectIds, $user, $auth, $asObject),
             6 => $this->json6Data->democratic($objectIds, $user, $auth, $asObject),
             8 => $this->json8Data->democratic($objectIds, $user, $auth, $asObject),
@@ -275,12 +280,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $genres
      */
     public function genres(int $apiVersion, array $genres, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => $this->json4Data->tags($genres),
             5 => $this->json5Data->genres($genres, $asObject),
             6 => $this->json6Data->genres($genres, $asObject),
             8 => $this->json8Data->genres($genres, $asObject),
@@ -306,7 +312,7 @@ final class JsonOutput implements ApiOutputInterface
      *
      * The json indexes have no full_xml flag, so it is dropped here.
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $objects
      */
     public function indexes(
@@ -319,6 +325,7 @@ final class JsonOutput implements ApiOutputInterface
         bool $include = false,
     ): string {
         return match ($apiVersion) {
+            4 => $this->json4Data->indexes($objects, $objectType, $user, $auth, $include),
             5 => $this->json5Data->indexes($objects, $objectType, $user, $auth, $include),
             6 => $this->json6Data->indexes($objects, $objectType, $user, $auth, $include),
             8 => $this->json8Data->indexes($objects, $objectType, $user, $auth, $include),
@@ -357,12 +364,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $licenses
      */
     public function licenses(int $apiVersion, array $licenses, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => $this->json4Data->licenses($licenses),
             5 => $this->json5Data->licenses($licenses, $asObject),
             6 => $this->json6Data->licenses($licenses, $asObject),
             8 => $this->json8Data->licenses($licenses, $asObject),
@@ -458,12 +466,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $playlists
      */
     public function playlists(int $apiVersion, array $playlists, User $user, string $auth, bool $songs = false, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => $this->json4Data->playlists($playlists, $user, $auth, $songs),
             5 => $this->json5Data->playlists($playlists, $user, $auth, $songs, $asObject),
             6 => $this->json6Data->playlists($playlists, $user, $auth, $songs, $asObject),
             8 => $this->json8Data->playlists($playlists, $user, $auth, $songs, $asObject),
@@ -477,7 +486,7 @@ final class JsonOutput implements ApiOutputInterface
     public function podcastEpisodes(int $apiVersion, array $result, User $user, string $auth, bool $encode = true, bool $asObject = true): string
     {
         return match ($apiVersion) {
-            4 => Json4_Data::podcast_episodes($result, $user, $auth, $asObject),
+            4 => $this->json4Data->podcast_episodes($result, $user, $auth, $asObject),
             5 => $this->json5Data->podcast_episodes($result, $user, $auth, $asObject),
             6 => $this->json6Data->podcast_episodes($result, $user, $auth, $encode, $asObject),
             8 => $this->json8Data->podcast_episodes($result, $user, $auth, $encode, $asObject),
@@ -487,12 +496,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $podcasts
      */
     public function podcasts(int $apiVersion, array $podcasts, User $user, string $auth, bool $episodes = false, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => $this->json4Data->podcasts($podcasts, $user, $auth, $episodes),
             5 => $this->json5Data->podcasts($podcasts, $user, $auth, $episodes, $asObject),
             6 => $this->json6Data->podcasts($podcasts, $user, $auth, $episodes, $asObject),
             8 => $this->json8Data->podcasts($podcasts, $user, $auth, $episodes, $asObject),
@@ -616,7 +626,7 @@ final class JsonOutput implements ApiOutputInterface
     public function setLimit(int $apiVersion, int|string $limit): void
     {
         match ($apiVersion) {
-            4 => Json4_Data::set_limit($limit),
+            4 => $this->json4Data->set_limit($limit),
             5 => $this->json5Data->set_limit($limit),
             6 => $this->json6Data->set_limit($limit),
             8 => $this->json8Data->set_limit($limit),
@@ -629,7 +639,7 @@ final class JsonOutput implements ApiOutputInterface
     public function setOffset(int $apiVersion, int|string $offset): void
     {
         match ($apiVersion) {
-            4 => Json4_Data::set_offset($offset),
+            4 => $this->json4Data->set_offset($offset),
             5 => $this->json5Data->set_offset($offset),
             6 => $this->json6Data->set_offset($offset),
             8 => $this->json8Data->set_offset($offset),
@@ -639,12 +649,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $shares
      */
     public function shares(int $apiVersion, array $shares, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => $this->json4Data->shares($shares, $user),
             5 => $this->json5Data->shares($shares, $user, $asObject),
             6 => $this->json6Data->shares($shares, $user, $asObject),
             8 => $this->json8Data->shares($shares, $user, $asObject),
@@ -654,7 +665,7 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<Shoutbox> $shouts
      */
     public function shouts(
@@ -663,6 +674,7 @@ final class JsonOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return match ($apiVersion) {
+            4 => $this->json4Data->shouts(new ArrayIterator($shouts)),
             5 => $this->json5Data->shouts(new ArrayIterator($shouts), $asObject),
             6 => $this->json6Data->shouts($shouts, $asObject),
             8 => $this->json8Data->shouts($shouts, $asObject),
@@ -672,12 +684,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $songs
      */
     public function songs(int $apiVersion, array $songs, User $user, string $auth, bool $encode = true, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => $this->json4Data->songs($songs, $user, $auth, $encode),
             5 => $this->json5Data->songs($songs, $user, $auth, $asObject),
             6 => $this->json6Data->songs($songs, $user, $auth, $encode, $asObject),
             8 => $this->json8Data->songs($songs, $user, $auth, $encode, $asObject),
@@ -735,12 +748,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param int[] $activities Activity id list
      */
     public function timeline(int $apiVersion, array $activities): string
     {
         return match ($apiVersion) {
+            4 => $this->json4Data->timeline($activities),
             5 => $this->json5Data->timeline($activities),
             6 => $this->json6Data->timeline($activities),
             8 => $this->json8Data->timeline($activities),
@@ -750,11 +764,12 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      */
     public function user(int $apiVersion, User $user, bool $fullInfo, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => $this->json4Data->user($user, $fullInfo),
             5 => $this->json5Data->user($user, $fullInfo, $asObject),
             6 => $this->json6Data->user($user, $fullInfo, $auth, $asObject),
             8 => $this->json8Data->user($user, $fullInfo, $auth, $asObject),
@@ -764,12 +779,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $users
      */
     public function users(int $apiVersion, array $users): string
     {
         return match ($apiVersion) {
+            4 => $this->json4Data->users($users),
             // the version 5 builder only ever took integer ids
             5 => $this->json5Data->users(array_map(intval(...), $users)),
             6 => $this->json6Data->users($users),
@@ -780,12 +796,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $videos
      */
     public function videos(int $apiVersion, array $videos, User $user, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => $this->json4Data->videos($videos, $user, $auth),
             5 => $this->json5Data->videos($videos, $user, $auth, $asObject),
             6 => $this->json6Data->videos($videos, $user, $auth, $asObject),
             8 => $this->json8Data->videos($videos, $user, $auth, $asObject),

@@ -26,87 +26,78 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class PlaylistSongs4Method
+ * Returns the songs of a playlist or a smartlist.
  */
-final class PlaylistSongs4Method
+final class PlaylistSongs4Method implements MethodInterface
 {
     public const string ACTION = 'playlist_songs';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * playlist_songs
-     * MINIMUM_API_VERSION=380001
-     *
-     * This returns the songs for a playlist
-     *
-     * filter = (string) UID of playlist
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
-     * @param array{
-     *     filter: string,
-     *     random?: int,
-     *     offset?: int,
-     *     limit?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function playlist_songs(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
-        $uid = scrub_in((string) $input['filter']);
-        debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
-        if (str_replace('smart_', '', $uid) === $uid) {
-            // Playlists
-            $playlist = new Playlist((int) $uid);
-        } else {
-            // Smartlists
-            $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
-        }
+
+        $uid = scrub_in((string) ($input['filter'] ?? ''));
+        debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $uid, 5);
+
+        $playlist = (str_replace('smart_', '', $uid) === $uid)
+            ? new Playlist((int) $uid)
+            : new Search((int) str_replace('smart_', '', $uid), 'song', $user);
+
         if ($playlist->isNew()) {
             Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
+
         if (
             $playlist->type !== 'public'
             && !$playlist->has_collaborate($user)
         ) {
             Api4::message('error', 'Access denied to this playlist', '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
-        $items   = $playlist->get_items();
         $results = [];
-        foreach ($items as $object) {
+        foreach ($playlist->get_items() as $object) {
             if ($object['object_type']->value == 'song') {
                 $results[] = $object['object_id'];
             }
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json4_Data::set_offset($input['offset'] ?? 0);
-                Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::songs($results, $user, $input['auth']);
-                break;
-            default:
-                Xml4_Data::set_offset($input['offset'] ?? 0);
-                Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::songs($results, $user, $input['auth']);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

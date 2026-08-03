@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -53,6 +54,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private FolderRepositoryInterface $folderRepository,
         private VideoRepositoryInterface $videoRepository,
         private ZipHandlerInterface $zipHandler,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -89,7 +91,8 @@ final readonly class ShowAction implements ApplicationActionInterface
                     'user' => $user,
                     'zipHandler' => $this->zipHandler,
                     'videoRepository' => $this->videoRepository,
-                    'folderRepository' => $this->folderRepository
+                    'folderRepository' => $this->folderRepository,
+                    'browseFactory' => $this->browseFactory
                 ]
             );
 

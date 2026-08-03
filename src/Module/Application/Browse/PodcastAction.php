@@ -29,9 +29,9 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\FolderRepositoryInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,7 +41,7 @@ final readonly class PodcastAction implements ApplicationActionInterface
     public const string REQUEST_KEY = 'podcast';
 
     public function __construct(
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private FolderRepositoryInterface $folderRepository,
@@ -54,7 +54,7 @@ final readonly class PodcastAction implements ApplicationActionInterface
             session_start();
         }
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
         $browse->set_type(self::REQUEST_KEY);
         $browse->set_simple_browse(true);
         $browse->set_sort('title', 'ASC');

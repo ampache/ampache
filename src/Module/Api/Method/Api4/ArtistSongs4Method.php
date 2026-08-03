@@ -26,70 +26,57 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
-use Ampache\Repository\Model\Artist;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class ArtistSongs4Method
+ * Returns the songs of a single artist.
  */
-final class ArtistSongs4Method
+final class ArtistSongs4Method implements MethodInterface
 {
     public const string ACTION = 'artist_songs';
 
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private SongRepositoryInterface $songRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * artist_songs
-     * MINIMUM_API_VERSION=380001
-     *
-     * This returns the songs of the specified artist
-     *
-     * filter = (string) UID of Artist
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
-     * @param array{
-     *     filter: string,
-     *     top50?: int,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function artist_songs(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $artist  = new Artist((int) $input['filter']);
-        $results = self::getSongRepository()->getByArtist($artist->id);
-
-        if (!empty($results)) {
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    Json4_Data::set_offset($input['offset'] ?? 0);
-                    Json4_Data::set_limit($input['limit'] ?? 0);
-                    echo Json4_Data::songs($results, $user, $input['auth']);
-                    break;
-                default:
-                    Xml4_Data::set_offset($input['offset'] ?? 0);
-                    Xml4_Data::set_limit($input['limit'] ?? 0);
-                    echo Xml4_Data::songs($results, $user, $input['auth']);
-            }
+            return $response;
         }
 
-        return true;
-    }
+        $artist  = $this->modelFactory->createArtist((int) ($input['filter'] ?? 0));
+        $results = $this->songRepository->getByArtist($artist->id);
+        if ($results === []) {
+            return $response;
+        }
 
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return $dic->get(SongRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

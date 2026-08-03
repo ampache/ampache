@@ -34,7 +34,7 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -47,6 +47,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var bool $isAlbumEditable */
 /** @var ZipHandlerInterface $zipHandler */
 /** @var User|null $current_user */
@@ -285,7 +286,7 @@ if (Catalog::can_remove($album)) {
 &nbsp;
 </div>
 <div id='reordered_list_<?php echo $album->id; ?>'>
-<?php $browse = new Browse();
+<?php $browse = $browseFactory->create();
 $browse->set_type('song');
 $browse->set_simple_browse(true);
 $browse->set_skip_catalog_check(true);

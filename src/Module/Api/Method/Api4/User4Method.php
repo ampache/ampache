@@ -26,70 +26,62 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class User4Method
+ * Returns a single user by name.
  */
-final class User4Method
+final class User4Method implements MethodInterface
 {
     public const string ACTION = 'user';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+        private UserRepositoryInterface $userRepository,
+    ) {}
+
     /**
-     * user
-     * MINIMUM_API_VERSION=380001
-     *
-     * This get a user's public information
-     *
-     * username = (string) $username)
-     *
-     * @param array{
-     *     username?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function user(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
+            return $response;
         }
+
         $username   = (string) ($input['username'] ?? '');
         $check_user = User::get_from_username($username);
-        $valid      = ($check_user instanceof User && $check_user->isNew() === false && in_array($check_user->id, self::getUserRepository()->getValid(true)));
-        if (!$valid) {
+
+        if (
+            !$check_user instanceof User
+            || $check_user->isNew()
+            || !in_array($check_user->id, $this->userRepository->getValid(true))
+        ) {
             Api4::message('error', 'User_id not found', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
-        $fullinfo = false;
-        // get full info when you're an admin or searching for yourself
-        if (($check_user->id == $user->id) || ($user->access === 100)) {
-            $fullinfo = true;
-        }
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::user($check_user, $fullinfo);
-                break;
-            default:
-                echo Xml4_Data::user($check_user, $fullinfo);
-        }
+        // full info is for an admin, or for a user looking at their own record
+        $fullinfo = ($check_user->id == $user->id) || ($user->access === 100);
 
-        return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->user($apiVersion, $check_user, $fullinfo, $input['auth'])
+            )
+        );
     }
 }

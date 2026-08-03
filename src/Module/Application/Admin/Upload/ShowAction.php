@@ -28,8 +28,8 @@ namespace Ampache\Module\Application\Admin\Upload;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,7 +39,7 @@ final class ShowAction extends AbstractUploadAction
 
     public function __construct(
         private readonly UiInterface $ui,
-        private readonly ModelFactoryInterface $modelFactory,
+        private readonly BrowseFactoryInterface $browseFactory,
         private readonly ConfigContainerInterface $configContainer,
     ) {}
 
@@ -48,7 +48,7 @@ final class ShowAction extends AbstractUploadAction
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Browse Uploads'));
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
         $browse->set_type(
             'song',
             Catalog::get_uploads_sql('song')
@@ -57,7 +57,7 @@ final class ShowAction extends AbstractUploadAction
         $browse->show_objects();
         $browse->store();
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
         $browse->set_type(
             'album',
             Catalog::get_uploads_sql('album')
@@ -67,7 +67,7 @@ final class ShowAction extends AbstractUploadAction
         $browse->store();
 
         if (!$this->configContainer->get(ConfigurationKeyEnum::UPLOAD_USER_ARTIST)) {
-            $browse = $this->modelFactory->createBrowse();
+            $browse = $this->browseFactory->create();
             $browse->set_type(
                 'artist',
                 Catalog::get_uploads_sql('artist')

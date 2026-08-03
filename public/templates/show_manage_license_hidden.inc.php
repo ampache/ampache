@@ -29,8 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LicenseRepositoryInterface;
 
-global $dic;
-$licenseRepository = $dic->get(LicenseRepositoryInterface::class);
+/** @var LicenseRepositoryInterface $licenseRepository */
 
 /** @var list<int> $object_ids */
 

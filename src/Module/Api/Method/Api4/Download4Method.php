@@ -26,14 +26,15 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Download4Method
- */
-final class Download4Method
+final class Download4Method implements MethodInterface
 {
     public const string ACTION = 'download';
 
@@ -56,11 +57,18 @@ final class Download4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function download(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['id', 'type'], self::ACTION)) {
-            return false;
+            return $response;
         }
         $fileid       = (int) $input['id'];
         $type         = $input['type'];
@@ -86,10 +94,10 @@ final class Download4Method
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
-            return true;
+            return $response->withStatus(302);
         }
         Api4::message('error', 'failed to create: ' . $url, '400', $input['api_format']);
 
-        return true;
+        return $response;
     }
 }

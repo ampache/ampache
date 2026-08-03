@@ -29,9 +29,9 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,7 +42,7 @@ final readonly class UserflagVideoAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private ConfigContainerInterface $configContainer,
         private VideoRepositoryInterface $videoRepository,
     ) {}
@@ -73,7 +73,7 @@ final readonly class UserflagVideoAction implements ApplicationActionInterface
             && $this->videoRepository->getItemCount()
         ) {
             $objects = Userflag::get_latest('video', $gatekeeper->getUser(), -1, 0, 0, 0, $by_user);
-            $browse  = $this->modelFactory->createBrowse();
+            $browse  = $this->browseFactory->create();
             $browse->set_threshold($thresh_value);
             $browse->set_type('video');
             $browse->set_sort('user_flag', 'DESC');

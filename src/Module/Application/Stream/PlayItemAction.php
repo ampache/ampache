@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\container_item;
@@ -47,6 +48,7 @@ final class PlayItemAction extends AbstractStreamAction
         private readonly ConfigContainerInterface $configContainer,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
         private readonly Stats $stats,
+        private BrowseFactoryInterface $browseFactory,
     ) {
         parent::__construct($logger, $configContainer);
     }
@@ -59,7 +61,7 @@ final class PlayItemAction extends AbstractStreamAction
 
         $object_type = $_REQUEST['object_type'] ?? '';
         if ($object_type === 'browse') {
-            $browse     = new Browse((int) Core::get_get('object_id'));
+            $browse     = $this->browseFactory->create((int) Core::get_get('object_id'));
             $objectIds  = [];
             $objectType = null;
             $saved      = $browse->get_saved();

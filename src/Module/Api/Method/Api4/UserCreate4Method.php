@@ -26,19 +26,24 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class UserCreate4Method
- */
-final class UserCreate4Method
+final class UserCreate4Method implements MethodInterface
 {
     public const string ACTION = 'user_create';
+
+    public function __construct(
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     /**
      * user_create
@@ -63,14 +68,21 @@ final class UserCreate4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function user_create(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, 'user_create', $input['api_format'])) {
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['username', 'password', 'email'], self::ACTION)) {
-            return false;
+            return $response;
         }
         $username = $input['username'];
         $fullname = $input['fullname'] ?? $username;
@@ -96,33 +108,23 @@ final class UserCreate4Method
             Api4::message('success', 'successfully created: ' . $username, null, $input['api_format']);
             Catalog::count_table(CountableTableEnum::USER);
 
-            return true;
+            return $response;
         }
 
-        $userRepository = self::getUserRepository();
+        $userRepository = $this->userRepository;
 
         if ($userRepository->idByUsername($username) > 0) {
             Api4::message('error', 'username already exists: ' . $username, '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if ($userRepository->idByEmail($email) > 0) {
             Api4::message('error', 'email already exists: ' . $email, '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         Api4::message('error', 'failed to create: ' . $username, '400', $input['api_format']);
 
-        return false;
-    }
-
-    /**
-     * @todo Inject by constructor
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return $response;
     }
 }

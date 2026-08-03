@@ -100,10 +100,10 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
 
         $collections = [];
         foreach ($this->collectionRepository->getByUser($user) as $collectionId) {
-            $collection = new Collection($collectionId);
+            $collection = $this->collectionRepository->findById($collectionId);
             // A pinned collection only appears when it accepts every type being added, so picking it cannot
             // half-work; a mixed one accepts anything valid.
-            if ($collection->isNew() || !$collection->has_collaborate($user)) {
+            if ($collection === null || !$collection->has_collaborate($user)) {
                 continue;
             }
 

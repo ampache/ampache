@@ -27,72 +27,61 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Podcast4Method
+ * Returns a single podcast.
  */
-final class Podcast4Method
+final class Podcast4Method implements MethodInterface
 {
     public const string ACTION = 'podcast';
 
+    public function __construct(
+        private PodcastRepositoryInterface $podcastRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * podcast
-     * MINIMUM_API_VERSION=420000
-     *
-     * Get the podcast from it's id.
-     *
-     * filter = (integer) Podcast ID number
-     * include = (string) 'episodes' (include episodes in the response) //optional
-     *
-     * @param array{
-     *     filter: string,
-     *     include?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function podcast(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', 'Access Denied: podcast features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
+
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
-        $object_id = (int) $input['filter'];
-        $podcast   = self::getPodcastRepository()->findById($object_id);
 
-        if ($podcast !== null) {
-            $episodes = (array_key_exists('include', $input) && $input['include'] == 'episodes');
-
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    echo Json4_Data::podcasts([$object_id], $user, $input['auth'], $episodes);
-                    break;
-                default:
-                    echo Xml4_Data::podcasts([$object_id], $user, $input['auth'], $episodes);
-            }
-        } else {
+        $object_id = (int) ($input['filter'] ?? 0);
+        if ($this->podcastRepository->findById($object_id) === null) {
             Api4::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);
+
+            return $response;
         }
 
-        return true;
-    }
+        $episodes = (array_key_exists('include', $input) && $input['include'] == 'episodes');
 
-    /**
-     * @todo inject by constructor
-     */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->podcasts($apiVersion, [$object_id], $user, $input['auth'], $episodes)
+            )
+        );
     }
 }

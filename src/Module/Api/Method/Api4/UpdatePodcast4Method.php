@@ -26,19 +26,25 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class UpdatePodcast4Method
- */
-final class UpdatePodcast4Method
+final class UpdatePodcast4Method implements MethodInterface
 {
     public const string ACTION = 'update_podcast';
+
+    public function __construct(
+        private PodcastRepositoryInterface $podcastRepository,
+        private PodcastSyncerInterface $podcastSyncer,
+    ) {}
 
     /**
      * update_podcast
@@ -56,21 +62,28 @@ final class UpdatePodcast4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function update_podcast(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $input['filter'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, 'update_podcast', $input['api_format'])) {
-            return false;
+            return $response;
         }
         $object_id = (int) $input['filter'];
-        $podcast   = self::getPodcastRepository()->findById($object_id);
+        $podcast   = $this->podcastRepository->findById($object_id);
 
         if ($podcast !== null) {
-            if (self::getPodcastSyncer()->sync($podcast, true)) {
+            if ($this->podcastSyncer->sync($podcast, true)) {
                 Api4::message('success', 'Synced episodes for podcast: ' . $object_id, null, $input['api_format']);
                 Session::extend($input['auth'], AccessTypeEnum::API->value);
             } else {
@@ -80,26 +93,6 @@ final class UpdatePodcast4Method
             Api4::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);
         }
 
-        return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastSyncer(): PodcastSyncerInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastSyncerInterface::class);
+        return $response;
     }
 }

@@ -27,13 +27,13 @@ namespace Ampache\Module\Application\Search;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -45,7 +45,7 @@ final readonly class SearchAction implements ApplicationActionInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private MissingArtistFinderInterface $missingArtistFinder,
         private VideoRepositoryInterface $videoRepository,
         private ZipHandlerInterface $zipHandler,
@@ -70,7 +70,7 @@ final readonly class SearchAction implements ApplicationActionInterface
         }
 
         if ($rule_1 !== 'missing_artist') {
-            $browse = $this->modelFactory->createBrowse();
+            $browse = $this->browseFactory->create();
             // both templates are required into this scope, so the services they use are named here
             $videoRepository = $this->videoRepository;
             $zipHandler      = $this->zipHandler;

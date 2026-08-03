@@ -29,7 +29,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Browse;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery;
 use Mockery\MockInterface;
@@ -40,7 +40,7 @@ use Psr\Http\Message\StreamInterface;
 
 class CatalogsMethodTest extends MockeryTestCase
 {
-    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private BrowseFactoryInterface|MockInterface|null $browseFactory;
     private ?CatalogsMethod $subject;
 
     /**
@@ -88,7 +88,7 @@ class CatalogsMethodTest extends MockeryTestCase
 
         $user->shouldReceive('getId')->withNoArgs()->andReturn($userId);
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
@@ -144,7 +144,7 @@ class CatalogsMethodTest extends MockeryTestCase
 
         $user->shouldReceive('getId')->withNoArgs()->andReturn($userId);
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
@@ -201,7 +201,7 @@ class CatalogsMethodTest extends MockeryTestCase
 
         $user->shouldReceive('getId')->withNoArgs()->andReturn($userId);
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
@@ -244,10 +244,10 @@ class CatalogsMethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->browseFactory = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new CatalogsMethod(
-            $this->modelFactory
+            $this->browseFactory
         );
     }
 }

@@ -47,9 +47,7 @@ function debug_wresult(bool $status = false, ?string $value = null, string $comm
         . '</span> <em>' . $comment . '</em></button>';
 }
 
-// TODO remove me
 /** @var EnvironmentInterface $environment */
-
 /** @var string $configfile */
 ?>
 <tr>

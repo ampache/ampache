@@ -34,7 +34,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
@@ -48,8 +48,8 @@ use Psr\Http\Message\StreamInterface;
  */
 class ListMethodTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface|MockInterface|null $browseFactory;
     private ConfigContainerInterface|MockInterface|null $configContainer;
-    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?ListMethod $subject;
 
     /**
@@ -77,7 +77,7 @@ class ListMethodTest extends MockeryTestCase
 
         $result = 'empty-result';
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
@@ -249,12 +249,12 @@ class ListMethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
+        $this->browseFactory    = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new ListMethod(
             $this->configContainer,
-            $this->modelFactory
+            $this->browseFactory
         );
     }
 }

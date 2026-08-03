@@ -27,7 +27,6 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Playback\Democratic;
@@ -61,11 +60,6 @@ interface ModelFactoryInterface
     public function createBroadcast(
         int $broadcastId,
     ): Broadcast;
-
-    public function createBrowse(
-        ?int $browse_id = null,
-        bool $cached = true,
-    ): Browse;
 
     public function createDemocratic(
         int $democraticId,
