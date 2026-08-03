@@ -37,6 +37,7 @@ return [
     JsonRestApiApplication::class => autowire(),
     SubsonicApiApplication::class => autowire(),
     Subsonic_Api::class => autowire(),
+    OpenSubsonic_Api::class => autowire(),
     DaapApiApplication::class => autowire(),
     SseApiApplication::class => autowire(),
     ApiOutputFactoryInterface::class => autowire(ApiOutputFactory::class),
