@@ -854,6 +854,21 @@ final readonly class PlayAction implements ApplicationActionInterface
             : $client;
         $location = Session::get_geolocation($sessionkey);
 
+        // a range request is a seek or a resume, so only whole-file requests are held to the repeat limit
+        if (
+            Core::get_server('HTTP_RANGE') === ''
+            && Stream::is_repeat_request($sessionkey, $media->getId(), $media->getMediaType()->value)
+        ) {
+            $this->logger->warning(
+                'Repeated request for ' . $type . ' {' . $media->getId() . '} on session ' . $sessionkey . ', rate limited',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+            header('HTTP/1.1 429 Too Many Requests');
+            header('Retry-After: ' . Stream::REPEAT_REQUEST_SECONDS);
+
+            return null;
+        }
+
         // If they are just trying to download make sure they have rights and then present them with the download file
         if ($is_download && !$transcode_to) {
             $this->logger->notice(
