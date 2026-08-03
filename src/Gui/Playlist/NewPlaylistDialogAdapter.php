@@ -49,7 +49,9 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
         'album',
         'album_disk',
         'artist',
+        'collection',
         'folder',
+        'genre',
         'label',
         'live_stream',
         'playlist',
@@ -178,8 +180,8 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
     /**
      * Whether a playlist could hold what is being added
      *
-     * A genre only belongs in a collection, so the dialog drops the playlist half rather than offering a
-     * destination that would silently add nothing.
+     * A type that expands to no media at all drops the playlist half rather than offering a destination
+     * that would silently add nothing.
      */
     public function getPlaylistsEnabled(): bool
     {

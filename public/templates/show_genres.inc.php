@@ -34,7 +34,7 @@ use Ampache\Repository\Model\Tag;
 /** @var list<int> $object_ids */
 
 $show_video = (bool) AmpConfig::get('allow_video');
-$thcount    = ($show_video) ? 7 : 6;
+$thcount    = ($show_video) ? 9 : 8;
 // Translations
 $t_art     = T_('Art');
 $t_genre   = T_('Genre');
@@ -50,8 +50,10 @@ if ($browse->is_show_header()) {
 <table class="tabledata striped-rows" data-objecttype="tag">
     <thead>
         <tr class="th-top">
+            <th class="cel_play essential"></th>
             <th class="cel_cover optional"><?php echo $t_art; ?></th>
             <th class="cel_genre essential persist"><?php echo $t_genre; ?></th>
+            <th class="cel_add_list essential"></th>
             <th class="cel_songs optional"><?php echo $t_songs; ?></th>
             <th class="cel_albums optional"><?php echo $t_albums; ?></th>
             <th class="cel_artists optional"><?php echo $t_artists; ?></th>
@@ -79,8 +81,10 @@ if ($browse->is_show_header()) {
     </tbody>
     <tfoot>
         <tr class="th-bottom">
+            <th class="cel_play essential"></th>
             <th class="cel_cover optional"><?php echo $t_art; ?></th>
             <th class="cel_genre essential persist"><?php echo $t_genre; ?></th>
+            <th class="cel_add_list essential"></th>
             <th class="cel_songs optional"><?php echo $t_songs; ?></th>
             <th class="cel_albums optional"><?php echo $t_albums; ?></th>
             <th class="cel_artists optional"><?php echo $t_artists; ?></th>

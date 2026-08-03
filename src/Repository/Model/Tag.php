@@ -627,12 +627,12 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public function get_medias(?string $filter_type = null): array
     {
+        // an unasked genre expands to its songs, the way an album does, so it can be played and curated
+        $objectType = $filter_type ?? 'song';
+
         $medias = [];
-        if ($filter_type) {
-            $ids = self::get_tag_objects($filter_type, $this->id);
-            foreach ($ids as $object_id) {
-                $medias[] = ['object_type' => LibraryItemEnum::from($filter_type), 'object_id' => $object_id];
-            }
+        foreach (self::get_tag_objects($objectType, $this->id) as $object_id) {
+            $medias[] = ['object_type' => LibraryItemEnum::from($objectType), 'object_id' => $object_id];
         }
 
         return $medias;
