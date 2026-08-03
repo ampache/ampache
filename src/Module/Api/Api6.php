@@ -25,16 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
-use Ampache\Module\Database\Query\BrowseFactoryInterface;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Api6 Class
@@ -297,24 +292,6 @@ class Api6
         }
     }
 
-    public static function getBrowse(User $user): Browse
-    {
-        if (self::$browse === null) {
-            // create new browse
-            self::$browse = self::getBrowseFactory()->create(null, false);
-        } else {
-            // reset existing browse
-            self::$browse->reset();
-            // ensure _state offset is 0
-            self::$browse->set_offset(0);
-        }
-
-        // ensure user_id is set
-        self::$browse->set_user_id($user);
-
-        return self::$browse;
-    }
-
     /**
      * message
      * call the correct success message depending on format
@@ -356,142 +333,5 @@ class Api6
         }
 
         return true;
-    }
-
-    /**
-     * server_details
-     *
-     * get the server counts for pings and handshakes
-     *
-     * @return array{
-     *     auth?: ?string,
-     *     api?: string,
-     *     session_expire?: int|string,
-     *     update?: string,
-     *     add?: string,
-     *     clean?: string,
-     *     max_song?: int,
-     *     max_album?: int,
-     *     max_artist?: int,
-     *     max_video?: int,
-     *     max_podcast?: int,
-     *     max_podcast_episode?: int,
-     *     songs?: int,
-     *     albums?: int,
-     *     artists?: int,
-     *     genres?: int,
-     *     playlists?: int,
-     *     searches?: int,
-     *     playlists_searches?: int,
-     *     users?: int,
-     *     catalogs?: int,
-     *     videos?: int,
-     *     podcasts?: int,
-     *     podcast_episodes?: int,
-     *     shares?: int,
-     *     licenses?: int,
-     *     live_streams?: int,
-     *     labels?: int,
-     *     username?: string,
-     * }
-     */
-    public static function server_details(string $token = ''): array
-    {
-        // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
-        $sql = <<<SQL
-            SELECT `catalog`.`update`, `catalog`.`add`, `catalog`.`clean`, `maxid`.`max_song`, `maxid`.`max_album`, `maxid`.`max_artist`, `maxid`.`max_video`, `maxid`.`max_podcast`, `maxid`.`max_podcast_episode`
-            FROM (
-               SELECT MAX(`last_update`) AS `update`,
-                      MAX(`last_add`) AS `add`,
-                      MAX(`last_clean`) AS `clean`
-               FROM `catalog`
-            ) AS `catalog`
-            LEFT JOIN (
-                SELECT (SELECT MAX(`id`) FROM `song`) AS `max_song`,
-                       (SELECT MAX(`id`) FROM `album`) AS `max_album`,
-                       (SELECT MAX(`id`) FROM `artist`) AS `max_artist`,
-                       (SELECT MAX(`id`) FROM `video`) AS `max_video`,
-                       (SELECT MAX(`id`) FROM `podcast`) AS `max_podcast`,
-                       (SELECT MAX(`id`) FROM `podcast_episode`) AS `max_podcast_episode`
-            ) AS `maxid` ON 1=1;
-            SQL;
-        $db_results = Dba::read($sql);
-        $details    = Dba::fetch_assoc($db_results);
-
-        // Now we need to quickly get the totals
-        $client = self::getUserRepository()->findByApiKey(trim($token));
-        if (!$client instanceof User || $client->isNew()) {
-            return [];
-        }
-
-        $counts    = Catalog::get_server_counts($client->id);
-        $playlists = (AmpConfig::get('hide_search', false))
-            ? $counts['playlist']
-            : $counts['playlist'] + $counts['search'];
-        $autharray = (!empty($token))
-            ? [
-                'auth' => $token,
-                'streamtoken' => $client->streamtoken
-            ]
-            : [];
-        // perpetual sessions do not expire
-        $perpetual      = (bool) AmpConfig::get('perpetual_api_session', false);
-        $session_expire = ($perpetual)
-            ? 0
-            : date("c", time() + AmpConfig::get('session_length', 3600) - 60);
-
-        // send the totals
-        $outarray = [
-            'api' => self::$version,
-            'session_expire' => $session_expire,
-            'update' => date("c", (int) $details['update']),
-            'add' => date("c", (int) $details['add']),
-            'clean' => date("c", (int) $details['clean']),
-            'max_song' => (int) $details['max_song'],
-            'max_album' => (int) $details['max_album'],
-            'max_artist' => (int) $details['max_artist'],
-            'max_video' => (int) $details['max_video'],
-            'max_podcast' => (int) $details['max_podcast'],
-            'max_podcast_episode' => (int) $details['max_podcast_episode'],
-            'songs' => $counts['song'],
-            'albums' => $counts['album'],
-            'artists' => $counts['artist'],
-            'genres' => $counts['tag'],
-            'playlists' => $counts['playlist'],
-            'searches' => $counts['search'],
-            'playlists_searches' => $playlists,
-            'users' => $counts['user'],
-            'catalogs' => $counts['catalog'],
-            'videos' => $counts['video'],
-            'podcasts' => $counts['podcast'],
-            'podcast_episodes' => $counts['podcast_episode'],
-            'shares' => $counts['share'],
-            'licenses' => $counts['license'],
-            'live_streams' => $counts['live_stream'],
-            'labels' => $counts['label'],
-            'username' => $client->getUsername(),
-        ];
-
-        return array_merge($autharray, $outarray);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getBrowseFactory(): BrowseFactoryInterface
-    {
-        global $dic;
-
-        return $dic->get(BrowseFactoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }
