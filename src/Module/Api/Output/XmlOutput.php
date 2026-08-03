@@ -648,12 +648,14 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 3|4|5|6|8 $apiVersion
      * @param array<int|string> $songs
      */
     public function songs(int $apiVersion, array $songs, User $user, string $auth, bool $encode = true, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            3 => Xml3_Data::songs($songs, $user, $auth),
+            4 => Xml4_Data::songs($songs, $user, $auth),
             5 => $this->xml5Data->songs($songs, $user, $auth),
             6 => $this->xml6Data->songs($songs, $user, $auth),
             8 => $this->xml8Data->songs($songs, $user, $auth),

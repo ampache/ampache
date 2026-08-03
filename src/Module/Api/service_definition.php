@@ -233,6 +233,7 @@ return [
     Method\Api3\Album3Method::class => autowire(),
     Method\Api3\Albums3Method::class => autowire(),
     Method\Api4\Album4Method::class => autowire(),
+    Method\Api4\AlbumSongs4Method::class => autowire(),
     Method\Api4\Albums4Method::class => autowire(),
     Method\Api4\PodcastDelete4Method::class => autowire(),
     Method\Api4\PodcastEpisodes4Method::class => autowire(),
