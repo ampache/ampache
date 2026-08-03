@@ -25,17 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class AdvancedSearch4Method
- */
-final class AdvancedSearch4Method
+final class AdvancedSearch4Method implements MethodInterface
 {
     public const string ACTION = 'advanced_search';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * advanced_search
@@ -64,73 +68,45 @@ final class AdvancedSearch4Method
      * limit = (integer)
      *
      * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function advanced_search(array $input, User $user): void
-    {
-        ob_end_clean();
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $type = $input['type'] ?? 'song';
 
-        $type = 'song';
-        if (isset($input['type'])) {
-            $type = $input['type'];
-        }
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;
         $data['type']   = $type;
-        $search_sql     = Search::prepare($data, $user);
-        $query          = Search::query($search_sql);
-        $results        = $query['results'];
 
-        switch ($input['api_format']) {
-            case 'json':
-                Json4_Data::set_offset($input['offset'] ?? 0);
-                Json4_Data::set_limit($input['limit'] ?? 0);
-                switch ($type) {
-                    case 'song_artist':
-                    case 'album_artist':
-                    case 'artist':
-                        echo Json4_Data::artists($results, [], $user, $input['auth']);
-                        break;
-                    case 'album':
-                        echo Json4_Data::albums($results, [], $user, $input['auth']);
-                        break;
-                    case 'playlist':
-                        echo Json4_Data::playlists($results, $user, $input['auth']);
-                        break;
-                    case 'user':
-                        echo Json4_Data::users($results);
-                        break;
-                    case 'video':
-                        echo Json4_Data::videos($results, $user, $input['auth']);
-                        break;
-                    default:
-                        echo Json4_Data::songs($results, $user, $input['auth']);
-                        break;
-                }
-                break;
-            default:
-                Xml4_Data::set_offset($input['offset'] ?? 0);
-                Xml4_Data::set_limit($input['limit'] ?? 0);
-                switch ($type) {
-                    case 'artist':
-                        echo Xml4_Data::artists($results, [], $user, $input['auth']);
-                        break;
-                    case 'album':
-                        echo Xml4_Data::albums($results, [], $user, $input['auth']);
-                        break;
-                    case 'playlist':
-                        echo Xml4_Data::playlists($results, $user, $input['auth']);
-                        break;
-                    case 'user':
-                        echo Xml4_Data::users($results);
-                        break;
-                    case 'video':
-                        echo Xml4_Data::videos($results, $user, $input['auth']);
-                        break;
-                    default:
-                        echo Xml4_Data::songs($results, $user, $input['auth']);
-                        break;
-                }
-        }
+        $query   = Search::query(Search::prepare($data, $user));
+        $results = $query['results'];
+
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
+
+        // json has always treated the two artist roles as artists here and xml has not; keep both as they were
+        $asArtist = ($input['api_format'] === 'json')
+            ? in_array($type, ['song_artist', 'album_artist', 'artist'], true)
+            : $type === 'artist';
+
+        $body = match (true) {
+            $asArtist => $output->artists($apiVersion, $results, [], $user, $input['auth']),
+            $type === 'album' => $output->albums($apiVersion, $results, [], $user, $input['auth']),
+            $type === 'playlist' => $output->playlists($apiVersion, $results, $user, $input['auth']),
+            $type === 'user' => $output->users($apiVersion, $results),
+            $type === 'video' => $output->videos($apiVersion, $results, $user, $input['auth']),
+            default => $output->songs($apiVersion, $results, $user, $input['auth']),
+        };
+
+        return $response->withBody(
+            $this->streamFactory->createStream($body)
+        );
     }
 }
