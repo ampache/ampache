@@ -61,8 +61,7 @@ $action_text = T_('Actions');
 
 $sort_url = '?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=collection&sort=';
 
-global $dic;
-$collectionRepository = $dic->get(CollectionRepositoryInterface::class);
+/** @var CollectionRepositoryInterface $collectionRepository */
 $user                 = Core::get_global('user');
 $user                 = ($user instanceof User) ? $user : null;
 

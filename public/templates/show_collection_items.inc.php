@@ -38,8 +38,7 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\User;
 
-global $dic;
-$libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
+/** @var LibraryItemLoaderInterface $libraryItemLoader */
 
 /** @var Browse $browse */
 /** @var Collection $collection */
@@ -164,13 +163,17 @@ if ($browse->is_show_header()) {
                 $libtype = (is_string($object['object_type']))
                     ? LibraryItemEnum::tryFrom($object['object_type'])
                     : $object['object_type'];
+                if ($libtype === null) {
+                    continue;
+                }
+
                 $libitem = $libraryItemLoader->load($libtype, $object['object_id']);
                 // A member whose object has since gone drops out rather than rendering an empty row
                 if ($libitem === null) {
                     continue;
                 }
 
-                $object_type = $libtype?->value;
+                $object_type = $libtype->value;
                 // `tag` is the table; `genre` is what the API and the rest of the UI call it
                 $type_label       = ($object_type === 'tag') ? 'genre' : (string) $object_type;
                 $collection_track = (int) $object['track']; ?>

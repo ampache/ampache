@@ -32,7 +32,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Playlist;
@@ -85,10 +85,9 @@ if ($browse->is_show_header()) {
         </tr>
     </thead>
     <tbody>
-        <?php global $dic;
-$talFactory = $dic->get(TalFactoryInterface::class);
-$guiFactory = $dic->get(GuiFactoryInterface::class);
-$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+        <?php /** @var TalFactoryInterface $talFactory */
+/** @var GuiFactoryInterface $guiFactory */
+/** @var GuiGatekeeperInterface $gatekeeper */
 $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
 
 // One TAL view reused for all rows

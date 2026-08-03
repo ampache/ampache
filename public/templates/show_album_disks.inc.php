@@ -32,7 +32,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
@@ -111,10 +111,9 @@ if ($show_ratings) {
         </tr>
     </thead>
     <tbody>
-<?php global $dic;
-$talFactory = $dic->get(TalFactoryInterface::class);
-$guiFactory = $dic->get(GuiFactoryInterface::class);
-$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+<?php /** @var TalFactoryInterface $talFactory */
+/** @var GuiFactoryInterface $guiFactory */
+/** @var GuiGatekeeperInterface $gatekeeper */
 
 if (AmpConfig::get('ratings')) {
     Rating::build_cache('album_disk', $object_ids);

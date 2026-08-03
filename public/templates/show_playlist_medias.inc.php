@@ -40,8 +40,7 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 
-global $dic;
-$libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
+/** @var LibraryItemLoaderInterface $libraryItemLoader */
 
 /** @var Browse $browse */
 /** @var Playlist|Search $playlist */
@@ -184,10 +183,12 @@ if ($browse->is_show_header()) {
                     $libtype = (is_string($object['object_type']))
                         ? LibraryItemEnum::tryFrom($object['object_type'])
                         : $object['object_type'];
-                    $libitem = $libraryItemLoader->load(
-                        $libtype,
-                        $object['object_id'],
-                    );
+                    if ($libtype !== null) {
+                        $libitem = $libraryItemLoader->load(
+                            $libtype,
+                            $object['object_id'],
+                        );
+                    }
                 }
                 if ($libitem !== null) {
                     $object_type    = $libtype?->value;

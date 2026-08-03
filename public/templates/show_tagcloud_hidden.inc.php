@@ -33,18 +33,18 @@ use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
-
-global $dic;
-$ui = $dic->get(UiInterface::class);
+use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var UiInterface $ui */
+/** @var AjaxUriRetrieverInterface $ajaxUriRetriever */
+/** @var VideoRepositoryInterface $videoRepository */
 /** @var Browse $browse */
 /** @var array<int, array{id: int, name: string}> $object_ids */
 /** @var string $browse_type */
 
 $ui->show(
     'show_form_genre.inc.php',
-    ['type' => 'tag_hidden']
+    ['type' => 'tag_hidden', 'videoRepository' => $videoRepository]
 ); ?>
 <?php Ajax::start_container('tag_filter'); ?>
 <?php foreach ($object_ids as $data) { ?>
@@ -61,7 +61,7 @@ $ui->show(
                     </a>
                 </li>
                 <li>
-                    <a class="tag_hidden_delete" href="<?php echo $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri(); ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" data-confirm="<?php echo T_('Do you really want to delete this Tag?'); ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
+                    <a class="tag_hidden_delete" href="<?php echo $ajaxUriRetriever->getAjaxUri(); ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" data-confirm="<?php echo T_('Do you really want to delete this Tag?'); ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 </li>
             </ul>
         </div>
