@@ -705,8 +705,7 @@ class Stream
         $target = self::get_transcode_format($source, $target, $player, $media_type);
         $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?? AmpConfig::get('transcode_cmd');
         if (empty($cmd)) {
-            // A missing command is a misconfiguration, so it logs like the target-format check below rather than
-            // at the verbose level, where the reason a stream produced nothing was effectively invisible.
+            // a missing command is a misconfiguration, so it logs at the same level as the target format check below
             debug_event(self::class, 'A valid transcode_cmd is required to transcode', 2);
 
             return [];

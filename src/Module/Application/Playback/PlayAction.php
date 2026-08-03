@@ -1183,9 +1183,6 @@ final readonly class PlayAction implements ApplicationActionInterface
                 "Failed to open " . $stream_file . " for streaming",
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-            // Every other failure in this method answers with a status. Without one the request returns 200 and an
-            // empty body, which a player reports as an unsupported content type instead of a server error.
-            header('HTTP/1.1 500 Stream Failed');
 
             // without a status the request answers 200 with an empty body, which every player reports as a corrupt stream
             if (!headers_sent()) {
