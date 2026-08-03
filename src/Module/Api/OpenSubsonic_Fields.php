@@ -416,6 +416,9 @@ final class OpenSubsonic_Fields
      */
     public function songReplayGain(Song $song): array
     {
+        // the gain columns live in song_data, which a Song does not load on construction
+        $song->fill_ext_info('replaygain_track_gain, replaygain_track_peak, replaygain_album_gain, replaygain_album_peak, r128_track_gain, r128_album_gain');
+
         $gain = [];
         if ($song->replaygain_track_gain !== null) {
             $gain['trackGain'] = $song->replaygain_track_gain;

@@ -778,7 +778,7 @@ class OpenSubsonic_Json_Data
             $catalog = Catalog::create_from_id($folder_id);
             if ($catalog instanceof Catalog) {
                 $json['musicFolder'][] = [
-                    'id' => OpenSubsonic_Api::getCatalogSubId($folder_id),
+                    'id' => $folder_id,
                     'name' => (string) $catalog->name,
                 ];
             }
@@ -2407,7 +2407,7 @@ class OpenSubsonic_Json_Data
      *             'trackPeak'?: float,
      *             'albumPeak'?: float,
      *             'baseGain'?: float
-     *         },
+     *         }|\stdClass,
      *         'explicitStatus'?: string
      *     }
      * }
@@ -2739,7 +2739,7 @@ class OpenSubsonic_Json_Data
      *         'trackPeak'?: float,
      *         'albumPeak'?: float,
      *         'baseGain'?: float
-     *     },
+     *     }|\stdClass,
      *     'explicitStatus'?: string
      * }
      */
@@ -2885,8 +2885,9 @@ class OpenSubsonic_Json_Data
             $json['bookmarkPosition'] = $bookmark_position;
         }
 
-        // Unlike every other optional field here, replayGain must always be present on a Child even when empty.
-        $json['replayGain'] = $this->openSubsonicFields->songReplayGain($song);
+        // Unlike every other optional field here, replayGain must always be present on a Child, as an object even when empty.
+        $replay_gain        = $this->openSubsonicFields->songReplayGain($song);
+        $json['replayGain'] = ($replay_gain === []) ? (object) [] : $replay_gain;
 
         if (AmpConfig::get('transcode', 'default') != 'never') {
             $cache_path     = (string) AmpConfig::get('cache_path', '');

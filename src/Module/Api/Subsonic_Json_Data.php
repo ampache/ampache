@@ -724,7 +724,7 @@ class Subsonic_Json_Data
             $catalog = Catalog::create_from_id($folder_id);
             if ($catalog instanceof Catalog) {
                 $json['musicFolder'][] = [
-                    'id' => Subsonic_Api::getCatalogSubId($folder_id),
+                    'id' => $folder_id,
                     'name' => (string) $catalog->name,
                 ];
             }

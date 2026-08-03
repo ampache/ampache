@@ -847,7 +847,7 @@ class OpenSubsonic_Xml_Data
                 break;
             }
             $xfolder = $this->_addChildToResultXml($xfolders, 'musicFolder');
-            $xfolder->addAttribute('id', OpenSubsonic_Api::getCatalogSubId($catalog_id));
+            $xfolder->addAttribute('id', (string) $catalog_id);
             $xfolder->addAttribute('name', (string) $catalog->name);
         }
 
