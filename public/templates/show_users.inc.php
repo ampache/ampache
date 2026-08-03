@@ -49,6 +49,7 @@ $t_enable      = T_('Enable');
 $t_disable     = T_('Disable');
 $t_delete      = T_('Delete');
 $t_username    = T_('Username');
+$t_fullname    = T_('Fullname');
 $t_last_seen   = T_('Last Seen');
 $t_reg_date    = T_('Registration Date');
 $t_activity    = T_('Activity');
