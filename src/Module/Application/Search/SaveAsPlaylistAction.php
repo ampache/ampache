@@ -31,6 +31,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
@@ -48,6 +49,7 @@ final readonly class SaveAsPlaylistAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -57,7 +59,7 @@ final readonly class SaveAsPlaylistAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $browse  = $this->modelFactory->createBrowse((int) $this->requestParser->getFromRequest('browse_id'));
+        $browse  = $this->browseFactory->create((int) $this->requestParser->getFromRequest('browse_id'));
         $objects = $browse->get_saved();
 
         // Make sure we have a unique name

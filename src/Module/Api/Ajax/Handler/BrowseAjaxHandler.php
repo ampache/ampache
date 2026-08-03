@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Query;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
 use Ampache\Module\System\Core;
@@ -43,6 +44,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private LiveStreamRepositoryInterface $liveStreamRepository,
         private ShareUiLinkRendererInterface $shareUiLinkRenderer,
     ) {}
@@ -56,7 +58,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         $browse_id = (isset($_REQUEST['browse_id']))
             ? (int) $_REQUEST['browse_id']
             : null;
-        $browse = $this->modelFactory->createBrowse($browse_id);
+        $browse = $this->browseFactory->create($browse_id);
 
         debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '} id {' . $browse_id . '}', 5);
         if (array_key_exists('show_header', $_REQUEST) && $_REQUEST['show_header']) {

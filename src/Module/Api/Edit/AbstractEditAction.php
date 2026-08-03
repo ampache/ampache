@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -45,6 +46,7 @@ use Psr\Log\LoggerInterface;
 
 abstract class AbstractEditAction implements ApplicationActionInterface
 {
+    private BrowseFactoryInterface $browseFactory;
     private ConfigContainerInterface $configContainer;
     private LibraryItemLoaderInterface $libraryItemLoader;
     private LoggerInterface $logger;
@@ -55,7 +57,9 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         LibraryItemLoaderInterface $libraryItemLoader,
         LoggerInterface $logger,
         ShareRepositoryInterface $shareRepository,
+        BrowseFactoryInterface $browseFactory,
     ) {
+        $this->browseFactory     = $browseFactory;
         $this->configContainer   = $configContainer;
         $this->libraryItemLoader = $libraryItemLoader;
         $this->logger            = $logger;
@@ -90,7 +94,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         // source Browse
         $browse_id = (int) $this->readString($query, 'browse_id');
         $browse    = ($browse_id > 0)
-            ? new Browse($browse_id)
+            ? $this->browseFactory->create($browse_id)
             : null;
 
         $libitem = $this->loadItem($object_type, $object_id);

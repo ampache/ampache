@@ -30,13 +30,14 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var ZipHandlerInterface $zipHandler */
 /** @var User|null $current_user */
 $current_user = $current_user ?? Core::get_global('user');
@@ -81,7 +82,7 @@ if ($directplay_limit > 0) {
 </div>
 <div id='reordered_list_<?php echo $folder->id; ?>'>
 <?php
-$browse = new Browse();
+$browse = $browseFactory->create();
 $browse->set_type('folder');
 $browse->set_use_pages(true);
 $browse->set_simple_browse(true);

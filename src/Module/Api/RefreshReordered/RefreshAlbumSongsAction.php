@@ -27,8 +27,8 @@ namespace Ampache\Module\Api\RefreshReordered;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -36,22 +36,22 @@ final class RefreshAlbumSongsAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'refresh_album_songs';
 
-    private ModelFactoryInterface $modelFactory;
+    private BrowseFactoryInterface $browseFactory;
     private RequestParserInterface $requestParser;
 
     public function __construct(
         RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory,
+        BrowseFactoryInterface $browseFactory,
     ) {
         $this->requestParser = $requestParser;
-        $this->modelFactory  = $modelFactory;
+        $this->browseFactory = $browseFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $object_id = $this->requestParser->getFromRequest('id');
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
 
         $browse->set_show_header(true);
         $browse->set_type('song');

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -39,6 +40,7 @@ use Psr\Log\LoggerInterface;
 
 class ShowPlaylistActionTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface&MockInterface $browseFactory;
     private LoggerInterface&MockObject $logger;
     private ModelFactoryInterface&MockInterface $modelFactory;
     private ?ShowAction $subject;
@@ -82,7 +84,8 @@ class ShowPlaylistActionTest extends MockeryTestCase
                 [
                     'playlist' => $search,
                     'object_ids' => $objectIds,
-                    'zipHandler' => $this->zipHandler
+                    'zipHandler' => $this->zipHandler,
+                    'browseFactory' => $this->browseFactory
                 ]
             )
             ->once();
@@ -101,16 +104,18 @@ class ShowPlaylistActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->logger       = $this->createMock(LoggerInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
-        $this->zipHandler   = $this->mock(ZipHandlerInterface::class);
+        $this->ui            = $this->mock(UiInterface::class);
+        $this->logger        = $this->createMock(LoggerInterface::class);
+        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+        $this->zipHandler    = $this->mock(ZipHandlerInterface::class);
+        $this->browseFactory = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new ShowAction(
             $this->ui,
             $this->logger,
             $this->modelFactory,
-            $this->zipHandler
+            $this->zipHandler,
+            $this->browseFactory
         );
     }
 }

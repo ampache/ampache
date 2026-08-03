@@ -27,9 +27,9 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,7 +40,7 @@ final readonly class HighestAlbumAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private VideoRepositoryInterface $videoRepository,
     ) {}
 
@@ -66,7 +66,7 @@ final readonly class HighestAlbumAction implements ApplicationActionInterface
         $user_id = $gatekeeper->getUser()?->id;
 
         $objects = Rating::get_highest('album', -1, 0, $user_id, $by_user);
-        $browse  = $this->modelFactory->createBrowse();
+        $browse  = $this->browseFactory->create();
         $browse->set_use_filters(false);
         $browse->set_type('album');
         $browse->show_objects($objects);

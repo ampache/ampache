@@ -29,8 +29,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
+use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Album;
@@ -57,6 +59,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
     public const string REQUEST_KEY = 'refresh_updated';
 
     private Browse $browse;
+    private GatekeeperFactoryInterface $gatekeeperFactory;
     private GuiFactoryInterface $guiFactory;
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
@@ -70,18 +73,21 @@ final class RefreshUpdatedAction extends AbstractEditAction
         LibraryItemLoaderInterface $libraryItemLoader,
         LoggerInterface $logger,
         ShareRepositoryInterface $shareRepository,
+        BrowseFactoryInterface $browseFactory,
+        GatekeeperFactoryInterface $gatekeeperFactory,
         TalFactoryInterface $talFactory,
         GuiFactoryInterface $guiFactory,
         Browse $browse,
         UiInterface $ui,
     ) {
-        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository);
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
-        $this->talFactory      = $talFactory;
-        $this->guiFactory      = $guiFactory;
-        $this->browse          = $browse;
-        $this->ui              = $ui;
+        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository, $browseFactory);
+        $this->gatekeeperFactory = $gatekeeperFactory;
+        $this->responseFactory   = $responseFactory;
+        $this->streamFactory     = $streamFactory;
+        $this->talFactory        = $talFactory;
+        $this->guiFactory        = $guiFactory;
+        $this->browse            = $browse;
+        $this->ui                = $ui;
     }
 
     /**
@@ -224,6 +230,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     'show_artist_row.inc.php',
                     [
                         'libitem' => $libitem,
+                        'gatekeeper' => $this->gatekeeperFactory->createGuiGatekeeper(),
                         'is_table' => true,
                         'object_type' => $object_type,
                         'object_id' => $object_id,

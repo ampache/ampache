@@ -34,7 +34,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -47,6 +47,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var Artist $artist */
 /** @var array<string, int[]>|null $multi_object_ids */
 /** @var list<int> $object_ids */
@@ -325,7 +326,7 @@ if ($use_label) { ?>
 
 foreach ($multi_object_ids as $key => $object_ids) {
     $title  = (!empty($key)) ? ucwords($key) : '';
-    $browse = new Browse();
+    $browse = $browseFactory->create();
     $browse->set_type($object_type);
     $browse->set_use_filters(false);
     if ($is_album_type) {

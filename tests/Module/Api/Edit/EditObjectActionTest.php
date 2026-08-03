@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -48,6 +49,7 @@ use Psr\Log\LoggerInterface;
 
 class EditObjectActionTest extends TestCase
 {
+    private BrowseFactoryInterface&MockObject $browseFactory;
     private ConfigContainerInterface&MockObject $configContainer;
     private LabelRepositoryInterface&MockObject $labelRepository;
     private LibraryItemLoaderInterface&MockObject $libraryItemLoader;
@@ -213,6 +215,7 @@ class EditObjectActionTest extends TestCase
     protected function setUp(): void
     {
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->browseFactory     = $this->createMock(BrowseFactoryInterface::class);
         $this->labelRepository   = $this->createMock(LabelRepositoryInterface::class);
         $this->libraryItemLoader = $this->createMock(LibraryItemLoaderInterface::class);
         $this->logger            = $this->createMock(LoggerInterface::class);
@@ -233,7 +236,8 @@ class EditObjectActionTest extends TestCase
             $this->logger,
             $this->responseFactory,
             $this->shareRepository,
-            $this->streamFactory,
+            $this->browseFactory,
+            $this->streamFactory
         );
     }
 

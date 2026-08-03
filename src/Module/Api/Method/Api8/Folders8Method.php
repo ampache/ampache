@@ -30,9 +30,9 @@ use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Folder;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -45,15 +45,15 @@ final class Folders8Method implements MethodInterface
 {
     public const string ACTION = 'folders';
 
+    private BrowseFactoryInterface $browseFactory;
     private FolderRepositoryInterface $folderRepository;
-    private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         FolderRepositoryInterface $folderRepository,
-        ModelFactoryInterface $modelFactory,
+        BrowseFactoryInterface $browseFactory,
     ) {
-        $this->folderRepository = $folderRepository;
-        $this->modelFactory     = $modelFactory;
+        $this->folderRepository  = $folderRepository;
+        $this->browseFactory     = $browseFactory;
     }
 
     /**
@@ -99,7 +99,7 @@ final class Folders8Method implements MethodInterface
             );
         }
 
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
         $browse->set_user_id($user);
         $browse->set_type('folder');
 

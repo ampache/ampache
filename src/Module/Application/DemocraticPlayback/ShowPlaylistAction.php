@@ -30,11 +30,11 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Democratic;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -47,7 +47,7 @@ final readonly class ShowPlaylistAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -70,7 +70,7 @@ final readonly class ShowPlaylistAction implements ApplicationActionInterface
 
         $democratic->set_parent();
 
-        $browse = $this->modelFactory->createBrowse((int) $this->requestParser->getFromRequest('browse_id'));
+        $browse = $this->browseFactory->create((int) $this->requestParser->getFromRequest('browse_id'));
 
         require_once Ui::find_template('show_democratic.inc.php');
 

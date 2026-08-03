@@ -28,7 +28,6 @@ declare(strict_types=1);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\EnvironmentInterface;
 
-// TODO remove me
 /** @var EnvironmentInterface $environment */
 $t_search = T_('Search');
 

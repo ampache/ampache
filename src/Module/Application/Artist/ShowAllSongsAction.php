@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Artist;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -43,6 +44,7 @@ final readonly class ShowAllSongsAction implements ApplicationActionInterface
         private UiInterface $ui,
         private SongRepositoryInterface $songRepository,
         private ZipHandlerInterface $zipHandler,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -60,7 +62,8 @@ final readonly class ShowAllSongsAction implements ApplicationActionInterface
                 'object_ids' => $this->songRepository->getAllByArtist($artistId),
                 'multi_object_ids' => [],
                 'gatekeeper' => $gatekeeper,
-                'zipHandler' => $this->zipHandler
+                'zipHandler' => $this->zipHandler,
+                'browseFactory' => $this->browseFactory
             ]
         );
 

@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
@@ -300,7 +301,7 @@ class Api6
     {
         if (self::$browse === null) {
             // create new browse
-            self::$browse = new Browse(null, false);
+            self::$browse = self::getBrowseFactory()->create(null, false);
         } else {
             // reset existing browse
             self::$browse->reset();
@@ -472,6 +473,16 @@ class Api6
         ];
 
         return array_merge($autharray, $outarray);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getBrowseFactory(): BrowseFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BrowseFactoryInterface::class);
     }
 
     /**

@@ -32,7 +32,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Browse;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -44,9 +44,9 @@ use Psr\Http\Message\StreamInterface;
 
 class PodcastEpisodesMethodTest extends TestCase
 {
+    private BrowseFactoryInterface&MockObject $browseFactory;
     private ConfigContainerInterface&MockObject $configContainer;
     private GatekeeperInterface&MockObject $gatekeeper;
-    private ModelFactoryInterface&MockObject $modelFactory;
     private ApiOutputInterface&MockObject $output;
     private PodcastRepositoryInterface&MockObject $podcastRepository;
     private ResponseInterface&MockObject $response;
@@ -86,8 +86,8 @@ class PodcastEpisodesMethodTest extends TestCase
             ->method('getBody')
             ->willReturn($stream);
 
-        $this->modelFactory->expects(static::once())
-            ->method('createBrowse')
+        $this->browseFactory->expects(static::once())
+            ->method('create')
             ->with(null, false)
             ->willReturn($browse);
 
@@ -226,8 +226,8 @@ class PodcastEpisodesMethodTest extends TestCase
             ->method('getBody')
             ->willReturn($stream);
 
-        $this->modelFactory->expects(static::once())
-            ->method('createBrowse')
+        $this->browseFactory->expects(static::once())
+            ->method('create')
             ->with(null, false)
             ->willReturn($browse);
 
@@ -371,12 +371,12 @@ class PodcastEpisodesMethodTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
-        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
-        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->browseFactory      = $this->createMock(BrowseFactoryInterface::class);
+        $this->podcastRepository  = $this->createMock(PodcastRepositoryInterface::class);
+        $this->configContainer    = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new PodcastEpisodesMethod(
-            $this->modelFactory,
+            $this->browseFactory,
             $this->podcastRepository,
             $this->configContainer,
         );
