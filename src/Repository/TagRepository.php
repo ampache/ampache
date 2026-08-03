@@ -332,7 +332,7 @@ final readonly class TagRepository implements TagRepositoryInterface
 
         // allowlist: $order reaches ORDER BY as a raw identifier (see get_tags caller ?sort=)
         $sql .= ($order === 'count')
-            ? 'ORDER BY `count` DESC'
+            ? 'ORDER BY `count` DESC, `tag`.`id`'
             : sprintf('ORDER BY `%s`', (in_array($order, ['name', 'id', 'is_hidden'], true) ? $order : 'name'));
 
         if ($limit > 0) {
@@ -363,8 +363,8 @@ final readonly class TagRepository implements TagRepositoryInterface
         // the per-type counter column doubles as the weight, so a type without one falls back to the summed count
         $countType = TagCountTypeEnum::tryFrom($objectType);
         $sql       = ($countType instanceof TagCountTypeEnum)
-            ? sprintf('SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`%s` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `%s` DESC ', $countType->value, $countType->value) . $limitClause
-            : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `count` DESC ' . $limitClause;
+            ? sprintf('SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`%s` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `%s` DESC, `tag`.`id` ', $countType->value, $countType->value) . $limitClause
+            : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `count` DESC, `tag`.`id` ' . $limitClause;
 
         $result = $this->connection->query($sql, [$objectType, $objectId]);
 

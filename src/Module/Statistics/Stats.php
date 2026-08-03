@@ -894,7 +894,8 @@ final class Stats
             && !$addAdditionalColumns
             && in_array($type, ['album', 'album_disk', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'], true)
         ) {
-            $sql = "SELECT `object_id` AS `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' GROUP BY `object_id`, `object_type`";
+            $sql   = "SELECT `object_id` AS `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' GROUP BY `object_id`, `object_type`";
+            $group = '`object_id`';
         } else {
             $is_podcast = ($type === 'podcast');
             $select_sql = ($is_podcast)
@@ -982,7 +983,8 @@ final class Stats
         if ($random) {
             $sql .= " ORDER BY RAND() DESC ";
         } else {
-            $sql .= " ORDER BY `count` DESC ";
+            // equal counts have to break on the grouped id or a LIMIT returns a different set each run
+            $sql .= " ORDER BY `count` DESC, " . $group . " ";
         }
 
         //debug_event(self::class, 'get_top_sql ' . $sql, 5);
