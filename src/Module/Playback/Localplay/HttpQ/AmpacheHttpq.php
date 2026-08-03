@@ -180,26 +180,30 @@ class AmpacheHttpq extends localplay_controller
             $data['id']  = $key;
             $data['raw'] = $entry;
 
+            $data['name'] = '';
+            $data['link'] = '';
+
             $url_data = $this->parse_url($entry);
-            switch ($url_data['primary_key']) {
+            switch ($url_data['primary_key'] ?? '') {
                 case 'oid':
-                    $data['oid']  = $url_data['oid'];
-                    $song         = new Song($data['oid']);
-                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_parent_fullname();
-                    $data['link'] = $song->get_f_link();
+                    $data['oid'] = $url_data['oid'];
+                    $song        = new Song($data['oid']);
+                    if (!$song->isNew()) {
+                        $data['name'] = self::_join_parts([$song->get_fullname(), $song->get_album_fullname($song->album, true), $song->get_parent_fullname()]);
+                        $data['link'] = $song->get_f_link();
+                    }
+
                     break;
                 case 'demo_id':
                     $democratic   = new Democratic((int) $url_data['demo_id']);
-                    $data['name'] = T_('Democratic') . ' - ' . $democratic->name;
-                    $data['link'] = '';
+                    $data['name'] = self::_join_parts([T_('Democratic'), $democratic->name]);
                     break;
                 case 'random':
-                    $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst((string) $url_data['random_type']));
-                    $data['link'] = '';
+                    $data['name'] = self::_join_parts([T_('Random'), scrub_out(ucfirst((string) ($url_data['random_type'] ?? '')))]);
                     break;
                 default:
                     // If we don't know it, look up by filename
-                    $filename          = Dba::escape($url_data['file']);
+                    $filename          = Dba::escape($url_data['file'] ?? $entry);
                     $sql               = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE ? UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url` = ?;";
                     $libraryItemLoader = $this->getLibraryItemLoader();
 
@@ -227,8 +231,8 @@ class AmpacheHttpq extends localplay_controller
                             }
                         }
                     } else {
+                        // a basename is not a link, and an empty name leaves the template showing the raw url
                         $data['name'] = basename($data['raw']);
-                        $data['link'] = basename($data['raw']);
                     }
 
                     break;
@@ -486,19 +490,25 @@ class AmpacheHttpq extends localplay_controller
         $array['random'] = $this->_httpq->get_random();
         $array['track']  = $this->_httpq->get_now_playing();
 
+        $array['track_title'] = '';
+
         $url_data = $this->parse_url($array['track']);
-        if (array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
+        if (!empty($url_data['oid'])) {
             $song = new Song($url_data['oid']);
-            if ($song->isNew()) {
-                $array['track_title']  = T_('Unknown');
-                $array['track_artist'] = T_('Unknown');
-                $array['track_album']  = T_('Unknown');
-            } else {
+            if (!$song->isNew()) {
                 $array['track_title']  = $song->title;
                 $array['track_artist'] = $song->get_parent_fullname();
                 $array['track_album']  = $song->get_album_fullname();
             }
-        } else {
+        } elseif (!empty($url_data['demo_id'])) {
+            $democratic           = new Democratic((int) $url_data['demo_id']);
+            $array['track_title'] = self::_join_parts([T_('Democratic'), $democratic->name]);
+        } elseif (!empty($url_data['random_id'])) {
+            $array['track_title'] = self::_join_parts([T_('Random'), scrub_out(ucfirst((string) ($url_data['random_type'] ?? '')))]);
+        }
+
+        // an unresolved entry falls back to the name the player reported
+        if ($array['track_title'] === '') {
             $array['track_title'] = basename($array['track'] ?? '');
         }
 

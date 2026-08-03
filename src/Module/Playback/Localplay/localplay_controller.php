@@ -35,6 +35,21 @@ use Ampache\Module\Playback\Stream_Url;
  */
 abstract class localplay_controller
 {
+    /**
+     * _join_parts
+     * Join the parts of a display name, dropping the empty ones so an unresolved lookup can't leave a dangling separator
+     * @param array<int, string|null> $parts
+     */
+    protected static function _join_parts(array $parts): string
+    {
+        $filled = array_filter(
+            array_map(static fn(?string $part): string => trim((string) $part), $parts),
+            static fn(string $part): bool => $part !== ''
+        );
+
+        return implode(' - ', $filled);
+    }
+
     // For display we need the following 'instance' functions
 
     /**

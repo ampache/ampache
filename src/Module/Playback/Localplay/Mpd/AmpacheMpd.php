@@ -56,21 +56,6 @@ class AmpacheMpd extends localplay_controller
     private string $version     = '000003';
 
     /**
-     * _join_parts
-     * Join the parts of a display name, dropping the empty ones so an unresolved lookup can't leave a dangling separator
-     * @param array<int, string|null> $parts
-     */
-    private static function _join_parts(array $parts): string
-    {
-        $filled = array_filter(
-            array_map(static fn(?string $part): string => trim((string) $part), $parts),
-            static fn(string $part): bool => $part !== ''
-        );
-
-        return implode(' - ', $filled);
-    }
-
-    /**
      * add_instance
      * This takes key'd data and inserts a new MPD instance
      * @param array{
