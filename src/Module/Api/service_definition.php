@@ -42,6 +42,8 @@ return [
     Json5_Data::class => autowire(),
     Json6_Data::class => autowire(),
     Json8_Data::class => autowire(),
+    Xml4_Data::class => autowire(),
+    Json4_Data::class => autowire(),
     Xml5_Data::class => autowire(),
     Xml6_Data::class => autowire(),
     Xml8_Data::class => autowire(),

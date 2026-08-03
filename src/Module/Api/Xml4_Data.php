@@ -61,16 +61,78 @@ use Traversable;
  */
 class Xml4_Data
 {
-    private static ?int $count  = null;
-    private static ?int $limit  = 5000;
-    private static int $offset  = 0;
+    private ?int $count  = null;
+    private ?int $limit  = 5000;
+    private int $offset  = 0;
 
     /**
      * constructor
      *
      * We don't use this, as its really a static class
      */
-    private function __construct() {}
+    public function __construct(
+        private AlbumRepositoryInterface $albumRepository,
+        private LicenseRepositoryInterface $licenseRepository,
+        private PodcastRepositoryInterface $podcastRepository,
+        private SongRepositoryInterface $songRepository,
+    ) {}
+
+    /**
+     * error
+     *
+     * This generates a standard XML Error message
+     */
+    public static function error(string $code, string $message): string
+    {
+        $xml_string = "\t<error code=\"$code\"><![CDATA[" . $message . "]]></error>";
+
+        return Api::output_xml($xml_string);
+    }
+
+    /**
+     * success
+     *
+     * This generates a standard XML Success message
+     *
+     * @param string $string success message
+     */
+    public static function success(string $string): string
+    {
+        $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
+
+        return Api::output_xml($xml_string);
+    }
+
+    /**
+     * tags_string
+     *
+     * This returns the formatted 'tags' string for an xml document
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
+     */
+    private static function _tags_string(array $tags): string
+    {
+        $string = '';
+
+        if (!empty($tags)) {
+            $atags = [];
+            foreach ($tags as $tag) {
+                if (array_key_exists($tag['id'], $atags)) {
+                    $atags[$tag['id']]['count']++;
+                } else {
+                    $atags[$tag['id']] = [
+                        'name' => $tag['name'],
+                        'count' => 1
+                    ];
+                }
+            }
+
+            foreach ($atags as $tag_id => $data) {
+                $string .= "\t<tag id=\"" . $tag_id . "\" count=\"" . $data['count'] . "\" ><![CDATA[" . $data['name'] . "]]></tag>\n";
+            }
+        }
+
+        return $string;
+    }
 
     /**
      * albums
@@ -81,12 +143,12 @@ class Xml4_Data
      * @param string[] $include Array of other items to include
      * @param bool $full_xml whether to return a full XML document or just the node
      */
-    public static function albums(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
+    public function albums(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
         Rating::build_cache('album', $objects);
 
@@ -110,7 +172,7 @@ class Xml4_Data
             }
             // Handle includes
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getAlbumRepository()->getSongs($album->id), $user, $auth, false);
+                $songs = $this->songs($this->albumRepository->getSongs($album->id), $user, $auth, false);
             } else {
                 $songs = $album->song_count;
             }
@@ -131,12 +193,12 @@ class Xml4_Data
      * @param string[] $include Array of other items to include
      * @param bool $full_xml whether to return a full XML document or just the node
      */
-    public static function artists(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
+    public function artists(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
         Rating::build_cache('artist', $objects);
 
@@ -156,12 +218,12 @@ class Xml4_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, $auth, false);
+                $albums = $this->albums($this->albumRepository->getAlbumByArtist($artist->id), [], $user, $auth, false);
             } else {
                 $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getSongRepository()->getByArtist($artist->id), $user, $auth, false);
+                $songs = $this->songs($this->songRepository->getByArtist($artist->id), $user, $auth, false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -179,12 +241,12 @@ class Xml4_Data
      *
      * @param int[] $objects group of catalog id's
      */
-    public static function catalogs(array $objects): string
+    public function catalogs(array $objects): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
-        $string = "<total_count>" . self::$count . "</total_count>\n";
+        $string = "<total_count>" . $this->count . "</total_count>\n";
 
         foreach ($objects as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
@@ -210,7 +272,7 @@ class Xml4_Data
      *     track: int
      * }> $object_ids Object IDs
      */
-    public static function democratic(array $object_ids, User $user, string $auth): string
+    public function democratic(array $object_ids, User $user, string $auth): string
     {
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';
@@ -242,18 +304,6 @@ class Xml4_Data
     }
 
     /**
-     * error
-     *
-     * This generates a standard XML Error message
-     */
-    public static function error(string $code, string $message): string
-    {
-        $xml_string = "\t<error code=\"$code\"><![CDATA[" . $message . "]]></error>";
-
-        return Api::output_xml($xml_string);
-    }
-
-    /**
      * indexes
      *
      * This takes an array of object_ids and return XML based on the type of object
@@ -264,25 +314,25 @@ class Xml4_Data
      * @param bool $full_xml whether to return a full XML document or just the node
      * @param bool $include include episodes from podcasts or tracks in a playlist
      */
-    public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
+    public function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
         // here is where we call the object type
         switch ($object_type) {
             case 'artist':
                 foreach ($objects as $object_id) {
                     if ($include) {
-                        $string .= self::artists([(int) $object_id], ['songs', 'albums'], $user, $auth, false);
+                        $string .= $this->artists([(int) $object_id], ['songs', 'albums'], $user, $auth, false);
                     } else {
                         $artist = new Artist((int) $object_id);
                         if ($artist->isNew()) {
                             break;
                         }
-                        $albums = self::getAlbumRepository()->getAlbumByArtist((int) $object_id);
+                        $albums = $this->albumRepository->getAlbumByArtist((int) $object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
@@ -297,7 +347,7 @@ class Xml4_Data
             case 'album':
                 foreach ($objects as $object_id) {
                     if ($include) {
-                        $string .= self::albums([(int) $object_id], ['songs'], $user, $auth, false);
+                        $string .= $this->albums([(int) $object_id], ['songs'], $user, $auth, false);
                     } else {
                         $album = new Album((int) $object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n"
@@ -350,17 +400,17 @@ class Xml4_Data
                 }
                 break;
             case 'share':
-                $string .= self::shares($objects, $user, false);
+                $string .= $this->shares($objects, $user, false);
                 break;
             case 'podcast':
                 foreach ($objects as $object_id) {
-                    $podcast = self::getPodcastRepository()->findById((int) $object_id);
+                    $podcast = $this->podcastRepository->findById((int) $object_id);
                     if ($podcast !== null) {
                         $string .= "<podcast id=\"$object_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->get_description() . "]]></description>\n\t<language><![CDATA[" . scrub_out($podcast->getLanguage()) . "]]></language>\n\t<copyright><![CDATA[" . scrub_out($podcast->getCopyright()) . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->getFeedUrl() . "]]></feed_url>\n\t<generator><![CDATA[" . scrub_out($podcast->getGenerator()) . "]]></generator>\n\t<website><![CDATA[" . scrub_out($podcast->getWebsite()) . "]]></website>\n\t<build_date><![CDATA[" . $podcast->getLastBuildDate()->format(DATE_ATOM) . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->getLastSyncDate()->format(DATE_ATOM) . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n";
                         if ($include) {
                             $episodes = $podcast->getEpisodeIds();
                             foreach ($episodes as $episode_id) {
-                                $string .= self::podcast_episodes([$episode_id], $user, $auth, false);
+                                $string .= $this->podcast_episodes([$episode_id], $user, $auth, false);
                             }
                         }
                         $string .= "\t</podcast>\n";
@@ -368,10 +418,10 @@ class Xml4_Data
                 }
                 break;
             case 'podcast_episode':
-                $string .= self::podcast_episodes($objects, $user, $auth, false);
+                $string .= $this->podcast_episodes($objects, $user, $auth, false);
                 break;
             case 'video':
-                $string .= self::videos($objects, $user, $auth, false);
+                $string .= $this->videos($objects, $user, $auth, false);
                 break;
         }
 
@@ -385,14 +435,14 @@ class Xml4_Data
      *
      * @param array<int|string> $objects
      */
-    public static function licenses(array $objects): string
+    public function licenses(array $objects): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
-        $string = "<total_count>" . self::$count . "</total_count>\n";
+        $string = "<total_count>" . $this->count . "</total_count>\n";
 
-        $licenseRepository = self::getLicenseRepository();
+        $licenseRepository = $this->licenseRepository;
 
         foreach ($objects as $license_id) {
             $license = $licenseRepository->findById((int) $license_id);
@@ -411,12 +461,12 @@ class Xml4_Data
      *
      * @param array<int|string> $objects Playlist id's to include
      */
-    public static function playlists(array $objects, User $user, string $auth): string
+    public function playlists(array $objects, User $user, string $auth): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
-        $string = "<total_count>" . self::$count . "</total_count>\n";
+        $string = "<total_count>" . $this->count . "</total_count>\n";
 
         // Foreach the playlist ids
         foreach ($objects as $playlist_id) {
@@ -464,12 +514,12 @@ class Xml4_Data
      * @param array<int|string> $objects Podcast_Episode id's to include
      * @param bool $full_xml whether to return a full XML document or just the node
      */
-    public static function podcast_episodes(array $objects, User $user, string $auth, bool $full_xml = true): string
+    public function podcast_episodes(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
         foreach ($objects as $episode_id) {
             $episode = new Podcast_Episode((int) $episode_id);
@@ -496,14 +546,14 @@ class Xml4_Data
      * @param bool $episodes include the episodes of the podcast //optional
      * @param bool $full_xml whether to return a full XML document or just the node
      */
-    public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $full_xml = true): string
+    public function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
-        $podcastRepository = self::getPodcastRepository();
+        $podcastRepository = $this->podcastRepository;
 
         foreach ($objects as $podcast_id) {
             $podcast = $podcastRepository->findById((int) $podcast_id);
@@ -518,7 +568,7 @@ class Xml4_Data
             if ($episodes) {
                 $results = $podcast->getEpisodeIds();
                 if (!empty($results)) {
-                    $string .= self::podcast_episodes($results, $user, $auth, false);
+                    $string .= $this->podcast_episodes($results, $user, $auth, false);
                 }
             }
             $string .= "\t</podcast>\n";
@@ -534,13 +584,13 @@ class Xml4_Data
      *
      * @param int|string $limit Set a limit on your results
      */
-    public static function set_limit(int|string $limit): bool
+    public function set_limit(int|string $limit): bool
     {
         if (!$limit) {
             return false;
         }
 
-        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
+        $this->limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
 
         return true;
     }
@@ -552,9 +602,9 @@ class Xml4_Data
      *
      * @param int|string $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
      */
-    public static function set_offset(int|string $offset): void
+    public function set_offset(int|string $offset): void
     {
-        self::$offset = (int) $offset;
+        $this->offset = (int) $offset;
     }
 
     /**
@@ -565,12 +615,12 @@ class Xml4_Data
      * @param array<int|string> $objects
      * @param bool $full_xml whether to return a full XML document or just the node, bool $full_xml = true
      */
-    public static function shares(array $objects, User $user, bool $full_xml = true): string
+    public function shares(array $objects, User $user, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
         foreach ($objects as $share_id) {
             $share = new Share((int) $share_id);
@@ -591,7 +641,7 @@ class Xml4_Data
      *
      * @param Traversable<Shoutbox> $objects Shout identifier list
      */
-    public static function shouts(Traversable $objects): string
+    public function shouts(Traversable $objects): string
     {
         $string = "<shouts>\n";
         /** @var Shoutbox $shout */
@@ -614,12 +664,12 @@ class Xml4_Data
      * This returns an xml document from an array of song ids. (Spiffy isn't it!)
      * @param array<int|string> $objects
      */
-    public static function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
+    public function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
         Song::build_cache($objects);
         Stream::set_session($auth);
@@ -675,32 +725,18 @@ class Xml4_Data
     }
 
     /**
-     * success
-     *
-     * This generates a standard XML Success message
-     *
-     * @param string $string success message
-     */
-    public static function success(string $string): string
-    {
-        $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
-
-        return Api::output_xml($xml_string);
-    }
-
-    /**
      * tags
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
      * @param array<int|string> $objects
      */
-    public static function tags(array $objects): string
+    public function tags(array $objects): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
-        $string = "<total_count>" . self::$count . "</total_count>\n";
+        $string = "<total_count>" . $this->count . "</total_count>\n";
 
         foreach ($objects as $tag_id) {
             $tag = new Tag((int) $tag_id);
@@ -717,7 +753,7 @@ class Xml4_Data
      *
      * @param int[] $objects    Activity identifier list
      */
-    public static function timeline(array $objects): string
+    public function timeline(array $objects): string
     {
         $string = "<timeline>\n";
         foreach ($objects as $activity_id) {
@@ -739,7 +775,7 @@ class Xml4_Data
      *
      * This handles creating an xml document for a user
      */
-    public static function user(User $user, bool $fullinfo): string
+    public function user(User $user, bool $fullinfo): string
     {
         $string = "<user id=\"" . $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n";
         if ($fullinfo) {
@@ -761,10 +797,10 @@ class Xml4_Data
      *
      * @param array<int|string> $objects    User identifier list
      */
-    public static function users(array $objects): string
+    public function users(array $objects): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = "<users>\n";
         foreach ($objects as $user_id) {
@@ -786,12 +822,12 @@ class Xml4_Data
      * @param array<int|string> $objects
      * @param bool $full_xml whether to return a full XML document or just the node
      */
-    public static function videos(array $objects, User $user, string $auth, bool $full_xml = true): string
+    public function videos(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+        $this->count = $this->count ?: count($objects);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
         foreach ($objects as $video_id) {
             $video = new Video((int) $video_id);
@@ -807,76 +843,5 @@ class Xml4_Data
         }
 
         return Api::output_xml($string, $full_xml);
-    }
-
-    /**
-     * tags_string
-     *
-     * This returns the formatted 'tags' string for an xml document
-     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
-     */
-    private static function _tags_string(array $tags): string
-    {
-        $string = '';
-
-        if (!empty($tags)) {
-            $atags = [];
-            foreach ($tags as $tag) {
-                if (array_key_exists($tag['id'], $atags)) {
-                    $atags[$tag['id']]['count']++;
-                } else {
-                    $atags[$tag['id']] = [
-                        'name' => $tag['name'],
-                        'count' => 1
-                    ];
-                }
-            }
-
-            foreach ($atags as $tag_id => $data) {
-                $string .= "\t<tag id=\"" . $tag_id . "\" count=\"" . $data['count'] . "\" ><![CDATA[" . $data['name'] . "]]></tag>\n";
-            }
-        }
-
-        return $string;
-    }
-
-    /**
-     * @deprecated
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getLicenseRepository(): LicenseRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(LicenseRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
     }
 }

@@ -26,9 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Json6_Data;
 use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Api\Xml6_Data;
 use Ampache\Module\Api\Xml8_Data;
@@ -65,9 +67,11 @@ class ApiOutputFactoryTest extends MockeryTestCase
     {
         // the formatters are final, so the factory gets real ones built from mocked repositories
         $this->subject = new ApiOutputFactory(
+            json4Data: new Json4_Data(...$this->legacyRepositories()),
             json5Data: new Json5_Data(...$this->repositories()),
             json6Data: new Json6_Data(...$this->repositories()),
             json8Data: new Json8_Data(...$this->repositories()),
+            xml4Data: new Xml4_Data(...$this->legacyRepositories()),
             xml5Data: new Xml5_Data(...$this->repositories()),
             xml6Data: new Xml6_Data(...$this->repositories()),
             xml8Data: new Xml8_Data(...$this->repositories()),
@@ -86,6 +90,21 @@ class ApiOutputFactoryTest extends MockeryTestCase
      *     SongRepositoryInterface,
      * }
      */
+    /**
+     * The version 4 builders take a shorter list than the later ones
+     *
+     * @return array<int, mixed>
+     */
+    private function legacyRepositories(): array
+    {
+        return [
+            $this->mock(AlbumRepositoryInterface::class),
+            $this->mock(LicenseRepositoryInterface::class),
+            $this->mock(PodcastRepositoryInterface::class),
+            $this->mock(SongRepositoryInterface::class),
+        ];
+    }
+
     private function repositories(): array
     {
         return [
