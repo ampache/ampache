@@ -148,12 +148,14 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $catalogs
      */
     public function catalogs(int $apiVersion, array $catalogs, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            // the version 4 builder only ever took integer ids
+            4 => Xml4_Data::catalogs(array_map(intval(...), $catalogs)),
             // the version 5 builder only ever took integer ids
             5 => $this->xml5Data->catalogs(array_map(intval(...), $catalogs), $user),
             6 => $this->xml6Data->catalogs($catalogs, $user),
@@ -286,12 +288,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $genres
      */
     public function genres(int $apiVersion, array $genres, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Xml4_Data::tags($genres),
             5 => $this->xml5Data->genres($genres, $user),
             6 => $this->xml6Data->genres($genres, $user),
             8 => $this->xml8Data->genres($genres, $user),
@@ -367,12 +370,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $licenses
      */
     public function licenses(int $apiVersion, array $licenses, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Xml4_Data::licenses($licenses),
             5 => $this->xml5Data->licenses($licenses, $user),
             6 => $this->xml6Data->licenses($licenses, $user),
             8 => $this->xml8Data->licenses($licenses, $user),
@@ -494,12 +498,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $podcasts
      */
     public function podcasts(int $apiVersion, array $podcasts, User $user, string $auth, bool $episodes = false, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Xml4_Data::podcasts($podcasts, $user, $auth, $episodes),
             5 => $this->xml5Data->podcasts($podcasts, $user, $auth, $episodes),
             6 => $this->xml6Data->podcasts($podcasts, $user, $auth, $episodes),
             8 => $this->xml8Data->podcasts($podcasts, $user, $auth, $episodes),
@@ -617,12 +622,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $shares
      */
     public function shares(int $apiVersion, array $shares, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Xml4_Data::shares($shares, $user),
             5 => $this->xml5Data->shares($shares, $user),
             6 => $this->xml6Data->shares($shares, $user),
             8 => $this->xml8Data->shares($shares, $user),
@@ -767,12 +773,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $videos
      */
     public function videos(int $apiVersion, array $videos, User $user, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Xml4_Data::videos($videos, $user, $auth),
             5 => $this->xml5Data->videos($videos, $user, $auth),
             6 => $this->xml6Data->videos($videos, $user, $auth),
             8 => $this->xml8Data->videos($videos, $user, $auth),

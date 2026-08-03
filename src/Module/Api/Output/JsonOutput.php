@@ -144,12 +144,14 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $catalogs
      */
     public function catalogs(int $apiVersion, array $catalogs, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            // the version 4 builder only ever took integer ids
+            4 => Json4_Data::catalogs(array_map(intval(...), $catalogs)),
             // the version 5 builder only ever took integer ids
             5 => $this->json5Data->catalogs(array_map(intval(...), $catalogs), $asObject),
             6 => $this->json6Data->catalogs($catalogs, $asObject),
@@ -276,12 +278,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $genres
      */
     public function genres(int $apiVersion, array $genres, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Json4_Data::tags($genres),
             5 => $this->json5Data->genres($genres, $asObject),
             6 => $this->json6Data->genres($genres, $asObject),
             8 => $this->json8Data->genres($genres, $asObject),
@@ -358,12 +361,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $licenses
      */
     public function licenses(int $apiVersion, array $licenses, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Json4_Data::licenses($licenses),
             5 => $this->json5Data->licenses($licenses, $asObject),
             6 => $this->json6Data->licenses($licenses, $asObject),
             8 => $this->json8Data->licenses($licenses, $asObject),
@@ -489,12 +493,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $podcasts
      */
     public function podcasts(int $apiVersion, array $podcasts, User $user, string $auth, bool $episodes = false, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Json4_Data::podcasts($podcasts, $user, $auth, $episodes),
             5 => $this->json5Data->podcasts($podcasts, $user, $auth, $episodes, $asObject),
             6 => $this->json6Data->podcasts($podcasts, $user, $auth, $episodes, $asObject),
             8 => $this->json8Data->podcasts($podcasts, $user, $auth, $episodes, $asObject),
@@ -641,12 +646,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $shares
      */
     public function shares(int $apiVersion, array $shares, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Json4_Data::shares($shares, $user),
             5 => $this->json5Data->shares($shares, $user, $asObject),
             6 => $this->json6Data->shares($shares, $user, $asObject),
             8 => $this->json8Data->shares($shares, $user, $asObject),
@@ -785,12 +791,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 5|6|8 $apiVersion
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $videos
      */
     public function videos(int $apiVersion, array $videos, User $user, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            4 => Json4_Data::videos($videos, $user, $auth),
             5 => $this->json5Data->videos($videos, $user, $auth, $asObject),
             6 => $this->json6Data->videos($videos, $user, $auth, $asObject),
             8 => $this->json8Data->videos($videos, $user, $auth, $asObject),
