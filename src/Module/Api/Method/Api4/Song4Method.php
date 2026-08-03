@@ -26,47 +26,46 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Song4Method
+ * Returns a single song.
  */
-final class Song4Method
+final class Song4Method implements MethodInterface
 {
     public const string ACTION = 'song';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * song
-     * MINIMUM_API_VERSION=380001
-     *
-     * return a single song
-     *
-     * filter = (string) UID of song
-     *
-     * @param array{
-     *     filter: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function song(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $song_id = scrub_in((string) $input['filter']);
-
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::songs([(int) $song_id], $user, $input['auth']);
-                break;
-            default:
-                echo Xml4_Data::songs([(int) $song_id], $user, $input['auth']);
+            return $response;
         }
 
-        return true;
+        $results = [(int) scrub_in((string) ($input['filter'] ?? ''))];
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }
