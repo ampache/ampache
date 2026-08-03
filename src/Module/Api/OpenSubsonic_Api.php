@@ -225,6 +225,8 @@ class OpenSubsonic_Api
     private ArtistRepositoryInterface $artistRepository;
     private BookmarkRepositoryInterface $bookmarkRepository;
     private LiveStreamRepositoryInterface $liveStreamRepository;
+    private OpenSubsonic_Json_Data $openSubsonicJsonData;
+    private OpenSubsonic_Xml_Data $openSubsonicXmlData;
     private PasswordGeneratorInterface $passwordGenerator;
     private PodcastCreatorInterface $podcastCreator;
     private PodcastDeleterInterface $podcastDeleter;
@@ -247,6 +249,8 @@ class OpenSubsonic_Api
         PodcastRepositoryInterface $podcastRepository,
         PodcastSyncerInterface $podcastSyncer,
         PrivateMessageRepositoryInterface $privateMessageRepository,
+        OpenSubsonic_Json_Data $openSubsonicJsonData,
+        OpenSubsonic_Xml_Data $openSubsonicXmlData,
         ShareCreatorInterface $shareCreator,
         ShareRepositoryInterface $shareRepository,
         SongRepositoryInterface $songRepository,
@@ -262,6 +266,8 @@ class OpenSubsonic_Api
         $this->podcastRepository        = $podcastRepository;
         $this->podcastSyncer            = $podcastSyncer;
         $this->privateMessageRepository = $privateMessageRepository;
+        $this->openSubsonicJsonData     = $openSubsonicJsonData;
+        $this->openSubsonicXmlData      = $openSubsonicXmlData;
         $this->shareCreator             = $shareCreator;
         $this->shareRepository          = $shareRepository;
         $this->songRepository           = $songRepository;
@@ -740,10 +746,10 @@ class OpenSubsonic_Api
                 $playlist = new Playlist($playlistId);
                 if ($format === 'xml') {
                     $response = $this->_addXmlResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, $user, true);
+                    $response = $this->openSubsonicXmlData->addPlaylist($response, $playlist, $user, true);
                 } else {
                     $response = $this->_addJsonResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, $user, true);
+                    $response = $this->openSubsonicJsonData->addPlaylist($response, $playlist, $user, true);
                 }
                 $this->_responseOutput($input, __FUNCTION__, $response);
             } else {
@@ -877,10 +883,10 @@ class OpenSubsonic_Api
                 $format = (string) ($input['f'] ?? 'xml');
                 if ($format === 'xml') {
                     $response = $this->_addXmlResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Xml_Data::addShares($response, $shares);
+                    $response = $this->openSubsonicXmlData->addShares($response, $shares);
                 } else {
                     $response = $this->_addJsonResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Json_Data::addShares($response, $shares);
+                    $response = $this->openSubsonicJsonData->addShares($response, $shares);
                 }
                 $this->_responseOutput($input, __FUNCTION__, $response);
             } else {
@@ -1280,10 +1286,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addSonicMatches($response, $matches);
+            $response = $this->openSubsonicXmlData->addSonicMatches($response, $matches);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addSonicMatches($response, $matches);
+            $response = $this->openSubsonicJsonData->addSonicMatches($response, $matches);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1313,10 +1319,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addAlbumID3($response, $album, true);
+            $response = $this->openSubsonicXmlData->addAlbumID3($response, $album, true);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addAlbumID3($response, $album, true);
+            $response = $this->openSubsonicJsonData->addAlbumID3($response, $album, true);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1347,10 +1353,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addAlbumInfo($response, $info, $album);
+            $response = $this->openSubsonicXmlData->addAlbumInfo($response, $info, $album);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addAlbumInfo($response, $info, $album);
+            $response = $this->openSubsonicJsonData->addAlbumInfo($response, $info, $album);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1395,10 +1401,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addAlbumList($response, $albums);
+            $response = $this->openSubsonicXmlData->addAlbumList($response, $albums);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addAlbumList($response, $albums);
+            $response = $this->openSubsonicJsonData->addAlbumList($response, $albums);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1431,10 +1437,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addAlbumList2($response, $albums);
+            $response = $this->openSubsonicXmlData->addAlbumList2($response, $albums);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addAlbumList2($response, $albums);
+            $response = $this->openSubsonicJsonData->addAlbumList2($response, $albums);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1464,10 +1470,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addArtistID3($response, $artist, true);
+            $response = $this->openSubsonicXmlData->addArtistID3($response, $artist, true);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addArtistWithAlbumsID3($response, $artist);
+            $response = $this->openSubsonicJsonData->addArtistWithAlbumsID3($response, $artist);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1502,10 +1508,10 @@ class OpenSubsonic_Api
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addArtistInfo($response, $info, $artist, $similars);
+            $response = $this->openSubsonicXmlData->addArtistInfo($response, $info, $artist, $similars);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addArtistInfo($response, $info, $artist, $similars);
+            $response = $this->openSubsonicJsonData->addArtistInfo($response, $info, $artist, $similars);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1540,10 +1546,10 @@ class OpenSubsonic_Api
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addArtistInfo2($response, $info, $artist, $similars);
+            $response = $this->openSubsonicXmlData->addArtistInfo2($response, $info, $artist, $similars);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addArtistInfo2($response, $info, $artist, $similars);
+            $response = $this->openSubsonicJsonData->addArtistInfo2($response, $info, $artist, $similars);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1567,10 +1573,10 @@ class OpenSubsonic_Api
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addArtists($response, $artists);
+            $response = $this->openSubsonicXmlData->addArtists($response, $artists);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addArtists($response, $artists);
+            $response = $this->openSubsonicJsonData->addArtists($response, $artists);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1635,10 +1641,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addBookmarks($response, $bookmarks);
+            $response = $this->openSubsonicXmlData->addBookmarks($response, $bookmarks);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addBookmarks($response, $bookmarks);
+            $response = $this->openSubsonicJsonData->addBookmarks($response, $bookmarks);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1681,10 +1687,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addChatMessages($response, $messages);
+            $response = $this->openSubsonicXmlData->addChatMessages($response, $messages);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addChatMessages($response, $messages);
+            $response = $this->openSubsonicJsonData->addChatMessages($response, $messages);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1782,10 +1788,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addGenres($response, Tag::get_tags('song'));
+            $response = $this->openSubsonicXmlData->addGenres($response, Tag::get_tags('song'));
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addGenres($response, Tag::get_tags('song'));
+            $response = $this->openSubsonicJsonData->addGenres($response, Tag::get_tags('song'));
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1839,13 +1845,13 @@ class OpenSubsonic_Api
             $response = $this->_addXmlResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
                 $artists  = Catalog::get_artist_arrays($fcatalogs);
-                $response = OpenSubsonic_Xml_Data::addIndexes($response, $artists, $lastmodified);
+                $response = $this->openSubsonicXmlData->addIndexes($response, $artists, $lastmodified);
             }
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
                 $artists  = Catalog::get_artist_arrays($fcatalogs);
-                $response = OpenSubsonic_Json_Data::addIndexes($response, $artists, $lastmodified);
+                $response = $this->openSubsonicJsonData->addIndexes($response, $artists, $lastmodified);
             }
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
@@ -1864,10 +1870,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addInternetRadioStations($response, $radios);
+            $response = $this->openSubsonicXmlData->addInternetRadioStations($response, $radios);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addInternetRadioStations($response, $radios);
+            $response = $this->openSubsonicJsonData->addInternetRadioStations($response, $radios);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1886,10 +1892,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addLicense($response);
+            $response = $this->openSubsonicXmlData->addLicense($response);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addLicense($response);
+            $response = $this->openSubsonicJsonData->addLicense($response);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1940,10 +1946,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addLyrics($response, $artist, $title, $song);
+            $response = $this->openSubsonicXmlData->addLyrics($response, $artist, $title, $song);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addLyrics($response, $artist, $title, $song);
+            $response = $this->openSubsonicJsonData->addLyrics($response, $artist, $title, $song);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1978,10 +1984,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addLyricsList($response, $song, $enhanced);
+            $response = $this->openSubsonicXmlData->addLyricsList($response, $song, $enhanced);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addLyricsList($response, $song, $enhanced);
+            $response = $this->openSubsonicJsonData->addLyricsList($response, $song, $enhanced);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2019,10 +2025,10 @@ class OpenSubsonic_Api
             $format = (string) ($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = $this->_addXmlResponse(__FUNCTION__);
-                $response = OpenSubsonic_Xml_Data::addDirectory($response, $object);
+                $response = $this->openSubsonicXmlData->addDirectory($response, $object);
             } else {
                 $response = $this->_addJsonResponse(__FUNCTION__);
-                $response = OpenSubsonic_Json_Data::addDirectory($response, $object);
+                $response = $this->openSubsonicJsonData->addDirectory($response, $object);
             }
             $this->_responseOutput($input, __FUNCTION__, $response);
         } else {
@@ -2043,10 +2049,10 @@ class OpenSubsonic_Api
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addMusicFolders($response, $catalogs);
+            $response = $this->openSubsonicXmlData->addMusicFolders($response, $catalogs);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addMusicFolders($response, $catalogs);
+            $response = $this->openSubsonicJsonData->addMusicFolders($response, $catalogs);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2072,10 +2078,10 @@ class OpenSubsonic_Api
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addNewestPodcasts($response, $episodes);
+            $response = $this->openSubsonicXmlData->addNewestPodcasts($response, $episodes);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addNewestPodcasts($response, $episodes);
+            $response = $this->openSubsonicJsonData->addNewestPodcasts($response, $episodes);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2094,10 +2100,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addNowPlaying($response, $data);
+            $response = $this->openSubsonicXmlData->addNowPlaying($response, $data);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addNowPlaying($response, $data);
+            $response = $this->openSubsonicJsonData->addNowPlaying($response, $data);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2135,10 +2141,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addOpenSubsonicExtensions($response, $extensions);
+            $response = $this->openSubsonicXmlData->addOpenSubsonicExtensions($response, $extensions);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addOpenSubsonicExtensions($response, $extensions);
+            $response = $this->openSubsonicJsonData->addOpenSubsonicExtensions($response, $extensions);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2170,10 +2176,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, $user, true);
+            $response = $this->openSubsonicXmlData->addPlaylist($response, $playlist, $user, true);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, $user, true);
+            $response = $this->openSubsonicJsonData->addPlaylist($response, $playlist, $user, true);
         }
 
         $this->_responseOutput($input, __FUNCTION__, $response);
@@ -2213,10 +2219,10 @@ class OpenSubsonic_Api
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addPlaylists($response, $user, $results);
+            $response = $this->openSubsonicXmlData->addPlaylists($response, $user, $results);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addPlaylists($response, $user, $results);
+            $response = $this->openSubsonicJsonData->addPlaylists($response, $user, $results);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2236,10 +2242,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addPlayQueue($response, $playQueue, (string) $user->username);
+            $response = $this->openSubsonicXmlData->addPlayQueue($response, $playQueue, (string) $user->username);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addPlayQueue($response, $playQueue, (string) $user->username);
+            $response = $this->openSubsonicJsonData->addPlayQueue($response, $playQueue, (string) $user->username);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2259,10 +2265,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addPlayQueueByIndex($response, $playQueue, (string) $user->username);
+            $response = $this->openSubsonicXmlData->addPlayQueueByIndex($response, $playQueue, (string) $user->username);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addPlayQueueByIndex($response, $playQueue, (string) $user->username);
+            $response = $this->openSubsonicJsonData->addPlayQueueByIndex($response, $playQueue, (string) $user->username);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2298,10 +2304,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addPodcastEpisode($response, $episode);
+            $response = $this->openSubsonicXmlData->addPodcastEpisode($response, $episode);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addPodcastEpisode($response, $episode);
+            $response = $this->openSubsonicJsonData->addPodcastEpisode($response, $episode);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2341,10 +2347,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
+            $response = $this->openSubsonicXmlData->addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
+            $response = $this->openSubsonicJsonData->addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2422,10 +2428,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addRandomSongs($response, $songs);
+            $response = $this->openSubsonicXmlData->addRandomSongs($response, $songs);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addRandomSongs($response, $songs);
+            $response = $this->openSubsonicJsonData->addRandomSongs($response, $songs);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2442,10 +2448,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addScanStatus($response, $user);
+            $response = $this->openSubsonicXmlData->addScanStatus($response, $user);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addScanStatus($response, $user);
+            $response = $this->openSubsonicJsonData->addScanStatus($response, $user);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2463,10 +2469,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addShares($response, $shares);
+            $response = $this->openSubsonicXmlData->addShares($response, $shares);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addShares($response, $shares);
+            $response = $this->openSubsonicJsonData->addShares($response, $shares);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2536,20 +2542,20 @@ class OpenSubsonic_Api
             $response = $this->_addXmlResponse(__FUNCTION__);
             switch ($elementName) {
                 case 'similarSongs':
-                    $response = OpenSubsonic_Xml_Data::addSimilarSongs($response, $songs);
+                    $response = $this->openSubsonicXmlData->addSimilarSongs($response, $songs);
                     break;
                 case 'similarSongs2':
-                    $response = OpenSubsonic_Xml_Data::addSimilarSongs2($response, $songs);
+                    $response = $this->openSubsonicXmlData->addSimilarSongs2($response, $songs);
                     break;
             }
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
             switch ($elementName) {
                 case 'similarSongs':
-                    $response = OpenSubsonic_Json_Data::addSimilarSongs($response, $songs);
+                    $response = $this->openSubsonicJsonData->addSimilarSongs($response, $songs);
                     break;
                 case 'similarSongs2':
-                    $response = OpenSubsonic_Json_Data::addSimilarSongs2($response, $songs);
+                    $response = $this->openSubsonicJsonData->addSimilarSongs2($response, $songs);
                     break;
             }
         }
@@ -2600,10 +2606,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addSong($response, $song);
+            $response = $this->openSubsonicXmlData->addSong($response, $song);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addSong($response, $song_id);
+            $response = $this->openSubsonicJsonData->addSong($response, $song_id);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2636,10 +2642,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addSongsByGenre($response, $songs);
+            $response = $this->openSubsonicXmlData->addSongsByGenre($response, $songs);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addSongsByGenre($response, $songs);
+            $response = $this->openSubsonicJsonData->addSongsByGenre($response, $songs);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2676,10 +2682,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addSonicMatches($response, $matches);
+            $response = $this->openSubsonicXmlData->addSonicMatches($response, $matches);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addSonicMatches($response, $matches);
+            $response = $this->openSubsonicJsonData->addSonicMatches($response, $matches);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2708,13 +2714,13 @@ class OpenSubsonic_Api
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
             $response = ($elementName === 'starred2')
-                ? OpenSubsonic_Xml_Data::addStarred2($response, $artists, $albums, $songs)
-                : OpenSubsonic_Xml_Data::addStarred($response, $artists, $albums, $songs);
+                ? $this->openSubsonicXmlData->addStarred2($response, $artists, $albums, $songs)
+                : $this->openSubsonicXmlData->addStarred($response, $artists, $albums, $songs);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
             $response = ($elementName === 'starred2')
-                ? OpenSubsonic_Json_Data::addStarred2($response, $artists, $albums, $songs)
-                : OpenSubsonic_Json_Data::addStarred($response, $artists, $albums, $songs);
+                ? $this->openSubsonicJsonData->addStarred2($response, $artists, $albums, $songs)
+                : $this->openSubsonicJsonData->addStarred($response, $artists, $albums, $songs);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2776,10 +2782,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addTopSongs($response, $songs);
+            $response = $this->openSubsonicXmlData->addTopSongs($response, $songs);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addTopSongs($response, $songs);
+            $response = $this->openSubsonicJsonData->addTopSongs($response, $songs);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2817,10 +2823,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addTranscodeDecision($response, $decision);
+            $response = $this->openSubsonicXmlData->addTranscodeDecision($response, $decision);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addTranscodeDecision($response, $decision);
+            $response = $this->openSubsonicJsonData->addTranscodeDecision($response, $decision);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2903,10 +2909,10 @@ class OpenSubsonic_Api
                 $format = (string) ($input['f'] ?? 'xml');
                 if ($format === 'xml') {
                     $response = $this->_addXmlResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Xml_Data::addUser($response, $update_user);
+                    $response = $this->openSubsonicXmlData->addUser($response, $update_user);
                 } else {
                     $response = $this->_addJsonResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Json_Data::addUser($response, $update_user);
+                    $response = $this->openSubsonicJsonData->addUser($response, $update_user);
                 }
                 $this->_responseOutput($input, __FUNCTION__, $response);
             }
@@ -2934,10 +2940,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addUsers($response, $users);
+            $response = $this->openSubsonicXmlData->addUsers($response, $users);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addUsers($response, $users);
+            $response = $this->openSubsonicJsonData->addUsers($response, $users);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2967,10 +2973,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addVideoInfo($response, $video_id);
+            $response = $this->openSubsonicXmlData->addVideoInfo($response, $video_id);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addVideoInfo($response, $video_id);
+            $response = $this->openSubsonicJsonData->addVideoInfo($response, $video_id);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2990,10 +2996,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addVideos($response, $videos);
+            $response = $this->openSubsonicXmlData->addVideos($response, $videos);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addVideos($response, $videos);
+            $response = $this->openSubsonicJsonData->addVideos($response, $videos);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3027,10 +3033,10 @@ class OpenSubsonic_Api
             $format = (string) ($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = $this->_addXmlResponse(__FUNCTION__);
-                $response = OpenSubsonic_Xml_Data::addUser($response, $update_user);
+                $response = $this->openSubsonicXmlData->addUser($response, $update_user);
             } else {
                 $response = $this->_addJsonResponse(__FUNCTION__);
-                $response = OpenSubsonic_Json_Data::addUser($response, $update_user);
+                $response = $this->openSubsonicJsonData->addUser($response, $update_user);
             }
             $this->_responseOutput($input, __FUNCTION__, $response);
         }
@@ -3198,16 +3204,16 @@ class OpenSubsonic_Api
             if ($format === 'xml') {
                 $response = $this->_addXmlResponse(__FUNCTION__);
                 if ($action == 'get') {
-                    $response = OpenSubsonic_Xml_Data::addJukeboxPlaylist($response, $localplay);
+                    $response = $this->openSubsonicXmlData->addJukeboxPlaylist($response, $localplay);
                 } else {
-                    $response = OpenSubsonic_Xml_Data::addJukeboxStatus($response, $localplay);
+                    $response = $this->openSubsonicXmlData->addJukeboxStatus($response, $localplay);
                 }
             } else {
                 $response = $this->_addJsonResponse(__FUNCTION__);
                 if ($action == 'get') {
-                    $response = OpenSubsonic_Json_Data::addJukeboxPlaylist($response, $localplay);
+                    $response = $this->openSubsonicJsonData->addJukeboxPlaylist($response, $localplay);
                 } else {
-                    $response = OpenSubsonic_Json_Data::addJukeboxStatus($response, $localplay);
+                    $response = $this->openSubsonicJsonData->addJukeboxStatus($response, $localplay);
                 }
             }
             $this->_responseOutput($input, __FUNCTION__, $response);
@@ -3627,10 +3633,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addSearchResult($response, $results, $offset, $total);
+            $response = $this->openSubsonicXmlData->addSearchResult($response, $results, $offset, $total);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addSearchResult($response, $results, $offset, $total);
+            $response = $this->openSubsonicJsonData->addSearchResult($response, $results, $offset, $total);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3650,10 +3656,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = $this->openSubsonicXmlData->addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = $this->openSubsonicJsonData->addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3673,10 +3679,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = $this->openSubsonicXmlData->addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = $this->openSubsonicJsonData->addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3738,10 +3744,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addScanStatus($response, $user);
+            $response = $this->openSubsonicXmlData->addScanStatus($response, $user);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addScanStatus($response, $user);
+            $response = $this->openSubsonicJsonData->addScanStatus($response, $user);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3805,10 +3811,10 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addTokenInfo($response, $user);
+            $response = $this->openSubsonicXmlData->addTokenInfo($response, $user);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addTokenInfo($response, $user);
+            $response = $this->openSubsonicJsonData->addTokenInfo($response, $user);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -4037,7 +4043,7 @@ class OpenSubsonic_Api
      */
     private function _addJsonResponse(string $function): array
     {
-        return OpenSubsonic_Json_Data::addResponse($function);
+        return $this->openSubsonicJsonData->addResponse($function);
     }
 
     /**
@@ -4048,7 +4054,7 @@ class OpenSubsonic_Api
      */
     private function _addXmlResponse(string $function): SimpleXMLElement
     {
-        return OpenSubsonic_Xml_Data::addResponse($function);
+        return $this->openSubsonicXmlData->addResponse($function);
     }
 
     /**
@@ -4163,14 +4169,14 @@ class OpenSubsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         switch ($format) {
             case 'json':
-                $this->_jsonOutput(OpenSubsonic_Json_Data::addError($errorCode, $function));
+                $this->_jsonOutput($this->openSubsonicJsonData->addError($errorCode, $function));
                 break;
             case 'jsonp':
                 $callback = (string) ($input['callback'] ?? 'jsonp');
-                $this->_jsonpOutput(OpenSubsonic_Json_Data::addError($errorCode, $function), $callback);
+                $this->_jsonpOutput($this->openSubsonicJsonData->addError($errorCode, $function), $callback);
                 break;
             default:
-                $this->_xmlOutput(OpenSubsonic_Xml_Data::addError($errorCode, $function));
+                $this->_xmlOutput($this->openSubsonicXmlData->addError($errorCode, $function));
                 break;
         }
     }
@@ -4291,7 +4297,7 @@ class OpenSubsonic_Api
     {
         $output = json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         if (!$output) {
-            $output = json_encode(OpenSubsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
+            $output = json_encode($this->openSubsonicJsonData->addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
         header("Content-type: application/json; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
@@ -4307,7 +4313,7 @@ class OpenSubsonic_Api
     {
         $output = json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         if ($output === false) {
-            $output = json_encode(OpenSubsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
+            $output = json_encode($this->openSubsonicJsonData->addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
         header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset', 'UTF-8'));

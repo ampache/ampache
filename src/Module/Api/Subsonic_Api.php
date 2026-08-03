@@ -224,6 +224,8 @@ class Subsonic_Api
     private ShareCreatorInterface $shareCreator;
     private ShareRepositoryInterface $shareRepository;
     private SongRepositoryInterface $songRepository;
+    private Subsonic_Json_Data $subsonicJsonData;
+    private Subsonic_Xml_Data $subsonicXmlData;
     private UserRepositoryInterface $userRepository;
 
     public function __construct(
@@ -240,6 +242,8 @@ class Subsonic_Api
         ShareCreatorInterface $shareCreator,
         ShareRepositoryInterface $shareRepository,
         SongRepositoryInterface $songRepository,
+        Subsonic_Json_Data $subsonicJsonData,
+        Subsonic_Xml_Data $subsonicXmlData,
         UserRepositoryInterface $userRepository,
     ) {
         $this->albumRepository          = $albumRepository;
@@ -255,6 +259,8 @@ class Subsonic_Api
         $this->shareCreator             = $shareCreator;
         $this->shareRepository          = $shareRepository;
         $this->songRepository           = $songRepository;
+        $this->subsonicJsonData         = $subsonicJsonData;
+        $this->subsonicXmlData          = $subsonicXmlData;
         $this->userRepository           = $userRepository;
     }
 
@@ -730,10 +736,10 @@ class Subsonic_Api
                 $playlist = new Playlist($playlistId);
                 if ($format === 'xml') {
                     $response = $this->_addXmlResponse(__FUNCTION__);
-                    $response = Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
+                    $response = $this->subsonicXmlData->addPlaylist($response, $playlist, true);
                 } else {
                     $response = $this->_addJsonResponse(__FUNCTION__);
-                    $response = Subsonic_Json_Data::addPlaylist($response, $playlist, true);
+                    $response = $this->subsonicJsonData->addPlaylist($response, $playlist, true);
                 }
                 $this->_responseOutput($input, __FUNCTION__, $response);
             } else {
@@ -863,10 +869,10 @@ class Subsonic_Api
                 $format = (string) ($input['f'] ?? 'xml');
                 if ($format === 'xml') {
                     $response = $this->_addXmlResponse(__FUNCTION__);
-                    $response = Subsonic_Xml_Data::addShares($response, $shares);
+                    $response = $this->subsonicXmlData->addShares($response, $shares);
                 } else {
                     $response = $this->_addJsonResponse(__FUNCTION__);
-                    $response = Subsonic_Json_Data::addShares($response, $shares);
+                    $response = $this->subsonicJsonData->addShares($response, $shares);
                 }
                 $this->_responseOutput($input, __FUNCTION__, $response);
             } else {
@@ -1248,10 +1254,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addAlbumID3($response, $album, true);
+            $response = $this->subsonicXmlData->addAlbumID3($response, $album, true);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addAlbumID3($response, $album, true);
+            $response = $this->subsonicJsonData->addAlbumID3($response, $album, true);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1282,10 +1288,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addAlbumInfo($response, $info, $album);
+            $response = $this->subsonicXmlData->addAlbumInfo($response, $info, $album);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addAlbumInfo($response, $info, $album);
+            $response = $this->subsonicJsonData->addAlbumInfo($response, $info, $album);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1330,10 +1336,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addAlbumList($response, $albums);
+            $response = $this->subsonicXmlData->addAlbumList($response, $albums);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addAlbumList($response, $albums);
+            $response = $this->subsonicJsonData->addAlbumList($response, $albums);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1366,10 +1372,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addAlbumList2($response, $albums);
+            $response = $this->subsonicXmlData->addAlbumList2($response, $albums);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addAlbumList2($response, $albums);
+            $response = $this->subsonicJsonData->addAlbumList2($response, $albums);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1399,10 +1405,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addArtistID3($response, $artist, true);
+            $response = $this->subsonicXmlData->addArtistID3($response, $artist, true);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addArtistWithAlbumsID3($response, $artist);
+            $response = $this->subsonicJsonData->addArtistWithAlbumsID3($response, $artist);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1437,10 +1443,10 @@ class Subsonic_Api
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addArtistInfo($response, $info, $artist, $similars);
+            $response = $this->subsonicXmlData->addArtistInfo($response, $info, $artist, $similars);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addArtistInfo($response, $info, $artist, $similars);
+            $response = $this->subsonicJsonData->addArtistInfo($response, $info, $artist, $similars);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1475,10 +1481,10 @@ class Subsonic_Api
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addArtistInfo2($response, $info, $artist, $similars);
+            $response = $this->subsonicXmlData->addArtistInfo2($response, $info, $artist, $similars);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addArtistInfo2($response, $info, $artist, $similars);
+            $response = $this->subsonicJsonData->addArtistInfo2($response, $info, $artist, $similars);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1502,10 +1508,10 @@ class Subsonic_Api
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addArtists($response, $artists);
+            $response = $this->subsonicXmlData->addArtists($response, $artists);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addArtists($response, $artists);
+            $response = $this->subsonicJsonData->addArtists($response, $artists);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1570,10 +1576,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addBookmarks($response, $bookmarks);
+            $response = $this->subsonicXmlData->addBookmarks($response, $bookmarks);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addBookmarks($response, $bookmarks);
+            $response = $this->subsonicJsonData->addBookmarks($response, $bookmarks);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1616,10 +1622,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addChatMessages($response, $messages);
+            $response = $this->subsonicXmlData->addChatMessages($response, $messages);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addChatMessages($response, $messages);
+            $response = $this->subsonicJsonData->addChatMessages($response, $messages);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1717,10 +1723,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addGenres($response, Tag::get_tags('song'));
+            $response = $this->subsonicXmlData->addGenres($response, Tag::get_tags('song'));
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addGenres($response, Tag::get_tags('song'));
+            $response = $this->subsonicJsonData->addGenres($response, Tag::get_tags('song'));
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1774,13 +1780,13 @@ class Subsonic_Api
             $response = $this->_addXmlResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
                 $artists  = Catalog::get_artist_arrays($fcatalogs);
-                $response = Subsonic_Xml_Data::addIndexes($response, $artists, $lastmodified);
+                $response = $this->subsonicXmlData->addIndexes($response, $artists, $lastmodified);
             }
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
                 $artists  = Catalog::get_artist_arrays($fcatalogs);
-                $response = Subsonic_Json_Data::addIndexes($response, $artists, $lastmodified);
+                $response = $this->subsonicJsonData->addIndexes($response, $artists, $lastmodified);
             }
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
@@ -1799,10 +1805,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addInternetRadioStations($response, $radios);
+            $response = $this->subsonicXmlData->addInternetRadioStations($response, $radios);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addInternetRadioStations($response, $radios);
+            $response = $this->subsonicJsonData->addInternetRadioStations($response, $radios);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1821,10 +1827,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addLicense($response);
+            $response = $this->subsonicXmlData->addLicense($response);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addLicense($response);
+            $response = $this->subsonicJsonData->addLicense($response);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1875,10 +1881,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addLyrics($response, $artist, $title, $song);
+            $response = $this->subsonicXmlData->addLyrics($response, $artist, $title, $song);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addLyrics($response, $artist, $title, $song);
+            $response = $this->subsonicJsonData->addLyrics($response, $artist, $title, $song);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1927,10 +1933,10 @@ class Subsonic_Api
             $format = (string) ($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = $this->_addXmlResponse(__FUNCTION__);
-                $response = Subsonic_Xml_Data::addDirectory($response, $object);
+                $response = $this->subsonicXmlData->addDirectory($response, $object);
             } else {
                 $response = $this->_addJsonResponse(__FUNCTION__);
-                $response = Subsonic_Json_Data::addDirectory($response, $object);
+                $response = $this->subsonicJsonData->addDirectory($response, $object);
             }
             $this->_responseOutput($input, __FUNCTION__, $response);
         } else {
@@ -1951,10 +1957,10 @@ class Subsonic_Api
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addMusicFolders($response, $catalogs);
+            $response = $this->subsonicXmlData->addMusicFolders($response, $catalogs);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addMusicFolders($response, $catalogs);
+            $response = $this->subsonicJsonData->addMusicFolders($response, $catalogs);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1980,10 +1986,10 @@ class Subsonic_Api
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addNewestPodcasts($response, $episodes);
+            $response = $this->subsonicXmlData->addNewestPodcasts($response, $episodes);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addNewestPodcasts($response, $episodes);
+            $response = $this->subsonicJsonData->addNewestPodcasts($response, $episodes);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2002,10 +2008,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addNowPlaying($response, $data);
+            $response = $this->subsonicXmlData->addNowPlaying($response, $data);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addNowPlaying($response, $data);
+            $response = $this->subsonicJsonData->addNowPlaying($response, $data);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2049,10 +2055,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
+            $response = $this->subsonicXmlData->addPlaylist($response, $playlist, true);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPlaylist($response, $playlist, true);
+            $response = $this->subsonicJsonData->addPlaylist($response, $playlist, true);
         }
 
         $this->_responseOutput($input, __FUNCTION__, $response);
@@ -2092,10 +2098,10 @@ class Subsonic_Api
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPlaylists($response, $user, $results);
+            $response = $this->subsonicXmlData->addPlaylists($response, $user, $results);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPlaylists($response, $user, $results);
+            $response = $this->subsonicJsonData->addPlaylists($response, $user, $results);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2115,10 +2121,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPlayQueue($response, $playQueue, (string) $user->username);
+            $response = $this->subsonicXmlData->addPlayQueue($response, $playQueue, (string) $user->username);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPlayQueue($response, $playQueue, (string) $user->username);
+            $response = $this->subsonicJsonData->addPlayQueue($response, $playQueue, (string) $user->username);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2180,10 +2186,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
+            $response = $this->subsonicXmlData->addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
+            $response = $this->subsonicJsonData->addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2261,10 +2267,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addRandomSongs($response, $songs);
+            $response = $this->subsonicXmlData->addRandomSongs($response, $songs);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addRandomSongs($response, $songs);
+            $response = $this->subsonicJsonData->addRandomSongs($response, $songs);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2281,10 +2287,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addScanStatus($response, $user);
+            $response = $this->subsonicXmlData->addScanStatus($response, $user);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addScanStatus($response, $user);
+            $response = $this->subsonicJsonData->addScanStatus($response, $user);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2302,10 +2308,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addShares($response, $shares);
+            $response = $this->subsonicXmlData->addShares($response, $shares);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addShares($response, $shares);
+            $response = $this->subsonicJsonData->addShares($response, $shares);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2375,20 +2381,20 @@ class Subsonic_Api
             $response = $this->_addXmlResponse(__FUNCTION__);
             switch ($elementName) {
                 case 'similarSongs':
-                    $response = Subsonic_Xml_Data::addSimilarSongs($response, $songs);
+                    $response = $this->subsonicXmlData->addSimilarSongs($response, $songs);
                     break;
                 case 'similarSongs2':
-                    $response = Subsonic_Xml_Data::addSimilarSongs2($response, $songs);
+                    $response = $this->subsonicXmlData->addSimilarSongs2($response, $songs);
                     break;
             }
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
             switch ($elementName) {
                 case 'similarSongs':
-                    $response = Subsonic_Json_Data::addSimilarSongs($response, $songs);
+                    $response = $this->subsonicJsonData->addSimilarSongs($response, $songs);
                     break;
                 case 'similarSongs2':
-                    $response = Subsonic_Json_Data::addSimilarSongs2($response, $songs);
+                    $response = $this->subsonicJsonData->addSimilarSongs2($response, $songs);
                     break;
             }
         }
@@ -2439,10 +2445,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSong($response, $song);
+            $response = $this->subsonicXmlData->addSong($response, $song);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addSong($response, $song_id);
+            $response = $this->subsonicJsonData->addSong($response, $song_id);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2475,10 +2481,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSongsByGenre($response, $songs);
+            $response = $this->subsonicXmlData->addSongsByGenre($response, $songs);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addSongsByGenre($response, $songs);
+            $response = $this->subsonicJsonData->addSongsByGenre($response, $songs);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2507,13 +2513,13 @@ class Subsonic_Api
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
             $response = ($elementName === 'starred2')
-                ? Subsonic_Xml_Data::addStarred2($response, $artists, $albums, $songs)
-                : Subsonic_Xml_Data::addStarred($response, $artists, $albums, $songs);
+                ? $this->subsonicXmlData->addStarred2($response, $artists, $albums, $songs)
+                : $this->subsonicXmlData->addStarred($response, $artists, $albums, $songs);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
             $response = ($elementName === 'starred2')
-                ? Subsonic_Json_Data::addStarred2($response, $artists, $albums, $songs)
-                : Subsonic_Json_Data::addStarred($response, $artists, $albums, $songs);
+                ? $this->subsonicJsonData->addStarred2($response, $artists, $albums, $songs)
+                : $this->subsonicJsonData->addStarred($response, $artists, $albums, $songs);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2561,10 +2567,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addTopSongs($response, $songs);
+            $response = $this->subsonicXmlData->addTopSongs($response, $songs);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addTopSongs($response, $songs);
+            $response = $this->subsonicJsonData->addTopSongs($response, $songs);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2595,10 +2601,10 @@ class Subsonic_Api
                 $format = (string) ($input['f'] ?? 'xml');
                 if ($format === 'xml') {
                     $response = $this->_addXmlResponse(__FUNCTION__);
-                    $response = Subsonic_Xml_Data::addUser($response, $update_user);
+                    $response = $this->subsonicXmlData->addUser($response, $update_user);
                 } else {
                     $response = $this->_addJsonResponse(__FUNCTION__);
-                    $response = Subsonic_Json_Data::addUser($response, $update_user);
+                    $response = $this->subsonicJsonData->addUser($response, $update_user);
                 }
                 $this->_responseOutput($input, __FUNCTION__, $response);
             }
@@ -2626,10 +2632,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addUsers($response, $users);
+            $response = $this->subsonicXmlData->addUsers($response, $users);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addUsers($response, $users);
+            $response = $this->subsonicJsonData->addUsers($response, $users);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2659,10 +2665,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addVideoInfo($response, $video_id);
+            $response = $this->subsonicXmlData->addVideoInfo($response, $video_id);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addVideoInfo($response, $video_id);
+            $response = $this->subsonicJsonData->addVideoInfo($response, $video_id);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2682,10 +2688,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addVideos($response, $videos);
+            $response = $this->subsonicXmlData->addVideos($response, $videos);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addVideos($response, $videos);
+            $response = $this->subsonicJsonData->addVideos($response, $videos);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2719,10 +2725,10 @@ class Subsonic_Api
             $format = (string) ($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = $this->_addXmlResponse(__FUNCTION__);
-                $response = Subsonic_Xml_Data::addUser($response, $update_user);
+                $response = $this->subsonicXmlData->addUser($response, $update_user);
             } else {
                 $response = $this->_addJsonResponse(__FUNCTION__);
-                $response = Subsonic_Json_Data::addUser($response, $update_user);
+                $response = $this->subsonicJsonData->addUser($response, $update_user);
             }
             $this->_responseOutput($input, __FUNCTION__, $response);
         }
@@ -2890,16 +2896,16 @@ class Subsonic_Api
             if ($format === 'xml') {
                 $response = $this->_addXmlResponse(__FUNCTION__);
                 if ($action == 'get') {
-                    $response = Subsonic_Xml_Data::addJukeboxPlaylist($response, $localplay);
+                    $response = $this->subsonicXmlData->addJukeboxPlaylist($response, $localplay);
                 } else {
-                    $response = Subsonic_Xml_Data::addJukeboxStatus($response, $localplay);
+                    $response = $this->subsonicXmlData->addJukeboxStatus($response, $localplay);
                 }
             } else {
                 $response = $this->_addJsonResponse(__FUNCTION__);
                 if ($action == 'get') {
-                    $response = Subsonic_Json_Data::addJukeboxPlaylist($response, $localplay);
+                    $response = $this->subsonicJsonData->addJukeboxPlaylist($response, $localplay);
                 } else {
-                    $response = Subsonic_Json_Data::addJukeboxStatus($response, $localplay);
+                    $response = $this->subsonicJsonData->addJukeboxStatus($response, $localplay);
                 }
             }
             $this->_responseOutput($input, __FUNCTION__, $response);
@@ -3169,10 +3175,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSearchResult($response, $results, $offset, $total);
+            $response = $this->subsonicXmlData->addSearchResult($response, $results, $offset, $total);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addSearchResult($response, $results, $offset, $total);
+            $response = $this->subsonicJsonData->addSearchResult($response, $results, $offset, $total);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3192,10 +3198,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = $this->subsonicXmlData->addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = $this->subsonicJsonData->addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3222,10 +3228,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = $this->subsonicXmlData->addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = $this->subsonicJsonData->addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3287,10 +3293,10 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addScanStatus($response, $user);
+            $response = $this->subsonicXmlData->addScanStatus($response, $user);
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addScanStatus($response, $user);
+            $response = $this->subsonicJsonData->addScanStatus($response, $user);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3581,7 +3587,7 @@ class Subsonic_Api
      */
     private function _addJsonResponse(string $function): array
     {
-        return Subsonic_Json_Data::addResponse($function);
+        return $this->subsonicJsonData->addResponse($function);
     }
 
     /**
@@ -3591,7 +3597,7 @@ class Subsonic_Api
      */
     private function _addXmlResponse(string $function): SimpleXMLElement
     {
-        return Subsonic_Xml_Data::addResponse($function);
+        return $this->subsonicXmlData->addResponse($function);
     }
 
     /**
@@ -3705,14 +3711,14 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         switch ($format) {
             case 'json':
-                $this->_jsonOutput(Subsonic_Json_Data::addError($errorCode, $function));
+                $this->_jsonOutput($this->subsonicJsonData->addError($errorCode, $function));
                 break;
             case 'jsonp':
                 $callback = (string) ($input['callback'] ?? 'jsonp');
-                $this->_jsonpOutput(Subsonic_Json_Data::addError($errorCode, $function), $callback);
+                $this->_jsonpOutput($this->subsonicJsonData->addError($errorCode, $function), $callback);
                 break;
             default:
-                $this->_xmlOutput(Subsonic_Xml_Data::addError($errorCode, $function));
+                $this->_xmlOutput($this->subsonicXmlData->addError($errorCode, $function));
                 break;
         }
     }
@@ -3811,7 +3817,7 @@ class Subsonic_Api
     {
         $output = json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         if (!$output) {
-            $output = json_encode(Subsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
+            $output = json_encode($this->subsonicJsonData->addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
         header("Content-type: application/json; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
@@ -3827,7 +3833,7 @@ class Subsonic_Api
     {
         $output = json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         if ($output === false) {
-            $output = json_encode(Subsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
+            $output = json_encode($this->subsonicJsonData->addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
         header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
