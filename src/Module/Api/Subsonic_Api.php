@@ -861,7 +861,7 @@ class Subsonic_Api
                 $object_type = '';
             }
 
-            if (!empty($object_type) && !empty($sub_id)) {
+            if (!empty($object_type) && !empty($sub_id) && !$object->isNew()) {
                 $share = $this->shareCreator->create(
                     $user,
                     LibraryItemEnum::from($object_type),
