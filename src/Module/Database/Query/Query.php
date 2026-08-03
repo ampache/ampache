@@ -227,6 +227,7 @@ class Query
                 return SongPreviewQuery::FILTERS;
             case 'song':
                 return SongQuery::FILTERS;
+            case 'genre':
             case 'tag_hidden':
             case 'tag':
                 return TagQuery::FILTERS;
@@ -939,6 +940,7 @@ class Query
             case 'song':
                 $this->queryType = new SongQuery();
                 break;
+            case 'genre':
             case 'tag_hidden':
             case 'tag':
                 $this->queryType = new TagQuery();
@@ -1098,11 +1100,14 @@ class Query
                 case 'song_album':
                 case 'song_artist':
                 case 'song':
+                case 'genre':
                 case 'tag':
                 case 'video':
+                    // `genre` is the row-list view of the `tag` table, so it takes the same filter
+                    $filter_type = ($type === 'genre') ? 'tag' : $type;
                     $sql .= ($sql == "WHERE")
-                        ? ' ' . Catalog::get_user_filter($type, $this->user_id ?? -1)
-                        : Catalog::get_user_filter($type, $this->user_id ?? -1);
+                        ? ' ' . Catalog::get_user_filter($filter_type, $this->user_id ?? -1)
+                        : Catalog::get_user_filter($filter_type, $this->user_id ?? -1);
                     break;
             }
         }
@@ -1392,7 +1397,7 @@ class Query
             if (in_array($this->get_type(), ['license_hidden', 'tag_hidden'])) {
                 $this->set_filter('hidden', 1);
             }
-            if (in_array($this->get_type(), ['license', 'tag'])) {
+            if (in_array($this->get_type(), ['genre', 'license', 'tag'])) {
                 $this->set_filter('hidden', 0);
             }
 

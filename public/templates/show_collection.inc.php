@@ -132,6 +132,10 @@ if ($collection->has_access()) { ?>
     $pinnedType = ($collection->object_type === null || $collection->object_type === '')
         ? null
         : Collection::normalizeType($collection->object_type);
+    // the `tag` browse is the tag cloud, which can neither take a list of ids nor keep the curated order
+    if ($pinnedType === 'tag') {
+        $pinnedType = 'genre';
+    }
 
     $browse = $browseFactory->create();
     $browse->set_use_filters(false);

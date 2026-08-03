@@ -88,6 +88,7 @@ class Browse extends Query
         'democratic',
         'folder',
         'follower',
+        'genre',
         'label',
         'license_hidden',
         'license',
@@ -670,6 +671,7 @@ class Browse extends Query
                 case 'playlist':
                     Playlist::build_cache($this->_squashList($object_ids));
                     break;
+                case 'genre':
                 case 'tag':
                 case 'tag_hidden':
                     Tag::build_cache($this->_squashList($object_ids));
@@ -854,6 +856,12 @@ class Browse extends Query
                 }
 
                 $box_req = Ui::find_template('show_manage_shoutbox.inc.php');
+                break;
+            case 'genre':
+                // the same rows the tag cloud draws from, listed instead of clouded
+                $browse->set_grid_view(false);
+                $box_title = $this->get_title(T_('Genres') . $match);
+                $box_req   = Ui::find_template('show_genres.inc.php');
                 break;
             case 'tag':
                 $box_title = $this->get_title(T_('Genres'));

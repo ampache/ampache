@@ -41,13 +41,15 @@ class Tag extends database_object implements library_item, displayable_item, con
 {
     protected const string DB_TABLENAME = 'tag';
 
-    public int $album     = 0;
-    public int $artist    = 0;
-    public int $id        = 0;
-    public int $is_hidden = 0;
-    public ?string $name  = null;
-    public int $song      = 0;
-    public int $video     = 0;
+    public int $album       = 0;
+    public int $artist      = 0;
+    public int $id          = 0;
+    public int $is_hidden   = 0;
+    public ?string $name    = null;
+    public int $song        = 0;
+    public int $video       = 0;
+    private ?string $f_link = null;
+    private ?string $link   = null;
 
     /**
      * constructor
@@ -560,7 +562,12 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public function get_f_link(?string $title = null): string
     {
-        return '';
+        // don't do anything if it's formatted
+        if ($this->f_link === null) {
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($title ?? $this->get_fullname()) . "</a>";
+        }
+
+        return $this->f_link;
     }
 
     /**
@@ -607,7 +614,12 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public function get_link(): string
     {
-        return '';
+        // don't do anything if it's formatted
+        if ($this->link === null) {
+            $this->link = AmpConfig::get_web_path() . '/browse.php?action=tag&show_tag=' . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
