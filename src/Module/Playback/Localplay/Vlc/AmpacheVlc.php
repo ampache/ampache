@@ -224,12 +224,12 @@ class AmpacheVlc extends localplay_controller
                     $data['link'] = $song->get_f_link();
                     break;
                 case 'demo_id':
-                    $democratic   = new Democratic($url_data['demo_id']);
+                    $democratic   = new Democratic((int) $url_data['demo_id']);
                     $data['name'] = T_('Democratic') . ' - ' . $democratic->name;
                     $data['link'] = '';
                     break;
                 case 'random':
-                    $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst((string) $url_data['type']));
+                    $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst((string) $url_data['random_type']));
                     $data['link'] = '';
                     break;
                 default:
