@@ -29,10 +29,14 @@ use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
 
 final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInterface
 {
-    public function __construct(private readonly ConfigContainerInterface $configContainer) {}
+    public function __construct(
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly CatalogFilterRepositoryInterface $catalogFilterRepository,
+    ) {}
 
     public function add(
         Interactor $interactor,
@@ -76,7 +80,7 @@ final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInter
         }
 
         // Add catalog to filter table
-        Catalog::add_catalog_filter_group_map($catalog_id);
+        $this->catalogFilterRepository->addCatalogToGroups($catalog_id);
 
         $buffer = ob_get_contents();
 

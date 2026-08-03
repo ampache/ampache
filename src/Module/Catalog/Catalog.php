@@ -151,27 +151,6 @@ abstract class Catalog extends database_object
     private ?string $f_link = null;
 
     /**
-     * add_catalog_filter_group
-     *
-     * @param array<int, int> $catalogs catalog id => 1 to enable, 0 to hide
-     */
-    public static function add_catalog_filter_group(string $filter_name, array $catalogs): bool
-    {
-        $repository = self::getCatalogFilterRepository();
-
-        return $repository->insertCatalogsForGroup($repository->createGroup($filter_name), $catalogs);
-    }
-
-    /**
-     * add_catalog_filter_group_map
-     * Adds appropriate rows when a catalog is added.
-     */
-    public static function add_catalog_filter_group_map(int $catalog_id): void
-    {
-        self::getCatalogFilterRepository()->addCatalogToGroups($catalog_id);
-    }
-
-    /**
      * Run the cache_catalog_proc() on music catalogs.
      */
     public static function cache_catalogs(?Interactor $interactor = null, bool $cleanup = false): void
@@ -656,50 +635,12 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * delete_catalog_filter
-     */
-    public static function delete_catalog_filter(int $filter_id): bool
-    {
-        return self::getCatalogFilterRepository()->deleteGroup($filter_id);
-    }
-
-    /**
-     * edit_catalog_filter
-     *
-     * @param array<int, int> $catalogs
-     */
-    public static function edit_catalog_filter(int $filter_id, string $filter_name, array $catalogs): bool
-    {
-        $repository = self::getCatalogFilterRepository();
-        $repository->renameGroup($filter_id, $filter_name);
-
-        foreach ($catalogs as $catalog_id => $enabled) {
-            if (!$repository->setCatalogEnabled($filter_id, (int) $catalog_id, $enabled)) {
-                return false;
-            }
-        }
-
-        self::garbage_collect_filters();
-
-        return true;
-    }
-
-    /**
      * filter_catalog_count
      * This returns the number of catalogs assigned to a filter.
      */
     public static function filter_catalog_count(int $filter_id): int
     {
         return self::getCatalogFilterRepository()->countCatalogs($filter_id);
-    }
-
-    /**
-     * filter_name_exists
-     * can specifiy an ID to ignore in this check, useful for filter names.
-     */
-    public static function filter_name_exists(string $filter_name, int $exclude_id = 0): bool
-    {
-        return self::getCatalogFilterRepository()->groupNameExists($filter_name, $exclude_id);
     }
 
     /**
@@ -836,15 +777,6 @@ abstract class Catalog extends database_object
     public static function filter_user_count(int $filter_id): int
     {
         return self::getUserRepository()->countByCatalogFilterGroup($filter_id);
-    }
-
-    /**
-     * Delete catalog filters that might have gone missing
-     */
-    public static function garbage_collect_filters(): void
-    {
-        self::getCatalogFilterRepository()->collectGarbage();
-        self::getUserRepository()->resetMissingCatalogFilterGroups();
     }
 
     /**
@@ -1945,7 +1877,8 @@ abstract class Catalog extends database_object
                         }
                     }
 
-                    self::garbage_collect_filters();
+                    self::getCatalogFilterRepository()->collectGarbage();
+                    self::getUserRepository()->resetMissingCatalogFilterGroups();
                 }
                 break;
             case 'scan_all_catalog_folders':

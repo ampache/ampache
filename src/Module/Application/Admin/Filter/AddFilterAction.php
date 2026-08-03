@@ -32,6 +32,7 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,6 +44,7 @@ final class AddFilterAction extends AbstractFilterAction
         private readonly UiInterface $ui,
         private readonly ConfigContainerInterface $configContainer,
         private readonly RequestParserInterface $requestParser,
+        private readonly CatalogFilterRepositoryInterface $catalogFilterRepository,
     ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -65,7 +67,7 @@ final class AddFilterAction extends AbstractFilterAction
         }
 
         // make sure the filter doesn't already exist
-        if (Catalog::filter_name_exists($filter_name)) {
+        if ($this->catalogFilterRepository->groupNameExists($filter_name)) {
             AmpError::add('name', T_('That name already exists'));
         }
 
@@ -92,8 +94,7 @@ final class AddFilterAction extends AbstractFilterAction
         }
 
         // Attempt to create the filter
-        $filter_id = Catalog::add_catalog_filter_group($filter_name, $catalog_array);
-        if ($filter_id === false) {
+        if (!$this->catalogFilterRepository->createGroupWithCatalogs($filter_name, $catalog_array)) {
             AmpError::add('general', T_("The new filter was not created"));
         }
 

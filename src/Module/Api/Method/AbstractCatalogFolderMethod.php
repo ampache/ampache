@@ -39,12 +39,14 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\Catalog_local;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -64,15 +66,21 @@ abstract class AbstractCatalogFolderMethod implements MethodInterface
     // the name the version reports the catalog id under; overridden per version
     protected const string FILTER_KEY = 'filter';
 
+    private CatalogFilterRepositoryInterface $catalogFilterRepository;
     private ConfigContainerInterface $configContainer;
     private PrivilegeCheckerInterface $privilegeChecker;
+    private UserRepositoryInterface $userRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         PrivilegeCheckerInterface $privilegeChecker,
+        CatalogFilterRepositoryInterface $catalogFilterRepository,
+        UserRepositoryInterface $userRepository,
     ) {
-        $this->configContainer  = $configContainer;
-        $this->privilegeChecker = $privilegeChecker;
+        $this->configContainer         = $configContainer;
+        $this->privilegeChecker        = $privilegeChecker;
+        $this->catalogFilterRepository = $catalogFilterRepository;
+        $this->userRepository          = $userRepository;
     }
 
     /**
@@ -248,7 +256,8 @@ abstract class AbstractCatalogFolderMethod implements MethodInterface
             // clean up after the action
             Catalog::update_catalog_map($catalogMediaType);
             Catalog::garbage_collect_mapping($tables);
-            Catalog::garbage_collect_filters();
+            $this->catalogFilterRepository->collectGarbage();
+            $this->userRepository->resetMissingCatalogFilterGroups();
         }
 
         $response->getBody()->write(

@@ -100,6 +100,11 @@ final readonly class CatalogFilterRepository implements CatalogFilterRepositoryI
         return $this->connection->getLastInsertedId();
     }
 
+    public function createGroupWithCatalogs(string $name, array $enabledByCatalogId): bool
+    {
+        return $this->insertCatalogsForGroup($this->createGroup($name), $enabledByCatalogId);
+    }
+
     public function deleteGroup(int $groupId): bool
     {
         if ($groupId <= 0) {
@@ -224,6 +229,19 @@ final readonly class CatalogFilterRepository implements CatalogFilterRepositoryI
             $this->connection->query($sql, [$enabled, $groupId, $catalogId]);
         } catch (DatabaseException) {
             return false;
+        }
+
+        return true;
+    }
+
+    public function updateGroupCatalogs(int $groupId, string $name, array $enabledByCatalogId): bool
+    {
+        $this->renameGroup($groupId, $name);
+
+        foreach ($enabledByCatalogId as $catalogId => $enabled) {
+            if (!$this->setCatalogEnabled($groupId, (int) $catalogId, $enabled)) {
+                return false;
+            }
         }
 
         return true;
