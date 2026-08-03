@@ -559,12 +559,11 @@ class Stream_Playlist
         }
 
         if (!$append) {
-            // We don't have metadata on Stream_Url to know its kind
-            // so we check the content to know if it is democratic
+            // Stream_Url carries no metadata about its kind, so the parsed url is what tells us this is a democratic play
             if (count($this->urls) === 1) {
                 $furl = $this->urls[0];
-                if (str_contains($furl->url, "&demo_id=1") && $furl->time == -1) {
-                    // If democratic, repeat the song to get the next voted one.
+                if ((Stream_Url::parse($furl->url)['type'] ?? '') === 'democratic' && $furl->time == -1) {
+                    // repeating the democratic url makes the player re-request it and get the next voted song
                     debug_event(self::class, 'Playing democratic on Localplay, enabling repeat...', 5);
                     $localplay->repeat(true);
                 }
