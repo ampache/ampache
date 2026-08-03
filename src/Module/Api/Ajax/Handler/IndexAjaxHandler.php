@@ -44,6 +44,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
@@ -69,6 +70,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         private TalFactoryInterface $talFactory,
         private ZipHandlerInterface $zipHandler,
         private BrowseFactoryInterface $browseFactory,
+        private FolderRepositoryInterface $folderRepository,
     ) {}
 
     public function handle(User $user): void
@@ -511,6 +513,10 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 Ajax::set_include_override(true);
                 ob_start();
                 $_SESSION['state']['sidebar_tab'] = $button;
+                // sidebar_home renders in this scope
+                $folderRepository = $this->folderRepository;
+
+                $videoRepository = $this->videoRepository;
                 require_once Ui::find_template('sidebar.inc.php');
                 $results['sidebar-content'] = ob_get_contents();
                 ob_end_clean();
