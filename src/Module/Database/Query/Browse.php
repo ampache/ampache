@@ -143,6 +143,28 @@ class Browse extends Query
     }
 
     /**
+     * get_argument_param
+     * Rebuild the show_objects argument as query string, so an ajax refresh renders the same columns
+     * @param bool|array<string, mixed>|string $argument
+     */
+    public static function get_argument_param(bool|array|string $argument): string
+    {
+        if (is_array($argument)) {
+            $hide_columns = (array_key_exists('hide', $argument) && is_array($argument['hide']))
+                ? $argument['hide']
+                : [];
+
+            return ($hide_columns === [])
+                ? ''
+                : '&hide=' . implode(',', array_map(static fn($column): string => (string) scrub_in((string) $column), $hide_columns));
+        }
+
+        return ($argument)
+            ? '&argument=' . scrub_in((string) $argument)
+            : '';
+    }
+
+    /**
      * is_valid_type
      * Validate the browse is a type of object you can actually browse
      */
@@ -693,26 +715,10 @@ class Browse extends Query
         debug_event(self::class, 'show_objects called. browse {' . $this->id . '} type {' . $type . '}', 5);
 
         // hide some of the useless columns in a browse
-        $hide_columns   = [];
-        $argument_param = '';
-        if (is_array($argument)) {
-            if (array_key_exists('hide', $argument) && is_array($argument['hide'])) {
-                $hide_columns = $argument['hide'];
-            }
-
-            if ($hide_columns !== []) {
-                $argument_param = '&hide=';
-                foreach ($hide_columns as $column) {
-                    $argument_param .= scrub_in((string) $column) . ',';
-                }
-
-                $argument_param = rtrim($argument_param, ',');
-            }
-        } else {
-            $argument_param = ($argument)
-                ? '&argument=' . scrub_in((string) $argument)
-                : '';
-        }
+        $hide_columns = (is_array($argument) && array_key_exists('hide', $argument) && is_array($argument['hide']))
+            ? $argument['hide']
+            : [];
+        $argument_param = self::get_argument_param($argument);
 
         if (!empty($type) && !$skip_cookies) {
             if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_use_pages', $_COOKIE)) {

@@ -390,6 +390,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The genre rules counting a genre's own contents shared their labels with the object's own counts, so an artist search offered two `Song Count` rules. They are now `Song Count (Genre)`, `Album Count (Genre)` and `Artist Count (Genre)`
 * A stream that could not be opened answered `200` with an empty body, which a player reports as a corrupt or unsupported stream instead of a server error; it now answers `500`
 * A transcode requested while no `transcode_cmd` is configured is logged as an error instead of at the most verbose debug level, where the reason nothing played was effectively invisible
+* Song duration
+  * A file carrying an ID3v2.3 `TIME` frame was given that frame's recording time of day as its duration, so a 98 second track was imported as 2019 seconds
+  * Durations were estimated from the file size and bitrate instead of being read from the file, so anything stored after the audio (APE cover art, for example) counted as playing time; the estimate is kept for remote catalogs and for files with no readable duration
+* Browse
+  * Filtering a song list from the sidebar `Filters` box dropped the track numbers and the `#` sort column and brought back the columns the page had hidden, on the album, album disk, playlist, podcast and label pages
+  * The `Limit` box and the song list's `Year` sort header lost the same columns
 
 ## Ampache 7.10.1
 

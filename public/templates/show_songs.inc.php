@@ -172,7 +172,7 @@ if ($browse->is_show_header()) {
             } ?>
             <?php if (!$hide_year) {
                 ++$thcount; ?>
-            <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'song_sort_year'); ?></th>
+            <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year' . $argument_param, T_('Year'), 'song_sort_year'); ?></th>
             <?php
             } ?>
             <?php if (!$hide_genres) {
@@ -283,7 +283,7 @@ foreach ($object_ids as $song_id) {
                 <th class="<?php echo $cel_album; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'song_sort_album' . $browse->id); ?></th>
             <?php } ?>
             <?php if (!$hide_year) { ?>
-            <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'song_sort_year'); ?></th>
+            <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year' . $argument_param, T_('Year'), 'song_sort_year'); ?></th>
             <?php } ?>
             <?php if (!$hide_genres) { ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>

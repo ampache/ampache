@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Query;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
@@ -74,6 +75,9 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         if (array_key_exists('hide', $_REQUEST)) {
             $argument = ['hide' => explode(',', scrub_in((string) $_REQUEST['hide']))];
         }
+
+        // the filter box builds its own browse links, so it needs the argument this browse was rendered with
+        $argument_param = Browse::get_argument_param($argument);
 
         $results = [];
         $action  = $this->requestParser->getFromRequest('action');
