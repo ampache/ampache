@@ -29,6 +29,7 @@ use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Json6_Data;
 use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Api\Xml6_Data;
@@ -41,6 +42,7 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
         private Json5_Data $json5Data,
         private Json6_Data $json6Data,
         private Json8_Data $json8Data,
+        private Xml3_Data $xml3Data,
         private Xml4_Data $xml4Data,
         private Xml5_Data $xml5Data,
         private Xml6_Data $xml6Data,
@@ -54,6 +56,6 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
 
     public function createXmlOutput(): ApiOutputInterface
     {
-        return new XmlOutput($this->xml4Data, $this->xml5Data, $this->xml6Data, $this->xml8Data);
+        return new XmlOutput($this->xml3Data, $this->xml4Data, $this->xml5Data, $this->xml6Data, $this->xml8Data);
     }
 }

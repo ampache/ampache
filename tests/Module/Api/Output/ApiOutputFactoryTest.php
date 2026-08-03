@@ -30,6 +30,7 @@ use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Json6_Data;
 use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Api\Xml6_Data;
@@ -71,6 +72,7 @@ class ApiOutputFactoryTest extends MockeryTestCase
             json5Data: new Json5_Data(...$this->repositories()),
             json6Data: new Json6_Data(...$this->repositories()),
             json8Data: new Json8_Data(...$this->repositories()),
+            xml3Data: new Xml3_Data(...$this->version3Repositories()),
             xml4Data: new Xml4_Data(...$this->legacyRepositories()),
             xml5Data: new Xml5_Data(...$this->repositories()),
             xml6Data: new Xml6_Data(...$this->repositories()),
@@ -78,18 +80,6 @@ class ApiOutputFactoryTest extends MockeryTestCase
         );
     }
 
-    /**
-     * Every formatter takes the same six repositories, so each one gets its own set of mocks
-     *
-     * @return array{
-     *     AlbumRepositoryInterface,
-     *     BookmarkRepositoryInterface,
-     *     LabelRepositoryInterface,
-     *     LicenseRepositoryInterface,
-     *     PodcastRepositoryInterface,
-     *     SongRepositoryInterface,
-     * }
-     */
     /**
      * The version 4 builders take a shorter list than the later ones
      *
@@ -113,6 +103,31 @@ class ApiOutputFactoryTest extends MockeryTestCase
             $this->mock(LabelRepositoryInterface::class),
             $this->mock(LicenseRepositoryInterface::class),
             $this->mock(PodcastRepositoryInterface::class),
+            $this->mock(SongRepositoryInterface::class),
+        ];
+    }
+
+    /**
+     * Every formatter takes the same six repositories, so each one gets its own set of mocks
+     *
+     * @return array{
+     *     AlbumRepositoryInterface,
+     *     BookmarkRepositoryInterface,
+     *     LabelRepositoryInterface,
+     *     LicenseRepositoryInterface,
+     *     PodcastRepositoryInterface,
+     *     SongRepositoryInterface,
+     * }
+     */
+    /**
+     * The version 3 builder takes only two
+     *
+     * @return array<int, mixed>
+     */
+    private function version3Repositories(): array
+    {
+        return [
+            $this->mock(AlbumRepositoryInterface::class),
             $this->mock(SongRepositoryInterface::class),
         ];
     }

@@ -42,6 +42,7 @@ use ArrayIterator;
 final class XmlOutput implements ApiOutputInterface
 {
     public function __construct(
+        private Xml3_Data $xml3Data,
         private Xml4_Data $xml4Data,
         private Xml5_Data $xml5Data,
         private Xml6_Data $xml6Data,
@@ -85,7 +86,7 @@ final class XmlOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return match ($apiVersion) {
-            3 => Xml3_Data::albums($albums, $include, $user, $auth, $encode),
+            3 => $this->xml3Data->albums($albums, $include, $user, $auth, $encode),
             4 => $this->xml4Data->albums($albums, $include, $user, $auth, $encode),
             5 => $this->xml5Data->albums($albums, $include, $user, $auth, $encode),
             6 => $this->xml6Data->albums($albums, $include, $user, $auth, $encode),
@@ -103,7 +104,7 @@ final class XmlOutput implements ApiOutputInterface
     public function artists(int $apiVersion, array $artists, array $include, User $user, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
-            3 => Xml3_Data::artists($artists, $include, $user, $auth),
+            3 => $this->xml3Data->artists($artists, $include, $user, $auth),
             4 => $this->xml4Data->artists($artists, $include, $user, $auth),
             5 => $this->xml5Data->artists($artists, $include, $user, $auth),
             6 => $this->xml6Data->artists($artists, $include, $user, $auth),
@@ -248,7 +249,7 @@ final class XmlOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return match ($apiVersion) {
-            3 => Xml3_Data::democratic($objectIds, $user, $auth),
+            3 => $this->xml3Data->democratic($objectIds, $user, $auth),
             4 => $this->xml4Data->democratic($objectIds, $user, $auth),
             5 => $this->xml5Data->democratic($objectIds, $user, $auth),
             6 => $this->xml6Data->democratic($objectIds, $user, $auth),
@@ -297,7 +298,7 @@ final class XmlOutput implements ApiOutputInterface
     public function genres(int $apiVersion, array $genres, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
-            3 => Xml3_Data::tags($genres),
+            3 => $this->xml3Data->tags($genres),
             4 => $this->xml4Data->tags($genres),
             5 => $this->xml5Data->genres($genres, $user),
             6 => $this->xml6Data->genres($genres, $user),
@@ -478,7 +479,7 @@ final class XmlOutput implements ApiOutputInterface
     public function playlists(int $apiVersion, array $playlists, User $user, string $auth, bool $songs = false, bool $asObject = true): string
     {
         return match ($apiVersion) {
-            3 => Xml3_Data::playlists($playlists),
+            3 => $this->xml3Data->playlists($playlists),
             4 => $this->xml4Data->playlists($playlists, $user, $auth),
             5 => $this->xml5Data->playlists($playlists, $user, $auth),
             6 => $this->xml6Data->playlists($playlists, $user, $auth, $songs),
@@ -602,7 +603,7 @@ final class XmlOutput implements ApiOutputInterface
     public function setLimit(int $apiVersion, int|string $limit): void
     {
         match ($apiVersion) {
-            3 => Xml3_Data::set_limit($limit),
+            3 => $this->xml3Data->set_limit($limit),
             4 => $this->xml4Data->set_limit($limit),
             5 => $this->xml5Data->set_limit($limit),
             6 => $this->xml6Data->set_limit($limit),
@@ -616,7 +617,7 @@ final class XmlOutput implements ApiOutputInterface
     public function setOffset(int $apiVersion, int|string $offset): void
     {
         match ($apiVersion) {
-            3 => Xml3_Data::set_offset($offset),
+            3 => $this->xml3Data->set_offset($offset),
             4 => $this->xml4Data->set_offset($offset),
             5 => $this->xml5Data->set_offset($offset),
             6 => $this->xml6Data->set_offset($offset),
@@ -654,7 +655,7 @@ final class XmlOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return match ($apiVersion) {
-            3 => Xml3_Data::shouts(new ArrayIterator($shouts)),
+            3 => $this->xml3Data->shouts(new ArrayIterator($shouts)),
             4 => $this->xml4Data->shouts(new ArrayIterator($shouts)),
             5 => $this->xml5Data->shouts(new ArrayIterator($shouts)),
             6 => $this->xml6Data->shouts($shouts),
@@ -671,7 +672,7 @@ final class XmlOutput implements ApiOutputInterface
     public function songs(int $apiVersion, array $songs, User $user, string $auth, bool $encode = true, bool $asObject = true): string
     {
         return match ($apiVersion) {
-            3 => Xml3_Data::songs($songs, $user, $auth),
+            3 => $this->xml3Data->songs($songs, $user, $auth),
             4 => $this->xml4Data->songs($songs, $user, $auth),
             5 => $this->xml5Data->songs($songs, $user, $auth),
             6 => $this->xml6Data->songs($songs, $user, $auth),
@@ -738,7 +739,7 @@ final class XmlOutput implements ApiOutputInterface
     public function timeline(int $apiVersion, array $activities): string
     {
         return match ($apiVersion) {
-            3 => Xml3_Data::timeline($activities),
+            3 => $this->xml3Data->timeline($activities),
             4 => $this->xml4Data->timeline($activities),
             5 => $this->xml5Data->timeline($activities),
             6 => $this->xml6Data->timeline($activities),
@@ -754,7 +755,7 @@ final class XmlOutput implements ApiOutputInterface
     public function user(int $apiVersion, User $user, bool $fullInfo, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
-            3 => Xml3_Data::user($user),
+            3 => $this->xml3Data->user($user),
             4 => $this->xml4Data->user($user, $fullInfo),
             5 => $this->xml5Data->user($user, $fullInfo),
             6 => $this->xml6Data->user($user, $fullInfo, $auth),
@@ -771,7 +772,7 @@ final class XmlOutput implements ApiOutputInterface
     public function users(int $apiVersion, array $users): string
     {
         return match ($apiVersion) {
-            3 => Xml3_Data::users($users),
+            3 => $this->xml3Data->users($users),
             4 => $this->xml4Data->users($users),
             5 => $this->xml5Data->users($users),
             6 => $this->xml6Data->users($users),
@@ -788,7 +789,7 @@ final class XmlOutput implements ApiOutputInterface
     public function videos(int $apiVersion, array $videos, User $user, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
-            3 => Xml3_Data::videos($videos),
+            3 => $this->xml3Data->videos($videos),
             4 => $this->xml4Data->videos($videos, $user, $auth),
             5 => $this->xml5Data->videos($videos, $user, $auth),
             6 => $this->xml6Data->videos($videos, $user, $auth),

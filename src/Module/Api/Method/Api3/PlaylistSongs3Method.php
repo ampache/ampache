@@ -40,6 +40,7 @@ final class PlaylistSongs3Method implements MethodInterface
     public const string ACTION = 'playlist_songs';
 
     public function __construct(
+        private Xml3_Data $xml3Data,
         private StreamFactoryInterface $streamFactory,
     ) {}
 
@@ -82,7 +83,7 @@ final class PlaylistSongs3Method implements MethodInterface
         // version 3 threads playlist_data through songs(); the shared output contract has no slot for it
         return $response->withBody(
             $this->streamFactory->createStream(
-                Xml3_Data::songs($results, $user, $input['auth'], $items)
+                $this->xml3Data->songs($results, $user, $input['auth'], $items)
             )
         );
     }
