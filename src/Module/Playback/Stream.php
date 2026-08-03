@@ -392,8 +392,15 @@ class Stream
             && $bit_rate > $media->bitrate
             && $media->bitrate > 0
         ) {
-            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $media->bitrate, 5);
-            $bit_rate = self::validate_bitrate((int) $media->bitrate);
+            $source_rate = self::validate_bitrate((int) $media->bitrate);
+            if ($source_rate <= 0) {
+                // a source under 1 kbps rounds away to nothing, and a zero target here reaches the encoder as `-b:a 0`
+                $source_rate = (int) AmpConfig::get('min_bit_rate', 8000);
+                debug_event(self::class, 'Source bitrate ' . $media->bitrate . ' is below 1 kbps, using the minimum ' . $source_rate, 4);
+            }
+
+            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $source_rate, 5);
+            $bit_rate = $source_rate;
         }
 
         // Whatever the rate came from, the target format has to be able to carry it. Without this a lossless source

@@ -1171,6 +1171,11 @@ final readonly class PlayAction implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
+            // without a status the request answers 200 with an empty body, which every player reports as a corrupt stream
+            if (!headers_sent()) {
+                header('HTTP/1.1 500 Failed to open stream');
+            }
+
             return null;
         }
 
@@ -1390,6 +1395,17 @@ final readonly class PlayAction implements ApplicationActionInterface
             http_response_code(416);
             $this->logger->debug(
                 'Stream ended: No bytes left to stream',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            return null;
+        }
+
+        if ($transcode && $bytes_streamed === 0) {
+            // a transcoder that opened but wrote nothing would otherwise answer 200 with an empty, playable-looking body
+            http_response_code(500);
+            $this->logger->error(
+                'Stream ended: the transcoder produced no data',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
