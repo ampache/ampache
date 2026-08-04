@@ -233,7 +233,8 @@
             "nullable": true
           },
           "parent": {
-            "type": "integer"
+            "type": "string",
+            "nullable": true
           },
           "path": {
             "type": "string",
@@ -283,7 +284,7 @@
             "nullable": true
           },
           "parent": {
-            "type": "integer",
+            "type": "string",
             "nullable": true
           },
           "path": {
@@ -291,7 +292,7 @@
             "nullable": true
           },
           "catalog": {
-            "type": "integer"
+            "type": "string"
           },
           "items": {
             "type": "array",
@@ -13676,15 +13677,15 @@
                       "folder": {
                         "id": "1",
                         "title": "Music",
-                        "parent": 0,
+                        "parent": "0",
                         "path": "/music",
-                        "catalog": 1,
+                        "catalog": "1",
                         "items": [
                           {
                             "id": "2",
                             "object_type": "folder",
                             "title": "Rock",
-                            "parent": 1,
+                            "parent": "1",
                             "path": "/music/rock",
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=2&object_type=folder&auth=token123",
                             "has_art": false,
@@ -13696,7 +13697,7 @@
                             "id": "12345",
                             "object_type": "song",
                             "title": "Example Song.mp3",
-                            "parent": 1,
+                            "parent": "1",
                             "path": "/music",
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=12345&object_type=song&auth=token123",
                             "has_art": true,
@@ -13708,7 +13709,7 @@
                             "id": "54321",
                             "object_type": "video",
                             "title": "Example Video.mp4",
-                            "parent": 1,
+                            "parent": "1",
                             "path": "/music",
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=54321&object_type=video&auth=token123",
                             "has_art": true,
@@ -13789,15 +13790,15 @@
                       "folder": {
                         "id": "1",
                         "title": "Music",
-                        "parent": 0,
+                        "parent": "0",
                         "path": "/music",
-                        "catalog": 1,
+                        "catalog": "1",
                         "items": [
                           {
                             "id": "2",
                             "object_type": "folder",
                             "title": "Rock",
-                            "parent": 1,
+                            "parent": "1",
                             "path": "/music/rock",
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=2&object_type=folder&auth=token123",
                             "has_art": false,
@@ -13809,7 +13810,7 @@
                             "id": "12345",
                             "object_type": "song",
                             "title": "Example Song.mp3",
-                            "parent": 1,
+                            "parent": "1",
                             "path": "/music",
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=12345&object_type=song&auth=token123",
                             "has_art": true,
@@ -13821,7 +13822,7 @@
                             "id": "54321",
                             "object_type": "video",
                             "title": "Example Video.mp4",
-                            "parent": 1,
+                            "parent": "1",
                             "path": "/music",
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=54321&object_type=video&auth=token123",
                             "has_art": true,

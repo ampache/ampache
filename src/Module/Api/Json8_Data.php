@@ -1490,9 +1490,9 @@ final class Json8_Data
         $JSON = [
             "id" => (string) $folder->getId(),
             "title" => $folder->get_fullname(),
-            "parent" => $folder->parent,
+            "parent" => ($folder->parent === null) ? null : (string) $folder->parent,
             "path" => $folder->path_name,
-            "catalog" => $folder->catalog,
+            "catalog" => (string) $folder->catalog,
             "items" => []
         ];
         foreach ($objects as $item) {
@@ -1537,7 +1537,7 @@ final class Json8_Data
                 "id" => (string) $libitem->id,
                 "object_type" => $object_type,
                 "title" => $filename,
-                "parent" => $folder->getId(),
+                "parent" => (string) $folder->getId(),
                 "path" => $dirname,
                 "art" => $art_url,
                 "has_art" => $libitem->has_art(),
@@ -1566,9 +1566,9 @@ final class Json8_Data
      * @return array<int, array{
      *     "id": string,
      *     "name": null|string,
-     *     "parent": null|int,
+     *     "parent": null|string,
      *     "path": null|string,
-     *     "catalog": int,
+     *     "catalog": string,
      *     "items": int,
      *     "playable": bool,
      *     "art": null|string,
@@ -1597,9 +1597,9 @@ final class Json8_Data
             $JSON[] = [
                 "id" => (string) $folder->getId(),
                 "name" => $folder->get_fullname(),
-                "parent" => $folder->parent,
+                "parent" => ($folder->parent === null) ? null : (string) $folder->parent,
                 "path" => $folder->path_name,
-                "catalog" => $folder->catalog,
+                "catalog" => (string) $folder->catalog,
                 "items" => (int) $folder->object_count,
                 "playable" => $folder->playable,
                 "art" => Art::url($folder->getId(), 'folder', $auth),

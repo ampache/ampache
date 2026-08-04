@@ -6334,7 +6334,7 @@ One member of a collection, at the position it was curated into. `object_type` n
 | id            | string  |    NO    |    NO    |       |
 | object_type   | string  |    NO    |    NO    |       |
 | title         | string  |   YES    |    NO    |       |
-| parent        | integer |    NO    |    NO    |       |
+| parent        | string  |   YES    |    NO    |       |
 | path          | string  |   YES    |    NO    |       |
 | art           | string  |   YES    |    NO    |       |
 | has_art       | boolean |    NO    |    NO    |       |
@@ -6348,9 +6348,9 @@ One member of a collection, at the position it was curated into. `object_type` n
 |---------|----------------------------------------------------|:--------:|:--------:|--------------------------------------------------|
 | id      | string                                             |    NO    |    NO    |                                                  |
 | title   | string                                             |   YES    |    NO    |                                                  |
-| parent  | integer                                            |   YES    |    NO    |                                                  |
+| parent  | string                                             |   YES    |    NO    |                                                  |
 | path    | string                                             |   YES    |    NO    |                                                  |
-| catalog | integer                                            |    NO    |    NO    |                                                  |
+| catalog | string                                             |    NO    |    NO    |                                                  |
 | items   | array&lt;[FolderBrowseItem](#folderbrowseitem)&gt; |    NO    |    NO    | see [FolderBrowseItem](#folderbrowseitem) fields |
 
 ### GenreReference
