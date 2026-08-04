@@ -262,6 +262,23 @@ class ApiHandlerTest extends TestCase
         );
     }
 
+    public function testNormalizeActionFoldsTheSingularFolderAlias(): void
+    {
+        // an `rest/.htaccess` from before 8.0.0 rewrites `folders/{folder_id}` to `action=folder`
+        static::assertSame(
+            'folders',
+            $this->subject->normalizeAction('folder', null, true)
+        );
+    }
+
+    public function testNormalizeActionKeepsCatalogFolderOutOfTheFolderAlias(): void
+    {
+        static::assertSame(
+            'catalog_folder',
+            $this->subject->normalizeAction('folder', 'catalog', true)
+        );
+    }
+
     public function testNormalizeActionStillRoutesCatalogAddWithoutFilterToCatalogCreate(): void
     {
         static::assertSame(

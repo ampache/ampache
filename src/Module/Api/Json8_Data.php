@@ -1487,10 +1487,12 @@ final class Json8_Data
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
+        $parentId = $folder->getParentId();
+
         $JSON = [
             "id" => (string) $folder->getId(),
             "title" => $folder->get_fullname(),
-            "parent" => ($folder->parent === null) ? null : (string) $folder->parent,
+            "parent" => ($parentId === null) ? null : (string) $parentId,
             "path" => $folder->path_name,
             "catalog" => (string) $folder->catalog,
             "items" => []
@@ -1593,11 +1595,12 @@ final class Json8_Data
             $rating      = new Rating($folder->getId(), 'folder');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($folder->getId(), 'folder');
+            $parentId    = $folder->getParentId();
 
             $JSON[] = [
                 "id" => (string) $folder->getId(),
                 "name" => $folder->get_fullname(),
-                "parent" => ($folder->parent === null) ? null : (string) $folder->parent,
+                "parent" => ($parentId === null) ? null : (string) $parentId,
                 "path" => $folder->path_name,
                 "catalog" => (string) $folder->catalog,
                 "items" => (int) $folder->object_count,

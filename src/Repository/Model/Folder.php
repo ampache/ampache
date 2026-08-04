@@ -439,6 +439,18 @@ class Folder extends database_object implements
     }
 
     /**
+     * The id of the folder this one hangs off.
+     */
+    public function getParentId(): ?int
+    {
+        if ($this->id === -1) {
+            return null;
+        }
+
+        return $this->parent ?? -1;
+    }
+
+    /**
      * get_parent
      * @return null|array{object_type: LibraryItemEnum, object_id: int}
      */

@@ -215,6 +215,7 @@
       },
       "FolderBrowseItem": {
         "type": "object",
+        "description": "One child of the folder being browsed. `parent` is always the id of that folder, so an item lifted out of the list still knows where it came from; it is `-1` when the folder being browsed is the virtual root.",
         "properties": {
           "id": {
             "type": "string"
@@ -234,7 +235,7 @@
           },
           "parent": {
             "type": "string",
-            "nullable": true
+            "description": "The id of the folder being browsed, so an item lifted out of the list still knows where it came from. Always present -- `-1` when the parent is the virtual root."
           },
           "path": {
             "type": "string",
@@ -275,6 +276,7 @@
       },
       "FolderBrowseNode": {
         "type": "object",
+        "description": "The folder that was browsed, and its children. `parent` is the id of the folder this one hangs off: a top level folder reports the virtual root (`-1`) rather than nothing, so a client can always walk up, and `null` means this is the virtual root itself.",
         "properties": {
           "id": {
             "type": "string"
@@ -285,7 +287,8 @@
           },
           "parent": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "The id of the folder this one hangs off. A top level folder reports the virtual root (`-1`) rather than nothing, so a client can always walk up; `null` means this is the virtual root itself."
           },
           "path": {
             "type": "string",
@@ -13677,7 +13680,7 @@
                       "folder": {
                         "id": "1",
                         "title": "Music",
-                        "parent": "0",
+                        "parent": "-1",
                         "path": "/music",
                         "catalog": "1",
                         "items": [
@@ -13790,7 +13793,7 @@
                       "folder": {
                         "id": "1",
                         "title": "Music",
-                        "parent": "0",
+                        "parent": "-1",
                         "path": "/music",
                         "catalog": "1",
                         "items": [
