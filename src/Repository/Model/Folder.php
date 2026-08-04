@@ -439,18 +439,6 @@ class Folder extends database_object implements
     }
 
     /**
-     * The id of the folder this one hangs off.
-     */
-    public function getParentId(): ?int
-    {
-        if ($this->id === -1) {
-            return null;
-        }
-
-        return $this->parent ?? -1;
-    }
-
-    /**
      * get_parent
      * @return null|array{object_type: LibraryItemEnum, object_id: int}
      */
@@ -516,6 +504,18 @@ class Folder extends database_object implements
     public function getMediaType(): LibraryItemEnum
     {
         return LibraryItemEnum::FOLDER;
+    }
+
+    /**
+     * The id of the folder this one hangs off.
+     */
+    public function getParentId(): ?int
+    {
+        if ($this->id === -1) {
+            return null;
+        }
+
+        return $this->parent ?? -1;
     }
 
     public function has_art(): bool
