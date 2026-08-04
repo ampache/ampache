@@ -49,34 +49,9 @@ class Random
         'video',
     ];
 
-    /**
-     * advanced
-     * This processes the results of a post from a form and returns an
-     * array of song items that were returned from said randomness
-     * @param array<string, mixed> $data
-     * @return int[]
-     */
-    public static function advanced(string $type, array $data): array
-    {
-        /* Figure out our object limit */
-        $limit     = (int) ($data['limit'] ?? -1);
-        $limit_sql = "LIMIT " . Dba::escape($limit);
-
-        /* If they've passed -1 as limit then get everything */
-        if ($limit == -1) {
-            if (array_key_exists('limit', $data)) {
-                unset($data['limit']);
-            }
-
-            $limit_sql = "";
-        }
-
-        $search  = self::_advanced_sql($data, $type, $limit_sql);
-        $results = self::_advanced_results($search['sql'], $search['parameters'], $data);
-        //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
-
-        return self::get_songs($type, $results);
-    }
+    public function __construct(
+        private readonly SongRepositoryInterface $songRepository,
+    ) {}
 
     /**
      * artist
@@ -445,38 +420,6 @@ class Random
     }
 
     /**
-     * get_songs
-     * This processes the results of a post from a form and returns an
-     * array of song items that were returned from said randomness
-     * @param int[] $results
-     * @return int[]
-     */
-    public static function get_songs(string $type, array $results): array
-    {
-        switch ($type) {
-            case 'song':
-            case 'video':
-                return $results;
-            case 'album':
-                $songs = [];
-                foreach ($results as $object_id) {
-                    $songs = array_merge($songs, self::getSongRepository()->getByAlbum($object_id));
-                }
-
-                return $songs;
-            case 'artist':
-                $songs = [];
-                foreach ($results as $object_id) {
-                    $songs = array_merge($songs, self::getSongRepository()->getByArtist($object_id));
-                }
-
-                return $songs;
-            default:
-                return [];
-        }
-    }
-
-    /**
      * playlist
      * This returns a random Playlist with songs little bit of extra
      * logic require
@@ -675,12 +618,63 @@ class Random
     }
 
     /**
-     * @deprecated
+     * advanced
+     * This processes the results of a post from a form and returns an
+     * array of song items that were returned from said randomness
+     * @param array<string, mixed> $data
+     * @return int[]
      */
-    private static function getSongRepository(): SongRepositoryInterface
+    public function advanced(string $type, array $data): array
     {
-        global $dic;
+        /* Figure out our object limit */
+        $limit     = (int) ($data['limit'] ?? -1);
+        $limit_sql = "LIMIT " . Dba::escape($limit);
 
-        return $dic->get(SongRepositoryInterface::class);
+        /* If they've passed -1 as limit then get everything */
+        if ($limit == -1) {
+            if (array_key_exists('limit', $data)) {
+                unset($data['limit']);
+            }
+
+            $limit_sql = "";
+        }
+
+        $search  = self::_advanced_sql($data, $type, $limit_sql);
+        $results = self::_advanced_results($search['sql'], $search['parameters'], $data);
+        //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
+
+        return $this->get_songs($type, $results);
+    }
+
+    /**
+     * get_songs
+     * This processes the results of a post from a form and returns an
+     * array of song items that were returned from said randomness
+     * @param int[] $results
+     * @return int[]
+     */
+    public function get_songs(string $type, array $results): array
+    {
+        switch ($type) {
+            case 'song':
+            case 'video':
+                return $results;
+            case 'album':
+                $songs = [];
+                foreach ($results as $object_id) {
+                    $songs = array_merge($songs, $this->songRepository->getByAlbum($object_id));
+                }
+
+                return $songs;
+            case 'artist':
+                $songs = [];
+                foreach ($results as $object_id) {
+                    $songs = array_merge($songs, $this->songRepository->getByArtist($object_id));
+                }
+
+                return $songs;
+            default:
+                return [];
+        }
     }
 }

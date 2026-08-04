@@ -45,6 +45,7 @@ final readonly class GetAdvancedAction implements ApplicationActionInterface
         private UiInterface $ui,
         private VideoRepositoryInterface $videoRepository,
         private BrowseFactoryInterface $browseFactory,
+        private Random $random,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -56,7 +57,7 @@ final readonly class GetAdvancedAction implements ApplicationActionInterface
         $user = Core::get_global('user');
         if ($user instanceof User) {
             $user->load_playlist();
-            $objectIds = Random::advanced($objectType->value, $_POST);
+            $objectIds = $this->random->advanced($objectType->value, $_POST);
             if ($objectIds !== []) {
                 // you need to add by the base child type song/video
                 $objectType = match ($objectType->value) {

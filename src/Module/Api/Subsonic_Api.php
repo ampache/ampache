@@ -221,6 +221,7 @@ class Subsonic_Api
     private PodcastRepositoryInterface $podcastRepository;
     private PodcastSyncerInterface $podcastSyncer;
     private PrivateMessageRepositoryInterface $privateMessageRepository;
+    private Random $random;
     private ShareCreatorInterface $shareCreator;
     private ShareRepositoryInterface $shareRepository;
     private SongRepositoryInterface $songRepository;
@@ -239,6 +240,7 @@ class Subsonic_Api
         PodcastRepositoryInterface $podcastRepository,
         PodcastSyncerInterface $podcastSyncer,
         PrivateMessageRepositoryInterface $privateMessageRepository,
+        Random $random,
         ShareCreatorInterface $shareCreator,
         ShareRepositoryInterface $shareRepository,
         SongRepositoryInterface $songRepository,
@@ -256,6 +258,7 @@ class Subsonic_Api
         $this->podcastRepository        = $podcastRepository;
         $this->podcastSyncer            = $podcastSyncer;
         $this->privateMessageRepository = $privateMessageRepository;
+        $this->random                   = $random;
         $this->shareCreator             = $shareCreator;
         $this->shareRepository          = $shareRepository;
         $this->songRepository           = $songRepository;
@@ -2273,7 +2276,7 @@ class Subsonic_Api
             ++$count;
         }
         if ($count > 0) {
-            $songs = Random::advanced('song', $data);
+            $songs = $this->random->advanced('song', $data);
         } else {
             $songs = Random::get_default($size, $user);
         }
