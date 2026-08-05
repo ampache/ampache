@@ -510,7 +510,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
         }
     }
 
-    if (error_reporting() == 0) {
+    if (!(error_reporting() & $errno)) {
         // Ignored, probably via @. But not really, so use the super-sekrit level
         $level = 7;
     }

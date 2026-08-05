@@ -28,7 +28,7 @@ declare(strict_types=1);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-/** @var array<string, string> $instance */
+/** @var array<string, int|string> $instance */
 /** @var array<string, array{description: string, type: string}> $fields */
 
 Ui::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance'); ?>
@@ -38,7 +38,7 @@ Ui::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance
     $autocomplete = ($field['type'] === 'password') ? 'new-password' : 'off'; ?>
 <tr>
     <td><?php echo $field['description']; ?></td>
-    <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out($instance[$key]); ?>" autocomplete="<?php echo $autocomplete; ?>" /></td>
+    <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out((string)($instance[$key] ?? '')); ?>" autocomplete="<?php echo $autocomplete; ?>" /></td>
 </tr>
 <?php } ?>
 </table>
