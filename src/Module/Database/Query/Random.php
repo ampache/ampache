@@ -662,14 +662,18 @@ class Random
             case 'album':
                 $songs = [];
                 foreach ($results as $object_id) {
-                    $songs = array_merge($songs, $this->songRepository->getByAlbum($object_id));
+                    foreach ($this->songRepository->getByAlbum($object_id) as $song_id) {
+                        $songs[] = $song_id;
+                    }
                 }
 
                 return $songs;
             case 'artist':
                 $songs = [];
                 foreach ($results as $object_id) {
-                    $songs = array_merge($songs, $this->songRepository->getByArtist($object_id));
+                    foreach ($this->songRepository->getByArtist($object_id) as $song_id) {
+                        $songs[] = $song_id;
+                    }
                 }
 
                 return $songs;
