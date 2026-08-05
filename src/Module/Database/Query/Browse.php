@@ -572,14 +572,15 @@ class Browse extends Query
         }
 
         if (self::is_valid_type($type)) {
+            // restoring what this browser last chose is a read, so none of these write the cookie back
             $name = 'browse_' . $type . '_pages';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_use_pages(Core::get_cookie($name) == 'true');
+                $this->set_use_pages(Core::get_cookie($name) == 'true', false);
             }
 
             $name = 'browse_' . $type . '_alpha';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_use_alpha(Core::get_cookie($name) == 'true');
+                $this->set_use_alpha(Core::get_cookie($name) == 'true', false);
             } else {
                 $default_alpha = (AmpConfig::get('libitem_browse_alpha')) ? explode(
                     ",",
@@ -589,11 +590,6 @@ class Browse extends Query
                     $this->set_use_alpha(true, false);
                 }
             }
-
-            //$name = 'browse_' . $type . '_grid_view';
-            //if ((isset($_COOKIE[$name]))) {
-            //    $this->set_grid_view(Core::get_cookie($name) == 'true', false);
-            //}
 
             $name = 'browse_' . $type . '_select';
             if ((isset($_COOKIE[$name]))) {

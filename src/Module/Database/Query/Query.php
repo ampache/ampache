@@ -420,12 +420,9 @@ class Query
             return count($this->_cache);
         }
 
-        $db_results = Dba::read($this->_get_sql(false), $this->_state['params']);
-        $num_rows   = Dba::num_rows($db_results);
+        $this->_state['total'] = $this->_count_rows();
 
-        $this->_state['total'] = $num_rows;
-
-        return $num_rows;
+        return $this->_state['total'];
     }
 
     /**
@@ -1051,6 +1048,23 @@ class Query
     }
 
     /**
+     * _count_rows
+     * Ask the database how many rows the current filters match. Counting by reading every row costs the whole
+     * result set in memory to produce one integer, and the sort it would be read in does not affect the answer.
+     */
+    private function _count_rows(): int
+    {
+        $sql = $this->_get_sql(false, false);
+        if (trim($sql) === '') {
+            return 0;
+        }
+
+        $row = Dba::fetch_row(Dba::read(sprintf('SELECT COUNT(*) FROM (%s) AS `count_query`', $sql), $this->_state['params']));
+
+        return (int) ($row[0] ?? 0);
+    }
+
+    /**
      * _get_base_sql
      * This returns the base sql statement all parsed up, this should be
      * called after all set operations.
@@ -1235,7 +1249,7 @@ class Query
      * every time we get the objects because it depends on the filters and
      * the type of object we are currently browsing.
      */
-    private function _get_sql(?bool $limit = true): string
+    private function _get_sql(?bool $limit = true, bool $sort = true): string
     {
         if ($this->_state['custom']) {
             // custom queries are set by base and should not be added to
@@ -1257,7 +1271,10 @@ class Query
                 $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
             }
 
-            $final_sql .= $sort_sql;
+            // the sort is built either way, because building it is what registers the joins it reaches through
+            if ($sort) {
+                $final_sql .= $sort_sql;
+            }
         }
 
         // apply a limit/offset limit (if set)
@@ -1344,16 +1361,16 @@ class Query
             $sql = $this->_get_base_sql();
 
             $group_sql = " GROUP BY `" . $this->get_type() . '`.`id`';
-            $order_sql = " ORDER BY ";
 
             // There should only be one of these in a browse
             $sql_sort = $this->_sql_sort($this->_state['sort']['name'], $this->_state['sort']['order']);
-            $order_sql .= $sql_sort;
             $group_sql .= ", " . preg_replace('/(ASC,|DESC,|,|RAND\(\))$/', '', $sql_sort);
 
-            // Clean her up
-            $order_sql = rtrim($order_sql, "ORDER BY ");
-            $order_sql = rtrim($order_sql, ",");
+            // the sort carries a trailing comma, and a browse with nothing to sort by must not emit a bare ORDER BY
+            $sql_sort  = rtrim($sql_sort, ', ');
+            $order_sql = ($sql_sort === '')
+                ? ''
+                : ' ORDER BY ' . $sql_sort;
 
             $sql = $sql . $this->_get_join_sql() . $where_sql . $group_sql . $order_sql;
         } // if not simple
