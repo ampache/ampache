@@ -39,13 +39,15 @@ if (!Core::is_session_started()) {
 }
 $browse_type     = $browse->get_type();
 $browse_filters  = Browse::get_allowed_filters($browse_type);
-$allowed_filters = ['starts_with', 'minimum_count', 'rated', 'unplayed', 'playlist_type', 'object_type', 'catalog', 'show_art'];
+$allowed_filters = ['starts_with', 'minimum_count', 'rated', 'unplayed', 'playlist_type', 'catalog', 'show_art'];
 if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_filters))) { ?>
 <li>
     <h4><?php echo T_('Filters'); ?></h4>
     <div class="sb3">
-    <?php if (in_array('starts_with', $browse_filters) && array_key_exists('catalog', $_SESSION)) {
-        $browse->set_catalog($_SESSION['catalog']);
+    <?php if (in_array('starts_with', $browse_filters)) {
+        if (array_key_exists('catalog', $_SESSION)) {
+            $browse->set_catalog($_SESSION['catalog']);
+        }
         $match_labels = ['starts_with' => T_('Starts With'), 'like' => T_('Contains')];
         $match_modes  = array_intersect_key($match_labels, array_flip($browse_filters));
 
