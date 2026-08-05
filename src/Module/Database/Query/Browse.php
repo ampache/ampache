@@ -572,15 +572,15 @@ class Browse extends Query
         }
 
         if (self::is_valid_type($type)) {
-            // restoring what this browser last chose is a read, so none of these write the cookie back
-            $name = 'browse_' . $type . '_pages';
-            if ((isset($_COOKIE[$name]))) {
-                $this->set_use_pages(Core::get_cookie($name) == 'true', false);
+            // an ajax refresh renders with skip_cookies, so the options it reads before that are restored here
+            $use_pages = $this->_readViewCookie($type, 'pages');
+            if ($use_pages !== null) {
+                $this->set_use_pages($use_pages, false);
             }
 
-            $name = 'browse_' . $type . '_alpha';
-            if ((isset($_COOKIE[$name]))) {
-                $this->set_use_alpha(Core::get_cookie($name) == 'true', false);
+            $use_alpha = $this->_readViewCookie($type, 'alpha');
+            if ($use_alpha !== null) {
+                $this->set_use_alpha($use_alpha, false);
             } else {
                 $default_alpha = (AmpConfig::get('libitem_browse_alpha')) ? explode(
                     ",",
@@ -591,9 +591,9 @@ class Browse extends Query
                 }
             }
 
-            $name = 'browse_' . $type . '_select';
-            if ((isset($_COOKIE[$name]))) {
-                $this->set_use_select(Core::get_cookie($name) == 'true', false);
+            $use_select = $this->_readViewCookie($type, 'select');
+            if ($use_select !== null) {
+                $this->set_use_select($use_select, false);
             }
 
             parent::set_type($type, $custom_base, $parameters);
@@ -836,24 +836,28 @@ class Browse extends Query
      */
     private function _applyCookieState(string $type): void
     {
-        if (!$this->is_mashup() && array_key_exists('browse_' . $type . '_pages', $_COOKIE)) {
-            $this->set_use_pages(Core::get_cookie('browse_' . $type . '_pages') == 'true', false);
+        $use_pages = $this->_readViewCookie($type, 'pages');
+        if (!$this->is_mashup() && $use_pages !== null) {
+            $this->set_use_pages($use_pages, false);
         }
 
+        $grid_view = $this->_readViewCookie($type, 'grid_view');
         if (in_array($type, self::GRID_TYPES)) {
-            if (!$this->is_mashup() && array_key_exists('browse_' . $type . '_grid_view', $_COOKIE)) {
-                $this->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'true', false);
+            if (!$this->is_mashup() && $grid_view !== null) {
+                $this->set_grid_view($grid_view, false);
             }
         } else {
             $this->set_grid_view(false);
         }
 
-        if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
-            $this->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true', false);
+        $use_alpha = $this->_readViewCookie($type, 'alpha');
+        if ($this->is_use_filters() && $use_alpha !== null) {
+            $this->set_use_alpha($use_alpha, false);
         }
 
-        if (in_array($type, self::MULTISELECT_TYPES) && array_key_exists('browse_' . $type . '_select', $_COOKIE)) {
-            $this->set_use_select(Core::get_cookie('browse_' . $type . '_select') == 'true', false);
+        $use_select = $this->_readViewCookie($type, 'select');
+        if (in_array($type, self::MULTISELECT_TYPES) && $use_select !== null) {
+            $this->set_use_select($use_select, false);
         }
     }
 
@@ -1013,6 +1017,19 @@ class Browse extends Query
             'video' => Video::build_cache($this->_squashList($object_ids)),
             default => null,
         };
+    }
+
+    /**
+     * What this browser last chose for one of the browse view options, or null where it has never chosen one.
+     * Reading an option never writes it back, so every caller passes false for the cookie save.
+     */
+    private function _readViewCookie(string $type, string $option): ?bool
+    {
+        $name = 'browse_' . $type . '_' . $option;
+
+        return array_key_exists($name, $_COOKIE)
+            ? Core::get_cookie($name) === 'true'
+            : null;
     }
 
     /**

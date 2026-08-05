@@ -67,24 +67,27 @@ class Query
     /** @var int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}> $_cache */
     protected array $_cache = [];
 
-    /** @var array<string, mixed> $_state */
+    /**
+     * The SQL the query is built from. Browse adds its own presentation keys (grid_view, mashup, show_header,
+     * title, update_session, use_alpha, use_filters, use_pages, use_select) on write and defaults them in its
+     * own getters, so they ride along into tmp_browse without this class having to know about them.
+     *
+     * @var array<string, mixed> $_state
+     */
     protected array $_state = [
         'album_artist' => false, // Used by $browse->set_type() to filter artists to album artist only
         'base' => null,
         'custom' => false,
         'extended_key_name' => null,
         'filter' => [],
-        'grid_view' => false,
         'group' => [],
         'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,
         'limit' => 0,
-        'mashup' => null,
         'match_mode' => 'starts_with', // which name match the filter box is set to, kept apart from the filter it sets
         'offset' => 0,
         'params' => [], // parameters for custom sql
         'select' => [],
-        'show_header' => true,
         'simple' => false,
         'skip_catalog_check' => false, // when you've already checked the parent object catalog is usable
         'song_artist' => null, // Used by $browse->set_type() to filter artists to song artist only
@@ -95,13 +98,8 @@ class Query
         'start' => 0,
         'static' => false,
         'threshold' => '',
-        'title' => null,
         'total' => null,
         'type' => '',
-        'update_session' => false,
-        'use_alpha' => false,
-        'use_filters' => true, // Used by $browse to hide the filter box in the sidebar
-        'use_pages' => false,
     ];
 
     private ?QueryInterface $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
@@ -789,13 +787,6 @@ class Query
             return;
         }
 
-        // Joins may change because of the new sort so don't keep the old ones
-        $this->_state['join'] = [];
-
-        // ensure joins are reset on $this->_state
-        $this->_get_filter_sql();
-        $this->_get_sort_sql();
-
         if (!empty($order)) {
             $order = ($order == 'DESC')
                 ? 'DESC'
@@ -814,6 +805,8 @@ class Query
             'name' => $sort,
             'order' => $order,
         ];
+
+        $this->_rebuild_joins();
 
         if ($resort === true) {
             $this->_resort_objects();
@@ -927,7 +920,6 @@ class Query
             case 'shoutbox':
                 $this->queryType = new ShoutboxQuery();
                 break;
-            case 'search':
             case 'smartplaylist':
                 $this->queryType = new SmartplaylistQuery();
                 break;
@@ -1319,6 +1311,19 @@ class Query
     }
 
     /**
+     * _rebuild_joins
+     * A query collects the joins it needs as its filter and sort SQL is built, so the set it holds belongs to the
+     * filter and sort it was built for. Changing either drops that set and builds both again to collect the
+     * joins now in play; the SQL itself is discarded because only the joins are wanted.
+     */
+    private function _rebuild_joins(): void
+    {
+        $this->_state['join'] = [];
+        $this->_get_filter_sql();
+        $this->_get_sort_sql();
+    }
+
+    /**
      * _resort_objects
      * This takes the existing objects, looks at the current
      * sort method and then re-sorts them This is internally
@@ -1360,11 +1365,11 @@ class Query
 
             $sql = $this->_get_base_sql();
 
-            $group_sql = " GROUP BY `" . $this->get_type() . '`.`id`';
+            // grouping by the sort as well splits the row per joined value, so an album with three artists repeats
+            $group_sql = ' GROUP BY `' . $this->get_type() . '`.`id`';
 
             // There should only be one of these in a browse
             $sql_sort = $this->_sql_sort($this->_state['sort']['name'], $this->_state['sort']['order']);
-            $group_sql .= ", " . preg_replace('/(ASC,|DESC,|,|RAND\(\))$/', '', $sql_sort);
 
             // the sort carries a trailing comma, and a browse with nothing to sort by must not emit a bare ORDER BY
             $sql_sort  = rtrim($sql_sort, ', ');
