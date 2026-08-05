@@ -118,7 +118,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                 $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'send_playlist':
-                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=random' . '&random_type=' . scrub_out($_REQUEST['random_type']) . '&random_id=' . scrub_out($_REQUEST['random_id']);
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=random' . '&random_type=' . scrub_out((string) ($_REQUEST['random_type'] ?? '')) . '&random_id=' . scrub_out((string) ($_REQUEST['random_id'] ?? ''));
                 $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
         } // switch on action;
 

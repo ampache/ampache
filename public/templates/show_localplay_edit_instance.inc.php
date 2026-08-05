@@ -38,7 +38,7 @@ Ui::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance
     $autocomplete = ($field['type'] === 'password') ? 'new-password' : 'off'; ?>
 <tr>
     <td><?php echo $field['description']; ?></td>
-    <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out((string)($instance[$key] ?? '')); ?>" autocomplete="<?php echo $autocomplete; ?>" /></td>
+    <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out((string) ($instance[$key] ?? '')); ?>" autocomplete="<?php echo $autocomplete; ?>" /></td>
 </tr>
 <?php } ?>
 </table>

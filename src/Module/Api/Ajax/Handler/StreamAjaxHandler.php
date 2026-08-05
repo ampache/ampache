@@ -137,7 +137,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 
                 // We need to set the basket up!
                 $_SESSION['iframe']['target'] = (array_key_exists('playlist_method', $_REQUEST))
-                    ? $web_path . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
+                    ? $web_path . '/stream.php?action=basket&playlist_method=' . scrub_out((string) ($_REQUEST['playlist_method'] ?? ''))
                     : $web_path . '/stream.php?action=basket';
                 $results['reloader'] = '<script>' . Core::get_reloadutil() . "('" . $web_path . "/util.php');</script>";
         } // switch on action;
