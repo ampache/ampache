@@ -5,6 +5,7 @@ import * as Multiselect from './multiselect.js';
 import * as Search from './search.js';
 import * as Sidebar from './sidebar.js';
 import * as Slideshow from './slideshow.js';
+import * as Symbols from './symbols.js';
 import * as Tools from './tools.js';
 
 Object.assign(window, Ajax);
@@ -15,3 +16,4 @@ Object.assign(window, Sidebar);
 Object.assign(window, Artist);
 Object.assign(window, Slideshow);
 Object.assign(window, Multiselect);
+Object.assign(window, Symbols);

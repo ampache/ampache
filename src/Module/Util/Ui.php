@@ -496,6 +496,59 @@ class Ui implements UiInterface
     }
 
     /**
+     * make_fragment_self_contained
+     *
+     * One ajax response is not one piece of markup: a handler fills a $results map and each entry is
+     * dropped into a different element. get_material_symbol only emits an icon's <symbol> on the first
+     * use in the *request* though, so the definition lands in whichever fragment rendered that icon
+     * first and its siblings carry a bare <use>. They draw, because the id is somewhere in the
+     * document -- right up until a later action replaces the fragment holding the definition, and
+     * every other reference to it goes blank.
+     *
+     * So hand each fragment the definitions it references but does not carry, and none of them depends
+     * on another one surviving. Only the gaps are filled, so this costs nothing for the fragment that
+     * already emitted them inline.
+     */
+    public static function make_fragment_self_contained(string $html): string
+    {
+        if (!str_contains($html, '#ms-')) {
+            return $html;
+        }
+
+        // one match per <use> even though the tag carries both href and xlink:href
+        if (!preg_match_all('/<use\s[^>]*href="#ms-([^"]+)"/', $html, $used)) {
+            return $html;
+        }
+
+        $missing = array_unique($used[1]);
+        if (preg_match_all('/<symbol\s+id="ms-([^"]+)"/', $html, $held)) {
+            $missing = array_diff($missing, $held[1]);
+        }
+
+        $symbols = '';
+        foreach ($missing as $symbol_key) {
+            $symbol = self::$_symbol_cache[$symbol_key] ?? null;
+            if ($symbol === null) {
+                continue;
+            }
+
+            $viewbox = ($symbol['viewbox'] !== '')
+                ? ' viewBox="' . $symbol['viewbox'] . '"'
+                : '';
+            $symbols .= '<symbol id="ms-' . scrub_out($symbol_key) . '"' . $viewbox . '>' . $symbol['inner'] . '</symbol>';
+        }
+
+        if ($symbols === '') {
+            return $html;
+        }
+
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">'
+            . $symbols
+            . '</svg>'
+            . $html;
+    }
+
+    /**
      * material_symbol_sprite
      *
      * Returns a single hidden <svg> sprite containing one <symbol> per

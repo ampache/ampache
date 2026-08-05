@@ -77,7 +77,7 @@ class Random
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int) $results['id'];
+        return (int) ($results['id'] ?? 0);
     }
 
     /**
@@ -431,7 +431,7 @@ class Random
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int) $results['id'];
+        return (int) ($results['id'] ?? 0);
     }
 
     /**

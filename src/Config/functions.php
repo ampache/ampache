@@ -849,6 +849,16 @@ function xoutput_headers(): void
  */
 function xoutput_from_array(array $array, bool $callback = false, string $type = ''): string
 {
+    // Top level only: this is the ajax fragment map, one entry per target element, and each of them
+    // has to carry its own icon definitions. A $callback pass is Api recursing through nested data.
+    if (!$callback) {
+        foreach ($array as $key => $value) {
+            if (is_string($value)) {
+                $array[$key] = Ui::make_fragment_self_contained($value);
+            }
+        }
+    }
+
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
         return Api::output_xml_from_array($array, $callback, $type);
