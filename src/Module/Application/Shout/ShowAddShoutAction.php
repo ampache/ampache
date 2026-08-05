@@ -65,7 +65,7 @@ final readonly class ShowAddShoutAction implements ApplicationActionInterface
             echo AmpError::display('general');
 
             $this->ui->showQueryStats();
-            $this->ui->showHeader();
+            $this->ui->showFooter();
 
             return null;
         }
@@ -90,7 +90,7 @@ final readonly class ShowAddShoutAction implements ApplicationActionInterface
         );
 
         $this->ui->showQueryStats();
-        $this->ui->showHeader();
+        $this->ui->showFooter();
 
         return null;
     }
