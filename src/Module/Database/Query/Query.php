@@ -68,17 +68,15 @@ class Query
     protected array $_cache = [];
 
     /**
-     * The SQL the query is built from. Browse adds its own presentation keys (grid_view, mashup, show_header,
-     * title, update_session, use_alpha, use_filters, use_pages, use_select) on write and defaults them in its
-     * own getters, so they ride along into tmp_browse without this class having to know about them.
+     * The SQL the query is built from. Browse adds its own view keys (album_artist, extended_key_name, grid_view,
+     * mashup, show_header, song_artist, threshold, title, update_session, use_alpha, use_filters, use_pages,
+     * use_select) on write and defaults them in its own getters, so they ride along into tmp_browse unread here.
      *
      * @var array<string, mixed> $_state
      */
     protected array $_state = [
-        'album_artist' => false, // Used by $browse->set_type() to filter artists to album artist only
         'base' => null,
         'custom' => false,
-        'extended_key_name' => null,
         'filter' => [],
         'group' => [],
         'having' => '', // HAVING is not currently used in Query SQL
@@ -90,14 +88,12 @@ class Query
         'select' => [],
         'simple' => false,
         'skip_catalog_check' => false, // when you've already checked the parent object catalog is usable
-        'song_artist' => null, // Used by $browse->set_type() to filter artists to song artist only
         'sort' => [
             'name' => null,
             'order' => null,
         ],
         'start' => 0,
         'static' => false,
-        'threshold' => '',
         'total' => null,
         'type' => '',
     ];
@@ -265,19 +261,6 @@ class Query
 
         $this->_state['total'] = null;
         $this->set_start(0);
-    }
-
-    /**
-     * Get content div name
-     */
-    public function get_content_div(): string
-    {
-        $key = 'browse_content_' . $this->get_type();
-        if (!empty($this->_state['extended_key_name'])) {
-            $key .= '_' . $this->_state['extended_key_name'];
-        }
-
-        return $key . ('_' . $this->id);
     }
 
     /**
@@ -474,7 +457,7 @@ class Query
             'order' => null,
         ];
         $this->set_static_content(false);
-        $this->set_is_simple(false);
+        $this->set_simple_browse(false);
         $this->set_start(0);
         $this->set_offset((int) AmpConfig::get('offset_limit', 50));
     }
@@ -508,6 +491,47 @@ class Query
     }
 
     /**
+     * set_api_filter
+     *
+     * Do some value checks for api input before attempting to set the query filter
+     */
+    public function set_api_filter(string $filter, bool|int|string|null $value): void
+    {
+        if (!strlen((string) $value)) {
+            return;
+        }
+
+        switch ($filter) {
+            case 'add':
+                // Check for a range, if no range default to gt
+                if (strpos((string) $value, '/')) {
+                    $elements = explode('/', (string) $value);
+                    $this->set_filter('add_lt', strtotime($elements[1]));
+                    $this->set_filter('add_gt', strtotime($elements[0]));
+                } else {
+                    $this->set_filter('add_gt', strtotime((string) $value));
+                }
+                break;
+            case 'update':
+                // Check for a range, if no range default to gt
+                if (strpos((string) $value, '/')) {
+                    $elements = explode('/', (string) $value);
+                    $this->set_filter('update_lt', strtotime($elements[1]));
+                    $this->set_filter('update_gt', strtotime($elements[0]));
+                } else {
+                    $this->set_filter('update_gt', strtotime((string) $value));
+                }
+                break;
+            case 'alpha_match':
+                $this->set_filter('alpha_match', $value);
+                break;
+            case 'exact_match':
+                $this->set_filter('exact_match', $value);
+                break;
+        }
+    }
+
+    /**
      * set_catalog
      */
     public function set_catalog(?int $catalog_number = 0): void
@@ -516,12 +540,19 @@ class Query
     }
 
     /**
-     * Set an additional content div key.
-     * This is used to keep div names unique in the html
+     * set_conditions
+     *
+     * Apply additional filters to the Query using ';' separated comma string pairs
+     * e.g. 'filter1,value1;filter2,value2'
      */
-    public function set_content_div_ak(int|string $key): void
+    public function set_conditions(string $cond): void
     {
-        $this->_state['extended_key_name'] = str_replace(", ", "_", (string) $key);
+        foreach ((explode(';', $cond)) as $condition) {
+            $filter = (explode(',', $condition));
+            if (!empty($filter[0])) {
+                $this->set_filter(strtolower($filter[0]), (($filter[1] ?? '') ?: null));
+            }
+        }
     }
 
     /**
@@ -666,16 +697,6 @@ class Query
     }
 
     /**
-     * set_is_simple
-     * This sets the current browse object to a 'simple' browse method
-     * which means use the base query provided and expand from there
-     */
-    public function set_is_simple(bool $value): void
-    {
-        $this->_state['simple'] = make_bool($value);
-    }
-
-    /**
      * set_join
      * This sets the joins for the current browse object
      */
@@ -761,6 +782,16 @@ class Query
     }
 
     /**
+     * set_simple_browse
+     * This sets the current browse object to a 'simple' browse method
+     * which means use the base query provided and expand from there
+     */
+    public function set_simple_browse(bool $value): void
+    {
+        $this->_state['simple'] = make_bool($value);
+    }
+
+    /**
      * set_skip_catalog_check
      * This allows you to bypass catalog state checks when you have already checked the parent
      * This will speed up getting sub-items when you are sure it's been checked
@@ -811,6 +842,24 @@ class Query
         if ($resort === true) {
             $this->_resort_objects();
         }
+    }
+
+    /**
+     * set_sort_order
+     *
+     * Try to clean up sorts into something valid before sending to the Query
+     * @param string[] $default
+     */
+    public function set_sort_order(string $sort, array $default): void
+    {
+        $sort      = array_map('trim', explode(',', $sort));
+        $sort_name = $sort[0] ?: $default[0];
+        $sort_type = $sort[1] ?? $default[1];
+        if (empty($sort_name) || empty($sort_type)) {
+            return;
+        }
+
+        $this->set_sort(strtolower($sort_name), strtoupper($sort_type), false);
     }
 
     /**
@@ -964,63 +1013,6 @@ class Query
     public function set_user_id(User $user): void
     {
         $this->user_id = $user->getId();
-    }
-
-    /**
-     * sql_sort_video
-     */
-    public function sql_sort_video(?string $field, ?string $order = null, ?string $table = 'video'): string
-    {
-        $sql = "";
-        switch ($field) {
-            case 'name':
-            case 'title':
-                $sql = "`video`.`title`";
-                break;
-            case 'addition_time':
-            case 'catalog':
-            case 'id':
-            case 'total_count':
-            case 'total_skip':
-            case 'update_time':
-                $sql = "`video`.`$field`";
-                break;
-            case 'codec':
-                $sql = "`video`.`video_codec`";
-                break;
-            case 'length':
-                $sql = "`video`.`time`";
-                break;
-            case 'rating':
-                $sql = sprintf('`rating`.`rating` %s, `rating`.`id`', $order);
-                $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string) $this->user_id, 100);
-                break;
-            case 'release_date':
-                $sql = "`video`.`release_date`";
-                break;
-            case 'resolution':
-                $sql = "`video`.`resolution_x`";
-                break;
-            case 'user_flag':
-                $sql = "`user_flag`.`date`";
-                $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string) $this->user_id, 100);
-                break;
-            case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order `rating`.`rating` $order, `rating`.`date`";
-                $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string) $this->user_id, 100);
-                $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string) $this->user_id, 100);
-                break;
-        }
-
-        if (
-            $sql !== ''
-            && $sql !== '0'
-            && $table != 'video'
-        ) {
-            $this->set_join('LEFT', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 50);
-        }
-
-        return $sql;
     }
 
     /**

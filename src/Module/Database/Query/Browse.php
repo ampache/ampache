@@ -254,6 +254,19 @@ class Browse extends Query
     }
 
     /**
+     * The id of the div this browse renders into, unique per browse so two on a page do not collide.
+     */
+    public function get_content_div(): string
+    {
+        $key = 'browse_content_' . $this->get_type();
+        if (!empty($this->_state['extended_key_name'])) {
+            $key .= '_' . $this->_state['extended_key_name'];
+        }
+
+        return $key . ('_' . $this->id);
+    }
+
+    /**
      * get_css_class
      */
     public function get_css_class(): string
@@ -384,24 +397,6 @@ class Browse extends Query
     }
 
     /**
-     * save_cookie_params
-     */
-    public function save_cookie_params(string $option, string $value): void
-    {
-        if ($this->get_type() !== '' && $this->get_type() !== '0') {
-            $remember_length = time() + 31536000;
-            $cookie_options  = [
-                'expires' => $remember_length,
-                'path' => (string) AmpConfig::get('cookie_path'),
-                'domain' => (string) AmpConfig::get('cookie_domain'),
-                'secure' => make_bool(AmpConfig::get('cookie_secure')),
-                'samesite' => 'Strict',
-            ];
-            setcookie('browse_' . $this->get_type() . '_' . $option, $value, $cookie_options);
-        }
-    }
-
-    /**
      * set_album_artist
      */
     public function set_album_artist(bool $album_artist): void
@@ -410,60 +405,12 @@ class Browse extends Query
     }
 
     /**
-     * set_api_filter
-     *
-     * Do some value checks for api input before attempting to set the query filter
+     * Set an additional content div key.
+     * This is used to keep div names unique in the html
      */
-    public function set_api_filter(string $filter, bool|int|string|null $value): void
+    public function set_content_div_ak(int|string $key): void
     {
-        if (!strlen((string) $value)) {
-            return;
-        }
-
-        switch ($filter) {
-            case 'add':
-                // Check for a range, if no range default to gt
-                if (strpos((string) $value, '/')) {
-                    $elements = explode('/', (string) $value);
-                    $this->set_filter('add_lt', strtotime($elements[1]));
-                    $this->set_filter('add_gt', strtotime($elements[0]));
-                } else {
-                    $this->set_filter('add_gt', strtotime((string) $value));
-                }
-                break;
-            case 'update':
-                // Check for a range, if no range default to gt
-                if (strpos((string) $value, '/')) {
-                    $elements = explode('/', (string) $value);
-                    $this->set_filter('update_lt', strtotime($elements[1]));
-                    $this->set_filter('update_gt', strtotime($elements[0]));
-                } else {
-                    $this->set_filter('update_gt', strtotime((string) $value));
-                }
-                break;
-            case 'alpha_match':
-                $this->set_filter('alpha_match', $value);
-                break;
-            case 'exact_match':
-                $this->set_filter('exact_match', $value);
-                break;
-        }
-    }
-
-    /**
-     * set_conditions
-     *
-     * Apply additional filters to the Query using ';' separated comma string pairs
-     * e.g. 'filter1,value1;filter2,value2'
-     */
-    public function set_conditions(string $cond): void
-    {
-        foreach ((explode(';', $cond)) as $condition) {
-            $filter = (explode(',', $condition));
-            if (!empty($filter[0])) {
-                $this->set_filter(strtolower($filter[0]), (($filter[1] ?? '') ?: null));
-            }
-        }
+        $this->_state['extended_key_name'] = str_replace(", ", "_", (string) $key);
     }
 
     /**
@@ -495,39 +442,11 @@ class Browse extends Query
     }
 
     /**
-     * set_simple_browse
-     * This sets the current browse object to a 'simple' browse method
-     * which means use the base query provided and expand from there
-     */
-    public function set_simple_browse(bool $value): void
-    {
-        $this->set_is_simple($value);
-    }
-
-    /**
      * set_song_artist
      */
     public function set_song_artist(bool $song_artist): void
     {
         $this->_state['song_artist'] = $song_artist;
-    }
-
-    /**
-     * set_sort_order
-     *
-     * Try to clean up sorts into something valid before sending to the Query
-     * @param string[] $default
-     */
-    public function set_sort_order(string $sort, array $default): void
-    {
-        $sort      = array_map('trim', explode(',', $sort));
-        $sort_name = $sort[0] ?: $default[0];
-        $sort_type = $sort[1] ?? $default[1];
-        if (empty($sort_name) || empty($sort_type)) {
-            return;
-        }
-
-        $this->set_sort(strtolower($sort_name), strtoupper($sort_type), false);
     }
 
     /**
@@ -1053,5 +972,23 @@ class Browse extends Query
         }
 
         return $results;
+    }
+
+    /**
+     * save_cookie_params
+     */
+    private function save_cookie_params(string $option, string $value): void
+    {
+        if ($this->get_type() !== '' && $this->get_type() !== '0') {
+            $remember_length = time() + 31536000;
+            $cookie_options  = [
+                'expires' => $remember_length,
+                'path' => (string) AmpConfig::get('cookie_path'),
+                'domain' => (string) AmpConfig::get('cookie_domain'),
+                'secure' => make_bool(AmpConfig::get('cookie_secure')),
+                'samesite' => 'Strict',
+            ];
+            setcookie('browse_' . $this->get_type() . '_' . $option, $value, $cookie_options);
+        }
     }
 }
