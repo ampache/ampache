@@ -52,16 +52,19 @@ final readonly class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $sessionCookie = $_COOKIE[$this->configContainer->getSessionName()] ?? '';
+        $authParam     = (string) ($_REQUEST['auth'] ?? '');
+
         // Check to see if they've got an interface session or a valid API session
         if (
-            !Session::exists(AccessTypeEnum::INTERFACE->value, $_COOKIE[$this->configContainer->getSessionName()])
-            && !Session::exists(AccessTypeEnum::API->value, $_REQUEST['auth'] ?? '')
+            !Session::exists(AccessTypeEnum::INTERFACE->value, $sessionCookie)
+            && !Session::exists(AccessTypeEnum::API->value, $authParam)
         ) {
             $this->logger->warning(
                 sprintf(
                     'Access denied, checked cookie session:%s and auth:%s',
-                    $_COOKIE[$this->configContainer->getSessionName()],
-                    $_REQUEST['auth']
+                    $sessionCookie,
+                    $authParam
                 ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );

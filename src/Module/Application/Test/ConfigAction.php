@@ -36,6 +36,7 @@ use Gettext\Translations;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode\RFC\RFC7231;
 
 final readonly class ConfigAction implements ApplicationActionInterface
 {
@@ -61,7 +62,7 @@ final readonly class ConfigAction implements ApplicationActionInterface
 
         if (!file_exists($configfile)) {
             return $this->responseFactory
-                ->createResponse()
+                ->createResponse(RFC7231::FOUND)
                 ->withHeader(
                     'Location',
                     '/install.php'
