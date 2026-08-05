@@ -44,12 +44,15 @@ use Ampache\Repository\Model\Song;
             </tr>
         </thead>
         <tbody>
-        <?php if (!$songs->valid()) { ?>
+        <?php // valid() primes the generator, and on an empty result that also closes it -- so the
+        // foreach has to be the else branch. Iterating afterwards raises "Cannot traverse an already
+        // closed generator".
+        if (!$songs->valid()) { ?>
             <tr>
                 <td colspan="6" style="text-align: center"><span class="error"><?php echo T_('No records found'); ?></span></td>
             </tr>
-        <?php } ?>
-            <?php foreach ($songs as $song) {
+        <?php } else {
+            foreach ($songs as $song) {
                 /** @var Song $song */?>
                 <tr>
                     <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->getId(); ?>" /></td>
@@ -59,7 +62,8 @@ use Ampache\Repository\Model\Song;
                     <td class="cel_filename"><?php echo scrub_out($song->getFile()); ?></td>
                     <td class="cel_additiontime"><?php echo get_datetime($song->getAdditionTime()); ?></td>
                 </tr>
-            <?php } ?>
+            <?php }
+            } ?>
         </tbody>
         <tfoot>
             <tr class="th-bottom">

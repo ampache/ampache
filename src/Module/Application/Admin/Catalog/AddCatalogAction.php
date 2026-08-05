@@ -64,8 +64,6 @@ final class AddCatalogAction extends AbstractCatalogAction
             return null;
         }
 
-        ob_end_flush();
-
         $body = (array) $request->getParsedBody();
         $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
         if (
@@ -85,6 +83,8 @@ final class AddCatalogAction extends AbstractCatalogAction
 
         // If an error hasn't occurred
         if (!AmpError::occurred()) {
+            ob_end_flush();
+
             // mandatory catalog information
             $data = [
                 'name' => $_POST['name'],

@@ -66,7 +66,7 @@ final readonly class ClearCacheAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $text = T_('Your cache has been cleared successfully');
-        switch ($_REQUEST['type']) {
+        switch ((string) ($_REQUEST['type'] ?? '')) {
             case 'song':
                 Song::clear_cache();
                 break;

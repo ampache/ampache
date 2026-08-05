@@ -32,10 +32,10 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var AccessListItemInterface $access */
-/** @var bool $level_5 */
-/** @var bool $level_25 */
-/** @var bool $level_50 */
-/** @var bool $level_75 */
+/** @var string $level_5 */
+/** @var string $level_25 */
+/** @var string $level_50 */
+/** @var string $level_75 */
 /** @var string $sl_stream */
 /** @var string $sl_interface */
 /** @var string $sl_network */
@@ -57,8 +57,10 @@ $all          = T_('All'); ?>
         <tr>
             <td><?php echo T_('Level') . ':'; ?></td>
             <td colspan="3">
-                <?php $name = 'level_' . $access->getLevel();
-${$name}                    = 'checked="checked"'; ?>
+                <?php // only the matching one is assigned below, so the rest have to start out defined
+$level_5 = $level_25 = $level_50 = $level_75 = '';
+$name    = 'level_' . $access->getLevel();
+${$name} = 'checked="checked"'; ?>
                 <input type="radio" name="level" value="5" <?php echo $level_5; ?>><?php echo T_('View'); ?>
                 <input type="radio" name="level" value="25" <?php echo $level_25; ?>><?php echo T_('Read'); ?>
                 <input type="radio" name="level" value="50" <?php echo $level_50; ?>><?php echo T_('Read/Write'); ?>
@@ -75,8 +77,10 @@ ${$name}                    = 'checked="checked"'; ?>
             <td><?php echo T_('Type') . ':'; ?></td>
             <td colspan="3">
                 <select name="type">
-                <?php $name = 'sl_' . $access->getType();
-${$name}                    = ' selected="selected"'; ?>
+                <?php // as above: pre-define every option so the three that do not match still echo
+$sl_stream = $sl_interface = $sl_network = $sl_rpc = '';
+$name      = 'sl_' . $access->getType();
+${$name}   = ' selected="selected"'; ?>
                     <option value="stream"<?php echo $sl_stream; ?>><?php echo $streamaccess; ?></option>
                     <option value="interface"<?php echo $sl_interface; ?>><?php echo T_('Web Interface'); ?></option>
                     <option value="network"<?php echo $sl_network; ?>><?php echo $localnetwork; ?></option>

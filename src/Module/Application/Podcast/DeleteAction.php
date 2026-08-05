@@ -64,7 +64,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
         }
 
         $queryParams = $request->getQueryParams();
-        $podcastId   = (int) ($queryParams['podcast_id']);
+        $podcastId   = (int) ($queryParams['podcast_id'] ?? 0);
         $burlParam   = (string) ($queryParams['burl'] ?? '');
         $webPath     = $this->configContainer->getWebPath();
 

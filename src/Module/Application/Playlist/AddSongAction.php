@@ -54,7 +54,12 @@ final readonly class AddSongAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $playlist->add_songs([$_REQUEST['song_id']]);
+        // getFromRequest() rather than $_REQUEST directly: the key is absent whenever the action is
+        // called without one, and there is nothing to add in that case.
+        $song_id = (int) $this->requestParser->getFromRequest('song_id');
+        if ($song_id > 0) {
+            $playlist->add_songs([$song_id]);
+        }
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

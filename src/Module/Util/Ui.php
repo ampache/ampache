@@ -878,8 +878,15 @@ class Ui implements UiInterface
     public function accessDenied(string $error = 'Access Denied'): void
     {
         // Clear any buffered crap
-        ob_end_clean();
-        header('HTTP/1.1 403 ' . $error);
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        // A handler that already flushed its buffer has sent the headers, so setting the status here
+        // would only raise "headers already sent". showErrorPage() guards the same way.
+        if (!headers_sent()) {
+            header('HTTP/1.1 403 ' . $error);
+        }
         require_once self::find_template('show_denied.inc.php');
     }
 
