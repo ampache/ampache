@@ -67,13 +67,22 @@ function suppressDialogNavigation(source) {
     }
 }
 
-// The element a popup dialog hangs off, given either the click event or the element itself.
+// The element a popup dialog hangs off, given the click event, the element, or a jQuery wrapper of it.
 function dialogAnchor(source) {
-    if (source && source.nodeType) {
+    if (!source) {
+        return null;
+    }
+
+    if (source.nodeType) {
         return source;
     }
 
-    return (source && (source.currentTarget || source.target)) || null;
+    // A context-menu callback has no event to offer, only the jQuery-wrapped trigger it fired from.
+    if (source.jquery) {
+        return source[0] || null;
+    }
+
+    return source.currentTarget || source.target || null;
 }
 
 // The broadcast button lives in the position:fixed web player, so a document coordinate for it is only valid
