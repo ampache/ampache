@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Playlist\Search;
+namespace Ampache\Module\Database\Search;
 
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Search;
