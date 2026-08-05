@@ -98,7 +98,12 @@ if ($browse->is_show_header()) {
         </tr>
     </thead>
     <tbody>
-<?php foreach ($object_ids as $collection_id) {
+<?php if ($show_ratings) {
+    Rating::build_cache('collection', $object_ids);
+    Userflag::build_cache('collection', $object_ids);
+}
+
+foreach ($object_ids as $collection_id) {
     $libitem = $collectionRepository->findById((int) $collection_id);
     // Skip a row whose collection vanished between the browse query and this loop
     if (

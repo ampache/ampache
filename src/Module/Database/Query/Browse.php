@@ -49,6 +49,7 @@ use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
@@ -77,6 +78,7 @@ class Browse extends Query
         'playlist_media',
         'song',
     ];
+
     private const array BROWSE_TYPES = [
         'album_disk',
         'album',
@@ -110,6 +112,72 @@ class Browse extends Query
         'user',
         'video',
         'wanted',
+    ];
+
+    /** Browse types that can be drawn as tiles, and so remember a grid view choice per browser */
+    private const array GRID_TYPES = [
+        'album',
+        'album_disk',
+        'artist',
+        'live_stream',
+        'playlist',
+        'podcast',
+        'podcast_episode',
+        'smartplaylist',
+        'song',
+        'video',
+    ];
+
+    /** The most rows an un-paged browse may render at once, chosen to stay under a 256M PHP memory limit */
+    private const int RENDER_LIMIT = 5000;
+
+    /** Browse types that list rows rather than tiles, whatever the grid view cookie says */
+    private const array ROW_TYPES = [
+        'collection_items',
+        'democratic',
+        'genre',
+        'playlist_localplay',
+        'playlist_media',
+    ];
+    /**
+     * The template each browse type renders through. A type with no entry here renders nothing, so every type in
+     * BROWSE_TYPES needs one; the matching box title lives in _getBoxTitle().
+     *
+     * @var array<string, string>
+     */
+    private const array TEMPLATE_MAP = [
+        'album' => 'show_albums.inc.php',
+        'album_disk' => 'show_album_disks.inc.php',
+        'artist' => 'show_artists.inc.php',
+        'broadcast' => 'show_broadcasts.inc.php',
+        'catalog' => 'show_catalogs.inc.php',
+        'collection' => 'show_collections.inc.php',
+        'collection_items' => 'show_collection_items.inc.php',
+        'democratic' => 'show_democratic_playlist.inc.php',
+        'folder' => 'show_folders.inc.php',
+        'follower' => 'show_users.inc.php',
+        'genre' => 'show_genres.inc.php',
+        'label' => 'show_labels.inc.php',
+        'license' => 'show_manage_license.inc.php',
+        'license_hidden' => 'show_manage_license_hidden.inc.php',
+        'live_stream' => 'show_live_streams.inc.php',
+        'playlist' => 'show_playlists.inc.php',
+        'playlist_localplay' => 'show_localplay_playlist.inc.php',
+        'playlist_media' => 'show_playlist_medias.inc.php',
+        'playlist_search' => 'show_searches.inc.php',
+        'podcast' => 'show_podcasts.inc.php',
+        'podcast_episode' => 'show_podcast_episodes.inc.php',
+        'pvmsg' => 'show_pvmsgs.inc.php',
+        'share' => 'show_shared_objects.inc.php',
+        'shoutbox' => 'show_manage_shoutbox.inc.php',
+        'smartplaylist' => 'show_searches.inc.php',
+        'song' => 'show_songs.inc.php',
+        'song_preview' => 'show_song_previews.inc.php',
+        'tag' => 'show_tagcloud.inc.php',
+        'tag_hidden' => 'show_tagcloud_hidden.inc.php',
+        'user' => 'show_users.inc.php',
+        'video' => 'show_videos.inc.php',
+        'wanted' => 'show_wanted_albums.inc.php',
     ];
 
     public ?int $duration = null;
@@ -258,7 +326,7 @@ class Browse extends Query
      */
     public function is_show_header(): bool
     {
-        return $this->_state['show_header'];
+        return make_bool($this->_state['show_header'] ?? true);
     }
 
     /**
@@ -620,6 +688,7 @@ class Browse extends Query
         $type            = $this->get_type();
         $limit_threshold = $this->get_threshold();
 
+        // a song_preview or folder browse is handed rows it built itself, so they are neither saved nor prefetched
         $build_cache = false;
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
@@ -629,57 +698,13 @@ class Browse extends Query
             $build_cache = true;
         }
 
-        // Limit is based on the user's preferences if this is not a
-        // simple browse because we've got too much here
-        if (
-            $this->get_offset() > 0
-            && $this->get_start() >= 0
-            && !$this->is_simple()
-        ) {
-            $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
-        } elseif ($object_ids === []) {
-            $this->set_total(0);
-        } elseif (!$this->is_simple() && $this->get_offset() === 0) {
-            // No-limit == php memory exhausts and silent fail
-            // silent fail == user sad (#4276)
-            // Hard code a arbitrary limit to prevent those silent fails
-            // 5000 as a limit allow to stay under 256M of PHP
-            $limit = 5000;
-            $count = count($object_ids);
-            if ($count > $limit) {
-                debug_event(self::class, sprintf('show_objects refused: un-paged %s browse of %d objects exceeds the %d render limit', $type, $count, $limit), 1);
-                AmpError::add('browse', sprintf(nT_('This view has %d item and is too large to show all at once (limit %d). Enable paging or narrow your filters.', 'This view has %d items and is too large to show all at once (limit %d). Enable paging or narrow your filters.', $count), $count, $limit));
-
-                echo '<div class="error browse-too-large">' . scrub_out(sprintf(nT_('This view has %d item and is too large to show all at once (limit %d). Enable paging or narrow your filters.', 'This view has %d items and is too large to show all at once (limit %d). Enable paging or narrow your filters.', $count), $count, $limit)) . '</div>';
-
-                return;
-            }
+        $object_ids = $this->_pageObjectIds($object_ids, $type);
+        if ($object_ids === null) {
+            return;
         }
 
         if ($build_cache) {
-            /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
-            switch ($type) {
-                case 'song':
-                    Song::build_cache($this->_squashList($object_ids), $limit_threshold);
-                    break;
-                case 'album':
-                    Album::build_cache($this->_squashList($object_ids));
-                    break;
-                case 'artist':
-                    Artist::build_cache($this->_squashList($object_ids), true, $limit_threshold);
-                    break;
-                case 'playlist':
-                    Playlist::build_cache($this->_squashList($object_ids));
-                    break;
-                case 'genre':
-                case 'tag':
-                case 'tag_hidden':
-                    Tag::build_cache($this->_squashList($object_ids));
-                    break;
-                case 'video':
-                    Video::build_cache($this->_squashList($object_ids));
-                    break;
-            }
+            $this->_prefetchPage($type, $object_ids, $limit_threshold);
         }
 
         // Row templates are also included directly, so they repeat this prefetch unless told it is already done
@@ -693,19 +718,7 @@ class Browse extends Query
             ${$name} = $extra;
         }
 
-        $match = '';
-        // Format any matches we have so we can show them to the masses
-        if ($filter_value = $this->get_filter('alpha_match')) {
-            $match = ' (' . $filter_value . ')';
-        } elseif ($filter_value = $this->get_filter('starts_with')) {
-            $match = ' (' . $filter_value . ')';
-        } elseif ($filter_value = $this->get_filter('catalog')) {
-            // Get the catalog title
-            $catalog = Catalog::create_from_id((int) ($filter_value));
-            if ($catalog !== null) {
-                $match = ' (' . $catalog->name . ')';
-            }
-        }
+        $match = $this->_getMatchName();
 
         // Update the session value only if it's allowed on the current browser
         if ($this->is_update_session()) {
@@ -723,212 +736,35 @@ class Browse extends Query
         $argument_param = self::get_argument_param($argument);
 
         if (!empty($type) && !$skip_cookies) {
-            if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_use_pages', $_COOKIE)) {
-                $browse->set_use_pages(Core::get_cookie('browse_' . $type . '_use_pages') == 'true', false);
-            }
-
-            if (in_array($type, ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
-                if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_grid_view', $_COOKIE)) {
-                    $browse->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'true', false);
-                }
-            } else {
-                $browse->set_grid_view(false);
-            }
-
-            if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
-                $browse->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true', false);
-            }
-
-            if (in_array($type, self::MULTISELECT_TYPES) && array_key_exists('browse_' . $type . '_select', $_COOKIE)) {
-                $browse->set_use_select(Core::get_cookie('browse_' . $type . '_select') == 'true', false);
-            }
+            $this->_applyCookieState($type);
         }
 
-        $box_title = $this->get_title('');
-        // Switch on the type of browsing we're doing
-        switch ($type) {
-            case 'song':
-                $box_title = $this->get_title(T_('Songs') . $match);
-                $box_req   = Ui::find_template('show_songs.inc.php');
-                break;
-            case 'album':
-                $box_title     = $this->get_title(T_('Albums') . $match);
-                $group_release = false;
-                if (is_array($argument)) {
-                    if (array_key_exists('title', $argument)) {
-                        $box_title = $argument['title'];
-                    }
-
-                    if (array_key_exists('group_disks', $argument)) {
-                        $group_release = (bool) $argument['group_disks'];
-                    }
-                }
-
-                $box_req = Ui::find_template('show_albums.inc.php');
-                break;
-            case 'album_disk':
-                $box_title     = $this->get_title(T_('Albums') . $match);
-                $group_release = false;
-                if (is_array($argument)) {
-                    if (array_key_exists('title', $argument)) {
-                        $box_title = $argument['title'];
-                    }
-
-                    if (array_key_exists('group_disks', $argument)) {
-                        $group_release = (bool) $argument['group_disks'];
-                    }
-                }
-
-                $box_req = Ui::find_template('show_album_disks.inc.php');
-                break;
-            case 'user':
-                $box_title = $this->get_title(T_('Browse Users') . $match);
-                $box_req   = Ui::find_template('show_users.inc.php');
-                break;
-            case 'artist':
-                if ($this->is_album_artist()) {
-                    $box_title = $this->get_title(T_('Album Artist') . $match);
-                } elseif ($this->is_song_artist()) {
-                    $box_title = $this->get_title(T_('Song Artist') . $match);
-                } else {
-                    $box_title = $this->get_title(T_('Artist') . $match);
-                }
-
-                $box_req = Ui::find_template('show_artists.inc.php');
-                break;
-            case 'live_stream':
-                $box_title = $this->get_title(T_('Radio Stations') . $match);
-                $box_req   = Ui::find_template('show_live_streams.inc.php');
-                break;
-            case 'playlist':
-                $box_title = $this->get_title(T_('Playlists') . $match);
-                $box_req   = Ui::find_template('show_playlists.inc.php');
-                break;
-            case 'playlist_media':
-                $browse->set_grid_view(false);
-                $box_title = $this->get_title(T_('Playlist Items') . $match);
-                $box_req   = Ui::find_template('show_playlist_medias.inc.php');
-                break;
-            case 'folder':
-                $box_title = $this->get_title(T_('Folders'));
-                $box_req   = Ui::find_template('show_folders.inc.php');
-                break;
-            case 'collection':
-                $box_title = $this->get_title(T_('Collections') . $match);
-                $box_req   = Ui::find_template('show_collections.inc.php');
-                break;
-            case 'collection_items':
-                // Rows, not tiles: the members are of mixed types and each one has to show which type it is
-                $browse->set_grid_view(false);
-                $box_title = $this->get_title(T_('Collection Items') . $match);
-                $box_req   = Ui::find_template('show_collection_items.inc.php');
-                break;
-            case 'playlist_localplay':
-                $browse->set_grid_view(false);
-                $box_title = $this->get_title(T_('Current Playlist'));
-                $box_req   = Ui::find_template('show_localplay_playlist.inc.php');
-                Ui::show_box_bottom();
-                break;
-            case 'smartplaylist':
-                $box_title = $this->get_title(T_('Smart Playlists') . $match);
-                $box_req   = Ui::find_template('show_searches.inc.php');
-                break;
-            case 'catalog':
-                $box_title = $this->get_title(T_('Catalogs'));
-                $box_req   = Ui::find_template('show_catalogs.inc.php');
-                break;
-            case 'shoutbox':
-                $shoutObjectLoader = $this->shoutObjectLoader;
-                $shoutRepository   = $this->shoutRepository;
-                $box_title         = $this->get_title(T_('Shoutbox Records'));
-                $shouts            = [];
-                foreach ($object_ids as $shoutId) {
-                    if ($shoutId instanceof Song_Preview) {
-                        continue;
-                    }
-                    $shout = (is_array($shoutId) && isset($shoutId['object_id']))
-                        ? $shoutRepository->findById((int) $shoutId['object_id'])
-                        : $shoutRepository->findById((int) $shoutId);
-                    if ($shout !== null) {
-                        // used within the template
-                        $shouts[] = $shout;
-                    }
-                }
-
-                $box_req = Ui::find_template('show_manage_shoutbox.inc.php');
-                break;
-            case 'genre':
-                // the same rows the tag cloud draws from, listed instead of clouded
-                $browse->set_grid_view(false);
-                $box_title = $this->get_title(T_('Genres') . $match);
-                $box_req   = Ui::find_template('show_genres.inc.php');
-                break;
-            case 'tag':
-                $box_title = $this->get_title(T_('Genres'));
-                $box_req   = Ui::find_template('show_tagcloud.inc.php');
-                break;
-            case 'tag_hidden':
-                $box_title = $this->get_title(T_('Genres'));
-                $box_req   = Ui::find_template('show_tagcloud_hidden.inc.php');
-                break;
-            case 'video':
-                $box_title = $this->get_title(T_('Videos'));
-                $box_req   = Ui::find_template('show_videos.inc.php');
-                break;
-            case 'democratic':
-                $browse->set_grid_view(false);
-                $box_title = $this->get_title(T_('Democratic Playlist'));
-                $box_req   = Ui::find_template('show_democratic_playlist.inc.php');
-                break;
-            case 'wanted':
-                $box_title = $this->get_title(T_('Wanted Albums'));
-                $box_req   = Ui::find_template('show_wanted_albums.inc.php');
-                break;
-            case 'share':
-                $box_title = $this->get_title(T_('Shares'));
-                $box_req   = Ui::find_template('show_shared_objects.inc.php');
-                break;
-            case 'song_preview':
-                $box_title = $this->get_title(T_('Songs'));
-                $box_req   = Ui::find_template('show_song_previews.inc.php');
-                break;
-            case 'broadcast':
-                $box_title = $this->get_title(T_('Broadcasts'));
-                $box_req   = Ui::find_template('show_broadcasts.inc.php');
-                break;
-            case 'license':
-                $box_title = $this->get_title(T_('Media Licenses'));
-                $box_req   = Ui::find_template('show_manage_license.inc.php');
-                break;
-            case 'license_hidden':
-                $box_title = $this->get_title(T_('Media Licenses'));
-                $box_req   = Ui::find_template('show_manage_license_hidden.inc.php');
-                break;
-            case 'label':
-                $box_title = $this->get_title(T_('Labels'));
-                $box_req   = Ui::find_template('show_labels.inc.php');
-                break;
-            case 'pvmsg':
-                $box_title = $this->get_title(T_('Private Messages'));
-                $box_req   = Ui::find_template('show_pvmsgs.inc.php');
-                break;
-            case 'podcast':
-                $box_title = $this->get_title(T_('Podcasts'));
-                $box_req   = Ui::find_template('show_podcasts.inc.php');
-                break;
-            case 'podcast_episode':
-                $box_title = $this->get_title(T_('Podcast Episodes'));
-                $box_req   = Ui::find_template('show_podcast_episodes.inc.php');
-                break;
+        if (in_array($type, self::ROW_TYPES)) {
+            $browse->set_grid_view(false);
         }
+
+        $box_req   = $this->_getTemplate($type);
+        $box_title = $this->_getBoxTitle($type, $match);
+
+        // an album list may be titled and grouped by whatever asked for it
+        $group_release = false;
+        if (is_array($argument) && ($type === 'album' || $type === 'album_disk')) {
+            $box_title     = (string) ($argument['title'] ?? $box_title);
+            $group_release = (bool) ($argument['group_disks'] ?? false);
+        }
+
+        // the shoutbox template lists the records themselves rather than their ids
+        $shouts = ($type === 'shoutbox')
+            ? $this->_getShouts($object_ids)
+            : [];
 
         Ajax::start_container($this->get_content_div(), 'browse_content');
-        if ($this->is_show_header() && (isset($box_req) && !empty($box_title))) {
+        if ($this->is_show_header() && $box_req !== '' && $box_title !== '') {
             $this->set_title($box_title);
             Ui::show_box_top($box_title, $class);
         }
 
-        if (isset($box_req)) {
+        if ($box_req !== '') {
             // the browse template and its row templates render in this scope, so the services they use are named here
             $ajaxUriRetriever        = $this->ajaxUriRetriever;
             $collectionRepository    = $this->collectionRepository;
@@ -951,7 +787,7 @@ class Browse extends Query
         }
 
         if ($this->is_show_header()) {
-            if (isset($box_req)) {
+            if ($box_req !== '') {
                 Ui::show_box_bottom();
             }
 
@@ -997,6 +833,190 @@ class Browse extends Query
                 }
             }
         }
+    }
+
+    /**
+     * Restore the view options this browser last chose for this type.
+     */
+    private function _applyCookieState(string $type): void
+    {
+        if (!$this->is_mashup() && array_key_exists('browse_' . $type . '_pages', $_COOKIE)) {
+            $this->set_use_pages(Core::get_cookie('browse_' . $type . '_pages') == 'true', false);
+        }
+
+        if (in_array($type, self::GRID_TYPES)) {
+            if (!$this->is_mashup() && array_key_exists('browse_' . $type . '_grid_view', $_COOKIE)) {
+                $this->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'true', false);
+            }
+        } else {
+            $this->set_grid_view(false);
+        }
+
+        if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
+            $this->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true', false);
+        }
+
+        if (in_array($type, self::MULTISELECT_TYPES) && array_key_exists('browse_' . $type . '_select', $_COOKIE)) {
+            $this->set_use_select(Core::get_cookie('browse_' . $type . '_select') == 'true', false);
+        }
+    }
+
+    /**
+     * The translated box title for this type, carrying the filter name where the list is filtered by one.
+     */
+    private function _getBoxTitle(string $type, string $match): string
+    {
+        $title = match ($type) {
+            'album', 'album_disk' => T_('Albums') . $match,
+            'artist' => match (true) {
+                $this->is_album_artist() => T_('Album Artist') . $match,
+                $this->is_song_artist() => T_('Song Artist') . $match,
+                default => T_('Artist') . $match,
+            },
+            'broadcast' => T_('Broadcasts'),
+            'catalog' => T_('Catalogs'),
+            'collection' => T_('Collections') . $match,
+            'collection_items' => T_('Collection Items') . $match,
+            'democratic' => T_('Democratic Playlist'),
+            'folder' => T_('Folders'),
+            'follower', 'user' => T_('Browse Users') . $match,
+            'genre' => T_('Genres') . $match,
+            'label' => T_('Labels'),
+            'license', 'license_hidden' => T_('Media Licenses'),
+            'live_stream' => T_('Radio Stations') . $match,
+            'playlist' => T_('Playlists') . $match,
+            'playlist_localplay' => T_('Current Playlist'),
+            'playlist_media' => T_('Playlist Items') . $match,
+            'playlist_search', 'smartplaylist' => T_('Smart Playlists') . $match,
+            'podcast' => T_('Podcasts'),
+            'podcast_episode' => T_('Podcast Episodes'),
+            'pvmsg' => T_('Private Messages'),
+            'share' => T_('Shares'),
+            'shoutbox' => T_('Shoutbox Records'),
+            'song' => T_('Songs') . $match,
+            'song_preview' => T_('Songs'),
+            'tag', 'tag_hidden' => T_('Genres'),
+            'video' => T_('Videos'),
+            'wanted' => T_('Wanted Albums'),
+            default => '',
+        };
+
+        return $this->get_title($title);
+    }
+
+    /**
+     * The name of whatever the list is filtered by, ready to append to the box title.
+     */
+    private function _getMatchName(): string
+    {
+        if ($filter_value = $this->get_filter('alpha_match')) {
+            return ' (' . $filter_value . ')';
+        }
+
+        if ($filter_value = $this->get_filter('starts_with')) {
+            return ' (' . $filter_value . ')';
+        }
+
+        if ($filter_value = $this->get_filter('catalog')) {
+            $catalog = Catalog::create_from_id((int) $filter_value);
+            if ($catalog !== null) {
+                return ' (' . $catalog->name . ')';
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * The shoutbox template lists the records themselves, so the ids are resolved before it renders.
+     *
+     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
+     * @return list<Shoutbox>
+     */
+    private function _getShouts(array $object_ids): array
+    {
+        $shouts = [];
+        foreach ($object_ids as $shoutId) {
+            if ($shoutId instanceof Song_Preview) {
+                continue;
+            }
+
+            $shout = (is_array($shoutId) && isset($shoutId['object_id']))
+                ? $this->shoutRepository->findById((int) $shoutId['object_id'])
+                : $this->shoutRepository->findById((int) $shoutId);
+            if ($shout !== null) {
+                $shouts[] = $shout;
+            }
+        }
+
+        return $shouts;
+    }
+
+    /**
+     * The template this type renders through, or an empty string when the type has none.
+     */
+    private function _getTemplate(string $type): string
+    {
+        if (!array_key_exists($type, self::TEMPLATE_MAP)) {
+            debug_event(self::class, 'show_objects: no template for browse type {' . $type . '}', 1);
+
+            return '';
+        }
+
+        return Ui::find_template(self::TEMPLATE_MAP[$type]);
+    }
+
+    /**
+     * Cut the id list down to the page being rendered. An un-paged list too large to hold in memory renders an
+     * error instead of failing silently, which is signalled back by a null return.
+     *
+     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
+     * @return int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview>|null
+     */
+    private function _pageObjectIds(array $object_ids, string $type): ?array
+    {
+        if ($this->get_offset() > 0 && $this->get_start() >= 0 && !$this->is_simple()) {
+            return array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
+        }
+
+        if ($object_ids === []) {
+            $this->set_total(0);
+
+            return $object_ids;
+        }
+
+        // an un-paged browse builds every row at once, so a hard ceiling keeps it under PHP's memory limit (#4276)
+        $count = count($object_ids);
+        if (!$this->is_simple() && $this->get_offset() === 0 && $count > self::RENDER_LIMIT) {
+            debug_event(self::class, sprintf('show_objects refused: un-paged %s browse of %d objects exceeds the %d render limit', $type, $count, self::RENDER_LIMIT), 1);
+            $message = sprintf(nT_('This view has %d item and is too large to show all at once (limit %d). Enable paging or narrow your filters.', 'This view has %d items and is too large to show all at once (limit %d). Enable paging or narrow your filters.', $count), $count, self::RENDER_LIMIT);
+            AmpError::add('browse', $message);
+
+            echo '<div class="error browse-too-large">' . scrub_out($message) . '</div>';
+
+            return null;
+        }
+
+        return $object_ids;
+    }
+
+    /**
+     * Warm the object cache for the rows this page shows, so the row templates read them without a query each.
+     *
+     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
+     */
+    private function _prefetchPage(string $type, array $object_ids, string $limit_threshold): void
+    {
+        /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
+        match ($type) {
+            'song' => Song::build_cache($this->_squashList($object_ids), $limit_threshold),
+            'album' => Album::build_cache($this->_squashList($object_ids)),
+            'artist' => Artist::build_cache($this->_squashList($object_ids), true, $limit_threshold),
+            'playlist' => Playlist::build_cache($this->_squashList($object_ids)),
+            'genre', 'tag', 'tag_hidden' => Tag::build_cache($this->_squashList($object_ids)),
+            'video' => Video::build_cache($this->_squashList($object_ids)),
+            default => null,
+        };
     }
 
     /**

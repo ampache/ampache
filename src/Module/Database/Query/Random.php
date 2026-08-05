@@ -62,7 +62,7 @@ class Random
         $catalog_filter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
         $user_id        = Core::get_global('user')?->getId() ?? -1;
         $sql            = ($catalog_filter)
-            ? "SELECT `artist`.`id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
+            ? "SELECT `artist`.`id` FROM `artist` WHERE EXISTS (SELECT 1 FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")) "
             : "SELECT `artist`.`id` FROM `artist` ";
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -72,7 +72,7 @@ class Random
                 : sprintf('WHERE `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
         }
 
-        $sql .= "GROUP BY `artist`.`id` ORDER BY RAND() LIMIT 1;";
+        $sql .= "ORDER BY RAND() LIMIT 1;";
 
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
@@ -426,7 +426,7 @@ class Random
      */
     public static function playlist(): int
     {
-        $sql = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL ORDER BY RAND()";
+        $sql = "SELECT `playlist`.`id` FROM `playlist` WHERE EXISTS (SELECT 1 FROM `playlist_data` WHERE `playlist_data`.`playlist` = `playlist`.`id`) ORDER BY RAND() LIMIT 1;";
 
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);

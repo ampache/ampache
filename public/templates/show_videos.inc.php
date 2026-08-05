@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
@@ -72,16 +74,21 @@ if ($browse->is_show_header()) {
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($object_ids as $video_id) {
-            $libitem = new Video($video_id);
-            if ($libitem->isNew()) {
-                continue;
-            } ?>
+        <?php if ($show_ratings) {
+            Rating::build_cache('video', $object_ids);
+            Userflag::build_cache('video', $object_ids);
+        }
+
+foreach ($object_ids as $video_id) {
+    $libitem = new Video($video_id);
+    if ($libitem->isNew()) {
+        continue;
+    } ?>
         <tr id="video_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_video_row.inc.php'); ?>
         </tr>
         <?php
-        } ?>
+} ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="42"><span class="nodata"><?php echo T_('No video found'); ?></span></td>

@@ -33,6 +33,8 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Playlist;
@@ -89,6 +91,10 @@ if ($browse->is_show_header()) {
 /** @var GuiFactoryInterface $guiFactory */
 /** @var GuiGatekeeperInterface $gatekeeper */
 $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
+if ($show_ratings) {
+    Rating::build_cache('playlist', $object_ids);
+    Userflag::build_cache('playlist', $object_ids);
+}
 
 // One TAL view reused for all rows
 $playlistRowView = $talFactory->createTalView()->setTemplate('playlist_row.xhtml');

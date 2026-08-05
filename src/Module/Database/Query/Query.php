@@ -1112,9 +1112,16 @@ class Query
             }
         }
 
-        $sql = rtrim($sql, " AND ") . " ";
+        // each fragment ends in ' AND ', and a WHERE that collected no filters has to disappear completely
+        if (str_ends_with($sql, ' AND ')) {
+            $sql = substr($sql, 0, -5);
+        }
 
-        return rtrim($sql, "WHERE ") . " ";
+        $sql = rtrim($sql);
+
+        return ($sql === 'WHERE')
+            ? ' '
+            : $sql . ' ';
     }
 
     /**
@@ -1179,8 +1186,9 @@ class Query
     {
         $offset = $this->get_offset();
         if ($this->_state['limit'] > 0) {
-            if ($offset > 0) {
-                return ' LIMIT ' . $this->_state['limit'] . ', ' . $offset;
+            // MySQL reads `LIMIT a, b` as skip a take b, so the start goes first and the row count second
+            if ($this->get_start() > 0) {
+                return ' LIMIT ' . $this->get_start() . ', ' . $this->_state['limit'];
             }
 
             return ' LIMIT ' . $this->_state['limit'];
@@ -1214,13 +1222,11 @@ class Query
             return '';
         }
 
-        $sql = 'ORDER BY ';
+        $sort_sql = rtrim($this->_sql_sort($this->_state['sort']['name'], $this->_state['sort']['order']), ', ');
 
-        $sql .= $this->_sql_sort($this->_state['sort']['name'], $this->_state['sort']['order']);
-
-        $sql = rtrim($sql, 'ORDER BY ');
-
-        return rtrim($sql, ', ');
+        return ($sort_sql === '')
+            ? ''
+            : 'ORDER BY ' . $sort_sql;
     }
 
     /**
@@ -1322,6 +1328,11 @@ class Query
             $where_sql = sprintf('WHERE `%s`.`id` IN (', $type);
 
             foreach ($object_ids as $object_id) {
+                // a mixed list keeps the order it is curated in; its rows are not ids this can sort by
+                if (!is_int($object_id) && !is_string($object_id)) {
+                    return;
+                }
+
                 $object_id = Dba::escape($object_id);
                 $where_sql .= sprintf('\'%s\',', $object_id);
             }
