@@ -174,6 +174,17 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Garbage collection removes a wanted album once the library holds it, matched on release-group `mbid` or on name and album artist
 * Database 800014
   * Dropped four redundant `object_count` indexes: `object_count_full_index` (an exact duplicate of `object_count_UNIQUE_IDX`), `object_type` and `object_count_type_IDX` (leading-column prefixes of that key), and `date` (a prefix of `object_count_date_IDX`)
+* Play statistics
+  * Database 800044
+    * New `object_count_geo_IDX` index on `object_count`.`geo_latitude`, `geo_longitude`, so a place name is looked up instead of read by scanning the play history; only matters with `geolocation` on
+    * New `object_type_date_IDX` index on `user_flag`.`object_type`, `date`, so the newest flagged lists stop at the rows they show
+  * The recently played list picks the users whose history it may show before it reads the play rows, so a user with nothing recent to show no longer walks the whole play history to find that out
+  * The recent lists read the newest plays in date order and group those, instead of grouping every play ever recorded to sort them
+  * Play counts for a page of songs or artists are read in one query instead of one per row, when a stats threshold applies
+  * The democratic cooldown check reads the song ids it needs rather than every column of every play
+  * Ratings and flags are read for the whole page on the playlist, smartlist, collection, video and live stream lists, and on the items of a playlist or collection, instead of two queries per row
+  * The newest flagged lists read the newest flags in date order and group those, and the highest rated and newest lists no longer build the counts and dates they never showed
+  * A random playlist or artist is picked without joining rows the query then has to group away again
 * Caching
   * `memory_cache` now defaults to `true` (was `false`); it batches the per-object lookups a page would otherwise repeat, roughly halving the query count on a large browse
   * Set `memory_cache = "false"` in `ampache.cfg.php` if you have a very large catalog and a low PHP memory limit — the cache trades memory for queries
@@ -196,8 +207,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The server counts (the totals in the API handshake and on the admin debug page) can no longer go stale because of an unrecognised table name. `Catalog::count_table()` takes a fixed list of countable tables instead of a free-text string, which silently counted zero and left the stored total untouched
 * Refreshing those totals no longer re-reads the whole `song`, `video` and `podcast_episode` tables. Each table's share of `items`, `time` and `size` is stored on its own, so adding or removing a song leaves the other two tables alone, and a deletion that already knows what it removed adjusts the totals without reading anything. One count went from four full table scans to one, and a song deletion to none
 * A song browse reads the artists of every song on the page in one `artist_map` query instead of one per song; a 50 song page went from 143 queries to 95
+* The row count a browse shows above its pages is counted by the database instead of by reading every matching row into memory and counting those. Over a million rows that went from 1.42s to 0.08s, and the sort the count never needed is no longer built
 * The stored waveform is no longer read alongside a song's comment, lyrics and replaygain, so a browse stops pulling a blob per song that nothing on the page draws. Asking for a waveform explicitly now returns it, which it did not before, so a saved waveform is reused instead of being regenerated from the audio on every request
-* Internal namespaces reorganised: `Ampache\Application` is gone (its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`), and `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have all left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums. The api version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes. Only relevant if you carry local patches
+* Internal namespaces reorganised: `Ampache\Application` is gone (its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`), and `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have all left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums. The api version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes. The per-type search rule builders followed the query engine out of `Ampache\Module\Playlist\Search` into `Ampache\Module\Database\Search`. `Query` and `Browse` swapped the parts each held that belonged to the other, so `Query::sql_sort_video()` now lives in `VideoQuery::get_sql_sort()` and `Query::set_is_simple()` is gone in favour of the `set_simple_browse()` every caller already used. Only relevant if you carry local patches
 * API version 8 has been added to the list of API versions
 * Docker: build using `docker/Dockerfilephp85`
 * Theme
@@ -256,6 +268,13 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* Sorting a browse by a column reached through a join emptied the list, when the column before it was sorted by a different join. Sorting an album list by Artist was the common way in
+* An album sorted by a column its artists or songs are reached through listed the same album once per artist or song it has
+* The current playlist on the Localplay page was drawn outside the Localplay Control box it belongs in, leaving the page with three unbalanced closing tags
+* The Popular Album Disks list was always empty, however much a disk had been played
+* Rating and flag lists for genres, collections, podcasts and live streams failed with `catalog_filter` enabled
+* The newest list for a genre, a live stream or a collection came back empty
+* Retagging a song to drop one of its artists left that artist holding the plays it had gained from that song
 * The broadcast button took two clicks to show its menu on a scrolled page: its `href="#"` jumped the document to the top as the dialog opened, so the menu was placed where the button had been a moment earlier and landed below the fold. The popup dialogs no longer navigate, and the broadcast one is placed against the window so it tracks the button in the fixed player
 * The websocket server logged a dozen PHP 8.5 deprecation errors on every connection, drowning the broadcast log; `cboden/ratchet` moves to the `0.4.x` branch, which supports PHP 8.5, and `ratchet/rfc6455` to v0.4.1
 * A database connection dropped by the server (idle timeout, restart, killed thread) was kept and reused, so every following query failed with `MySQL server has gone away`; the handle is discarded and the retry reconnects. This broke long running processes worst of all: the websocket server could not register a broadcast or authorise a listener once its connection had timed out
