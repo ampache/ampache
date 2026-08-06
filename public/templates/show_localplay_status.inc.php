@@ -53,12 +53,12 @@ if (!empty($status)) {
         </li>
         <li>
             <?php echo Ui::printBool(make_bool($status['repeat'])); ?> |
-            <?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_bool($status['repeat']), Ui::printBool(invert_bool($status['repeat'])), 'localplay_repeat'); ?>
+            <?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_bool($status['repeat']), Ui::printBool(invert_bool($status['repeat']), false), 'localplay_repeat'); ?>
             <?php echo T_('Repeat'); ?>
         </li>
         <li>
             <?php echo Ui::printBool(make_bool($status['random'])); ?> |
-            <?php echo Ajax::text('?page=localplay&action=random&value=' . invert_bool($status['random']), Ui::printBool(invert_bool($status['random'])), 'localplay_random'); ?>
+            <?php echo Ajax::text('?page=localplay&action=random&value=' . invert_bool($status['random']), Ui::printBool(invert_bool($status['random']), false), 'localplay_random'); ?>
             <?php echo T_('Random'); ?>
         </li>
         <li>
