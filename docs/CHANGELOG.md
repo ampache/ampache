@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## Ampache 7.10.1
+
+### Fixed (7.10.1)
+
+* Podcast feed urls beginning `https://` were silently discarded, so editing a podcast's feed appeared to do nothing and a podcast created from an https feed was stored with an empty one. The check meant to keep http and https urls was inverted, and also let through schemes like `ftp://` that it was there to refuse
+* Deleting a Playlist or Smartlist left its `user_playlist_map` rows behind, so a later list given the freed id inherited the collaborators
+* User deletion and garbage collection stepped over `user_playlist_map` because it names its column `user_id`
+* Update sources
+  * Updating from the web interface reported success when it had not worked; `composer install`, `npm install` and `npm run build` discarded their exit status and kept only the last line of output, then redirected away. The status is checked, the output is logged and shown, and a failure keeps you on the update page
+  * `npm` failed outright when the web server user's home directory was not writable, because it could not create its cache directory; it is pointed at a writable one
+  * `npm install` installs the dev packages explicitly, so a server with `NODE_ENV=production` no longer builds nothing
+  * The update is refused before the sources are pulled when `exec()` is disabled or the checkout, `node_modules` or `vendor` cannot be written
+  * A package that rewrites one of its own tracked files during install (`phpstan/extension-installer` and its `src/GeneratedConfig.php`) left that checkout dirty, and composer refuses to remove a modified source install, so a `composer_no_dev` update aborted while stripping the dev packages and left `vendor` incomplete. Dirty vendor checkouts are restored before the install runs
+* Upload
+  * An artist created while uploading was never mapped to the upload catalog, so it was missing from an artist browse filtered to that catalog until the next catalog update; the artists of an uploaded song are now mapped as the song is added
+* Rating or favouriting a playlist, search or live stream logged an SQL error on every click, because only the media tables carry the `weight` column those writes adjust
+* Aggregated counts fetched from the database are php ints, not strings, so returning one from a `string` typed method raised a `TypeError`
+  * The Wrapped page (`show_wrapped`) failed on `Stats::get_object_data()`, so the songs played and minutes played figures were blank
+  * `scrobble` failed on `Song::can_scrobble()` whenever it did match a song, so a scrobble from a client that sends names rather than an id was never recorded
+* A browse `cond` string whose condition had no comma (`cond=hidden` rather than `cond=hidden,1`) raised an `Undefined array key 1` runtime error on every request; a valueless condition now applies the filter with no argument, exactly as the trailing-comma form already did
+
 ## Ampache 7.10.0
 
 This release replaces the old captcha implementation (including OCR/image testing behavior) with the new `gregwar/captcha` library.

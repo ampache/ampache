@@ -104,7 +104,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         <input type="hidden" name="browse_id" value="<?php echo $browse->id; ?>" />
         <input type="hidden" name="playlist_id" value="<?php echo $playlist->id; ?>" />
         <input type="hidden" name="playlist_type" value="<?php echo $playlist->type; ?>" />
-        <input type="hidden" name="playlist_name" value="<?php echo $playlist->name; ?>" />
+        <input type="hidden" name="playlist_name" value="<?php echo scrub_out($playlist->name); ?>" />
         <input type="hidden" name="playlist_user" value="<?php echo $playlist->user; ?>" />
         <input type="hidden" name="limit" value="<?php echo $playlist->limit; ?>" />
         <input type="hidden" name="random" value="<?php echo $playlist->random; ?>" />
