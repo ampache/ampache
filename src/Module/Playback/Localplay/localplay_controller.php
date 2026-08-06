@@ -35,6 +35,21 @@ use Ampache\Module\Playback\Stream_Url;
  */
 abstract class localplay_controller
 {
+    /**
+     * _join_parts
+     * Join the parts of a display name, dropping the empty ones so an unresolved lookup can't leave a dangling separator
+     * @param array<int, string|null> $parts
+     */
+    protected static function _join_parts(array $parts): string
+    {
+        $filled = array_filter(
+            array_map(static fn(?string $part): string => trim((string) $part), $parts),
+            static fn(string $part): bool => $part !== ''
+        );
+
+        return implode(' - ', $filled);
+    }
+
     // For display we need the following 'instance' functions
 
     /**
@@ -123,22 +138,26 @@ abstract class localplay_controller
             ];
         }
 
-        preg_match('/demo_id.(.*)/', $url, $match);
+        // callers read `demo_id`, so return it under that key (not `oid`)
+        preg_match('/demo_id[=\/]([0-9]+)/', $url, $match);
         if (array_key_exists(1, $match) && $match[1]) {
             return [
                 'primary_key' => 'demo_id',
-                'oid' => $match[1]
+                'demo_id' => (int) $match[1]
             ];
         }
 
-        preg_match_all('#\b(random_id|random_type)=([^&]*)#', $url, $match);
+        // match path-style urls too and keep `random` as the primary key the callers switch on
+        preg_match_all('#\b(random_id|random_type)[=/]([^&/]+)#', $url, $match);
         if ($match[1] && $match[2]) {
             $result = array_combine($match[1], $match[2]);
-
-            return [
-                'primary_key' => $result['random_type'],
-                'oid' => $result['random_id']
-            ];
+            if (isset($result['random_id'])) {
+                return [
+                    'primary_key' => 'random',
+                    'random_id' => (int) $result['random_id'],
+                    'random_type' => $result['random_type'] ?? 'song'
+                ];
+            }
         }
 
         return $data;

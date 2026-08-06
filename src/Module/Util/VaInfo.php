@@ -1312,6 +1312,9 @@ final class VaInfo implements VaInfoInterface
                 case 'music_cd_identifier':
                     // REMOVE_ME get rid of this annoying tag causing only problems with metadata
                     break;
+                case 'time':
+                    // ID3v2.3 TIME frame is the recording time (HHMM), not the song duration
+                    break;
                 default:
                     if (array_key_exists(0, $data)) {
                         $parsed[strtolower($tag)] = $data[0];
@@ -2028,10 +2031,14 @@ final class VaInfo implements VaInfoInterface
         $parsed['size']     = $this->_forcedSize ?: $tags['filesize'] ?? null;
         $parsed['encoding'] = $tags['encoding'] ?? null;
         $parsed['mime']     = $tags['mime_type'] ?? null;
-        if (($parsed['size'] && array_key_exists('avdataoffset', $tags) && array_key_exists('bitrate', $tags))) {
-            $parsed['time'] = (($parsed['size'] - $tags['avdataoffset']) * 8) / $tags['bitrate'];
+        if ($this->_forcedSize && array_key_exists('avdataoffset', $tags) && array_key_exists('bitrate', $tags)) {
+            // Remote catalogs only analyze a partial download; extrapolate duration from the real size
+            $parsed['time'] = (($this->_forcedSize - $tags['avdataoffset']) * 8) / $tags['bitrate'];
         } elseif (array_key_exists('playtime_seconds', $tags) && $tags['playtime_seconds'] > 0) {
             $parsed['time'] = $tags['playtime_seconds'];
+        } elseif ($parsed['size'] && array_key_exists('avdataoffset', $tags) && array_key_exists('bitrate', $tags)) {
+            // Fallback estimate; overcounts trailing tags (e.g. APE cover art)
+            $parsed['time'] = (($parsed['size'] - $tags['avdataoffset']) * 8) / $tags['bitrate'];
         } else {
             $this->logger->critical("UNABLE TO READ 'playtime_seconds'. This is probably a bad file " . $parsed['title'], [LegacyLogger::CONTEXT_TYPE => self::class]);
             $parsed['time'] = 0;

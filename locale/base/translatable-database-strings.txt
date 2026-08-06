@@ -3,7 +3,7 @@
  # This file lists all translatable strings from the Ampache preference table
  # (descriptions and subcategories). It is generated from the source code by
  # './gather-messages.sh [-gu|--getutds]' - descriptions come from
- # Preference::translate_db() and subcategories from Preference::set_defaults(),
+ # Preference::translate_db() and subcategories from Preference::DEFAULTS,
  # so a live database is NOT required. Do not edit it by hand; re-run the script.
 
  #######################################################################
@@ -126,6 +126,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Broadcast web player by default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Require a session to listen to my broadcasts"
 msgstr ""
 
 #: Ampache preference description

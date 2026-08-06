@@ -27,8 +27,9 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
@@ -36,13 +37,18 @@ use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Stats4Method
- */
-final class Stats4Method
+final class Stats4Method implements MethodInterface
 {
     public const string ACTION = 'stats';
+
+    public function __construct(
+        private AlbumRepositoryInterface $albumRepository,
+        private ArtistRepositoryInterface $artistRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * stats
@@ -72,12 +78,20 @@ final class Stats4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function stats(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['type', 'filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
+
         $user_id = $user->id;
         // override your user if you're looking at others
         if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
@@ -90,15 +104,17 @@ final class Stats4Method
                 $user    = new User($user_id);
             }
         }
-        // moved type to filter and allowed multiple type selection
+
         $type   = $input['type'];
         $offset = (int) ($input['offset'] ?? 0);
         $limit  = (int) ($input['limit'] ?? 0);
-        // original method only searched albums and had poor method inputs
+
+        // the original method only searched albums and took the mode as the type
         if (in_array($type, ['newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'])) {
             $type            = 'album';
             $input['filter'] = $type;
         }
+
         if ($limit < 1) {
             $limit = (int) AmpConfig::get('popular_threshold', 10);
         }
@@ -117,91 +133,44 @@ final class Stats4Method
                 break;
             case 'recent':
             case 'forgotten':
-                $newest = $input['filter'] == 'recent';
-                if ($user->isNew()) {
-                    $results = Stats::get_recent($type, $limit, $offset, null, $newest);
-                } else {
-                    $results = $user->get_recently_played($type, $limit, $offset, $newest);
-                }
+                $newest  = $input['filter'] == 'recent';
+                $results = ($user->isNew())
+                    ? Stats::get_recent($type, $limit, $offset, null, $newest)
+                    : $user->get_recently_played($type, $limit, $offset, $newest);
                 break;
             case 'flagged':
                 $results = Userflag::get_latest($type, $user, $limit, $offset);
                 break;
             case 'random':
             default:
-                switch ($type) {
-                    case 'song':
-                        $results = Random::get_default($limit, $user);
-                        break;
-                    case 'artist':
-                        $results = self::getArtistRepository()->getRandom(
-                            $user_id,
-                            $limit
-                        );
-                        break;
-                    case 'album':
-                        $results = self::getAlbumRepository()->getRandom(
-                            $user_id,
-                            $limit
-                        );
-                }
+                $results = match ($type) {
+                    'song' => Random::get_default($limit, $user),
+                    'artist' => $this->artistRepository->getRandom($user_id, $limit),
+                    'album' => $this->albumRepository->getRandom($user_id, $limit),
+                    default => [],
+                };
         }
 
-        ob_end_clean();
-        if (empty($results)) {
+        if ($results === []) {
             Api4::message('error', 'No Results', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
-        if ($type === 'song') {
-            switch ($input['api_format']) {
-                case 'json':
-                    echo Json4_Data::songs($results, $user, $input['auth']);
-                    break;
-                default:
-                    echo Xml4_Data::songs($results, $user, $input['auth']);
-            }
-        }
-        if ($type === 'artist') {
-            switch ($input['api_format']) {
-                case 'json':
-                    echo Json4_Data::artists($results, [], $user, $input['auth']);
-                    break;
-                default:
-                    echo Xml4_Data::artists($results, [], $user, $input['auth']);
-            }
-        }
-        if ($type === 'album') {
-            switch ($input['api_format']) {
-                case 'json':
-                    echo Json4_Data::albums($results, [], $user, $input['auth']);
-                    break;
-                default:
-                    echo Xml4_Data::albums($results, [], $user, $input['auth']);
-            }
+        // any other type prints nothing at all
+        $body = match ($type) {
+            'song' => $output->songs($apiVersion, $results, $user, $input['auth']),
+            'artist' => $output->artists($apiVersion, $results, [], $user, $input['auth']),
+            'album' => $output->albums($apiVersion, $results, [], $user, $input['auth']),
+            default => null,
+        };
+
+        if ($body === null) {
+            return $response;
         }
 
-        return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getArtistRepository(): ArtistRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ArtistRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($body)
+        );
     }
 }

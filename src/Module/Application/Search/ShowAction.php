@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -35,13 +36,19 @@ final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    public function __construct(private UiInterface $ui) {}
+    public function __construct(
+        private UiInterface $ui,
+        private VideoRepositoryInterface $videoRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
 
-        $this->ui->show('show_form_search.inc.php');
+        $this->ui->show(
+            'show_form_search.inc.php',
+            ['videoRepository' => $this->videoRepository]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

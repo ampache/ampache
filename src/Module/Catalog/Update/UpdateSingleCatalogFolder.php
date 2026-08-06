@@ -32,15 +32,22 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\UserRepositoryInterface;
 
 define('API', true);
 final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements UpdateSingleCatalogFolderInterface
 {
+    public function __construct(
+        private readonly CatalogFilterRepositoryInterface $catalogFilterRepository,
+        private readonly UserRepositoryInterface $userRepository,
+    ) {}
+
     public function update(
         Interactor $interactor,
         string $catname,
@@ -259,7 +266,8 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 // clean up after the action
                 Catalog::update_catalog_map($catalog->gather_types);
                 Catalog::garbage_collect_mapping($tables);
-                Catalog::garbage_collect_filters();
+                $this->catalogFilterRepository->collectGarbage();
+                $this->userRepository->resetMissingCatalogFilterGroups();
             }
         }
 

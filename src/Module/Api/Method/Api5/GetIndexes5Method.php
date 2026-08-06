@@ -33,8 +33,8 @@ use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Preference;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -51,7 +51,7 @@ final class GetIndexes5Method implements MethodInterface
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private StreamFactoryInterface $streamFactory,
     ) {}
 
@@ -163,7 +163,7 @@ final class GetIndexes5Method implements MethodInterface
             );
         }
 
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
         $browse->set_user_id($user);
 
         if (

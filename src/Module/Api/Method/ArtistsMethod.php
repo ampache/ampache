@@ -27,7 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -42,7 +42,7 @@ final class ArtistsMethod implements MethodInterface
     public const string ACTION = 'artists';
 
     public function __construct(
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     /**
@@ -87,7 +87,7 @@ final class ArtistsMethod implements MethodInterface
     ): ResponseInterface {
         $album_artist = (array_key_exists('album_artist', $input) && (int) $input['album_artist'] == 1);
 
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
 
         $browse->set_user_id($user);
 

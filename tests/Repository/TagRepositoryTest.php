@@ -167,37 +167,6 @@ class TagRepositoryTest extends TestCase
         static::assertSame([], $this->subject->getSongTagNamesByArtist(42));
     }
 
-    public function testGetTagIdsAppendsAnOffsetOnlyAlongsideACount(): void
-    {
-        $result = $this->createMock(PDOStatement::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = ?  LIMIT 20, 10',
-                ['song']
-            )
-            ->willReturn($result);
-
-        $result->method('fetchColumn')->willReturn('666', false);
-
-        static::assertSame([666], $this->subject->getTagIds('song', 10, 20));
-    }
-
-    public function testGetTagIdsOmitsTheLimitEntirelyWithoutACount(): void
-    {
-        $result = $this->createMock(PDOStatement::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with('SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = ? ', ['song'])
-            ->willReturn($result);
-
-        $result->method('fetchColumn')->willReturn(false);
-
-        static::assertSame([], $this->subject->getTagIds('song', 0, 20));
-    }
-
     public function testIncrementCountWritesTheColumnFromTheEnum(): void
     {
         $this->connection->expects(static::once())

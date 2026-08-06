@@ -27,12 +27,13 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\VideoRepositoryInterface;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var VideoRepositoryInterface $videoRepository */
 /** @var list<int> $object_ids */
 
@@ -138,7 +139,7 @@ foreach ([64, 128, 256, 512, 1024] as $value) {
 <div id="browse">
 <?php
     if (!empty($object_ids)) {
-        $browse = new Browse();
+        $browse = $browseFactory->create();
         $browse->set_type($browse_type);
         $browse->save_objects($object_ids);
         $browse->show_objects();

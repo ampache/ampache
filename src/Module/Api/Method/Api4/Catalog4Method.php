@@ -26,48 +26,46 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Catalog4Method
+ * Returns a single catalog.
  */
-final class Catalog4Method
+final class Catalog4Method implements MethodInterface
 {
     public const string ACTION = 'catalog';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * catalog
-     * MINIMUM_API_VERSION=420000
-     *
-     * Get the catalogs from it's id.
-     *
-     * filter = (integer) Catalog ID number
-     *
-     * @param array{
-     *     filter: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function catalog(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        unset($user);
-        $results = [(int) $input['filter']];
-
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::catalogs($results);
-                break;
-            default:
-                echo Xml4_Data::catalogs($results);
+            return $response;
         }
 
-        return true;
+        $results = [(int) ($input['filter'] ?? 0)];
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->catalogs($apiVersion, $results, $user)
+            )
+        );
     }
 }

@@ -590,6 +590,22 @@ class Dba
     }
 
     /**
+     * _is_lost_connection
+     *
+     * The driver errors that mean the server closed the connection on us (idle timeout, restart, killed thread)
+     */
+    private static function _is_lost_connection(PDOException $pdoException): bool
+    {
+        if (in_array((int) ($pdoException->errorInfo[1] ?? 0), [2006, 2013], true)) {
+            return true;
+        }
+
+        $message = $pdoException->getMessage();
+
+        return str_contains($message, 'server has gone away') || str_contains($message, 'Lost connection');
+    }
+
+    /**
      * _query
      */
     private static function _query(string $sql, array $params, bool $silent = false): ?PDOStatement
@@ -616,6 +632,11 @@ class Dba
             if (!$silent) {
                 debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
                 debug_event(self::class, 'Error_query MSG: ' . $pdoException->getMessage(), 1);
+            }
+
+            // a dead handle stays cached, so nuke it and let the retry in query() open a fresh connection
+            if (self::_is_lost_connection($pdoException)) {
+                self::disconnect();
             }
 
             return null;

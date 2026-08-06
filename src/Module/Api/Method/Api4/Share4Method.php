@@ -27,53 +27,52 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Share4Method
+ * Returns a single share.
  */
-final class Share4Method
+final class Share4Method implements MethodInterface
 {
     public const string ACTION = 'share';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * share
-     * MINIMUM_API_VERSION=420000
-     *
-     * Get the share from it's id.
-     *
-     * filter = (integer) Share ID number
-     *
-     * @param array{
-     *     filter: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function share(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('share')) {
             Api4::message('error', 'Access Denied: sharing features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
+
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
 
-        $results = [(int) $input['filter']];
+        $results = [(int) ($input['filter'] ?? 0)];
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::shares($results, $user);
-                break;
-            default:
-                echo Xml4_Data::shares($results, $user);
-        }
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->shares($apiVersion, $results, $user)
+            )
+        );
     }
 }

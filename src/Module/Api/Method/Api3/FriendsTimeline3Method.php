@@ -26,16 +26,22 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class FriendsTimeline3Method
- */
-final class FriendsTimeline3Method
+final class FriendsTimeline3Method implements MethodInterface
 {
     public const string ACTION = 'friends_timeline';
+
+    public function __construct(
+        private UserActivityRepositoryInterface $useractivityRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * friends_timeline
@@ -46,29 +52,36 @@ final class FriendsTimeline3Method
      *     since?: int,
      *     api_format: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function friends_timeline(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (AmpConfig::get('sociable')) {
             $limit = (int) ($input['limit'] ?? 0);
             $since = (int) ($input['since'] ?? 0);
 
-            $results = self::getUseractivityRepository()->getActivities(
+            $results = $this->useractivityRepository->getActivities(
                 $user->id,
                 $limit,
                 $since
             );
             ob_end_clean();
-            echo Xml3_Data::timeline($results);
-        } else {
-            debug_event(self::class, 'Sociable feature is not enabled.', 3);
+
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->timeline($apiVersion, $results)
+                )
+            );
         }
-    }
+        debug_event(self::class, 'Sociable feature is not enabled.', 3);
 
-    private static function getUseractivityRepository(): UserActivityRepositoryInterface
-    {
-        global $dic;
 
-        return $dic->get(UserActivityRepositoryInterface::class);
+        return $response;
     }
 }

@@ -50,9 +50,9 @@ use Ampache\Repository\Model\Share;
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($libitem->allow_stream) ? 'checked' : ''; ?> /> <?php echo T_('Allow Stream'); ?></td>
             </tr>
-<?php global $dic; // @todo remove after refactoring
-$zipHandler = $dic->get(ZipHandlerInterface::class);
-if ((in_array($libitem->object_type, ['song', 'video', 'podcast_episode']) && (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD))) || (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable($libitem->object_type))) { ?>
+<?php /** @var ZipHandlerInterface $zipHandler */
+$objectType = $libitem->object_type ?? '';
+if ((in_array($objectType, ['song', 'video', 'podcast_episode']) && (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD))) || (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable($objectType))) { ?>
             <tr>
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="allow_download" value="1" <?php echo ($libitem->allow_download) ? 'checked' : ''; ?> /> <?php echo T_('Allow Download'); ?></td>

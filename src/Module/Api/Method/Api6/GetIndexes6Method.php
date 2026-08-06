@@ -33,8 +33,8 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Method\ObjectTypeGate;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Preference;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -47,15 +47,15 @@ final class GetIndexes6Method implements MethodInterface
 {
     public const string ACTION = 'get_indexes';
 
+    private BrowseFactoryInterface $browseFactory;
     private ConfigContainerInterface $configContainer;
-    private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
+        BrowseFactoryInterface $browseFactory,
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer  = $configContainer;
+        $this->browseFactory    = $browseFactory;
     }
 
     /**
@@ -132,7 +132,7 @@ final class GetIndexes6Method implements MethodInterface
         $hide    = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] === 1)
             || (bool) $this->configContainer->get('hide_search');
 
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
         $browse->set_user_id($user);
 
         if ($type === 'playlist' && $hide === false) {

@@ -32,6 +32,8 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,6 +45,8 @@ final class UpdateFilterAction extends AbstractFilterAction
         private readonly UiInterface $ui,
         private readonly ConfigContainerInterface $configContainer,
         private readonly RequestParserInterface $requestParser,
+        private readonly CatalogFilterRepositoryInterface $catalogFilterRepository,
+        private readonly UserRepositoryInterface $userRepository,
     ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -69,7 +73,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         }
 
         // make sure the filter doesn't already exist
-        if ((Catalog::filter_name_exists($filter_name, $filter_id))) {
+        if ($this->catalogFilterRepository->groupNameExists($filter_name, $filter_id)) {
             AmpError::add('name', T_('That name already exists'));
         }
 
@@ -97,9 +101,12 @@ final class UpdateFilterAction extends AbstractFilterAction
         }
 
         // Attempt to modify the filter
-        if (!Catalog::edit_catalog_filter($filter_id, $filter_name, $catalog_array)) {
+        if (!$this->catalogFilterRepository->updateGroupCatalogs($filter_id, $filter_name, $catalog_array)) {
             AmpError::add('general', T_("The filter was not modified"));
         }
+
+        $this->catalogFilterRepository->collectGarbage();
+        $this->userRepository->resetMissingCatalogFilterGroups();
 
         $this->ui->showConfirmation(
             T_('Filter Updated'),

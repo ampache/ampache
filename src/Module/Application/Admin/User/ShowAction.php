@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -36,14 +36,14 @@ final class ShowAction extends AbstractUserAction
 
     public function __construct(
         private readonly UiInterface $ui,
-        private readonly ModelFactoryInterface $modelFactory,
+        private readonly BrowseFactoryInterface $browseFactory,
     ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
         $this->ui->showHeader();
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
         $browse->set_type('user');
         $browse->set_sort('username', 'ASC');
         $browse->show_objects($browse->get_objects());

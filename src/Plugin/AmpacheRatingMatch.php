@@ -69,6 +69,11 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     // These are internal settings used by this class, run this->load to fill them out
     private int $min_stars;
 
+    /**
+     * Constructor
+     */
+    private SongTagWriterInterface $songTagWriter;
+
     /** @var string[] $star1_rule */
     private array $star1_rule = [];
 
@@ -87,12 +92,11 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     private User $user;
     private bool $write_tags;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->description = T_('Raise the album and artist rating to match the highest song rating');
+    public function __construct(
+        SongTagWriterInterface $songTagWriter,
+    ) {
+        $this->songTagWriter = $songTagWriter;
+        $this->description   = T_('Raise the album and artist rating to match the highest song rating');
     }
 
     /**
@@ -298,10 +302,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
 
                 // write to tags
                 if ($this->write_tags) {
-                    global $dic;
-
-                    $songTagWriter = $dic->get(SongTagWriterInterface::class);
-                    $songTagWriter->writeRating($song, $this->user, $rating);
+                    $this->songTagWriter->writeRating($song, $this->user, $rating);
                 }
             }
 

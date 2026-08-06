@@ -32,7 +32,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,18 +41,18 @@ final class PodcastEpisodesMethod implements MethodInterface
 {
     public const string ACTION = 'podcast_episodes';
 
+    private BrowseFactoryInterface $browseFactory;
     private ConfigContainerInterface $configContainer;
-    private ModelFactoryInterface $modelFactory;
     private PodcastRepositoryInterface $podcastRepository;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
+        BrowseFactoryInterface $browseFactory,
         PodcastRepositoryInterface $podcastRepository,
         ConfigContainerInterface $configContainer,
     ) {
-        $this->modelFactory      = $modelFactory;
-        $this->podcastRepository = $podcastRepository;
-        $this->configContainer   = $configContainer;
+        $this->browseFactory      = $browseFactory;
+        $this->podcastRepository  = $podcastRepository;
+        $this->configContainer    = $configContainer;
     }
 
     /**
@@ -113,7 +113,7 @@ final class PodcastEpisodesMethod implements MethodInterface
             }
         }
 
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
 
         $browse->set_user_id($user);
 

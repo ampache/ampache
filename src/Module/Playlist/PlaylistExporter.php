@@ -27,7 +27,7 @@ namespace Ampache\Module\Playlist;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -42,6 +42,10 @@ final class PlaylistExporter implements PlaylistExporterInterface
         'xspf',
         'pls',
     ];
+
+    public function __construct(
+        private BrowseFactoryInterface $browseFactory,
+    ) {}
 
     public function export(
         Interactor $interactor,
@@ -77,7 +81,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 break;
             case 'smartlists':
                 if ((int) $playlistId < 1) {
-                    $browse = new Browse(null, false);
+                    $browse = $this->browseFactory->create(null, false);
                     $browse->set_type('smartplaylist');
                     if ($userId > 0) {
                         $browse->set_filter('playlist_user', $userId);
@@ -102,7 +106,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
             case 'playlists':
             default:
                 if ((int) $playlistId < 1) {
-                    $browse = new Browse(null, false);
+                    $browse = $this->browseFactory->create(null, false);
                     $browse->set_type('playlist');
                     $browse->set_sort('name', 'ASC');
                     if ($userId > 0) {

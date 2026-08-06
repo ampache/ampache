@@ -28,9 +28,11 @@ namespace Ampache\Module\Application\Mashup;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,6 +43,8 @@ final readonly class ShowAction implements ApplicationActionInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
+        private VideoRepositoryInterface $videoRepository,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -55,7 +59,9 @@ final readonly class ShowAction implements ApplicationActionInterface
             'show_mashup.inc.php',
             [
                 'object_type' => $object_type,
-                'user' => $gatekeeper->getUser()
+                'user' => $gatekeeper->getUser(),
+                'videoRepository' => $this->videoRepository,
+                'browseFactory' => $this->browseFactory
             ]
         );
         $this->ui->showQueryStats();

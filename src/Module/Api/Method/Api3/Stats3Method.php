@@ -26,19 +26,25 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Stats3Method
- */
-final class Stats3Method
+final class Stats3Method implements MethodInterface
 {
     public const string ACTION = 'stats';
+
+    public function __construct(
+        private AlbumRepositoryInterface $albumRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * This get library stats.
@@ -55,9 +61,16 @@ final class Stats3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function stats(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $type     = $input['type'];
         $offset   = $input['offset'] ?? 0;
         $limit    = $input['limit'] ?? 0;
@@ -89,22 +102,19 @@ final class Stats3Method
             if (!$limit) {
                 $limit = AmpConfig::get('popular_threshold');
             }
-            $results = self::getAlbumRepository()->getRandom($user->id, $limit);
+            $results = $this->albumRepository->getRandom($user->id, $limit);
         }
 
         if (!empty($results)) {
             ob_end_clean();
-            echo Xml3_Data::albums($results, [], $user, $input['auth']);
+
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->albums($apiVersion, $results, [], $user, $input['auth'])
+                )
+            );
         }
-    }
 
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
+        return $response;
     }
 }

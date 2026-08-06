@@ -43,6 +43,9 @@ use Ampache\Repository\TmpBrowseRepositoryInterface;
  */
 class Query
 {
+    /** @var string[] The name matches the filter box offers, in the order it lists them */
+    public const array MATCH_MODES = ['starts_with', 'like'];
+
     private const array SORT_ORDER = [
         'active' => 'ASC',
         'last_count' => 'ASC',
@@ -64,40 +67,35 @@ class Query
     /** @var int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}> $_cache */
     protected array $_cache = [];
 
-    /** @var array<string, mixed> $_state */
+    /**
+     * The SQL the query is built from. Browse adds its own view keys (album_artist, extended_key_name, grid_view,
+     * mashup, show_header, song_artist, threshold, title, update_session, use_alpha, use_filters, use_pages,
+     * use_select) on write and defaults them in its own getters, so they ride along into tmp_browse unread here.
+     *
+     * @var array<string, mixed> $_state
+     */
     protected array $_state = [
-        'album_artist' => false, // Used by $browse->set_type() to filter artists to album artist only
         'base' => null,
         'custom' => false,
-        'extended_key_name' => null,
         'filter' => [],
-        'grid_view' => false,
         'group' => [],
         'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,
         'limit' => 0,
-        'mashup' => null,
+        'match_mode' => 'starts_with', // which name match the filter box is set to, kept apart from the filter it sets
         'offset' => 0,
         'params' => [], // parameters for custom sql
         'select' => [],
-        'show_header' => true,
         'simple' => false,
         'skip_catalog_check' => false, // when you've already checked the parent object catalog is usable
-        'song_artist' => null, // Used by $browse->set_type() to filter artists to song artist only
         'sort' => [
             'name' => null,
             'order' => null,
         ],
         'start' => 0,
         'static' => false,
-        'threshold' => '',
-        'title' => null,
         'total' => null,
         'type' => '',
-        'update_session' => false,
-        'use_alpha' => false,
-        'use_filters' => true, // Used by $browse to hide the filter box in the sidebar
-        'use_pages' => false,
     ];
 
     private ?QueryInterface $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
@@ -223,6 +221,7 @@ class Query
                 return SongPreviewQuery::FILTERS;
             case 'song':
                 return SongQuery::FILTERS;
+            case 'genre':
             case 'tag_hidden':
             case 'tag':
                 return TagQuery::FILTERS;
@@ -248,16 +247,20 @@ class Query
     }
 
     /**
-     * Get content div name
+     * clear_filter
+     * drops a filter so it stops contributing to the query; every set filter emits sql, so an unwanted one
+     * has to be removed rather than blanked
      */
-    public function get_content_div(): string
+    public function clear_filter(string $key): void
     {
-        $key = 'browse_content_' . $this->get_type();
-        if (!empty($this->_state['extended_key_name'])) {
-            $key .= '_' . $this->_state['extended_key_name'];
+        if (!isset($this->_state['filter'][$key])) {
+            return;
         }
 
-        return $key . ('_' . $this->id);
+        unset($this->_state['filter'][$key]);
+
+        $this->_state['total'] = null;
+        $this->set_start(0);
     }
 
     /**
@@ -267,6 +270,20 @@ class Query
     public function get_filter(string $key): int|string|null
     {
         return $this->_state['filter'][$key] ?? null;
+    }
+
+    /**
+     * get_match_mode
+     * the name match the filter box is set to; it outlives the filter itself so emptying the box does not
+     * silently put the box back to the default on the next render
+     */
+    public function get_match_mode(): string
+    {
+        $mode = $this->_state['match_mode'] ?? null;
+
+        return (in_array($mode, self::MATCH_MODES, true))
+            ? $mode
+            : self::MATCH_MODES[0];
     }
 
     /**
@@ -384,12 +401,9 @@ class Query
             return count($this->_cache);
         }
 
-        $db_results = Dba::read($this->_get_sql(false), $this->_state['params']);
-        $num_rows   = Dba::num_rows($db_results);
+        $this->_state['total'] = $this->_count_rows();
 
-        $this->_state['total'] = $num_rows;
-
-        return $num_rows;
+        return $this->_state['total'];
     }
 
     /**
@@ -443,7 +457,7 @@ class Query
             'order' => null,
         ];
         $this->set_static_content(false);
-        $this->set_is_simple(false);
+        $this->set_simple_browse(false);
         $this->set_start(0);
         $this->set_offset((int) AmpConfig::get('offset_limit', 50));
     }
@@ -477,6 +491,47 @@ class Query
     }
 
     /**
+     * set_api_filter
+     *
+     * Do some value checks for api input before attempting to set the query filter
+     */
+    public function set_api_filter(string $filter, bool|int|string|null $value): void
+    {
+        if (!strlen((string) $value)) {
+            return;
+        }
+
+        switch ($filter) {
+            case 'add':
+                // Check for a range, if no range default to gt
+                if (strpos((string) $value, '/')) {
+                    $elements = explode('/', (string) $value);
+                    $this->set_filter('add_lt', strtotime($elements[1]));
+                    $this->set_filter('add_gt', strtotime($elements[0]));
+                } else {
+                    $this->set_filter('add_gt', strtotime((string) $value));
+                }
+                break;
+            case 'update':
+                // Check for a range, if no range default to gt
+                if (strpos((string) $value, '/')) {
+                    $elements = explode('/', (string) $value);
+                    $this->set_filter('update_lt', strtotime($elements[1]));
+                    $this->set_filter('update_gt', strtotime($elements[0]));
+                } else {
+                    $this->set_filter('update_gt', strtotime((string) $value));
+                }
+                break;
+            case 'alpha_match':
+                $this->set_filter('alpha_match', $value);
+                break;
+            case 'exact_match':
+                $this->set_filter('exact_match', $value);
+                break;
+        }
+    }
+
+    /**
      * set_catalog
      */
     public function set_catalog(?int $catalog_number = 0): void
@@ -485,12 +540,19 @@ class Query
     }
 
     /**
-     * Set an additional content div key.
-     * This is used to keep div names unique in the html
+     * set_conditions
+     *
+     * Apply additional filters to the Query using ';' separated comma string pairs
+     * e.g. 'filter1,value1;filter2,value2'
      */
-    public function set_content_div_ak(int|string $key): void
+    public function set_conditions(string $cond): void
     {
-        $this->_state['extended_key_name'] = str_replace(", ", "_", (string) $key);
+        foreach ((explode(';', $cond)) as $condition) {
+            $filter = (explode(',', $condition));
+            if (!empty($filter[0])) {
+                $this->set_filter(strtolower($filter[0]), (($filter[1] ?? '') ?: null));
+            }
+        }
     }
 
     /**
@@ -635,16 +697,6 @@ class Query
     }
 
     /**
-     * set_is_simple
-     * This sets the current browse object to a 'simple' browse method
-     * which means use the base query provided and expand from there
-     */
-    public function set_is_simple(bool $value): void
-    {
-        $this->_state['simple'] = make_bool($value);
-    }
-
-    /**
      * set_join
      * This sets the joins for the current browse object
      */
@@ -700,6 +752,16 @@ class Query
     }
 
     /**
+     * set_match_mode
+     */
+    public function set_match_mode(string $mode): void
+    {
+        if (in_array($mode, self::MATCH_MODES, true)) {
+            $this->_state['match_mode'] = $mode;
+        }
+    }
+
+    /**
      * set_offset
      * This sets the current offset of this query
      */
@@ -717,6 +779,16 @@ class Query
     public function set_select(string $field): void
     {
         $this->_state['select'] = [$field];
+    }
+
+    /**
+     * set_simple_browse
+     * This sets the current browse object to a 'simple' browse method
+     * which means use the base query provided and expand from there
+     */
+    public function set_simple_browse(bool $value): void
+    {
+        $this->_state['simple'] = make_bool($value);
     }
 
     /**
@@ -746,13 +818,6 @@ class Query
             return;
         }
 
-        // Joins may change because of the new sort so don't keep the old ones
-        $this->_state['join'] = [];
-
-        // ensure joins are reset on $this->_state
-        $this->_get_filter_sql();
-        $this->_get_sort_sql();
-
         if (!empty($order)) {
             $order = ($order == 'DESC')
                 ? 'DESC'
@@ -772,9 +837,29 @@ class Query
             'order' => $order,
         ];
 
+        $this->_rebuild_joins();
+
         if ($resort === true) {
             $this->_resort_objects();
         }
+    }
+
+    /**
+     * set_sort_order
+     *
+     * Try to clean up sorts into something valid before sending to the Query
+     * @param string[] $default
+     */
+    public function set_sort_order(string $sort, array $default): void
+    {
+        $sort      = array_map('trim', explode(',', $sort));
+        $sort_name = $sort[0] ?: $default[0];
+        $sort_type = $sort[1] ?? $default[1];
+        if (empty($sort_name) || empty($sort_type)) {
+            return;
+        }
+
+        $this->set_sort(strtolower($sort_name), strtoupper($sort_type), false);
     }
 
     /**
@@ -884,7 +969,6 @@ class Query
             case 'shoutbox':
                 $this->queryType = new ShoutboxQuery();
                 break;
-            case 'search':
             case 'smartplaylist':
                 $this->queryType = new SmartplaylistQuery();
                 break;
@@ -894,6 +978,7 @@ class Query
             case 'song':
                 $this->queryType = new SongQuery();
                 break;
+            case 'genre':
             case 'tag_hidden':
             case 'tag':
                 $this->queryType = new TagQuery();
@@ -931,63 +1016,6 @@ class Query
     }
 
     /**
-     * sql_sort_video
-     */
-    public function sql_sort_video(?string $field, ?string $order = null, ?string $table = 'video'): string
-    {
-        $sql = "";
-        switch ($field) {
-            case 'name':
-            case 'title':
-                $sql = "`video`.`title`";
-                break;
-            case 'addition_time':
-            case 'catalog':
-            case 'id':
-            case 'total_count':
-            case 'total_skip':
-            case 'update_time':
-                $sql = "`video`.`$field`";
-                break;
-            case 'codec':
-                $sql = "`video`.`video_codec`";
-                break;
-            case 'length':
-                $sql = "`video`.`time`";
-                break;
-            case 'rating':
-                $sql = sprintf('`rating`.`rating` %s, `rating`.`id`', $order);
-                $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string) $this->user_id, 100);
-                break;
-            case 'release_date':
-                $sql = "`video`.`release_date`";
-                break;
-            case 'resolution':
-                $sql = "`video`.`resolution_x`";
-                break;
-            case 'user_flag':
-                $sql = "`user_flag`.`date`";
-                $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string) $this->user_id, 100);
-                break;
-            case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order `rating`.`rating` $order, `rating`.`date`";
-                $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string) $this->user_id, 100);
-                $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string) $this->user_id, 100);
-                break;
-        }
-
-        if (
-            $sql !== ''
-            && $sql !== '0'
-            && $table != 'video'
-        ) {
-            $this->set_join('LEFT', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 50);
-        }
-
-        return $sql;
-    }
-
-    /**
      * store
      * This saves the current state to the database
      */
@@ -1001,6 +1029,23 @@ class Query
                 $this->_serialize($this->_state)
             );
         }
+    }
+
+    /**
+     * _count_rows
+     * Ask the database how many rows the current filters match. Counting by reading every row costs the whole
+     * result set in memory to produce one integer, and the sort it would be read in does not affect the answer.
+     */
+    private function _count_rows(): int
+    {
+        $sql = $this->_get_sql(false, false);
+        if (trim($sql) === '') {
+            return 0;
+        }
+
+        $row = Dba::fetch_row(Dba::read(sprintf('SELECT COUNT(*) FROM (%s) AS `count_query`', $sql), $this->_state['params']));
+
+        return (int) ($row[0] ?? 0);
     }
 
     /**
@@ -1053,18 +1098,28 @@ class Query
                 case 'song_album':
                 case 'song_artist':
                 case 'song':
+                case 'genre':
                 case 'tag':
                 case 'video':
+                    // `genre` is the row-list view of the `tag` table, so it takes the same filter
+                    $filter_type = ($type === 'genre') ? 'tag' : $type;
                     $sql .= ($sql == "WHERE")
-                        ? ' ' . Catalog::get_user_filter($type, $this->user_id ?? -1)
-                        : Catalog::get_user_filter($type, $this->user_id ?? -1);
+                        ? ' ' . Catalog::get_user_filter($filter_type, $this->user_id ?? -1)
+                        : Catalog::get_user_filter($filter_type, $this->user_id ?? -1);
                     break;
             }
         }
 
-        $sql = rtrim($sql, " AND ") . " ";
+        // each fragment ends in ' AND ', and a WHERE that collected no filters has to disappear completely
+        if (str_ends_with($sql, ' AND ')) {
+            $sql = substr($sql, 0, -5);
+        }
 
-        return rtrim($sql, "WHERE ") . " ";
+        $sql = rtrim($sql);
+
+        return ($sql === 'WHERE')
+            ? ' '
+            : $sql . ' ';
     }
 
     /**
@@ -1129,8 +1184,9 @@ class Query
     {
         $offset = $this->get_offset();
         if ($this->_state['limit'] > 0) {
-            if ($offset > 0) {
-                return ' LIMIT ' . $this->_state['limit'] . ', ' . $offset;
+            // MySQL reads `LIMIT a, b` as skip a take b, so the start goes first and the row count second
+            if ($this->get_start() > 0) {
+                return ' LIMIT ' . $this->get_start() . ', ' . $this->_state['limit'];
             }
 
             return ' LIMIT ' . $this->_state['limit'];
@@ -1164,13 +1220,11 @@ class Query
             return '';
         }
 
-        $sql = 'ORDER BY ';
+        $sort_sql = rtrim($this->_sql_sort($this->_state['sort']['name'], $this->_state['sort']['order']), ', ');
 
-        $sql .= $this->_sql_sort($this->_state['sort']['name'], $this->_state['sort']['order']);
-
-        $sql = rtrim($sql, 'ORDER BY ');
-
-        return rtrim($sql, ', ');
+        return ($sort_sql === '')
+            ? ''
+            : 'ORDER BY ' . $sort_sql;
     }
 
     /**
@@ -1179,7 +1233,7 @@ class Query
      * every time we get the objects because it depends on the filters and
      * the type of object we are currently browsing.
      */
-    private function _get_sql(?bool $limit = true): string
+    private function _get_sql(?bool $limit = true, bool $sort = true): string
     {
         if ($this->_state['custom']) {
             // custom queries are set by base and should not be added to
@@ -1201,7 +1255,10 @@ class Query
                 $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
             }
 
-            $final_sql .= $sort_sql;
+            // the sort is built either way, because building it is what registers the joins it reaches through
+            if ($sort) {
+                $final_sql .= $sort_sql;
+            }
         }
 
         // apply a limit/offset limit (if set)
@@ -1246,6 +1303,19 @@ class Query
     }
 
     /**
+     * _rebuild_joins
+     * A query collects the joins it needs as its filter and sort SQL is built, so the set it holds belongs to the
+     * filter and sort it was built for. Changing either drops that set and builds both again to collect the
+     * joins now in play; the SQL itself is discarded because only the joins are wanted.
+     */
+    private function _rebuild_joins(): void
+    {
+        $this->_state['join'] = [];
+        $this->_get_filter_sql();
+        $this->_get_sort_sql();
+    }
+
+    /**
      * _resort_objects
      * This takes the existing objects, looks at the current
      * sort method and then re-sorts them This is internally
@@ -1272,6 +1342,11 @@ class Query
             $where_sql = sprintf('WHERE `%s`.`id` IN (', $type);
 
             foreach ($object_ids as $object_id) {
+                // a mixed list keeps the order it is curated in; its rows are not ids this can sort by
+                if (!is_int($object_id) && !is_string($object_id)) {
+                    return;
+                }
+
                 $object_id = Dba::escape($object_id);
                 $where_sql .= sprintf('\'%s\',', $object_id);
             }
@@ -1282,17 +1357,17 @@ class Query
 
             $sql = $this->_get_base_sql();
 
-            $group_sql = " GROUP BY `" . $this->get_type() . '`.`id`';
-            $order_sql = " ORDER BY ";
+            // grouping by the sort as well splits the row per joined value, so an album with three artists repeats
+            $group_sql = ' GROUP BY `' . $this->get_type() . '`.`id`';
 
             // There should only be one of these in a browse
             $sql_sort = $this->_sql_sort($this->_state['sort']['name'], $this->_state['sort']['order']);
-            $order_sql .= $sql_sort;
-            $group_sql .= ", " . preg_replace('/(ASC,|DESC,|,|RAND\(\))$/', '', $sql_sort);
 
-            // Clean her up
-            $order_sql = rtrim($order_sql, "ORDER BY ");
-            $order_sql = rtrim($order_sql, ",");
+            // the sort carries a trailing comma, and a browse with nothing to sort by must not emit a bare ORDER BY
+            $sql_sort  = rtrim($sql_sort, ', ');
+            $order_sql = ($sql_sort === '')
+                ? ''
+                : ' ORDER BY ' . $sql_sort;
 
             $sql = $sql . $this->_get_join_sql() . $where_sql . $group_sql . $order_sql;
         } // if not simple
@@ -1347,7 +1422,7 @@ class Query
             if (in_array($this->get_type(), ['license_hidden', 'tag_hidden'])) {
                 $this->set_filter('hidden', 1);
             }
-            if (in_array($this->get_type(), ['license', 'tag'])) {
+            if (in_array($this->get_type(), ['genre', 'license', 'tag'])) {
                 $this->set_filter('hidden', 0);
             }
 

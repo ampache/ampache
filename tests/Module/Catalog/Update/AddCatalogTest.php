@@ -25,11 +25,13 @@ namespace Ampache\Module\Catalog\Update;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class AddCatalogTest extends TestCase
 {
+    private CatalogFilterRepositoryInterface&MockObject $catalogFilterRepository;
     private ConfigContainerInterface&MockObject $configContainer;
     private AddCatalog $subject;
 
@@ -55,8 +57,12 @@ class AddCatalogTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->configContainer         = $this->createMock(ConfigContainerInterface::class);
+        $this->catalogFilterRepository = $this->createMock(CatalogFilterRepositoryInterface::class);
 
-        $this->subject = new AddCatalog($this->configContainer);
+        $this->subject = new AddCatalog(
+            $this->configContainer,
+            $this->catalogFilterRepository,
+        );
     }
 }

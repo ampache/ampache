@@ -28,16 +28,20 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class GetIndexes4Method
- */
-final class GetIndexes4Method
+final class GetIndexes4Method implements MethodInterface
 {
     public const string ACTION = 'get_indexes';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * get_indexes
@@ -70,37 +74,50 @@ final class GetIndexes4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function get_indexes(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['type'], self::ACTION)) {
-            return false;
+            return $response;
         }
+
         $album_artist = ((string) $input['type'] == 'album_artist');
         $type         = ($album_artist) ? 'artist' : (string) $input['type'];
+
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api4::message('error', 'Access Denied: allow_video is not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
+
         if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
             Api4::message('error', 'Access Denied: podcast features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
+
         if (!AmpConfig::get('share') && $type == 'share') {
             Api4::message('error', 'Access Denied: sharing features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
+
         $include = (array_key_exists('include', $input) && (int) $input['include'] == 1);
         $hide    = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
-        // confirm the correct data
+
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'])) {
             Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
+
         $browse = Api::getBrowse($user);
         if (
             $type === 'playlist'
@@ -112,32 +129,27 @@ final class GetIndexes4Method
         } else {
             $browse->set_type($type);
         }
-        $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $browse->set_sort('name', 'ASC', false);
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1)
+            ? 'exact_match'
+            : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
-
         if ($type == 'playlist') {
             $browse->set_filter('playlist_open', $user->getId());
         }
 
         $results = $browse->get_objects();
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json4_Data::set_offset($input['offset'] ?? 0);
-                Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::indexes($results, $type, $user, $input['auth'], $include);
-                break;
-            default:
-                Xml4_Data::set_offset($input['offset'] ?? 0);
-                Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::indexes($results, $type, $user, $input['auth'], true, $include);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->indexes($apiVersion, $results, $type, $user, $input['auth'], true, $include)
+            )
+        );
     }
 }

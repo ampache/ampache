@@ -38,8 +38,8 @@ use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\VideoRepositoryInterface;
 
-global $dic;
-
+/** @var VideoRepositoryInterface $videoRepository */
+/** @var FolderRepositoryInterface $folderRepository */
 /** @var string $web_path */
 /** @var string $t_a_artists */
 /** @var string $t_albums */
@@ -75,8 +75,6 @@ global $dic;
 /** @var string $t_collections */
 $server_allow     = AmpConfig::get('allow_localplay_playback');
 $controller       = AmpConfig::get('localplay_controller');
-$videoRepository  = $dic->get(VideoRepositoryInterface::class);
-$folderRepository = $dic->get(FolderRepositoryInterface::class);
 $allowVideo       = AmpConfig::get('allow_video') && $videoRepository->getItemCount();
 $allowDemocratic  = AmpConfig::get('allow_democratic_playback');
 $showAlbumArtist  = AmpConfig::get('show_album_artist');

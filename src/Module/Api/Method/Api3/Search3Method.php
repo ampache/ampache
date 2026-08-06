@@ -25,14 +25,19 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Search3Method
- */
-final class Search3Method
+final class Search3Method implements MethodInterface
 {
     public const string ACTION = 'search';
+
+    public function __construct(
+        private AdvancedSearch3Method $delegate,
+    ) {}
 
     /**
      * search
@@ -55,9 +60,16 @@ final class Search3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function search(array $input, User $user): void
-    {
-        AdvancedSearch3Method::advanced_search($input, $user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        return $this->delegate->handle($gatekeeper, $response, $output, $input, $user, $apiVersion);
     }
 }

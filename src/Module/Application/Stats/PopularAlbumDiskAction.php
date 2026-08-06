@@ -29,9 +29,10 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,8 +42,9 @@ final readonly class PopularAlbumDiskAction implements ApplicationActionInterfac
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private ConfigContainerInterface $configContainer,
+        private VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -54,7 +56,10 @@ final readonly class PopularAlbumDiskAction implements ApplicationActionInterfac
         $this->ui->showHeader();
         $this->ui->show(
             'show_form_popular.inc.php',
-            ['by_user' => $by_user]
+            [
+                'by_user' => $by_user,
+                'videoRepository' => $this->videoRepository
+            ]
         );
         $this->ui->showHeader();
 
@@ -64,7 +69,7 @@ final readonly class PopularAlbumDiskAction implements ApplicationActionInterfac
         define('NO_BROWSE_SORTING', true);
 
         $objects = Stats::get_top('album_disk', -1, $thresh_value, 0, $gatekeeper->getUser(), false, 0, 0, $by_user);
-        $browse  = $this->modelFactory->createBrowse();
+        $browse  = $this->browseFactory->create();
         $browse->set_use_filters(false);
         $browse->set_type('album_disk');
         $browse->show_objects($objects);

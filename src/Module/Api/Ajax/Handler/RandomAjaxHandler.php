@@ -29,7 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -43,6 +43,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private AlbumRepositoryInterface $albumRepository,
         private SongRepositoryInterface $songRepository,
+        private UiInterface $ui,
     ) {}
 
     public function handle(User $user): void
@@ -63,7 +64,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                     $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                 }
 
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'album':
                 $album_id = $this->albumRepository->getRandom(
@@ -82,7 +83,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                     $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                 }
 
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'artist':
                 $artist_id = Random::artist();
@@ -97,7 +98,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                     $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                 }
 
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'playlist':
                 $playlist_id = Random::playlist();
@@ -114,10 +115,10 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                     $user->playlist?->add_object((int) $item['object_id'], $item['object_type']);
                 }
 
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'send_playlist':
-                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=random' . '&random_type=' . scrub_out($_REQUEST['random_type']) . '&random_id=' . scrub_out($_REQUEST['random_id']);
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=random' . '&random_type=' . scrub_out((string) ($_REQUEST['random_type'] ?? '')) . '&random_id=' . scrub_out((string) ($_REQUEST['random_id'] ?? ''));
                 $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
         } // switch on action;
 

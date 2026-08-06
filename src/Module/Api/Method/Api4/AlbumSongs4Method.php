@@ -26,18 +26,27 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class AlbumSongs4Method
+ * Returns the songs of a specified album.
  */
-class AlbumSongs4Method
+final class AlbumSongs4Method implements MethodInterface
 {
     public const string ACTION = 'album_songs';
+
+    public function __construct(
+        private AlbumRepositoryInterface $albumRepository,
+        private ModelFactoryInterface $modelFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * album_songs
@@ -50,7 +59,7 @@ class AlbumSongs4Method
      * limit = (integer) //optional
      *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     offset?: int,
      *     limit?: int,
      *     cond?: string,
@@ -58,45 +67,38 @@ class AlbumSongs4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function album_songs(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        // check_parameter writes the version 4 error itself, so a miss returns the response untouched
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $album   = new Album((int) $input['filter']);
-        $results = [];
-
-        ob_end_clean();
-
-        if ($album->isNew() === false) {
-            $results = self::getAlbumRepository()->getSongs($album->id);
+            return $response;
         }
 
-        if (!empty($results)) {
-            switch ($input['api_format']) {
-                case 'json':
-                    Json4_Data::set_offset($input['offset'] ?? 0);
-                    Json4_Data::set_limit($input['limit'] ?? 0);
-                    echo Json4_Data::songs($results, $user, $input['auth']);
-                    break;
-                default:
-                    Xml4_Data::set_offset($input['offset'] ?? 0);
-                    Xml4_Data::set_limit($input['limit'] ?? 0);
-                    echo Xml4_Data::songs($results, $user, $input['auth']);
-            }
+        $album   = $this->modelFactory->createAlbum((int) ($input['filter'] ?? 0));
+        $results = ($album->isNew())
+            ? []
+            : $this->albumRepository->getSongs($album->id);
+
+        // version 4 answers a missing or empty album with no body at all rather than an empty result
+        if ($results === []) {
+            return $response;
         }
 
-        return true;
-    }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-    /**
-     * @deprecated
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

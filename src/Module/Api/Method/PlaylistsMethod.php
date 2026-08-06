@@ -28,8 +28,8 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Preference;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -44,7 +44,7 @@ final class PlaylistsMethod implements MethodInterface
     public const string ACTION = 'playlists';
 
     public function __construct(
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     /**
@@ -94,7 +94,7 @@ final class PlaylistsMethod implements MethodInterface
             ? make_bool($input['show_dupes'])
             : (bool) Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
 
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
 
         $browse->set_user_id($user);
 

@@ -25,30 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playlist;
 
-use Ampache\Module\Playlist\Search\AlbumSearch;
-use Ampache\Module\Playlist\Search\ArtistSearch;
-use Ampache\Module\Playlist\Search\LabelSearch;
-use Ampache\Module\Playlist\Search\PlaylistSearch;
-use Ampache\Module\Playlist\Search\PodcastEpisodeSearch;
-use Ampache\Module\Playlist\Search\PodcastSearch;
-use Ampache\Module\Playlist\Search\SongSearch;
-use Ampache\Module\Playlist\Search\TagSearch;
-use Ampache\Module\Playlist\Search\UserSearch;
-use Ampache\Module\Playlist\Search\VideoSearch;
-
 use function DI\autowire;
 
 return [
     PlaylistExporterInterface::class => autowire(PlaylistExporter::class),
     PlaylistLoaderInterface::class => autowire(PlaylistLoader::class),
-    AlbumSearch::class => autowire(),
-    ArtistSearch::class => autowire(),
-    LabelSearch::class => autowire(),
-    PlaylistSearch::class => autowire(),
-    PodcastEpisodeSearch::class => autowire(),
-    PodcastSearch::class => autowire(),
-    SongSearch::class => autowire(),
-    TagSearch::class => autowire(),
-    UserSearch::class => autowire(),
-    VideoSearch::class => autowire(),
 ];

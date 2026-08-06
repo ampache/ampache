@@ -37,7 +37,7 @@ use Ampache\Module\Api\RefreshReordered\RefreshPlaylistMediasAction;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
@@ -48,6 +48,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var Playlist $playlist */
 /** @var list<int> $object_ids */
 
@@ -95,8 +96,7 @@ $playlist->display_art($size, false, false); ?>
             </a>
         </li>
 <?php }
-global $dic; // @todo remove after refactoring
-$zipHandler = $dic->get(ZipHandlerInterface::class);
+/** @var ZipHandlerInterface $zipHandler */
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('playlist')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=playlist&id=<?php echo $playlist->id; ?>" rel="nofollow">
@@ -169,7 +169,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
 <?php Ui::show_box_bottom(); ?>
 <div id='reordered_list_<?php echo $playlist->id; ?>'>
 <?php
-    $browse = new Browse();
+    $browse = $browseFactory->create();
 $browse->set_type('playlist_media');
 $browse->set_use_filters(false);
 $browse->add_supplemental_object('playlist', $playlist);

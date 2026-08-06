@@ -47,11 +47,7 @@ function debug_wresult(bool $status = false, ?string $value = null, string $comm
         . '</span> <em>' . $comment . '</em></button>';
 }
 
-// TODO remove me
-global $dic;
 /** @var EnvironmentInterface $environment */
-$environment = $dic->get(EnvironmentInterface::class);
-
 /** @var string $configfile */
 ?>
 <tr>

@@ -36,6 +36,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Plugin\PluginEnum;
 use Ampache\Repository\Model\LibraryItemEnum;
+use DI\FactoryInterface;
 
 final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
 {
@@ -43,6 +44,7 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
         private FunctionCheckerInterface $functionChecker,
         private ZipHandlerInterface $zipHandler,
         private ConfigContainerInterface $configContainer,
+        private FactoryInterface $factory,
     ) {}
 
     public function render(
@@ -110,7 +112,7 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
         $plugins = Plugin::get_plugins(PluginTypeEnum::EXTERNAL_SHARE);
         foreach ($plugins as $plugin_name) {
             $plugin_class = PluginEnum::LIST[strtolower($plugin_name)];
-            $plugin       = new $plugin_class();
+            $plugin       = $this->factory->make($plugin_class);
 
             $link .= sprintf(
                 '<a onclick="handleShareAction(\'%s/share.php?action=external_share&plugin=%s&type=%s&id=%d\')" target="_blank">%s</a>&nbsp;',

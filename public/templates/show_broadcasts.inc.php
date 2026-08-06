@@ -68,7 +68,7 @@ $started_filter = $browse->get_filter('started'); ?>
         } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="6"><span class="nodata"><?php echo T_('No Broadcast found'); ?></span></td>
+            <td colspan="6"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
         </tr>
         <?php } ?>
     </tbody>

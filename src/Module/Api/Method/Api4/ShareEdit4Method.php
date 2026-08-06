@@ -27,15 +27,20 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShareRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class ShareEdit4Method
- */
-final class ShareEdit4Method
+final class ShareEdit4Method implements MethodInterface
 {
     public const string ACTION = 'share_edit';
+
+    public function __construct(
+        private ShareRepositoryInterface $shareRepository,
+    ) {}
 
     /**
      * share_edit
@@ -58,20 +63,27 @@ final class ShareEdit4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function share_edit(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('share')) {
             Api4::message('error', 'Access Denied: sharing features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
         $share_id = $input['filter'];
 
-        $share = self::getShareRepository()->findById((int) $share_id);
+        $share = $this->shareRepository->findById((int) $share_id);
 
         if (
             $share === null
@@ -79,7 +91,7 @@ final class ShareEdit4Method
         ) {
             Api4::message('error', 'share ' . $share_id . ' was not found', '404', $input['api_format']);
 
-            return true;
+            return $response;
         }
 
         $description = (isset($input['description'])) ? htmlspecialchars($input['description']) : $share->description;
@@ -100,16 +112,6 @@ final class ShareEdit4Method
             Api4::message('error', 'share ' . $share_id . ' was not updated', '401', $input['api_format']);
         }
 
-        return true;
-    }
-
-    /**
-     * @deprecated Inject dependency
-     */
-    private static function getShareRepository(): ShareRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ShareRepositoryInterface::class);
+        return $response;
     }
 }

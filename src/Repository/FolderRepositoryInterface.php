@@ -75,6 +75,11 @@ interface FolderRepositoryInterface
     public function getItemCount(): int;
 
     /**
+     * Counts everything playable below a folder, without hydrating the rows
+     */
+    public function getMediaCount(Folder $folder): int;
+
+    /**
      * Returns everything below a folder, optionally narrowed to a single type
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>

@@ -103,38 +103,6 @@ class Song_Preview extends database_object implements Media, displayable_item, c
     }
 
     /**
-     * build_cache
-     *
-     * This attempts to reduce queries by asking for everything in the
-     * browse all at once and storing it in the cache, this can help if the
-     * db connection is the slow point.
-     * @param array<int|string> $song_ids
-     */
-    public static function build_cache(array $song_ids): bool
-    {
-        if (empty($song_ids)) {
-            return false;
-        }
-
-        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
-        if (!database_object::isCacheEnabled()) {
-            return false;
-        }
-
-        $artists = [];
-        foreach (self::getSongPreviewRepository()->getRows(array_values($song_ids)) as $row) {
-            parent::add_to_cache('song_preview', $row['id'], $row);
-            if ($row['artist']) {
-                $artists[] = (int) $row['artist'];
-            }
-        }
-
-        Artist::build_cache($artists);
-
-        return true;
-    }
-
-    /**
      * garbage_collection
      */
     public static function garbage_collection(): void

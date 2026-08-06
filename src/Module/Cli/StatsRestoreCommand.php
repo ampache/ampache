@@ -31,8 +31,9 @@ use Ampache\Module\Statistics\Stats;
 
 final class StatsRestoreCommand extends Command
 {
-    public function __construct()
-    {
+    public function __construct(
+        private readonly CatalogGarbageCollectorInterface $catalogGarbageCollector,
+    ) {
         parent::__construct('cleanup:restoreStats', T_('Restore consolidated play history from the archive'));
 
         $this
@@ -61,8 +62,7 @@ final class StatsRestoreCommand extends Command
             $interactor->red(sprintf(T_('%d rows restored, %d album/artist/podcast rows rebuilt'), $result['rows'], $result['derived']), true);
             $interactor->white(T_('Updating counts'), true);
             // restoring history moves every play counter, so the repair pass is what puts them back in step
-            global $dic;
-            $dic->get(CatalogGarbageCollectorInterface::class)->collect();
+            $this->catalogGarbageCollector->collect();
         } else {
             $interactor->green(sprintf(T_('%d rows would be restored (dry-run)'), $result['rows']), true);
         }

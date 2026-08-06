@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
@@ -52,6 +53,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
         private UserFollowerRepositoryInterface $userFollowerRepository,
         private UserFollowStateRendererInterface $userFollowStateRenderer,
         private LibraryItemLoaderInterface $libraryItemLoader,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -82,6 +84,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
                     'userFollowStateRenderer' => $this->userFollowStateRenderer,
                     'userActivityRenderer' => $this->userActivityRenderer,
                     'libraryItemLoader' => $this->libraryItemLoader,
+                    'browseFactory' => $this->browseFactory,
                 ]
             );
             show_table_render(false, true);

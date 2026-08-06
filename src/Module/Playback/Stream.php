@@ -73,6 +73,9 @@ class Stream
      */
     public const array NON_CACHEABLE_FORMATS = ['mp3_rg', 'mp3_car', 'opus_rg', 'opus_car'];
 
+    // shortest gap allowed between two full requests for the same media on one session
+    public const int REPEAT_REQUEST_SECONDS = 1;
+
     /**
      * Classification of the transcode output formats offered in the preferences picker.
      * A format is only actually available when a matching `encode_args_<format>` config key exists.
@@ -392,8 +395,15 @@ class Stream
             && $bit_rate > $media->bitrate
             && $media->bitrate > 0
         ) {
-            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $media->bitrate, 5);
-            $bit_rate = self::validate_bitrate((int) $media->bitrate);
+            $source_rate = self::validate_bitrate((int) $media->bitrate);
+            if ($source_rate <= 0) {
+                // a source under 1 kbps rounds away to nothing, and a zero target here reaches the encoder as `-b:a 0`
+                $source_rate = (int) AmpConfig::get('min_bit_rate', 8000);
+                debug_event(self::class, 'Source bitrate ' . $media->bitrate . ' is below 1 kbps, using the minimum ' . $source_rate, 4);
+            }
+
+            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $source_rate, 5);
+            $bit_rate = $source_rate;
         }
 
         // Whatever the rate came from, the target format has to be able to carry it. Without this a lossless source
@@ -695,7 +705,8 @@ class Stream
         $target = self::get_transcode_format($source, $target, $player, $media_type);
         $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?? AmpConfig::get('transcode_cmd');
         if (empty($cmd)) {
-            debug_event(self::class, 'A valid transcode_cmd is required to transcode', 5);
+            // a missing command is a misconfiguration, so it logs at the same level as the target format check below
+            debug_event(self::class, 'A valid transcode_cmd is required to transcode', 2);
 
             return [];
         }
@@ -759,6 +770,27 @@ class Stream
         // Ensure that this client only has a single row; the last three are null unless `reportPlayback` sent them
         $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`, `position_ms`, `playback_rate`, `state`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, [$sid, $object_id, strtolower($type), $uid, time() + $length, $previous, $position_ms, $playback_rate, $state]);
+    }
+
+    /**
+     * is_repeat_request
+     * A client asking for the same media again within a second is looping rather than playing it, and every retry
+     * costs a fresh transcode, so the caller answers 429 instead of serving it again
+     */
+    public static function is_repeat_request(string $session_id, int $object_id, string $type): bool
+    {
+        if ($session_id === '' || $object_id === 0) {
+            return false;
+        }
+
+        $sql        = "SELECT `insertion` FROM `now_playing` WHERE `id` = ? AND `object_id` = ? AND `object_type` = ? LIMIT 1";
+        $db_results = Dba::read($sql, [$session_id, $object_id, strtolower($type)]);
+        $row        = Dba::fetch_assoc($db_results);
+        if ($row === []) {
+            return false;
+        }
+
+        return (time() - (int) $row['insertion']) < self::REPEAT_REQUEST_SECONDS;
     }
 
     /**
@@ -931,9 +963,14 @@ class Stream
             '%FILE%' => $song_file,
         ];
         if ($media instanceof Video) {
-            $string_map['%RESOLUTION%'] = $options['resolution'] ?? $media->get_f_resolution() ?? '1280x720';
-            $string_map['%QUALITY%']    = (isset($options['quality']))
-                ? (31 * (101 - $options['quality'])) / 100
+            $resolution = (string) ($options['resolution'] ?? $media->get_f_resolution() ?? '1280x720');
+
+            // the command is handed to a shell, so only a literal WIDTHxHEIGHT is allowed to reach %RESOLUTION%
+            $string_map['%RESOLUTION%'] = (preg_match('/^\d{1,5}x\d{1,5}$/', $resolution) === 1)
+                ? $resolution
+                : '1280x720';
+            $string_map['%QUALITY%'] = (isset($options['quality']))
+                ? (31 * (101 - (int) $options['quality'])) / 100
                 : 10;
         }
 

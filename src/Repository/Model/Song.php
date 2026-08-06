@@ -206,18 +206,25 @@ class Song extends database_object implements
         $albums     = [];
         $repository = self::getSongRepository();
 
+        $played_counts = (!empty($limit_threshold) && AmpConfig::get('show_played_times'))
+            ? Stats::get_object_counts('song', $song_ids, $limit_threshold)
+            : [];
+        $skipped_counts = (!empty($limit_threshold) && AmpConfig::get('show_skipped_times'))
+            ? Stats::get_object_counts('song', $song_ids, $limit_threshold, 'skip')
+            : [];
+
         // Song data cache
         foreach ($repository->getRowsByIds(array_values($song_ids), (bool) AmpConfig::get('catalog_disable')) as $row) {
             if (AmpConfig::get('show_played_times')) {
                 $row['total_count'] = (empty($limit_threshold))
                     ? $row['total_count']
-                    : Stats::get_object_count('song', $row['id'], $limit_threshold);
+                    : ($played_counts[(int) $row['id']] ?? 0);
             }
 
             if (AmpConfig::get('show_skipped_times')) {
                 $row['total_skip'] = (empty($limit_threshold))
                     ? $row['total_skip']
-                    : Stats::get_object_count('song', $row['id'], $limit_threshold, 'skip');
+                    : ($skipped_counts[(int) $row['id']] ?? 0);
             }
 
             $artists[] = (int) $row['artist'];
@@ -562,11 +569,6 @@ class Song extends database_object implements
         }
 
         return self::getSongRepository()->getSongMapValues($song_id, $type)[0] ?? null;
-    }
-
-    public static function has_id(int|string $song_id): bool
-    {
-        return self::getSongRepository()->hasId((int) $song_id);
     }
 
     /**
@@ -1071,15 +1073,6 @@ class Song extends database_object implements
     public static function update_song_map(array $new_data, string $type, int $song_id): void
     {
         self::getSongRepository()->updateSongMap(array_values($new_data), $type, $song_id);
-    }
-
-    /**
-     * update_time
-     * updates the time field
-     */
-    public static function update_time(int $new_time, int $song_id): void
-    {
-        self::_update_item('time', $new_time, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**

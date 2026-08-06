@@ -28,15 +28,16 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Localplay4Method
- */
-final class Localplay4Method
+final class Localplay4Method implements MethodInterface
 {
     public const string ACTION = 'localplay';
 
@@ -60,11 +61,18 @@ final class Localplay4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function localplay(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['command'], self::ACTION)) {
-            return false;
+            return $response;
         }
         unset($user);
         // Load their Localplay instance
@@ -72,7 +80,7 @@ final class Localplay4Method
         if (empty($localplay->type) || !$localplay->connect()) {
             Api4::message('error', 'Error Unable to connect to localplay controller', '405', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         $result  = false;
@@ -87,7 +95,7 @@ final class Localplay4Method
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
                     Api4::message('error', 'Access Denied: allow_video is not enabled.', '400', $input['api_format']);
 
-                    return false;
+                    return $response;
                 }
 
                 $clear = (int) ($input['clear'] ?? 0);
@@ -144,14 +152,14 @@ final class Localplay4Method
                 // They are doing it wrong
                 Api4::message('error', 'Invalid request', '405', $input['api_format']);
 
-                return false;
+                return $response;
         }
 
         // bad status calls can happen
         if ($command === 'status' && empty($status)) {
             Api4::message('error', 'Error Unable to connect to localplay controller', '405', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         $results = (!empty($status))
@@ -165,6 +173,6 @@ final class Localplay4Method
                 echo Api::keyed_array($results);
         }
 
-        return true;
+        return $response;
     }
 }

@@ -32,43 +32,65 @@ use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\User;
 
 /** @var Browse $browse */
+/** @var string $argument_param */
 
 if (!Core::is_session_started()) {
     session_start();
 }
 $browse_type     = $browse->get_type();
 $browse_filters  = Browse::get_allowed_filters($browse_type);
-$allowed_filters = ['starts_with', 'minimum_count', 'rated', 'unplayed', 'playlist_type', 'object_type', 'catalog', 'show_art'];
+$allowed_filters = ['starts_with', 'minimum_count', 'rated', 'unplayed', 'playlist_type', 'catalog', 'show_art'];
 if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_filters))) { ?>
 <li>
     <h4><?php echo T_('Filters'); ?></h4>
     <div class="sb3">
-    <?php if (in_array('starts_with', $browse_filters) && array_key_exists('catalog', $_SESSION)) {
-        $browse->set_catalog($_SESSION['catalog']); ?>
+    <?php if (in_array('starts_with', $browse_filters)) {
+        if (array_key_exists('catalog', $_SESSION)) {
+            $browse->set_catalog($_SESSION['catalog']);
+        }
+        $match_labels = ['starts_with' => T_('Starts With'), 'like' => T_('Contains')];
+        $match_modes  = array_intersect_key($match_labels, array_flip($browse_filters));
+
+        $match_mode = $browse->get_match_mode();
+        if (!array_key_exists($match_mode, $match_modes)) {
+            $match_mode = 'starts_with';
+        }
+
+        $match_value = (string) $browse->get_filter($match_mode); ?>
         <form id="multi_alpha_filter_form" action="javascript:void(0);">
-            <label id="multi_alpha_filterLabel" for="multi_alpha_filter"><?php echo T_('Starts With'); ?></label>
-            <input type="text" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php echo scrub_out((string) $browse->get_filter('starts_with')); ?>" onBlur="delayRun(this, '400', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=browse&browse_id=' . $browse->id . '&key=starts_with'); ?>', 'multi_alpha_filter');">
+            <label id="multi_alpha_filterLabel" for="multi_alpha_filter"><?php echo T_('Name'); ?></label>
+            <?php if (count($match_modes) > 1) { ?>
+                <select id="multi_alpha_filter_match" name="multi_alpha_filter_match">
+                    <?php foreach ($match_modes as $mode => $label) { ?>
+                        <option value="<?php echo $mode; ?>" <?php echo ($mode === $match_mode) ? 'selected="selected"' : ''; ?>><?php echo $label; ?></option>
+                    <?php } ?>
+                </select>
+            <?php } ?>
+            <input type="text" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php echo scrub_out($match_value); ?>" onBlur="delayRun(this, '400', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=browse&browse_id=' . $browse->id . '&key=starts_with' . $argument_param); ?>', 'multi_alpha_filter_form');">
         </form>
-    <?php }
+        <?php if (count($match_modes) > 1) {
+            echo Ajax::observe('multi_alpha_filter_match', 'change', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=starts_with' . $argument_param, '', 'multi_alpha_filter_form'));
+        }
+    }
     if (in_array('minimum_count', $browse_filters)) { ?>
         <input id="mincountCB" type="checkbox" value="1" />
         <label id="mincountLabel" for="mincountCB"><?php echo T_('Minimum Count'); ?></label><br />
-        <?php echo Ajax::observe('mincountCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=min_count&value=1', ''));
+        <?php echo Ajax::observe('mincountCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=min_count&value=1' . $argument_param, ''));
     }
     if (in_array('rated', $browse_filters)) { ?>
         <input id="ratedCB" type="checkbox" value="1" />
         <label id="ratedLabel" for="ratedCB"><?php echo T_('Rated'); ?></label><br />
-        <?php echo Ajax::observe('ratedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=rated&value=1', ''));
+        <?php echo Ajax::observe('ratedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=rated&value=1' . $argument_param, ''));
     }
     if (in_array('unplayed', $browse_filters)) { ?>
         <input id="unplayedCB" type="checkbox" <?php echo ($browse->get_filter('unplayed')) ? 'checked="checked"' : ''; ?>/>
         <label id="unplayedLabel" for="unplayedCB"><?php echo T_('Unplayed'); ?></label><br />
-        <?php echo Ajax::observe('unplayedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=unplayed&value=1', ''));
+        <?php echo Ajax::observe('unplayedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=unplayed&value=1' . $argument_param, ''));
     }
     if (in_array('playlist_type', $browse_filters)) { ?>
         <input id="show_allplCB" type="checkbox" value="1" <?php echo $browse->get_filter('playlist_type') ? 'checked="checked"' : ''; ?>/>
         <label id="show_allplLabel" for="show_allplCB"><?php echo T_('All Playlists'); ?></label><br />
-        <?php echo Ajax::observe('show_allplCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=playlist_type&value=1', ''));
+        <?php echo Ajax::observe('show_allplCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=playlist_type&value=1' . $argument_param, ''));
     }
     if (in_array('catalog', $browse_filters)) { ?>
         <form method="post" id="catalog_choice" action="javascript.void(0);">
@@ -93,12 +115,12 @@ if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_
             echo '>' . $entries['name'] . '</options>';
         } ?>
             </select>
-        <?php echo Ajax::observe('catalog_select', 'change', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id, 'catalog_select', 'catalog_choice')); ?>
+        <?php echo Ajax::observe('catalog_select', 'change', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . $argument_param, 'catalog_select', 'catalog_choice')); ?>
         </form>
     <?php }
     if (in_array('show_art', $browse_filters)) { ?>
         <?php echo T_('Toggle Artwork'); ?>&nbsp;<input id="show_artCB" type="checkbox" checked="checked"/>
-        <?php echo Ajax::observe('show_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id, ''));
+        <?php echo Ajax::observe('show_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id . $argument_param, ''));
     } ?>
     </div>
 </li>

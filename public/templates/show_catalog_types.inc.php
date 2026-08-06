@@ -66,7 +66,7 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
         <?php
         } if (!count($catalog_types)) { ?>
         <tr>
-            <td colspan="4"><span class="error"><?php echo T_('No records found'); ?></span></td>
+            <td colspan="4"><span class="error"><?php echo T_('Found nothing to show'); ?></span></td>
         </tr>
         <?php } ?>
     </tbody>

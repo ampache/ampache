@@ -27,7 +27,9 @@ namespace Ampache\Module\Application\Artist;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -37,10 +39,12 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowAllSongsActionTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface&MockInterface $browseFactory;
     private ModelFactoryInterface|MockInterface|null $modelFactory;
     private SongRepositoryInterface|MockInterface|null $songRepository;
     private ?ShowAllSongsAction $subject;
     private UiInterface|MockInterface|null $ui;
+    private ZipHandlerInterface|MockInterface|null $zipHandler;
 
     public function testRunRenders(): void
     {
@@ -73,6 +77,8 @@ class ShowAllSongsActionTest extends MockeryTestCase
                     'object_ids' => $songList,
                     'multi_object_ids' => [],
                     'gatekeeper' => $gatekeeper,
+                    'zipHandler' => $this->zipHandler,
+                    'browseFactory' => $this->browseFactory,
                 ]
             )
             ->once();
@@ -97,13 +103,17 @@ class ShowAllSongsActionTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->modelFactory   = $this->mock(ModelFactoryInterface::class);
+        $this->browseFactory  = $this->mock(BrowseFactoryInterface::class);
         $this->ui             = $this->mock(UiInterface::class);
         $this->songRepository = $this->mock(SongRepositoryInterface::class);
+        $this->zipHandler     = $this->mock(ZipHandlerInterface::class);
 
         $this->subject = new ShowAllSongsAction(
             $this->modelFactory,
             $this->ui,
-            $this->songRepository
+            $this->songRepository,
+            $this->zipHandler,
+            $this->browseFactory
         );
     }
 }

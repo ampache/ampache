@@ -26,44 +26,47 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Video4Method
+ * Returns a single video.
  */
-final class Video4Method
+final class Video4Method implements MethodInterface
 {
     public const string ACTION = 'video';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * video
-     * This returns a single video
-     *
-     * filter = (string) UID of video
-     *
-     * @param array{
-     *     filter: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function video(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $video_id = scrub_in((string) $input['filter']);
-
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::videos([$video_id], $user, $input['auth']);
-                break;
-            default:
-                echo Xml4_Data::videos([$video_id], $user, $input['auth']);
+            return $response;
         }
 
-        return true;
+        // version 4 hands the filter through as a string rather than casting it to an id
+        $results = [scrub_in((string) ($input['filter'] ?? ''))];
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->videos($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

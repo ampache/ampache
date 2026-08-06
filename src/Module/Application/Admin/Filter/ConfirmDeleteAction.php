@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,6 +40,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
     public function __construct(
         private readonly UiInterface $ui,
         private readonly ConfigContainerInterface $configContainer,
+        private readonly CatalogFilterRepositoryInterface $catalogFilterRepository,
     ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -54,7 +56,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
 
         $filter_id   = (int) ($request->getQueryParams()['filter_id'] ?? 0);
         $filter_name = (string) ($request->getQueryParams()['filter_name'] ?? T_('Catalog Filter'));
-        if (Catalog::delete_catalog_filter($filter_id)) {
+        if ($this->catalogFilterRepository->deleteGroup($filter_id)) {
             Catalog::reset_user_filter($filter_id);
             $this->ui->showConfirmation(
                 T_('No Problem'),

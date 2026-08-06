@@ -30,11 +30,13 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,8 +47,10 @@ final readonly class TagAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private UiInterface $ui,
+        private AjaxUriRetrieverInterface $ajaxUriRetriever,
+        private VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -75,8 +79,12 @@ final readonly class TagAction implements ApplicationActionInterface
 
         $this->ui->showBoxTop(T_('Genres'), 'box box_tag_cloud');
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
         $browse->set_type($browse_type);
+        // the tagcloud and the genre form it renders are required into this scope, so their services are named here
+        $ui               = $this->ui;
+        $ajaxUriRetriever = $this->ajaxUriRetriever;
+        $videoRepository  = $this->videoRepository;
         if ($request_type === 'tag_hidden') {
             require_once Ui::find_template('show_tagcloud_hidden.inc.php');
 

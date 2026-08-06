@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -48,6 +49,7 @@ use Psr\Log\LoggerInterface;
 
 class EditObjectActionTest extends TestCase
 {
+    private BrowseFactoryInterface&MockObject $browseFactory;
     private ConfigContainerInterface&MockObject $configContainer;
     private LabelRepositoryInterface&MockObject $labelRepository;
     private LibraryItemLoaderInterface&MockObject $libraryItemLoader;
@@ -56,6 +58,25 @@ class EditObjectActionTest extends TestCase
     private ShareRepositoryInterface&MockObject $shareRepository;
     private StreamFactoryInterface&MockObject $streamFactory;
     private EditObjectAction $subject;
+
+    public function testRunLoadsATypeThatCarriesNoRowSuffix(): void
+    {
+        $libitem = $this->createMock(library_item::class);
+
+        $this->libraryItemLoader->expects(static::once())
+            ->method('load')
+            ->with(LibraryItemEnum::SONG, 666)
+            ->willReturn($libitem);
+
+        $libitem->expects(static::once())
+            ->method('update')
+            ->willReturn(666);
+
+        $this->subject->run(
+            $this->createRequest(['type' => 'song', 'id' => '666'], ['id' => '666']),
+            $this->createGatekeeper()
+        );
+    }
 
     public function testRunLoadsTheItemThroughTheLoaderAndSavesTheScrubbedPostData(): void
     {
@@ -213,6 +234,7 @@ class EditObjectActionTest extends TestCase
     protected function setUp(): void
     {
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->browseFactory     = $this->createMock(BrowseFactoryInterface::class);
         $this->labelRepository   = $this->createMock(LabelRepositoryInterface::class);
         $this->libraryItemLoader = $this->createMock(LibraryItemLoaderInterface::class);
         $this->logger            = $this->createMock(LoggerInterface::class);
@@ -233,7 +255,8 @@ class EditObjectActionTest extends TestCase
             $this->logger,
             $this->responseFactory,
             $this->shareRepository,
-            $this->streamFactory,
+            $this->browseFactory,
+            $this->streamFactory
         );
     }
 

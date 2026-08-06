@@ -47,6 +47,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private ResponseFactoryInterface $responseFactory,
         private ConfigContainerInterface $configContainer,
         private StreamFactoryInterface $streamFactory,
+        private Waveform $waveform,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -73,7 +74,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $object      = new Song($object_id);
         }
 
-        $waveform = Waveform::get($object, $object_type);
+        $waveform = $this->waveform->get($object, $object_type);
 
         if (!$waveform) {
             return null;

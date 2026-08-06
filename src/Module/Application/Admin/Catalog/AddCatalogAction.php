@@ -32,6 +32,7 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,6 +46,7 @@ final class AddCatalogAction extends AbstractCatalogAction
         UiInterface $ui,
         private readonly ConfigContainerInterface $configContainer,
         private readonly RequestParserInterface $requestParser,
+        private readonly CatalogFilterRepositoryInterface $catalogFilterRepository,
     ) {
         parent::__construct($ui);
         $this->ui = $ui;
@@ -61,8 +63,6 @@ final class AddCatalogAction extends AbstractCatalogAction
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
-
-        ob_end_flush();
 
         $body = (array) $request->getParsedBody();
         $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -83,6 +83,8 @@ final class AddCatalogAction extends AbstractCatalogAction
 
         // If an error hasn't occurred
         if (!AmpError::occurred()) {
+            ob_end_flush();
+
             // mandatory catalog information
             $data = [
                 'name' => $_POST['name'],
@@ -150,7 +152,7 @@ final class AddCatalogAction extends AbstractCatalogAction
             }
 
             // Add catalog to filter table
-            Catalog::add_catalog_filter_group_map($catalog_id);
+            $this->catalogFilterRepository->addCatalogToGroups($catalog_id);
 
             $catalogIds[] = $catalog_id;
             catalog_worker('add_to_catalog', $catalogIds, $_POST);

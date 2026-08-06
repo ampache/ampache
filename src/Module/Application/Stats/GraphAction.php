@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Stats;
 
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -38,9 +39,11 @@ final readonly class GraphAction extends AbstractGraphRendererAction
     public function __construct(
         private UiInterface $ui,
         LibraryItemLoaderInterface $libraryItemLoader,
+        Graph $graph,
     ) {
         parent::__construct(
-            $libraryItemLoader
+            $libraryItemLoader,
+            $graph
         );
     }
 

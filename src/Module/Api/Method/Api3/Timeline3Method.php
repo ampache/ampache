@@ -26,17 +26,23 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Timeline3Method
- */
-final class Timeline3Method
+final class Timeline3Method implements MethodInterface
 {
     public const string ACTION = 'timeline';
+
+    public function __construct(
+        private UserActivityRepositoryInterface $useractivityRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * timeline
@@ -49,10 +55,16 @@ final class Timeline3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function timeline(array $input, User $user): void
-    {
-        unset($user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             $limit    = (int) ($input['limit'] ?? 0);
@@ -64,13 +76,18 @@ final class Timeline3Method
                     $user instanceof User
                     && Preference::get_by_user($user->id, 'allow_personal_info_recent')
                 ) {
-                    $results = self::getUseractivityRepository()->getActivities(
+                    $results = $this->useractivityRepository->getActivities(
                         $user->id,
                         $limit,
                         $since
                     );
                     ob_end_clean();
-                    echo Xml3_Data::timeline($results);
+
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->timeline($apiVersion, $results)
+                        )
+                    );
                 }
             } else {
                 debug_event(self::class, 'Username required on timeline function call.', 1);
@@ -78,12 +95,7 @@ final class Timeline3Method
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-    }
 
-    private static function getUseractivityRepository(): UserActivityRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityRepositoryInterface::class);
+        return $response;
     }
 }

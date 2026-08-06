@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\library_item;
@@ -61,9 +62,10 @@ final class EditObjectAction extends AbstractEditAction
         LoggerInterface $logger,
         ResponseFactoryInterface $responseFactory,
         ShareRepositoryInterface $shareRepository,
+        BrowseFactoryInterface $browseFactory,
         StreamFactoryInterface $streamFactory,
     ) {
-        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository);
+        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository, $browseFactory);
         $this->labelRepository = $labelRepository;
         $this->logger          = $logger;
         $this->responseFactory = $responseFactory;

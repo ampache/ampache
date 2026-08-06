@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -51,12 +52,14 @@ final readonly class ShowCustomizeCatalogAction implements ApplicationActionInte
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
+        $catalogId = (int) $this->requestParser->getFromRequest('catalog_id');
 
-        $catalog = Catalog::create_from_id((int) $this->requestParser->getFromRequest('catalog_id'));
+        $catalog = Catalog::create_from_id($catalogId);
         if ($catalog === null) {
-            return null;
+            throw new ObjectNotFoundException($catalogId);
         }
+
+        $this->ui->showHeader();
 
         $this->ui->show(
             'show_edit_catalog.inc.php',

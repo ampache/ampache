@@ -27,17 +27,18 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class PodcastEpisodeDelete4Method
- */
-final class PodcastEpisodeDelete4Method
+final class PodcastEpisodeDelete4Method implements MethodInterface
 {
     public const string ACTION = 'podcast_episode_delete';
 
@@ -54,26 +55,33 @@ final class PodcastEpisodeDelete4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function podcast_episode_delete(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', 'Access Denied: podcast features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_podcast', $input['api_format'])) {
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
         if ($episode->isNew()) {
             Api4::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         if ($episode->remove()) {
@@ -83,6 +91,6 @@ final class PodcastEpisodeDelete4Method
             Api4::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['api_format']);
         }
 
-        return true;
+        return $response;
     }
 }

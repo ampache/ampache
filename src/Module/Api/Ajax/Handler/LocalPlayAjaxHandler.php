@@ -29,17 +29,22 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\VideoRepositoryInterface;
 
 final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
+        private BrowseFactoryInterface $browseFactory,
+        private FolderRepositoryInterface $folderRepository,
+        private VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function handle(User $user): void
@@ -65,6 +70,10 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 // We should also refresh the sidebar
                 ob_start();
+                // sidebar_home renders in this scope
+                $folderRepository = $this->folderRepository;
+
+                $videoRepository = $this->videoRepository;
                 require_once Ui::find_template('sidebar.inc.php');
                 $results['sidebar-content'] = ob_get_contents();
                 ob_end_clean();
@@ -116,7 +125,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                     case 'delete_all':
                         $localplay->delete_all();
                         ob_start();
-                        $browse = new Browse();
+                        $browse = $this->browseFactory->create();
                         $browse->set_type('playlist_localplay');
                         $browse->set_static_content(true);
                         $browse->save_objects([]);
@@ -129,7 +138,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         $localplay->skip((int) filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT));
                         $objects = $localplay->get();
                         ob_start();
-                        $browse = new Browse();
+                        $browse = $this->browseFactory->create();
                         $browse->set_type('playlist_localplay');
                         $browse->set_static_content(true);
                         $browse->save_objects($objects);
@@ -143,6 +152,8 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 if (in_array($command, $refresh_commands, true)) {
                     ob_start();
                     $objects = $localplay->get();
+                    // the status template builds its own browse in this scope
+                    $browseFactory = $this->browseFactory;
                     require Ui::find_template('show_localplay_status.inc.php');
                     $results['localplay_status'] = (string) ob_get_contents();
                     ob_end_clean();
@@ -170,7 +181,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 ob_start();
                 $browse_id = (int) ($_REQUEST['browse_id'] ?? 0);
-                $browse    = new Browse($browse_id);
+                $browse    = $this->browseFactory->create($browse_id);
                 $browse->set_type('playlist_localplay');
                 $browse->set_static_content(true);
                 $browse->save_objects($objects);
@@ -211,6 +222,8 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 ob_start();
                 $objects = $localplay->get();
+                // the status template builds its own browse in this scope
+                $browseFactory = $this->browseFactory;
                 require_once Ui::find_template('show_localplay_status.inc.php');
                 $results['localplay_status'] = ob_get_contents();
                 ob_end_clean();
@@ -231,6 +244,8 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 ob_start();
                 $objects = $localplay->get();
+                // the status template builds its own browse in this scope
+                $browseFactory = $this->browseFactory;
                 require_once Ui::find_template('show_localplay_status.inc.php');
                 $results['localplay_status'] = ob_get_contents();
                 ob_end_clean();

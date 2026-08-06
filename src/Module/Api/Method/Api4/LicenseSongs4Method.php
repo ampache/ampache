@@ -27,63 +27,55 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class LicenseSongs4Method
+ * Returns the songs carrying a single license.
  */
-final class LicenseSongs4Method
+final class LicenseSongs4Method implements MethodInterface
 {
     public const string ACTION = 'license_songs';
 
+    public function __construct(
+        private SongRepositoryInterface $songRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * license_songs
-     * MINIMUM_API_VERSION=420000
-     *
-     * This returns all songs attached to a license ID
-     *
-     * filter = (string) UID of license
-     *
-     * @param array{
-     *     filter: string,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function license_songs(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('licensing')) {
             Api4::message('error', 'Access Denied: licensing features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
+
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $results = self::getSongRepository()->getByLicense((int) scrub_in((string) $input['filter']));
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::songs($results, $user, $input['auth']);
-                break;
-            default:
-                echo Xml4_Data::songs($results, $user, $input['auth']);
+            return $response;
         }
 
-        return true;
-    }
+        // an empty result still prints a songs document here, unlike artist_songs
+        $results = $this->songRepository->getByLicense((int) scrub_in((string) ($input['filter'] ?? '')));
 
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

@@ -52,7 +52,7 @@ final readonly class ConfirmUninstallPluginAction implements ApplicationActionIn
 
         $this->ui->showHeader();
 
-        $plugin = scrub_in((string) $_REQUEST['plugin']);
+        $plugin = scrub_in((string) ($_REQUEST['plugin'] ?? ''));
         $url    = sprintf(
             '%s/modules.php?action=uninstall_plugin&plugin=%s',
             $this->configContainer->getWebPath('/admin'),

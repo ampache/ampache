@@ -38,9 +38,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 
-global $dic;
-$metadataManager = $dic->get(MetadataManagerInterface::class);
-
+/** @var MetadataManagerInterface $metadataManager */
 /** @var Song $libitem */
 
 $current_user = Core::get_global('user');

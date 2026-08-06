@@ -27,15 +27,20 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShareRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class ShareDelete4Method
- */
-final class ShareDelete4Method
+final class ShareDelete4Method implements MethodInterface
 {
     public const string ACTION = 'share_delete';
+
+    public function __construct(
+        private ShareRepositoryInterface $shareRepository,
+    ) {}
 
     /**
      * share_delete
@@ -50,20 +55,27 @@ final class ShareDelete4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function share_delete(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('share')) {
             Api4::message('error', 'Access Denied: sharing features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
         $object_id = $input['filter'];
 
-        $shareRepository = self::getShareRepository();
+        $shareRepository = $this->shareRepository;
 
         $share = $shareRepository->findById((int) $object_id);
 
@@ -73,23 +85,13 @@ final class ShareDelete4Method
         ) {
             Api4::message('error', 'share ' . $object_id . ' was not found', '404', $input['api_format']);
 
-            return true;
+            return $response;
         }
 
         $shareRepository->delete($share);
 
         Api4::message('success', 'share ' . $object_id . ' deleted', null, $input['api_format']);
 
-        return true;
-    }
-
-    /**
-     * @deprecated Inject dependency
-     */
-    private static function getShareRepository(): ShareRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ShareRepositoryInterface::class);
+        return $response;
     }
 }

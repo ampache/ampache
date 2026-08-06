@@ -26,54 +26,52 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class PlaylistCreate4Method
+ * Creates a playlist and returns it.
  */
-final class PlaylistCreate4Method
+final class PlaylistCreate4Method implements MethodInterface
 {
     public const string ACTION = 'playlist_create';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * playlist_create
-     * MINIMUM_API_VERSION=380001
-     *
-     * Create a new playlist and return it
-     *
-     * name = (string) Playlist name
-     * type = (string) 'public'|'private'
-     *
-     * @param array{
-     *     name: string,
-     *     type?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function playlist_create(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['name', 'type'], self::ACTION)) {
-            return false;
+            return $response;
         }
-        $name = $input['name'];
+
         $type = $input['type'] ?? 'public';
         if ($type !== 'private' && $type !== 'public') {
             $type = 'public';
         }
 
-        $uid = Playlist::create($name, $type, $user->id);
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::playlists([(int) $uid], $user, $input['auth']);
-                break;
-            default:
-                echo Xml4_Data::playlists([(int) $uid], $user, $input['auth']);
-        }
+        $uid = Playlist::create((string) ($input['name'] ?? ''), $type, $user->id);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->playlists($apiVersion, [(int) $uid], $user, $input['auth'])
+            )
+        );
     }
 }

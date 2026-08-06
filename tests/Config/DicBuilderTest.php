@@ -57,7 +57,12 @@ class DicBuilderTest extends TestCase
             }
 
             // DicBuilder lives in src/Config, so every path but its own is written relative to that
-            $relative = str_replace($sourcePath, '', (string) $file->getRealPath());
+            // Paths are normalised to forward slashes so the literals match on Windows too
+            $relative = str_replace(
+                [$sourcePath, DIRECTORY_SEPARATOR],
+                ['', '/'],
+                (string) $file->getRealPath()
+            );
             $literal  = ($relative === '/Config/service_definition.php')
                 ? '/service_definition.php'
                 : '/..' . $relative;

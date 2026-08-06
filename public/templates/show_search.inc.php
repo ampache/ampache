@@ -31,7 +31,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -39,6 +39,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var Search $playlist */
 /** @var list<int> $object_ids */
 
@@ -47,7 +48,7 @@ $web_path = AmpConfig::get_web_path();
 ob_start();
 echo $playlist->getFullname();
 $title  = ob_get_contents();
-$browse = new Browse();
+$browse = $browseFactory->create();
 $browse->set_type('playlist_media');
 $browse->set_use_filters(false);
 $browse->add_supplemental_object('playlist', $playlist);
@@ -64,8 +65,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 <?php } ?>
 <div id="information_actions">
     <ul>
-<?php global $dic; // @todo remove after refactoring
-$zipHandler = $dic->get(ZipHandlerInterface::class);
+<?php /** @var ZipHandlerInterface $zipHandler */
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('search')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=search&id=<?php echo $playlist->id; ?>" rel="nofollow">
@@ -117,7 +117,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         <input type="hidden" name="browse_id" value="<?php echo $browse->id; ?>" />
         <input type="hidden" name="playlist_id" value="<?php echo $playlist->id; ?>" />
         <input type="hidden" name="playlist_type" value="<?php echo $playlist->type; ?>" />
-        <input type="hidden" name="playlist_name" value="<?php echo $playlist->name; ?>" />
+        <input type="hidden" name="playlist_name" value="<?php echo scrub_out($playlist->name); ?>" />
         <input type="hidden" name="playlist_user" value="<?php echo $playlist->user; ?>" />
         <input type="hidden" name="limit" value="<?php echo $playlist->limit; ?>" />
         <input type="hidden" name="random" value="<?php echo $playlist->random; ?>" />

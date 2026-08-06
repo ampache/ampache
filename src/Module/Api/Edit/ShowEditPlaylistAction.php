@@ -30,6 +30,7 @@ use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Share;
@@ -56,10 +57,11 @@ final class ShowEditPlaylistAction extends AbstractEditAction
         LibraryItemLoaderInterface $libraryItemLoader,
         LoggerInterface $logger,
         ShareRepositoryInterface $shareRepository,
+        BrowseFactoryInterface $browseFactory,
         TalFactoryInterface $talFactory,
         GuiFactoryInterface $guiFactory,
     ) {
-        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository);
+        parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository, $browseFactory);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->talFactory      = $talFactory;

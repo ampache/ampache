@@ -59,7 +59,7 @@ if ($browse->is_show_header()) {
             } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="6"><span class="nodata"><?php echo T_('No Catalog found'); ?></span></td>
+            <td colspan="6"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
         </tr>
             <?php } ?>
     </tbody>

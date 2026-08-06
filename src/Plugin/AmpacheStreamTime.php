@@ -66,8 +66,9 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly Graph $graph,
+    ) {
         $this->description = T_('Control time per user');
     }
 
@@ -123,7 +124,7 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
                 $next_total += $media->time ?? 0;
             }
 
-            $graph         = new Graph();
+            $graph         = $this->graph;
             $end_date      = time();
             $start_date    = $end_date - ($this->time_days * 86400);
             $current_total = $graph->get_total_time($this->user_id, $start_date, $end_date);

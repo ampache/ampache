@@ -181,7 +181,7 @@ if ($limit > 0 && $total > $limit) {
                     <script>
                         $('#limit_value_<?php echo $browse->id; ?>_<?php echo $is_header; ?>').on('blur keydown',function(e) {
                             if (e.type === 'blur' || e.key === "Enter") {
-                                delayRun(this, '50', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=limit'); ?>', 'limit_value_<?php echo $browse->id; ?>_<?php echo $is_header; ?>');
+                                delayRun(this, '50', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=limit' . $argument_param); ?>', 'limit_value_<?php echo $browse->id; ?>_<?php echo $is_header; ?>');
                             }
                         });
                     </script>

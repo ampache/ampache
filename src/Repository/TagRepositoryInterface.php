@@ -60,14 +60,6 @@ interface TagRepositoryInterface
     public function findIdByName(string $name): ?int;
 
     /**
-     * Reads the tag map rows for a set of objects, for the prefetch that feeds the browse display
-     *
-     * @param array<int|string> $objectIds
-     * @return list<array{id: int, tag_id: int, name: string, object_id: int, user: int}>
-     */
-    public function getMapRows(string $objectType, array $objectIds): array;
-
-    /**
      * Counts the distinct tags that have been merged into another one
      */
     public function getMergedCount(): int;
@@ -114,13 +106,6 @@ interface TagRepositoryInterface
      * @return list<string>
      */
     public function getSongTagNamesByArtist(int $artistId): array;
-
-    /**
-     * Reads the ids of tags applied to a given object type
-     *
-     * @return list<int>
-     */
-    public function getTagIds(string $objectType, int $count, int $offset): array;
 
     /**
      * Reads the ids of objects carrying a given tag, or every tagged object when the tag id is 0

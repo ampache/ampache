@@ -33,7 +33,7 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -46,6 +46,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var Album $album */
 /** @var bool $isAlbumEditable */
 
@@ -78,8 +79,7 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 }
-global $dic; // @todo remove after refactoring
-$zipHandler = $dic->get(ZipHandlerInterface::class);
+/** @var ZipHandlerInterface $zipHandler */
 $batch_dl   = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 $zip_album  = $batch_dl && $zipHandler->isZipable('album');
 $zip_albumD = $batch_dl && $zipHandler->isZipable('album_disk');
@@ -337,7 +337,7 @@ foreach ($album->getDisks() as $album_disk) {
     </div>
     <div id='reordered_list_<?php echo $album_disk->id; ?>'>
         <?php
-        $browse = new Browse();
+        $browse = $browseFactory->create();
     $browse->set_show_header(false);
     $browse->set_type('song');
     $browse->set_simple_browse(true);

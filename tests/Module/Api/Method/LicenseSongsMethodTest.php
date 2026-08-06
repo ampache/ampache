@@ -33,7 +33,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Browse;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
@@ -43,8 +43,8 @@ use Psr\Http\Message\StreamInterface;
 
 class LicenseSongsMethodTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface|MockInterface|null $browseFactory;
     private ConfigContainerInterface|MockInterface|null $configContainer;
-    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?LicenseSongsMethod $subject;
 
     /**
@@ -245,18 +245,18 @@ class LicenseSongsMethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
+        $this->browseFactory    = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new LicenseSongsMethod(
             $this->configContainer,
-            $this->modelFactory
+            $this->browseFactory
         );
     }
 
     private function mockBrowse(MockInterface $browse, MockInterface $user): void
     {
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
