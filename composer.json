@@ -135,11 +135,13 @@
         "cs:check": "vendor/bin/php-cs-fixer fix --dry-run -vv",
         "api:docs": [
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_openapi_schemas.py",
-            "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_api_methods_md.py"
+            "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_api_methods_md.py",
+            "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_browse_docs.py"
         ],
         "api:docs:check": [
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_openapi_schemas.py --check",
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_api_methods_md.py --check",
+            "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_browse_docs.py --check",
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/check_openapi_examples.py --strict",
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/lint_openapi.py"
         ],
