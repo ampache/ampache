@@ -91,7 +91,7 @@ foreach ($object_ids as $video_id) {
 } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="42"><span class="nodata"><?php echo T_('No video found'); ?></span></td>
+            <td colspan="42"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
         </tr>
         <?php } ?>
     </tbody>

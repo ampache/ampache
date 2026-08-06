@@ -38,7 +38,7 @@ usage() {
     echo -e "\033[32m usage: $0 [-h|--help][-g|--get][-gu|--getutds][-i|--init][-m|--merge][-f|--format][-a|--all][-au|--allutds]\033[0m"
     echo ""
     echo -e "[-g|--get]\t\t Creates the messages.pot file from translation strings within the source code."
-    echo -e "[-gu|--getutds]\t\t Generates the Pot file from translation strings within the source code\n\t\t\t and (re)generates 'translatable-database-strings.txt' from the preference strings in\n\t\t\t the source code (Preference::translate_db() and Preference::set_defaults()). No database needed."
+    echo -e "[-gu|--getutds]\t\t Generates the Pot file from translation strings within the source code\n\t\t\t and (re)generates 'translatable-database-strings.txt' from the preference strings in\n\t\t\t the source code (Preference::translate_db() and Preference::DEFAULTS). No database needed."
     echo -e "[-i|--init]\t\t Creates a new language catalog and its directory structure."
     echo -e "[-m|--merge]\t\t Merges the messages.pot into the language catalogs and shows obsolet translations."
     echo -e "[-ma|--mergeall]\t Same as -m but for all translations."
@@ -95,7 +95,7 @@ add_db_entries() {
 }
 
 # Generate/overwrite messages.pot from Source-Strings and preference strings read from the source code.
-# Descriptions come from Preference::translate_db(); subcategories from the seed SQL. No database required.
+# Descriptions come from Preference::translate_db(); subcategories from Preference::DEFAULTS. No database required.
 generate_pot_utds() {
     echo ""
     echo "Generating/updating pot-file"
@@ -113,7 +113,12 @@ generate_pot_utds() {
         return 1
     fi
 
-    preffile='../../src/Repository/Model/Preference.php'
+    preffile='../../src/Module/System/Preference.php'
+    if [[ ! -f "$preffile" ]]; then
+        echo -e "\033[31m Error\033[0m: $preffile not found, the preference strings cannot be gathered."
+        return 1
+    fi
+
     tmpdir=$(mktemp -d)
 
     echo -e "\033[32m Pot creation/update successful\033[0m\n"
@@ -128,13 +133,25 @@ generate_pot_utds() {
       | sed 's/^.\(.*\).$/\1/' \
       | awk '!seen[$0]++' > "$tmpdir/desc.txt"
 
-    # Subcategories: the 7th argument of each Preference::set_defaults() row (the source of truth for
-    # system preferences). Title-case them to match rendering - the template calls T_(ucwords($subcategory)).
-    awk '/public static function set_defaults/,/public static function set_level/' "$preffile" \
-      | grep -F 'Dba::write($pref_sql, [' \
-      | sed -E "s/.*, ('[^']*'|null)\]\);.*/\1/" \
+    # Subcategories: the last element of each Preference::DEFAULTS row, which set_defaults() inserts.
+    # Title-case them to match rendering - the template calls T_(ucwords($subcategory)).
+    awk '/public const array DEFAULTS = \[/{f=1; next}
+         f && /^[[:space:]]*\];/{exit}
+         f' "$preffile" \
+      | sed -E "s/.*, ('[^']*'|null)\],[[:space:]]*\$/\1/" \
       | grep -v '^null$' | tr -d "'" \
       | perl -pe 's/(?:^|(?<=\s))([a-z])/\u$1/g' | sort -u > "$tmpdir/subcat.txt"
+
+    # Both lists are read out of the source with awk, so a rename in Preference.php shows up here as an
+    # empty file rather than an error. Stop instead of overwriting $tdstxt with nothing.
+    for list in desc subcat; do
+        if [[ ! -s "$tmpdir/$list.txt" ]]; then
+            echo -e "\033[31m Error\033[0m: no $list strings found in $preffile, leaving $tdstxt alone."
+            echo -e " The extraction in this script has to be updated to match the class."
+            rm -rf "$tmpdir"
+            return 1
+        fi
+    done
 
     echo "Deleting old $tdstxt"
     rm -f $tdstxt
@@ -143,7 +160,7 @@ generate_pot_utds() {
         printf ' # This file lists all translatable strings from the Ampache preference table\n'
         printf ' # (descriptions and subcategories). It is generated from the source code by\n'
         printf " # './gather-messages.sh [-gu|--getutds]' - descriptions come from\n"
-        printf ' # Preference::translate_db() and subcategories from Preference::set_defaults(),\n'
+        printf ' # Preference::translate_db() and subcategories from Preference::DEFAULTS,\n'
         printf ' # so a live database is NOT required. Do not edit it by hand; re-run the script.\n\n'
         printf ' #######################################################################\n'
     } > $tdstxt

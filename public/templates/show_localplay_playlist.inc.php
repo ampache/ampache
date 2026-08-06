@@ -74,7 +74,7 @@ $status = $localplay->status(); ?>
         <?php
             } if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="3"><span class="error"><?php echo T_('No records found'); ?></span></td>
+            <td colspan="3"><span class="error"><?php echo T_('Found nothing to show'); ?></span></td>
         </tr>
         <?php } ?>
         <?php } ?>

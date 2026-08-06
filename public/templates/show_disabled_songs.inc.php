@@ -49,7 +49,7 @@ use Ampache\Repository\Model\Song;
         // closed generator".
         if (!$songs->valid()) { ?>
             <tr>
-                <td colspan="6" style="text-align: center"><span class="error"><?php echo T_('No records found'); ?></span></td>
+                <td colspan="6" style="text-align: center"><span class="error"><?php echo T_('Found nothing to show'); ?></span></td>
             </tr>
         <?php } else {
             foreach ($songs as $song) {

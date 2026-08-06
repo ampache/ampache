@@ -156,7 +156,7 @@ if ($libitem->has_access()) { ?>
 <?php } ?>
 <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="<?php echo ($show_ratings) ? 9 : 8; ?>"><span class="nodata"><?php echo T_('No collection found'); ?></span></td>
+            <td colspan="<?php echo ($show_ratings) ? 9 : 8; ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
         </tr>
 <?php } ?>
     </tbody>

@@ -91,7 +91,7 @@ final readonly class ShareAction implements ApplicationActionInterface
 
             show_table_render(false, true);
         } else {
-            echo T_('No records found');
+            echo T_('Found nothing to show');
         }
 
         $this->ui->showQueryStats();

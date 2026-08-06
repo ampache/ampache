@@ -75,7 +75,7 @@ if ($browse->is_show_header()) {
         <?php } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Genre found'); ?></span></td>
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
         </tr>
         <?php } ?>
     </tbody>
