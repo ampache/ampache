@@ -25,11 +25,12 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var string $object_type */
 /** @var User $user */
 
@@ -46,7 +47,7 @@ if (!empty($object_ids)) {
     Ui::show_box_top(T_('Newest') . "&nbsp" . Ajax::button('?page=index&action=dashboard_newest&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'newest', 'dashboard_newest'), 'newest');
     echo "</a>";
     echo '<div id="dashboard_newest">';
-    $browse = new Browse();
+    $browse = $browseFactory->create();
     $browse->set_type($object_type);
     $browse->set_use_filters(false);
     $browse->set_show_header(false);
@@ -64,7 +65,7 @@ if (!empty($object_ids)) {
     Ui::show_box_top(T_('Recent') . "&nbsp" . Ajax::button('?page=index&action=dashboard_recent&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'recent', 'dashboard_recent'), 'recent');
     echo "</a>";
     echo '<div id="dashboard_recent">';
-    $browse = new Browse();
+    $browse = $browseFactory->create();
     $browse->set_type($object_type);
     $browse->set_use_filters(false);
     $browse->set_show_header(false);
@@ -87,7 +88,7 @@ if ($user->getId() < 1) {
 if (!empty($object_ids)) {
     Ui::show_box_top(T_('Trending') . "&nbsp" . Ajax::button('?page=index&action=dashboard_trending&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'trending', 'dashboard_trending'), 'trending');
     echo '<div id="dashboard_trending">';
-    $browse = new Browse();
+    $browse = $browseFactory->create();
     $browse->set_type($object_type);
     $browse->set_use_filters(false);
     $browse->set_show_header(false);
@@ -108,7 +109,7 @@ if (!empty($object_ids)) {
     Ui::show_box_top(T_('Popular') . "&nbsp" . Ajax::button('?page=index&action=dashboard_popular&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'popular', 'dashboard_popular'), 'popular');
     echo "</a>";
     echo '<div id="dashboard_popular">';
-    $browse = new Browse();
+    $browse = $browseFactory->create();
     $browse->set_type($object_type);
     $browse->set_show_header(false);
     $browse->set_grid_view(true, false);

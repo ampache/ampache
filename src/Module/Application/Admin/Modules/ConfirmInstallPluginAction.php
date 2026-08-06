@@ -52,7 +52,7 @@ final readonly class ConfirmInstallPluginAction implements ApplicationActionInte
 
         $this->ui->showHeader();
 
-        $plugin = scrub_in((string) $_REQUEST['plugin']);
+        $plugin = scrub_in((string) ($_REQUEST['plugin'] ?? ''));
         $url    = sprintf(
             '%s/modules.php?action=install_plugin&plugin=%s',
             $this->configContainer->getWebPath('/admin'),

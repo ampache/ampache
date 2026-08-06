@@ -27,14 +27,15 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Localplay3Method
- */
-final class Localplay3Method
+final class Localplay3Method implements MethodInterface
 {
     public const string ACTION = 'localplay';
 
@@ -51,16 +52,22 @@ final class Localplay3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function localplay(array $input, User $user): bool
-    {
-        unset($user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         // Load their localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {
             echo Xml3_Data::error(405, 'Invalid Request');
 
-            return false;
+            return $response;
         }
 
         switch (strtolower($input['command'])) {
@@ -80,13 +87,13 @@ final class Localplay3Method
                 // They are doing it wrong
                 echo Xml3_Data::error(405, 'Invalid Request');
 
-                return false;
+                return $response;
         }
 
         $results = ['localplay' => ['command' => [$input['command'] => $result]]];
 
         echo Api::keyed_array($results);
 
-        return true;
+        return $response;
     }
 }

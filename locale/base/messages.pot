@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-08-02 13:28+1000\n"
+"POT-Creation-Date: 2026-08-06 11:40+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,6 +22,12 @@ msgid "Filters"
 msgstr ""
 
 msgid "Starts With"
+msgstr ""
+
+msgid "Contains"
+msgstr ""
+
+msgid "Name"
 msgstr ""
 
 msgid "Minimum Count"
@@ -58,9 +64,6 @@ msgid "The table below explains the cookies we use and why"
 msgstr ""
 
 msgid "Cookie"
-msgstr ""
-
-msgid "Name"
 msgstr ""
 
 msgid "Purpose"
@@ -1012,7 +1015,7 @@ msgstr ""
 msgid "Art"
 msgstr ""
 
-msgid "No Album found"
+msgid "Found nothing to show"
 msgstr ""
 
 msgid "Unknown (Orphaned)"
@@ -1075,9 +1078,6 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
-msgid "No Artist found"
-msgstr ""
-
 msgid "Select New Art"
 msgstr ""
 
@@ -1106,9 +1106,6 @@ msgid "Started"
 msgstr ""
 
 msgid "Listeners"
-msgstr ""
-
-msgid "No Broadcast found"
 msgstr ""
 
 msgid "Disable"
@@ -1156,9 +1153,6 @@ msgstr ""
 msgid "Last Clean"
 msgstr ""
 
-msgid "No Catalog found"
-msgstr ""
-
 msgid "Description"
 msgstr ""
 
@@ -1166,9 +1160,6 @@ msgid "Version"
 msgstr ""
 
 msgid "Activate"
-msgstr ""
-
-msgid "No records found"
 msgstr ""
 
 msgid "Clean Catalog"
@@ -1217,9 +1208,6 @@ msgid "# Items"
 msgstr ""
 
 msgid "Holds"
-msgstr ""
-
-msgid "No collection found"
 msgstr ""
 
 msgid "Continue"
@@ -1618,6 +1606,9 @@ msgstr ""
 msgid "Searched"
 msgstr ""
 
+msgid "Do you really want to delete this Tag?"
+msgstr ""
+
 msgid "Artist Art Search"
 msgstr ""
 
@@ -1671,6 +1662,9 @@ msgid "Your browser doesn't support this feature."
 msgstr ""
 
 msgid "Full-Screen not supported by your browser"
+msgstr ""
+
+msgid "Could not connect to the broadcast. Resuming normal playback."
 msgstr ""
 
 msgid "Media is currently playing, are you sure you want to close?"
@@ -2056,9 +2050,6 @@ msgstr ""
 msgid "Create Label"
 msgstr ""
 
-msgid "No label found"
-msgstr ""
-
 msgid "Stream"
 msgstr ""
 
@@ -2201,9 +2192,6 @@ msgstr ""
 msgid "Primary"
 msgstr ""
 
-msgid "No democratic found"
-msgstr ""
-
 msgid "Number of Users"
 msgstr ""
 
@@ -2217,9 +2205,6 @@ msgid "Users"
 msgstr ""
 
 msgid "Create License"
-msgstr ""
-
-msgid "No licenses found"
 msgstr ""
 
 msgid "Object"
@@ -2283,9 +2268,6 @@ msgstr ""
 msgid "Playlist Name"
 msgstr ""
 
-msgid "No playlist found"
-msgstr ""
-
 msgid "Web Player"
 msgstr ""
 
@@ -2337,9 +2319,6 @@ msgstr ""
 msgid "Episodes"
 msgstr ""
 
-msgid "No podcast found"
-msgstr ""
-
 msgid "Apply to All"
 msgstr ""
 
@@ -2373,9 +2352,6 @@ msgid "Mark as Unread"
 msgstr ""
 
 msgid "Sender"
-msgstr ""
-
-msgid "No message found"
 msgstr ""
 
 msgid "Queries: "
@@ -2540,16 +2516,10 @@ msgstr ""
 msgid "Skipped"
 msgstr ""
 
-msgid "No song found"
-msgstr ""
-
 msgid "Add to playlist"
 msgstr ""
 
 msgid "License"
-msgstr ""
-
-msgid "Do you really want to delete this Tag?"
 msgstr ""
 
 msgid "No Genre"
@@ -2858,6 +2828,9 @@ msgstr ""
 msgid "I Accept"
 msgstr ""
 
+msgid "Fullname"
+msgstr ""
+
 msgid "Registration Date"
 msgstr ""
 
@@ -2906,9 +2879,6 @@ msgid "Added"
 msgstr ""
 
 msgid "Video Information"
-msgstr ""
-
-msgid "No video found"
 msgstr ""
 
 msgid "Ampache Wrapped"
@@ -4668,6 +4638,9 @@ msgstr ""
 msgid "Create .htaccess files"
 msgstr ""
 
+msgid "Include the optional web root .htaccess"
+msgstr ""
+
 msgid "Recreate Ampache .htaccess files"
 msgstr ""
 
@@ -4936,6 +4909,24 @@ msgstr ""
 msgid "Table engine: %s"
 msgstr ""
 
+msgid "Collection Items"
+msgstr ""
+
+msgid "Current Playlist"
+msgstr ""
+
+msgid "Playlist Items"
+msgstr ""
+
+msgid "Private Messages"
+msgstr ""
+
+msgid "Shoutbox Records"
+msgstr ""
+
+msgid "Wanted Albums"
+msgstr ""
+
 #, php-format
 msgid ""
 "This view has %d item and is too large to show all at once (limit %d). "
@@ -4945,24 +4936,6 @@ msgid_plural ""
 "Enable paging or narrow your filters."
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "Playlist Items"
-msgstr ""
-
-msgid "Collection Items"
-msgstr ""
-
-msgid "Current Playlist"
-msgstr ""
-
-msgid "Shoutbox Records"
-msgstr ""
-
-msgid "Wanted Albums"
-msgstr ""
-
-msgid "Private Messages"
-msgstr ""
 
 msgid "Browse was not found or expired, try reloading the page"
 msgstr ""
@@ -5494,9 +5467,6 @@ msgid ""
 msgstr ""
 
 msgid "A new user has registered, the following values were entered:"
-msgstr ""
-
-msgid "Fullname"
 msgstr ""
 
 #, php-format
@@ -6579,12 +6549,175 @@ msgstr ""
 
 msgid "Add to wanted list"
 msgstr ""
- #######################################################################
+
+#: ./untranslated-strings.txt:3
+msgid "Connected Users"
+msgstr ""
+
+#: ./untranslated-strings.txt:7
+msgid "Catalog Size"
+msgstr ""
+
+#: ./untranslated-strings.txt:11
+msgid "Catalog Time"
+msgstr ""
+
+#: ./untranslated-strings.txt:15
+msgid "Total Users"
+msgstr ""
+
+#: ./untranslated-strings.txt:118
+msgid "subsonic"
+msgstr ""
+
+#: ./untranslated-strings.txt:119
+msgid "7digital"
+msgstr ""
+
+#: ./untranslated-strings.txt:120
+msgid "Amazon"
+msgstr ""
+
+#: ./untranslated-strings.txt:121
+msgid "Bit.ly"
+msgstr ""
+
+#: ./untranslated-strings.txt:122
+msgid "Catalog Favorites"
+msgstr ""
+
+#: ./untranslated-strings.txt:123
+msgid "ChartLyrics"
+msgstr ""
+
+#: ./untranslated-strings.txt:124
+msgid "Discogs"
+msgstr ""
+
+#: ./untranslated-strings.txt:125
+msgid "Facebook"
+msgstr ""
+
+#: ./untranslated-strings.txt:126
+msgid "Flattr"
+msgstr ""
+
+#: ./untranslated-strings.txt:127
+msgid "Flickr"
+msgstr ""
+
+#: ./untranslated-strings.txt:129
+msgid "GoogleAnalytics"
+msgstr ""
+
+#: ./untranslated-strings.txt:130
+msgid "GoogleMaps"
+msgstr ""
+
+#: ./untranslated-strings.txt:131
+msgid "Gravatar"
+msgstr ""
+
+#: ./untranslated-strings.txt:132
+msgid "Headphones"
+msgstr ""
+
+#: ./untranslated-strings.txt:133
+msgid "Last.FM"
+msgstr ""
+
+#: ./untranslated-strings.txt:134
+msgid "Libravatar"
+msgstr ""
+
+#: ./untranslated-strings.txt:135
+msgid "Libre.FM"
+msgstr ""
+
+#: ./untranslated-strings.txt:136
+msgid "ListenBrainz"
+msgstr ""
+
+#: ./untranslated-strings.txt:137
+msgid "Lyrist Lyrics"
+msgstr ""
+
+#: ./untranslated-strings.txt:138
+msgid "Matomo"
+msgstr ""
+
+#: ./untranslated-strings.txt:141
+msgid "Paypal"
+msgstr ""
+
+#: ./untranslated-strings.txt:142
+msgid "Personal Favorites"
+msgstr ""
+
+#: ./untranslated-strings.txt:143
+msgid "Piwik"
+msgstr ""
+
+#: ./untranslated-strings.txt:144
+msgid "RatingMatch"
+msgstr ""
+
+#: ./untranslated-strings.txt:145
+msgid "RSSView"
+msgstr ""
+
+#: ./untranslated-strings.txt:146
+msgid "Shout Home"
+msgstr ""
+
+#: ./untranslated-strings.txt:147
+msgid "Stream Bandwidth"
+msgstr ""
+
+#: ./untranslated-strings.txt:148
+msgid "Stream Hits"
+msgstr ""
+
+#: ./untranslated-strings.txt:149
+msgid "Stream Time"
+msgstr ""
+
+#: ./untranslated-strings.txt:150
+msgid "TheAudioDb"
+msgstr ""
+
+#: ./untranslated-strings.txt:152
+msgid "Twitter"
+msgstr ""
+
+#: ./untranslated-strings.txt:153
+msgid "YOURLS"
+msgstr ""
+
+#: ./untranslated-strings.txt:154
+msgid "handshake"
+msgstr ""
+
+#: ./untranslated-strings.txt:155
+msgid "ping"
+msgstr ""
+
+#: ./untranslated-strings.txt:256
+msgid "average"
+msgstr ""
+
+#: ./untranslated-strings.txt:260
+msgid "Home Dashboard"
+msgstr ""
+
+#: ./untranslated-strings.txt:269
+msgid "Mpd"
+msgstr "" #######################################################################
 
  # This file lists all translatable strings from the Ampache preference table
  # (descriptions and subcategories). It is generated from the source code by
  # './gather-messages.sh [-gu|--getutds]' - descriptions come from
- # Preference::translate_db() and subcategories from Preference::set_defaults(),
+ # Preference::translate_db() and subcategories from Preference::DEFAULTS,
  # so a live database is NOT required. Do not edit it by hand; re-run the script.
 
  #######################################################################
@@ -6707,6 +6840,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Broadcast web player by default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Require a session to listen to my broadcasts"
 msgstr ""
 
 #: Ampache preference description
@@ -7315,168 +7452,4 @@ msgstr ""
 
 #: Ampache preference subcategory
 msgid "Transcoding"
-msgstr ""
-
-#: ./untranslated-strings.txt:3
-msgid "Connected Users"
-msgstr ""
-
-#: ./untranslated-strings.txt:7
-msgid "Catalog Size"
-msgstr ""
-
-#: ./untranslated-strings.txt:11
-msgid "Catalog Time"
-msgstr ""
-
-#: ./untranslated-strings.txt:15
-msgid "Total Users"
-msgstr ""
-
-#: ./untranslated-strings.txt:118
-msgid "subsonic"
-msgstr ""
-
-#: ./untranslated-strings.txt:119
-msgid "7digital"
-msgstr ""
-
-#: ./untranslated-strings.txt:120
-msgid "Amazon"
-msgstr ""
-
-#: ./untranslated-strings.txt:121
-msgid "Bit.ly"
-msgstr ""
-
-#: ./untranslated-strings.txt:122
-msgid "Catalog Favorites"
-msgstr ""
-
-#: ./untranslated-strings.txt:123
-msgid "ChartLyrics"
-msgstr ""
-
-#: ./untranslated-strings.txt:124
-msgid "Discogs"
-msgstr ""
-
-#: ./untranslated-strings.txt:125
-msgid "Facebook"
-msgstr ""
-
-#: ./untranslated-strings.txt:126
-msgid "Flattr"
-msgstr ""
-
-#: ./untranslated-strings.txt:127
-msgid "Flickr"
-msgstr ""
-
-#: ./untranslated-strings.txt:129
-msgid "GoogleAnalytics"
-msgstr ""
-
-#: ./untranslated-strings.txt:130
-msgid "GoogleMaps"
-msgstr ""
-
-#: ./untranslated-strings.txt:131
-msgid "Gravatar"
-msgstr ""
-
-#: ./untranslated-strings.txt:132
-msgid "Headphones"
-msgstr ""
-
-#: ./untranslated-strings.txt:133
-msgid "Last.FM"
-msgstr ""
-
-#: ./untranslated-strings.txt:134
-msgid "Libravatar"
-msgstr ""
-
-#: ./untranslated-strings.txt:135
-msgid "Libre.FM"
-msgstr ""
-
-#: ./untranslated-strings.txt:136
-msgid "ListenBrainz"
-msgstr ""
-
-#: ./untranslated-strings.txt:137
-msgid "Lyrist Lyrics"
-msgstr ""
-
-#: ./untranslated-strings.txt:138
-msgid "Matomo"
-msgstr ""
-
-#: ./untranslated-strings.txt:141
-msgid "Paypal"
-msgstr ""
-
-#: ./untranslated-strings.txt:142
-msgid "Personal Favorites"
-msgstr ""
-
-#: ./untranslated-strings.txt:143
-msgid "Piwik"
-msgstr ""
-
-#: ./untranslated-strings.txt:144
-msgid "RatingMatch"
-msgstr ""
-
-#: ./untranslated-strings.txt:145
-msgid "RSSView"
-msgstr ""
-
-#: ./untranslated-strings.txt:146
-msgid "Shout Home"
-msgstr ""
-
-#: ./untranslated-strings.txt:147
-msgid "Stream Bandwidth"
-msgstr ""
-
-#: ./untranslated-strings.txt:148
-msgid "Stream Hits"
-msgstr ""
-
-#: ./untranslated-strings.txt:149
-msgid "Stream Time"
-msgstr ""
-
-#: ./untranslated-strings.txt:150
-msgid "TheAudioDb"
-msgstr ""
-
-#: ./untranslated-strings.txt:152
-msgid "Twitter"
-msgstr ""
-
-#: ./untranslated-strings.txt:153
-msgid "YOURLS"
-msgstr ""
-
-#: ./untranslated-strings.txt:154
-msgid "handshake"
-msgstr ""
-
-#: ./untranslated-strings.txt:155
-msgid "ping"
-msgstr ""
-
-#: ./untranslated-strings.txt:256
-msgid "average"
-msgstr ""
-
-#: ./untranslated-strings.txt:260
-msgid "Home Dashboard"
-msgstr ""
-
-#: ./untranslated-strings.txt:269
-msgid "Mpd"
 msgstr ""

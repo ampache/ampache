@@ -45,6 +45,10 @@ class Graph
 
     private const int MAX_POINTS = 3000;
 
+    public function __construct(
+        private readonly UserRepositoryInterface $userRepository,
+    ) {}
+
     /**
      */
     public function display_map(
@@ -543,7 +547,7 @@ class Graph
         ?int    $end_date = null,
         string  $zoom = 'day',
     ): void {
-        $userRepository = $this->getUserRepository();
+        $userRepository = $this->userRepository;
 
         $values = $this->get_all_pts($fct, $series, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         $ustats = $userRepository->getStatistics();
@@ -870,12 +874,5 @@ class Graph
         }
 
         return $labelled;
-    }
-
-    private function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }

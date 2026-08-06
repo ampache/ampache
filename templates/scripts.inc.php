@@ -30,11 +30,9 @@ use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 use Idleberg\ViteManifest\Manifest;
 
-global $dic;
+/** @var EnvironmentInterface $environment */
 
-$web_path = AmpConfig::get_web_path();
-
-$environment = $dic->get(EnvironmentInterface::class);
+$web_path    = AmpConfig::get_web_path();
 $manifest    = __DIR__ . '/../dist/.vite/manifest.json';
 $entrypoint  = false;
 if (file_exists($manifest)) {

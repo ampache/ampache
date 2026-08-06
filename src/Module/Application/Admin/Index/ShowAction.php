@@ -31,8 +31,8 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -42,7 +42,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -55,7 +55,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         // Show Catalogs
         $catalogs = Catalog::get_all_catalogs();
-        $browse   = $this->modelFactory->createBrowse();
+        $browse   = $this->browseFactory->create();
         $browse->set_type('catalog');
         $browse->set_static_content(true);
         $browse->show_objects($catalogs);

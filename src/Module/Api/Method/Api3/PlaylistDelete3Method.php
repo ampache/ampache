@@ -25,14 +25,15 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class PlaylistDelete3Method
- */
-final class PlaylistDelete3Method
+final class PlaylistDelete3Method implements MethodInterface
 {
     public const string ACTION = 'playlist_delete';
 
@@ -45,10 +46,16 @@ final class PlaylistDelete3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function playlist_delete(array $input, User $user): void
-    {
-        unset($user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         ob_end_clean();
         $playlist = new Playlist((int) $input['filter']);
         if (!$playlist->has_access()) {
@@ -57,5 +64,7 @@ final class PlaylistDelete3Method
             $playlist->delete();
             echo Xml3_Data::success();
         }
+
+        return $response;
     }
 }

@@ -28,7 +28,7 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -44,7 +44,7 @@ final class Songs5Method implements MethodInterface
     public const string ACTION = 'songs';
 
     public function __construct(
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private StreamFactoryInterface $streamFactory,
     ) {}
 
@@ -85,7 +85,7 @@ final class Songs5Method implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
 
         $browse->set_user_id($user);
         $browse->set_type('song');

@@ -49,7 +49,9 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
         'album',
         'album_disk',
         'artist',
+        'collection',
         'folder',
+        'genre',
         'label',
         'live_stream',
         'playlist',
@@ -100,10 +102,10 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
 
         $collections = [];
         foreach ($this->collectionRepository->getByUser($user) as $collectionId) {
-            $collection = new Collection($collectionId);
+            $collection = $this->collectionRepository->findById($collectionId);
             // A pinned collection only appears when it accepts every type being added, so picking it cannot
             // half-work; a mixed one accepts anything valid.
-            if ($collection->isNew() || !$collection->has_collaborate($user)) {
+            if ($collection === null || !$collection->has_collaborate($user)) {
                 continue;
             }
 
@@ -178,8 +180,8 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
     /**
      * Whether a playlist could hold what is being added
      *
-     * A genre only belongs in a collection, so the dialog drops the playlist half rather than offering a
-     * destination that would silently add nothing.
+     * A type that expands to no media at all drops the playlist half rather than offering a destination
+     * that would silently add nothing.
      */
     public function getPlaylistsEnabled(): bool
     {

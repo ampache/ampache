@@ -30,18 +30,18 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Playlist\Search\AlbumDiskSearch;
-use Ampache\Module\Playlist\Search\AlbumSearch;
-use Ampache\Module\Playlist\Search\ArtistSearch;
-use Ampache\Module\Playlist\Search\LabelSearch;
-use Ampache\Module\Playlist\Search\PlaylistSearch;
-use Ampache\Module\Playlist\Search\PodcastEpisodeSearch;
-use Ampache\Module\Playlist\Search\PodcastSearch;
-use Ampache\Module\Playlist\Search\SearchInterface;
-use Ampache\Module\Playlist\Search\SongSearch;
-use Ampache\Module\Playlist\Search\TagSearch;
-use Ampache\Module\Playlist\Search\UserSearch;
-use Ampache\Module\Playlist\Search\VideoSearch;
+use Ampache\Module\Database\Search\AlbumDiskSearch;
+use Ampache\Module\Database\Search\AlbumSearch;
+use Ampache\Module\Database\Search\ArtistSearch;
+use Ampache\Module\Database\Search\LabelSearch;
+use Ampache\Module\Database\Search\PlaylistSearch;
+use Ampache\Module\Database\Search\PodcastEpisodeSearch;
+use Ampache\Module\Database\Search\PodcastSearch;
+use Ampache\Module\Database\Search\SearchInterface;
+use Ampache\Module\Database\Search\SongSearch;
+use Ampache\Module\Database\Search\TagSearch;
+use Ampache\Module\Database\Search\UserSearch;
+use Ampache\Module\Database\Search\VideoSearch;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\LicenseRepositoryInterface;
@@ -186,7 +186,7 @@ class Search extends playlist_object
     private SearchInterface $searchType;
 
     /** @var string[] $stars */
-    private array $stars; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
+    private array $stars; // generate sql for the object type (Ampache\Module\Database\Search\*)
 
     /**
      * constructor

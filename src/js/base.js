@@ -75,7 +75,9 @@ $(document).ready(function(){
             if (typeof action !== 'undefined' && action !== '') {
                 ajaxPut(jsAjaxUrl + action + '&object_type=' + object_type + '&object_id=' + object_id);
             } else {
-                showPlaylistDialog(this, object_type, object_id);
+                // The context menu is torn down before this runs, so the dialog hangs off the .libitem_menu
+                // element it was opened from -- that is still in the page and is where the user is looking.
+                showPlaylistDialog(item, object_type, object_id);
             }
         }
 

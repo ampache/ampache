@@ -434,6 +434,15 @@ function check_htaccess_play_writable(): bool
 }
 
 /**
+ * check_htaccess_public_writable
+ */
+function check_htaccess_public_writable(): bool
+{
+    return ((file_exists(__DIR__ . '/../../public/.htaccess') && is_writeable(__DIR__ . '/../../public/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../public/.htaccess') && is_writeable(__DIR__ . '/../../public/')));
+}
+
+/**
  * debug_result
  * Convenience function to format the output.
  */
@@ -510,7 +519,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
         }
     }
 
-    if (error_reporting() == 0) {
+    if (!(error_reporting() & $errno)) {
         // Ignored, probably via @. But not really, so use the super-sekrit level
         $level = 7;
     }
@@ -849,6 +858,16 @@ function xoutput_headers(): void
  */
 function xoutput_from_array(array $array, bool $callback = false, string $type = ''): string
 {
+    // Top level only: this is the ajax fragment map, one entry per target element, and each of them
+    // has to carry its own icon definitions. A $callback pass is Api recursing through nested data.
+    if (!$callback) {
+        foreach ($array as $key => $value) {
+            if (is_string($value)) {
+                $array[$key] = Ui::make_fragment_self_contained($value);
+            }
+        }
+    }
+
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
         return Api::output_xml_from_array($array, $callback, $type);

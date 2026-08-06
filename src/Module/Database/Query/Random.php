@@ -49,34 +49,9 @@ class Random
         'video',
     ];
 
-    /**
-     * advanced
-     * This processes the results of a post from a form and returns an
-     * array of song items that were returned from said randomness
-     * @param array<string, mixed> $data
-     * @return int[]
-     */
-    public static function advanced(string $type, array $data): array
-    {
-        /* Figure out our object limit */
-        $limit     = (int) ($data['limit'] ?? -1);
-        $limit_sql = "LIMIT " . Dba::escape($limit);
-
-        /* If they've passed -1 as limit then get everything */
-        if ($limit == -1) {
-            if (array_key_exists('limit', $data)) {
-                unset($data['limit']);
-            }
-
-            $limit_sql = "";
-        }
-
-        $search  = self::_advanced_sql($data, $type, $limit_sql);
-        $results = self::_advanced_results($search['sql'], $search['parameters'], $data);
-        //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
-
-        return self::get_songs($type, $results);
-    }
+    public function __construct(
+        private readonly SongRepositoryInterface $songRepository,
+    ) {}
 
     /**
      * artist
@@ -87,7 +62,7 @@ class Random
         $catalog_filter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
         $user_id        = Core::get_global('user')?->getId() ?? -1;
         $sql            = ($catalog_filter)
-            ? "SELECT `artist`.`id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
+            ? "SELECT `artist`.`id` FROM `artist` WHERE EXISTS (SELECT 1 FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")) "
             : "SELECT `artist`.`id` FROM `artist` ";
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -97,12 +72,12 @@ class Random
                 : sprintf('WHERE `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
         }
 
-        $sql .= "GROUP BY `artist`.`id` ORDER BY RAND() LIMIT 1;";
+        $sql .= "ORDER BY RAND() LIMIT 1;";
 
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int) $results['id'];
+        return (int) ($results['id'] ?? 0);
     }
 
     /**
@@ -445,50 +420,18 @@ class Random
     }
 
     /**
-     * get_songs
-     * This processes the results of a post from a form and returns an
-     * array of song items that were returned from said randomness
-     * @param int[] $results
-     * @return int[]
-     */
-    public static function get_songs(string $type, array $results): array
-    {
-        switch ($type) {
-            case 'song':
-            case 'video':
-                return $results;
-            case 'album':
-                $songs = [];
-                foreach ($results as $object_id) {
-                    $songs = array_merge($songs, self::getSongRepository()->getByAlbum($object_id));
-                }
-
-                return $songs;
-            case 'artist':
-                $songs = [];
-                foreach ($results as $object_id) {
-                    $songs = array_merge($songs, self::getSongRepository()->getByArtist($object_id));
-                }
-
-                return $songs;
-            default:
-                return [];
-        }
-    }
-
-    /**
      * playlist
      * This returns a random Playlist with songs little bit of extra
      * logic require
      */
     public static function playlist(): int
     {
-        $sql = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL ORDER BY RAND()";
+        $sql = "SELECT `playlist`.`id` FROM `playlist` WHERE EXISTS (SELECT 1 FROM `playlist_data` WHERE `playlist_data`.`playlist` = `playlist`.`id`) ORDER BY RAND() LIMIT 1;";
 
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int) $results['id'];
+        return (int) ($results['id'] ?? 0);
     }
 
     /**
@@ -675,12 +618,67 @@ class Random
     }
 
     /**
-     * @deprecated
+     * advanced
+     * This processes the results of a post from a form and returns an
+     * array of song items that were returned from said randomness
+     * @param array<string, mixed> $data
+     * @return int[]
      */
-    private static function getSongRepository(): SongRepositoryInterface
+    public function advanced(string $type, array $data): array
     {
-        global $dic;
+        /* Figure out our object limit */
+        $limit     = (int) ($data['limit'] ?? -1);
+        $limit_sql = "LIMIT " . Dba::escape($limit);
 
-        return $dic->get(SongRepositoryInterface::class);
+        /* If they've passed -1 as limit then get everything */
+        if ($limit == -1) {
+            if (array_key_exists('limit', $data)) {
+                unset($data['limit']);
+            }
+
+            $limit_sql = "";
+        }
+
+        $search  = self::_advanced_sql($data, $type, $limit_sql);
+        $results = self::_advanced_results($search['sql'], $search['parameters'], $data);
+        //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
+
+        return $this->get_songs($type, $results);
+    }
+
+    /**
+     * get_songs
+     * This processes the results of a post from a form and returns an
+     * array of song items that were returned from said randomness
+     * @param int[] $results
+     * @return int[]
+     */
+    public function get_songs(string $type, array $results): array
+    {
+        switch ($type) {
+            case 'song':
+            case 'video':
+                return $results;
+            case 'album':
+                $songs = [];
+                foreach ($results as $object_id) {
+                    foreach ($this->songRepository->getByAlbum($object_id) as $song_id) {
+                        $songs[] = $song_id;
+                    }
+                }
+
+                return $songs;
+            case 'artist':
+                $songs = [];
+                foreach ($results as $object_id) {
+                    foreach ($this->songRepository->getByArtist($object_id) as $song_id) {
+                        $songs[] = $song_id;
+                    }
+                }
+
+                return $songs;
+            default:
+                return [];
+        }
     }
 }

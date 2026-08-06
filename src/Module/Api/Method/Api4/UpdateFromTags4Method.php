@@ -26,17 +26,18 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class UpdateFromTags4Method
- */
-final class UpdateFromTags4Method
+final class UpdateFromTags4Method implements MethodInterface
 {
     public const string ACTION = 'update_from_tags';
 
@@ -55,11 +56,18 @@ final class UpdateFromTags4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function update_from_tags(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['type', 'id'], self::ACTION)) {
-            return false;
+            return $response;
         }
         unset($user);
         $type      = (string) $input['type'];
@@ -69,7 +77,7 @@ final class UpdateFromTags4Method
         if (!in_array(strtolower($type), ['artist', 'album', 'song'])) {
             Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
         $className = ObjectTypeToClassNameMapper::map($type);
         /** @var Artist|Album|Song $item */
@@ -77,13 +85,13 @@ final class UpdateFromTags4Method
         if ($item->isNew()) {
             Api4::message('error', 'The requested item was not found', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
         // update your object
         Catalog::update_single_item($type, $object_id, true);
 
         Api4::message('success', 'Updated tags for: ' . $object_id . ' (' . $type . ')', null, $input['api_format']);
 
-        return true;
+        return $response;
     }
 }

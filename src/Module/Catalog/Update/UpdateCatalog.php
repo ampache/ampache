@@ -31,12 +31,18 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\UserRepositoryInterface;
 use PDOStatement;
 
 final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalogInterface
 {
-    public function __construct(private readonly CatalogGarbageCollectorInterface $catalogGarbageCollector) {}
+    public function __construct(
+        private readonly CatalogGarbageCollectorInterface $catalogGarbageCollector,
+        private readonly CatalogFilterRepositoryInterface $catalogFilterRepository,
+        private readonly UserRepositoryInterface $userRepository,
+    ) {}
 
     public function update(
         Interactor $interactor,
@@ -357,7 +363,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
 
             $catalog?->count_scan_folders($interactor);
 
-            Catalog::garbage_collect_filters();
+            $this->catalogFilterRepository->collectGarbage();
+            $this->userRepository->resetMissingCatalogFilterGroups();
             $interactor->info(
                 '------------------',
                 true

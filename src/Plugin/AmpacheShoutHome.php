@@ -65,9 +65,17 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
     /**
      * Constructor
      */
-    public function __construct()
-    {
-        $this->description = T_('Shoutbox on homepage');
+    private ShoutRendererInterface $shoutRenderer;
+
+    private ShoutRepositoryInterface $shoutRepository;
+
+    public function __construct(
+        ShoutRendererInterface $shoutRenderer,
+        ShoutRepositoryInterface $shoutRepository,
+    ) {
+        $this->shoutRenderer   = $shoutRenderer;
+        $this->shoutRepository = $shoutRepository;
+        $this->description     = T_('Shoutbox on homepage');
     }
 
     /**
@@ -82,9 +90,9 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
                 : '<div id="shout_objects">';
             echo $divString;
             $shouts = iterator_to_array(
-                self::getShoutRepository()->getTop($this->maxitems)
+                $this->shoutRepository->getTop($this->maxitems)
             );
-            $shoutRenderer = $this->getShoutRenderer();
+            $shoutRenderer = $this->shoutRenderer;
 
             if ($shouts !== []) {
                 require_once Ui::find_template('show_shoutbox.inc.php');
@@ -154,25 +162,5 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
         }
 
         return true;
-    }
-
-    /**
-     * @todo find a better solution...
-     */
-    private function getShoutRenderer(): ShoutRendererInterface
-    {
-        global $dic;
-
-        return $dic->get(ShoutRendererInterface::class);
-    }
-
-    /**
-     * @todo find a better solution...
-     */
-    private function getShoutRepository(): ShoutRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ShoutRepositoryInterface::class);
     }
 }

@@ -103,8 +103,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New `show_collection` preference to show/hide the "Collections" link in the sidebar, and with it the collection half of the add-to-list dialog. The link no longer waits for a collection to exist before it appears, so there is a way in from a fresh install
   * Collections in the web interface: a `collection.php` page listing the members, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker
   * A "Create Collection" button on the collections browse creates one, choosing its name, whether it is public or private, and whether it is pinned to a single item type or left mixed
-  * The add-to-list dialog offers collections as well as playlists, under a "Playlists" and a "Collections" heading so the two kinds of destination are told apart. Only the halves that can take what you are adding are shown, and a collection pinned to another type is left out: a genre offers collections alone, because a playlist stores the media an item expands to and a genre expands to nothing on its own
-  * Genres, labels and folders gained the add-to-list control they never had, since all three can be collected even though a genre cannot go in a playlist
+  * The add-to-list dialog offers collections as well as playlists, under a "Playlists" and a "Collections" heading so the two kinds of destination are told apart. Only the halves that can take what you are adding are shown, and a collection pinned to another type is left out
+  * Genres, labels and folders gained the add-to-list control they never had, since all three can be collected
+  * A genre expands to its songs the way an album does, so it can be played, queued and added to a playlist as well as collected
   * A folder is curated as itself, so a collection of folders stays a list of folders; adding one to a playlist instead adds the media below it, the way an album adds its songs. A folder that holds nothing playable still offers the control, since it can be collected even though it has nothing to play
   * The label reads "Add to playlist / collection" once collections are switched on, and "Add to list" where there is no room for it; a server with collections off still just says "Add to playlist"
   * The collection page renders a mixed collection as one ordered list through a new `collection_items` browse type, each row naming its own type. A collection pinned to a single type is handed to that type's own browse instead, so a collection of albums looks like any other album view
@@ -148,9 +149,25 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The action is on the artist, smartlist, podcast, podcast episode, radio station and video pages, which only offered the temporary playlist before
   * Podcast rows carry it as well, so a whole podcast can be added from a browse the way an album already could
 * A `PHP Modules` table on `Admin -> Server Config -> Ampache Debug` listing every php extension Ampache requires or suggests, whether this server has it, and what an optional one is needed for
+* Webserver rules that keep private files out of the web root
+  * Optional hardening; nothing in Ampache needs these rules, so an install without them keeps working exactly as before
+  * `public/.htaccess.dist` refuses `bin`, `config`, `docker`, `docs`, `locale`, `node_modules`, `resources`, `src`, `tests` and `vendor`, which sit beside `index.php` when you install from a release zip
+  * It also refuses dotted paths such as `.git` and `.env` at any depth, and leftovers such as `.bak`, `.old`, `.swp`, `.sql` and `.dist`; `/.well-known/acme-challenge/` stays reachable so certbot can still renew
+  * `ampache.cfg.php` is refused by name from a rule that does not need `mod_rewrite`, so the config file is not served as plain text if the module is missing
+  * New `-p`/`--public` option on `bin/installer htaccess` writes `public/.htaccess`, which `-e` on its own still leaves alone; it overwrites the file, so back it up if you edited it
+  * A `RewriteRule` whose substitution is `-` keeps it when the rules are written for a subdirectory install, instead of being rewritten to a path nothing matches
+  * New `docs/examples/apache-site.conf`, a complete Apache 2.4 vhost carrying the same rules, plus php-fpm, websocket and server-sent-event settings, for anyone running with `AllowOverride None`
+  * New `docs/examples/lighttpd-site.conf` and `docs/examples/caddy-site.conf`, replacing the Caddy v1 sample that has not been valid since 2020
+  * `docs/examples/nginx-site.conf` refuses the same set, and its `transcode_to` rules match again
 
 ### Changed (8.0.0)
 
+* The browse filter box matches a name in more than one way
+  * A **Starts With** / **Contains** menu sits above the box; Contains matches anywhere in the name, so a browse no longer has to be abandoned for the search page to find something by a word in the middle of its title
+  * Only one match applies at a time and the choice is remembered per browse, so emptying the box does not put it back to Starts With
+  * The private message browse gained the Contains match with everything else
+  * `browse_filter` is on by default for new installs; existing users keep whatever they have set
+  * The Users admin page lost its own search form, which the filter box now covers exactly: in Contains mode it matches username, fullname or email, the same three columns the form searched
 * Playback
   * Radio stations, remote-catalog media and song previews stream through Ampache instead of redirecting the client to the source server, so the web player can apply the equalizer, ReplayGain and the visualizer to them
   * A radio station may be added as an `m3u`, `m3u8`, `pls`, `asx` or `xspf` url; the stream url inside it is read when the station is played, so a directory that rotates its mirrors keeps working
@@ -167,6 +184,17 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Garbage collection removes a wanted album once the library holds it, matched on release-group `mbid` or on name and album artist
 * Database 800014
   * Dropped four redundant `object_count` indexes: `object_count_full_index` (an exact duplicate of `object_count_UNIQUE_IDX`), `object_type` and `object_count_type_IDX` (leading-column prefixes of that key), and `date` (a prefix of `object_count_date_IDX`)
+* Play statistics
+  * Database 800044
+    * New `object_count_geo_IDX` index on `object_count`.`geo_latitude`, `geo_longitude`, so a place name is looked up instead of read by scanning the play history; only matters with `geolocation` on
+    * New `object_type_date_IDX` index on `user_flag`.`object_type`, `date`, so the newest flagged lists stop at the rows they show
+  * The recently played list picks the users whose history it may show before it reads the play rows, so a user with nothing recent to show no longer walks the whole play history to find that out
+  * The recent lists read the newest plays in date order and group those, instead of grouping every play ever recorded to sort them
+  * Play counts for a page of songs or artists are read in one query instead of one per row, when a stats threshold applies
+  * The democratic cooldown check reads the song ids it needs rather than every column of every play
+  * Ratings and flags are read for the whole page on the playlist, smartlist, collection, video and live stream lists, and on the items of a playlist or collection, instead of two queries per row
+  * The newest flagged lists read the newest flags in date order and group those, and the highest rated and newest lists no longer build the counts and dates they never showed
+  * A random playlist or artist is picked without joining rows the query then has to group away again
 * Caching
   * `memory_cache` now defaults to `true` (was `false`); it batches the per-object lookups a page would otherwise repeat, roughly halving the query count on a large browse
   * Set `memory_cache = "false"` in `ampache.cfg.php` if you have a very large catalog and a low PHP memory limit — the cache trades memory for queries
@@ -189,8 +217,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The server counts (the totals in the API handshake and on the admin debug page) can no longer go stale because of an unrecognised table name. `Catalog::count_table()` takes a fixed list of countable tables instead of a free-text string, which silently counted zero and left the stored total untouched
 * Refreshing those totals no longer re-reads the whole `song`, `video` and `podcast_episode` tables. Each table's share of `items`, `time` and `size` is stored on its own, so adding or removing a song leaves the other two tables alone, and a deletion that already knows what it removed adjusts the totals without reading anything. One count went from four full table scans to one, and a song deletion to none
 * A song browse reads the artists of every song on the page in one `artist_map` query instead of one per song; a 50 song page went from 143 queries to 95
+* The row count a browse shows above its pages is counted by the database instead of by reading every matching row into memory and counting those. Over a million rows that went from 1.42s to 0.08s, and the sort the count never needed is no longer built
 * The stored waveform is no longer read alongside a song's comment, lyrics and replaygain, so a browse stops pulling a blob per song that nothing on the page draws. Asking for a waveform explicitly now returns it, which it did not before, so a saved waveform is reused instead of being regenerated from the audio on every request
-* Internal namespaces reorganised: `Ampache\Application` is gone (its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`), and `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have all left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums. The api version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes. Only relevant if you carry local patches
+* Internal namespaces reorganised: `Ampache\Application` is gone (its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`), and `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have all left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums. The api version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes. The per-type search rule builders followed the query engine out of `Ampache\Module\Playlist\Search` into `Ampache\Module\Database\Search`. `Query` and `Browse` swapped the parts each held that belonged to the other, so `Query::sql_sort_video()` now lives in `VideoQuery::get_sql_sort()` and `Query::set_is_simple()` is gone in favour of the `set_simple_browse()` every caller already used. Only relevant if you carry local patches
 * API version 8 has been added to the list of API versions
 * Docker: build using `docker/Dockerfilephp85`
 * Theme
@@ -249,6 +278,16 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* Sorting a browse by a column reached through a join emptied the list, when the column before it was sorted by a different join. Sorting an album list by Artist was the common way in
+* An album sorted by a column its artists or songs are reached through listed the same album once per artist or song it has
+* The current playlist on the Localplay page was drawn outside the Localplay Control box it belongs in, leaving the page with three unbalanced closing tags
+* The Popular Album Disks list was always empty, however much a disk had been played
+* Rating and flag lists for genres, collections, podcasts and live streams failed with `catalog_filter` enabled
+* The newest list for a genre, a live stream or a collection came back empty
+* Retagging a song to drop one of its artists left that artist holding the plays it had gained from that song
+* The broadcast button took two clicks to show its menu on a scrolled page: its `href="#"` jumped the document to the top as the dialog opened, so the menu was placed where the button had been a moment earlier and landed below the fold. The popup dialogs no longer navigate, and the broadcast one is placed against the window so it tracks the button in the fixed player
+* The websocket server logged a dozen PHP 8.5 deprecation errors on every connection, drowning the broadcast log; `cboden/ratchet` moves to the `0.4.x` branch, which supports PHP 8.5, and `ratchet/rfc6455` to v0.4.1
+* A database connection dropped by the server (idle timeout, restart, killed thread) was kept and reused, so every following query failed with `MySQL server has gone away`; the handle is discarded and the retry reconnects. This broke long running processes worst of all: the websocket server could not register a broadcast or authorise a listener once its connection had timed out
 * Turning on `album_art_store_disk` without setting `local_metadata_dir` hid every cover; the art was still written to the database but only ever read back from disk
 * Art stored for something that is not a library item, such as a wanted album, returned an empty image
 * Uploading a file with an album name always failed after the file had been copied into the catalog, leaving it on disk but absent from the library
@@ -379,6 +418,14 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Artist searches on `Image Width` and `Image Height` returned nothing
   * The genre search offered two rules both labelled `Album Count`; the second is the artist count and now says `Artist Count`
   * The genre rules counting a genre's own contents shared their labels with the object's own counts, so an artist search offered two `Song Count` rules. They are now `Song Count (Genre)`, `Album Count (Genre)` and `Artist Count (Genre)`
+* A stream that could not be opened answered `200` with an empty body, which a player reports as a corrupt or unsupported stream instead of a server error; it now answers `500`
+* A transcode requested while no `transcode_cmd` is configured is logged as an error instead of at the most verbose debug level, where the reason nothing played was effectively invisible
+* Song duration
+  * A file carrying an ID3v2.3 `TIME` frame was given that frame's recording time of day as its duration, so a 98 second track was imported as 2019 seconds
+  * Durations were estimated from the file size and bitrate instead of being read from the file, so anything stored after the audio (APE cover art, for example) counted as playing time; the estimate is kept for remote catalogs and for files with no readable duration
+* Browse
+  * Filtering a song list from the sidebar `Filters` box dropped the track numbers and the `#` sort column and brought back the columns the page had hidden, on the album, album disk, playlist, podcast and label pages
+  * The `Limit` box and the song list's `Year` sort header lost the same columns
 
 ## Ampache 7.10.1
 

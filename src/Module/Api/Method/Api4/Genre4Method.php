@@ -26,47 +26,46 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Genre4Method
+ * Returns a single genre.
  */
-final class Genre4Method
+final class Genre4Method implements MethodInterface
 {
     public const string ACTION = 'genre';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * genre
-     * MINIMUM_API_VERSION=380001
-     *
-     * This returns a single genre based on UID
-     *
-     * filter = (string) UID of Genre
-     *
-     * @param array{
-     *     filter: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function genre(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        unset($user);
-        $uid = scrub_in((string) $input['filter']);
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::tags([(int) $uid]);
-                break;
-            default:
-                echo Xml4_Data::tags([(int) $uid]);
+            return $response;
         }
 
-        return true;
+        $results = [(int) scrub_in((string) ($input['filter'] ?? ''))];
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->genres($apiVersion, $results, $user)
+            )
+        );
     }
 }

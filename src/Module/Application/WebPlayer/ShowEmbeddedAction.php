@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\WebPlayer;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,10 +36,16 @@ final class ShowEmbeddedAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
+    public function __construct(
+        private AjaxUriRetrieverInterface $ajaxUriRetriever,
+    ) {}
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $iframed = true;
 
+        // the player headers render in this scope
+        $ajaxUriRetriever = $this->ajaxUriRetriever;
         require_once Ui::find_template('show_web_player.inc.php');
 
         return null;

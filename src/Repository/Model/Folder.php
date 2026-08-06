@@ -405,6 +405,14 @@ class Folder extends database_object implements
     }
 
     /**
+     * How many playable items sit below this folder, subfolders included
+     */
+    public function get_media_count(): int
+    {
+        return self::getFolderRepository()->getMediaCount($this);
+    }
+
+    /**
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
@@ -496,6 +504,18 @@ class Folder extends database_object implements
     public function getMediaType(): LibraryItemEnum
     {
         return LibraryItemEnum::FOLDER;
+    }
+
+    /**
+     * The id of the folder this one hangs off.
+     */
+    public function getParentId(): ?int
+    {
+        if ($this->id === -1) {
+            return null;
+        }
+
+        return $this->parent ?? -1;
     }
 
     public function has_art(): bool

@@ -244,6 +244,21 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
+     * Counts everything playable below a folder, without hydrating the rows
+     */
+    public function getMediaCount(Folder $folder): int
+    {
+        $count = $this->connection->fetchOne(
+            "SELECT COUNT(*) FROM `folder_map` WHERE `folder_map`.`object_type` != 'folder' AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?);",
+            [$folder->getId(), $folder->path_name . '/%']
+        );
+
+        return ($count === false)
+            ? 0
+            : (int) $count;
+    }
+
+    /**
      * Returns everything below a folder, optionally narrowed to a single type
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>

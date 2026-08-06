@@ -55,6 +55,7 @@ final readonly class UserflagRepository implements UserflagRepositoryInterface
         'user',
         'video',
     ];
+    private const int WINDOW_MAXIMUM = 1000;
 
     public function __construct(
         private DatabaseConnectionInterface $connection,
@@ -139,7 +140,7 @@ final readonly class UserflagRepository implements UserflagRepositoryInterface
         bool $byUser,
         int $catalogId,
     ): array {
-        $sql   = $this->getLatestSql($inputType, $user, $since, $before, $byUser, $catalogId);
+        $sql   = $this->getLatestSql($inputType, $user, $since, $before, $byUser, $catalogId, $offset + $count);
         $limit = ($offset < 1)
             ? (string) $count
             : $offset . ',' . $count;
@@ -218,9 +219,10 @@ final readonly class UserflagRepository implements UserflagRepositoryInterface
         int $before,
         bool $byUser,
         int $catalogId,
+        int $limit = 0,
     ): string {
         $type = Stats::validate_type($inputType);
-        $sql  = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
+        $sql  = "";
         if ($inputType == 'album_artist' || $inputType == 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `user_flag`.`object_id` AND `user_flag`.`object_type` = 'artist'";
         }
@@ -234,8 +236,11 @@ final readonly class UserflagRepository implements UserflagRepositoryInterface
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
 
-        if (AmpConfig::get('catalog_filter')) {
-            $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user?->getId() ?? -1);
+        $user_filter = (AmpConfig::get('catalog_filter'))
+            ? Catalog::get_user_filter('user_flag_' . $type, $user?->getId() ?? -1)
+            : '';
+        if ($user_filter !== '') {
+            $sql .= " AND" . $user_filter;
         }
 
         $catalog_sql = Catalog::get_catalog_id_filter($inputType, '`user_flag`.`object_id`', $catalogId);
@@ -258,6 +263,12 @@ final readonly class UserflagRepository implements UserflagRepositoryInterface
             }
         }
 
-        return $sql . " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `date` DESC ";
+        if ($limit > 0 && $limit <= self::WINDOW_MAXIMUM) {
+            $window = max(1000, $limit * 50);
+
+            return "SELECT `id` FROM (SELECT `user_flag`.`object_id` AS `id`, `user_flag`.`date` FROM `user_flag`" . $sql . " ORDER BY `user_flag`.`date` DESC LIMIT " . $window . ") AS `latest` GROUP BY `id` ORDER BY MAX(`date`) DESC ";
+        }
+
+        return "SELECT `user_flag`.`object_id` AS `id` FROM `user_flag`" . $sql . " GROUP BY `user_flag`.`object_id` ORDER BY MAX(`user_flag`.`date`) DESC ";
     }
 }

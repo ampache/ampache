@@ -47,20 +47,24 @@ final readonly class ShowAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
+        private Graph $graph,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $sessionCookie = $_COOKIE[$this->configContainer->getSessionName()] ?? '';
+        $authParam     = (string) ($_REQUEST['auth'] ?? '');
+
         // Check to see if they've got an interface session or a valid API session
         if (
-            !Session::exists(AccessTypeEnum::INTERFACE->value, $_COOKIE[$this->configContainer->getSessionName()])
-            && !Session::exists(AccessTypeEnum::API->value, $_REQUEST['auth'] ?? '')
+            !Session::exists(AccessTypeEnum::INTERFACE->value, $sessionCookie)
+            && !Session::exists(AccessTypeEnum::API->value, $authParam)
         ) {
             $this->logger->warning(
                 sprintf(
                     'Access denied, checked cookie session:%s and auth:%s',
-                    $_COOKIE[$this->configContainer->getSessionName()],
-                    $_REQUEST['auth']
+                    $sessionCookie,
+                    $authParam
                 ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
@@ -82,7 +86,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $object_type = null;
         }
 
-        $graph     = new Graph();
+        $graph     = $this->graph;
         $user_id   = (int) $this->requestParser->getFromRequest('user_id');
         $object_id = (int) $this->requestParser->getFromRequest('object_id');
         $end_date  = (in_array($this->requestParser->getFromRequest('end_date'), ['', '0'], true))

@@ -28,10 +28,8 @@ declare(strict_types=1);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\EnvironmentInterface;
 
-// TODO remove me
-global $dic;
-$environment = $dic->get(EnvironmentInterface::class);
-$t_search    = T_('Search');
+/** @var EnvironmentInterface $environment */
+$t_search = T_('Search');
 
 /** @var string $web_path */
 /** @var string $t_albums */

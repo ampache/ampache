@@ -31,6 +31,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -41,6 +42,7 @@ use Psr\Http\Message\StreamInterface;
 
 class AlbumDiskSongs8MethodTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface&MockInterface $browseFactory;
     private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?AlbumDiskSongs8Method $subject;
 
@@ -67,7 +69,7 @@ class AlbumDiskSongs8MethodTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
@@ -145,7 +147,7 @@ class AlbumDiskSongs8MethodTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
@@ -262,10 +264,12 @@ class AlbumDiskSongs8MethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+        $this->browseFactory = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new AlbumDiskSongs8Method(
-            $this->modelFactory
+            $this->modelFactory,
+            $this->browseFactory
         );
     }
 }

@@ -218,6 +218,47 @@ final class VideoQuery implements QueryInterface
      */
     public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
-        return $query->sql_sort_video($field, $order);
+        $sql = "";
+        switch ($field) {
+            case 'name':
+            case 'title':
+                $sql = "`video`.`title`";
+                break;
+            case 'addition_time':
+            case 'catalog':
+            case 'id':
+            case 'total_count':
+            case 'total_skip':
+            case 'update_time':
+                $sql = "`video`.`$field`";
+                break;
+            case 'codec':
+                $sql = "`video`.`video_codec`";
+                break;
+            case 'length':
+                $sql = "`video`.`time`";
+                break;
+            case 'rating':
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`id`', $order);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string) $query->user_id, 100);
+                break;
+            case 'release_date':
+                $sql = "`video`.`release_date`";
+                break;
+            case 'resolution':
+                $sql = "`video`.`resolution_x`";
+                break;
+            case 'user_flag':
+                $sql = "`user_flag`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string) $query->user_id, 100);
+                break;
+            case 'user_flag_rating':
+                $sql = "`user_flag`.`date` $order `rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string) $query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string) $query->user_id, 100);
+                break;
+        }
+
+        return $sql;
     }
 }

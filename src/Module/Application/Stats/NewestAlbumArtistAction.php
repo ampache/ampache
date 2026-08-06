@@ -29,9 +29,10 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,8 +42,9 @@ final readonly class NewestAlbumArtistAction implements ApplicationActionInterfa
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private ConfigContainerInterface $configContainer,
+        private VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -50,7 +52,10 @@ final readonly class NewestAlbumArtistAction implements ApplicationActionInterfa
         $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
         $this->ui->showHeader();
-        $this->ui->show('show_form_newest.inc.php');
+        $this->ui->show(
+            'show_form_newest.inc.php',
+            ['videoRepository' => $this->videoRepository]
+        );
 
         define('TABLE_RENDERED', 1);
 
@@ -58,7 +63,7 @@ final readonly class NewestAlbumArtistAction implements ApplicationActionInterfa
         define('NO_BROWSE_SORTING', true);
 
         $objects = Stats::get_newest('album_artist', -1, 0, 0, $gatekeeper->getUser());
-        $browse  = $this->modelFactory->createBrowse();
+        $browse  = $this->browseFactory->create();
         $browse->set_use_filters(false);
         $browse->set_type('album_artist');
         $browse->show_objects($objects);

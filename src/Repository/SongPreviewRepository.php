@@ -28,7 +28,6 @@ namespace Ampache\Repository;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\LegacyLogger;
-use PDO;
 use Psr\Log\LoggerInterface;
 
 final readonly class SongPreviewRepository implements SongPreviewRepositoryInterface
@@ -88,32 +87,6 @@ final readonly class SongPreviewRepository implements SongPreviewRepositoryInter
         return ($row === false)
             ? []
             : $row;
-    }
-
-    /**
-     * @param list<int|string> $previewIds
-     * @return list<array<string, mixed>>
-     */
-    public function getRows(array $previewIds): array
-    {
-        if ($previewIds === []) {
-            return [];
-        }
-
-        $result = $this->connection->query(
-            sprintf(
-                'SELECT %s FROM `song_preview` WHERE `id` IN (%s) ORDER BY `disk`, `track`;',
-                self::COLUMNS,
-                implode(',', array_map(intval(...), $previewIds))
-            )
-        );
-
-        $rows = [];
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $rows[] = $row;
-        }
-
-        return $rows;
     }
 
     /**

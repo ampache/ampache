@@ -25,8 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database;
 
+use Ampache\Module\Database\Query\BrowseFactory;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Database\Query\Random;
+
 use function DI\autowire;
 
 return [
     DatabaseCharsetUpdaterInterface::class => autowire(DatabaseCharsetUpdater::class),
+    BrowseFactoryInterface::class => autowire(BrowseFactory::class),
+    Random::class => autowire(),
 ];

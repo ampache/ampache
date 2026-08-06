@@ -25,15 +25,20 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Video3Method
- */
-final class Video3Method
+final class Video3Method implements MethodInterface
 {
     public const string ACTION = 'video';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * video
@@ -44,12 +49,22 @@ final class Video3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function video(array $input, User $user): void
-    {
-        unset($user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $video_id = scrub_in((string) $input['filter']);
 
-        echo Xml3_Data::videos([$video_id]);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->videos($apiVersion, [$video_id], $user, $input['auth'])
+            )
+        );
     }
 }

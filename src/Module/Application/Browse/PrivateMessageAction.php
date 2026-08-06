@@ -27,9 +27,9 @@ namespace Ampache\Module\Application\Browse;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -38,7 +38,7 @@ final readonly class PrivateMessageAction implements ApplicationActionInterface
     public const string REQUEST_KEY = 'pvmsg';
 
     public function __construct(
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private UiInterface $ui,
     ) {}
 
@@ -48,7 +48,7 @@ final readonly class PrivateMessageAction implements ApplicationActionInterface
             session_start();
         }
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
         $browse->set_type(self::REQUEST_KEY);
         $browse->set_simple_browse(true);
         $browse->set_sort('creation_date', 'DESC');

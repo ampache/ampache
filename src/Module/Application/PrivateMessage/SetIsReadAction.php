@@ -65,7 +65,7 @@ final readonly class SetIsReadAction implements ApplicationActionInterface
         $readMode   = (int) ($queryParams['read'] ?? 0);
         $messageIds = array_map(
             intval(...),
-            explode(',', $queryParams['msgs'] ?? [])
+            explode(',', (string) ($queryParams['msgs'] ?? ''))
         );
 
         foreach ($messageIds as $messageId) {

@@ -745,6 +745,10 @@ final class ApiHandler implements ApiHandlerInterface
             };
         }
 
+        if ($action === 'folder' && ($type === null || $type === '')) {
+            $action = 'folders';
+        }
+
         if ($type !== null && $type !== '') {
             if ($type === 'catalog') {
                 if ($action === 'create' || ($action === 'add' && !$hasFilter)) {

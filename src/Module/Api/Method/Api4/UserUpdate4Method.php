@@ -27,19 +27,24 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Preference;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class UserUpdate4Method
- */
-final class UserUpdate4Method
+final class UserUpdate4Method implements MethodInterface
 {
     public const string ACTION = 'user_update';
+
+    public function __construct(
+        private UserStateTogglerInterface $userStateToggler,
+    ) {}
 
     /**
      * user_update
@@ -76,14 +81,21 @@ final class UserUpdate4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function user_update(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, 'user_update', $input['api_format'])) {
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['username'], 'user_update')) {
-            return false;
+            return $response;
         }
 
         $username    = $input['username'];
@@ -91,14 +103,14 @@ final class UserUpdate4Method
         if ($update_user === null) {
             Api4::message('error', 'failed to update: ' . $username, '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         $password = $input['password'] ?? null;
         if ($password && $update_user->access == 100) {
             Api4::message('error', 'Do not update passwords for admin users! ' . $username, '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         $fullname = $input['fullname'] ?? null;
@@ -131,7 +143,7 @@ final class UserUpdate4Method
             if ($city) {
                 $update_user->update_city($city);
             }
-            $userStateToggler = self::getUserStateToggler();
+            $userStateToggler = $this->userStateToggler;
             if ($disable === 1) {
                 $userStateToggler->disable($update_user);
             } elseif ($disable === 0) {
@@ -143,20 +155,10 @@ final class UserUpdate4Method
             }
             Api4::message('success', 'successfully updated: ' . $username, null, $input['api_format']);
 
-            return true;
+            return $response;
         }
         Api4::message('error', 'failed to update: ' . $username, '400', $input['api_format']);
 
-        return false;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getUserStateToggler(): UserStateTogglerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserStateTogglerInterface::class);
+        return $response;
     }
 }

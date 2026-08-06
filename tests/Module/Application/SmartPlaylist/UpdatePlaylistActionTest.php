@@ -28,8 +28,10 @@ namespace Ampache\Module\Application\SmartPlaylist;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
 use Override;
@@ -37,9 +39,11 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class UpdatePlaylistActionTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface&MockInterface $browseFactory;
     private ModelFactoryInterface|MockInterface $modelFactory;
     private UpdatePlaylistAction $subject;
     private UiInterface|MockInterface $ui;
+    private ZipHandlerInterface|MockInterface $zipHandler;
 
     public function testRunThrowsExceptionIfAccessDenied(): void
     {
@@ -80,12 +84,16 @@ class UpdatePlaylistActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->ui            = $this->mock(UiInterface::class);
+        $this->browseFactory = $this->mock(BrowseFactoryInterface::class);
+        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+        $this->zipHandler    = $this->mock(ZipHandlerInterface::class);
 
         $this->subject = new UpdatePlaylistAction(
             $this->ui,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->zipHandler,
+            $this->browseFactory
         );
     }
 }

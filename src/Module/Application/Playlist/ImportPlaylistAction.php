@@ -48,23 +48,31 @@ final readonly class ImportPlaylistAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        // first we rename the file to it's original name before importing.
-        // Otherwise the playlist name will have the $_FILES['filename']['tmp_name'] which doesn't look right...
-        $dir      = dirname((string) $_FILES['filename']['tmp_name']) . "/";
-        $filename = $dir . basename((string) $_FILES['filename']['name']);
-        move_uploaded_file($_FILES['filename']['tmp_name'], $filename);
+        // $_FILES is empty whenever this action is reached without an upload -- a bare GET, or a POST
+        // whose file exceeded the upload limit. Leaving $filename empty routes that into the existing
+        // "There Was a Problem" branch below instead of erroring on a missing key.
+        $upload        = $_FILES['filename'] ?? [];
+        $uploadTmpName = (string) ($upload['tmp_name'] ?? '');
+        $uploadName    = (string) ($upload['name'] ?? '');
+        $filename      = '';
+        if ($uploadTmpName !== '' && $uploadName !== '') {
+            // first we rename the file to it's original name before importing.
+            // Otherwise the playlist name will have the $_FILES['filename']['tmp_name'] which doesn't look right...
+            $filename = dirname($uploadTmpName) . "/" . basename($uploadName);
+            move_uploaded_file($uploadTmpName, $filename);
+        }
         // allow setting public or private for your imports
         $playlist_type = (string) filter_input(INPUT_POST, 'playlist_visibility', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $user   = Core::get_global('user');
-        $result = ($user instanceof User)
+        $result = ($user instanceof User && $filename !== '')
             ? PlaylistImporter::import_playlist($filename, $user->getId(), $playlist_type)
             : null;
 
         if ($result !== null) {
             $url   = 'show_playlist&playlist_id=' . $result['id'];
             $title = T_('No Problem');
-            $body  = basename((string) $_FILES['filename']['name']);
+            $body  = basename($uploadName);
             $body .= '<br />'
                 /* HINT: Number of songs */
                 . sprintf(nT_("Successfully imported playlist with %d song.", "Successfully imported playlist with %d songs.", $result['count']), $result['count']);

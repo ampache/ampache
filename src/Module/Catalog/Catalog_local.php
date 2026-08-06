@@ -1468,7 +1468,7 @@ class Catalog_local extends Catalog
 
         foreach ($files as $mediaId => $mediaFile) {
             $results   = ['id' => $mediaId, 'file' => $mediaFile];
-            $file_info = filesize(Core::conv_lc_file($results['file']));
+            $file_info = @filesize(Core::conv_lc_file($results['file']));
             if ($file_info === false || $file_info < 1) {
                 $interactor?->info(
                     'File not found or empty: ' . $results['file'],

@@ -26,16 +26,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Stream4Method
- */
-final class Stream4Method
+final class Stream4Method implements MethodInterface
 {
     public const string ACTION = 'stream';
 
@@ -51,7 +52,7 @@ final class Stream4Method
      * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb)
      * format = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding SONG ONLY
      * offset = (integer) time offset in seconds
-     * length = (integer) 0,1
+     * length = (integer) 0,1 // ask for an estimated Content-Length; unreliable unless the transcode is cached
      *
      * @param array{
      *     id: string,
@@ -64,11 +65,18 @@ final class Stream4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function stream(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['id', 'type'], self::ACTION)) {
-            return false;
+            return $response;
         }
         $fileid = (int) $input['id'];
         $type   = $input['type'];
@@ -106,10 +114,10 @@ final class Stream4Method
             Session::extend($input['auth'], AccessTypeEnum::API->value);
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
-            return true;
+            return $response->withStatus(302);
         }
         Api4::message('error', 'failed to create: ' . $url, '400', $input['api_format']);
 
-        return true;
+        return $response;
     }
 }

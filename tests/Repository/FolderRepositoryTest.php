@@ -171,6 +171,33 @@ class FolderRepositoryTest extends TestCase
         static::assertSame(0, $this->subject->getItemCount());
     }
 
+    public function testGetMediaCountCountsEverythingBelowTheFolder(): void
+    {
+        $folder = new Folder();
+
+        $folder->id        = 666;
+        $folder->path_name = '/some/path';
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                static::stringContains('`folder_map`.`path_name` LIKE ?'),
+                [666, '/some/path/%']
+            )
+            ->willReturn('42');
+
+        static::assertSame(42, $this->subject->getMediaCount($folder));
+    }
+
+    public function testGetMediaCountReturnsZeroWhenNothingIsFound(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->willReturn(false);
+
+        static::assertSame(0, $this->subject->getMediaCount(new Folder()));
+    }
+
     public function testGetMediasNarrowsToASingleTypeWhenAsked(): void
     {
         $folder = new Folder();

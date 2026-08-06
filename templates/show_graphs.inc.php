@@ -40,6 +40,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $zoom */
 /** @var string[] $gtypes */
 /** @var string $blink */
+/** @var Graph $graph */
 
 $web_path = AmpConfig::get_web_path();
 
@@ -65,7 +66,6 @@ foreach ($gtypes as $gtype) {
 if (AmpConfig::get('geolocation')) { ?>
     <div class="stats_graph">
     <?php
-    $graph = new Graph();
     $graph->display_map($user_id, $object_type, $object_id, $start_date, $end_date, $zoom); ?>
     </div>
 <?php } ?>

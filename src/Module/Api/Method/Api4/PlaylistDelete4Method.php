@@ -26,13 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class PlaylistDelete4Method
- */
-final class PlaylistDelete4Method
+final class PlaylistDelete4Method implements MethodInterface
 {
     public const string ACTION = 'playlist_delete';
 
@@ -49,11 +50,18 @@ final class PlaylistDelete4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function playlist_delete(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
         ob_end_clean();
         $playlist = new Playlist((int) $input['filter']);
@@ -64,6 +72,6 @@ final class PlaylistDelete4Method
             Api4::message('success', 'playlist deleted', null, $input['api_format']);
         }
 
-        return true;
+        return $response;
     }
 }

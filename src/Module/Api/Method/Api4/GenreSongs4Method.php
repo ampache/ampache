@@ -26,60 +26,53 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class GenreSongs4Method
+ * Returns the songs carrying a single genre.
  */
-final class GenreSongs4Method
+final class GenreSongs4Method implements MethodInterface
 {
     public const string ACTION = 'genre_songs';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * genre_songs
-     * MINIMUM_API_VERSION=380001
-     *
-     * returns the songs for this genre
-     *
-     * filter = (string) UID of Genre
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function genre_songs(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
+
         $results = Tag::get_tag_objects('song', (int) ($input['filter'] ?? 0));
-
-        ob_end_clean();
-        if (!empty($results)) {
-            switch ($input['api_format']) {
-                case 'json':
-                    Json4_Data::set_offset($input['offset'] ?? 0);
-                    Json4_Data::set_limit($input['limit'] ?? 0);
-                    echo Json4_Data::songs($results, $user, $input['auth']);
-                    break;
-                default:
-                    Xml4_Data::set_offset($input['offset'] ?? 0);
-                    Xml4_Data::set_limit($input['limit'] ?? 0);
-                    echo Xml4_Data::songs($results, $user, $input['auth']);
-            }
+        if ($results === []) {
+            return $response;
         }
 
-        return true;
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

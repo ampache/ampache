@@ -60,7 +60,9 @@ use WpOrg\Requests\Requests;
  */
 class Art extends database_object
 {
-    public const array VALID_TYPES = [
+    /** @var int[] The placeholder sizes shipped in public/images, smallest first */
+    public const array FALLBACK_SIZES = [128, 200, 256, 384, 768];
+    public const array VALID_TYPES    = [
         'bmp',
         'gif',
         'jp2',
@@ -69,6 +71,7 @@ class Art extends database_object
         'png',
         'webp',
     ];
+
     protected const string DB_TABLENAME = 'image';
 
     public int $height         = 0;
@@ -276,20 +279,23 @@ class Art extends database_object
         }
 
         echo ">";
-        $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&size=" . $out_size;
-        if ($use_auth) {
-            $imgurl .= "&auth=" . session_id();
-        }
-
-        if ($kind != 'default') {
-            $imgurl .= '&kind=' . $kind;
-        }
-
-        // This to keep browser cache feature but force a refresh in case image just changed
         if ($has_db) {
+            $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&size=" . $out_size;
+            if ($use_auth) {
+                $imgurl .= "&auth=" . session_id();
+            }
+
+            if ($kind != 'default') {
+                $imgurl .= '&kind=' . $kind;
+            }
+
+            // This to keep browser cache feature but force a refresh in case image just changed
             if ($art->has_db_info($out_size)) {
                 $imgurl .= '&id=' . $art->id;
             }
+        } else {
+            // one shared url for every item with no art, so the browser fetches and caches the placeholder once
+            $imgurl = self::get_fallback_url($object_type, $out_size);
         }
 
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" loading=\"lazy\" decoding=\"async\" />";
@@ -495,6 +501,29 @@ class Art extends database_object
         }
 
         return $path . $slash_type;
+    }
+
+    /**
+     * get_fallback_url
+     *
+     * The placeholder shown when an object has no art. Every object of a type shares one url so the browser
+     * caches a single copy instead of one per item, and it is a static file so the request never reaches php.
+     */
+    public static function get_fallback_url(string $type, ?string $size = null): string
+    {
+        // a custom blank album is already a url of its own, and folders keep their own placeholder
+        if ($type !== 'folder') {
+            $custom = (string) AmpConfig::get('custom_blankalbum', '');
+            if (str_starts_with($custom, 'http://') || str_starts_with($custom, 'https://')) {
+                return $custom;
+            }
+        }
+
+        $name = ($type === 'folder')
+            ? 'folder'
+            : 'blankalbum';
+
+        return AmpConfig::get_web_path() . '/images/' . $name . '_' . self::_fallback_size($size) . '.png';
     }
 
     /**
@@ -810,6 +839,9 @@ class Art extends database_object
                 if ($row !== []) {
                     parent::add_to_cache('art', $key, $row);
                     $mime = $row['mime'];
+                } else {
+                    // no row of any size, so image.php would answer with the placeholder; point straight at it
+                    return self::get_fallback_url($type, $size);
                 }
             }
         }
@@ -853,7 +885,7 @@ class Art extends database_object
     }
 
     /**
-     * delete_rec_dir
+     * _delete_rec_dir
      */
     private static function _delete_rec_dir(string $path, ?string $size = '', ?string $mime = ''): void
     {
@@ -893,6 +925,30 @@ class Art extends database_object
         }
     }
 
+    /**
+     * _fallback_size
+     *
+     * Snaps a requested size onto a shipped placeholder. Anything else fell through to the full size image,
+     * which is 660KB for a folder, so an unrecognised size took the largest file rather than the closest one.
+     */
+    private static function _fallback_size(?string $size): string
+    {
+        $wanted = 0;
+        if ($size !== null && preg_match('/^(\d+)x(\d+)$/', $size, $matches)) {
+            $wanted = max((int) $matches[1], (int) $matches[2]);
+        }
+
+        foreach (self::FALLBACK_SIZES as $available) {
+            if ($wanted <= $available) {
+                return $available . 'x' . $available;
+            }
+        }
+
+        $largest = self::FALLBACK_SIZES[count(self::FALLBACK_SIZES) - 1];
+
+        return $largest . 'x' . $largest;
+    }
+
     private static function _hasGD(): bool
     {
         return (
@@ -902,7 +958,7 @@ class Art extends database_object
     }
 
     /**
-     * read_from_dir
+     * _read_from_dir
      */
     private static function _read_from_dir(string $sizetext, string $type, int $uid, string $kind, string $mime): ?string
     {
@@ -949,7 +1005,7 @@ class Art extends database_object
     }
 
     /**
-     * write_to_dir
+     * _write_to_dir
      */
     private static function _write_to_dir(
         string $source,

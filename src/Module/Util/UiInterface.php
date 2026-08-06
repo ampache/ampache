@@ -118,4 +118,9 @@ interface UiInterface
      * This displays the query stats
      */
     public function showQueryStats(): void;
+
+    /**
+     * Renders the play queue sidebar and returns its markup
+     */
+    public function showRightbar(): string;
 }

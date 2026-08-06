@@ -27,9 +27,10 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,7 +40,8 @@ final readonly class RecentArtistAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
+        private VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -49,7 +51,10 @@ final readonly class RecentArtistAction implements ApplicationActionInterface
         $this->ui->showHeader();
         $this->ui->show(
             'show_form_recent.inc.php',
-            ['by_user' => $by_user]
+            [
+                'by_user' => $by_user,
+                'videoRepository' => $this->videoRepository
+            ]
         );
 
         define('TABLE_RENDERED', 1);
@@ -62,7 +67,7 @@ final readonly class RecentArtistAction implements ApplicationActionInterface
             : null;
 
         $objects = Stats::get_recent('artist', -1, 0, $user);
-        $browse  = $this->modelFactory->createBrowse();
+        $browse  = $this->browseFactory->create();
         $browse->set_use_filters(false);
         $browse->set_type('artist');
         $browse->show_objects($objects);

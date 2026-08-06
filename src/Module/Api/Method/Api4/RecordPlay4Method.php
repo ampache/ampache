@@ -26,18 +26,23 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class RecordPlay4Method
- */
-final class RecordPlay4Method
+final class RecordPlay4Method implements MethodInterface
 {
     public const string ACTION = 'record_play';
+
+    public function __construct(
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     /**
      * record_play
@@ -60,11 +65,18 @@ final class RecordPlay4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function record_play(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['id'], self::ACTION)) {
-            return false;
+            return $response;
         }
         $play_user = $user;
         if (isset($input['user'])) {
@@ -73,15 +85,15 @@ final class RecordPlay4Method
                 : User::get_from_username((string) $input['user']);
         }
         // validate supplied user
-        $valid = ($play_user instanceof User && in_array($play_user->id, self::getUserRepository()->getValid()));
+        $valid = ($play_user instanceof User && in_array($play_user->id, $this->userRepository->getValid()));
         if ($valid === false) {
             Api4::message('error', 'User_id not found', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
         // If you are setting plays for other users make sure we have an admin
         if ($play_user->id !== $user->id && !Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, 'record_play', $input['api_format'])) {
-            return false;
+            return $response;
         }
         ob_end_clean();
         $object_id = (int) $input['id'];
@@ -94,7 +106,7 @@ final class RecordPlay4Method
         if ($media->isNew()) {
             Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
         debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . time(), 5);
 
@@ -106,16 +118,6 @@ final class RecordPlay4Method
 
         Api4::message('success', 'successfully recorded play: ' . $media->id . ' for: ' . $play_user->username, null, $input['api_format']);
 
-        return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return $response;
     }
 }

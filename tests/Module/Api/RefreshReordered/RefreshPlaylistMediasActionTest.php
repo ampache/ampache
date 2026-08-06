@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\RefreshReordered;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
@@ -37,6 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RefreshPlaylistMediasActionTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface&MockInterface $browseFactory;
     private MockInterface|ModelFactoryInterface|null $modelFactory;
     private MockInterface|RequestParserInterface|null $requestParser;
     private ?RefreshPlaylistMediasAction $subject;
@@ -56,7 +58,7 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
             ->once()
             ->andReturn($objectId);
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->withNoArgs()
             ->once()
             ->andReturn($browse);
@@ -98,12 +100,14 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->requestParser = $this->mock(RequestParserInterface::class);
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+        $this->requestParser  = $this->mock(RequestParserInterface::class);
+        $this->modelFactory   = $this->mock(ModelFactoryInterface::class);
+        $this->browseFactory  = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new RefreshPlaylistMediasAction(
             $this->requestParser,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->browseFactory
         );
     }
 }

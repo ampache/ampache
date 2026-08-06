@@ -41,13 +41,18 @@ final class HtaccessCommand extends Command
 
         $this
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
-            ->usage('<bold>  htaccess -e</end> <comment> ## ' . T_('Recreate Ampache .htaccess files') . '</end><eol/>');
+            ->option('-p|--public', T_('Include the optional web root .htaccess'), 'boolval', false)
+            ->usage(
+                '<bold>  htaccess -e</end> <comment> ## ' . T_('Recreate Ampache .htaccess files') . '</end><eol/>'
+                . '<bold>  htaccess -e -p</end> <comment> ## ' . T_('Include the optional web root .htaccess') . '</end><eol/>'
+            );
     }
 
     public function execute(): void
     {
         $interactor = $this->io();
         $execute    = $this->values()['execute'] === true;
+        $public     = $this->values()['public'] === true;
 
         // Make sure we have all the required information
         if (!$execute) {
@@ -56,10 +61,24 @@ final class HtaccessCommand extends Command
             return;
         }
 
-        $htaccess_play_file = __DIR__ . '/../../../play/.htaccess';
-        $htaccess_rest_file = __DIR__ . '/../../../rest/.htaccess';
+        $htaccess_play_file   = __DIR__ . '/../../../play/.htaccess';
+        $htaccess_rest_file   = __DIR__ . '/../../../rest/.htaccess';
+        $htaccess_public_file = __DIR__ . '/../../../.htaccess';
 
         // check permissions
+        if ($public && !check_htaccess_public_writable()) {
+            $interactor->error(
+                T_('Permission Denied') . ": " . $htaccess_public_file,
+                true
+            );
+            $interactor->error(
+                AmpError::get('general'),
+                true
+            );
+
+            return;
+        }
+
         if (!check_htaccess_play_writable()) {
             $interactor->error(
                 T_('Permission Denied') . ": " . $htaccess_play_file,
@@ -114,6 +133,26 @@ final class HtaccessCommand extends Command
             );
 
             return;
+        }
+
+        // the web root file is optional hardening, so it is only touched when asked for
+        if ($public) {
+            if (file_exists($htaccess_public_file)) {
+                unlink($htaccess_public_file);
+            }
+
+            if (!$this->installationHelper->install_rewrite_rules($htaccess_public_file, $this->configContainer->getWebPath(), false)) {
+                $interactor->error(
+                    T_('Failed to write config file') . ": " . $htaccess_public_file,
+                    true
+                );
+                $interactor->error(
+                    AmpError::get('general'),
+                    true
+                );
+
+                return;
+            }
         }
 
         // successfully created htaccess files

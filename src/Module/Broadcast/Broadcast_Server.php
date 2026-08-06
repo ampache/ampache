@@ -92,6 +92,9 @@ class Broadcast_Server implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn): void
     {
+        $role = ($this->isBroadcaster($conn)) ? 'broadcaster' : 'listener';
+        debug_event(self::class, 'Connection closed (' . $role . '), resourceId ' . $conn->resourceId, 5);
+
         if ($this->isBroadcaster($conn)) {
             $this->unregisterBroadcast($conn);
         } else {
@@ -170,8 +173,8 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $msg = $cmd . ':' . $value . ';';
         foreach ($clients as $client) {
-            $sid = $this->sids[$client->resourceId];
-            if ($sid) {
+            $sid = $this->sids[$client->resourceId] ?? '';
+            if ($sid !== '') {
                 Session::extend($sid, AccessTypeEnum::STREAM->value);
             }
 
@@ -197,16 +200,24 @@ class Broadcast_Server implements MessageComponentInterface
     }
 
     /**
-     *
+     * Resolves a song id to its player payload, or null if it doesn't resolve to a playable
+     * track (deleted, inaccessible, or a bogus id sent by a broadcaster whose player hadn't
+     * loaded a track yet) — callers should skip sending a SONG message rather than pass that on.
      */
-    protected function getSongJS(int $song_id): string
+    protected function getSongJS(int $song_id): ?string
     {
         $media   = [];
         $media[] = [
             'object_type' => LibraryItemEnum::SONG,
             'object_id' => $song_id,
         ];
-        $item          = Stream_Playlist::media_to_urlarray($media);
+        $item = Stream_Playlist::media_to_urlarray($media);
+        if ($item === []) {
+            debug_event(self::class, 'Could not resolve song ' . $song_id . ' to a playable track.', 3);
+
+            return null;
+        }
+
         $transcode_cfg = AmpConfig::get('transcode', 'default');
 
         return WebPlayer::get_media_js_param($item[0], (string) $transcode_cfg);
@@ -283,7 +294,10 @@ class Broadcast_Server implements MessageComponentInterface
             Session::extend(Stream::get_session(), AccessTypeEnum::STREAM->value);
 
             $broadcast->update_song($song_id);
-            $this->broadcastMessage($clients, self::BROADCAST_SONG, base64_encode($this->getSongJS($song_id)));
+            $songJS = $this->getSongJS($song_id);
+            if ($songJS !== null) {
+                $this->broadcastMessage($clients, self::BROADCAST_SONG, base64_encode($songJS));
+            }
 
             $this->echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " now playing song " . $song_id . "." . "\r\n");
         } else {
@@ -330,15 +344,26 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $broadcast = $this->getRunningBroadcast($broadcast_id);
 
-        if ($broadcast && (!$broadcast->is_private || !AmpConfig::get('require_session') || Session::exists(AccessTypeEnum::STREAM->value, $this->sids[$from->resourceId]))) {
+        if (
+            $broadcast
+            && (
+                !$broadcast->is_private
+                || !AmpConfig::get('require_session')
+                || Session::exists(AccessTypeEnum::STREAM->value, $this->sids[$from->resourceId] ?? '')
+            )
+        ) {
             $this->listeners[$broadcast->id][] = $from;
 
             // Send current song and song position to
-            $this->broadcastMessage(
-                [$from],
-                self::BROADCAST_SONG,
-                base64_encode($this->getSongJS($broadcast->song))
-            );
+            $songJS = $this->getSongJS($broadcast->song);
+            if ($songJS !== null) {
+                $this->broadcastMessage(
+                    [$from],
+                    self::BROADCAST_SONG,
+                    base64_encode($songJS)
+                );
+            }
+
             $this->broadcastMessage([$from], self::BROADCAST_SONG_POSITION, (string) $broadcast->song_position);
             $this->notifyNbListeners($broadcast);
 

@@ -46,13 +46,13 @@ class Access
      */
     public ?bool $enabled = null;
 
-    public string $end;
-    public int $id     = 0;
-    public ?int $level = null;
-    public string $name;
-    public string $start;
-    public string $type;
-    public ?int $user = null;
+    public string $end   = '';
+    public int $id       = 0;
+    public ?int $level   = null;
+    public string $name  = '';
+    public string $start = '';
+    public string $type  = '';
+    public ?int $user    = null;
 
     public function __construct(?int $access_id)
     {

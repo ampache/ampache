@@ -31,6 +31,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -46,6 +47,7 @@ final readonly class WrappedAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private UserRepositoryInterface $userRepository,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -85,6 +87,7 @@ final readonly class WrappedAction implements ApplicationActionInterface
                 'startTime' => $startTime,
                 'user' => $user,
                 'year' => date($year),
+                'browseFactory' => $this->browseFactory,
             ]
         );
         $this->ui->showQueryStats();

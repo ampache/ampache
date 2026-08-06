@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Podcast;
@@ -40,6 +41,7 @@ use Psr\Log\LoggerInterface;
 
 class ShowActionTest extends TestCase
 {
+    private BrowseFactoryInterface&MockObject $browseFactory;
     private ConfigContainerInterface&MockObject $configContainer;
     private GuiGatekeeperInterface&MockObject $gatekeeper;
     private LoggerInterface&MockObject $logger;
@@ -89,6 +91,7 @@ class ShowActionTest extends TestCase
                     'object_ids' => $episodeList,
                     'object_type' => 'podcast_episode',
                     'current_user' => $user,
+                    'browseFactory' => $this->browseFactory,
                 ]
             );
         $this->ui->expects(static::once())
@@ -166,6 +169,7 @@ class ShowActionTest extends TestCase
     protected function setUp(): void
     {
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->browseFactory     = $this->createMock(BrowseFactoryInterface::class);
         $this->ui                = $this->createMock(UiInterface::class);
         $this->logger            = $this->createMock(LoggerInterface::class);
         $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
@@ -178,6 +182,7 @@ class ShowActionTest extends TestCase
             $this->ui,
             $this->logger,
             $this->podcastRepository,
+            $this->browseFactory
         );
     }
 }

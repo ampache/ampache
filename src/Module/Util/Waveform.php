@@ -30,8 +30,10 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
@@ -66,102 +68,10 @@ use RuntimeException;
  */
 class Waveform
 {
-    /**
-     * Get a song or podcast_episode waveform.
-     * @throws RuntimeException
-     */
-    public static function get(Podcast_Episode|Song $media, string $object_type): ?string
-    {
-        $waveform = null;
-
-        if ($media->isNew() === false) {
-            if (AmpConfig::get('album_art_store_disk')) {
-                $waveform = self::get_from_file($media->id, $object_type);
-            } else {
-                // TODO waveforms aren't saved for podcast episodes.
-                if ($media instanceof Song) {
-                    $media->fill_ext_info('waveform');
-                }
-
-                $waveform = $media->waveform;
-            }
-
-            if (in_array($waveform, [null, '', '0'], true)) {
-                $catalog = Catalog::create_from_id($media->catalog);
-                if ($catalog !== null && $catalog->get_type() === 'local') {
-                    $transcode_to  = 'wav';
-                    $transcode_cfg = AmpConfig::get('transcode', 'default');
-                    $valid_types   = $media->get_stream_types();
-
-                    if ($media->type !== $transcode_to) {
-                        $basedir = Core::get_tmp_dir();
-                        if ($basedir !== '' && $basedir !== '0') {
-                            if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
-                                $tmpfile = tempnam($basedir, $transcode_to);
-                                if (!$tmpfile) {
-                                    return null;
-                                }
-
-                                $tfp = fopen($tmpfile, 'wb');
-                                if (!is_resource($tfp)) {
-                                    debug_event(self::class, "Failed to open " . $tmpfile, 3);
-
-                                    return null;
-                                }
-
-                                $transcode_settings = $media->get_transcode_settings($transcode_to);
-                                $transcoder         = Stream::start_transcode($media, $transcode_settings);
-                                if ($transcoder === []) {
-                                    return null;
-                                }
-
-                                $filepointer = $transcoder['handle'] ?? null;
-                                if (!is_resource($filepointer)) {
-                                    debug_event(self::class, "Failed to open " . $media->file . " for waveform.", 3);
-
-                                    return null;
-                                }
-
-                                do {
-                                    if ($buf = fread($filepointer, 2048)) {
-                                        fwrite($tfp, $buf);
-                                    }
-                                } while (!feof($filepointer));
-
-                                fclose($filepointer);
-                                fclose($tfp);
-
-                                Stream::kill_process($transcoder);
-
-                                $waveform = self::create_waveform($tmpfile);
-
-                                if (unlink($tmpfile) === false) {
-                                    throw new RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked');
-                                }
-                            } else {
-                                debug_event(self::class, 'transcode setting to wav required for waveform.', 3);
-                            }
-                        } else {
-                            debug_event(self::class, 'tmp_dir_path setting required for waveform.', 3);
-                        }
-                    } elseif ($media->file !== null) {
-                        // Already wav file, no transcode required
-                        $waveform = self::create_waveform($media->file);
-                    }
-                }
-
-                if (!in_array($waveform, [null, '', '0'], true)) {
-                    if (AmpConfig::get('album_art_store_disk')) {
-                        self::save_to_file($media->id, $object_type, $waveform);
-                    } else {
-                        self::save_to_db($media->id, $object_type, $waveform);
-                    }
-                }
-            }
-        }
-
-        return $waveform;
-    }
+    public function __construct(
+        private readonly EnvironmentInterface $environment,
+        private readonly LoggerInterface $logger,
+    ) {}
 
     /**
      * Return full path of the Waveform file.
@@ -223,21 +133,155 @@ class Waveform
     }
 
     /**
+     * findValues
+     */
+    protected static function findValues(string $byte1, string $byte2): float|int
+    {
+        $byte1 = hexdec(bin2hex($byte1));
+        $byte2 = hexdec(bin2hex($byte2));
+
+        return ($byte1 + ($byte2 * 256));
+    }
+
+    /**
+     * Great function slightly modified as posted by Minux at
+     * http://forums.clantemplates.com/showthread.php?t=133805
+     * Converts a hex color string (#RRGGBB or RRGGBB) to its RGB components.
+     * @return array{0: int<0,255>, 1: int<0,255>, 2: int<0,255>} [red, green, blue], each in the range 0–255
+     */
+    protected static function html2rgb(string $input): array
+    {
+        $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
+
+        return [
+            min(255, max(0, (int) hexdec(substr($input, 0, 2)))),
+            min(255, max(0, (int) hexdec(substr($input, 2, 2)))),
+            min(255, max(0, (int) hexdec(substr($input, 4, 2)))),
+        ];
+    }
+
+    /**
+     * Save waveform to db.
+     */
+    protected static function save_to_db(int $object_id, string $object_type, string $waveform): void
+    {
+        $sql = ($object_type === 'podcast_episode')
+            ? "UPDATE `podcast_episode` SET `waveform` = ? WHERE `id` = ?"
+            : "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
+
+        Dba::write($sql, [$waveform, $object_id]);
+    }
+
+    /**
+     * Get a song or podcast_episode waveform.
+     * @throws RuntimeException
+     */
+    public function get(Podcast_Episode|Song $media, string $object_type): ?string
+    {
+        $waveform = null;
+
+        if ($media->isNew() === false) {
+            if (AmpConfig::get('album_art_store_disk')) {
+                $waveform = self::get_from_file($media->id, $object_type);
+            } else {
+                // TODO waveforms aren't saved for podcast episodes.
+                if ($media instanceof Song) {
+                    $media->fill_ext_info('waveform');
+                }
+
+                $waveform = $media->waveform;
+            }
+
+            if (in_array($waveform, [null, '', '0'], true)) {
+                $catalog = Catalog::create_from_id($media->catalog);
+                if ($catalog !== null && $catalog->get_type() === 'local') {
+                    $transcode_to  = 'wav';
+                    $transcode_cfg = AmpConfig::get('transcode', 'default');
+                    $valid_types   = $media->get_stream_types();
+
+                    if ($media->type !== $transcode_to) {
+                        $basedir = Core::get_tmp_dir();
+                        if ($basedir !== '' && $basedir !== '0') {
+                            if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
+                                $tmpfile = tempnam($basedir, $transcode_to);
+                                if (!$tmpfile) {
+                                    return null;
+                                }
+
+                                $tfp = fopen($tmpfile, 'wb');
+                                if (!is_resource($tfp)) {
+                                    $this->logger->warning("Failed to open " . $tmpfile, [LegacyLogger::CONTEXT_TYPE => self::class]);
+
+                                    return null;
+                                }
+
+                                $transcode_settings = $media->get_transcode_settings($transcode_to);
+                                $transcoder         = Stream::start_transcode($media, $transcode_settings);
+                                if ($transcoder === []) {
+                                    return null;
+                                }
+
+                                $filepointer = $transcoder['handle'] ?? null;
+                                if (!is_resource($filepointer)) {
+                                    $this->logger->warning("Failed to open " . $media->file . " for waveform.", [LegacyLogger::CONTEXT_TYPE => self::class]);
+
+                                    return null;
+                                }
+
+                                do {
+                                    if ($buf = fread($filepointer, 2048)) {
+                                        fwrite($tfp, $buf);
+                                    }
+                                } while (!feof($filepointer));
+
+                                fclose($filepointer);
+                                fclose($tfp);
+
+                                Stream::kill_process($transcoder);
+
+                                $waveform = $this->create_waveform($tmpfile);
+
+                                if (unlink($tmpfile) === false) {
+                                    throw new RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked');
+                                }
+                            } else {
+                                $this->logger->warning('transcode setting to wav required for waveform.', [LegacyLogger::CONTEXT_TYPE => self::class]);
+                            }
+                        } else {
+                            $this->logger->warning('tmp_dir_path setting required for waveform.', [LegacyLogger::CONTEXT_TYPE => self::class]);
+                        }
+                    } elseif ($media->file !== null) {
+                        // Already wav file, no transcode required
+                        $waveform = $this->create_waveform($media->file);
+                    }
+                }
+
+                if (!in_array($waveform, [null, '', '0'], true)) {
+                    if (AmpConfig::get('album_art_store_disk')) {
+                        self::save_to_file($media->id, $object_type, $waveform);
+                    } else {
+                        self::save_to_db($media->id, $object_type, $waveform);
+                    }
+                }
+            }
+        }
+
+        return $waveform;
+    }
+
+    /**
      * Create waveform from song file.
      */
-    protected static function create_waveform(string $filename): ?string
+    protected function create_waveform(string $filename): ?string
     {
         if (!file_exists($filename)) {
-            debug_event(self::class, 'File ' . $filename . " doesn't exists", 1);
+            $this->logger->critical('File ' . $filename . " doesn't exists", [LegacyLogger::CONTEXT_TYPE => self::class]);
 
             return null;
         }
 
-        // FIXME remove...
-        global $dic;
-
-        if (!$dic->get(EnvironmentInterface::class)->check_php_gd()) {
-            debug_event(self::class, 'GD extension must be loaded', 1);
+        if (!$this->environment->check_php_gd()) {
+            $this->logger->critical('GD extension must be loaded', [LegacyLogger::CONTEXT_TYPE => self::class]);
 
             return null;
         }
@@ -253,7 +297,7 @@ class Waveform
 
         $handle = fopen($filename, "r");
         if ($handle === false) {
-            debug_event(self::class, 'Cannot open filename.', 1);
+            $this->logger->critical('Cannot open filename.', [LegacyLogger::CONTEXT_TYPE => self::class]);
 
             return null;
         }
@@ -298,7 +342,7 @@ class Waveform
             ? imagecreatetruecolor($img_width, $height)
             : false;
         if ($img === false) {
-            debug_event(self::class, 'Cannot create image.', 1);
+            $this->logger->critical('Cannot create image.', [LegacyLogger::CONTEXT_TYPE => self::class]);
 
             return null;
         }
@@ -385,45 +429,5 @@ class Waveform
         ob_clean();
 
         return $imgdata ?: null;
-    }
-
-    /**
-     * findValues
-     */
-    protected static function findValues(string $byte1, string $byte2): float|int
-    {
-        $byte1 = hexdec(bin2hex($byte1));
-        $byte2 = hexdec(bin2hex($byte2));
-
-        return ($byte1 + ($byte2 * 256));
-    }
-
-    /**
-     * Great function slightly modified as posted by Minux at
-     * http://forums.clantemplates.com/showthread.php?t=133805
-     * Converts a hex color string (#RRGGBB or RRGGBB) to its RGB components.
-     * @return array{0: int<0,255>, 1: int<0,255>, 2: int<0,255>} [red, green, blue], each in the range 0–255
-     */
-    protected static function html2rgb(string $input): array
-    {
-        $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
-
-        return [
-            min(255, max(0, (int) hexdec(substr($input, 0, 2)))),
-            min(255, max(0, (int) hexdec(substr($input, 2, 2)))),
-            min(255, max(0, (int) hexdec(substr($input, 4, 2)))),
-        ];
-    }
-
-    /**
-     * Save waveform to db.
-     */
-    protected static function save_to_db(int $object_id, string $object_type, string $waveform): void
-    {
-        $sql = ($object_type === 'podcast_episode')
-            ? "UPDATE `podcast_episode` SET `waveform` = ? WHERE `id` = ?"
-            : "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
-
-        Dba::write($sql, [$waveform, $object_id]);
     }
 }

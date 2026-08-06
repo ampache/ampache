@@ -31,6 +31,7 @@ final class PvmsgQuery implements QueryInterface
 {
     public const array FILTERS = [
         'alpha_match',
+        'like',
         'not_starts_with',
         'regex_match',
         'regex_not_match',
@@ -94,6 +95,7 @@ final class PvmsgQuery implements QueryInterface
             case 'exact_match':
                 $filter_sql = " `user_pvmsg`.`subject` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `user_pvmsg`.`subject` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;

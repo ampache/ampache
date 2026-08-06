@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Random;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
@@ -35,6 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class AdvancedActionTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface&MockInterface $browseFactory;
     private ?AdvancedAction $subject;
     private UiInterface|MockInterface|null $ui;
     private VideoRepositoryInterface|MockInterface|null $videoRepository;
@@ -52,7 +54,8 @@ class AdvancedActionTest extends MockeryTestCase
                 'show_random.inc.php',
                 [
                     'videoRepository' => $this->videoRepository,
-                    'object_ids' => []
+                    'object_ids' => [],
+                    'browseFactory' => $this->browseFactory
                 ]
             )
             ->once();
@@ -72,11 +75,13 @@ class AdvancedActionTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
+        $this->browseFactory   = $this->mock(BrowseFactoryInterface::class);
         $this->videoRepository = $this->mock(VideoRepositoryInterface::class);
 
         $this->subject = new AdvancedAction(
             $this->ui,
-            $this->videoRepository
+            $this->videoRepository,
+            $this->browseFactory
         );
     }
 }

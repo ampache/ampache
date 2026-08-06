@@ -221,6 +221,7 @@ class AmpacheXbmc extends localplay_controller
 
                 $data          = [];
                 $data['link']  = $item['file'];
+                $data['raw']   = $item['file'];
                 $data['id']    = $i;
                 $data['track'] = $i + 1;
 

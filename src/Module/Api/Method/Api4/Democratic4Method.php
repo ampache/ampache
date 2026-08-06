@@ -27,18 +27,22 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Playback\Democratic;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Democratic4Method
- */
-final class Democratic4Method
+final class Democratic4Method implements MethodInterface
 {
     public const string ACTION = 'democratic';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * democratic
@@ -55,102 +59,96 @@ final class Democratic4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function democratic(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['method'], self::ACTION)) {
-            return false;
+            return $response;
         }
-        // Load up democratic information
+
         $democratic = Democratic::get_current_playlist($user);
         $democratic->set_parent();
 
         switch ($input['method']) {
             case 'vote':
-                $type      = 'song';
-                $object_id = (int) ($input['oid'] ?? 0);
-                $media     = new Song($object_id);
+                $media = new Song((int) ($input['oid'] ?? 0));
                 if ($media->isNew()) {
                     Api4::message('error', 'Media object invalid or not specified', '400', $input['api_format']);
-                    break;
+
+                    return $response;
                 }
+
                 $democratic->add_vote(
                     [
                         [
-                            $type,
+                            'song',
                             $media->id
                         ]
                     ]
                 );
 
-                // If everything was ok
-                $results = [
-                    'method' => $input['method'],
-                    'result' => true
-                ];
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($results, JSON_PRETTY_PRINT);
-                        break;
-                    default:
-                        echo Api::keyed_array($results);
-                }
-                break;
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $this->keyed(['method' => $input['method'], 'result' => true], $input['api_format'])
+                    )
+                );
             case 'devote':
-                $type      = 'song';
-                $object_id = (int) ($input['oid'] ?? 0);
-                $media     = new Song($object_id);
+                $media = new Song((int) ($input['oid'] ?? 0));
                 if ($media->isNew()) {
                     Api4::message('error', 'Media object invalid or not specified', '400', $input['api_format']);
-                    break;
+
+                    return $response;
                 }
 
-                $object_id = $democratic->get_uid_from_object_id($media->id, $type);
+                $object_id = $democratic->get_uid_from_object_id($media->id, 'song');
                 if ($object_id) {
                     $democratic->remove_vote($object_id);
                 }
 
-                // Everything was ok
-                $results = [
-                    'method' => $input['method'],
-                    'result' => true
-                ];
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($results, JSON_PRETTY_PRINT);
-                        break;
-                    default:
-                        echo Api::keyed_array($results);
-                }
-                break;
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $this->keyed(['method' => $input['method'], 'result' => true], $input['api_format'])
+                    )
+                );
             case 'playlist':
                 $results = $democratic->get_items();
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo Json4_Data::democratic($results, $user, $input['auth']);
-                        break;
-                    default:
-                        echo Xml4_Data::democratic($results, $user, $input['auth']);
-                }
-                break;
+
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->democratic($apiVersion, $results, $user, $input['auth'])
+                    )
+                );
             case 'play':
-                $url     = $democratic->play_url($user);
-                $results = ['url' => $url];
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($results, JSON_PRETTY_PRINT);
-                        break;
-                    default:
-                        echo Api::keyed_array($results);
-                }
-                break;
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $this->keyed(['url' => $democratic->play_url($user)], $input['api_format'])
+                    )
+                );
             default:
                 Api4::message('error', 'Invalid request', '405', $input['api_format']);
-                break;
-        } // switch on method
 
-        return true;
+                return $response;
+        }
+    }
+
+    /**
+     * Version 4 prints a keyed array as pretty json or as xml; no data builder covers that shape.
+     *
+     * @param array<string, mixed> $results
+     */
+    private function keyed(array $results, string $format): string
+    {
+        return ($format === 'json')
+            ? (string) json_encode($results, JSON_PRETTY_PRINT)
+            : Api::keyed_array($results);
     }
 }

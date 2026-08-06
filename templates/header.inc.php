@@ -40,7 +40,7 @@ use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
-global $dic;
+/** @var PrivateMessageRepositoryInterface $privateMessageRepository */
 
 $web_path = AmpConfig::get_web_path();
 
@@ -125,9 +125,9 @@ if ($is_session) {
     require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $current_user_id; ?>"><?php echo $current_user?->fullname; ?></a>
-                        <?php if ($site_social) { ?>
+                        <?php if ($site_social && $current_user instanceof User) { ?>
                             <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php
-                                echo $dic->get(PrivateMessageRepositoryInterface::class)->getUnreadCount($current_user); ?>)</a>
+                                echo $privateMessageRepository->getUnreadCount($current_user); ?>)</a>
                         <?php } ?>
                         </span>
                     <?php

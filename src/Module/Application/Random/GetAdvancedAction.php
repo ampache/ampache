@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Random;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
@@ -43,6 +44,8 @@ final readonly class GetAdvancedAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private VideoRepositoryInterface $videoRepository,
+        private BrowseFactoryInterface $browseFactory,
+        private Random $random,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -54,7 +57,7 @@ final readonly class GetAdvancedAction implements ApplicationActionInterface
         $user = Core::get_global('user');
         if ($user instanceof User) {
             $user->load_playlist();
-            $objectIds = Random::advanced($objectType->value, $_POST);
+            $objectIds = $this->random->advanced($objectType->value, $_POST);
             if ($objectIds !== []) {
                 // you need to add by the base child type song/video
                 $objectType = match ($objectType->value) {
@@ -73,7 +76,8 @@ final readonly class GetAdvancedAction implements ApplicationActionInterface
             'show_random.inc.php',
             [
                 'videoRepository' => $this->videoRepository,
-                'object_ids' => $objectIds
+                'object_ids' => $objectIds,
+                'browseFactory' => $this->browseFactory
             ]
         );
         $this->ui->showQueryStats();

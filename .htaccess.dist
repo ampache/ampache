@@ -1,6 +1,17 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # PRIVATE PATHS
+    # Optional hardening. Nothing in Ampache needs these rules, and no other .htaccess file depends on them.
+    # The release zip (squashed layout) puts the install root in the web root, so config/, src/ and vendor/ sit beside index.php. Serving from public/ these paths do not exist and the rules cost nothing.
+    RewriteRule ^(bin|config|docker|docs|locale|node_modules|resources|src|tests|vendor)(/|$) - [F,L]
+    RewriteRule ^(composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|rector\.php|vite\.config\.js)$ - [F,L]
+    RewriteRule \.(bak|old|orig|save|swp|swo|sql|log|ini|neon|sh|dist|cache|md)$ - [F,L]
+
+    # Dotted paths (.git, .env, .idea) at any depth, leaving the acme-challenge webroot reachable so certbot can renew.
+    RewriteCond %{REQUEST_URI} !(^|/)\.well-known/ [NC]
+    RewriteRule (^|/)\. - [F,L]
+
     # BOTS
     #RewriteCond %{HTTP_USER_AGENT} (Agent\ GPT|AgentGPT|AIBot|AI2Bot|AISearchBot|AlexaTM|Alpha\ AI|AlphaAI|Amazon\ Bedrock|Amazon\ Lex|Amazonbot)             [NC,OR]
     #RewriteCond %{HTTP_USER_AGENT} (Amelia|anthropic-ai|AnyPicker|Applebot|AutoGPT|AwarioRssBot|AwarioSmartBot|Brave\ Leo\ AI|Bytespider|CatBoost)            [NC,OR]
@@ -36,4 +47,22 @@
     RewriteCond %{QUERY_STRING} (^|&)object_type=user(&|$) [NC]
     RewriteCond %{QUERY_STRING} !(^|&)action=show_user_avatar(&|$) [NC]
     RewriteRule ^image\.php$ /image.php?action=show_user_avatar&%{QUERY_STRING} [R=302,L]
+</IfModule>
+
+# The same file protection without mod_rewrite, so a missing module cannot expose ampache.cfg.php.
+# This matches on the file name alone, so the directory rules above are still what covers config/ and src/.
+
+# Apache 2.4
+<IfModule mod_authz_core.c>
+    <FilesMatch "^\.|\.cfg\.php$|\.(bak|old|orig|save|swp|swo|sql|log|ini|neon|sh|dist|cache|md|lock)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+
+# Apache 2.2
+<IfModule mod_access.c>
+    <FilesMatch "^\.|\.cfg\.php$|\.(bak|old|orig|save|swp|swo|sql|log|ini|neon|sh|dist|cache|md|lock)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
 </IfModule>

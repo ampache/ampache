@@ -26,61 +26,64 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Artist4Method
+ * Returns a single artist.
  */
-final class Artist4Method
+final class Artist4Method implements MethodInterface
 {
     public const string ACTION = 'artist';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * artist
-     * MINIMUM_API_VERSION=380001
-     *
-     * This returns a single artist based on the UID of said artist
-     *
-     * filter = (string) Alpha-numeric search term
-     * include = (array) 'albums'|'songs' //optional
-     *
-     * @param array{
-     *     filter: string,
-     *     include?: string|string[],
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function artist(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
-        $uid     = scrub_in((string) $input['filter']);
+
+        // version 4 hands the filter through as a string rather than casting it to an id
+        $results = [scrub_in((string) ($input['filter'] ?? ''))];
+
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
-                $input['include'] = explode(',', html_entity_decode((string) ($input['include'])));
+                $input['include'] = explode(',', html_entity_decode((string) $input['include']));
             }
+
             foreach ($input['include'] as $item) {
                 if ($item === 'songs' || $item == '1') {
                     $include[] = 'songs';
                 }
+
                 if ($item === 'albums' || $item == '1') {
                     $include[] = 'albums';
                 }
             }
         }
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::artists([$uid], $include, $user, $input['auth']);
-                break;
-            default:
-                echo Xml4_Data::artists([$uid], $include, $user, $input['auth']);
-        }
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->artists($apiVersion, $results, $include, $user, $input['auth'])
+            )
+        );
     }
 }

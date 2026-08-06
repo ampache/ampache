@@ -162,15 +162,32 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
         }
     }
 
+    // Which item is playing can change after the player is built: appending a random stream to an album keeps
+    // the player the album was loaded into, so the playlist the page was rendered with says nothing about what
+    // is playing now. The placeholder is recognised per track instead.
+    function isPlaceholderTrack()
+    {
+        if (jplaylist === null || !jplaylist.playlist) {
+            return false;
+        }
+        var item = jplaylist.playlist[jplaylist.current];
+
+        return !!item && (item['media_type'] === 'random' || item['media_type'] === 'democratic');
+    }
+
     // The placeholder item never changes, so the previous song has to be dropped the moment a new stream is
     // requested or a slow or failed lookup leaves its title and cover sitting over the track that replaced it.
     function nowPlayingTrackChanged()
     {
+        var placeholder = isPlaceholderTrack();
         cancelNowPlayingRetry();
         nowPlayingSeenId = null;
-        nowPlayingPending = true;
+        nowPlayingPending = placeholder;
         nowPlayingAttempts = 0;
         clearNowPlayingArt();
+        <?php if ($isVideo === false && $isShare === false) { ?>
+        $('#jquery_jplayer_1').css('visibility', placeholder ? 'hidden' : '');
+        <?php } ?>
     }
 
     // now_playing is only written once the stream request reaches the server, well after `play` fires, so the first
@@ -279,9 +296,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
         }
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
-            <?php if ($isRandom || $isDemocratic) { ?>
             refreshNowPlaying();
-            <?php } ?>
             // Splice the shared audio graph (EQ + ReplayGain) in as soon as playback starts so the equalizer is active.
             if (typeof ensureAudioGraph === 'function' && ensureAudioGraph() && audioContext && audioContext.state === 'suspended') {
                 audioContext.resume();
@@ -473,16 +488,22 @@ if (AmpConfig::get('song_page_title') && $isShare === false) {
         $("#jquery_jplayer_1").bind($.jPlayer.event.progress, correctPlayerTimeline);
         $("#jquery_jplayer_1").bind($.jPlayer.event.durationchange, correctPlayerTimeline);
 
-<?php if ($isRandom || $isDemocratic) { ?>
         $("#jquery_jplayer_1").bind($.jPlayer.event.loadstart, nowPlayingTrackChanged);
         $("#jquery_jplayer_1").bind($.jPlayer.event.loadeddata, refreshNowPlaying);
         $("#jquery_jplayer_1").bind($.jPlayer.event.playing, refreshNowPlaying);
-<?php } ?>
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.ended, function () {
+            if (
+                !jplaylist.loop
+                && isPlaceholderTrack()
+                && jplaylist.current === jplaylist.playlist.length - 1
+            ) {
+                jplaylist.play(jplaylist.current);
+            }
+        });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
-            <?php if ($isRandom || $isDemocratic) { ?>
             cancelNowPlayingRetry();
-            <?php } ?>
             if (brkey != '') {
                 sendBroadcastMessage('PLAYER_PLAY', 0);
             }
@@ -688,10 +709,13 @@ if ($isVideo === false) {
                                 <a href="javascript:SwapSlideshow();"><?php echo Ui::get_material_symbol('slideshow', addslashes(T_('Slideshow'))); ?></a>
                             </div>
                         <?php } ?>
-                        <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+                        <?php
+                        $isBroadcasting = false;
+                        if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                             <div id="broadcast" class="broadcast action_button">
                                 <?php if (AmpConfig::get('broadcast_by_default')) {
-                                    $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0);
+                                    $isBroadcasting = true;
+                                    $broadcasts     = Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0);
                                     if (count($broadcasts) < 1) {
                                         $broadcast_id = Broadcast::create(addslashes(T_('My Broadcast')));
                                     } else {
@@ -722,6 +746,13 @@ if ($isVideo === false) {
                             </div>
                             <div id="vizfullbtn" class="action_button" style="visibility: hidden">
                                 <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_material_symbol('fullscreen', addslashes(T_('Visualizer full-screen'))); ?></a>
+                            </div>
+                        <?php } ?>
+                        <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+                            <div id="broadcast_listeners_wrap" class="action_button">
+                                <?php if ($isBroadcasting) {
+                                    echo Broadcast::get_listeners_html();
+                                } ?>
                             </div>
                         <?php } ?>
                     <?php } ?>
