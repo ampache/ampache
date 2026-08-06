@@ -434,6 +434,15 @@ function check_htaccess_play_writable(): bool
 }
 
 /**
+ * check_htaccess_public_writable
+ */
+function check_htaccess_public_writable(): bool
+{
+    return ((file_exists(__DIR__ . '/../../public/.htaccess') && is_writeable(__DIR__ . '/../../public/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../public/.htaccess') && is_writeable(__DIR__ . '/../../public/')));
+}
+
+/**
  * debug_result
  * Convenience function to format the output.
  */

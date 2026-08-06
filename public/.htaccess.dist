@@ -2,6 +2,7 @@
     RewriteEngine On
 
     # PRIVATE PATHS
+    # Optional hardening. Nothing in Ampache needs these rules, and no other .htaccess file depends on them.
     # The release zip (squashed layout) puts the install root in the web root, so config/, src/ and vendor/ sit beside index.php. Serving from public/ these paths do not exist and the rules cost nothing.
     RewriteRule ^(bin|config|docker|docs|locale|node_modules|resources|src|tests|vendor)(/|$) - [F,L]
     RewriteRule ^(composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|rector\.php|vite\.config\.js)$ - [F,L]

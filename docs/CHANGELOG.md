@@ -149,6 +149,16 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The action is on the artist, smartlist, podcast, podcast episode, radio station and video pages, which only offered the temporary playlist before
   * Podcast rows carry it as well, so a whole podcast can be added from a browse the way an album already could
 * A `PHP Modules` table on `Admin -> Server Config -> Ampache Debug` listing every php extension Ampache requires or suggests, whether this server has it, and what an optional one is needed for
+* Webserver rules that keep private files out of the web root
+  * Optional hardening; nothing in Ampache needs these rules, so an install without them keeps working exactly as before
+  * `public/.htaccess.dist` refuses `bin`, `config`, `docker`, `docs`, `locale`, `node_modules`, `resources`, `src`, `tests` and `vendor`, which sit beside `index.php` when you install from a release zip
+  * It also refuses dotted paths such as `.git` and `.env` at any depth, and leftovers such as `.bak`, `.old`, `.swp`, `.sql` and `.dist`; `/.well-known/acme-challenge/` stays reachable so certbot can still renew
+  * `ampache.cfg.php` is refused by name from a rule that does not need `mod_rewrite`, so the config file is not served as plain text if the module is missing
+  * New `-p`/`--public` option on `bin/installer htaccess` writes `public/.htaccess`, which `-e` on its own still leaves alone; it overwrites the file, so back it up if you edited it
+  * A `RewriteRule` whose substitution is `-` keeps it when the rules are written for a subdirectory install, instead of being rewritten to a path nothing matches
+  * New `docs/examples/apache-site.conf`, a complete Apache 2.4 vhost carrying the same rules, plus php-fpm, websocket and server-sent-event settings, for anyone running with `AllowOverride None`
+  * New `docs/examples/lighttpd-site.conf` and `docs/examples/caddy-site.conf`, replacing the Caddy v1 sample that has not been valid since 2020
+  * `docs/examples/nginx-site.conf` refuses the same set, and its `transcode_to` rules match again
 
 ### Changed (8.0.0)
 
