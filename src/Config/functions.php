@@ -438,8 +438,8 @@ function check_htaccess_play_writable(): bool
  */
 function check_htaccess_public_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/.htaccess') && is_writeable(__DIR__ . '/../../public/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/.htaccess') && is_writeable(__DIR__ . '/../../public/')));
+    return ((file_exists(__DIR__ . '/../../.htaccess') && is_writeable(__DIR__ . '/../../.htaccess'))
+        || (!file_exists(__DIR__ . '/../../.htaccess') && is_writeable(__DIR__ . '/../../')));
 }
 
 /**
