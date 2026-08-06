@@ -124,6 +124,11 @@ final class InstallationHelper implements InstallationHelperInterface
                 // Matching url rewriting rule syntax
                 if ($parts[$count] === 'RewriteRule' && $count < ($p_count - 2)) {
                     $reprule = $parts[$count + 2];
+                    // a substitution of '-' means the rule only sets flags, so there is no path to prefix
+                    if ($reprule === '-') {
+                        break;
+                    }
+
                     if ($web_path !== '' && $web_path !== '0' && !str_starts_with($reprule, $web_path)) {
                         $reprule = $web_path . $reprule;
                         if ($fix) {

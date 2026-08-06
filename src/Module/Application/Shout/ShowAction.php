@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode\RFC\RFC7231;
 
 final readonly class ShowAction implements ApplicationActionInterface
 {
@@ -44,7 +45,7 @@ final readonly class ShowAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         return $this->responseFactory
-            ->createResponse()
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 $this->configContainer->getWebPath('/client')

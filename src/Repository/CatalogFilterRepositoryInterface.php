@@ -58,6 +58,13 @@ interface CatalogFilterRepositoryInterface
     public function createGroup(string $name): int;
 
     /**
+     * Creates a filter group and maps the given catalogs onto it
+     *
+     * @param array<int, int> $enabledByCatalogId catalog id => 1 to enable, 0 to hide
+     */
+    public function createGroupWithCatalogs(string $name, array $enabledByCatalogId): bool;
+
+    /**
      * Removes a group and every catalog mapping it holds
      */
     public function deleteGroup(int $groupId): bool;
@@ -108,4 +115,11 @@ interface CatalogFilterRepositoryInterface
      * Enables or hides one catalog for a group, adding the mapping when it has none
      */
     public function setCatalogEnabled(int $groupId, int $catalogId, int $enabled): bool;
+
+    /**
+     * Renames a group and applies the enabled state of every catalog it was given
+     *
+     * @param array<int, int> $enabledByCatalogId catalog id => 1 to enable, 0 to hide
+     */
+    public function updateGroupCatalogs(int $groupId, string $name, array $enabledByCatalogId): bool;
 }

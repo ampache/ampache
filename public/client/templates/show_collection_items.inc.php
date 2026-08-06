@@ -32,14 +32,15 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\User;
 
-global $dic;
-$libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
+/** @var LibraryItemLoaderInterface $libraryItemLoader */
 
 /** @var Browse $browse */
 /** @var Collection $collection */
@@ -160,17 +161,33 @@ if ($browse->is_show_header()) {
             </thead>
             <?php // `sortableplaylist_` is what `sortPlaylistRender()` looks for, so the drag handling is shared?>
             <tbody id="sortableplaylist_<?php echo $collection_id; ?>">
+            <?php if ($show_ratings) {
+                $rating_ids = [];
+                foreach ($object_ids as $object) {
+                    $rating_type                = (is_string($object['object_type'])) ? $object['object_type'] : $object['object_type']->value;
+                    $rating_ids[$rating_type][] = (int) $object['object_id'];
+                }
+
+                foreach ($rating_ids as $rating_type => $rating_id_list) {
+                    Rating::build_cache($rating_type, $rating_id_list);
+                    Userflag::build_cache($rating_type, $rating_id_list);
+                }
+            } ?>
             <?php foreach ($object_ids as $object) {
                 $libtype = (is_string($object['object_type']))
                     ? LibraryItemEnum::tryFrom($object['object_type'])
                     : $object['object_type'];
+                if ($libtype === null) {
+                    continue;
+                }
+
                 $libitem = $libraryItemLoader->load($libtype, $object['object_id']);
                 // A member whose object has since gone drops out rather than rendering an empty row
                 if ($libitem === null) {
                     continue;
                 }
 
-                $object_type = $libtype?->value;
+                $object_type = $libtype->value;
                 // `tag` is the table; `genre` is what the API and the rest of the UI call it
                 $type_label       = ($object_type === 'tag') ? 'genre' : (string) $object_type;
                 $collection_track = (int) $object['track']; ?>

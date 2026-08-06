@@ -32,7 +32,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Browse;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
@@ -42,8 +42,8 @@ use Psr\Http\Message\StreamInterface;
 
 class BrowseMethodTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface|MockInterface|null $browseFactory;
     private ConfigContainerInterface|MockInterface|null $configContainer;
-    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?BrowseMethod $subject;
 
     /**
@@ -97,7 +97,7 @@ class BrowseMethodTest extends MockeryTestCase
 
         $result = 'type-error';
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
@@ -144,7 +144,7 @@ class BrowseMethodTest extends MockeryTestCase
         $user       = $this->mock(User::class);
         $browse     = $this->mock(Browse::class);
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
@@ -175,7 +175,7 @@ class BrowseMethodTest extends MockeryTestCase
         $user       = $this->mock(User::class);
         $browse     = $this->mock(Browse::class);
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
@@ -200,20 +200,20 @@ class BrowseMethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
+        $this->browseFactory    = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new BrowseMethod(
             $this->configContainer,
-            $this->modelFactory,
+            $this->browseFactory,
         );
     }
 
     #[Override]
     protected function tearDown(): void
     {
-        $this->configContainer = null;
-        $this->modelFactory    = null;
-        $this->subject         = null;
+        $this->configContainer  = null;
+        $this->browseFactory    = null;
+        $this->subject          = null;
     }
 }

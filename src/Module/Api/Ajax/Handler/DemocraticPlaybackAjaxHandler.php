@@ -29,7 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Democratic;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
@@ -39,6 +39,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
 {
     public function __construct(
         private RequestParserInterface $requestParser,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function handle(User $user): void
@@ -80,7 +81,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                     return;
                 }
 
-                $_SESSION['iframe']['target'] = AmpConfig::get_web_path('/client') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id'] ?? '');
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path('/client') . '/stream.php?action=democratic&democratic_id=' . scrub_out((string) ($_REQUEST['democratic_id'] ?? ''));
                 $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             case 'clear_playlist':
@@ -99,7 +100,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
             ob_start();
             $object_ids = $democratic->get_items();
             $browse_id  = (int) ($_REQUEST['browse_id'] ?? 0);
-            $browse     = new Browse($browse_id);
+            $browse     = $this->browseFactory->create($browse_id);
             $browse->set_type('democratic');
             $browse->set_static_content(false);
             $browse->show_objects($object_ids);

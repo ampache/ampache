@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Playback\Democratic;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Core;
@@ -40,6 +39,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -47,6 +47,11 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+
+/** @var CollectionRepositoryInterface $collectionRepository */
+/** @var LibraryItemLoaderInterface $libraryItemLoader */
+/** @var PlaylistLoaderInterface $playlistLoader */
+/** @var ZipHandlerInterface $zipHandler */
 
 $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')->id : -1; ?>
 <ul id="rb_action">
@@ -60,10 +65,7 @@ $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
                 </li>
-            <?php global $dic;
-    $playlists = $dic->get(PlaylistLoaderInterface::class)->loadByUserId(
-        $user_id
-    );
+            <?php $playlists = $playlistLoader->loadByUserId($user_id);
     foreach ($playlists as $playlist) { ?>
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->getFullname(), 'rb_append_playlist_' . $playlist->id); ?>
@@ -74,7 +76,7 @@ $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')
                 <li>
                     <?php echo Ajax::text('?page=collection&action=append_item', T_('Add to New Collection'), 'rb_create_collection'); ?>
                 </li>
-                <?php foreach ($dic->get(CollectionRepositoryInterface::class)->getByUser($rb_user) as $collectionId) {
+                <?php foreach ($collectionRepository->getByUser($rb_user) as $collectionId) {
                     $rb_collection = new Collection($collectionId);
                     if ($rb_collection->isNew() || !$rb_collection->has_collaborate($rb_user)) {
                         continue;
@@ -87,8 +89,6 @@ $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')
             </ul>
         </li>
 <?php }
-global $dic; // @todo remove after refactoring
-$zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('tmp_playlist')) { ?>
     <li>
         <a class="nohtml" href="<?php echo AmpConfig::get_web_path('/client'); ?>/batch.php?action=tmp_playlist&id=<?php echo Core::get_global('user')?->playlist?->id; ?>">
@@ -138,18 +138,15 @@ if ($basket_count > 100) {
     $truncated = ($basket_count - 100);
 }
 
-global $dic;
-$libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
-
 foreach ($objects as $object_data) {
     $uid = $object_data['track_id'];
 
     $object = $libraryItemLoader->load(
         $object_data['object_type'],
         $object_data['object_id'],
-        [Broadcast::class, Democratic::class, Live_Stream::class, Podcast_Episode::class, Song::class, Song_Preview::class, Video::class,]
+        [Broadcast::class, Live_Stream::class, Podcast_Episode::class, Song::class, Song_Preview::class, Video::class,]
     );
-    if ($object !== null) {
+    if ($object instanceof displayable_item) {
         ?>
     <li>
       <?php echo $object->get_f_link();

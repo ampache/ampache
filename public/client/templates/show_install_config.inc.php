@@ -43,14 +43,14 @@ $web_path_guess = $_REQUEST['web_path'] ?? '';
 if (empty($web_path_guess)) {
     $web_path_guess = get_web_path();
 }
-$db_user        = scrub_out($_REQUEST['db_user'] ?? '');
-$local_username = scrub_out($_REQUEST['db_username']);
+$db_user        = scrub_out((string) ($_REQUEST['db_user'] ?? ''));
+$local_username = scrub_out((string) ($_REQUEST['db_username'] ?? ''));
 if (!$db_user) {
-    $local_username = scrub_out($_REQUEST['local_username']);
+    $local_username = scrub_out((string) ($_REQUEST['local_username'] ?? ''));
 }
-$local_pass = scrub_out($_REQUEST['db_password']);
+$local_pass = scrub_out((string) ($_REQUEST['db_password'] ?? ''));
 if (empty($local_pass)) {
-    $local_pass = scrub_out($_REQUEST['local_pass']);
+    $local_pass = scrub_out((string) ($_REQUEST['local_pass'] ?? ''));
 }
 $has_usecase  = array_key_exists('usecase', $_REQUEST);
 $has_backends = array_key_exists('backends', $_REQUEST);
@@ -93,19 +93,19 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <div class="row mb-3">
             <label for="local_db" class="col-sm-2 form-label"><?php echo T_('Database Name'); ?></label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="local_db" name="local_db" size="32" value="<?php echo scrub_out($_REQUEST['local_db']); ?>">
+                <input type="text" class="form-control" id="local_db" name="local_db" size="32" value="<?php echo scrub_out((string) ($_REQUEST['local_db'] ?? '')); ?>">
             </div>
         </div>
         <div class="row mb-3">
             <label for="local_host" class="col-sm-2 form-label"><?php echo T_('MySQL Hostname'); ?></label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="local_host" name="local_host" size="32" value="<?php echo scrub_out($_REQUEST['local_host']); ?>">
+                <input type="text" class="form-control" id="local_host" name="local_host" size="32" value="<?php echo scrub_out((string) ($_REQUEST['local_host'] ?? '')); ?>">
             </div>
         </div>
         <div class="row mb-3">
             <label for="local_port" class="col-sm-2 form-label"><?php echo T_('MySQL Port (optional)'); ?></label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="local_port" name="local_port" size="32" value="<?php echo scrub_out($_REQUEST['local_port']); ?>"/>
+                <input type="text" class="form-control" id="local_port" name="local_port" size="32" value="<?php echo scrub_out((string) ($_REQUEST['local_port'] ?? '')); ?>"/>
             </div>
         </div>
         <div class="row mb-3">

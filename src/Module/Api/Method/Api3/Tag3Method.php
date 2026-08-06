@@ -25,36 +25,42 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Tag3Method
- */
-final class Tag3Method
+final class Tag3Method implements MethodInterface
 {
     public const string ACTION = 'tag';
 
-    /**
-     * genre
-     * This returns a single tag based on UID
-     * @param array<string, mixed> $input
-     */
-    public static function genre(array $input, User $user): void
-    {
-        self::tag($input, $user);
-    }
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * tag
      * This returns a single tag based on UID
      * @param array<string, mixed> $input
+     * @param 3 $apiVersion
      */
-    public static function tag(array $input, User $user): void
-    {
-        unset($user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $uid = scrub_in((string) $input['filter']);
         ob_end_clean();
-        echo Xml3_Data::tags([(int) $uid]);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->genres($apiVersion, [(int) $uid], $user)
+            )
+        );
     }
 }

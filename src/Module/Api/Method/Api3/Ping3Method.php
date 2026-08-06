@@ -28,18 +28,24 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api3;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Ping3Method
- */
-final class Ping3Method
+final class Ping3Method implements MethodInterface
 {
     public const string ACTION = 'ping';
+
+    public function __construct(
+        private UserRepositoryInterface $userRepository,
+        private UserTrackerInterface $userTracker,
+    ) {}
 
     /**
      * ping
@@ -51,9 +57,16 @@ final class Ping3Method
      *     version?: string,
      *     api_format: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function ping(array $input): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $version      = (isset($input['version'])) ? $input['version'] : Api3::$version;
         $data_version = (int) substr((string) $version, 0, 1);
         $results      = [
@@ -78,11 +91,11 @@ final class Ping3Method
                 $results
             );
 
-            $user = self::getUserRepository()->findByApiKey($input['auth']);
+            $user = $this->userRepository->findByApiKey($input['auth']);
 
             // We're about to start. Record this user's IP.
             if (AmpConfig::get('track_user_ip') && $user instanceof User) {
-                self::getUserTracker()->trackIpAddress($user, 'ping');
+                $this->userTracker->trackIpAddress($user, 'ping');
             }
         }
 
@@ -90,25 +103,7 @@ final class Ping3Method
 
         ob_end_clean();
         echo Api::keyed_array($results);
-    }
 
-    /**
-     * @todo replace by constructor injection
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getUserTracker(): UserTrackerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserTrackerInterface::class);
+        return $response;
     }
 }

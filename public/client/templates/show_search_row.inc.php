@@ -83,8 +83,7 @@ use Ampache\Repository\Model\User;
 <?php } ?>
 <td class="cel_owner"><?php echo scrub_out($libitem->username); ?></td>
 <td class="cel_action">
-<?php global $dic; // @todo remove after refactoring
-$zipHandler = $dic->get(ZipHandlerInterface::class);
+<?php /** @var ZipHandlerInterface $zipHandler */
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('search')) { ?>
                 <a class="nohtml" href="<?php echo AmpConfig::get_web_path('/client'); ?>/batch.php?action=search&id=<?php echo $libitem->id; ?>" rel="nofollow">
                     <?php echo Ui::get_material_symbol('folder_zip', T_('Batch download')); ?>

@@ -35,6 +35,7 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\Plugin;
@@ -44,9 +45,14 @@ use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Plugin\AmpacheLastfm;
 use Ampache\Plugin\Ampachelibrefm;
 use Ampache\Plugin\PluginDisplayOnFooterInterface;
+use Ampache\Repository\CollectionRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 
 /**
  * A collection of methods related to the user interface
@@ -76,6 +82,15 @@ class Ui implements UiInterface
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly MetadataFieldRepositoryInterface $metadataFieldRepository,
+        private readonly AjaxUriRetrieverInterface $ajaxUriRetriever,
+        private readonly CollectionRepositoryInterface $collectionRepository,
+        private readonly EnvironmentInterface $environment,
+        private readonly FolderRepositoryInterface $folderRepository,
+        private readonly LibraryItemLoaderInterface $libraryItemLoader,
+        private readonly PlaylistLoaderInterface $playlistLoader,
+        private readonly PrivateMessageRepositoryInterface $privateMessageRepository,
+        private readonly VideoRepositoryInterface $videoRepository,
+        private readonly ZipHandlerInterface $zipHandler,
     ) {}
 
     /**
@@ -83,11 +98,17 @@ class Ui implements UiInterface
      *
      * Does some trickery with the output buffer to return the output of a
      * template.
+     *
+     * @param array<string, mixed> $context values the template renders with
      */
-    public static function ajax_include(string $template): string
+    public static function ajax_include(string $template, array $context = []): string
     {
+        $templatePath = self::find_template('') . $template;
+
         ob_start();
-        require self::find_template('') . $template;
+        extract($context);
+
+        require $templatePath;
         $output = ob_get_contents();
         ob_end_clean();
 
@@ -475,6 +496,59 @@ class Ui implements UiInterface
     }
 
     /**
+     * make_fragment_self_contained
+     *
+     * One ajax response is not one piece of markup: a handler fills a $results map and each entry is
+     * dropped into a different element. get_material_symbol only emits an icon's <symbol> on the first
+     * use in the *request* though, so the definition lands in whichever fragment rendered that icon
+     * first and its siblings carry a bare <use>. They draw, because the id is somewhere in the
+     * document -- right up until a later action replaces the fragment holding the definition, and
+     * every other reference to it goes blank.
+     *
+     * So hand each fragment the definitions it references but does not carry, and none of them depends
+     * on another one surviving. Only the gaps are filled, so this costs nothing for the fragment that
+     * already emitted them inline.
+     */
+    public static function make_fragment_self_contained(string $html): string
+    {
+        if (!str_contains($html, '#ms-')) {
+            return $html;
+        }
+
+        // one match per <use> even though the tag carries both href and xlink:href
+        if (!preg_match_all('/<use\s[^>]*href="#ms-([^"]+)"/', $html, $used)) {
+            return $html;
+        }
+
+        $missing = array_unique($used[1]);
+        if (preg_match_all('/<symbol\s+id="ms-([^"]+)"/', $html, $held)) {
+            $missing = array_diff($missing, $held[1]);
+        }
+
+        $symbols = '';
+        foreach ($missing as $symbol_key) {
+            $symbol = self::$_symbol_cache[$symbol_key] ?? null;
+            if ($symbol === null) {
+                continue;
+            }
+
+            $viewbox = ($symbol['viewbox'] !== '')
+                ? ' viewBox="' . $symbol['viewbox'] . '"'
+                : '';
+            $symbols .= '<symbol id="ms-' . scrub_out($symbol_key) . '"' . $viewbox . '>' . $symbol['inner'] . '</symbol>';
+        }
+
+        if ($symbols === '') {
+            return $html;
+        }
+
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">'
+            . $symbols
+            . '</svg>'
+            . $html;
+    }
+
+    /**
      * material_symbol_sprite
      *
      * Returns a single hidden <svg> sprite containing one <symbol> per
@@ -804,8 +878,15 @@ class Ui implements UiInterface
     public function accessDenied(string $error = 'Access Denied'): void
     {
         // Clear any buffered crap
-        ob_end_clean();
-        header('HTTP/1.1 403 ' . $error);
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        // A handler that already flushed its buffer has sent the headers, so setting the status here
+        // would only raise "headers already sent". showErrorPage() guards the same way.
+        if (!headers_sent()) {
+            header('HTTP/1.1 403 ' . $error);
+        }
         require_once self::find_template('show_denied.inc.php');
     }
 
@@ -1630,6 +1711,17 @@ class Ui implements UiInterface
             exit;
         }
 
+        // header.inc.php and everything it requires render in this scope, so the services they use are named here
+        $ajaxUriRetriever         = $this->ajaxUriRetriever;
+        $collectionRepository     = $this->collectionRepository;
+        $environment              = $this->environment;
+        $folderRepository         = $this->folderRepository;
+        $libraryItemLoader        = $this->libraryItemLoader;
+        $playlistLoader           = $this->playlistLoader;
+        $privateMessageRepository = $this->privateMessageRepository;
+        $videoRepository          = $this->videoRepository;
+        $zipHandler               = $this->zipHandler;
+
         require_once self::find_template('header.inc.php');
     }
 
@@ -1663,5 +1755,18 @@ class Ui implements UiInterface
     public function showQueryStats(): void
     {
         require self::find_template('show_query_stats.inc.php');
+    }
+
+    public function showRightbar(): string
+    {
+        return self::ajax_include(
+            'rightbar.inc.php',
+            [
+                'collectionRepository' => $this->collectionRepository,
+                'libraryItemLoader' => $this->libraryItemLoader,
+                'playlistLoader' => $this->playlistLoader,
+                'zipHandler' => $this->zipHandler,
+            ]
+        );
     }
 }

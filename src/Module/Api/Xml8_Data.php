@@ -668,7 +668,7 @@ final class Xml8_Data
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($folder->getId(), 'folder');
 
-            $string .= "<folder id=\"" . $folder->getId() . "\">\n\t<name><![CDATA[" . $folder->get_fullname() . "]]></name>\n\t<parent>" . $folder->parent . "</parent>\n\t<path><![CDATA[" . $folder->path_name . "]]></path>\n\t<catalog>" . $folder->catalog . "</catalog>\n\t<items>" . (int) $folder->object_count . "</items>\n\t<playable>" . ($folder->playable ? '1' : '0') . "</playable>\n\t<art><![CDATA[" . Art::url($folder->getId(), 'folder', $auth) . "]]></art>\n\t<has_art>" . ($folder->has_art() ? '1' : '0') . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? '') . "</averagerating>\n</folder>\n";
+            $string .= "<folder id=\"" . $folder->getId() . "\">\n\t<name><![CDATA[" . $folder->get_fullname() . "]]></name>\n\t<parent>" . $folder->getParentId() . "</parent>\n\t<path><![CDATA[" . $folder->path_name . "]]></path>\n\t<catalog>" . $folder->catalog . "</catalog>\n\t<items>" . (int) $folder->object_count . "</items>\n\t<playable>" . ($folder->playable ? '1' : '0') . "</playable>\n\t<art><![CDATA[" . Art::url($folder->getId(), 'folder', $auth) . "]]></art>\n\t<has_art>" . ($folder->has_art() ? '1' : '0') . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? '') . "</averagerating>\n</folder>\n";
         }
 
         return Api::output_xml($string, $full_xml);
@@ -698,7 +698,7 @@ final class Xml8_Data
         $xml_folder = $xml->addChild('folder');
         $xml_folder->addAttribute('id', (string) $folder->getId());
         $xml_folder->addChild('title', str_replace('&', '&amp;', (string) $folder->get_fullname()));
-        $xml_folder->addChild('parent', (string) $folder->parent);
+        $xml_folder->addChild('parent', (string) $folder->getParentId());
         $xml_folder->addChild('path', str_replace('&', '&amp;', (string) $folder->path_name));
         $xml_folder->addChild('catalog', (string) $folder->catalog);
         $xml_items = $xml_folder->addChild('items');

@@ -31,8 +31,8 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Preference;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -48,7 +48,7 @@ final class IndexMethod implements MethodInterface
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     /**
@@ -132,7 +132,7 @@ final class IndexMethod implements MethodInterface
         $hide    = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1)
             || AmpConfig::get('hide_search', false);
 
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
 
         $browse->set_user_id($user);
 

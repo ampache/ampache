@@ -8,11 +8,10 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\VideoRepositoryInterface;
 
-global $dic;
+/** @var VideoRepositoryInterface $videoRepository */
 
 $web_path = AmpConfig::get_web_path('/client');
 
-$videoRepository = $dic->get(VideoRepositoryInterface::class);
 $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
 $albumString     = (AmpConfig::get('album_group'))
     ? 'album'

@@ -29,7 +29,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
@@ -46,6 +46,7 @@ final readonly class CollectionAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private CollectionRepositoryInterface $collectionRepository,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function handle(User $user): void
@@ -172,7 +173,7 @@ final readonly class CollectionAjaxHandler implements AjaxHandlerInterface
                 $browse_id  = (int) $this->requestParser->getFromRequest('browse_id');
                 $object_ids = $collection->get_items();
                 ob_start();
-                $browse = new Browse($browse_id);
+                $browse = $this->browseFactory->create($browse_id);
                 $browse->set_type('collection_items');
                 $browse->add_supplemental_object('collection', $collection);
                 $browse->save_objects($object_ids);

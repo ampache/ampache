@@ -29,7 +29,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
@@ -42,7 +42,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 class GenreAlbumsMethodTest extends MockeryTestCase
 {
-    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private BrowseFactoryInterface|MockInterface|null $browseFactory;
     private ?GenreAlbumsMethod $subject;
 
     /**
@@ -82,10 +82,10 @@ class GenreAlbumsMethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->browseFactory = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new GenreAlbumsMethod(
-            $this->modelFactory
+            $this->browseFactory
         );
     }
 }

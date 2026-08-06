@@ -32,8 +32,10 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -44,12 +46,14 @@ use Psr\Log\LoggerInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface&MockInterface $browseFactory;
     private ConfigContainerInterface&MockInterface $configContainer;
     private LoggerInterface&MockInterface $logger;
     private ModelFactoryInterface&MockInterface $modelFactory;
     private PrivilegeCheckerInterface&MockInterface $privilegeChecker;
     private ShowAction $subject;
     private UiInterface&MockInterface $ui;
+    private ZipHandlerInterface&MockInterface $zipHandler;
 
     public function testRunShowsAlbumEditabbleWithSingleDisc(): void
     {
@@ -278,6 +282,8 @@ class ShowActionTest extends MockeryTestCase
                     'album' => $album,
                     'isAlbumEditable' => $isEditAble,
                     'user' => $user,
+                    'zipHandler' => $this->zipHandler,
+                    'browseFactory' => $this->browseFactory,
                 ]
             )
             ->once();
@@ -347,17 +353,21 @@ class ShowActionTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
+        $this->browseFactory    = $this->mock(BrowseFactoryInterface::class);
         $this->ui               = $this->mock(UiInterface::class);
         $this->logger           = $this->mock(LoggerInterface::class);
         $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
         $this->configContainer  = $this->mock(ConfigContainerInterface::class);
+        $this->zipHandler       = $this->mock(ZipHandlerInterface::class);
 
         $this->subject = new ShowAction(
             $this->modelFactory,
             $this->ui,
             $this->logger,
             $this->privilegeChecker,
-            $this->configContainer
+            $this->configContainer,
+            $this->zipHandler,
+            $this->browseFactory
         );
     }
 
@@ -411,6 +421,8 @@ class ShowActionTest extends MockeryTestCase
                     'album' => $album,
                     'isAlbumEditable' => $isEditAble,
                     'user' => $user,
+                    'zipHandler' => $this->zipHandler,
+                    'browseFactory' => $this->browseFactory,
                 ]
             )
             ->once();

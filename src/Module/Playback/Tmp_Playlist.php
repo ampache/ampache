@@ -101,8 +101,8 @@ class Tmp_Playlist extends database_object
      */
     public static function garbage_collection(): void
     {
-        self::prune_playlists();
-        self::prune_tracks();
+        // one call sweeps both orphaned playlists and orphaned rows, so asking twice repeats two full table scans
+        self::getTmpPlaylistRepository()->collectGarbage();
     }
 
     /**
@@ -130,26 +130,6 @@ class Tmp_Playlist extends database_object
     public static function get_from_username(string $username): ?int
     {
         return self::getTmpPlaylistRepository()->findByUsername($username);
-    }
-
-    /**
-     * prune_playlists
-     * This deletes any playlists that don't have an associated session
-     */
-    public static function prune_playlists(): bool
-    {
-        self::getTmpPlaylistRepository()->collectGarbage();
-
-        return true;
-    }
-
-    /**
-     * prune_tracks
-     * This prunes tracks that don't have playlists or don't have votes
-     */
-    public static function prune_tracks(): void
-    {
-        self::getTmpPlaylistRepository()->collectGarbage();
     }
 
     /**

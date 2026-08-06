@@ -23,15 +23,15 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Playlist\Search;
+namespace Ampache\Module\Database\Search;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\Query\Search;
 
-final class PodcastSearch implements SearchInterface
+final class PodcastEpisodeSearch implements SearchInterface
 {
     /**
-     * Handles the generation of the SQL for podcast searches.
+     * Handles the generation of the SQL for podcast_episode searches.
      * @return array{
      *     base: string,
      *     join: array<string, bool>,
@@ -79,32 +79,27 @@ final class PodcastSearch implements SearchInterface
             switch ($rule[0]) {
                 case 'title':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = "NOT (`podcast`.`title` SOUNDS LIKE ?)";
-                    } else {
-                        $where[] = sprintf('`podcast`.`title` %s ?', $operator_sql);
-                    }
-
-                    $parameters[] = $input;
-                    break;
-                case 'episode_count':
-                    $where[]      = sprintf('`podcast`.`episodes` %s ?', $operator_sql);
-                    $parameters[] = $input;
-                    break;
-                case 'podcast_episode':
-                    if ($operator_sql === 'NOT SOUNDS LIKE') {
                         $where[] = "NOT (`podcast_episode`.`title` SOUNDS LIKE ?)";
                     } else {
                         $where[] = sprintf('`podcast_episode`.`title` %s ?', $operator_sql);
                     }
 
-                    $parameters[]            = $input;
-                    $join['podcast_episode'] = true;
+                    $parameters[] = $input;
+                    break;
+                case 'podcast':
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`podcast`.`title` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = sprintf('`podcast`.`title` %s ?', $operator_sql);
+                    }
+
+                    $parameters[]    = $input;
+                    $join['podcast'] = true;
                     break;
                 case 'time':
-                    $input                   = ((int) $input) * 60;
-                    $where[]                 = sprintf('`podcast_episode`.`time` %s ?', $operator_sql);
-                    $parameters[]            = $input;
-                    $join['podcast_episode'] = true;
+                    $input        = ((int) $input) * 60;
+                    $where[]      = sprintf('`podcast_episode`.`time` %s ?', $operator_sql);
+                    $parameters[] = $input;
                     break;
                 case 'state':
                     $where[] = sprintf('`podcast_episode`.`state` %s ?', $operator_sql);
@@ -119,25 +114,23 @@ final class PodcastSearch implements SearchInterface
                             $parameters[] = 'completed';
                     }
 
-                    $join['podcast_episode'] = true;
                     break;
                 case 'pubdate':
-                    $input                   = strtotime((string) $input);
-                    $where[]                 = sprintf('`podcast_episode`.`pubdate` %s ?', $operator_sql);
-                    $parameters[]            = $input;
-                    $join['podcast_episode'] = true;
+                    $input        = strtotime((string) $input);
+                    $where[]      = sprintf('`podcast_episode`.`pubdate` %s ?', $operator_sql);
+                    $parameters[] = $input;
                     break;
                 case 'rating':
                     // average ratings only
                     $where[]          = sprintf('IFNULL(`average_rating`.`avg`, 0) %s ?', $operator_sql);
                     $parameters[]     = $input;
-                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='podcast' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `podcast`.`id` ";
+                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='podcast' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `podcast_episode`.`id` ";
                     break;
                 case 'favorite':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = "NOT (`podcast`.`title` SOUNDS LIKE ? AND `favorite_podcast_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_podcast_" . $search_user_id . "`.`object_type` = 'podcast')";
+                        $where[] = "NOT (`podcast_episode`.`title` SOUNDS LIKE ? AND `favorite_podcast_episode_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_podcast_episode_" . $search_user_id . "`.`object_type` = 'podcast_episode')";
                     } else {
-                        $where[] = sprintf('`podcast`.`title` %s ? AND `favorite_podcast_', $operator_sql) . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_podcast_" . $search_user_id . "`.`object_type` = 'podcast'";
+                        $where[] = sprintf('`podcast_episode`.`title` %s ? AND `favorite_podcast_episode_', $operator_sql) . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_podcast_episode_" . $search_user_id . "`.`object_type` = 'podcast_episode'";
                     }
 
                     $parameters = array_merge($parameters, [$input]);
@@ -146,17 +139,17 @@ final class PodcastSearch implements SearchInterface
                         $table['favorite'] = '';
                     }
 
-                    $table['favorite'] .= (strpos($table['favorite'], "favorite_podcast_" . $search_user_id))
+                    $table['favorite'] .= (strpos($table['favorite'], "favorite_podcast_episode_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search_user_id . ") AS `favorite_podcast_" . $search_user_id . "` ON `podcast`.`id` = `favorite_podcast_" . $search_user_id . "`.`object_id` AND `favorite_podcast_" . $search_user_id . "`.`object_type` = 'podcast'";
+                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search_user_id . ") AS `favorite_podcast_episode_" . $search_user_id . "` ON `podcast_episode`.`id` = `favorite_podcast_episode_" . $search_user_id . "`.`object_id` AND `favorite_podcast_episode_" . $search_user_id . "`.`object_type` = 'podcast_episode'";
                     break;
                 case 'myrating':
                 case 'podcastrating':
                 case 'podcast_episoderating':
                     // combine these as they all do the same thing just different tables
                     $looking = str_replace('rating', '', $rule[0]);
-                    $column  = ($looking == 'my' || $looking == 'podcast') ? '`podcast`.`id`' : '`podcast_episode`.`id`';
-                    $my_type = ($looking == 'my' || $looking == 'podcast') ? 'podcast' : $looking;
+                    $column  = ($looking == 'my' || $looking == 'podcast_episode') ? '`podcast_episode`.`id`' : '`podcast`.`id`';
+                    $my_type = ($looking == 'my' || $looking == 'podcast_episode') ? 'podcast_episode' : $looking;
                     if ($input == 0 && $operator_sql == '>=') {
                         break;
                     }
@@ -181,8 +174,8 @@ final class PodcastSearch implements SearchInterface
                     $table['rating'] .= (strpos($table['rating'], "rating_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = " . $search_user_id . " AND `object_type` = '" . $my_type . "') AS `rating_" . $my_type . "_" . $search_user_id . "` ON `rating_" . $my_type . "_" . $search_user_id . ('`.`object_id` = ' . $column);
-                    if ($my_type == 'podcast_episode') {
-                        $join['podcast_episode'] = true;
+                    if ($my_type == 'podcast') {
+                        $join['podcast'] = true;
                     }
 
                     break;
@@ -202,8 +195,8 @@ final class PodcastSearch implements SearchInterface
                         ? ""
                         : "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user_flag`.`object_type` = '" . $my_type . "' AND `user_flag`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `my_flagged__" . $my_type . "_" . $search_user_id . "` ON `" . $my_type . sprintf('`.`%s` = `my_flagged__', $column) . $my_type . "_" . $search_user_id . "`.`object_id` AND `my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[] = "`my_flagged__" . $my_type . "_" . $search_user_id . ('`.`object_id` ' . $operator_sql);
-                    if ($my_type == 'podcast_episode') {
-                        $join['podcast_episode'] = true;
+                    if ($my_type == 'podcast') {
+                        $join['podcast'] = true;
                     }
 
                     break;
@@ -212,29 +205,28 @@ final class PodcastSearch implements SearchInterface
                     $my_type      = str_replace('weight_', '', $rule[0]);
                     $where[]      = "`" . $my_type . sprintf('`.`weight` %s ?', $operator_sql);
                     $parameters[] = $input;
-                    if ($my_type == 'podcast_episode') {
-                        $join['podcast_episode'] = true;
+                    if ($my_type == 'podcast') {
+                        $join['podcast'] = true;
                     }
 
                     break;
                 case 'recent_played':
                     $key                     = md5($input . $operator_sql);
                     $where[]                 = sprintf('`played_%s`.`object_id` IS NOT NULL', $key);
-                    $table['played_' . $key] = sprintf("LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'podcast' ORDER BY %s DESC LIMIT ", $operator_sql) . (int) $input . sprintf(') AS `played_%s` ON `podcast`.`id` = `played_%s`.`object_id`', $key, $key);
+                    $table['played_' . $key] = sprintf("LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'podcast_episode' ORDER BY %s DESC LIMIT ", $operator_sql) . (int) $input . sprintf(') AS `played_%s` ON `podcast_episode`.`id` = `played_%s`.`object_id`', $key, $key);
                     break;
                 case 'played':
-                    $where[]                 = sprintf("`podcast_episode`.`played` = '%s'", $operator_sql);
-                    $join['podcast_episode'] = true;
+                    $where[] = sprintf("`podcast_episode`.`played` = '%s'", $operator_sql);
                     break;
                 case 'last_play':
-                    $my_type = 'podcast';
+                    $my_type = 'podcast_episode';
                     if (!array_key_exists('last_play', $table)) {
                         $table['last_play'] = '';
                     }
 
                     $table['last_play'] .= (strpos($table['last_play'], "last_play_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream'], $search_user_id) . " AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `podcast`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
+                        : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream'], $search_user_id) . " AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[] = "`last_play_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'last_skip':
@@ -246,8 +238,7 @@ final class PodcastSearch implements SearchInterface
                     $table['last_skip'] .= (strpos($table['last_skip'], "last_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['skip'], $search_user_id) . " AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' ";
-                    $where[]                 = "`last_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
-                    $join['podcast_episode'] = true;
+                    $where[] = "`last_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'last_play_or_skip':
                     $my_type = 'podcast_episode';
@@ -258,42 +249,35 @@ final class PodcastSearch implements SearchInterface
                     $table['last_play_or_skip'] .= (strpos($table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream', 'skip'], $search_user_id) . " AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
-                    $where[]                 = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
-                    $join['podcast_episode'] = true;
+                    $where[] = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'days_added':
-                    $where[]                 = sprintf('`podcast_episode`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
-                    $join['podcast_episode'] = true;
+                    $where[] = sprintf('`podcast_episode`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'days_updated':
-                    $where[]                 = sprintf('`podcast_episode`.`update_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
-                    $join['podcast_episode'] = true;
+                    $where[] = sprintf('`podcast_episode`.`update_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'played_times':
-                    $where[]      = sprintf('(`podcast`.`total_count` %s ?)', $operator_sql);
+                    $where[]      = sprintf('(`podcast_episode`.`total_count` %s ?)', $operator_sql);
                     $parameters[] = $input;
                     break;
                 case 'skipped_times':
-                    $where[]      = sprintf('(`podcast`.`total_skip` %s ?)', $operator_sql);
-                    $parameters[] = $input;
-                    break;
-                case 'id':
-                    $where[]      = sprintf('(`podcast`.`id` %s ?)', $operator_sql);
+                    $where[]      = sprintf('(`podcast_episode`.`total_skip` %s ?)', $operator_sql);
                     $parameters[] = $input;
                     break;
                 case 'played_or_skipped_times':
-                    $where[]      = sprintf('((`podcast`.`total_count` + `podcast`.`total_skip`) %s ?)', $operator_sql);
+                    $where[]      = sprintf('((`podcast_episode`.`total_count` + `podcast_episode`.`total_skip`) %s ?)', $operator_sql);
                     $parameters[] = $input;
                     break;
                 case 'myplayed_times':
-                    $my_type = 'podcast';
+                    $my_type = 'podcast_episode';
                     if (!array_key_exists('myplayed', $table)) {
                         $table['myplayed'] = '';
                     }
 
                     $table['myplayed'] .= (strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN " . PlayHistorySubquery::count($my_type, ['stream'], $search_user_id) . " AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `podcast`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
+                        : "LEFT JOIN " . PlayHistorySubquery::count($my_type, ['stream'], $search_user_id) . " AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[]      = "`myplayed_" . $my_type . "_" . $search_user_id . sprintf('`.`total` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
@@ -306,9 +290,8 @@ final class PodcastSearch implements SearchInterface
                     $table['myskipped'] .= (strpos($table['myskipped'], "myskipped_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::count($my_type, ['skip'], $search_user_id) . " AS `myskipped_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myskipped_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myskipped_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' ";
-                    $where[]                 = "`myskipped_" . $my_type . "_" . $search_user_id . sprintf('`.`total` %s ?', $operator_sql);
-                    $parameters[]            = $input;
-                    $join['podcast_episode'] = true;
+                    $where[]      = "`myskipped_" . $my_type . "_" . $search_user_id . sprintf('`.`total` %s ?', $operator_sql);
+                    $parameters[] = $input;
                     break;
                 case 'myplayed_or_skipped_times':
                     $my_type = 'podcast_episode';
@@ -319,29 +302,28 @@ final class PodcastSearch implements SearchInterface
                     $table['myplayed_or_skip'] .= (strpos($table['myplayed_or_skip'], "myplayed_or_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::count($my_type, ['stream', 'skip'], $search_user_id) . " AS `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
-                    $where[]                 = "`myplayed_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`total` %s ?', $operator_sql);
-                    $parameters[]            = $input;
-                    $join['podcast_episode'] = true;
+                    $where[]      = "`myplayed_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`total` %s ?', $operator_sql);
+                    $parameters[] = $input;
                     break;
                 case 'play_skip_ratio':
-                    $where[]      = sprintf('(((`podcast`.`total_count`/`podcast`.`total_skip`) * 100) %s ?)', $operator_sql);
+                    $where[]      = sprintf('(((`podcast_episode`.`total_count`/`podcast_episode`.`total_skip`) * 100) %s ?)', $operator_sql);
                     $parameters[] = $input;
                     break;
                 case 'other_user':
                     $other_userid = (int) $input;
                     if ($operator_sql == 'userflag') {
-                        $where[] = sprintf("`favorite_podcast_%s`.`user` = %s AND `favorite_podcast_%s`.`object_type` = 'podcast'", $other_userid, $other_userid, $other_userid);
+                        $where[] = sprintf("`favorite_podcast_episode_%s`.`user` = %s AND `favorite_podcast_episode_%s`.`object_type` = 'podcast_episode'", $other_userid, $other_userid, $other_userid);
                         // flag once per user
                         if (!array_key_exists('favorite', $table)) {
                             $table['favorite'] = '';
                         }
 
-                        $table['favorite'] .= (strpos($table['favorite'], 'favorite_podcast_' . $other_userid))
+                        $table['favorite'] .= (strpos($table['favorite'], 'favorite_podcast_episode_' . $other_userid))
                             ? ""
-                            : sprintf("LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = %s) AS `favorite_podcast_%s` ON `podcast`.`id` = `favorite_podcast_%s`.`object_id` AND `favorite_podcast_%s`.`object_type` = 'podcast'", $other_userid, $other_userid, $other_userid, $other_userid);
+                            : sprintf("LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = %s) AS `favorite_podcast_episode_%s` ON `podcast_episode`.`id` = `favorite_podcast_episode_%s`.`object_id` AND `favorite_podcast_episode_%s`.`object_type` = 'podcast_episode'", $other_userid, $other_userid, $other_userid, $other_userid);
                     } else {
                         $column  = 'id';
-                        $my_type = 'podcast';
+                        $my_type = 'podcast_episode';
                         $unrated = ($operator_sql == 'unrated');
                         $where[] = ($unrated) ? "`" . $my_type . sprintf("`.`%s` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '", $column) . $my_type . sprintf("' AND `rating`.`user` = %s)", $other_userid) : "`rating_" . $my_type . "_" . $other_userid . sprintf('`.%s AND `rating_', $operator_sql) . $my_type . "_" . $other_userid . sprintf('`.`user` = %s AND `rating_', $other_userid) . $my_type . "_" . $other_userid . "`.`object_type` = '" . $my_type . "'";
                         // rating once per user
@@ -356,7 +338,7 @@ final class PodcastSearch implements SearchInterface
 
                     break;
                 case 'myplayed':
-                    $my_type      = 'podcast';
+                    $my_type      = 'podcast_episode';
                     $operator_sql = ((int) $operator_sql === 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
                     if (!array_key_exists('myplayed', $table)) {
@@ -365,20 +347,22 @@ final class PodcastSearch implements SearchInterface
 
                     $table['myplayed'] .= (strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN " . PlayHistorySubquery::exists($my_type, ['stream'], $search_user_id) . " AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `podcast`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
+                        : "LEFT JOIN " . PlayHistorySubquery::exists($my_type, ['stream'], $search_user_id) . " AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[] = "`myplayed_" . $my_type . "_" . $search_user_id . ('`.`object_id` ' . $operator_sql);
                     break;
                 case 'added':
-                    $input                   = strtotime((string) $input);
-                    $where[]                 = sprintf('`podcast_episode`.`addition_time` %s ?', $operator_sql);
-                    $parameters[]            = $input;
-                    $join['podcast_episode'] = true;
+                    $input        = strtotime((string) $input);
+                    $where[]      = sprintf('`podcast_episode`.`addition_time` %s ?', $operator_sql);
+                    $parameters[] = $input;
                     break;
                 case 'updated':
-                    $input                   = strtotime((string) $input);
-                    $where[]                 = sprintf('`podcast_episode`.`update_time` %s ?', $operator_sql);
-                    $parameters[]            = $input;
-                    $join['podcast_episode'] = true;
+                    $input        = strtotime((string) $input);
+                    $where[]      = sprintf('`podcast_episode`.`update_time` %s ?', $operator_sql);
+                    $parameters[] = $input;
+                    break;
+                case 'id':
+                    $where[]      = sprintf('`podcast_episode`.`id` %s ?', $operator_sql);
+                    $parameters[] = $input;
                     break;
                 case 'file':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
@@ -387,8 +371,7 @@ final class PodcastSearch implements SearchInterface
                         $where[] = sprintf('`podcast_episode`.`file` %s ?', $operator_sql);
                     }
 
-                    $parameters[]            = $input;
-                    $join['podcast_episode'] = true;
+                    $parameters[] = $input;
                     break;
                 default:
                     debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
@@ -401,12 +384,12 @@ final class PodcastSearch implements SearchInterface
 
         $where_sql = implode(sprintf(' %s ', $sql_logic_operator), $where);
 
-        if (array_key_exists('podcast_episode', $join)) {
-            $table['0_podcast'] = "LEFT JOIN `podcast_episode` ON `podcast_episode`.`podcast` = `podcast`.`id`";
+        if (array_key_exists('podcast', $join)) {
+            $table['0_podcast'] = "LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast`";
         }
 
         if ($join['catalog']) {
-            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `podcast`.`catalog`";
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `podcast_episode`.`catalog`";
             if ($catalog_disable) {
                 if ($where_sql !== '' && $where_sql !== '0') {
                     $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
@@ -418,9 +401,9 @@ final class PodcastSearch implements SearchInterface
 
         if ($search->catalog_id) {
             if ($where_sql !== '' && $where_sql !== '0') {
-                $where_sql = "(" . $where_sql . ") AND `podcast`.`catalog` = " . $search->catalog_id;
+                $where_sql = "(" . $where_sql . ") AND `podcast_episode`.`catalog` = " . $search->catalog_id;
             } else {
-                $where_sql = "`podcast`.`catalog` = " . $search->catalog_id;
+                $where_sql = "`podcast_episode`.`catalog` = " . $search->catalog_id;
             }
         }
 
@@ -442,7 +425,7 @@ final class PodcastSearch implements SearchInterface
         $having_sql = implode(sprintf(' %s ', $sql_logic_operator), $having);
 
         return [
-            'base' => 'SELECT DISTINCT(`podcast`.`id`), `podcast`.`title`, `podcast`.`weight` FROM `podcast`',
+            'base' => 'SELECT DISTINCT(`podcast_episode`.`id`), `podcast_episode`.`pubdate`, `podcast_episode`.`time`, `podcast_episode`.`weight` FROM `podcast_episode`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

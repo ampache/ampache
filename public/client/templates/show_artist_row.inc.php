@@ -31,15 +31,14 @@ use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 
-global $dic;
-$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+/** @var GuiGatekeeperInterface $gatekeeper */
 
 /** @var Ampache\Repository\Model\Artist $libitem */
 /** @var Ampache\Module\Database\Query\Browse|null $browse */

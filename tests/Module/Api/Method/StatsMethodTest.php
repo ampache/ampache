@@ -33,6 +33,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -51,6 +52,7 @@ class StatsMethodTest extends MockeryTestCase
 {
     private AlbumRepositoryInterface|MockInterface|null $albumRepository;
     private ArtistRepositoryInterface|MockInterface|null $artistRepository;
+    private BrowseFactoryInterface&MockInterface $browseFactory;
     private ConfigContainerInterface|MockInterface|null $configContainer;
     private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?StatsMethod $subject;
@@ -184,16 +186,18 @@ class StatsMethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->albumRepository  = $this->mock(AlbumRepositoryInterface::class);
-        $this->artistRepository = $this->mock(ArtistRepositoryInterface::class);
-        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
+        $this->albumRepository   = $this->mock(AlbumRepositoryInterface::class);
+        $this->artistRepository  = $this->mock(ArtistRepositoryInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
+        $this->browseFactory     = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new StatsMethod(
             $this->albumRepository,
             $this->artistRepository,
             $this->configContainer,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->browseFactory
         );
     }
 }

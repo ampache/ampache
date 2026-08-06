@@ -26,16 +26,21 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UrlToSong3Method
- */
-final class UrlToSong3Method
+final class UrlToSong3Method implements MethodInterface
 {
     public const string ACTION = 'url_to_song';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * url_to_song
@@ -47,13 +52,25 @@ final class UrlToSong3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function url_to_song(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $charset  = AmpConfig::get('site_charset', 'UTF-8');
         $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
         $url_data = Stream_Url::parse($song_url);
         ob_end_clean();
-        echo Xml3_Data::songs([(int) ($url_data['id'] ?? 0)], $user, $input['auth']);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, [(int) ($url_data['id'] ?? 0)], $user, $input['auth'])
+            )
+        );
     }
 }

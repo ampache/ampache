@@ -33,7 +33,7 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -46,13 +46,12 @@ use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 
-global $dic;
-
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var bool $isAlbumEditable */
+/** @var ZipHandlerInterface $zipHandler */
 /** @var User|null $current_user */
 
 $current_user = $current_user ?? Core::get_global('user');
-$zipHandler   = $dic->get(ZipHandlerInterface::class);
 $batch_dl     = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 $zip_albumD   = $batch_dl && $zipHandler->isZipable('album_disk');
 // Title for this album
@@ -280,7 +279,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
 </div>
 <div id='reordered_list_<?php echo $albumDisk->id; ?>'>
 <?php
-    $browse = new Browse();
+    $browse = $browseFactory->create();
 $browse->set_type('song');
 $browse->set_simple_browse(true);
 $browse->set_skip_catalog_check(true);

@@ -28,10 +28,10 @@ namespace Ampache\Module\Application\Stats;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -43,7 +43,7 @@ final readonly class ShareAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private ConfigContainerInterface $configContainer,
         private ShareRepositoryInterface $shareRepository,
     ) {}
@@ -80,7 +80,7 @@ final readonly class ShareAction implements ApplicationActionInterface
             ? $this->shareRepository->getIdsByUser($user)
             : [];
         if ($object_ids !== []) {
-            $browse = $this->modelFactory->createBrowse();
+            $browse = $this->browseFactory->create();
             $browse->set_type('share');
             $browse->set_static_content(true);
             $browse->save_objects($object_ids);
@@ -91,7 +91,7 @@ final readonly class ShareAction implements ApplicationActionInterface
 
             show_table_render(false, true);
         } else {
-            echo T_('No records found');
+            echo T_('Found nothing to show');
         }
 
         $this->ui->showQueryStats();

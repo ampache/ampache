@@ -29,8 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LicenseRepositoryInterface;
 
-global $dic;
-$licenseRepository = $dic->get(LicenseRepositoryInterface::class);
+/** @var LicenseRepositoryInterface $licenseRepository */
 
 /** @var list<int> $object_ids */
 
@@ -67,7 +66,7 @@ $t_delete   = T_('Delete'); ?>
         } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="6" class="error"><?php echo T_('No licenses found'); ?></td>
+            <td colspan="6" class="error"><?php echo T_('Found nothing to show'); ?></td>
         </tr>
         <?php } ?>
     </tbody>

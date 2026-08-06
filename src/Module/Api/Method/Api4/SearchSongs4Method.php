@@ -26,58 +26,60 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class SearchSongs4Method
+ * Returns the songs matching a search string anywhere.
  */
-final class SearchSongs4Method
+final class SearchSongs4Method implements MethodInterface
 {
     public const string ACTION = 'search_songs';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * search_songs
-     * MINIMUM_API_VERSION=380001
-     *
-     * This searches the songs and returns... songs
-     *
-     * filter = (string) Alpha-numeric search term
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
      * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function search_songs(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $data                    = [];
-        $data['type']            = 'song';
-        $data['rule_1']          = 'anywhere';
-        $data['rule_1_input']    = $input['filter'];
-        $data['rule_1_operator'] = 0;
-
-        $search_sql = Search::prepare($data, $user);
-        $query      = Search::query($search_sql);
-        $results    = $query['results'];
-
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json4_Data::set_offset($input['offset'] ?? 0);
-                Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::songs($results, $user, $input['auth']);
-                break;
-            default:
-                Xml4_Data::set_offset($input['offset'] ?? 0);
-                Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::songs($results, $user, $input['auth']);
+            return $response;
         }
 
-        return true;
+        $query = Search::query(Search::prepare(
+            [
+                'type' => 'song',
+                'rule_1' => 'anywhere',
+                'rule_1_input' => $input['filter'] ?? '',
+                'rule_1_operator' => 0,
+            ],
+            $user
+        ));
+
+        $results = $query['results'];
+
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

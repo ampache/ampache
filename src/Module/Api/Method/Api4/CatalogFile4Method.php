@@ -27,6 +27,9 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
@@ -37,11 +40,9 @@ use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class CatalogFile4Method
- */
-final class CatalogFile4Method
+final class CatalogFile4Method implements MethodInterface
 {
     public const string ACTION = 'catalog_file';
 
@@ -64,39 +65,46 @@ final class CatalogFile4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function catalog_file(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['catalog', 'file', 'task'], self::ACTION)) {
-            return false;
+            return $response;
         }
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, 'catalog_file', $input['api_format'])) {
-            return false;
+            return $response;
         }
         $task = (string) $input['task'];
         if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
             Api4::message('error', 'Access Denied: delete from disk is not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         $file = html_entity_decode($input['file']);
         // confirm the correct data
         if (!in_array($task, ['add', 'clean', 'verify', 'remove'])) {
             Api4::message('error', 'Incorrect file task' . ' ' . $task, '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!file_exists($file) && $task !== 'clean') {
             Api4::message('error', 'File not found' . ' ' . $file, '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
         $catalog_id = (int) $input['catalog'];
         $catalog    = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
             Api4::message('error', 'Catalog not found' . ' ' . $catalog_id, '404', $input['api_format']);
 
-            return false;
+            return $response;
         }
         switch ($catalog->gather_types) {
             case 'podcast':
@@ -141,6 +149,6 @@ final class CatalogFile4Method
             Api4::message('error', 'The requested catalog was not found', '404', $input['api_format']);
         }
 
-        return true;
+        return $response;
     }
 }

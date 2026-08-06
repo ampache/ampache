@@ -44,20 +44,26 @@ final class SubsonicApiApplication implements ApiApplicationInterface
     private AuthenticationManagerInterface $authenticationManager;
     private LoggerInterface $logger;
     private NetworkCheckerInterface $networkChecker;
+    private OpenSubsonic_Api $openSubsonicApi;
     private ServerRequestCreatorInterface $serverRequestCreator;
+    private Subsonic_Api $subsonicApi;
     private UserRepositoryInterface $userRepository;
 
     public function __construct(
         AuthenticationManagerInterface $authenticationManager,
         LoggerInterface $logger,
         NetworkCheckerInterface $networkChecker,
+        OpenSubsonic_Api $openSubsonicApi,
         ServerRequestCreatorInterface $serverRequestCreator,
+        Subsonic_Api $subsonicApi,
         UserRepositoryInterface $userRepository,
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->logger                = $logger;
         $this->networkChecker        = $networkChecker;
+        $this->openSubsonicApi       = $openSubsonicApi;
         $this->serverRequestCreator  = $serverRequestCreator;
+        $this->subsonicApi           = $subsonicApi;
         $this->userRepository        = $userRepository;
     }
 
@@ -240,7 +246,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             ob_end_clean();
-            Subsonic_Api::error($query, Subsonic_Api::SSERROR_UNAUTHORIZED, $action);
+            $this->subsonicApi->error($query, Subsonic_Api::SSERROR_UNAUTHORIZED, $action);
 
             return;
         }
@@ -299,9 +305,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             );
 
             if ($subsonic_legacy) {
-                Subsonic_Api::error($query, Subsonic_Api::SSERROR_MISSINGPARAM, $action);
+                $this->subsonicApi->error($query, Subsonic_Api::SSERROR_MISSINGPARAM, $action);
             } else {
-                OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_MISSINGPARAM, $action);
+                $this->openSubsonicApi->error($query, OpenSubsonic_Api::SSERROR_MISSINGPARAM, $action);
             }
 
             return;
@@ -317,11 +323,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             if ($subsonic_legacy) {
-                Subsonic_Api::error($query, Subsonic_Api::SSERROR_BADAUTH, $action);
+                $this->subsonicApi->error($query, Subsonic_Api::SSERROR_BADAUTH, $action);
             } elseif ($apiKey) {
-                OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAPIKEY, $action);
+                $this->openSubsonicApi->error($query, OpenSubsonic_Api::SSERROR_BADAPIKEY, $action);
             } else {
-                OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAUTH, $action);
+                $this->openSubsonicApi->error($query, OpenSubsonic_Api::SSERROR_BADAUTH, $action);
             }
 
             return;
@@ -347,11 +353,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             );
             ob_end_clean();
             if ($subsonic_legacy) {
-                Subsonic_Api::error($query, Subsonic_Api::SSERROR_BADAUTH, $action);
+                $this->subsonicApi->error($query, Subsonic_Api::SSERROR_BADAUTH, $action);
             } elseif ($apiKey) {
-                OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAPIKEY, $action);
+                $this->openSubsonicApi->error($query, OpenSubsonic_Api::SSERROR_BADAPIKEY, $action);
             } else {
-                OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAUTH, $action);
+                $this->openSubsonicApi->error($query, OpenSubsonic_Api::SSERROR_BADAUTH, $action);
             }
 
             return;
@@ -365,7 +371,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             ob_end_clean();
-            Subsonic_Api::error($query, Subsonic_Api::SSERROR_UNAUTHORIZED, $action);
+            $this->subsonicApi->error($query, Subsonic_Api::SSERROR_UNAUTHORIZED, $action);
 
             return;
         }
@@ -380,7 +386,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 sprintf('Requested client version %s is newer than the supported %s', $version, Subsonic_Api::API_VERSION),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-            Subsonic_Api::error($query, Subsonic_Api::SSERROR_APIVERSION_SERVER, $action);
+            $this->subsonicApi->error($query, Subsonic_Api::SSERROR_APIVERSION_SERVER, $action);
 
             return;
         }
@@ -394,10 +400,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         // handler names are folded to match: a camelCase method is otherwise unreachable through this gate.
         $os_methods = ($subsonic_legacy)
             ? []
-            : array_map('strtolower', array_diff(get_class_methods(OpenSubsonic_Api::class), OpenSubsonic_Api::SYSTEM_LIST));
+            : array_map('strtolower', array_diff(get_class_methods($this->openSubsonicApi), OpenSubsonic_Api::SYSTEM_LIST));
         // allow fallback to a pure Subsonic 1.16.1 API
         $methods = ($subsonic_legacy)
-            ? array_map('strtolower', array_diff(get_class_methods(Subsonic_Api::class), Subsonic_Api::SYSTEM_LIST))
+            ? array_map('strtolower', array_diff(get_class_methods($this->subsonicApi), Subsonic_Api::SYSTEM_LIST))
             : [];
 
         // We do not use $_GET because of multiple parameters with the same name
@@ -470,22 +476,22 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
         // Call your function if it's valid
-        $callback = [OpenSubsonic_Api::class, $action];
+        $callback = [$this->openSubsonicApi, $action];
         if (
             $os_methods !== []
             && in_array(strtolower($action), $os_methods)
-            && method_exists(OpenSubsonic_Api::class, $action)
+            && method_exists($this->openSubsonicApi, $action)
             && assert(is_callable($callback))
         ) {
             call_user_func($callback, $input, $user);
 
             return;
         }
-        $callback = [Subsonic_Api::class, $action];
+        $callback = [$this->subsonicApi, $action];
         if (
             $methods !== []
             && in_array(strtolower($action), $methods)
-            && method_exists(Subsonic_Api::class, $action)
+            && method_exists($this->subsonicApi, $action)
             && assert(is_callable($callback))
         ) {
             call_user_func($callback, $input, $user);
@@ -501,9 +507,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         if ($subsonic_legacy) {
-            Subsonic_Api::error($input, Subsonic_Api::SSERROR_GENERIC, $action);
+            $this->subsonicApi->error($input, Subsonic_Api::SSERROR_GENERIC, $action);
         } else {
-            OpenSubsonic_Api::error($input, OpenSubsonic_Api::SSERROR_GENERIC, $action);
+            $this->openSubsonicApi->error($input, OpenSubsonic_Api::SSERROR_GENERIC, $action);
         }
     }
 }

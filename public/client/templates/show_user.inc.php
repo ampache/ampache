@@ -30,7 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
@@ -48,6 +48,7 @@ use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var UserActivityRendererInterface $userActivityRenderer */
 /** @var UserFollowStateRendererInterface $userFollowStateRenderer */
 /** @var LibraryItemLoaderInterface $libraryItemLoader */
@@ -202,7 +203,7 @@ require Ui::find_template('show_recently_skipped.inc.php'); ?>
 <?php if ($allow_upload) { ?>
         <div id="artists" class="tab_content">
     <?php $sql = Catalog::get_uploads_sql('artist', $client->id);
-    $browse    = new Browse();
+    $browse    = $browseFactory->create();
     $browse->set_type('artist', $sql);
     $browse->set_simple_browse(true);
     $browse->show_objects();
@@ -213,7 +214,7 @@ require Ui::find_template('show_recently_skipped.inc.php'); ?>
 <?php
 $show_all     = ($is_user || ($current_user instanceof User && $current_user->access == 100));
 $playlist_ids = $client->get_playlists($show_all);
-$browse       = new Browse();
+$browse       = $browseFactory->create();
 $browse->set_type('playlist');
 $browse->set_use_filters(false);
 $browse->set_simple_browse(false);
@@ -222,7 +223,7 @@ $browse->store(); ?>
         </div>
 <?php if (AmpConfig::get('sociable')) { ?>
         <div id="following" class="tab_content">
-    <?php $browse = new Browse();
+    <?php $browse = $browseFactory->create();
     $browse->set_type('user');
     $browse->set_use_filters(false);
     $browse->set_simple_browse(false);
@@ -230,7 +231,7 @@ $browse->store(); ?>
     $browse->store(); ?>
         </div>
         <div id="followers" class="tab_content">
-    <?php $browse = new Browse();
+    <?php $browse = $browseFactory->create();
     $browse->set_type('user');
     $browse->set_use_filters(false);
     $browse->set_simple_browse(false);

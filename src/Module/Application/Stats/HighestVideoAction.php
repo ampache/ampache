@@ -29,9 +29,9 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,7 +42,7 @@ final readonly class HighestVideoAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private ConfigContainerInterface $configContainer,
         private VideoRepositoryInterface $videoRepository,
     ) {}
@@ -54,7 +54,10 @@ final readonly class HighestVideoAction implements ApplicationActionInterface
         $this->ui->showHeader();
         $this->ui->show(
             'show_form_highest.inc.php',
-            ['by_user' => $by_user]
+            [
+                'by_user' => $by_user,
+                'videoRepository' => $this->videoRepository
+            ]
         );
         $this->ui->showHeader();
 
@@ -69,7 +72,7 @@ final readonly class HighestVideoAction implements ApplicationActionInterface
         ) {
             $user_id = $gatekeeper->getUser()?->id;
             $objects = Rating::get_highest('video', -1, 0, $user_id, $by_user);
-            $browse  = $this->modelFactory->createBrowse();
+            $browse  = $this->browseFactory->create();
             $browse->set_type('video');
             $browse->show_objects($objects);
             $browse->store();

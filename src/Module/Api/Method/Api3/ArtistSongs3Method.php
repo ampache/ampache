@@ -25,17 +25,23 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class ArtistSongs3Method
- */
-final class ArtistSongs3Method
+final class ArtistSongs3Method implements MethodInterface
 {
     public const string ACTION = 'artist_songs';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+        private SongRepositoryInterface $songRepository,
+    ) {}
 
     /**
      * artist_songs
@@ -51,23 +57,28 @@ final class ArtistSongs3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function artist_songs(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $artist  = new Artist((int) $input['filter']);
-        $results = self::getSongRepository()->getByArtist($artist->id);
+        $results = $this->songRepository->getByArtist($artist->id);
 
         // Set the offset
-        Xml3_Data::set_offset($input['offset'] ?? 0);
-        Xml3_Data::set_limit($input['limit'] ?? 0);
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::songs($results, $user, $input['auth']);
-    }
 
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs($apiVersion, $results, $user, $input['auth'])
+            )
+        );
     }
 }

@@ -67,9 +67,17 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
     /**
      * Constructor
      */
-    public function __construct()
-    {
-        $this->description = T_("Friend's Timeline on homepage");
+    private UserActivityRendererInterface $userActivityRenderer;
+
+    private UserActivityRepositoryInterface $userActivityRepository;
+
+    public function __construct(
+        UserActivityRendererInterface $userActivityRenderer,
+        UserActivityRepositoryInterface $userActivityRepository,
+    ) {
+        $this->userActivityRenderer   = $userActivityRenderer;
+        $this->userActivityRepository = $userActivityRepository;
+        $this->description            = T_("Friend's Timeline on homepage");
     }
 
     /**
@@ -86,7 +94,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
                     ? '<div class="ftl" style="order: ' . $this->order . '">'
                     : '<div class="ftl">';
                 echo $divString;
-                $activities = $this->getUseractivityRepository()->getFriendsActivities(
+                $activities = $this->userActivityRepository->getFriendsActivities(
                     $user_id,
                     $this->maxitems
                 );
@@ -94,7 +102,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
                     Ui::show_box_top(T_('Friends Timeline'));
                     Useractivity::build_cache($activities);
 
-                    $activityRenderer = $this->getUserActivityRenderer();
+                    $activityRenderer = $this->userActivityRenderer;
 
                     foreach ($activities as $activity_id) {
                         echo $activityRenderer->show(
@@ -170,19 +178,5 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
         }
 
         return true;
-    }
-
-    private function getUserActivityRenderer(): UserActivityRendererInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityRendererInterface::class);
-    }
-
-    private function getUseractivityRepository(): UserActivityRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityRepositoryInterface::class);
     }
 }

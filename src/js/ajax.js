@@ -19,6 +19,8 @@
  *
  */
 
+import { hoistMaterialSymbols } from "./symbols.js";
+
 function hasScriptableUrlScheme(url) {
     var scheme = String(url).replace(/[\u0000-\u0020\u00a0\u1680\u2000-\u200d\u2028\u2029\u202f\u205f\u3000\ufeff]/g, "");
 
@@ -97,6 +99,17 @@ $(document).ajaxSend(function () {
 });
 $(document).ajaxComplete(function () {
     $("#ajax-loading").hide();
+});
+
+// Lift the sprite the page arrived with out of #guts before anything can replace it, then do the same
+// for every fragment that lands afterwards. ajaxComplete rather than ajaxSuccess so a handler that
+// renders an error body is covered too; both fire after the success callback has put the markup in the
+// DOM, and still inside the same task, so nothing is ever painted with a dangling <use>.
+$(document).ready(function () {
+    hoistMaterialSymbols();
+});
+$(document).ajaxComplete(function () {
+    hoistMaterialSymbols();
 });
 
 // The page currently rendered into #content, as path+search. Used to tell a real back/forward move
@@ -302,6 +315,9 @@ export function processContents(data) {
         // use id attribute selector as workaround for multiple identical IDs (e.g. rating)
         $("[id=" + $(this).attr("div")).html($(this).text());
     });
+    // One response, several target elements, but only the first fragment to use an icon carries its
+    // definition -- park them all somewhere no later update can delete.
+    hoistMaterialSymbols();
 } // processContents
 
 /* global jsWebPath */
@@ -314,21 +330,28 @@ export function loadContentData(data, status, jqXHR)
         $("body").undelegate("a");
         $("body").undelegate("form");
         $("body").empty().append($response);
-    } else {
-        var $mainContent = $("#content");
-        var $pageWrap    = $("#guts");
-        $mainContent.empty().append($response.find("#guts"));
-        $mainContent.fadeIn(200, function() {
-            $pageWrap.animate({
-                height: $mainContent.height() + "px"
-            });
-        });
-        $("a[rel^='prettyPhoto']").prettyPhoto({
-            social_tools: false,
-            deeplinking: false
-        });
-        initTabs();
+        // body was emptied, so the store went with it -- rebuild it from what just arrived
+        hoistMaterialSymbols();
+
+        return;
     }
+
+    var $mainContent = $("#content");
+    var $pageWrap    = $("#guts");
+    $mainContent.empty().append($response.find("#guts"));
+    // before the fade, so the incoming icons are defined by the time any of this is painted
+    hoistMaterialSymbols($mainContent[0]);
+
+    $mainContent.fadeIn(200, function() {
+        $pageWrap.animate({
+            height: $mainContent.height() + "px"
+        });
+    });
+    $("a[rel^='prettyPhoto']").prettyPhoto({
+        social_tools: false,
+        deeplinking: false
+    });
+    initTabs();
 }
 
 export function loadContentPage(url)

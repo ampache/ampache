@@ -123,6 +123,11 @@ class Broadcast extends database_object implements library_item, displayable_ite
         return self::getBroadcastRepository()->getIdsByUser($user_id);
     }
 
+    public static function get_listeners_html(): string
+    {
+        return "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
+    }
+
     /**
      * Get unbroadcast link.
      */
@@ -135,9 +140,8 @@ class Broadcast extends database_object implements library_item, displayable_ite
             T_('Unbroadcast'),
             'broadcast_action'
         );
-        $link .= "</div>";
 
-        return $link . "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
+        return $link . "</div>";
     }
 
     /**

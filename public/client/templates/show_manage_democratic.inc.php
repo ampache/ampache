@@ -68,7 +68,7 @@ Ui::show_box_top(T_('Manage')); ?>
     <?php
         } if (!count($playlists)) { ?>
     <tr>
-        <td colspan="10"><span class="nodata"><?php echo T_('No democratic found'); ?></span></td>
+        <td colspan="10"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
     </tr>
 <?php } ?>
 </table>

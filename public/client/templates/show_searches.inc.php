@@ -31,6 +31,8 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
@@ -69,7 +71,12 @@ use Ampache\Repository\Model\User;
         </tr>
     </thead>
     <tbody>
-<?php foreach ($object_ids as $playlist_id) {
+<?php if (User::is_registered() && AmpConfig::get('ratings')) {
+    Rating::build_cache('search', $object_ids);
+    Userflag::build_cache('search', $object_ids);
+}
+
+foreach ($object_ids as $playlist_id) {
     $libitem = new Search($playlist_id, 'song');
     if ($libitem->isNew() || (!$libitem->has_collaborate() && $libitem->type === 'private')) {
         continue;

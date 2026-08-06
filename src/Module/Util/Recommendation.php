@@ -502,17 +502,6 @@ class Recommendation
     }
 
     /**
-     */
-    public static function has_recommendation_cache(string $object_type, int $object_id): bool
-    {
-        $sql        = "SELECT `id` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
-        $db_results = Dba::read($sql, [$object_type, $object_id]);
-        $row        = Dba::fetch_assoc($db_results);
-
-        return ($row !== []);
-    }
-
-    /**
      * Migrate an object associate stats to a new object
      */
     public static function migrate(string $object_type, int $old_object_id): void

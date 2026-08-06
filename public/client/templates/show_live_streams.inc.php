@@ -30,6 +30,8 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\User;
@@ -76,11 +78,16 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
     </thead>
     <tbody>
         <?php
-        foreach ($object_ids as $radio_id) {
-            $libitem = new Live_Stream($radio_id);
-            if ($libitem->isNew()) {
-                continue;
-            } ?>
+        if ($show_ratings) {
+            Rating::build_cache('live_stream', $object_ids);
+            Userflag::build_cache('live_stream', $object_ids);
+        }
+
+foreach ($object_ids as $radio_id) {
+    $libitem = new Live_Stream($radio_id);
+    if ($libitem->isNew()) {
+        continue;
+    } ?>
         <tr id="live_stream_<?php echo $libitem->id; ?>">
                 <?php require Ui::find_template('show_live_stream_row.inc.php'); ?>
         </tr>

@@ -26,15 +26,20 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Artists3Method
- */
-final class Artists3Method
+final class Artists3Method implements MethodInterface
 {
     public const string ACTION = 'artists';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * artists
@@ -55,9 +60,16 @@ final class Artists3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function artists(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $browse = Api::getBrowse($user);
         $browse->set_type('artist');
         $browse->set_sort('name', 'ASC', false);
@@ -68,8 +80,8 @@ final class Artists3Method
         $browse->set_api_filter('update', $input['update'] ?? '');
 
         // Set the offset
-        Xml3_Data::set_offset($input['offset'] ?? 0);
-        Xml3_Data::set_limit($input['limit'] ?? 0);
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
         $results = $browse->get_objects();
         $include = [];
@@ -88,6 +100,11 @@ final class Artists3Method
         }
         // echo out the resulting xml document
         ob_end_clean();
-        echo Xml3_Data::artists($results, $include, $user, $input['auth']);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->artists($apiVersion, $results, $include, $user, $input['auth'])
+            )
+        );
     }
 }

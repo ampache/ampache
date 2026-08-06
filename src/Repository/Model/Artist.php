@@ -155,10 +155,13 @@ class Artist extends database_object implements
             $extra
             && AmpConfig::get('show_played_times')
         ) {
+            $played_counts = (empty($limit_threshold))
+                ? []
+                : Stats::get_object_counts('artist', $ids, $limit_threshold);
             foreach ($artistRepository->getPlayCountsByIds($ids) as $row) {
                 $row['total_count'] = (empty($limit_threshold))
                     ? $row['total_count']
-                    : Stats::get_object_count('artist', $row['artist'], $limit_threshold);
+                    : ($played_counts[(int) $row['artist']] ?? 0);
                 parent::add_to_cache('artist_extra', $row['artist'], $row);
             }
         }

@@ -27,82 +27,72 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserFollowerRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Followers4Method
+ * Returns the users following a named user.
  */
-final class Followers4Method
+final class Followers4Method implements MethodInterface
 {
     public const string ACTION = 'followers';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+        private UserFollowerRepositoryInterface $userFollowerRepository,
+    ) {}
+
     /**
-     * followers
-     * MINIMUM_API_VERSION=380001
-     * CHANGED_IN_API_VERSION=400004
-     *
-     * This gets followers of the user
-     * Error when user not found or no followers
-     *
-     * username = (string) $username
-     *
-     * @param array{
-     *     username: string,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function followers(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('sociable')) {
             Api4::message('error', 'Access Denied: social features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
+
         if (!Api4::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
-        }
-        unset($user);
-        $username = $input['username'];
-        if (!empty($username)) {
-            $user = User::get_from_username($username);
-            if ($user instanceof User) {
-                $results = self::getUserFollowerRepository()->getFollowers($user);
-                if (!count($results)) {
-                    Api4::message('error', 'User `' . $username . '` has no followers.', '400', $input['api_format']);
-                } else {
-                    ob_end_clean();
-                    switch ($input['api_format']) {
-                        case 'json':
-                            echo Json4_Data::users($results);
-                            break;
-                        default:
-                            echo Xml4_Data::users($results);
-                    }
-                }
-            } else {
-                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
-                Api4::message('error', 'User `' . $username . '` cannot be found.', '400', $input['api_format']);
-            }
+            return $response;
         }
 
-        return true;
-    }
+        $username = $input['username'] ?? '';
+        if (empty($username)) {
+            return $response;
+        }
 
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getUserFollowerRepository(): UserFollowerRepositoryInterface
-    {
-        global $dic;
+        $follower = User::get_from_username((string) $username);
+        if (!$follower instanceof User) {
+            debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+            Api4::message('error', 'User `' . $username . '` cannot be found.', '400', $input['api_format']);
 
-        return $dic->get(UserFollowerRepositoryInterface::class);
+            return $response;
+        }
+
+        $results = $this->userFollowerRepository->getFollowers($follower);
+        if ($results === []) {
+            Api4::message('error', 'User `' . $username . '` has no followers.', '400', $input['api_format']);
+
+            return $response;
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->users($apiVersion, $results)
+            )
+        );
     }
 }

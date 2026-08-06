@@ -61,8 +61,7 @@ $action_text = T_('Actions');
 
 $sort_url = '?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=collection&sort=';
 
-global $dic;
-$collectionRepository = $dic->get(CollectionRepositoryInterface::class);
+/** @var CollectionRepositoryInterface $collectionRepository */
 $user                 = Core::get_global('user');
 $user                 = ($user instanceof User) ? $user : null;
 
@@ -99,7 +98,12 @@ if ($browse->is_show_header()) {
         </tr>
     </thead>
     <tbody>
-<?php foreach ($object_ids as $collection_id) {
+<?php if ($show_ratings) {
+    Rating::build_cache('collection', $object_ids);
+    Userflag::build_cache('collection', $object_ids);
+}
+
+foreach ($object_ids as $collection_id) {
     $libitem = $collectionRepository->findById((int) $collection_id);
     // Skip a row whose collection vanished between the browse query and this loop
     if (
@@ -152,7 +156,7 @@ if ($libitem->has_access()) { ?>
 <?php } ?>
 <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="<?php echo ($show_ratings) ? 9 : 8; ?>"><span class="nodata"><?php echo T_('No collection found'); ?></span></td>
+            <td colspan="<?php echo ($show_ratings) ? 9 : 8; ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
         </tr>
 <?php } ?>
     </tbody>

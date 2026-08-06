@@ -25,15 +25,20 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Artist3Method
- */
-final class Artist3Method
+final class Artist3Method implements MethodInterface
 {
     public const string ACTION = 'artist';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * artist
@@ -45,9 +50,16 @@ final class Artist3Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 3 $apiVersion
      */
-    public static function artist(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $uid     = scrub_in((string) $input['filter']);
         $include = [];
         if (array_key_exists('include', $input)) {
@@ -63,6 +75,11 @@ final class Artist3Method
                 }
             }
         }
-        echo Xml3_Data::artists([$uid], $include, $user, $input['auth']);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->artists($apiVersion, [$uid], $include, $user, $input['auth'])
+            )
+        );
     }
 }

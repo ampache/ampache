@@ -31,9 +31,9 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use ArrayIterator;
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -41,8 +41,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
+    private MockObject&BrowseFactoryInterface $browseFactory;
     private LicenseRepositoryInterface&MockObject $licenseRepository;
-    private MockObject&ModelFactoryInterface $modelFactory;
     private ShowAction $subject;
     private UiInterface&MockObject $ui;
 
@@ -67,8 +67,8 @@ class ShowActionTest extends MockeryTestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        $this->modelFactory->expects(static::once())
-            ->method('createBrowse')
+        $this->browseFactory->expects(static::once())
+            ->method('create')
             ->willReturn($browse);
 
         $this->licenseRepository->expects(static::once())
@@ -111,12 +111,12 @@ class ShowActionTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->ui                = $this->createMock(UiInterface::class);
-        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
+        $this->browseFactory     = $this->createMock(BrowseFactoryInterface::class);
         $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
 
         $this->subject = new ShowAction(
             $this->ui,
-            $this->modelFactory,
+            $this->browseFactory,
             $this->licenseRepository,
         );
     }

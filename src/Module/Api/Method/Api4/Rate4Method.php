@@ -27,15 +27,16 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Rate4Method
- */
-final class Rate4Method
+final class Rate4Method implements MethodInterface
 {
     public const string ACTION = 'rate';
 
@@ -56,16 +57,23 @@ final class Rate4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function rate(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('ratings')) {
             Api4::message('error', 'Access Denied: Rating features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['type', 'id', 'rating'], self::ACTION)) {
-            return false;
+            return $response;
         }
         ob_end_clean();
         $type      = (string) $input['type'];
@@ -75,12 +83,12 @@ final class Rate4Method
         if (!Rating::is_valid(strtolower($type))) {
             Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!in_array($rating, ['0', '1', '2', '3', '4', '5'])) {
             Api4::message('error', 'Ratings must be between [0-5]. ' . $rating . ' is invalid', '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
@@ -92,13 +100,13 @@ final class Rate4Method
             if ($item->getId() === 0) {
                 Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
-                return false;
+                return $response;
             }
             $rate = new Rating($object_id, $type);
             $rate->set_rating((int) $rating, $user->id);
             Api4::message('success', 'rating set to ' . $rating . ' for ' . $object_id, null, $input['api_format']);
         }
 
-        return true;
+        return $response;
     }
 }

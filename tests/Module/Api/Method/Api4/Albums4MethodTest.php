@@ -29,8 +29,8 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
@@ -40,7 +40,7 @@ use Psr\Http\Message\StreamInterface;
 
 class Albums4MethodTest extends MockeryTestCase
 {
-    private MockInterface|ModelFactoryInterface|null $modelFactory;
+    private MockInterface|BrowseFactoryInterface|null $browseFactory;
     private MockInterface|StreamFactoryInterface|null $streamFactory;
     private ?Albums4Method $subject;
 
@@ -59,7 +59,7 @@ class Albums4MethodTest extends MockeryTestCase
         $result  = 'some-result';
         $include = [];
 
-        $this->modelFactory->shouldReceive('createBrowse')
+        $this->browseFactory->shouldReceive('create')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
@@ -138,11 +138,11 @@ class Albums4MethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
-        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
+        $this->browseFactory  = $this->mock(BrowseFactoryInterface::class);
+        $this->streamFactory  = $this->mock(StreamFactoryInterface::class);
 
         $this->subject = new Albums4Method(
-            $this->modelFactory,
+            $this->browseFactory,
             $this->streamFactory
         );
     }

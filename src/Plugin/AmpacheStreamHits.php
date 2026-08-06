@@ -64,8 +64,9 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly Graph $graph,
+    ) {
         $this->description = T_('Control hits per user');
     }
 
@@ -113,7 +114,7 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
         // if using free software only you can't use this plugin
         if (AmpConfig::get('statistical_graphs')) {
             $next_total    = count($media_ids);
-            $graph         = new Graph();
+            $graph         = $this->graph;
             $end_date      = time();
             $start_date    = $end_date - ($this->hits_days * 86400);
             $current_total = $graph->get_total_hits($this->user_id, $start_date, $end_date);

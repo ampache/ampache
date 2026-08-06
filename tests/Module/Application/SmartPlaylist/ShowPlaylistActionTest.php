@@ -27,8 +27,10 @@ namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
 use Override;
@@ -38,10 +40,12 @@ use Psr\Log\LoggerInterface;
 
 class ShowPlaylistActionTest extends MockeryTestCase
 {
+    private BrowseFactoryInterface&MockInterface $browseFactory;
     private LoggerInterface&MockObject $logger;
     private ModelFactoryInterface&MockInterface $modelFactory;
     private ?ShowAction $subject;
     private UiInterface&MockInterface $ui;
+    private ZipHandlerInterface&MockInterface $zipHandler;
 
     public function testRunDisplaysPlaylistSearchView(): void
     {
@@ -79,7 +83,9 @@ class ShowPlaylistActionTest extends MockeryTestCase
                 'show_search.inc.php',
                 [
                     'playlist' => $search,
-                    'object_ids' => $objectIds
+                    'object_ids' => $objectIds,
+                    'zipHandler' => $this->zipHandler,
+                    'browseFactory' => $this->browseFactory
                 ]
             )
             ->once();
@@ -98,14 +104,18 @@ class ShowPlaylistActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->logger       = $this->createMock(LoggerInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->ui            = $this->mock(UiInterface::class);
+        $this->logger        = $this->createMock(LoggerInterface::class);
+        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+        $this->zipHandler    = $this->mock(ZipHandlerInterface::class);
+        $this->browseFactory = $this->mock(BrowseFactoryInterface::class);
 
         $this->subject = new ShowAction(
             $this->ui,
             $this->logger,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->zipHandler,
+            $this->browseFactory
         );
     }
 }

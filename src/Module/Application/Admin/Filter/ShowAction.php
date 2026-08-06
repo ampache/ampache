@@ -54,6 +54,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $this->ui->show('show_manage_filters.inc.php');
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
+        $this->ui->showFooter();
 
         return null;
     }

@@ -26,16 +26,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class CatalogAction4Method
- */
-final class CatalogAction4Method
+final class CatalogAction4Method implements MethodInterface
 {
     public const string ACTION = 'catalog_action';
 
@@ -56,21 +57,28 @@ final class CatalogAction4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function catalog_action(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['catalog', 'task'], self::ACTION)) {
-            return false;
+            return $response;
         }
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'catalog_action', $input['api_format'])) {
-            return false;
+            return $response;
         }
         $task = (string) $input['task'];
         // confirm the correct data
         if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'])) {
             Api4::message('error', 'Incorrect catalog task' . ' ' . $task, '401', $input['api_format']);
 
-            return false;
+            return $response;
         }
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
@@ -107,6 +115,6 @@ final class CatalogAction4Method
             Api4::message('error', 'The requested item was not found', '404', $input['api_format']);
         }
 
-        return true;
+        return $response;
     }
 }

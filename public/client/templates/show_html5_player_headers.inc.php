@@ -8,14 +8,13 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 
-global $dic;
+/** @var AjaxUriRetrieverInterface $ajaxUriRetriever */
 
 $web_path        = AmpConfig::get_web_path('/client');
 $ampache_version = AmpConfig::get('version');
 // Cache-bust the skin CSS by file mtime so edits load immediately (falls back to app version).
 $cssBust = static fn(string $file): string => is_file(__DIR__ . '/' . $file) ? (string) filemtime(__DIR__ . '/' . $file) : $ampache_version;
 
-$ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "path: '/', secure: true, samesite: 'Strict'"
     : "path: '/', samesite: 'Strict'";
@@ -647,10 +646,12 @@ if ($iframed) { ?>
 <script>
     var brkey = '';
     var brconn = null;
+    var brListening = false;
 
     function startBroadcast(key)
     {
         brkey = key;
+        brListening = false;
 
         listenBroadcast();
         brconn.onopen = function(e) {
@@ -662,6 +663,7 @@ if ($iframed) { ?>
 
     function startBroadcastListening(broadcast_id)
     {
+        brListening = true;
         listenBroadcast();
 
         // Hide few UI information on listening mode
@@ -682,6 +684,38 @@ if ($iframed) { ?>
         };
     }
 
+    function restoreListenerControls()
+    {
+        $('.jp-previous').css('visibility', '');
+        $('.jp-play').css('visibility', '');
+        $('.jp-pause').css('visibility', '');
+        $('.jp-next').css('visibility', '');
+        $('.jp-stop').css('visibility', '');
+        $('.jp-toggles').css('visibility', '');
+        $('.jp-playlist').css('visibility', '');
+        $('#broadcast').css('visibility', '');
+        $('.jp-seek-bar').css('pointer-events', '');
+    }
+
+    function onBroadcastSocketError(e)
+    {
+        console.error('[broadcast] websocket error connecting to <?php echo Broadcast_Server::get_address(); ?>', e);
+    }
+
+    function onBroadcastSocketClose(e)
+    {
+        console.error('[broadcast] websocket closed (code ' + e.code + (e.reason ? ', ' + e.reason : '') + ')');
+
+        if (brListening) {
+            restoreListenerControls();
+            displayNotification('<?php echo addslashes(T_('Could not connect to the broadcast. Resuming normal playback.')); ?>', 5000);
+        }
+
+        brListening = false;
+        brkey = '';
+        brconn = null;
+    }
+
     function listenBroadcast()
     {
         if (brconn != null) {
@@ -690,6 +724,8 @@ if ($iframed) { ?>
 
         brconn = new WebSocket('<?php echo Broadcast_Server::get_address(); ?>');
         brconn.onmessage = receiveBroadcastMessage;
+        brconn.onerror = onBroadcastSocketError;
+        brconn.onclose = onBroadcastSocketClose;
     }
 
     var brLoadingSong = false;
@@ -716,7 +752,12 @@ if ($iframed) { ?>
                         }
                         break;
                     case 'SONG':
-                        addMedia($.parseJSON(atob(msg[1])));
+                        try {
+                            addMedia($.parseJSON(atob(msg[1])));
+                        } catch (err) {
+                            console.error('[broadcast] failed to parse SONG payload', err);
+                            break;
+                        }
                         brLoadingSong = true;
                         // Buffering song position in case it is asked in the next sec.
                         // Otherwise we will move forward on the previous song instead of the new currently loading one
@@ -746,7 +787,7 @@ if ($iframed) { ?>
                         jp.stop();
                         break;
                     default:
-                        alert('Unknown message code');
+                        console.warn('[broadcast] unknown message code: ' + msg[0]);
                         break;
                 }
             }

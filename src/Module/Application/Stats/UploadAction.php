@@ -30,9 +30,9 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -42,7 +42,7 @@ final readonly class UploadAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private ConfigContainerInterface $configContainer,
     ) {}
 
@@ -57,7 +57,7 @@ final readonly class UploadAction implements ApplicationActionInterface
 
         $this->ui->showBoxTop(T_('Uploads'));
         $user_id = Core::get_global('user')?->getId() ?? -1;
-        $browse  = $this->modelFactory->createBrowse();
+        $browse  = $this->browseFactory->create();
         $browse->set_type(
             'song',
             Catalog::get_uploads_sql('song', $user_id)
@@ -66,7 +66,7 @@ final readonly class UploadAction implements ApplicationActionInterface
         $browse->show_objects();
         $browse->store();
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
         $browse->set_type(
             'album',
             Catalog::get_uploads_sql('album', $user_id)
@@ -76,7 +76,7 @@ final readonly class UploadAction implements ApplicationActionInterface
         $browse->store();
 
         if (!$this->configContainer->get(ConfigurationKeyEnum::UPLOAD_USER_ARTIST)) {
-            $browse = $this->modelFactory->createBrowse();
+            $browse = $this->browseFactory->create();
             $browse->set_type(
                 'artist',
                 Catalog::get_uploads_sql('artist', $user_id)

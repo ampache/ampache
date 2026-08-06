@@ -78,7 +78,7 @@ $t_no     = T_('No'); ?>
         } ?>
         <?php if ($shouts === []) { ?>
         <tr>
-            <td colspan="6" class="error"><?php echo T_('No records found'); ?></td>
+            <td colspan="6" class="error"><?php echo T_('Found nothing to show'); ?></td>
         </tr>
         <?php } ?>
     </tbody>

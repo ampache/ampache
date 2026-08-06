@@ -27,15 +27,20 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class ToggleFollow4Method
- */
-final class ToggleFollow4Method
+final class ToggleFollow4Method implements MethodInterface
 {
     public const string ACTION = 'toggle_follow';
+
+    public function __construct(
+        private UserFollowTogglerInterface $userFollowToggler,
+    ) {}
 
     /**
      * toggle_follow
@@ -50,46 +55,46 @@ final class ToggleFollow4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function toggle_follow(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('sociable')) {
             Api4::message('error', 'Access Denied: social features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
+            return $response;
         }
         $username = $input['username'];
         if (!empty($username)) {
             $leader = User::get_from_username($username);
             if ($leader instanceof User) {
-                self::getUserFollowToggler()->toggle(
+                $this->userFollowToggler->toggle(
                     $leader,
                     $user
                 );
                 ob_end_clean();
                 Api4::message('success', 'follow toggled for: ' . $user->id, null, $input['api_format']);
 
-                return true;
+                return $response;
             }
 
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api4::message('error', 'User `' . $username . '` cannot be found.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         Api4::message('error', 'Invalid request', '405', $input['api_format']);
 
-        return false;
-    }
-
-    private static function getUserFollowToggler(): UserFollowTogglerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserFollowTogglerInterface::class);
+        return $response;
     }
 }

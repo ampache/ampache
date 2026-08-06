@@ -28,8 +28,8 @@ namespace Ampache\Module\Application\Stats;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,7 +40,7 @@ final readonly class WantedAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private WantedRepositoryInterface $wantedRepository,
     ) {}
 
@@ -65,7 +65,7 @@ final readonly class WantedAction implements ApplicationActionInterface
 
         $object_ids = $this->wantedRepository->findAll($user);
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
         $browse->set_type('wanted');
         $browse->set_static_content(true);
         $browse->save_objects($object_ids);

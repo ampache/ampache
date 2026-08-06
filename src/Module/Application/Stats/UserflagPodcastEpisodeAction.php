@@ -29,9 +29,10 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,8 +42,9 @@ final readonly class UserflagPodcastEpisodeAction implements ApplicationActionIn
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private ConfigContainerInterface $configContainer,
+        private VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -54,7 +56,10 @@ final readonly class UserflagPodcastEpisodeAction implements ApplicationActionIn
         $this->ui->showHeader();
         $this->ui->show(
             'show_form_userflag.inc.php',
-            ['by_user' => $by_user]
+            [
+                'by_user' => $by_user,
+                'videoRepository' => $this->videoRepository
+            ]
         );
         $this->ui->showHeader();
 
@@ -64,7 +69,7 @@ final readonly class UserflagPodcastEpisodeAction implements ApplicationActionIn
         define('NO_BROWSE_SORTING', true);
 
         $objects = Userflag::get_latest('podcast_episode', $gatekeeper->getUser(), -1, 0, 0, 0, $by_user);
-        $browse  = $this->modelFactory->createBrowse();
+        $browse  = $this->browseFactory->create();
         $browse->set_use_filters(false);
         $browse->set_type('podcast_episode');
         $browse->set_sort('user_flag', 'DESC');

@@ -32,7 +32,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -94,10 +94,9 @@ if ($browse->is_show_header()) {
             </tr>
         </thead>
         <tbody>
-<?php global $dic;
-$talFactory = $dic->get(TalFactoryInterface::class);
-$guiFactory = $dic->get(GuiFactoryInterface::class);
-$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+<?php /** @var TalFactoryInterface $talFactory */
+/** @var GuiFactoryInterface $guiFactory */
+/** @var GuiGatekeeperInterface $gatekeeper */
 
 /* Foreach through the objects e.g. folder-12 song-125 podcast_episode-233 */
 // One TAL view reused for all rows
@@ -110,7 +109,7 @@ foreach ($object_ids as $object) {
         $object_id   = (int) $object;
     } else {
         preg_match('/([a-z_]+)-([0-9]+)/', (string) $object, $matches);
-        $object_type = $matches[1] ?? null;
+        $object_type = $matches[1] ?? '';
         $object_id   = (int) ($matches[2] ?? 0);
     }
 

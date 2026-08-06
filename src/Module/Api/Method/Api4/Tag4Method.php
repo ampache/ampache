@@ -26,35 +26,40 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Tag4Method
+ * Deprecated alias of genre, kept for version 4 clients.
  */
-final class Tag4Method
+final class Tag4Method implements MethodInterface
 {
     public const string ACTION = 'tag';
 
+    public function __construct(
+        private Genre4Method $delegate,
+    ) {}
+
     /**
-     * tag
-     * MINIMUM_API_VERSION=380001
-     *
-     * This returns a single tag based on UID
-     *
-     * filter = (string) UID of Tag
-     *
-     * @param array{
-     *     filter: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function tag(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        // the alias checks the parameter under its own name so the error still says tag
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
 
-        return Genre4Method::genre($input, $user);
+        return $this->delegate->handle($gatekeeper, $response, $output, $input, $user, $apiVersion);
     }
 }

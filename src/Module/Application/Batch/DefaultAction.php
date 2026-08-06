@@ -30,6 +30,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -55,6 +56,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private LoggerInterface $logger,
         private ZipHandlerInterface $zipHandler,
         private FunctionCheckerInterface $functionChecker,
@@ -150,7 +152,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     break;
                 case 'browse':
                     $object_id        = (int) $this->requestParser->getFromRequest('browse_id');
-                    $browse           = $this->modelFactory->createBrowse($object_id);
+                    $browse           = $this->browseFactory->create($object_id);
                     $browse_media_ids = $browse->get_saved();
                     foreach ($browse_media_ids as $media) {
                         if (is_array($media)) {

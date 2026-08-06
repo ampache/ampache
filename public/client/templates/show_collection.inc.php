@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Api\RefreshReordered\RefreshCollectionItemsAction;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -37,6 +38,7 @@ use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var Collection $collection */
 /** @var array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int, time: int}> $object_ids */
 
@@ -130,8 +132,12 @@ if ($collection->has_access()) { ?>
     $pinnedType = ($collection->object_type === null || $collection->object_type === '')
         ? null
         : Collection::normalizeType($collection->object_type);
+    // the `tag` browse is the tag cloud, which can neither take a list of ids nor keep the curated order
+    if ($pinnedType === 'tag') {
+        $pinnedType = 'genre';
+    }
 
-    $browse = new Browse();
+    $browse = $browseFactory->create();
     $browse->set_use_filters(false);
     $browse->set_static_content(true);
 

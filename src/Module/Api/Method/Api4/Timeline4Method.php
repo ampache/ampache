@@ -27,18 +27,23 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class TimelineMethod
- */
-final class Timeline4Method
+final class Timeline4Method implements MethodInterface
 {
     public const string ACTION = 'timeline';
+
+    public function __construct(
+        private UserActivityRepositoryInterface $useractivityRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * timeline
@@ -57,13 +62,20 @@ final class Timeline4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function timeline(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         unset($user);
         if (AmpConfig::get('sociable')) {
             if (!Api4::check_parameter($input, ['username'], self::ACTION)) {
-                return false;
+                return $response;
             }
             $username = $input['username'];
             $limit    = (int) ($input['limit'] ?? 0);
@@ -75,32 +87,24 @@ final class Timeline4Method
                     $user instanceof User
                     && Preference::get_by_user($user->id, 'allow_personal_info_recent')
                 ) {
-                    $results = self::getUseractivityRepository()->getActivities(
+                    $results = $this->useractivityRepository->getActivities(
                         $user->id,
                         $limit,
                         $since
                     );
                     ob_end_clean();
-                    switch ($input['api_format']) {
-                        case 'json':
-                            echo Json4_Data::timeline($results);
-                            break;
-                        default:
-                            echo Xml4_Data::timeline($results);
-                    }
+
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->timeline($apiVersion, $results)
+                        )
+                    );
                 }
             }
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
 
-        return true;
-    }
-
-    private static function getUseractivityRepository(): UserActivityRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityRepositoryInterface::class);
+        return $response;
     }
 }

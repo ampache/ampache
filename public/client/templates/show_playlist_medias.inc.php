@@ -33,6 +33,8 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -40,8 +42,7 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 
-global $dic;
-$libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
+/** @var LibraryItemLoaderInterface $libraryItemLoader */
 
 /** @var Browse $browse */
 /** @var Playlist|Search $playlist */
@@ -173,6 +174,20 @@ if ($browse->is_show_header()) {
             </tr>
             </thead>
             <tbody id="sortableplaylist_<?php echo $playlist_id; ?>">
+            <?php if ($show_ratings) {
+                $rating_ids = [];
+                foreach ($object_ids as $object) {
+                    if (is_array($object) && isset($object['object_type'], $object['object_id'])) {
+                        $rating_type                = (is_string($object['object_type'])) ? $object['object_type'] : $object['object_type']->value;
+                        $rating_ids[$rating_type][] = (int) $object['object_id'];
+                    }
+                }
+
+                foreach ($rating_ids as $rating_type => $rating_id_list) {
+                    Rating::build_cache($rating_type, $rating_id_list);
+                    Userflag::build_cache($rating_type, $rating_id_list);
+                }
+            } ?>
             <?php foreach ($object_ids as $object) {
                 if (!is_array($object)) {
                     continue;
@@ -184,10 +199,12 @@ if ($browse->is_show_header()) {
                     $libtype = (is_string($object['object_type']))
                         ? LibraryItemEnum::tryFrom($object['object_type'])
                         : $object['object_type'];
-                    $libitem = $libraryItemLoader->load(
-                        $libtype,
-                        $object['object_id'],
-                    );
+                    if ($libtype !== null) {
+                        $libitem = $libraryItemLoader->load(
+                            $libtype,
+                            $object['object_id'],
+                        );
+                    }
                 }
                 if ($libitem !== null) {
                     $object_type    = $libtype?->value;

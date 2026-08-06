@@ -26,10 +26,11 @@ declare(strict_types=1);
 // show_localplay_status.inc.php
 
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var Localplay $localplay */
 /** @var int[] $objects */
 
@@ -66,7 +67,7 @@ if (!empty($status)) {
     </ul>
 </div>
 <?php }
-$browse = new Browse();
+$browse = $browseFactory->create();
 $browse->set_type('playlist_localplay');
 $browse->set_use_filters(false);
 $browse->set_static_content(true);

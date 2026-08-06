@@ -36,7 +36,7 @@ Ui::show_box_top(T_('Create Collection'), 'box box_add_collection'); ?>
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Name'); ?></td>
-    <td><input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name'] ?? ''); ?>" autofocus />
+    <td><input type="text" name="name" value="<?php echo scrub_out((string) ($_REQUEST['name'] ?? '')); ?>" autofocus />
         <?php echo AmpError::display('name'); ?>
     </td>
 </tr>

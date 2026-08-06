@@ -31,9 +31,7 @@ use Ampache\Module\System\Preference;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 
-global $dic;
-$environment = $dic->get(EnvironmentInterface::class);
-
+/** @var EnvironmentInterface $environment */
 /** @var array<string, mixed> $configuration */
 /** @var string $latest_version */
 /** @var int $lastCronDate */

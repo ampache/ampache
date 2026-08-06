@@ -29,7 +29,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
@@ -41,6 +41,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function handle(User $user): void
@@ -77,7 +78,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 $browse_id  = (int) ($_REQUEST['browse_id'] ?? 0);
                 $object_ids = $playlist->get_items();
                 ob_start();
-                $browse = new Browse($browse_id);
+                $browse = $this->browseFactory->create($browse_id);
                 $browse->set_type('playlist_media');
                 $browse->add_supplemental_object('playlist', $playlist);
                 $browse->save_objects($object_ids);

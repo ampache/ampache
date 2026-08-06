@@ -26,14 +26,15 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class UserDelete4Method
- */
-final class UserDelete4Method
+final class UserDelete4Method implements MethodInterface
 {
     public const string ACTION = 'user_delete';
 
@@ -51,14 +52,21 @@ final class UserDelete4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function user_delete(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, 'user_delete', $input['api_format'])) {
-            return false;
+            return $response;
         }
         if (!Api4::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
+            return $response;
         }
         $username = $input['username'];
         $del_user = User::get_from_username($username);
@@ -66,10 +74,10 @@ final class UserDelete4Method
         if ($del_user !== null && $del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
             Api4::message('success', 'successfully deleted: ' . $username, null, $input['api_format']);
 
-            return true;
+            return $response;
         }
         Api4::message('error', 'failed to delete: ' . $username, '400', $input['api_format']);
 
-        return false;
+        return $response;
     }
 }

@@ -26,85 +26,73 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Artists4Method
+ * Returns the artist catalogue, filtered by name, add date or update date.
  */
-final class Artists4Method
+final class Artists4Method implements MethodInterface
 {
     public const string ACTION = 'artists';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * artists
-     * MINIMUM_API_VERSION=380001
-     *
-     * This takes a collection of inputs and returns
-     * artist objects. This function is deprecated!
-     *
-     * filter = (string) Alpha-numeric search term //optional
-     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add = $browse->set_api_filter(date) //optional
-     * update = $browse->set_api_filter(date) //optional
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     * include = (array) 'albums'|'songs' //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     exact?: int,
-     *     add?: string,
-     *     update?: string,
-     *     include?: string|string[],
-     *     album_artist?: int,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function artists(array $input, User $user): void
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $browse = Api::getBrowse($user);
         $browse->set_type('artist');
         $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1)
+            ? 'exact_match'
+            : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 
         $results = $browse->get_objects();
+
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
-                $input['include'] = explode(',', html_entity_decode((string) ($input['include'])));
+                $input['include'] = explode(',', html_entity_decode((string) $input['include']));
             }
+
             foreach ($input['include'] as $item) {
                 if ($item === 'songs' || $item == '1') {
                     $include[] = 'songs';
                 }
+
                 if ($item === 'albums' || $item == '1') {
                     $include[] = 'albums';
                 }
             }
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json4_Data::set_offset($input['offset'] ?? 0);
-                Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::artists($results, $include, $user, $input['auth']);
-                break;
-            default:
-                Xml4_Data::set_offset($input['offset'] ?? 0);
-                Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::artists($results, $include, $user, $input['auth']);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->artists($apiVersion, $results, $include, $user, $input['auth'])
+            )
+        );
     }
 }

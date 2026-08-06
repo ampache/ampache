@@ -26,41 +26,40 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class TagSongs4Method
+ * Deprecated alias of genre_songs, kept for version 4 clients.
  */
-final class TagSongs4Method
+final class TagSongs4Method implements MethodInterface
 {
     public const string ACTION = 'tag_songs';
 
+    public function __construct(
+        private GenreSongs4Method $genreSongs,
+    ) {}
+
     /**
-     * tag_songs
-     * MINIMUM_API_VERSION=380001
-     *
-     * returns the songs for this tag
-     *
-     * filter = (string) UID of Tag
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function tag_songs(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        // the alias checks the parameter under its own name so the error still says tag_songs
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
+            return $response;
         }
 
-        return GenreSongs4Method::genre_songs($input, $user);
+        return $this->genreSongs->handle($gatekeeper, $response, $output, $input, $user, $apiVersion);
     }
 }

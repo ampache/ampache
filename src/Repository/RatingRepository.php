@@ -283,7 +283,7 @@ final readonly class RatingRepository implements RatingRepositoryInterface
     {
         $type   = Stats::validate_type($inputType);
         $userId = $userId ?? -1;
-        $sql    = "SELECT MAX(`rating`.`id`) AS `table_id`, MIN(`rating`.`object_id`) AS `id`, ROUND(AVG(`rating`.`rating`), 2) AS `rating`, COUNT(DISTINCT(`rating`.`user`)) AS `count`, MAX(`rating`.`date`) AS `date` FROM `rating`";
+        $sql    = "SELECT `rating`.`object_id` AS `id` FROM `rating`";
         if ($inputType == 'album_artist' || $inputType == 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `rating`.`object_id` AND `rating`.`object_type` = 'artist'";
         }
@@ -297,8 +297,11 @@ final readonly class RatingRepository implements RatingRepositoryInterface
             $sql .= " AND " . Catalog::get_enable_filter($inputType, '`object_id`');
         }
 
-        if (AmpConfig::get('catalog_filter')) {
-            $sql .= " AND" . Catalog::get_user_filter('rating_' . $type, $userId);
+        $user_filter = (AmpConfig::get('catalog_filter'))
+            ? Catalog::get_user_filter('rating_' . $type, $userId)
+            : '';
+        if ($user_filter !== '') {
+            $sql .= " AND" . $user_filter;
         }
 
         $catalog_sql = Catalog::get_catalog_id_filter($inputType, '`rating`.`object_id`', $catalogId);
@@ -314,13 +317,13 @@ final readonly class RatingRepository implements RatingRepositoryInterface
             $sql .= " AND `artist`.`song_count` > 0";
         }
 
-        return $sql . " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `date` DESC, `count` DESC, `table_id` DESC ";
+        return $sql . " GROUP BY `rating`.`object_id` ORDER BY ROUND(AVG(`rating`.`rating`), 2) DESC, MAX(`rating`.`date`) DESC, COUNT(`rating`.`user`) DESC, MAX(`rating`.`id`) DESC ";
     }
 
     private function getLatestSql(string $inputType, ?User $user, int $since, int $before): string
     {
         $type = Stats::validate_type($inputType);
-        $sql  = "SELECT DISTINCT(`rating`.`object_id`) AS `id`, `rating`.`rating`, `rating`.`object_type` AS `type`, MAX(`rating`.`user`) AS `user`, MAX(`rating`.`date`) AS `date` FROM `rating`";
+        $sql  = "SELECT `rating`.`object_id` AS `id` FROM `rating`";
         if ($inputType == 'album_artist' || $inputType == 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `rating`.`object_id` AND `rating`.`object_type` = 'artist'";
         }
@@ -332,8 +335,11 @@ final readonly class RatingRepository implements RatingRepositoryInterface
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
 
-        if (AmpConfig::get('catalog_filter')) {
-            $sql .= " AND" . Catalog::get_user_filter('rating_' . $type, $user?->getId() ?? -1);
+        $user_filter = (AmpConfig::get('catalog_filter'))
+            ? Catalog::get_user_filter('rating_' . $type, $user?->getId() ?? -1)
+            : '';
+        if ($user_filter !== '') {
+            $sql .= " AND" . $user_filter;
         }
 
         if ($inputType == 'album_artist') {
@@ -351,6 +357,6 @@ final readonly class RatingRepository implements RatingRepositoryInterface
             }
         }
 
-        return $sql . " GROUP BY `rating`.`object_id`, `type` ORDER BY `rating` DESC, `date` DESC ";
+        return $sql . " GROUP BY `rating`.`object_id` ORDER BY MAX(`rating`.`rating`) DESC, MAX(`rating`.`date`) DESC ";
     }
 }

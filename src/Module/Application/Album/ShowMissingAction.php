@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -45,6 +46,7 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private UiInterface $ui,
         private ArtCollectorInterface $artCollector,
         private WantedRepositoryInterface $wantedRepository,
@@ -179,7 +181,7 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
 
         print('<div id="additional_information">&nbsp;</div><div>');
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
         $browse->set_type('song_preview');
         $browse->set_static_content(true);
         $browse->show_objects($walbum->songs);

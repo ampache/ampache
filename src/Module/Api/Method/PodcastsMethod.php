@@ -30,7 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -46,7 +46,7 @@ final class PodcastsMethod implements MethodInterface
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     /**
@@ -101,7 +101,7 @@ final class PodcastsMethod implements MethodInterface
             return $response;
         }
 
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
 
         $browse->set_user_id($user);
 

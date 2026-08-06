@@ -50,7 +50,9 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
     {
         yield 'folder' => ['folder', true];
         yield 'song' => ['song', true];
-        yield 'genre named after its table' => ['tag', false];
+        yield 'genre named after its table' => ['tag', true];
+        // a collection cannot hold another collection, so the playlist half is the only destination it has
+        yield 'collection' => ['collection', true];
         yield 'unknown type' => ['some-object-type', false];
     }
 
@@ -94,8 +96,8 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
     }
 
     /**
-     * A folder contributes the media below it, so the playlist half of the dialog is offered for one; a genre
-     * has no media at all and only belongs in a collection.
+     * A folder contributes the media below it and a genre contributes its songs, so the playlist half of the
+     * dialog is offered for both; a type that expands to nothing is refused.
      */
     #[DataProvider('playlistTypeDataProvider')]
     public function testGetPlaylistsEnabledFollowsTheRequestedType(string $objectType, bool $expected): void

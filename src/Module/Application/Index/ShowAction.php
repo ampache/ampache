@@ -33,6 +33,8 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\FolderRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,6 +46,8 @@ final readonly class ShowAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
+        private FolderRepositoryInterface $folderRepository,
+        private VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -74,6 +78,9 @@ final readonly class ShowAction implements ApplicationActionInterface
             require_once Ui::find_template('javascript_refresh.inc.php');
         }
 
+        // the header form show_index.inc.php picks is required into this scope, so name its services here
+        $folderRepository = $this->folderRepository;
+        $videoRepository  = $this->videoRepository;
         require_once Ui::find_template('show_index.inc.php');
 
         // Show the Footer

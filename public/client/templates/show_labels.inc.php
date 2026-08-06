@@ -34,8 +34,7 @@ use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LabelRepositoryInterface;
 
-global $dic;
-$labelRepository = $dic->get(LabelRepositoryInterface::class);
+/** @var LabelRepositoryInterface $labelRepository */
 
 /** @var Browse $browse */
 /** @var list<int> $object_ids */
@@ -85,7 +84,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) &
         <?php } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No label found'); ?></span></td>
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
         </tr>
         <?php } ?>
     </tbody>

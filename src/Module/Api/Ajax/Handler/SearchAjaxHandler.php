@@ -315,7 +315,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
 
-                $_SESSION['iframe']['target'] = AmpConfig::get_web_path('/client') . '/stream.php?action=search_random&search_id=' . scrub_out($_REQUEST['playlist_id'] ?? '');
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path('/client') . '/stream.php?action=search_random&search_id=' . scrub_out((string) ($_REQUEST['playlist_id'] ?? ''));
                 $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
         } // switch on action;
 

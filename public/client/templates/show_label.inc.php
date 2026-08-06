@@ -32,10 +32,11 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Label;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var Label $label */
 /** @var list<int> $object_ids */
 /** @var string $object_type */
@@ -43,7 +44,7 @@ use Ampache\Repository\Model\Label;
 
 $web_path = AmpConfig::get_web_path('/client');
 
-$browse = new Browse();
+$browse = $browseFactory->create();
 $browse->set_type($object_type);
 $browse->set_use_filters(false);
 // these are usually set so not sure why missing

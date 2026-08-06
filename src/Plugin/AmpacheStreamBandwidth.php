@@ -66,8 +66,9 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly Graph $graph,
+    ) {
         $this->description = T_('Control bandwidth per user');
     }
 
@@ -126,7 +127,7 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
                 $next_total += $media->size ?? 0;
             }
 
-            $graph         = new Graph();
+            $graph         = $this->graph;
             $end_date      = time();
             $start_date    = $end_date - ($this->bandwidth_days * 86400);
             $current_total = $graph->get_total_bandwidth($this->user_id, $start_date, $end_date);

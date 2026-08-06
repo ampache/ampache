@@ -27,9 +27,9 @@ namespace Ampache\Module\Api\RefreshReordered;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,7 +44,7 @@ final readonly class RefreshCollectionItemsAction implements ApplicationActionIn
 
     public function __construct(
         private RequestParserInterface $requestParser,
-        private ModelFactoryInterface $modelFactory,
+        private BrowseFactoryInterface $browseFactory,
         private CollectionRepositoryInterface $collectionRepository,
     ) {}
 
@@ -59,7 +59,7 @@ final readonly class RefreshCollectionItemsAction implements ApplicationActionIn
 
         $object_ids = $collection->get_items();
 
-        $browse = $this->modelFactory->createBrowse();
+        $browse = $this->browseFactory->create();
         $browse->set_type('collection_items');
         $browse->add_supplemental_object('collection', $collection);
         $browse->set_static_content(true);

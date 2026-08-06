@@ -25,39 +25,35 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Tags4Method
+ * Deprecated alias of genres, kept for version 4 clients.
  */
-final class Tags4Method
+final class Tags4Method implements MethodInterface
 {
     public const string ACTION = 'tags';
 
+    public function __construct(
+        private Genres4Method $delegate,
+    ) {}
+
     /**
-     * tags
-     * MINIMUM_API_VERSION=380001
-     *
-     * This returns the tags (Genres) based on the specified filter
-     *
-     * filter = (string) Alpha-numeric search term //optional
-     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     exact?: int,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function tags(array $input, User $user): void
-    {
-        Genres4Method::genres($input, $user);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        return $this->delegate->handle($gatekeeper, $response, $output, $input, $user, $apiVersion);
     }
 }

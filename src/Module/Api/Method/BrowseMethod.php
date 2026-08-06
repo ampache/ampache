@@ -35,11 +35,11 @@ use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -51,15 +51,15 @@ final class BrowseMethod implements MethodInterface
 {
     public const string ACTION = 'browse';
 
+    private BrowseFactoryInterface $browseFactory;
     private ConfigContainerInterface $configContainer;
-    private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
+        BrowseFactoryInterface $browseFactory,
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer  = $configContainer;
+        $this->browseFactory    = $browseFactory;
     }
 
     /**
@@ -129,7 +129,7 @@ final class BrowseMethod implements MethodInterface
             return $this->writeTypeError($response, $output, $apiVersion, (string) $objectType);
         }
 
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
         $browse->set_user_id($user);
 
         if ($objectType === 'root') {

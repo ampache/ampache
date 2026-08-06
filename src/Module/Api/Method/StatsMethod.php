@@ -32,6 +32,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
@@ -55,6 +56,7 @@ final class StatsMethod implements MethodInterface
 
     private AlbumRepositoryInterface $albumRepository;
     private ArtistRepositoryInterface $artistRepository;
+    private BrowseFactoryInterface $browseFactory;
     private ConfigContainerInterface $configContainer;
     private ModelFactoryInterface $modelFactory;
 
@@ -63,11 +65,13 @@ final class StatsMethod implements MethodInterface
         ArtistRepositoryInterface $artistRepository,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
+        BrowseFactoryInterface $browseFactory,
     ) {
-        $this->albumRepository  = $albumRepository;
-        $this->artistRepository = $artistRepository;
-        $this->configContainer  = $configContainer;
-        $this->modelFactory     = $modelFactory;
+        $this->albumRepository   = $albumRepository;
+        $this->artistRepository  = $artistRepository;
+        $this->configContainer   = $configContainer;
+        $this->modelFactory      = $modelFactory;
+        $this->browseFactory     = $browseFactory;
     }
 
     /**
@@ -233,7 +237,7 @@ final class StatsMethod implements MethodInterface
 
         // allow sorting results
         if (isset($input['sort']) || isset($input['cond'])) {
-            $outputBrowse = $this->modelFactory->createBrowse(null, false);
+            $outputBrowse = $this->browseFactory->create(null, false);
             $outputBrowse->set_user_id($user);
             $outputBrowse->set_type($type);
             $outputBrowse->set_filter('id', $results);
@@ -288,7 +292,7 @@ final class StatsMethod implements MethodInterface
             case 'album_disk':
                 return $this->albumRepository->getRandomAlbumDisk($userId, $limit);
             case 'playlist':
-                $browse = $this->modelFactory->createBrowse(null, false);
+                $browse = $this->browseFactory->create(null, false);
                 $browse->set_user_id($user);
                 $browse->set_type('playlist_search');
                 $browse->set_sort('rand', null, false);
@@ -305,7 +309,7 @@ final class StatsMethod implements MethodInterface
 
                 return $browse->get_objects();
             default:
-                $browse = $this->modelFactory->createBrowse(null, false);
+                $browse = $this->browseFactory->create(null, false);
                 $browse->set_user_id($user);
                 $browse->set_type($type);
                 $browse->set_sort('rand', null, false);

@@ -32,6 +32,7 @@ use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -47,9 +48,11 @@ final readonly class ShowAction extends AbstractGraphRendererAction
         private GuiFactoryInterface $guiFactory,
         private TalFactoryInterface $talFactory,
         LibraryItemLoaderInterface $libraryItemLoader,
+        Graph $graph,
     ) {
         parent::__construct(
             $libraryItemLoader,
+            $graph,
         );
     }
 

@@ -30,8 +30,7 @@ use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\WantedRepositoryInterface;
 
-global $dic;
-$wantedRepository = $dic->get(WantedRepositoryInterface::class);
+/** @var WantedRepositoryInterface $wantedRepository */
 
 /** @var Browse $browse */
 /** @var list<int> $object_ids */

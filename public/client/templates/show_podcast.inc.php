@@ -31,7 +31,7 @@ use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -39,6 +39,7 @@ use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
+/** @var BrowseFactoryInterface $browseFactory */
 /** @var Ampache\Repository\Model\Podcast $podcast */
 /** @var list<int> $object_ids */
 /** @var string $object_type */
@@ -48,7 +49,7 @@ $web_path = AmpConfig::get_web_path('/client');
 
 $access75 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER);
 $access50 = ($access75 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER));
-$browse   = new Browse();
+$browse   = $browseFactory->create();
 $browse->set_type($object_type);
 $browse->set_use_filters(false);
 $browse->set_skip_catalog_check(true);

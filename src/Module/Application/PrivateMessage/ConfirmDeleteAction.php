@@ -62,7 +62,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 
         $messageIds = array_map(
             intval(...),
-            explode(',', $request->getQueryParams()['msgs'] ?? [])
+            explode(',', (string) ($request->getQueryParams()['msgs'] ?? ''))
         );
         foreach ($messageIds as $messageId) {
             $message = $this->pmRepository->findById($messageId);

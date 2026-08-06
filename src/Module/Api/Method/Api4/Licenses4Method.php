@@ -28,68 +28,60 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Licenses4Method
+ * Returns every license.
  */
-final class Licenses4Method
+final class Licenses4Method implements MethodInterface
 {
     public const string ACTION = 'licenses';
 
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
+
     /**
-     * licenses
-     * MINIMUM_API_VERSION=420000
-     *
-     * This returns the licenses based on the specified filter
-     *
-     * filter = (string) Alpha-numeric search term //optional
-     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     exact?: int,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
+     * @param 4 $apiVersion
      */
-    public static function licenses(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!AmpConfig::get('licensing')) {
             Api4::message('error', 'Access Denied: licensing features are not enabled.', '400', $input['api_format']);
 
-            return false;
+            return $response;
         }
 
         $browse = Api::getBrowse($user);
         $browse->set_type('license');
         $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1)
+            ? 'exact_match'
+            : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
+
         $results = $browse->get_objects();
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json4_Data::set_offset($input['offset'] ?? 0);
-                Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::licenses($results);
-                break;
-            default:
-                Xml4_Data::set_offset($input['offset'] ?? 0);
-                Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::licenses($results);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->licenses($apiVersion, $results, $user)
+            )
+        );
     }
 }

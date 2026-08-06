@@ -29,13 +29,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\VideoRepositoryInterface;
 
-global $dic;
-
+/** @var VideoRepositoryInterface $videoRepository */
 /** @var bool $by_user */
 
 $web_path = AmpConfig::get_web_path('/client');
 
-$videoRepository = $dic->get(VideoRepositoryInterface::class);
 $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
 $showAlbumArtist = AmpConfig::get('show_album_artist');
 $showArtist      = AmpConfig::get('show_artist');

@@ -26,17 +26,18 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\container_item;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Tag;
@@ -49,6 +50,8 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private AlbumRepositoryInterface $albumRepository,
         private SongRepositoryInterface $songRepository,
+        private UiInterface $ui,
+        private BrowseFactoryInterface $browseFactory,
     ) {}
 
     public function handle(User $user): void
@@ -62,7 +65,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'basket_refresh':
             case 'refresh_rightbar':
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'current_playlist':
                 if ($request_type === 'delete') {
@@ -70,7 +73,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     $user->playlist?->delete_track($request_id);
                 }
 
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'basket':
                 // Handle the users basketcases...
@@ -107,7 +110,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                         case 'browse_set':
                         case 'browse_set_random':
                             $songs   = [];
-                            $browse  = new Browse((int) $this->requestParser->getFromRequest('browse_id'));
+                            $browse  = $this->browseFactory->create((int) $this->requestParser->getFromRequest('browse_id'));
                             $objects = $browse->get_saved();
                             switch ($browse->get_type()) {
                                 case 'album':
@@ -157,6 +160,11 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             }
 
                             break;
+                        case 'folder_random':
+                            $medias = (new Folder($request_id))->get_medias();
+                            shuffle($medias);
+                            $user->playlist?->add_medias($medias);
+                            break;
                         case 'tag_random':
                             $object = new Tag($request_id);
                             $songs  = $this->songRepository->getRandomByGenre($object);
@@ -187,7 +195,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     }
                 }
 
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'set_rating':
                 /* Setting ratings */

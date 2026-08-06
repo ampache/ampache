@@ -30,6 +30,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -44,12 +45,15 @@ final class AlbumDisks8Method implements MethodInterface
 {
     public const string ACTION = 'album_disks';
 
+    private BrowseFactoryInterface $browseFactory;
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         ModelFactoryInterface $modelFactory,
+        BrowseFactoryInterface $browseFactory,
     ) {
-        $this->modelFactory = $modelFactory;
+        $this->browseFactory = $browseFactory;
+        $this->modelFactory  = $modelFactory;
     }
 
     /**
@@ -100,7 +104,7 @@ final class AlbumDisks8Method implements MethodInterface
             throw new ResultEmptyException((string) $objectId);
         }
 
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = $this->browseFactory->create(null, false);
         $browse->set_user_id($user);
         $browse->set_type('album_disk');
         $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['disk', 'ASC']);

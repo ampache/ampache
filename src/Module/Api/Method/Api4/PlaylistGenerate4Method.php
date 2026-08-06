@@ -27,19 +27,23 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PlaylistGenerate4Method
- */
-final class PlaylistGenerate4Method
+final class PlaylistGenerate4Method implements MethodInterface
 {
     public const string ACTION = 'playlist_generate';
+
+    public function __construct(
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * playlist_generate
@@ -72,10 +76,16 @@ final class PlaylistGenerate4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function playlist_generate(array $input, User $user): void
-    {
-        // parameter defaults
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         $mode = (array_key_exists('mode', $input) && in_array($input['mode'], ['forgotten', 'recent', 'unplayed', 'random'], true))
             ? $input['mode']
             : 'random';
@@ -87,7 +97,9 @@ final class PlaylistGenerate4Method
         $limit      = (int) ($input['limit'] ?? 0);
         $rule_count = 1;
         $data       = ['type' => 'song'];
+
         debug_event(self::class, 'playlist_generate ' . $mode, 5);
+
         if (in_array($mode, ['forgotten', 'recent'], true)) {
             // played songs
             $data['rule_' . $rule_count]               = 'myplayed';
@@ -100,100 +112,67 @@ final class PlaylistGenerate4Method
             $data['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
             $rule_count++;
         } elseif ($mode == 'unplayed') {
-            // unplayed songs
             $data['rule_' . $rule_count]               = 'myplayed';
             $data['rule_' . $rule_count . '_operator'] = 1;
             $rule_count++;
         } else {
-            // random / anywhere
             $data['rule_' . $rule_count]               = 'anywhere';
             $data['rule_' . $rule_count . '_input']    = '%';
             $data['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        // additional rules
+
         if ((int) ($input['flag'] ?? 0) == 1) {
             $data['rule_' . $rule_count]               = 'favorite';
             $data['rule_' . $rule_count . '_input']    = '%';
             $data['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
+
         if (array_key_exists('filter', $input)) {
             $data['rule_' . $rule_count]               = 'title';
             $data['rule_' . $rule_count . '_input']    = (string) $input['filter'];
             $data['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
+
         $album = new Album((int) ($input['album'] ?? 0));
         if ((array_key_exists('album', $input)) && ($album->id == $input['album'])) {
-            // set rule
             $data['rule_' . $rule_count]               = 'album';
             $data['rule_' . $rule_count . '_input']    = $album->get_fullname();
             $data['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
+
         $artist = new Artist((int) ($input['artist'] ?? 0));
         if ((array_key_exists('artist', $input)) && ($artist->id == $input['artist'])) {
-            // set rule
             $data['rule_' . $rule_count]               = 'artist';
             $data['rule_' . $rule_count . '_input']    = trim(trim((string) $artist->prefix) . ' ' . trim((string) $artist->name));
             $data['rule_' . $rule_count . '_operator'] = 4;
         }
 
-        ob_end_clean();
-
-        // get db data
-        $search_sql = Search::prepare($data, $user);
-        $query      = Search::query($search_sql);
-        $results    = $query['results'];
+        $query   = Search::query(Search::prepare($data, $user));
+        $results = $query['results'];
         shuffle($results);
 
-        //slice the array if there is a limit
         if ($limit > 0) {
             $results = array_slice($results, 0, $limit);
         }
 
-        // output formatted XML
-        switch ($format) {
-            case 'id':
-                switch ($input['api_format']) {
-                    case 'json':
-                        Json4_Data::set_offset($offset);
-                        Json4_Data::set_limit($limit);
-                        echo json_encode($results, JSON_PRETTY_PRINT);
-                        break;
-                    default:
-                        Xml4_Data::set_offset($offset);
-                        Xml4_Data::set_limit($limit);
-                        echo Api::keyed_array($results, false, 'id');
-                }
-                break;
-            case 'index':
-                switch ($input['api_format']) {
-                    case 'json':
-                        Json4_Data::set_offset($offset);
-                        Json4_Data::set_limit($limit);
-                        echo Json4_Data::indexes($results, 'song', $user, $input['auth']);
-                        break;
-                    default:
-                        Xml4_Data::set_offset($offset);
-                        Xml4_Data::set_limit($limit);
-                        echo Xml4_Data::indexes($results, 'song', $user, $input['auth']);
-                }
-                break;
-            case 'song':
-            default:
-                switch ($input['api_format']) {
-                    case 'json':
-                        Json4_Data::set_offset($offset);
-                        Json4_Data::set_limit($limit);
-                        echo Json4_Data::songs($results, $user, $input['auth']);
-                        break;
-                    default:
-                        Xml4_Data::set_offset($offset);
-                        Xml4_Data::set_limit($limit);
-                        echo Xml4_Data::songs($results, $user, $input['auth']);
-                }
-        }
+        $output->setOffset($apiVersion, $offset);
+        $output->setLimit($apiVersion, $limit);
+
+        $body = match ($format) {
+            // the id list is printed raw rather than through a data builder
+            'id' => ($input['api_format'] === 'json')
+                ? (string) json_encode($results, JSON_PRETTY_PRINT)
+                : Api::keyed_array($results, false, 'id'),
+            'index' => $output->indexes($apiVersion, $results, 'song', $user, $input['auth']),
+            default => $output->songs($apiVersion, $results, $user, $input['auth']),
+        };
+
+        return $response->withBody(
+            $this->streamFactory->createStream($body)
+        );
     }
 }

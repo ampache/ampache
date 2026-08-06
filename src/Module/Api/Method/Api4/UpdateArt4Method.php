@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
@@ -33,11 +36,9 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class UpdateArt4Method
- */
-final class UpdateArt4Method
+final class UpdateArt4Method implements MethodInterface
 {
     public const string ACTION = 'update_art';
 
@@ -59,14 +60,21 @@ final class UpdateArt4Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 4 $apiVersion
      */
-    public static function update_art(array $input, User $user): bool
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
         if (!Api4::check_parameter($input, ['type', 'id'], self::ACTION)) {
-            return false;
+            return $response;
         }
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_art', $input['api_format'])) {
-            return false;
+            return $response;
         }
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
@@ -77,7 +85,7 @@ final class UpdateArt4Method
         if (!in_array(strtolower($type), ['artist', 'album'])) {
             Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
-            return true;
+            return $response;
         }
         $className = ObjectTypeToClassNameMapper::map($type);
         /** @var Artist|Album $item */
@@ -85,16 +93,16 @@ final class UpdateArt4Method
         if ($item->isNew()) {
             Api4::message('error', 'The requested item was not found', '404', $input['api_format']);
 
-            return true;
+            return $response;
         }
         // update your object
         if (Catalog::gather_art_item($type, $object_id, $db_art_first, true)) {
             Api4::message('success', 'Gathered new art for: ' . $object_id . ' (' . $type . ')', null, $input['api_format']);
 
-            return true;
+            return $response;
         }
         Api4::message('error', 'Failed to update_art for ' . $object_id, '400', $input['api_format']);
 
-        return true;
+        return $response;
     }
 }
