@@ -101,7 +101,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/handshake.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/handshake.json)
 
 ### goodbye
 
@@ -123,7 +123,7 @@ Destroy a session using the auth parameter.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/goodbye.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/goodbye.json)
 
 ### lost_password
 
@@ -214,7 +214,7 @@ This can be called without being authenticated, it is useful for determining if 
 "compatible": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/ping.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/ping.json)
 
 ### register
 
@@ -267,7 +267,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/system_update.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/system_update.json)
 
 ### system_preferences
 
@@ -311,7 +311,7 @@ Each `preference` entry ([PreferenceObject](#user_preference)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/system_preferences.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/system_preferences.json)
 
 ### users
 
@@ -340,7 +340,7 @@ Each `user` entry ([UserSummaryObject](#users)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/users.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/users.json)
 
 ### user_preferences
 
@@ -382,7 +382,7 @@ Each `preference` entry ([PreferenceObject](#user_preference)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_preferences.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/user_preferences.json)
 
 ## Data Methods
 
@@ -431,11 +431,11 @@ Just add 1 to the rule value to create a new group of rules.
 "error": ""
 ```
 
-SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/advanced_search%20\(song\).json)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/advanced_search%20\(song\).json)
 
-ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/advanced_search%20\(artist\).json)
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/advanced_search%20\(artist\).json)
 
-ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/advanced_search%20\(album\).json)
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/advanced_search%20\(album\).json)
 
 ### albums
 
@@ -500,7 +500,7 @@ Each `album` entry ([AlbumObject](#album)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/albums.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/albums.json)
 
 ### album
 
@@ -548,7 +548,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/album.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/album.json)
 
 ### album_songs
 
@@ -635,7 +635,7 @@ Each `song` entry ([SongObject](#song)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/album_songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/album_songs.json)
 
 ### album_disks
 
@@ -896,7 +896,7 @@ Each `artist` entry ([ArtistObject](#artist)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/artists.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/artists.json)
 
 ### artist
 
@@ -941,7 +941,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/artist.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/artist.json)
 
 ### artist_albums
 
@@ -1003,7 +1003,7 @@ Each `album` entry ([AlbumObject](#album)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/artist_albums.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/artist_albums.json)
 
 ### artist_songs
 
@@ -1091,7 +1091,7 @@ Each `song` entry ([SongObject](#song)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/artist_songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/artist_songs.json)
 
 ### bookmarks
 
@@ -1136,8 +1136,8 @@ Each `bookmark` entry ([BookmarkObject](#bookmark)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/bookmarks.json)
-[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmarks%20\(with%20include\).json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/bookmarks.json)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/bookmarks%20\(with%20include\).json)
 
 ### bookmark
 
@@ -1174,8 +1174,8 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark.json)
-[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark%20\(with%20include\).json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/bookmark.json)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/bookmark%20\(with%20include\).json)
 
 ### bookmark_create
 
@@ -1216,7 +1216,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/bookmark_create.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/bookmark_create.json)
 
 ### bookmark_delete
 
@@ -1240,7 +1240,7 @@ Delete an existing bookmark. (if it exists)
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/bookmark_delete)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/bookmark_delete)
 
 ### bookmark_edit
 
@@ -1267,7 +1267,7 @@ Edit a placeholder for the current media that you can return to later.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/bookmark_edit.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/bookmark_edit.json)
 
 ### browse
 
@@ -1322,19 +1322,19 @@ Each `browse` entry ([BrowseObject](#browse)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(root\).json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/browse%20\(root\).json)
 
-[Example: music catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(music%20catalog\).json)
+[Example: music catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/browse%20\(music%20catalog\).json)
 
-[Example: podcast catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(podcast%20catalog\).json)
+[Example: podcast catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/browse%20\(podcast%20catalog\).json)
 
-[Example: video catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(video%20catalog\).json)
+[Example: video catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/browse%20\(video%20catalog\).json)
 
-[Example: artist](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(artist\).json)
+[Example: artist](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/browse%20\(artist\).json)
 
-[Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(album\).json)
+[Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/browse%20\(album\).json)
 
-[Example: podcast](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(podcast\).json)
+[Example: podcast](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/browse%20\(podcast\).json)
 
 ### catalogs
 
@@ -1384,7 +1384,7 @@ Each `catalog` entry ([CatalogObject](#catalog)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/catalogs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/catalogs.json)
 
 ### catalog
 
@@ -1420,7 +1420,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/catalog.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/catalog.json)
 
 ### catalog_action
 
@@ -1447,9 +1447,9 @@ Kick off a catalog update or clean for the selected catalog
 "error": ""
 ```
 
-[Example: clean_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/catalog_action%20\(clean_catalog\).json)
+[Example: clean_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/catalog_action%20\(clean_catalog\).json)
 
-[Example: add_to_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/catalog_action%20\(add_to_catalog\).json)
+[Example: add_to_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/catalog_action%20\(add_to_catalog\).json)
 
 ### catalog_add
 
@@ -1492,7 +1492,7 @@ Create a new catalog.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/catalog_create.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/catalog_create.json)
 
 ### catalog_delete
 
@@ -1516,7 +1516,7 @@ Delete an existing catalog.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/catalog_delete.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/catalog_delete.json)
 
 ### catalog_file
 
@@ -1546,7 +1546,7 @@ Make sure you remember to urlencode those file names!
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/catalog_file.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/catalog_file.json)
 
 ### catalog_folder
 
@@ -1580,7 +1580,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/catalog_folder.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/catalog_folder.json)
 
 ### collections
 
@@ -1877,7 +1877,7 @@ Each `deleted_podcast_episode` entry ([DeletedPodcastEpisodeObject](#deleted_pod
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/deleted_podcast_episodes.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/deleted_podcast_episodes.json)
 
 ### deleted_songs
 
@@ -1922,7 +1922,7 @@ Each `deleted_song` entry ([DeletedSongObject](#deleted_songs)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/deleted_songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/deleted_songs.json)
 
 ### deleted_videos
 
@@ -1964,7 +1964,7 @@ Each `deleted_video` entry ([DeletedVideoObject](#deleted_videos)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/deleted_videos.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/deleted_videos.json)
 
 ### flag
 
@@ -1994,7 +1994,7 @@ This flags a library item as a favorite
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/flag.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/flag.json)
 
 ### folders
 
@@ -2068,7 +2068,7 @@ Each `user` entry ([UserSummaryObject](#users)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/followers.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/followers.json)
 
 ### following
 
@@ -2101,7 +2101,7 @@ Each `user` entry ([UserSummaryObject](#users)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/following.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/following.json)
 
 ### friends_timeline
 
@@ -2139,7 +2139,7 @@ Each `activity` entry ([ActivityObject](#friends_timeline)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/friends_timeline.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/friends_timeline.json)
 
 ### genres
 
@@ -2189,7 +2189,7 @@ Each `genre` entry ([GenreObject](#genre)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/genres.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/genres.json)
 
 ### genre
 
@@ -2224,7 +2224,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/genre.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/genre.json)
 
 ### genre_albums
 
@@ -2285,7 +2285,7 @@ Each `album` entry ([AlbumObject](#album)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/genre_albums.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/genre_albums.json)
 
 ### genre_artists
 
@@ -2343,7 +2343,7 @@ Each `artist` entry ([ArtistObject](#artist)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/genre_artists.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/genre_artists.json)
 
 ### genre_songs
 
@@ -2430,7 +2430,7 @@ Each `song` entry ([SongObject](#song)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/genre_songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/genre_songs.json)
 
 ### get_bookmark
 
@@ -2469,8 +2469,8 @@ By default; get only the most recent bookmark. Use `all` to retrieve all media b
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_bookmark.json)
-[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_bookmark%20\(with%20include\).json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/get_bookmark.json)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/get_bookmark%20\(with%20include\).json)
 
 ### get_external_metadata
 
@@ -2516,7 +2516,7 @@ The standard empty envelope, with an empty list keyed by the requested type.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_external_metadata.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/get_external_metadata.json)
 
 ### get_indexes
 
@@ -2553,13 +2553,13 @@ This takes a collection of inputs and returns ID + name for the object type
 "error": ""
 ```
 
-SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(song\).json)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/get_indexes%20\(song\).json)
 
-ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(artist\).json)
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/get_indexes%20\(artist\).json)
 
-ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(album\).json)
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/get_indexes%20\(album\).json)
 
-PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(playlist\).json)
+PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/get_indexes%20\(playlist\).json)
 
 ### get_lyrics
 
@@ -2588,7 +2588,7 @@ Return Database lyrics or search with plugins by Song id
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_lyrics.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/get_lyrics.json)
 
 ### get_similar
 
@@ -2672,7 +2672,7 @@ Each `song` entry ([SongObject](#song)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_similar.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/get_similar.json)
 
 ### index
 
@@ -2709,21 +2709,21 @@ Open map — each value is: array&lt;string&gt; \| array&lt;[IndexReferenceObjec
 "error": ""
 ```
 
-SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(song\).json)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/index%20\(song\).json)
 
-ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(artist\).json)
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/index%20\(artist\).json)
 
-ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(album\).json)
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/index%20\(album\).json)
 
-PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(playlist\).json)
+PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/index%20\(playlist\).json)
 
-SONG [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(song%20with%20include\).json)
+SONG [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/index%20\(song%20with%20include\).json)
 
-ARTIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(artist%20with%20include\).json)
+ARTIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/index%20\(artist%20with%20include\).json)
 
-ALBUM [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(album%20with%20include\).json)
+ALBUM [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/index%20\(album%20with%20include\).json)
 
-PLAYLIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/index%20\(playlist%20with%20include\).json)
+PLAYLIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/index%20\(playlist%20with%20include\).json)
 
 ### labels
 
@@ -2775,7 +2775,7 @@ Each `label` entry ([LabelObject](#label)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/labels.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/labels.json)
 
 ### label
 
@@ -2810,7 +2810,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/label.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/label.json)
 
 ### label_artists
 
@@ -2868,7 +2868,7 @@ Each `artist` entry ([ArtistObject](#artist)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/label_artists.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/label_artists.json)
 
 ### last_shouts
 
@@ -2908,7 +2908,7 @@ Each `shout` entry ([ShoutObject](#last_shouts)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/last_shouts.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/last_shouts.json)
 
 ### licenses
 
@@ -2954,7 +2954,7 @@ Each `license` entry ([LicenseObject](#license)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/licenses.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/licenses.json)
 
 ### license
 
@@ -2983,7 +2983,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/license.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/license.json)
 
 ### license_songs
 
@@ -3070,7 +3070,7 @@ Each `song` entry ([SongObject](#song)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/license_songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/license_songs.json)
 
 ### list
 
@@ -3120,7 +3120,7 @@ Each `list` entry ([ListObject](#list)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/list.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/list.json)
 
 ### live_streams
 
@@ -3168,7 +3168,7 @@ Each `live_stream` entry ([LiveStreamObject](#live_stream)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_streams.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/live_streams.json)
 
 ### live_stream
 
@@ -3199,7 +3199,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_stream.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/live_stream.json)
 
 ### live_stream_create
 
@@ -3236,7 +3236,7 @@ Create a live_stream (radio station) object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_stream_create.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/live_stream_create.json)
 
 ### live_stream_delete
 
@@ -3262,7 +3262,7 @@ Delete an existing live_stream (radio station). (if it exists)
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_stream_delete.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/live_stream_delete.json)
 
 ### live_stream_edit
 
@@ -3299,7 +3299,7 @@ Edit a live_stream (radio station) object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_stream_edit.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/live_stream_edit.json)
 
 ### now_playing
 
@@ -3331,7 +3331,7 @@ Each `now_playing` entry ([NowPlayingObject](#now_playing)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/now_playing.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/now_playing.json)
 
 ### player
 
@@ -3373,7 +3373,7 @@ Each `now_playing` entry ([NowPlayingObject](#now_playing)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/player.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/player.json)
 
 ### playlists
 
@@ -3433,7 +3433,7 @@ Each `playlist` entry ([PlaylistObject](#playlist)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlists.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlists.json)
 
 ### playlist
 
@@ -3474,7 +3474,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist.json)
 
 ### playlist_add
 
@@ -3500,7 +3500,7 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_add.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist_add.json)
 
 ### playlist_add_song
 
@@ -3526,7 +3526,7 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_add_song.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist_add_song.json)
 
 ### playlist_create
 
@@ -3549,7 +3549,7 @@ This create a new playlist and return it
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_create.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist_create.json)
 
 ### playlist_delete
 
@@ -3571,7 +3571,7 @@ This deletes a playlist
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_delete.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist_delete.json)
 
 ### playlist_edit
 
@@ -3601,7 +3601,7 @@ Previously name and type were mandatory while filter wasn't. this has been rever
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_edit.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist_edit.json)
 
 ### playlist_generate
 
@@ -3700,11 +3700,11 @@ Returned by `format=id`: song ids only, with no envelope.
 "error": ""
 ```
 
-SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_generate%20\(song\).json)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist_generate%20\(song\).json)
 
-INDEX [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_generate%20\(index\).json)
+INDEX [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist_generate%20\(index\).json)
 
-ID [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_generate%20\(id\).json)
+ID [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist_generate%20\(id\).json)
 
 ### playlist_hash
 
@@ -3730,7 +3730,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_hash.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist_hash.json)
 
 ### playlist_remove
 
@@ -3759,7 +3759,7 @@ Using clear will empty the entire list.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_remove.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist_remove.json)
 
 ### playlist_songs
 
@@ -3843,7 +3843,7 @@ Each `song` entry ([SongObject](#song)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/playlist_songs.json)
 
 ### podcasts
 
@@ -3901,7 +3901,7 @@ Each `podcast` entry ([PodcastObject](#podcast)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/podcasts.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/podcasts.json)
 
 ### podcast
 
@@ -3945,7 +3945,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/podcast.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/podcast.json)
 
 ### podcast_create
 
@@ -3971,7 +3971,7 @@ Takes the url and catalog parameters.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/podcast_create.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/podcast_create.json)
 
 ### podcast_delete
 
@@ -3995,7 +3995,7 @@ Delete an existing podcast.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/podcast_delete.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/podcast_delete.json)
 
 ### podcast_edit
 
@@ -4026,7 +4026,7 @@ Takes the podcast id to update with optional description and expires parameters.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/podcast_edit.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/podcast_edit.json)
 
 ### podcast_episodes
 
@@ -4098,7 +4098,7 @@ Each `podcast_episode` entry ([PodcastEpisodeObject](#podcast_episode)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/podcast_episodes.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/podcast_episodes.json)
 
 ### podcast_episode
 
@@ -4156,7 +4156,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/podcast_episode.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/podcast_episode.json)
 
 ### podcast_episode_delete
 
@@ -4178,7 +4178,7 @@ Delete an existing podcast_episode.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/podcast_episode_delete.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/podcast_episode_delete.json)
 
 ### preference_create
 
@@ -4208,7 +4208,7 @@ Add a new preference to your server
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/preference_create.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/preference_create.json)
 
 ### preference_delete
 
@@ -4232,7 +4232,7 @@ Delete a non-system preference by name
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/preference_delete.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/preference_delete.json)
 
 ### preference_edit
 
@@ -4257,7 +4257,7 @@ Edit a preference value and apply to all users if allowed
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/preference_edit.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/preference_edit.json)
 
 ### rate
 
@@ -4284,7 +4284,7 @@ This rates a library item
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/rate.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/rate.json)
 
 ### record_play
 
@@ -4315,7 +4315,7 @@ If you don't supply a user id (optional) then just fall back to you.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/record_play.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/record_play.json)
 
 ### scrobble
 
@@ -4344,7 +4344,7 @@ Search for a song using text info and then record a play if found. This allows o
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/scrobble.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/scrobble.json)
 
 ### search
 
@@ -4404,11 +4404,11 @@ Each `video` entry ([VideoObject](#video)):
 "error": ""
 ```
 
-SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/advanced_search%20\(song\).json)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/advanced_search%20\(song\).json)
 
-ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/advanced_search%20\(artist\).json)
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/advanced_search%20\(artist\).json)
 
-ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/advanced_search%20\(album\).json)
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/advanced_search%20\(album\).json)
 
 ### search_group
 
@@ -4496,11 +4496,11 @@ Each type is a grouping of object types so allow single search calls to be made
 "error": ""
 ```
 
-ALL [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_group%20\(all\).json)
+ALL [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/search_group%20\(all\).json)
 
-MUSIC [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_group%20\(music\).json)
+MUSIC [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/search_group%20\(music\).json)
 
-PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_group%20\(podcast\).json)
+PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/search_group%20\(podcast\).json)
 
 ### search_rules
 
@@ -4538,11 +4538,11 @@ Each `rule` entry ([SearchRuleObject](#search_rules)):
 "error": ""
 ```
 
-Artist [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(artist\).json)
+Artist [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/search_rules%20\(artist\).json)
 
-Album [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(album\).json)
+Album [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/search_rules%20\(album\).json)
 
-Song [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(song\).json)
+Song [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/search_rules%20\(song\).json)
 
 ### search_songs
 
@@ -4568,7 +4568,7 @@ This searches the songs and returns... songs
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/search_songs.json)
 
 ### shares
 
@@ -4623,7 +4623,7 @@ Each `share` entry ([ShareObject](#share)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/shares.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/shares.json)
 
 ### share
 
@@ -4663,7 +4663,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/share.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/share.json)
 
 ### share_create
 
@@ -4707,7 +4707,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/share_create.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/share_create.json)
 
 ### share_delete
 
@@ -4729,7 +4729,7 @@ Delete an existing share.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/share_delete.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/share_delete.json)
 
 ### share_edit
 
@@ -4756,7 +4756,7 @@ Takes the share id to update with optional description and expires parameters.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/share_edit.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/share_edit.json)
 
 ### smartlists
 
@@ -4814,7 +4814,7 @@ Each `playlist` entry ([PlaylistObject](#playlist)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlists.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/smartlists.json)
 
 ### smartlist
 
@@ -4855,7 +4855,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlist.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/smartlist.json)
 
 ### smartlist_songs
 
@@ -4939,7 +4939,7 @@ Each `song` entry ([SongObject](#song)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlist_songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/smartlist_songs.json)
 
 ### smartlist_delete
 
@@ -4961,7 +4961,7 @@ This deletes a smartlist
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlist_delete.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/smartlist_delete.json)
 
 ### songs
 
@@ -5051,7 +5051,7 @@ Each `song` entry ([SongObject](#song)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/songs.json)
 
 ### song
 
@@ -5124,7 +5124,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/song.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/song.json)
 
 ### song_delete
 
@@ -5146,7 +5146,7 @@ Delete an existing song. (if you are allowed to)
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/song_delete.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/song_delete.json)
 
 ### song_tags
 
@@ -5231,7 +5231,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/song_tags.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/song_tags.json)
 
 ### sonic_match
 
@@ -5322,11 +5322,11 @@ Each `video` entry ([VideoObject](#video)):
 "error": ""
 ```
 
-SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/stats%20\(song\).json)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/stats%20\(song\).json)
 
-ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/stats%20\(artist\).json)
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/stats%20\(artist\).json)
 
-ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/stats%20\(album\).json)
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/stats%20\(album\).json)
 
 ### system_preference
 
@@ -5363,7 +5363,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/system_preferences.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/system_preferences.json)
 
 ### timeline
 
@@ -5404,7 +5404,7 @@ Each `activity` entry ([ActivityObject](#friends_timeline)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/timeline.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/timeline.json)
 
 ### toggle_follow
 
@@ -5428,7 +5428,7 @@ This follow/unfollow a user
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/toggle_follow.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/toggle_follow.json)
 
 ### update_art
 
@@ -5458,7 +5458,7 @@ Existing art is replaced unless you send overwrite=0, which keeps whatever is al
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/update_art.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/update_art.json)
 
 ### update_artist_info
 
@@ -5485,7 +5485,7 @@ Make sure lastfm_API_key is set in your configuration file
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/update_artist_info.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/update_artist_info.json)
 
 ### update_from_tags
 
@@ -5510,7 +5510,7 @@ Update a single album, artist, song from the tag data
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/update_from_tags.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/update_from_tags.json)
 
 ### update_podcast
 
@@ -5537,7 +5537,7 @@ Sync and download new podcast episodes
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/update_podcast.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/update_podcast.json)
 
 ### upload
 
@@ -5653,7 +5653,7 @@ Each `song` entry ([SongObject](#song)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/url_to_song.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/url_to_song.json)
 
 ### user
 
@@ -5698,7 +5698,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/user.json)
 
 ### user_create
 
@@ -5729,7 +5729,7 @@ Create a new user. (Requires the username, password and email.)
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_create.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/user_create.json)
 
 ### user_delete
 
@@ -5755,7 +5755,7 @@ Delete an existing user.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_delete.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/user_delete.json)
 
 ### user_edit
 
@@ -5798,7 +5798,7 @@ Update an existing user.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_edit.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/user_edit.json)
 
 ### user_playlists
 
@@ -5857,7 +5857,7 @@ Each `playlist` entry ([PlaylistObject](#playlist)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_playlists.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/user_playlists.json)
 
 ### user_preference
 
@@ -5892,7 +5892,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_preference.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/user_preference.json)
 
 ### user_smartlists
 
@@ -5951,7 +5951,7 @@ Each `playlist` entry ([PlaylistObject](#playlist)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/user_smartlists.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/user_smartlists.json)
 
 ### videos
 
@@ -6003,7 +6003,7 @@ Each `video` entry ([VideoObject](#video)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/videos.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/videos.json)
 
 ### video
 
@@ -6044,7 +6044,7 @@ Returns a single object.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/video.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/video.json)
 
 ## Binary Data Methods
 
@@ -6236,11 +6236,11 @@ Each `song` entry ([DemocraticSongObject](#democratic)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/democratic%20\(play\).json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/democratic%20\(play\).json)
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/democratic%20\(vote\).json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/democratic%20\(vote\).json)
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/democratic%20\(playlist\).json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/democratic%20\(playlist\).json)
 
 ### localplay
 
@@ -6272,9 +6272,9 @@ The `status` command reports the player state instead of a boolean.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/localplay.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/localplay.json)
 
-[Example (status)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/localplay%20\(status\).json)
+[Example (status)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/localplay%20\(status\).json)
 
 ### localplay_songs
 
@@ -6310,7 +6310,7 @@ Each `localplay_songs` entry ([LocalplaySongObject](#localplay_songs)):
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/localplay_songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/localplay_songs.json)
 
 ## Shared reference objects
 

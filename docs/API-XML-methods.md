@@ -107,7 +107,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/handshake.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/handshake.xml)
 
 ### goodbye
 
@@ -131,7 +131,7 @@ Destroy a session using the auth parameter.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/goodbye.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/goodbye.xml)
 
 ### lost_password
 
@@ -236,7 +236,7 @@ This can be called without being authenticated, it is useful for determining if 
 </root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/ping.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/ping.xml)
 
 ### register
 
@@ -297,7 +297,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/system_update.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/system_update.xml)
 
 ### system_preferences
 
@@ -347,7 +347,7 @@ Each `preference` entry ([PreferenceObject](#user_preference)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/system_preferences.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/system_preferences.xml)
 
 ### users
 
@@ -382,7 +382,7 @@ Each `user` entry ([UserSummaryObject](#users)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/users.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/users.xml)
 
 ### user_preferences
 
@@ -401,7 +401,7 @@ Get your user preferences
 </root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_preferences.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/user_preferences.xml)
 
 ## Data Methods
 
@@ -453,11 +453,11 @@ Just add 1 to the rule value to create a new group of rules.
 <root><error></root>
 ```
 
-SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/advanced_search%20\(song\).xml)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/advanced_search%20\(song\).xml)
 
-ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/advanced_search%20\(artist\).xml)
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/advanced_search%20\(artist\).xml)
 
-ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/advanced_search%20\(album\).xml)
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/advanced_search%20\(album\).xml)
 
 ### albums
 
@@ -528,7 +528,7 @@ Each `album` entry ([AlbumObject](#album)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/albums.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/albums.xml)
 
 ### album
 
@@ -582,7 +582,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/album.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/album.xml)
 
 ### album_songs
 
@@ -675,7 +675,7 @@ Each `song` entry ([SongObject](#song)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/album_songs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/album_songs.xml)
 
 ### album_disks
 
@@ -960,7 +960,7 @@ Each `artist` entry ([ArtistObject](#artist)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/artists.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/artists.xml)
 
 ### artist
 
@@ -1011,7 +1011,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/artist.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/artist.xml)
 
 ### artist_albums
 
@@ -1079,7 +1079,7 @@ Each `album` entry ([AlbumObject](#album)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/artist_albums.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/artist_albums.xml)
 
 ### artist_songs
 
@@ -1173,7 +1173,7 @@ Each `song` entry ([SongObject](#song)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/artist_songs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/artist_songs.xml)
 
 ### bookmarks
 
@@ -1224,8 +1224,8 @@ Each `bookmark` entry ([BookmarkObject](#bookmark)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmarks.xml)
-[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmarks%20\(with%20include\).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/bookmarks.xml)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/bookmarks%20\(with%20include\).xml)
 
 ### bookmark
 
@@ -1268,8 +1268,8 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark.xml)
-[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark%20\(with%20include\).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/bookmark.xml)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/bookmark%20\(with%20include\).xml)
 
 ### bookmark_create
 
@@ -1316,7 +1316,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark_create.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/bookmark_create.xml)
 
 ### bookmark_delete
 
@@ -1342,7 +1342,7 @@ Delete an existing bookmark. (if it exists)
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark_delete)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/bookmark_delete)
 
 ### bookmark_edit
 
@@ -1371,7 +1371,7 @@ Edit a placeholder for the current media that you can return to later.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark_edit.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/bookmark_edit.xml)
 
 ### browse
 
@@ -1432,19 +1432,19 @@ Each `browse` entry ([BrowseObject](#browse)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(root\).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/browse%20\(root\).xml)
 
-[Example: music catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(music%20catalog\).xml)
+[Example: music catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/browse%20\(music%20catalog\).xml)
 
-[Example: podcast catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(podcast%20catalog\).xml)
+[Example: podcast catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/browse%20\(podcast%20catalog\).xml)
 
-[Example: video catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(video%20catalog\).xml)
+[Example: video catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/browse%20\(video%20catalog\).xml)
 
-[Example: artist](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(artist\).xml)
+[Example: artist](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/browse%20\(artist\).xml)
 
-[Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(album\).xml)
+[Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/browse%20\(album\).xml)
 
-[Example: podcast](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(podcast\).xml)
+[Example: podcast](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/browse%20\(podcast\).xml)
 
 ### catalogs
 
@@ -1500,7 +1500,7 @@ Each `catalog` entry ([CatalogObject](#catalog)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalogs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/catalogs.xml)
 
 ### catalog
 
@@ -1542,7 +1542,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/catalog.xml)
 
 ### catalog_action
 
@@ -1571,9 +1571,9 @@ Kick off a catalog update or clean for the selected catalog
 <root><error></root>
 ```
 
-[Example: clean_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(clean_catalog\).xml)
+[Example: clean_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/catalog_action%20\(clean_catalog\).xml)
 
-[Example: add_to_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(add_to_catalog\).xml)
+[Example: add_to_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/catalog_action%20\(add_to_catalog\).xml)
 
 ### catalog_add
 
@@ -1609,7 +1609,7 @@ Create a new catalog.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_create.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/catalog_create.xml)
 
 ### catalog_delete
 
@@ -1635,7 +1635,7 @@ Delete an existing catalog.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_delete.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/catalog_delete.xml)
 
 ### catalog_file
 
@@ -1667,7 +1667,7 @@ Make sure you remember to urlencode those file names!
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_file.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/catalog_file.xml)
 
 ### catalog_folder
 
@@ -1707,7 +1707,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_folder.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/catalog_folder.xml)
 
 ### collections
 
@@ -2039,7 +2039,7 @@ Each `deleted_podcast_episode` entry ([DeletedPodcastEpisodeObject](#deleted_pod
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/deleted_podcast_episodes.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/deleted_podcast_episodes.xml)
 
 ### deleted_songs
 
@@ -2090,7 +2090,7 @@ Each `deleted_song` entry ([DeletedSongObject](#deleted_songs)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/deleted_songs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/deleted_songs.xml)
 
 ### deleted_videos
 
@@ -2138,7 +2138,7 @@ Each `deleted_video` entry ([DeletedVideoObject](#deleted_videos)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/deleted_videos.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/deleted_videos.xml)
 
 ### flag
 
@@ -2171,7 +2171,7 @@ This flags a library item as a favorite
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/flag.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/flag.xml)
 
 ### folders
 
@@ -2257,7 +2257,7 @@ Each `user` entry ([UserSummaryObject](#users)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/followers.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/followers.xml)
 
 ### following
 
@@ -2296,7 +2296,7 @@ Each `user` entry ([UserSummaryObject](#users)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/following.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/following.xml)
 
 ### friends_timeline
 
@@ -2340,7 +2340,7 @@ Each `activity` entry ([ActivityObject](#friends_timeline)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/friends_timeline.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/friends_timeline.xml)
 
 ### genres
 
@@ -2396,7 +2396,7 @@ Each `genre` entry ([GenreObject](#genre)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/genres.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/genres.xml)
 
 ### genre
 
@@ -2439,7 +2439,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/genre.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/genre.xml)
 
 ### genre_albums
 
@@ -2506,7 +2506,7 @@ Each `album` entry ([AlbumObject](#album)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/genre_albums.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/genre_albums.xml)
 
 ### genre_artists
 
@@ -2570,7 +2570,7 @@ Each `artist` entry ([ArtistObject](#artist)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/genre_artists.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/genre_artists.xml)
 
 ### genre_songs
 
@@ -2663,7 +2663,7 @@ Each `song` entry ([SongObject](#song)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/genre_songs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/genre_songs.xml)
 
 ### get_bookmark
 
@@ -2691,8 +2691,8 @@ By default; get only the most recent bookmark. Use `all` to retrieve all media b
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_bookmark.xml)
-[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_bookmark%20\(with%20include\).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/get_bookmark.xml)
+[Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/get_bookmark%20\(with%20include\).xml)
 
 ### get_external_metadata
 
@@ -2744,7 +2744,7 @@ The standard empty envelope, with an empty list keyed by the requested type.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_external_metadata.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/get_external_metadata.xml)
 
 ### get_indexes
 
@@ -2782,15 +2782,15 @@ This takes a collection of inputs and returns ID + name for the object type
 <root><error></root>
 ```
 
-SONGS [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_indexes%20\(song\).xml)
+SONGS [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/get_indexes%20\(song\).xml)
 
-ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_indexes%20\(artist\).xml)
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/get_indexes%20\(artist\).xml)
 
-ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_indexes%20\(album\).xml)
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/get_indexes%20\(album\).xml)
 
-PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_indexes%20\(playlist\).xml)
+PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/get_indexes%20\(playlist\).xml)
 
-PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_indexes%20\(podcast\).xml)
+PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/get_indexes%20\(podcast\).xml)
 
 ### get_lyrics
 
@@ -2825,7 +2825,7 @@ Return Database lyrics or search with plugins by Song id
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_lyrics.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/get_lyrics.xml)
 
 ### get_similar
 
@@ -2915,7 +2915,7 @@ Each `song` entry ([SongObject](#song)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_similar.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/get_similar.xml)
 
 ### index
 
@@ -2958,23 +2958,23 @@ Open map — each value is: array&lt;string&gt; \| array&lt;[IndexReferenceObjec
 <root><error></root>
 ```
 
-SONGS [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(song\).xml)
+SONGS [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/index%20\(song\).xml)
 
-ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(artist\).xml)
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/index%20\(artist\).xml)
 
-ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(album\).xml)
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/index%20\(album\).xml)
 
-PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(playlist\).xml)
+PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/index%20\(playlist\).xml)
 
-PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(podcast\).xml)
+PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/index%20\(podcast\).xml)
 
-SONG [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(song%20with%20include\).xml)
+SONG [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/index%20\(song%20with%20include\).xml)
 
-ARTIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(artist%20with%20include\).xml)
+ARTIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/index%20\(artist%20with%20include\).xml)
 
-ALBUM [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(album%20with%20include\).xml)
+ALBUM [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/index%20\(album%20with%20include\).xml)
 
-PLAYLIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/index%20\(playlist%20with%20include\).xml)
+PLAYLIST [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/index%20\(playlist%20with%20include\).xml)
 
 ### labels
 
@@ -3030,7 +3030,7 @@ Each `label` entry ([LabelObject](#label)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/labels.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/labels.xml)
 
 ### label
 
@@ -3071,7 +3071,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/label.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/label.xml)
 
 ### label_artists
 
@@ -3135,7 +3135,7 @@ Each `artist` entry ([ArtistObject](#artist)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/label_artists.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/label_artists.xml)
 
 ### last_shouts
 
@@ -3181,7 +3181,7 @@ Each `shout` entry ([ShoutObject](#last_shouts)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/last_shouts.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/last_shouts.xml)
 
 ### license
 
@@ -3216,7 +3216,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/license.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/license.xml)
 
 ### license_songs
 
@@ -3309,7 +3309,7 @@ Each `song` entry ([SongObject](#song)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/license_songs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/license_songs.xml)
 
 ### licenses
 
@@ -3359,7 +3359,7 @@ Each `license` entry ([LicenseObject](#license)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/licenses.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/licenses.xml)
 
 ### list
 
@@ -3414,7 +3414,7 @@ Each `list` entry ([ListObject](#list)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/list.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/list.xml)
 
 ### live_streams
 
@@ -3466,7 +3466,7 @@ Each `live_stream` entry ([LiveStreamObject](#live_stream)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_streams.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/live_streams.xml)
 
 ### live_stream
 
@@ -3503,7 +3503,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_stream.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/live_stream.xml)
 
 ### live_stream_create
 
@@ -3533,7 +3533,7 @@ Create a live_stream (radio station) object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_stream_create.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/live_stream_create.xml)
 
 ### live_stream_delete
 
@@ -3561,7 +3561,7 @@ Delete an existing live_stream (radio station). (if it exists)
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_stream_delete.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/live_stream_delete.xml)
 
 ### live_stream_edit
 
@@ -3591,7 +3591,7 @@ Edit a live_stream (radio station) object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_stream_edit.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/live_stream_edit.xml)
 
 ### now_playing
 
@@ -3629,7 +3629,7 @@ Each `now_playing` entry ([NowPlayingObject](#now_playing)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/now_playing.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/now_playing.xml)
 
 ### player
 
@@ -3677,7 +3677,7 @@ Each `now_playing` entry ([NowPlayingObject](#now_playing)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/player.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/player.xml)
 
 ### playlists
 
@@ -3743,7 +3743,7 @@ Each `playlist` entry ([PlaylistObject](#playlist)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlists.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlists.xml)
 
 ### playlist
 
@@ -3790,7 +3790,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist.xml)
 
 ### playlist_add
 
@@ -3818,7 +3818,7 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_add.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_add.xml)
 
 ### playlist_add_song
 
@@ -3846,7 +3846,7 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_add_song.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_add_song.xml)
 
 ### playlist_create
 
@@ -3872,7 +3872,7 @@ This create a new playlist and return it
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_create.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_create.xml)
 
 ### playlist_delete
 
@@ -3896,7 +3896,7 @@ This deletes a playlist
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_delete.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_delete.xml)
 
 ### playlist_edit
 
@@ -3928,7 +3928,7 @@ Previously name and type were mandatory while filter wasn't. this has been rever
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_edit.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_edit.xml)
 
 ### playlist_generate
 
@@ -4035,11 +4035,11 @@ Returned by `format=id`: song ids only, with no envelope.
 <root><error></root>
 ```
 
-SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_generate%20\(song\).xml)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_generate%20\(song\).xml)
 
-INDEX [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_generate%20\(index\).xml)
+INDEX [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_generate%20\(index\).xml)
 
-ID [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_generate%20\(id\).xml)
+ID [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_generate%20\(id\).xml)
 
 ### playlist_hash
 
@@ -4071,7 +4071,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_hash.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_hash.xml)
 
 ### playlist_remove
 
@@ -4102,7 +4102,7 @@ Using clear will empty the entire list.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_remove.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_remove.xml)
 
 ### playlist_songs
 
@@ -4192,7 +4192,7 @@ Each `song` entry ([SongObject](#song)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist_songs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_songs.xml)
 
 ### podcast
 
@@ -4242,7 +4242,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/podcast.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/podcast.xml)
 
 ### podcasts
 
@@ -4306,7 +4306,7 @@ Each `podcast` entry ([PodcastObject](#podcast)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/podcasts.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/podcasts.xml)
 
 ### podcast_create
 
@@ -4335,7 +4335,7 @@ Takes the url and catalog parameters.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/podcast_create.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/podcast_create.xml)
 
 ### podcast_delete
 
@@ -4361,7 +4361,7 @@ Delete an existing podcast.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/podcast_delete.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/podcast_delete.xml)
 
 ### podcast_edit
 
@@ -4394,7 +4394,7 @@ Takes the podcast id to update with optional description and expires parameters.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/podcast_edit.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/podcast_edit.xml)
 
 ### podcast_episodes
 
@@ -4472,7 +4472,7 @@ Each `podcast_episode` entry ([PodcastEpisodeObject](#podcast_episode)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/podcast_episodes.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/podcast_episodes.xml)
 
 ### podcast_episode
 
@@ -4536,7 +4536,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/podcast_episode.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/podcast_episode.xml)
 
 ### podcast_episode_delete
 
@@ -4560,7 +4560,7 @@ Delete an existing podcast_episode.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/podcast_episode_delete.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/podcast_episode_delete.xml)
 
 ### preference_create
 
@@ -4592,7 +4592,7 @@ Add a new preference to your server
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/preference_create.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/preference_create.xml)
 
 ### preference_delete
 
@@ -4618,7 +4618,7 @@ Delete a non-system preference by name
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/preference_delete.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/preference_delete.xml)
 
 ### preference_edit
 
@@ -4645,7 +4645,7 @@ Edit a preference value and apply to all users if allowed
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/preference_edit.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/preference_edit.xml)
 
 ### rate
 
@@ -4674,7 +4674,7 @@ This rates a library item
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/rate.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/rate.xml)
 
 ### record_play
 
@@ -4707,7 +4707,7 @@ If you don't supply a user id (optional) then just fall back to you.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/record_play.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/record_play.xml)
 
 ### scrobble
 
@@ -4738,7 +4738,7 @@ Search for a song using text info and then record a play if found. This allows o
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/scrobble.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/scrobble.xml)
 
 ### search
 
@@ -4804,11 +4804,11 @@ Each `video` entry ([VideoObject](#video)):
 <root><error></root>
 ```
 
-SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/advanced_search%20\(song\).xml)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/advanced_search%20\(song\).xml)
 
-ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/advanced_search%20\(artist\).xml)
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/advanced_search%20\(artist\).xml)
 
-ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/advanced_search%20\(album\).xml)
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/advanced_search%20\(album\).xml)
 
 ### search_group
 
@@ -4902,11 +4902,11 @@ Each type is a grouping of object types so allow single search calls to be made
 <root><error></root>
 ```
 
-ALL [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/search_group%20\(all\).xml)
+ALL [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/search_group%20\(all\).xml)
 
-MUSIC [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/search_group%20\(music\).xml)
+MUSIC [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/search_group%20\(music\).xml)
 
-PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/search_group%20\(podcast\).xml)
+PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/search_group%20\(podcast\).xml)
 
 ### search_rules
 
@@ -4950,11 +4950,11 @@ Each `rule` entry ([SearchRuleObject](#search_rules)):
 <root><error></root>
 ```
 
-Artist [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(artist\).xml)
+Artist [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/search_rules%20\(artist\).xml)
 
-Album [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(album\).xml)
+Album [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/search_rules%20\(album\).xml)
 
-Song [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(song\).xml)
+Song [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/search_rules%20\(song\).xml)
 
 ### search_songs
 
@@ -4983,7 +4983,7 @@ This searches the songs and returns... songs
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/search_songs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/search_songs.xml)
 
 ### shares
 
@@ -5044,7 +5044,7 @@ Each `share` entry ([ShareObject](#share)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/shares.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/shares.xml)
 
 ### share
 
@@ -5090,7 +5090,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/share.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/share.xml)
 
 ### share_create
 
@@ -5140,7 +5140,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/share_create.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/share_create.xml)
 
 ### share_delete
 
@@ -5164,7 +5164,7 @@ Delete an existing share.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/share_delete.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/share_delete.xml)
 
 ### share_edit
 
@@ -5193,7 +5193,7 @@ Takes the share id to update with optional description and expires parameters.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/share_edit.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/share_edit.xml)
 
 ### smartlists
 
@@ -5257,7 +5257,7 @@ Each `playlist` entry ([PlaylistObject](#playlist)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlists.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/smartlists.xml)
 
 ### smartlist
 
@@ -5304,7 +5304,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlist.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/smartlist.xml)
 
 ### smartlist_songs
 
@@ -5394,7 +5394,7 @@ Each `song` entry ([SongObject](#song)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlist_songs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/smartlist_songs.xml)
 
 ### smartlist_delete
 
@@ -5418,7 +5418,7 @@ This deletes a smartlist
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlist_delete.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/smartlist_delete.xml)
 
 ### songs
 
@@ -5514,7 +5514,7 @@ Each `song` entry ([SongObject](#song)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/songs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/songs.xml)
 
 ### song
 
@@ -5593,7 +5593,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/song.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/song.xml)
 
 ### song_delete
 
@@ -5617,7 +5617,7 @@ Delete an existing song. (if you are allowed to)
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/song_delete.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/song_delete.xml)
 
 ### song_tags
 
@@ -5708,7 +5708,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/song_tags.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/song_tags.xml)
 
 ### sonic_match
 
@@ -5811,11 +5811,11 @@ Each `video` entry ([VideoObject](#video)):
 <root><error></root>
 ```
 
-SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/stats%20\(song\).xml)
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/stats%20\(song\).xml)
 
-ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/stats%20\(artist\).xml)
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/stats%20\(artist\).xml)
 
-ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/stats%20\(album\).xml)
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/stats%20\(album\).xml)
 
 ### system_preference
 
@@ -5858,7 +5858,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/system_preferences.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/system_preferences.xml)
 
 ### timeline
 
@@ -5905,7 +5905,7 @@ Each `activity` entry ([ActivityObject](#friends_timeline)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/timeline.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/timeline.xml)
 
 ### toggle_follow
 
@@ -5931,7 +5931,7 @@ This follow/unfollow a user
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/toggle_follow.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/toggle_follow.xml)
 
 ### update_art
 
@@ -5963,7 +5963,7 @@ Existing art is replaced unless you send overwrite=0, which keeps whatever is al
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/update_art.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/update_art.xml)
 
 ### update_artist_info
 
@@ -5992,7 +5992,7 @@ Make sure lastfm_API_key is set in your configuration file
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/update_artist_info.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/update_artist_info.xml)
 
 ### update_from_tags
 
@@ -6019,7 +6019,7 @@ Update a single album, artist, song from the tag data
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/update_from_tags.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/update_from_tags.xml)
 
 ### update_podcast
 
@@ -6048,7 +6048,7 @@ Sync and download new podcast episodes
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/update_podcast.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/update_podcast.xml)
 
 ### upload
 
@@ -6172,7 +6172,7 @@ Each `song` entry ([SongObject](#song)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/url_to_song.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/url_to_song.xml)
 
 ### user
 
@@ -6223,7 +6223,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/user.xml)
 
 ### user_create
 
@@ -6256,7 +6256,7 @@ Create a new user. (Requires the username, password and email.)
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_create.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/user_create.xml)
 
 ### user_delete
 
@@ -6284,7 +6284,7 @@ Delete an existing user.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_delete.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/user_delete.xml)
 
 ### user_edit
 
@@ -6329,7 +6329,7 @@ Update an existing user.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_edit.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/user_edit.xml)
 
 ### user_playlists
 
@@ -6396,7 +6396,7 @@ Each `playlist` entry ([PlaylistObject](#playlist)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_playlists.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/user_playlists.xml)
 
 ### user_preference
 
@@ -6437,7 +6437,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_preference.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/user_preference.xml)
 
 ### user_smartlists
 
@@ -6504,7 +6504,7 @@ Each `playlist` entry ([PlaylistObject](#playlist)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/user_smartlists.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/user_smartlists.xml)
 
 ### videos
 
@@ -6562,7 +6562,7 @@ Each `video` entry ([VideoObject](#video)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/videos.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/videos.xml)
 
 ### video
 
@@ -6609,7 +6609,7 @@ Returns a single object.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/video.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/video.xml)
 
 ## Binary Data Methods
 
@@ -6758,9 +6758,9 @@ The `status` command reports the player state instead of a boolean.
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/localplay.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/localplay.xml)
 
-[Example (status)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/localplay%20\(status\).xml)
+[Example (status)](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/localplay%20\(status\).xml)
 
 ### localplay_songs
 
@@ -6802,7 +6802,7 @@ Each `localplay_songs` entry ([LocalplaySongObject](#localplay_songs)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/localplay_songs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/localplay_songs.xml)
 
 ### democratic
 
@@ -6889,11 +6889,11 @@ Each `song` entry ([DemocraticSongObject](#democratic)):
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/democratic%20\(play\).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/democratic%20\(play\).xml)
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/democratic%20\(vote\).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/democratic%20\(vote\).xml)
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/democratic%20\(playlist\).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/democratic%20\(playlist\).xml)
 
 ## Shared reference objects
 
