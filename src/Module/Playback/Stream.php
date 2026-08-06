@@ -367,11 +367,14 @@ class Stream
             ? $options['maxbitrate']
             : 8000;
         if ($media instanceof Video) {
-            $string_map['%RESOLUTION%'] = (isset($options['resolution']))
-                ? $options['resolution']
-                : $media->get_f_resolution() ?? '1280x720';
+            $resolution = (string)($options['resolution'] ?? $media->get_f_resolution() ?? '1280x720');
+
+            // the command is handed to a shell, so only a literal WIDTHxHEIGHT is allowed to reach %RESOLUTION%
+            $string_map['%RESOLUTION%'] = (preg_match('/^\d{1,5}x\d{1,5}$/', $resolution) === 1)
+                ? $resolution
+                : '1280x720';
             $string_map['%QUALITY%'] = (isset($options['quality']))
-                ? (31 * (101 - $options['quality'])) / 100
+                ? (31 * (101 - (int)$options['quality'])) / 100
                 : 10;
         }
         if (isset($options['frame'])) {

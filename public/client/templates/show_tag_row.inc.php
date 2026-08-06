@@ -45,4 +45,4 @@ switch ($browse->get_type()) {
         break;
 }
 
-echo $libitem->name . ' (' . $count . ')';
+echo scrub_out($libitem->name) . ' (' . $count . ')';
