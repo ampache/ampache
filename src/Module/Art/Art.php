@@ -523,7 +523,7 @@ class Art extends database_object
             ? 'folder'
             : 'blankalbum';
 
-        return AmpConfig::get_web_path() . '/images/' . $name . '_' . self::_fallback_size($size) . '.png';
+        return AmpConfig::get_web_path('/client') . '/images/' . $name . '_' . self::_fallback_size($size) . '.png';
     }
 
     /**

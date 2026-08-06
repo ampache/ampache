@@ -616,7 +616,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $this->link = AmpConfig::get_web_path() . '/browse.php?action=tag&show_tag=' . $this->id;
+            $this->link = AmpConfig::get_web_path('/client') . '/browse.php?action=tag&show_tag=' . $this->id;
         }
 
         return $this->link;
