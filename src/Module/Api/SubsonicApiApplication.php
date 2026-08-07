@@ -234,6 +234,12 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $action = strtolower($query['action'] ?? '');
         }
 
+        // The action is called as a method name, and `hls.m3u8` cannot be one; the suffix is there so a
+        // client sees a playlist file name, and `hls()` is what serves it
+        if ($action === 'hls.m3u8') {
+            $action = 'hls';
+        }
+
         $format = (string) ($query['f'] ?? 'xml');
 
         // Set the correct default headers

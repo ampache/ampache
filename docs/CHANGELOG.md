@@ -406,6 +406,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `musicFolderId` was ignored by `getStarred`, `getStarred2` and `getSongsByGenre`
   * `musicFolderId` was ignored by `getAlbumList`/`getAlbumList2` for the `random`, `highest`, `frequent`, `recent`, `starred`, `byYear` and `byGenre` types
   * A `musicFolderId` naming a catalog the user can't browse returned everything instead of nothing
+  * `hls.m3u8` answered with an error; the endpoint is named with the suffix in the Subsonic specification, and only the suffixless `hls` was served
 * User avatars requested through a `/play/art/{sid}/user/{id}/...` url were always denied when `public_images` is disabled, because the `user` rewrite rules dropped the `auth` parameter that the other art rules pass on
 * Upload
   * An artist created while uploading was never mapped to the upload catalog, so it was missing from an artist browse filtered to that catalog until the next catalog update; the artists of an uploaded song are now mapped as the song is added
