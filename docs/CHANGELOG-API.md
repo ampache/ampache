@@ -76,7 +76,7 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 ### Changed (800000)
 
 * ALL
-  * Passing secrets in the query string is deprecated for privacy (query values leak into server/proxy logs and browser history): the `password` on `register`/`user_create`/`user_edit`/`catalog_add` and the `handshake` `auth` key should be sent in a request body (or, for `auth`, the `Authorization: Bearer` header) — query-string support for these will be removed in **API9**
+  * Passing secrets in the query string is deprecated for privacy (query values leak into server/proxy logs and browser history): the `password` on `register`/`user_create`/`user_edit`/`catalog_add` and the `handshake` `auth` key should be sent in a request body (or, for `auth`, the `Authorization: Bearer` header) — the query string keeps working for them, it is simply no longer the recommended way
   * Version rollover logic reworked for the new 5-version lineup: requests pinned to a disabled API6 now roll forward to API8 (version 7 is explicitly rejected as unsupported)
   * API8 JSON/XML output now sets real HTTP status codes for errors and empty results (`404` for empty, `Api::getHttpCode()`-mapped codes for errors) — API3–6 always returned HTTP 200 with the error embedded in the response body
   * API8 uses updated action names for a few methods present under legacy naming in API3/4: `index`/`list` (not `get_indexes`), `playlist_add` (not `playlist_add_song`), `user_edit` (not `user_update`)
@@ -868,7 +868,7 @@ Inconsistency with the return of object arrays and single items have been fixed 
 ### Changed (630000)
 
 * API6
-  * playlist_add_song: depreciated and will be removed in **API7** (Use playlist_add)
+  * playlist_add_song: depreciated (Use playlist_add) but it keeps working
   * share_create: add more valid types ('playlist', 'podcast', 'podcast_episode', 'video')
   * user: make username optional
 
@@ -1075,7 +1075,7 @@ Stream token's will let you design permalinked streams and allow users to stream
 ### Changed (600000)
 
 * Api6
-  * Renamed `user_update` to `user_edit` (user_update still works and will be removed in **API7**)
+  * Renamed `user_update` to `user_edit` (user_update still works and is kept for backwards compatibility)
 * Api5
   * Add backwards compatible `user_edit` method to point to `user_update`
 * ALL
@@ -1088,7 +1088,7 @@ Stream token's will let you design permalinked streams and allow users to stream
   * For data responses id is the only attribute and everything else is an element
   * Name was not set as an attribute OR an element so now it's always an element
   * Return original XML output (that may be malformed) when loadxml fails.
-* Api6::get_indexes: This method is depreciated and will be removed in Ampache **API7** (Use list instead)
+* Api6::get_indexes: This method is depreciated (Use list instead) but it keeps working
 
 ### Removed (600000)
 
@@ -1654,9 +1654,9 @@ API 5.0.0-release will be the first Ampache release to match the release string.
 * API Build number is depreciated (the last 3 digits of the api version)
   * API 5.0.0 will be released with a string version ("5.0.0-release")
   * All future 4.x.x API versions will follow the main Ampache version. (420000, 421000, 422000)
-* total_count in the XML API is depreciated and will be removed in API 5.0.0.
+* total_count in the XML API is depreciated, but it keeps working.
   * XML can count objects the same was as a JSON array [https://www.php.net/manual/en/simplexmlelement.count.php]
-* Genre in songs is depreciated and will be removed in API 5.0.0.
+* Genre in songs is depreciated, but it keeps working.
   * Use tag instead of genre, tag provides a genre ID as well as the name.
 
 ### Fixed (420000)

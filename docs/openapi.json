@@ -4109,7 +4109,7 @@
           },
           "password": {
             "type": "string",
-            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9."
+            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility."
           }
         },
         "required": [
@@ -4602,7 +4602,7 @@
           },
           "password": {
             "type": "string",
-            "description": "hash('sha256', password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9."
+            "description": "hash('sha256', password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility."
           },
           "email": {
             "type": "string"
@@ -4764,7 +4764,7 @@
           },
           "password": {
             "type": "string",
-            "description": "sha256(password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9."
+            "description": "sha256(password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility."
           },
           "email": {
             "type": "string"
@@ -4795,7 +4795,7 @@
         "properties": {
           "password": {
             "type": "string",
-            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9."
+            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility."
           },
           "email": {
             "type": "string"
@@ -11258,7 +11258,7 @@
               "type": "string"
             },
             "deprecated": true,
-            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9."
+            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility."
           }
         ],
         "responses": {
@@ -84209,7 +84209,7 @@
             }
           },
           {
-            "description": "hash('sha256', password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9.",
+            "description": "hash('sha256', password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility.",
             "in": "query",
             "name": "password",
             "required": false,
@@ -97181,7 +97181,7 @@
             }
           },
           {
-            "description": "sha256(password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9.",
+            "description": "sha256(password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility.",
             "in": "query",
             "name": "password",
             "required": false,
@@ -97544,7 +97544,7 @@
               "type": "string"
             },
             "deprecated": true,
-            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9."
+            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility."
           },
           {
             "in": "query",

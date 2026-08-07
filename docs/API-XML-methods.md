@@ -54,7 +54,7 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 |             |         | (Required if login/password authentication)              |          |
 | 'version'   | string  | $version (API Version that the application understands)  |      YES |
 
-**NOTE** For privacy, send `auth` in a request body or the `Authorization: Bearer` header rather than the query string. Query-string support for `auth` is deprecated and will be removed in **API9**.
+**NOTE** For privacy, send `auth` in a request body or the `Authorization: Bearer` header rather than the query string. Query-string support for `auth` is deprecated but still accepted for backward compatibility.
 
 * return
 
@@ -249,7 +249,7 @@ Register as a new user if allowed. (Requires the username, password and email.)
 | 'email'    | string | e.g. `user@gmail.com`     |       NO |
 | 'fullname' | string |                           |      YES |
 
-**NOTE** For privacy, send `password` in a form or JSON request body rather than the query string. Query-string support for `password` is deprecated and will be removed in **API9**.
+**NOTE** For privacy, send `password` in a form or JSON request body rather than the query string. Query-string support for `password` is deprecated but still accepted for backward compatibility.
 
 * return
 
@@ -1592,7 +1592,7 @@ Create a new catalog.
 | 'username'       | string | login to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote')         |      YES |
 | 'password'       | string | password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote')      |      YES |
 
-**NOTE** For privacy, send `password` in a form or JSON request body rather than the query string. Query-string support for `password` is deprecated and will be removed in **API9**.
+**NOTE** For privacy, send `password` in a form or JSON request body rather than the query string. Query-string support for `password` is deprecated but still accepted for backward compatibility.
 
 * return
 
@@ -6240,7 +6240,7 @@ Create a new user. (Requires the username, password and email.)
 | 'disable'  | boolean | `0`, `1`                          |      YES |
 | 'group'    | integer | Catalog filter group, default = 0 |      YES |
 
-**NOTE** For privacy, send `password` in a form or JSON request body rather than the query string. Query-string support for `password` is deprecated and will be removed in **API9**.
+**NOTE** For privacy, send `password` in a form or JSON request body rather than the query string. Query-string support for `password` is deprecated but still accepted for backward compatibility.
 
 * return
 
@@ -6313,7 +6313,7 @@ Update an existing user.
 | 'reset_streamtoken' | integer | `0`, `1` reset user Stream Token         |      YES |
 | 'clear_stats'       | integer | `0`, `1` reset all stats for this user   |      YES |
 
-**NOTE** For privacy, send `password` in a form or JSON request body rather than the query string. Query-string support for `password` is deprecated and will be removed in **API9**.
+**NOTE** For privacy, send `password` in a form or JSON request body rather than the query string. Query-string support for `password` is deprecated but still accepted for backward compatibility.
 
 * return
 

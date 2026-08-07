@@ -4097,7 +4097,7 @@
               "type": "string"
             },
             "deprecated": true,
-            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9."
+            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility."
           }
         ],
         "responses": {
@@ -5311,7 +5311,7 @@
         "description": "When you do not have an API key you can request a session token using handshake which can then be used as your authentication token.",
         "parameters": [
           {
-            "description": "Passphrase (timestamp + password hash) or API key. Required unless using BearerAuth. Deprecated: for privacy, send this in a request body or the `Authorization: Bearer` header instead of the query string. Query-string support will be removed in API9.",
+            "description": "Passphrase (timestamp + password hash) or API key. Required unless using BearerAuth. Deprecated: for privacy, send this in a request body or the `Authorization: Bearer` header instead of the query string. Query-string support is retained for backward compatibility.",
             "in": "query",
             "name": "auth",
             "required": false,
@@ -10288,7 +10288,7 @@
             }
           },
           {
-            "description": "hash('sha256', password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9.",
+            "description": "hash('sha256', password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility.",
             "in": "query",
             "name": "password",
             "required": true,
@@ -12979,7 +12979,7 @@
             }
           },
           {
-            "description": "sha256(password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9.",
+            "description": "sha256(password) Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility.",
             "in": "query",
             "name": "password",
             "required": true,
@@ -13118,7 +13118,7 @@
               "type": "string"
             },
             "deprecated": true,
-            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support will be removed in API9."
+            "description": "Deprecated: for privacy, send this in a form or JSON request body instead of the query string (query values land in server/proxy logs and browser history). Query-string support is retained for backward compatibility."
           },
           {
             "in": "query",
