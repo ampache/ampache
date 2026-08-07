@@ -1,5 +1,19 @@
 # API CHANGELOG
 
+## API 6.9.2 Build 4
+
+This version is being released for Ampache7 **only**
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+**NOTE** API8 has been removed from the codebase for Ampache 7.
+
+### Fixed (692004)
+
+* `preference_edit` (API6)
+  * preference_edit: `default=1` now writes the server default — the system user's value, and the value a new account is seeded from — instead of the calling user's own value, and reports that value back. Existing accounts are still only changed by `all=1`. **NOTE** the same fix landed in Ampache8, which serves API6 as well
+
 ## API 6.9.2 Build 3
 
 To ensure that there are no issues with clients checking for single int versions
