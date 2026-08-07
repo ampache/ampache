@@ -776,7 +776,7 @@ class Preference extends database_object
      */
     public static function get(string $pref_name, int $user_id): array
     {
-        $row = self::getPreferenceRepository()->getUserPreferenceRow($pref_name, $user_id, $user_id == -1);
+        $row = self::getPreferenceRepository()->getUserPreferenceRow($pref_name, $user_id, $user_id != -1);
         if ($row === []) {
             return [];
         }

@@ -4578,7 +4578,7 @@ Add a new preference to your server
 
 | Input         | Type    | Description                                                            | Optional |
 |---------------|---------|------------------------------------------------------------------------|---------:|
-| 'filter'      | string  | Preference name e.g ('notify_email', 'ajax_load')                      |       NO |
+| 'filter'      | string  | Preference name e.g ('notify_email', 'popular_threshold')              |       NO |
 | 'type'        | string  | `boolean`, `integer`, `string`, `special`                              |       NO |
 | 'default'     | mixed   | string or integer default value                                        |       NO |
 | 'category'    | string  | `interface`, `internal`, `options`, `playlist`, `plugins`, `streaming` |       NO |
@@ -4608,9 +4608,9 @@ Delete a non-system preference by name
 
 **ACCESS REQUIRED:** 100 (Admin)
 
-| Input    | Type   | Description                                       | Optional |
-|----------|--------|---------------------------------------------------|---------:|
-| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+| Input    | Type   | Description                                               | Optional |
+|----------|--------|-----------------------------------------------------------|---------:|
+| 'filter' | string | Preference name e.g ('notify_email', 'popular_threshold') |       NO |
 
 * return
 
@@ -4634,7 +4634,7 @@ Edit a preference value and apply to all users if allowed
 
 | Input     | Type    | Description                                                                             | Optional |
 |-----------|---------|-----------------------------------------------------------------------------------------|---------:|
-| 'filter'  | string  | Preference name e.g ('notify_email', 'ajax_load')                                       |       NO |
+| 'filter'  | string  | Preference name e.g ('notify_email', 'popular_threshold')                               |       NO |
 | 'value'   | mixed   | (string/integer) Preference value                                                       |       NO |
 | 'all'     | boolean | `0`, `1` apply to all users **ACCESS REQUIRED:** 100 (Admin)                            |      YES |
 | 'default' | boolean | `0`, `1` set as system default (New and public users)  **ACCESS REQUIRED:** 100 (Admin) |      YES |
@@ -5835,9 +5835,9 @@ Get your server preference by name
 
 **ACCESS REQUIRED:** 100 (Admin)
 
-| Input    | Type   | Description                                       | Optional |
-|----------|--------|---------------------------------------------------|---------:|
-| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+| Input    | Type   | Description                                               | Optional |
+|----------|--------|-----------------------------------------------------------|---------:|
+| 'filter' | string | Preference name e.g ('notify_email', 'popular_threshold') |       NO |
 
 * return
 
@@ -6416,9 +6416,9 @@ Each `playlist` entry ([PlaylistObject](#playlist)):
 
 Get your user preference by name
 
-| Input    | Type   | Description                                       | Optional |
-|----------|--------|---------------------------------------------------|---------:|
-| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+| Input    | Type   | Description                                               | Optional |
+|----------|--------|-----------------------------------------------------------|---------:|
+| 'filter' | string | Preference name e.g ('notify_email', 'popular_threshold') |       NO |
 
 * return
 

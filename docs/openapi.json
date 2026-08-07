@@ -81688,9 +81688,9 @@
                       "preference": [
                         {
                           "id": "123",
-                          "name": "ajax_load",
+                          "name": "show_donate",
                           "level": 25,
-                          "description": "Ajax page load",
+                          "description": "Show donate button in footer",
                           "value": "1",
                           "type": "boolean",
                           "category": "interface",
@@ -83165,9 +83165,9 @@
                       "preference": [
                         {
                           "id": 123,
-                          "name": "ajax_load",
+                          "name": "show_donate",
                           "level": 25,
-                          "description": "Ajax page load",
+                          "description": "Show donate button in footer",
                           "value": "1",
                           "type": "boolean",
                           "category": "interface",
@@ -84612,9 +84612,9 @@
                     "summary": "user preference",
                     "value": {
                       "id": "123",
-                      "name": "ajax_load",
+                      "name": "show_donate",
                       "level": 25,
-                      "description": "Ajax page load",
+                      "description": "Show donate button in footer",
                       "value": "1",
                       "type": "boolean",
                       "category": "interface",
@@ -84673,9 +84673,9 @@
                     "summary": "user preference",
                     "value": {
                       "id": "123",
-                      "name": "ajax_load",
+                      "name": "show_donate",
                       "level": 25,
-                      "description": "Ajax page load",
+                      "description": "Show donate button in footer",
                       "value": "1",
                       "type": "boolean",
                       "category": "interface",
@@ -84768,9 +84768,9 @@
                     "summary": "user preference",
                     "value": {
                       "id": "123",
-                      "name": "ajax_load",
+                      "name": "show_donate",
                       "level": 25,
-                      "description": "Ajax page load",
+                      "description": "Show donate button in footer",
                       "value": "1",
                       "type": "boolean",
                       "category": "interface",
@@ -95883,9 +95883,9 @@
                       "preference": [
                         {
                           "id": "123",
-                          "name": "ajax_load",
+                          "name": "show_donate",
                           "level": 25,
-                          "description": "Ajax page load",
+                          "description": "Show donate button in footer",
                           "value": "1",
                           "type": "boolean",
                           "category": "interface",
@@ -97638,9 +97638,9 @@
                     "summary": "system preference",
                     "value": {
                       "id": "123",
-                      "name": "ajax_load",
+                      "name": "show_donate",
                       "level": 25,
-                      "description": "Ajax page load",
+                      "description": "Show donate button in footer",
                       "value": "1",
                       "type": "boolean",
                       "category": "interface",
