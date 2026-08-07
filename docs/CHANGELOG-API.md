@@ -117,6 +117,8 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 * API5, API6
   * advanced_search: `type=album_disk` returned album disk ids rendered as songs, so a client read a disk id as a song id. Neither version has an album disk formatter, so both now return an empty result instead. `search` is affected too, being an alias. API8 returns the album disks. **NOTE** the same fix landed in Ampache7, which serves these versions as well
   * API3 and API4 are unchanged: neither validates the search `type` at all, so every unsupported type there already falls through to the song output
+* API8
+  * `Json8_Data`/`Xml8_Data` skip an object that no longer exists rather than returning it as an entry of empty fields, and a missing object no longer ends the list it appeared in. **NOTE** the same fix landed in Ampache7 for API3-6, which it serves as well
 * `preference_edit` (API6 and API8)
   * preference_edit: `default=1` now writes the server default — the system user's value, and the value a new account is seeded from — instead of the calling user's own value, and reports that value back. Existing accounts are still only changed by `all=1`. **NOTE** the same fix landed in Ampache7, which serves API6 as well
 
@@ -131,6 +133,9 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 
 ### Fixed (692004)
 
+* ALL
+  * An object that no longer exists is left out of the response instead of being returned as an entry of empty fields under its id. Affects genres, radio stations, and the album, song, artist and playlist entries in `index`, `indexes` and `search_group`
+  * A missing object no longer ends the list it appeared in, so the objects after it are returned rather than silently dropped
 * `preference_edit` (API6)
   * preference_edit: `default=1` now writes the server default — the system user's value, and the value a new account is seeded from — instead of the calling user's own value, and reports that value back. Existing accounts are still only changed by `all=1`. **NOTE** the same fix landed in Ampache8, which serves API6 as well
 
