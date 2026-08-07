@@ -23,17 +23,18 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui;
+namespace Ampache\Gui\Form;
 
-use Ampache\Gui\Form\LoginFormViewFactory;
-use Ampache\Gui\Form\LoginFormViewFactoryInterface;
-use Ampache\Gui\Form\StatsFormViewFactory;
-use Ampache\Gui\Form\StatsFormViewFactoryInterface;
+use Override;
 
-use function DI\autowire;
-
-return [
-    GuiFactoryInterface::class => autowire(GuiFactory::class),
-    LoginFormViewFactoryInterface::class => autowire(LoginFormViewFactory::class),
-    StatsFormViewFactoryInterface::class => autowire(StatsFormViewFactory::class),
-];
+/**
+ * The popular category bar.
+ */
+final class PopularFormView extends AbstractStatsFormView
+{
+    #[Override]
+    protected function templateFile(): string
+    {
+        return $this->findTemplate('form/popular.phtml');
+    }
+}
