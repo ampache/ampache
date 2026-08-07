@@ -25,19 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\System;
 
-interface ConfigViewAdapterInterface
+/**
+ * The three failures that replace the whole page rather than rendering inside it.
+ */
+enum StandaloneErrorTypeEnum: string
 {
-    public function isDirectplayEnabled(): bool;
-
-    public function isLicensingEnabled(): bool;
-
-    public function isRatingEnabled(): bool;
-
-    public function isShowLicenseEnabled(): bool;
-
-    public function isShowPlayedTimesEnabled(): bool;
-
-    public function isShowSkippedTimesEnabled(): bool;
-
-    public function isWaveformEnabled(): bool;
+    case ACCESS_DENIED     = 'access_denied';
+    case ERROR             = 'error';
+    case PERMISSION_DENIED = 'permission_denied';
 }

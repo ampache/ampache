@@ -25,13 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Modules;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Admin\LocalplayControllerTableView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -54,7 +55,10 @@ final readonly class ShowLocalplayAction implements ApplicationActionInterface
 
         $this->ui->showBoxTop(T_('Localplay Controllers'), 'box box_localplay_controllers');
 
-        require_once Ui::find_template('show_localplay_controllers.inc.php');
+        echo (new LocalplayControllerTableView(
+            AmpConfig::get_web_path('/admin'),
+            $controllers
+        ))->render();
 
         $this->ui->showBoxBottom();
 

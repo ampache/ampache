@@ -23,21 +23,13 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui\System;
+// query_stats.phtml -- rendered by Ampache\Gui\System\QueryStatsView
 
-interface ConfigViewAdapterInterface
-{
-    public function isDirectplayEnabled(): bool;
-
-    public function isLicensingEnabled(): bool;
-
-    public function isRatingEnabled(): bool;
-
-    public function isShowLicenseEnabled(): bool;
-
-    public function isShowPlayedTimesEnabled(): bool;
-
-    public function isShowSkippedTimesEnabled(): bool;
-
-    public function isWaveformEnabled(): bool;
-}
+/** @var Ampache\Gui\System\QueryStatsView $this */
+?>
+<br />
+<span class="query-count"><?php
+    echo T_('Queries: ') . $this->e($this->getQueryCount()) . ' | '
+        . T_('Cache Hits: ') . $this->e($this->getCacheHits()) . ' | '
+        . T_('Load Time: ') . $this->e($this->getLoadTime()) . ' | '
+        . $this->e($this->getPeakMemory()); ?></span>

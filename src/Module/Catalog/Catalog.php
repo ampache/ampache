@@ -29,6 +29,8 @@ use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Catalog\CatalogProgressTypeEnum;
+use Ampache\Gui\Catalog\CatalogProgressView;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
@@ -1812,7 +1814,7 @@ abstract class Catalog extends database_object
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
                     if ($catalog !== null) {
-                        require Ui::find_template('show_gather_art.inc.php');
+                        echo (new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id))->render();
                         flush();
                         $catalog->gather_art();
                     }
@@ -3508,7 +3510,7 @@ abstract class Catalog extends database_object
         debug_event(self::class, 'Starting clean on ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            require Ui::find_template('show_clean_catalog.inc.php');
+            echo (new CatalogProgressView(CatalogProgressTypeEnum::CLEAN, $this->getId(), $this->name))->render();
             ob_flush();
             flush();
         }
@@ -4321,7 +4323,7 @@ abstract class Catalog extends database_object
     public function verify_catalog(): bool
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            require Ui::find_template('show_verify_catalog.inc.php');
+            echo (new CatalogProgressView(CatalogProgressTypeEnum::VERIFY, $this->getId(), $this->name))->render();
             ob_flush();
             flush();
         }

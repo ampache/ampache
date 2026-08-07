@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Modules;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Admin\CatalogTypeTableView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -49,10 +51,10 @@ final readonly class ShowCatalogTypesAction implements ApplicationActionInterfac
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Catalog Types'), 'box box_catalog_types');
-        $this->ui->show(
-            'show_catalog_types.inc.php',
-            ['catalog_types' => Catalog::CATALOG_TYPES]
-        );
+        echo (new CatalogTypeTableView(
+            AmpConfig::get_web_path('/admin'),
+            Catalog::CATALOG_TYPES
+        ))->render();
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

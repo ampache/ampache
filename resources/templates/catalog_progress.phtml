@@ -23,21 +23,14 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui\System;
+// catalog_progress.phtml -- rendered by Ampache\Gui\Catalog\CatalogProgressView
 
-interface ConfigViewAdapterInterface
-{
-    public function isDirectplayEnabled(): bool;
+use Ampache\Module\Util\Ui;
 
-    public function isLicensingEnabled(): bool;
+/** @var Ampache\Gui\Catalog\CatalogProgressView $this */
 
-    public function isRatingEnabled(): bool;
-
-    public function isShowLicenseEnabled(): bool;
-
-    public function isShowPlayedTimesEnabled(): bool;
-
-    public function isShowSkippedTimesEnabled(): bool;
-
-    public function isWaveformEnabled(): bool;
-}
+Ui::show_box_top($this->getTitle(), $this->getBoxClass());
+echo $this->raw($this->getHeading()) . "<br />\n";
+echo $this->e($this->getCounterLabel()) . ': <span id="' . $this->e($this->getCounterElementId()) . '">' . $this->e($this->getCounterInitialValue()) . '</span><br />';
+echo $this->e($this->getReaderLabel()) . ': <span id="' . $this->e($this->getReaderElementId()) . '"></span><br />';
+Ui::show_box_bottom();
