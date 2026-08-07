@@ -48,8 +48,24 @@ class OutputObjectValidityTest extends TestCase
      */
     public static function formatterProvider(): array
     {
+        $names = [
+            'Json4',
+            'Json5',
+            'Json6',
+            'Json8',
+            'Xml3',
+            'Xml4',
+            'Xml5',
+            'Xml6',
+            'Xml8',
+            'Subsonic_Json',
+            'Subsonic_Xml',
+            'OpenSubsonic_Json',
+            'OpenSubsonic_Xml',
+        ];
+
         $formatters = [];
-        foreach (['Json4', 'Json5', 'Json6', 'Json8', 'Xml3', 'Xml4', 'Xml5', 'Xml6', 'Xml8'] as $name) {
+        foreach ($names as $name) {
             $formatters[$name . '_Data'] = [__DIR__ . '/../../../src/Module/Api/' . $name . '_Data.php'];
         }
 
@@ -77,8 +93,14 @@ class OutputObjectValidityTest extends TestCase
         $source = (string) file_get_contents($path);
 
         $unguarded = [];
+
+        /**
+         * Only a hydration whose id came from the list being walked is checked. One built from a
+         * property of the object being rendered — a message's sender, a share's playlist — is the
+         * attribute of an entry rather than the entry itself, so skipping it would drop the parent.
+         */
         preg_match_all(
-            '/\$(\w+)\s*=\s*new (' . self::MODELS . ')\(\(int\) \$\w+/',
+            '/\$(\w+)\s*=\s*new (' . self::MODELS . ')\((?:\(int\) )?\$(?:\w+|\w+\[[^]]+\])\)/',
             $source,
             $matches,
             PREG_OFFSET_CAPTURE
