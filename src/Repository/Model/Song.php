@@ -71,6 +71,8 @@ class Song extends database_object implements
     CatalogItemInterface,
     MetadataEnabledInterface
 {
+    // the value a player or an api response passes to fill_ext_info() for the scalars, without the comment or lyrics
+    public const string PARTIAL_FILTER  = 'partial';
     protected const string DB_TABLENAME = 'song';
     // the value Waveform passes to fill_ext_info() to reach the blob the other reads leave behind
     private const string WAVEFORM_FILTER = 'waveform';
@@ -95,8 +97,9 @@ class Song extends database_object implements
     public ?int $artist         = null;
     public ?string $artist_mbid = null;
     public int $bitrate;
-    public int $catalog   = 0;
-    public ?int $channels = null;
+    public ?float $bpm           = null;
+    public int $catalog          = 0;
+    public ?int $channels        = null;
 
     /**
      * song_data table
@@ -162,6 +165,7 @@ class Song extends database_object implements
     private ?string $f_link             = null;
     private ?bool $has_art              = null;
     private ?License $licenseObj        = null;
+    private bool $partial_data_loaded   = false;
     private bool $song_data_loaded      = false;
 
     /**
@@ -420,6 +424,7 @@ class Song extends database_object implements
             'mb_albumid_group',
             'mbid',
             'mime',
+            'partial_data_loaded',
             'played',
             'song_data_loaded',
             'total_count',
@@ -652,6 +657,7 @@ class Song extends database_object implements
         $replaygain_album_peak = $filtered_results['replaygain_album_peak'];
         $r128_track_gain       = $filtered_results['r128_track_gain'];
         $r128_album_gain       = $filtered_results['r128_album_gain'];
+        $bpm                   = $filtered_results['bpm'];
         $original_year         = $filtered_results['original_year'];
         $barcode               = $filtered_results['barcode'];
         $catalog_number        = $filtered_results['catalog_number'];
@@ -806,7 +812,7 @@ class Song extends database_object implements
             }
         }
 
-        self::getSongRepository()->insertData([$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain]);
+        self::getSongRepository()->insertData([$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain, $bpm]);
 
         return $song_id;
     }
@@ -1061,7 +1067,7 @@ class Song extends database_object implements
         self::getSongRepository()->updateSong(
             $song_id,
             [$new_song->album, $new_song->album_disk, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer ?: null, $new_song->bitrate, $new_song->rate, $new_song->mode, $new_song->channels, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id],
-            [$new_song->label ?: null, $new_song->lyrics ?: null, $new_song->language ?: null, $new_song->disksubtitle ?: null, $new_song->comment ?: null, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id]
+            [$new_song->label ?: null, $new_song->lyrics ?: null, $new_song->language ?: null, $new_song->disksubtitle ?: null, $new_song->comment ?: null, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $new_song->bpm, $song_id]
         );
     }
 
@@ -1341,7 +1347,7 @@ class Song extends database_object implements
             if ($this->waveform !== null) {
                 return;
             }
-        } elseif ($this->song_data_loaded) {
+        } elseif ($this->song_data_loaded || ($data_filter !== '' && $this->partial_data_loaded)) {
             return;
         }
 
@@ -1361,6 +1367,8 @@ class Song extends database_object implements
         // don't repeat this process if you've got it all
         if ($data_filter === '') {
             $this->song_data_loaded = true;
+        } elseif ($data_filter !== self::WAVEFORM_FILTER) {
+            $this->partial_data_loaded = true;
         }
     }
 
@@ -2407,7 +2415,7 @@ class Song extends database_object implements
         }
 
         if ($select !== '') {
-            return $repository->getReplaygainRow($this->id);
+            return $repository->getPartialDataRow($this->id);
         }
 
         if (parent::is_cached('song_data', $this->id)) {
@@ -2548,6 +2556,9 @@ class Song extends database_object implements
                 break;
             case 'disksubtitle':
                 $this->disksubtitle = $value !== null ? (string) $value : null;
+                break;
+            case 'bpm':
+                $this->bpm = $value === null ? null : (float) $value;
                 break;
         }
     }

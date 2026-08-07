@@ -357,6 +357,24 @@ final class OpenSubsonic_Fields
     }
 
     /**
+     * songBpm
+     *
+     * The tagged beats per minute. Ampache keeps the fraction a detection tool wrote, but the spec types the field
+     * as an integer, so it is rounded on the way out.
+     *
+     * https://opensubsonic.netlify.app/docs/responses/child/
+     */
+    public function songBpm(Song $song): ?int
+    {
+        // bpm lives in song_data, which a Song does not load on construction
+        $song->fill_ext_info(Song::PARTIAL_FILTER);
+
+        return ($song->bpm === null)
+            ? null
+            : (int) round($song->bpm);
+    }
+
+    /**
      * songContributors
      *
      * The contributor artists of a song. Ampache models artist relationships as artist/album-artist/composer rather
@@ -417,7 +435,7 @@ final class OpenSubsonic_Fields
     public function songReplayGain(Song $song): array
     {
         // the gain columns live in song_data, which a Song does not load on construction
-        $song->fill_ext_info('replaygain_track_gain, replaygain_track_peak, replaygain_album_gain, replaygain_album_peak, r128_track_gain, r128_album_gain');
+        $song->fill_ext_info(Song::PARTIAL_FILTER);
 
         $gain = [];
         if ($song->replaygain_track_gain !== null) {

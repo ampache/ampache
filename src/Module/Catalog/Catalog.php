@@ -721,6 +721,10 @@ abstract class Catalog extends database_object
         $results['r128_track_gain']       = (is_null($results['r128_track_gain'])) ? null : (int) $results['r128_track_gain'];
         $results['r128_album_gain']       = (is_null($results['r128_album_gain'])) ? null : (int) $results['r128_album_gain'];
 
+        // song_data.bpm is decimal(6,2), so round to what the column can hold or every rescan reads back a different value
+        $bpm             = (float) ($results['bpm'] ?? 0);
+        $results['bpm']  = ($bpm > 0 && $bpm <= 9999.99) ? round($bpm, 2) : null;
+
         if (empty($results['genre'])) {
             $results['genre'] = [];
         } elseif (!is_array($results['genre'])) {
@@ -2500,6 +2504,7 @@ abstract class Catalog extends database_object
         $new_song->replaygain_album_peak = $filtered_results['replaygain_album_peak'];
         $new_song->r128_track_gain       = $filtered_results['r128_track_gain'];
         $new_song->r128_album_gain       = $filtered_results['r128_album_gain'];
+        $new_song->bpm                   = $filtered_results['bpm'];
 
         // genre is used in the tag and tag_map tables
         $new_tag_array = [];
@@ -3009,6 +3014,7 @@ abstract class Catalog extends database_object
             'audio_codec' => null,
             'barcode' => null,
             'bitrate' => null,
+            'bpm' => null,
             'catalog_number' => null,
             'channels' => null,
             'comment' => null,

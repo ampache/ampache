@@ -588,6 +588,7 @@ Each `song` entry ([SongObject](#song)):
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
@@ -788,6 +789,7 @@ Each `song` entry ([SongObject](#song)):
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
@@ -1044,6 +1046,7 @@ Each `song` entry ([SongObject](#song)):
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
@@ -2387,6 +2390,7 @@ Each `song` entry ([SongObject](#song)):
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
@@ -2629,6 +2633,7 @@ Each `song` entry ([SongObject](#song)):
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
@@ -3027,6 +3032,7 @@ Each `song` entry ([SongObject](#song)):
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
@@ -3657,6 +3663,7 @@ Each `song` entry ([SongObject](#song)):
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
@@ -3804,6 +3811,7 @@ Each `song` entry ([SongObject](#song)):
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
@@ -4904,6 +4912,7 @@ Each `song` entry ([SongObject](#song)):
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
@@ -5016,6 +5025,7 @@ Each `song` entry ([SongObject](#song)):
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
@@ -5089,6 +5099,7 @@ Returns a single object.
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
@@ -5186,6 +5197,7 @@ Returns a single object.
 | audio_codec            | string              |   YES    |    NO    |       |
 | barcode                | string              |   YES    |    NO    |       |
 | bitrate                | integer             |   YES    |    NO    |       |
+| bpm                    | number              |   YES    |    NO    |       |
 | catalog                | integer             |   YES    |    NO    |       |
 | catalog_number         | string              |   YES    |    NO    |       |
 | channels               | integer             |   YES    |    NO    |       |
@@ -5618,6 +5630,7 @@ Each `song` entry ([SongObject](#song)):
 | albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
 | disk                  | integer                                        |    NO    |    NO    |                                              |
 | disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| bpm                   | number                                         |   YES    |    NO    |                                              |
 | track                 | integer                                        |    NO    |    NO    |                                              |
 | filename              | string                                         |   YES    |    NO    |                                              |
 | genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |

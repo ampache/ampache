@@ -2937,6 +2937,11 @@ class OpenSubsonic_Json_Data
             $json['bookmarkPosition'] = $bookmark_position;
         }
 
+        $bpm = $this->openSubsonicFields->songBpm($song);
+        if ($bpm !== null) {
+            $json['bpm'] = $bpm;
+        }
+
         // Unlike every other optional field here, replayGain must always be present on a Child, as an object even when empty.
         $replay_gain        = $this->openSubsonicFields->songReplayGain($song);
         $json['replayGain'] = ($replay_gain === []) ? (object) [] : $replay_gain;
