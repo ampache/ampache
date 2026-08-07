@@ -3048,7 +3048,17 @@
         "tags": [
           "Chat"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "since",
+            "in": "query",
+            "description": "Only return messages newer than this time (in millis since Jan 1 1970).",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful or failed response",
@@ -3078,7 +3088,13 @@
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "since": {
+                    "type": "integer",
+                    "description": "Only return messages newer than this time (in millis since Jan 1 1970)."
+                  }
+                }
               }
             }
           }
@@ -6069,10 +6085,14 @@
                   "type": "string"
                 }
               },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubsonicFailureResponse"
+                }
+              },
               "text/xml": {
                 "schema": {
-                  "type": "object",
-                  "description": "Error response TODO: TO BE DESCRIBED"
+                  "$ref": "#/components/schemas/SubsonicFailureResponse"
                 }
               }
             }
@@ -6127,10 +6147,14 @@
                   "type": "string"
                 }
               },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubsonicFailureResponse"
+                }
+              },
               "text/xml": {
                 "schema": {
-                  "type": "object",
-                  "description": "Error response TODO: TO BE DESCRIBED"
+                  "$ref": "#/components/schemas/SubsonicFailureResponse"
                 }
               }
             }
@@ -8857,7 +8881,7 @@
         "description": "HTTP form POST (`formPost`) Extension not supported"
       },
       "BinaryResponse": {
-        "description": "Success (binary) or error (xml) response",
+        "description": "Success (binary) or error (json/xml) response",
         "content": {
           "application/binary": {
             "schema": {
@@ -8865,10 +8889,14 @@
               "format": "binary"
             }
           },
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SubsonicFailureResponse"
+            }
+          },
           "text/xml": {
             "schema": {
-              "type": "object",
-              "description": "Error response TODO: TO BE DESCRIBED"
+              "$ref": "#/components/schemas/SubsonicFailureResponse"
             }
           }
         }
@@ -13069,13 +13097,114 @@
           "url": "https://opensubsonic.netlify.app/docs/endpoints/getusers/"
         }
       },
+      "Captions": {
+        "type": "object",
+        "description": "Video file caption details.",
+        "externalDocs": {
+          "description": "Captions",
+          "url": "https://opensubsonic.netlify.app/docs/responses/captions/"
+        },
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of a transcoded version of the video file"
+          },
+          "name": {
+            "type": "string",
+            "description": "Subtitle track name"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "AudioTrack": {
+        "type": "object",
+        "description": "Video file audio tracks.",
+        "externalDocs": {
+          "description": "AudioTrack",
+          "url": "https://opensubsonic.netlify.app/docs/responses/audiotrack/"
+        },
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of a transcoded version of the video file"
+          },
+          "name": {
+            "type": "string",
+            "description": "Language Name (e.g. English, French)"
+          },
+          "languageCode": {
+            "type": "string",
+            "description": "ISO 639 (2/3) code"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "VideoConversion": {
+        "type": "object",
+        "description": "Transcoded video files.",
+        "externalDocs": {
+          "description": "VideoConversion",
+          "url": "https://opensubsonic.netlify.app/docs/responses/videoconversion/"
+        },
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of a transcoded version of the video file"
+          },
+          "bitRate": {
+            "type": "integer",
+            "description": "File bitrate in Kbps"
+          },
+          "audioTrackId": {
+            "type": "integer",
+            "description": "The ID of the audio track this version carries"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
       "VideoInfo": {
         "type": "object",
-        "description": "videoInfo. TODO",
+        "description": "Video details.",
         "externalDocs": {
           "description": "VideoInfo",
           "url": "https://opensubsonic.netlify.app/docs/responses/videoinfo/"
-        }
+        },
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the video file"
+          },
+          "captions": {
+            "type": "array",
+            "description": "Available subtitle tracks",
+            "items": {
+              "$ref": "#/components/schemas/Captions"
+            }
+          },
+          "audioTrack": {
+            "type": "array",
+            "description": "Available audio tracks",
+            "items": {
+              "$ref": "#/components/schemas/AudioTrack"
+            }
+          },
+          "conversion": {
+            "type": "array",
+            "description": "Available transcoded versions of the video file",
+            "items": {
+              "$ref": "#/components/schemas/VideoConversion"
+            }
+          }
+        },
+        "required": [
+          "id"
+        ]
       },
       "GetVideoInfoSuccessResponse": {
         "allOf": [
@@ -13117,10 +13246,19 @@
       },
       "Videos": {
         "type": "object",
-        "description": "videos. TODO",
+        "description": "Video list.",
         "externalDocs": {
           "description": "Videos",
           "url": "https://opensubsonic.netlify.app/docs/responses/videos/"
+        },
+        "properties": {
+          "video": {
+            "type": "array",
+            "description": "List of videos",
+            "items": {
+              "$ref": "#/components/schemas/Child"
+            }
+          }
         }
       },
       "GetVideosSuccessResponse": {
@@ -13275,11 +13413,32 @@
       },
       "SearchResult": {
         "type": "object",
-        "description": "searchResult. TODO",
+        "description": "Search results.",
         "externalDocs": {
           "description": "SearchResult",
           "url": "https://opensubsonic.netlify.app/docs/responses/searchresult/"
-        }
+        },
+        "properties": {
+          "match": {
+            "type": "array",
+            "description": "Search results",
+            "items": {
+              "$ref": "#/components/schemas/Child"
+            }
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Starting list offset"
+          },
+          "totalHits": {
+            "type": "integer",
+            "description": "Total results from the search"
+          }
+        },
+        "required": [
+          "offset",
+          "totalHits"
+        ]
       },
       "SearchSuccessResponse": {
         "allOf": [

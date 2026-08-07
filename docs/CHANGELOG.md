@@ -76,7 +76,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New `artist`.`lastfm_url` column keeping the last.fm page url with the rest of the cached artist info
   * `label_asso` gains a nullable `album` column and its `artist` column becomes nullable, so a label can be associated with an album as well as an artist
 * Subsonic
-  * OpenSubsonic implementation audited against the published specification on 2026-07-27; the audited build is committed as `docs/openapi-opensubsonic.json` and pinned by a test so a refreshed copy prompts a re-audit instead of drifting silently
+  * OpenSubsonic implementation audited against the published specification on 2026-08-07; the audited build is committed as `docs/openapi-opensubsonic.json` and pinned by a test so a refreshed copy prompts a re-audit instead of drifting silently
   * New `transcoding` extension: `getTranscodeDecision` (POST, with the client's playback capabilities as a JSON body) reports whether a file can be played as-is, and `getTranscodeStream` serves the result. The decision is derived from the same transcode settings that serve the bytes, and its `transcodeParams` token is signed with `secret_key` so a client cannot choose its own output format or bitrate
   * New `playbackReport` extension: `reportPlayback` updates now-playing from a client's playback timeline, with `ignoreScrobble=true` refreshing the display without touching play counts
   * New `topSongsByArtistId` extension: `getTopSongs` accepts an artist `id` as well as a name

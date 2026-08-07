@@ -80,8 +80,18 @@ composer qa
 ```
 
 `OpenSubsonicSpecVersionTest` will fail, which is the point — it means the surface moved. Re-audit the
-implementation against the new build, then update `SPEC_SHA256` (and `SPEC_PATH_COUNT` if endpoints were added or
-removed) in that test and the compliance date in `docs/API-subsonic.md`. `testEveryDocumentedEndpointHasAHandler`
+implementation against the new build, then record it:
+
+```shell
+composer spec:refresh
+```
+
+That rewrites `SPEC_SHA256` in the test and the compliance date in `docs/API-subsonic.md` together, so the two
+cannot drift apart. `composer spec:refresh -- --check` reports what would change without writing and exits non-zero,
+which is the form to use in CI; `-- --date=YYYY-MM-DD` stamps a date other than today.
+
+It deliberately leaves `SPEC_PATH_COUNT` alone and only warns when it no longer matches — a changed endpoint count
+means endpoints came or went, which is a bigger review than a re-hash. `testEveryDocumentedEndpointHasAHandler`
 names any endpoint the new build documents that Ampache does not serve.
 
 Response fixtures are captured separately with `capture_subsonic_fixtures.php`; see its header for what it covers
