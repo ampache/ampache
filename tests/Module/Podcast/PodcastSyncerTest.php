@@ -101,6 +101,37 @@ class PodcastSyncerTest extends TestCase
         $this->subject->addEpisodes($podcast, $episodes, null, true);
     }
 
+    /**
+     * The episode rows are inserted whether or not anything downloads, so a subscribe with downloads off
+     * still has to leave the podcast with the right episode count.
+     */
+    public function testAddEpisodesRefreshesTheCountWhenNothingIsDownloaded(): void
+    {
+        $podcast  = $this->createMock(Podcast::class);
+        $episodes = new SimpleXMLElement('<items></items>');
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
+            ->willReturn(-1);
+
+        $this->podcastEpisodeRepository->expects(static::once())
+            ->method('getEpisodeCount')
+            ->with($podcast)
+            ->willReturn(504);
+
+        $this->podcastDeleter->expects(static::never())
+            ->method('deleteEpisode');
+
+        $podcast->expects(static::once())
+            ->method('setEpisodeCount')
+            ->with(504);
+        $podcast->expects(static::once())
+            ->method('save');
+
+        $this->subject->addEpisodes($podcast, $episodes);
+    }
+
     public function testAddEpisodesSkipsDownloadWhenDownloadLimitIsNegative(): void
     {
         $podcast  = $this->createMock(Podcast::class);

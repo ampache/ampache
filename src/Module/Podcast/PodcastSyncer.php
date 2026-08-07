@@ -103,13 +103,14 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
                 $this->podcastEpisodeRepository->getEpisodesEligibleForDeletion($podcast)
             );
 
-            $podcast->setEpisodeCount(
-                $this->podcastEpisodeRepository->getEpisodeCount($podcast)
-            );
             Catalog::update_mapping('podcast');
             Catalog::update_mapping('podcast_episode');
         }
 
+        // the rows are inserted whether or not anything downloaded, so the count is refreshed either way
+        $podcast->setEpisodeCount(
+            $this->podcastEpisodeRepository->getEpisodeCount($podcast)
+        );
         $podcast->setLastSyncDate($syncDate);
         $podcast->save();
     }
