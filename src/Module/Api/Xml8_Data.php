@@ -811,7 +811,11 @@ final class Xml8_Data
         $string = "<total_count>" . Catalog::get_update_info('tag', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         foreach ($objects as $tag_id) {
-            $tag    = new Tag((int) $tag_id);
+            $tag = new Tag((int) $tag_id);
+            if ($tag->isNew()) {
+                continue;
+            }
+
             $merged = $tag->get_merged_tags();
             $merge  = '';
             foreach ($merged as $mergedTag) {
@@ -1020,13 +1024,17 @@ final class Xml8_Data
                     } else {
                         $artist = new Artist((int) $object_id);
                         if ($artist->isNew()) {
-                            break;
+                            continue;
                         }
                         $albums = $this->albumRepository->getAlbumByArtist((int) $object_id);
                         $string .= "<artist id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
                                 $album = new Album($album_id);
+                                if ($album->isNew()) {
+                                    continue;
+                                }
+
                                 $string .= "\t<album id=\"" . $album_id . "\">\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n\t</album>\n";
                             }
                         }
@@ -1040,6 +1048,10 @@ final class Xml8_Data
                         $string .= $this->albums([(int) $object_id], ['songs'], $user, $auth, false);
                     } else {
                         $album = new Album((int) $object_id);
+                        if ($album->isNew()) {
+                            continue;
+                        }
+
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
                         if ($album->get_parent_fullname() != "") {
                             $album_artist = [
@@ -1056,7 +1068,11 @@ final class Xml8_Data
                 break;
             case 'song':
                 foreach ($objects as $object_id) {
-                    $song        = new Song((int) $object_id);
+                    $song = new Song((int) $object_id);
+                    if ($song->isNew()) {
+                        continue;
+                    }
+
                     $song_album  = $this->albumRepository->getNames($song->album);
                     $song_artist = Artist::get_name_array_by_id($song->artist);
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n"
@@ -1080,6 +1096,11 @@ final class Xml8_Data
                         $playlist       = new Playlist((int) $object_id);
                         $playitem_total = $playlist->get_media_count('song');
                     }
+
+                    if ($playlist->isNew()) {
+                        continue;
+                    }
+
                     $playlist_name = $playlist->get_fullname();
                     $playlist_user = $playlist->username;
 
@@ -1227,6 +1248,9 @@ final class Xml8_Data
 
         foreach ($objects as $live_stream_id) {
             $live_stream = new Live_Stream((int) $live_stream_id);
+            if ($live_stream->isNew()) {
+                continue;
+            }
 
             $string .= "<live_stream id=\"" . $live_stream_id . "\">\n\t<name><![CDATA[" . $live_stream->get_fullname() . "]]></name>\n\t<url><![CDATA[" . $live_stream->url . "]]></url>\n\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n\t<catalog>" . $live_stream->catalog . "</catalog>\n\t<site_url><![CDATA[" . $live_stream->site_url . "]]></site_url>\n</live_stream>\n";
         }
@@ -1504,7 +1528,7 @@ final class Xml8_Data
                     foreach ($objects as $object_id) {
                         $artist = new Artist((int) $object_id);
                         if ($artist->isNew()) {
-                            break;
+                            continue;
                         }
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n</$object_type>\n";
                     }
@@ -1513,6 +1537,10 @@ final class Xml8_Data
                     $objects = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
                     foreach ($objects as $object_id) {
                         $album = new Album((int) $object_id);
+                        if ($album->isNew()) {
+                            continue;
+                        }
+
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
                         if ($album->get_parent_fullname() != "") {
                             $album_artist = [
@@ -1529,7 +1557,11 @@ final class Xml8_Data
                 case 'song':
                     $objects = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
                     foreach ($objects as $object_id) {
-                        $song        = new Song((int) $object_id);
+                        $song = new Song((int) $object_id);
+                        if ($song->isNew()) {
+                            continue;
+                        }
+
                         $song_album  = $this->albumRepository->getNames($song->album);
                         $song_artist = Artist::get_name_array_by_id($song->artist);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n"
@@ -1554,6 +1586,11 @@ final class Xml8_Data
                             $playlist       = new Playlist((int) $object_id);
                             $playitem_total = $playlist->get_media_count('song');
                         }
+
+                        if ($playlist->isNew()) {
+                            continue;
+                        }
+
                         $playlist_name = $playlist->get_fullname();
                         $playlist_user = $playlist->username;
 
