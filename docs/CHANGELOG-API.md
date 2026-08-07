@@ -11,6 +11,9 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 
 ### Fixed (692004)
 
+* ALL
+  * An object that no longer exists is left out of the response instead of being returned as an entry of empty fields under its id. Affects genres, radio stations, and the album, song, artist and playlist entries in `index`, `indexes` and `search_group`
+  * A missing object no longer ends the list it appeared in, so the objects after it are returned rather than silently dropped
 * `preference_edit` (API6)
   * preference_edit: `default=1` now writes the server default — the system user's value, and the value a new account is seeded from — instead of the calling user's own value, and reports that value back. Existing accounts are still only changed by `all=1`. **NOTE** the same fix landed in Ampache8, which serves API6 as well
 
