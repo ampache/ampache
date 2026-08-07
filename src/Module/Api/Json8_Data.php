@@ -50,6 +50,7 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\PlaylistFolder;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Shoutbox;
@@ -57,6 +58,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DateMalformedStringException;
@@ -89,6 +91,7 @@ final class Json8_Data
         private BookmarkRepositoryInterface $bookmarkRepository,
         private LabelRepositoryInterface $labelRepository,
         private LicenseRepositoryInterface $licenseRepository,
+        private PlaylistFolderRepositoryInterface $playlistFolderRepository,
         private PodcastRepositoryInterface $podcastRepository,
         private SongRepositoryInterface $songRepository,
     ) {}
@@ -226,6 +229,28 @@ final class Json8_Data
             'object_type' => $collection->object_type,
             'items' => $collection->get_item_count(),
             'has_art' => $collection->has_art(),
+        ];
+    }
+
+    /**
+     * Where this user has filed a list, or nothing at all when they never have.
+     *
+     * The keys are absent rather than zero for an unfiled list, because the root is the absence of a
+     * placement and a `0` would read as a folder that exists.
+     *
+     * @param array<string, array{folder: int, sort_order: int}> $placements
+     * @return array{playlist_folder_id?: string, playlist_folder_sort_order?: int}
+     */
+    private static function placement_row(array $placements, string $objectType, int $objectId): array
+    {
+        $placement = $placements[sprintf('%s-%d', $objectType, $objectId)] ?? null;
+        if ($placement === null) {
+            return [];
+        }
+
+        return [
+            'playlist_folder_id' => (string) $placement['folder'],
+            'playlist_folder_sort_order' => $placement['sort_order'],
         ];
     }
 
@@ -1180,13 +1205,17 @@ final class Json8_Data
      *     type: null|string,
      *     object_type: null|string,
      *     items: int,
-     *     has_art: bool
+     *     has_art: bool,
+     *     playlist_folder_id?: string,
+     *     playlist_folder_sort_order?: int
      * }>
      */
     public function collections_array(array $objects, User $user): array
     {
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
+
+        $placements = $this->playlistFolderRepository->getPlacementMap($user);
 
         $JSON = [];
         foreach ($objects as $collectionId) {
@@ -1195,7 +1224,7 @@ final class Json8_Data
                 continue;
             }
 
-            $JSON[] = self::collection_row($collection);
+            $JSON[] = self::collection_row($collection) + self::placement_row($placements, 'collection', $collection->getId());
         }
 
         return $JSON;
@@ -2231,6 +2260,93 @@ final class Json8_Data
     }
 
     /**
+     * playlist_folder_items
+     *
+     * The lists filed in one folder. A null folder is the root, which has no row of its own, so it is
+     * reported with id 0 and an empty name rather than being left out of the response.
+     *
+     * @param list<array{object_id: int, object_type: string, sort_order: int}> $items
+     * @return string JSON Object "playlist_folder"
+     */
+    public function playlist_folder_items(?PlaylistFolder $folder, array $items, User $user, string $auth, bool $object = true): string
+    {
+        $this->count = $this->count ?: count($items);
+        $items       = array_values(Api::filter_objects($items, $this->count, $this->offset, $this->limit));
+
+        $JSON = [
+            "id" => (string) ($folder?->getId() ?? PlaylistFolder::ROOT),
+            "name" => $folder?->getName() ?? '',
+            "parent" => (string) ($folder?->getParentId() ?? PlaylistFolder::ROOT),
+            "sort_order" => $folder?->getSortOrder() ?? 0,
+            "items" => count($items),
+            "contents" => $this->playlist_folder_contents($items, $user, $auth),
+        ];
+
+        $output = ($object) ? ["playlist_folder" => $JSON] : $JSON;
+
+        return json_encode($output, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '';
+    }
+
+    /**
+     * playlist_folders
+     *
+     * The calling user's folder tree as a flat list; clients rebuild the hierarchy from each `parent`.
+     *
+     * @param list<PlaylistFolder> $folders
+     * @return string JSON Object "playlist_folder"
+     */
+    public function playlist_folders(array $folders, User $user, bool $object = true): string
+    {
+        $this->count = $this->count ?: count($folders);
+        $md5         = md5(serialize(array_map(static fn(PlaylistFolder $folder): int => $folder->getId(), $folders)));
+        $JSON        = $this->playlist_folders_array($folders, $user);
+
+        if ($object) {
+            $output = [
+                "total_count" => $this->count,
+                "md5" => $md5,
+                "playlist_folder" => $JSON
+            ];
+        } else {
+            $output = $JSON[0] ?? [];
+        }
+
+        return json_encode($output, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '';
+    }
+
+    /**
+     * playlist_folders_array
+     *
+     * @param list<PlaylistFolder> $folders
+     * @return array<int, array{
+     *     id: string,
+     *     name: string,
+     *     parent: string,
+     *     sort_order: int,
+     *     items: int
+     * }>
+     */
+    public function playlist_folders_array(array $folders, User $user): array
+    {
+        $this->count = $this->count ?: count($folders);
+        $folders     = array_values(Api::filter_objects($folders, $this->count, $this->offset, $this->limit));
+        $counts      = $this->playlistFolderRepository->getItemCounts($user);
+
+        $JSON = [];
+        foreach ($folders as $folder) {
+            $JSON[] = [
+                "id" => (string) $folder->getId(),
+                "name" => $folder->getName(),
+                "parent" => (string) $folder->getParentId(),
+                "sort_order" => $folder->getSortOrder(),
+                "items" => $counts[$folder->getId()] ?? 0,
+            ];
+        }
+
+        return $JSON;
+    }
+
+    /**
      * playlists_string
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
@@ -2279,12 +2395,16 @@ final class Json8_Data
      *     "md5": null|string,
      *     "last_update": int|null,
      *     "time": int,
+     *     "playlist_folder_id"?: string,
+     *     "playlist_folder_sort_order"?: int,
      * }>
      */
     public function playlists_array(array $objects, User $user, string $auth, bool $songs = false): array
     {
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
+
+        $placements = $this->playlistFolderRepository->getPlacementMap($user);
 
         $JSON = [];
         foreach ($objects as $playlist_id) {
@@ -2368,7 +2488,7 @@ final class Json8_Data
                 "md5" => $md5,
                 "last_update" => $last_update,
                 "time" => $duration ?: $last_duration,
-            ];
+            ] + self::placement_row($placements, $object_type, $playlist->id);
         }
 
         return $JSON;
@@ -3635,5 +3755,87 @@ final class Json8_Data
             'video' => $this->videos_array($ids, $user, $auth),
             default => null,
         };
+    }
+
+    /**
+     * One flat ordered list of the folder's members, each carrying its own type's object.
+     *
+     * @param list<array{object_id: int, object_type: string, sort_order: int}> $items
+     * @return array<int, array<string, mixed>>
+     */
+    private function playlist_folder_contents(array $items, User $user, string $auth): array
+    {
+        // Each type is rendered in one batch, then indexed by id so the stored order can be replayed over it
+        $rendered = [];
+        foreach (['playlist', 'search', 'collection'] as $objectType) {
+            $ids = array_values(
+                array_map(
+                    static fn(array $item): int => $item['object_id'],
+                    array_filter($items, static fn(array $item): bool => $item['object_type'] === $objectType)
+                )
+            );
+
+            if ($ids === []) {
+                continue;
+            }
+
+            $rendered[$objectType] = $this->playlist_folder_group($objectType, $ids, $user, $auth);
+        }
+
+        $contents = [];
+        foreach ($items as $item) {
+            $objectType = $item['object_type'];
+            $apiType    = PlaylistFolder::denormalizeType($objectType);
+            $object     = $rendered[$objectType][$item['object_id']] ?? null;
+
+            // A member the builder skipped drops out rather than leaving a hole the client has to guess at
+            if ($object === null) {
+                continue;
+            }
+
+            $contents[] = [
+                'sort_order' => $item['sort_order'],
+                'object_type' => $apiType,
+                $apiType => $object,
+            ];
+        }
+
+        return $contents;
+    }
+
+    /**
+     * Render every member of one type through that type's own builder, indexed by object id.
+     *
+     * @param list<int> $ids
+     * @return array<int, array<string, mixed>>
+     */
+    private function playlist_folder_group(string $objectType, array $ids, User $user, string $auth): array
+    {
+        // A smartlist is stored as `search` but its builder wants the prefixed id the rest of the API uses
+        $keys = ($objectType === 'search')
+            ? array_map(static fn(int $id): string => 'smart_' . $id, $ids)
+            : $ids;
+
+        $limit        = $this->limit;
+        $count        = $this->count;
+        $offset       = $this->offset;
+        $this->limit  = null;
+        $this->count  = 0;
+        $this->offset = 0;
+
+        $rows = ($objectType === 'collection')
+            ? $this->collections_array($ids, $user)
+            : $this->playlists_array($keys, $user, $auth);
+
+        $this->limit  = $limit;
+        $this->count  = $count;
+        $this->offset = $offset;
+
+        $indexed = [];
+        foreach ($rows as $row) {
+            $indexed[(int) str_replace('smart_', '', (string) $row['id'])] = $row;
+        }
+
+        return $indexed;
     }
 }

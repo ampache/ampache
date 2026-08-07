@@ -1226,7 +1226,6 @@ class Json4_Data
         $this->count = $this->count ?: count($objects);
         $JSON        = $this->tags_array($objects);
 
-
         return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 

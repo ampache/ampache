@@ -63,7 +63,7 @@ Each page lists every filter and sort that browse accepts, and what each one doe
 | [License Browse](https://ampache.org/api/browse/license-browse)                 | `license`         | `licenses`                                                                                           |
 | [Live Stream Browse](https://ampache.org/api/browse/live_stream-browse)         | `live_stream`     | `live_streams`                                                                                       |
 | [Playlist Browse](https://ampache.org/api/browse/playlist-browse)               | `playlist`        | `playlists`, `user_playlists`                                                                        |
-| [Playlist Search Browse](https://ampache.org/api/browse/playlist_search-browse) | `playlist_search` | `index`, `list`, `playlists`, `stats`                                                                |
+| [Playlist Search Browse](https://ampache.org/api/browse/playlist_search-browse) | `playlist_search` | `index`, `list`, `playlist_folder_items`, `playlists`, `stats`                                       |
 | [Podcast Browse](https://ampache.org/api/browse/podcast-browse)                 | `podcast`         | `browse`, `podcasts`                                                                                 |
 | [Podcast Episode Browse](https://ampache.org/api/browse/podcast_episode-browse) | `podcast_episode` | `browse`, `podcast_episodes`                                                                         |
 | [Share Browse](https://ampache.org/api/browse/share-browse)                     | `share`           | `shares`                                                                                             |

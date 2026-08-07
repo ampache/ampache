@@ -23,49 +23,54 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method\Api5;
+namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Creates a new playlist and returns it.
+ * Deletes an empty playlist folder
  *
- * Version 5 always creates a public playlist for any type other than `private`, so it keeps a
- * method of its own.
+ * Only api version 8 knows about playlist folders.
  */
-final class PlaylistCreate5Method implements MethodInterface
+final class PlaylistFolderDelete8Method implements MethodInterface
 {
-    public const string ACTION = 'playlist_create';
+    use PlaylistFolderLoaderTrait;
+
+    public const string ACTION = 'playlist_folder_delete';
+
+    private PlaylistFolderRepositoryInterface $playlistFolderRepository;
 
     public function __construct(
-        private StreamFactoryInterface $streamFactory,
-    ) {}
+        PlaylistFolderRepositoryInterface $playlistFolderRepository,
+    ) {
+        $this->playlistFolderRepository = $playlistFolderRepository;
+    }
 
     /**
-     * playlist_create
-     * MINIMUM_API_VERSION=380001
+     * playlist_folder_delete
+     * MINIMUM_API_VERSION=800000
      *
-     * Create a new playlist and return it
+     * Delete a folder. It must hold neither a child folder nor a filed list; the lists themselves are
+     * never touched, so emptying a folder means moving its contents out first.
      *
-     * name = (string) Playlist name
-     * type = (string) 'public', 'private'
+     * filter = (string) the folder, as an id or a name path
      *
      * @param array{
-     *     name?: string,
-     *     type?: string,
+     *     filter?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param 5 $apiVersion
+     *
      * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -75,37 +80,26 @@ final class PlaylistCreate5Method implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
-        if (!array_key_exists('name', $input)) {
-            throw new RequestParamMissingException(
-                sprintf('Bad Request: %s', 'name')
-            );
-        }
+        $folder = $this->loadFolder($input, $user);
 
-        $name = $input['name'];
-        $type = (isset($input['type'])) ? $input['type'] : 'private';
-        if ($type != 'private') {
-            $type = 'public';
-        }
-
-        $object_id = Playlist::create($name, $type, $user->id);
-        if (!$object_id) {
-            return $response->withBody(
-                $this->streamFactory->createStream(
-                    $output->error(
-                        $apiVersion,
-                        ErrorCodeEnum::BAD_REQUEST,
-                        'Bad Request',
-                        self::ACTION,
-                        'input'
-                    )
+        if (!$this->playlistFolderRepository->delete($folder->getId())) {
+            $response->getBody()->write(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::FAILED_ACCESS_CHECK,
+                    'Not Deleted',
+                    self::ACTION,
+                    'filter'
                 )
             );
+
+            return $response;
         }
 
-        return $response->withBody(
-            $this->streamFactory->createStream(
-                $output->playlists($apiVersion, [$object_id], $user, $input['auth'], false, false)
-            )
+        $response->getBody()->write(
+            $output->success($apiVersion, 'playlist folder deleted')
         );
+
+        return $response;
     }
 }

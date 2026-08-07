@@ -37,6 +37,7 @@ return [
     AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
     BroadcastRepositoryInterface::class => autowire(BroadcastRepository::class),
     PlaylistRepositoryInterface::class => autowire(PlaylistRepository::class),
+    PlaylistFolderRepositoryInterface::class => autowire(PlaylistFolderRepository::class),
     SearchRepositoryInterface::class => autowire(SearchRepository::class),
     SongRepositoryInterface::class => autowire(SongRepository::class),
     LabelRepositoryInterface::class => autowire(LabelRepository::class),

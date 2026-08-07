@@ -1081,6 +1081,12 @@
           },
           "time": {
             "type": "integer"
+          },
+          "playlist_folder_id": {
+            "type": "string"
+          },
+          "playlist_folder_sort_order": {
+            "type": "integer"
           }
         },
         "required": [
@@ -5001,6 +5007,12 @@
           },
           "has_art": {
             "type": "boolean"
+          },
+          "playlist_folder_id": {
+            "type": "string"
+          },
+          "playlist_folder_sort_order": {
+            "type": "integer"
           }
         },
         "required": [
@@ -5084,6 +5096,12 @@
               },
               "has_art": {
                 "type": "boolean"
+              },
+              "playlist_folder_id": {
+                "type": "string"
+              },
+              "playlist_folder_sort_order": {
+                "type": "integer"
               },
               "contents": {
                 "type": "array",
@@ -5207,6 +5225,191 @@
           "album_name": {
             "type": "string",
             "description": "Create or reuse an album you own"
+          }
+        },
+        "additionalProperties": true
+      },
+      "PlaylistFolderObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parent": {
+            "type": "string"
+          },
+          "sort_order": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "parent",
+          "sort_order",
+          "items"
+        ],
+        "additionalProperties": true
+      },
+      "PlaylistFoldersResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "playlist_folder": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlaylistFolderObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "playlist_folder"
+        ],
+        "additionalProperties": true
+      },
+      "PlaylistFolderItemObject": {
+        "type": "object",
+        "description": "One list filed in a playlist folder. `object_type` is `playlist`, `smartlist` or `collection` and the property of the same name carries that type's own object, e.g. `{\"sort_order\": 1, \"object_type\": \"playlist\", \"playlist\": {...}}`. `sort_order` is client-assigned and shared with the sibling folders, so ties are broken by name.",
+        "properties": {
+          "sort_order": {
+            "type": "integer",
+            "description": "position among its siblings; 0 when never placed"
+          },
+          "object_type": {
+            "type": "string",
+            "description": "The kind of object referenced, as a bare string. The set is intentionally open so a new media type is not a breaking change; values seen today include `song`, `album`, `artist`, `playlist`, `podcast`, `podcast_episode` and `video`."
+          }
+        },
+        "required": [
+          "sort_order",
+          "object_type"
+        ],
+        "additionalProperties": {
+          "type": "object"
+        }
+      },
+      "PlaylistFolderItemsResponse": {
+        "type": "object",
+        "properties": {
+          "playlist_folder": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "parent": {
+                "type": "string"
+              },
+              "sort_order": {
+                "type": "integer"
+              },
+              "items": {
+                "type": "integer"
+              },
+              "contents": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PlaylistFolderItemObject"
+                }
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "parent",
+              "sort_order",
+              "items",
+              "contents"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "playlist_folder"
+        ],
+        "additionalProperties": true
+      },
+      "PlaylistFolderCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "parent": {
+            "type": "string",
+            "description": "Parent folder as an id or a name path; the root when omitted"
+          },
+          "sort_order": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": true
+      },
+      "PlaylistFolderEditRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "parent": {
+            "type": "string",
+            "description": "New parent as an id or a name path; 0 for the root"
+          },
+          "sort_order": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": true
+      },
+      "PlaylistFolderRemoveRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "playlist",
+              "smartlist",
+              "collection"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "PlaylistFolderAddRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "playlist",
+              "smartlist",
+              "collection"
+            ],
+            "type": "string"
+          },
+          "sort_order": {
+            "type": "integer"
           }
         },
         "additionalProperties": true
@@ -5803,6 +6006,8 @@
     "DELETE /collections/{collection_id}": "action=collection_delete&filter={collection_id}",
     "DELETE /collections/{collection_id}/items": "action=collection_remove&filter={collection_id}",
     "DELETE /live-streams/{live_stream_id}": "action=live_stream_delete&filter={live_stream_id}",
+    "DELETE /playlist-folders/{playlist_folder_id}": "action=playlist_folder_delete&filter={playlist_folder_id}",
+    "DELETE /playlist-folders/{playlist_folder_id}/items": "action=playlist_folder_remove&filter={playlist_folder_id}",
     "DELETE /playlists/{playlist_id}": "action=playlist_delete&filter={playlist_id}",
     "DELETE /podcast-episodes/{episode_id}": "action=podcast_episode_delete&filter={episode_id}",
     "DELETE /podcast-episodes/{episode_id}/bookmark": "action=bookmark_delete&filter={episode_id}&type=podcast_episode",
@@ -5882,6 +6087,9 @@
     "GET /me/playlists": "action=user_playlists",
     "GET /me/smartlists": "action=user_smartlists",
     "GET /ping": "action=ping",
+    "GET /playlist-folders": "action=playlist_folders",
+    "GET /playlist-folders/{playlist_folder_id}": "action=playlist_folder&filter={playlist_folder_id}",
+    "GET /playlist-folders/{playlist_folder_id}/items": "action=playlist_folder_items&filter={playlist_folder_id}",
     "GET /playlists": "action=playlists",
     "GET /playlists/search": "action=search&type=playlist",
     "GET /playlists/stats": "action=stats&type=playlist",
@@ -5953,6 +6161,7 @@
     "PATCH /bookmarks/{bookmark_id}": "action=bookmark_edit&filter={bookmark_id}",
     "PATCH /collections/{collection_id}": "action=collection_edit&filter={collection_id}",
     "PATCH /live-streams/{live_stream_id}": "action=live_stream_edit&filter={live_stream_id}",
+    "PATCH /playlist-folders/{playlist_folder_id}": "action=playlist_folder_edit&filter={playlist_folder_id}",
     "PATCH /playlists/{playlist_id}": "action=playlist_edit&filter={playlist_id}",
     "PATCH /podcast-episodes/{episode_id}/bookmark": "action=bookmark_edit&filter={episode_id}&type=podcast_episode",
     "PATCH /podcasts/{podcast_id}": "action=podcast_edit&filter={podcast_id}",
@@ -6036,6 +6245,8 @@
     "PUT /collections": "action=collection_create",
     "PUT /collections/{collection_id}/items": "action=collection_add&filter={collection_id}",
     "PUT /live-streams": "action=live_stream_create",
+    "PUT /playlist-folders": "action=playlist_folder_create",
+    "PUT /playlist-folders/{playlist_folder_id}/items": "action=playlist_folder_add&filter={playlist_folder_id}",
     "PUT /playlists": "action=playlist_create",
     "PUT /podcast-episodes/{episode_id}/bookmark": "action=bookmark_create&filter={episode_id}&type=podcast_episode",
     "PUT /podcasts": "action=podcast_create",
@@ -20599,6 +20810,532 @@
           "Authentication"
         ],
         "operationId": "ping"
+      }
+    },
+    "/playlist-folders": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistFoldersResponse"
+                }
+              }
+            },
+            "description": "The folder tree"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "List playlist folders",
+        "tags": [
+          "Playlist Folders"
+        ],
+        "description": "A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to you alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. The whole tree is returned as a flat list; rebuild the hierarchy from each folder's parent, where 0 is the root.",
+        "operationId": "playlistFolders"
+      },
+      "put": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "parent",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Parent folder as an id or a name path; the root when omitted"
+          },
+          {
+            "in": "query",
+            "name": "sort_order",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistFoldersResponse"
+                }
+              }
+            },
+            "description": "The folder that was created"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Create a playlist folder",
+        "tags": [
+          "Playlist Folders"
+        ],
+        "description": "Creates an empty folder. The name may not contain a / because that is the path separator, and must be unique among its siblings; the comparison is case-insensitive, so Rock and rock collide.",
+        "requestBody": {
+          "required": false,
+          "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaylistFolderCreateRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaylistFolderCreateRequest"
+              }
+            }
+          }
+        },
+        "operationId": "playlistFolderCreate"
+      }
+    },
+    "/playlist-folders/{playlist_folder_id}": {
+      "delete": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playlist_folder_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The folder, as a numeric id or a name path such as /Rock/Live"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Deletion confirmation"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Delete a playlist folder",
+        "tags": [
+          "Playlist Folders"
+        ],
+        "description": "Deletes a folder that holds neither a child folder nor a filed list. The lists themselves are never deleted with it, so a folder is emptied by moving its contents out first.",
+        "operationId": "playlistFolderDelete"
+      },
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playlist_folder_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The folder, as a numeric id or a name path such as /Rock/Live"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistFoldersResponse"
+                }
+              }
+            },
+            "description": "A single playlist folder"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Get a playlist folder",
+        "tags": [
+          "Playlist Folders"
+        ],
+        "description": "One folder's own details, without its contents. A folder belonging to another user reports as not found rather than forbidden, so a tree cannot be probed from outside.",
+        "operationId": "playlistFolder"
+      },
+      "patch": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playlist_folder_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The folder, as a numeric id or a name path such as /Rock/Live"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "parent",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "New parent as an id or a name path; 0 for the root"
+          },
+          {
+            "in": "query",
+            "name": "sort_order",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistFoldersResponse"
+                }
+              }
+            },
+            "description": "The folder that was updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Edit a playlist folder",
+        "tags": [
+          "Playlist Folders"
+        ],
+        "description": "Renames, re-parents or repositions a folder. Anything not sent is left alone. Moving a folder into its own subtree is refused, because it would detach the branch from the tree.",
+        "requestBody": {
+          "required": false,
+          "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaylistFolderEditRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaylistFolderEditRequest"
+              }
+            }
+          }
+        },
+        "operationId": "playlistFolderEdit"
+      }
+    },
+    "/playlist-folders/{playlist_folder_id}/items": {
+      "delete": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playlist_folder_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The folder, as a numeric id or a name path such as /Rock/Live"
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "playlist",
+                "smartlist",
+                "collection"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Removal confirmation"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Take a list out of a playlist folder",
+        "tags": [
+          "Playlist Folders"
+        ],
+        "description": "Returns a list to the root. The list itself is untouched; because an unfiled list has no stored placement at all, removing one that was never filed is not an error.",
+        "requestBody": {
+          "required": false,
+          "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaylistFolderRemoveRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaylistFolderRemoveRequest"
+              }
+            }
+          }
+        },
+        "operationId": "playlistFolderRemoveItems"
+      },
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playlist_folder_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The folder, as a numeric id or a name path such as /Rock/Live"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistFolderItemsResponse"
+                }
+              }
+            },
+            "description": "The folder and the lists filed in it"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "List the contents of a playlist folder",
+        "tags": [
+          "Playlist Folders"
+        ],
+        "description": "The playlists, smartlists and collections filed in one folder. Use 0 as the id for the root, which is not a stored folder: it holds every list you can see that has not been filed elsewhere, so a newly created playlist appears there without anything having been written for it.",
+        "operationId": "playlistFolderItems"
+      },
+      "put": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playlist_folder_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The folder, as a numeric id or a name path such as /Rock/Live"
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "playlist",
+                "smartlist",
+                "collection"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort_order",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Placement confirmation"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "File a list into a playlist folder",
+        "tags": [
+          "Playlist Folders"
+        ],
+        "description": "Files a playlist, smartlist or collection into a folder. A list already filed is moved rather than copied: it sits in exactly one of your folders at a time. Use 0 as the folder id to send it back to the root.",
+        "requestBody": {
+          "required": false,
+          "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaylistFolderAddRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaylistFolderAddRequest"
+              }
+            }
+          }
+        },
+        "operationId": "playlistFolderAddItems"
       }
     },
     "/playlists": {

@@ -23,37 +23,52 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method\Api3;
+namespace Ampache\Module\Api\Method\Api8;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
-final class LastShouts3Method implements MethodInterface
+/**
+ * Returns a single playlist folder, found by its id or by its name path
+ *
+ * Only api version 8 knows about playlist folders.
+ */
+final class PlaylistFolder8Method implements MethodInterface
 {
-    public const string ACTION = 'last_shouts';
+    use PlaylistFolderLoaderTrait;
+
+    public const string ACTION = 'playlist_folder';
+
+    private PlaylistFolderRepositoryInterface $playlistFolderRepository;
 
     public function __construct(
-        private ShoutRepositoryInterface $shoutRepository,
-        private StreamFactoryInterface $streamFactory,
-    ) {}
+        PlaylistFolderRepositoryInterface $playlistFolderRepository,
+    ) {
+        $this->playlistFolderRepository = $playlistFolderRepository;
+    }
 
     /**
-     * last_shouts
-     * This get the latest posted shouts
+     * playlist_folder
+     * MINIMUM_API_VERSION=800000
+     *
+     * One folder's metadata, without its contents
+     *
+     * filter = (string) the folder, as an id or a name path such as /Rock/Live
      *
      * @param array{
-     *     username?: string,
-     *     limit?: int,
+     *     filter?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param 3 $apiVersion
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -63,28 +78,11 @@ final class LastShouts3Method implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
-        $limit = (int) ($input['limit'] ?? 0);
-        if ($limit < 1) {
-            $limit = (int) AmpConfig::get('popular_threshold');
-        }
-        if (AmpConfig::get('sociable')) {
-            if (!empty($input['username'])) {
-                $username = $input['username'];
-            } else {
-                $username = null;
-            }
+        $folder = $this->loadFolder($input, $user);
 
-            $results = $this->shoutRepository->getTop($limit, $username);
-
-            ob_end_clean();
-
-            return $response->withBody(
-                $this->streamFactory->createStream(
-                    $output->shouts($apiVersion, iterator_to_array($results))
-                )
-            );
-        }
-        debug_event(self::class, 'Sociable feature is not enabled.', 3);
+        $response->getBody()->write(
+            $output->playlistFolders($apiVersion, [$folder], $user)
+        );
 
         return $response;
     }

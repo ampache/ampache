@@ -8,7 +8,7 @@ This page lists the filters and sorts the `playlist_search` browse accepts. Refe
 
 ## API methods using this browse
 
-`index`, `list`, `playlists`, `stats`
+`index`, `list`, `playlist_folder_items`, `playlists`, `stats`
 
 ## Available browse filters
 

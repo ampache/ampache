@@ -51,6 +51,7 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\PlaylistFolder;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Shoutbox;
@@ -58,6 +59,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DOMDocument;
@@ -81,6 +83,7 @@ final class Xml8_Data
         private BookmarkRepositoryInterface $bookmarkRepository,
         private LabelRepositoryInterface $labelRepository,
         private LicenseRepositoryInterface $licenseRepository,
+        private PlaylistFolderRepositoryInterface $playlistFolderRepository,
         private PodcastRepositoryInterface $podcastRepository,
         private SongRepositoryInterface $songRepository,
     ) {}
@@ -185,6 +188,24 @@ final class Xml8_Data
 "
             . "	<has_art>" . ((int) $collection->has_art()) . "</has_art>
 ";
+    }
+
+    /**
+     * Where this user has filed a list, or nothing at all when they never have.
+     *
+     * The elements are absent rather than zero for an unfiled list, because the root is the absence of a
+     * placement and a `0` would read as a folder that exists.
+     *
+     * @param array<string, array{folder: int, sort_order: int}> $placements
+     */
+    private static function placement_row(array $placements, string $objectType, int $objectId): string
+    {
+        $placement = $placements[sprintf('%s-%d', $objectType, $objectId)] ?? null;
+        if ($placement === null) {
+            return '';
+        }
+
+        return "\t<playlist_folder_id>" . $placement['folder'] . "</playlist_folder_id>\n\t<playlist_folder_sort_order>" . $placement['sort_order'] . "</playlist_folder_sort_order>\n";
     }
 
     /**
@@ -522,11 +543,13 @@ final class Xml8_Data
      *
      * @param list<int> $objects
      */
-    public function collections(array $objects, User $user, string $auth): string
+    public function collections(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
         unset($auth);
         $this->count = $this->count ?: count($objects);
-        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
+
+        $placements = $this->playlistFolderRepository->getPlacementMap($user);
 
         $string = '';
         foreach ($objects as $collectionId) {
@@ -535,11 +558,11 @@ final class Xml8_Data
                 continue;
             }
 
-            $string .= self::collection_row($collection) . "</collection>
+            $string .= self::collection_row($collection) . self::placement_row($placements, 'collection', $collection->getId()) . "</collection>
 ";
         }
 
-        return Api::output_xml($string);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -1240,22 +1263,83 @@ final class Xml8_Data
     }
 
     /**
+     * playlist_folder_items
+     *
+     * The lists filed in one folder. A null folder is the root, which has no row of its own, so it is
+     * reported with id 0 and an empty name rather than being left out of the response.
+     *
+     * @param list<array{object_id: int, object_type: string, sort_order: int}> $items
+     */
+    public function playlist_folder_items(?PlaylistFolder $folder, array $items, User $user, string $auth): string
+    {
+        $this->count = $this->count ?: count($items);
+        $items       = array_values(Api::filter_objects($items, $this->count, $this->offset, $this->limit));
+
+        $string = "<total_count>" . $this->count . "</total_count>\n<md5>" . md5(serialize($items)) . "</md5>\n";
+        $string .= "<playlist_folder id=\"" . ($folder?->getId() ?? PlaylistFolder::ROOT) . "\">\n";
+        $string .= "\t<name><![CDATA[" . ($folder?->getName() ?? '') . "]]></name>\n";
+        $string .= "\t<parent>" . ($folder?->getParentId() ?? PlaylistFolder::ROOT) . "</parent>\n";
+        $string .= "\t<sort_order>" . ($folder?->getSortOrder() ?? 0) . "</sort_order>\n";
+        $string .= "\t<items>" . count($items) . "</items>\n";
+        $string .= "\t<contents>\n";
+
+        foreach ($items as $item) {
+            $apiType  = PlaylistFolder::denormalizeType($item['object_type']);
+            $rendered = $this->playlist_folder_member($item, $user, $auth);
+            if ($rendered === '') {
+                continue;
+            }
+
+            $string .= "\t\t<item sort_order=\"" . $item['sort_order'] . "\" object_type=\"" . $apiType . "\">\n" . $rendered . "\t\t</item>\n";
+        }
+
+        $string .= "\t</contents>\n</playlist_folder>\n";
+
+        return Api::output_xml($string);
+    }
+
+    /**
+     * playlist_folders
+     *
+     * The calling user's folder tree as a flat list; clients rebuild the hierarchy from each `parent`.
+     *
+     * @param list<PlaylistFolder> $folders
+     */
+    public function playlist_folders(array $folders, User $user, bool $full_xml = true): string
+    {
+        $this->count = $this->count ?: count($folders);
+        $md5         = md5(serialize(array_map(static fn(PlaylistFolder $folder): int => $folder->getId(), $folders)));
+        $folders     = array_values(Api::filter_objects($folders, $this->count, $this->offset, $this->limit, $full_xml));
+        $counts      = $this->playlistFolderRepository->getItemCounts($user);
+
+        $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+
+        foreach ($folders as $folder) {
+            $string .= "<playlist_folder id=\"" . $folder->getId() . "\">\n\t<name><![CDATA[" . $folder->getName() . "]]></name>\n\t<parent>" . $folder->getParentId() . "</parent>\n\t<sort_order>" . $folder->getSortOrder() . "</sort_order>\n\t<items>" . ($counts[$folder->getId()] ?? 0) . "</items>\n</playlist_folder>\n";
+        }
+
+        return Api::output_xml($string, $full_xml);
+    }
+
+    /**
      * playlists
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
      * @param array<int|string> $objects Playlist id's to include
      */
-    public function playlists(array $objects, User $user, string $auth, bool $songs = false): string
+    public function playlists(array $objects, User $user, string $auth, bool $songs = false, bool $full_xml = true): string
     {
         $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
+        $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         $total_count = (AmpConfig::get('hide_search', false))
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
             : Catalog::get_update_info('playlist', $user->id);
-        $string = "<total_count>" . $total_count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
+        $string = ($full_xml) ? "<total_count>" . $total_count . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+
+        $placements = $this->playlistFolderRepository->getPlacementMap($user);
 
         // Foreach the playlist ids
         foreach ($objects as $playlist_id) {
@@ -1317,10 +1401,10 @@ final class Xml8_Data
             $has_collaborate = $has_access ?: $playlist->has_collaborate($user);
 
             // Build this element
-            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_username . "]]></owner>\n\t<user id=\"" . $playlist_user . "\">\n\t\t<username><![CDATA[" . $playlist_username . "]]></username>\n\t</user>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . (($has_access) ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . (($has_collaborate) ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<md5>" . $md5 . "</md5>\n\t<last_update>" . $last_update . "</last_update>\n\t<time>" . ($duration ?: $last_duration) . "</time>\n</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_username . "]]></owner>\n\t<user id=\"" . $playlist_user . "\">\n\t\t<username><![CDATA[" . $playlist_username . "]]></username>\n\t</user>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . (($has_access) ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . (($has_collaborate) ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<md5>" . $md5 . "</md5>\n\t<last_update>" . $last_update . "</last_update>\n\t<time>" . ($duration ?: $last_duration) . "</time>\n" . self::placement_row($placements, $object_type, (int) $playlist->id) . "</playlist>\n";
         }
 
-        return Api::output_xml($string);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -1931,12 +2015,40 @@ final class Xml8_Data
             'genre' => $this->genres($ids, $user),
             'label' => $this->labels($ids, $user),
             'live_stream' => $this->live_streams($ids, $user, false),
-            'playlist' => $this->playlists($ids, $user, $auth),
+            'playlist' => $this->playlists($ids, $user, $auth, false, false),
             'podcast' => $this->podcasts($ids, $user, $auth),
             'podcast_episode' => $this->podcast_episodes($ids, $user, $auth, false),
             'song' => $this->songs($ids, $user, $auth, false),
             'video' => $this->videos($ids, $user, $auth, false),
             default => null,
         };
+    }
+
+    /**
+     * One member rendered through its own type's builder, or an empty string when that builder skipped it.
+     *
+     * @param array{object_id: int, object_type: string, sort_order: int} $item
+     */
+    private function playlist_folder_member(array $item, User $user, string $auth): string
+    {
+        $limit        = $this->limit;
+        $count        = $this->count;
+        $offset       = $this->offset;
+        $this->limit  = null;
+        $this->count  = 0;
+        $this->offset = 0;
+
+        // A smartlist is stored as `search` but its builder wants the prefixed id the rest of the API uses
+        $rendered = match ($item['object_type']) {
+            'collection' => $this->collections([$item['object_id']], $user, $auth, false),
+            'search' => $this->playlists(['smart_' . $item['object_id']], $user, $auth, false, false),
+            default => $this->playlists([$item['object_id']], $user, $auth, false, false),
+        };
+
+        $this->limit  = $limit;
+        $this->count  = $count;
+        $this->offset = $offset;
+
+        return $rendered;
     }
 }

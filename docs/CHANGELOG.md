@@ -68,6 +68,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
   * New `user`.`subsonic_secret` column holding the per-user Subsonic password
   * New database tables `collection` and `collection_map`
+  * New database tables `playlist_folder` and `playlist_folder_map`, holding a private per-user tree that organises playlists, smartlists and collections
   * New maintained `last_played` column on `album`, `album_disk`, `artist`, `podcast`, `podcast_episode`, `song` and `video`, written on the same statement that increments the play counter and backfilled from the existing play history (live counts, archived detail and consolidated summaries)
   * `collection` added to the `object_type` enum on `image`, `object_count`, `cache_object_count`, `cache_object_count_run`, `object_count_summary` and `object_count_archive`, so a collection carries its own art and play statistics
   * `collection` added to the `object_type` enum on `rating` and `user_flag`, so a collection can be rated and flagged

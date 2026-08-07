@@ -23,48 +23,56 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method\Api5;
+namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Creates a new playlist and returns it.
+ * Creates a playlist folder
  *
- * Version 5 always creates a public playlist for any type other than `private`, so it keeps a
- * method of its own.
+ * Only api version 8 knows about playlist folders.
  */
-final class PlaylistCreate5Method implements MethodInterface
+final class PlaylistFolderCreate8Method implements MethodInterface
 {
-    public const string ACTION = 'playlist_create';
+    use PlaylistFolderLoaderTrait;
+
+    public const string ACTION = 'playlist_folder_create';
+
+    public const string REST_ACTION = 'playlist_folders_create';
+
+    private PlaylistFolderRepositoryInterface $playlistFolderRepository;
 
     public function __construct(
-        private StreamFactoryInterface $streamFactory,
-    ) {}
+        PlaylistFolderRepositoryInterface $playlistFolderRepository,
+    ) {
+        $this->playlistFolderRepository = $playlistFolderRepository;
+    }
 
     /**
-     * playlist_create
-     * MINIMUM_API_VERSION=380001
+     * playlist_folder_create
+     * MINIMUM_API_VERSION=800000
      *
-     * Create a new playlist and return it
+     * Create a folder in the calling user's tree
      *
-     * name = (string) Playlist name
-     * type = (string) 'public', 'private'
+     * name       = (string) folder name; may not contain a / and must be unique among its siblings
+     * parent     = (string) parent folder as an id or a name path //optional, root when omitted
+     * sort_order = (integer) position among its siblings //optional, appended when omitted
      *
      * @param array{
      *     name?: string,
-     *     type?: string,
+     *     parent?: string,
+     *     sort_order?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param 5 $apiVersion
+     *
      * @throws RequestParamMissingException
      */
     public function handle(
@@ -81,31 +89,30 @@ final class PlaylistCreate5Method implements MethodInterface
             );
         }
 
-        $name = $input['name'];
-        $type = (isset($input['type'])) ? $input['type'] : 'private';
-        if ($type != 'private') {
-            $type = 'public';
-        }
+        $parentId  = $this->resolveParentId($input, $user);
+        $sortOrder = (isset($input['sort_order'])) ? (int) $input['sort_order'] : null;
 
-        $object_id = Playlist::create($name, $type, $user->id);
-        if (!$object_id) {
-            return $response->withBody(
-                $this->streamFactory->createStream(
-                    $output->error(
-                        $apiVersion,
-                        ErrorCodeEnum::BAD_REQUEST,
-                        'Bad Request',
-                        self::ACTION,
-                        'input'
-                    )
+        $folderId = $this->playlistFolderRepository->create($user, (string) $input['name'], $parentId, $sortOrder);
+        if ($folderId === null) {
+            $response->getBody()->write(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    'Bad Request',
+                    self::ACTION,
+                    'name'
                 )
             );
+
+            return $response;
         }
 
-        return $response->withBody(
-            $this->streamFactory->createStream(
-                $output->playlists($apiVersion, [$object_id], $user, $input['auth'], false, false)
-            )
+        $folder = $this->playlistFolderRepository->findById($folderId);
+
+        $response->getBody()->write(
+            $output->playlistFolders($apiVersion, ($folder === null) ? [] : [$folder], $user)
         );
+
+        return $response;
     }
 }

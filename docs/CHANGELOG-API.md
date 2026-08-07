@@ -34,6 +34,18 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * `collection_remove` accepts a `track` position as well as an `id`/`object_type` pair, because a position is the only unambiguous address once duplicates are possible. A position removes exactly one member; an object removes every member pointing at it. Either way the remaining positions close up, so they stay dense and 1-based. `collection_remove` still does not error on a non-member
   * Both name the member's type `object_type` rather than `type`, because the REST path already spends `type` on the resource name and the two would collide in the same query string
   * REST paths `collections`, `collections/{collection_id}` and `collections/{collection_id}/items`
+* `playlist_folder` (API8 only)
+  * New actions `playlist_folders`, `playlist_folder`, `playlist_folder_items`, `playlist_folder_create`, `playlist_folder_edit`, `playlist_folder_delete`, `playlist_folder_add` and `playlist_folder_remove`. A playlist folder organises playlists, smartlists and collections into a tree of arbitrary depth
+  * The tree is **private to each user**, and where a list sits belongs to the pair of you and that list rather than to the list itself. So you may file another user's public playlist into your own folder without changing anything for them, and two users can file the same playlist in different places
+  * A list is in exactly one of your folders at a time: filing one that is already filed moves it rather than copying it
+  * **The root is implicit and holds every list you can see that has not been filed elsewhere.** Nothing is stored when a playlist is created, so it appears at your root immediately, and it reappears there when it is taken out of a folder. Address the root as `0` or `/`
+  * `playlist_folders` returns the whole tree as one flat list; rebuild the hierarchy from each folder's `parent`, where `0` is the root. A folder belonging to another user reports *not found* rather than *access denied*, so a stranger cannot probe for one
+  * `filter` takes either a folder id or a name path, so REST paths `playlist-folders/{playlist_folder_id}` and `playlist-folders/Rock/Live` both reach the same folder. A folder name may not contain a `/` for that reason, and must be unique among its siblings — the comparison is case-insensitive, so `Rock` and `rock` collide
+  * `sort_order` is client-assigned and shared by a parent's folders and its filed lists, so the two interleave in one ordering space; ties are broken by name. Positions are left exactly as sent rather than renumbered, so gaps are preserved
+  * `playlist_folder_edit` refuses a move into the folder's own subtree, which would otherwise detach the branch
+  * `playlist_folder_delete` refuses a folder that still holds a child folder or a filed list; the lists themselves are never deleted with it, so a folder is emptied by moving its contents out first
+  * `playlist_folder_items` returns the members as one flat list under `contents`, each entry carrying its `sort_order` and its `object_type` (`playlist`, `smartlist` or `collection`) with that type's own object nested under a property of the same name
+  * REST paths `playlist-folders`, `playlist-folders/{playlist_folder_id}`, `playlist-folders{path}` and `playlist-folders/{playlist_folder_id}/items`
 * `sonic_match` (API8 only)
   * New action (`SonicMatch8Method`) returning songs that sound like the song in `filter`, each carrying a `similarity` score. Similarity comes from analysing the audio, which needs a sonic-analysis plugin, so with none enabled the request is refused (`4703`) rather than answered with an empty list. The score shares the OpenSubsonic `sonicMatch` scale — 0.0-1.0 where 1.0 is the same recording, and -1 when the backend gives no comparable score — so a client reads the same number from either API. REST path `songs/{song_id}/sonic-match`
 * `random` (API8 only)
@@ -868,7 +880,7 @@ Inconsistency with the return of object arrays and single items have been fixed 
 ### Changed (630000)
 
 * API6
-  * playlist_add_song: depreciated (Use playlist_add) but it keeps working
+  * playlist_add_song: depreciated (Use playlist_add); removed in **API8**
   * share_create: add more valid types ('playlist', 'podcast', 'podcast_episode', 'video')
   * user: make username optional
 
@@ -1075,7 +1087,7 @@ Stream token's will let you design permalinked streams and allow users to stream
 ### Changed (600000)
 
 * Api6
-  * Renamed `user_update` to `user_edit` (user_update still works and is kept for backwards compatibility)
+  * Renamed `user_update` to `user_edit` (user_update still works in API6 and older; removed in **API8**)
 * Api5
   * Add backwards compatible `user_edit` method to point to `user_update`
 * ALL
@@ -1088,7 +1100,7 @@ Stream token's will let you design permalinked streams and allow users to stream
   * For data responses id is the only attribute and everything else is an element
   * Name was not set as an attribute OR an element so now it's always an element
   * Return original XML output (that may be malformed) when loadxml fails.
-* Api6::get_indexes: This method is depreciated (Use list instead) but it keeps working
+* Api6::get_indexes: This method is depreciated (Use list instead); removed in **API8**
 
 ### Removed (600000)
 
