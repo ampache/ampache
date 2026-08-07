@@ -26,11 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Shout\ShoutboxView;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Preference;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Override;
@@ -95,7 +95,7 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
             $shoutRenderer = $this->shoutRenderer;
 
             if ($shouts !== []) {
-                require_once Ui::find_template('show_shoutbox.inc.php');
+                echo (new ShoutboxView($this->shoutRenderer, $shouts))->render();
             }
 
             echo "</div>\n";

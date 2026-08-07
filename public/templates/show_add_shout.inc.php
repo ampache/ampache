@@ -26,6 +26,7 @@ declare(strict_types=1);
 // show_add_shout.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Shout\ShoutboxView;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -84,7 +85,7 @@ Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
 $shouts = iterator_to_array($shouts);
 
 if ($shouts !== []) {
-    require_once Ui::find_template('show_shoutbox.inc.php');
+    echo (new ShoutboxView($shoutRenderer, $shouts))->render();
 } ?>
 <?php Ui::show_box_bottom(); ?>
 </div>

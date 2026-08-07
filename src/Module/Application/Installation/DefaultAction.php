@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Installation;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Installation\InstallErrorView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
@@ -60,8 +61,7 @@ final class DefaultAction implements ApplicationActionInterface
 
         // Redirect if installation is already complete.
         if (!$this->installationHelper->install_check_status($configfile)) {
-            $redirect_url = 'login.php';
-            require_once Ui::find_template('error_page.inc.php');
+            echo (new InstallErrorView('login.php'))->render();
 
             return null;
         }

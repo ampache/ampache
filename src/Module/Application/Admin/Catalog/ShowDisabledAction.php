@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Admin\DisabledSongsView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -65,10 +67,10 @@ final readonly class ShowDisabledAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->show(
-            'show_disabled_songs.inc.php',
-            ['songs' => $this->songRepository->getDisabled()]
-        );
+        echo (new DisabledSongsView(
+            AmpConfig::get_web_path('/admin'),
+            $this->songRepository->getDisabled()
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
