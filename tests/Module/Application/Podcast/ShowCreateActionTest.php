@@ -69,15 +69,6 @@ class ShowCreateActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showHeader');
         $this->ui->expects(static::once())
-            ->method('show')
-            ->with(
-                'show_add_podcast.inc.php',
-                [
-                    'catalog_id' => $catalogId,
-                    'feed' => $feedUrl,
-                ]
-            );
-        $this->ui->expects(static::once())
             ->method('showQueryStats');
         $this->ui->expects(static::once())
             ->method('showFooter');

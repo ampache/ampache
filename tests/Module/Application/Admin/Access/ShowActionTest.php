@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -35,8 +35,8 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AccessRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 use ArrayIterator;
-use Mockery;
 use Mockery\MockInterface;
 use Override;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,6 +44,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class ShowActionTest extends MockeryTestCase
 {
     private MockInterface&AccessRepositoryInterface $accessRepository;
+    private ConfigContainerInterface|MockInterface|null $configContainer;
     private MockInterface&ModelFactoryInterface $modelFactory;
     private ShowAction $subject;
     private MockInterface&UiInterface $ui;
@@ -62,12 +63,6 @@ class ShowActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_access_list.inc.php',
-                Mockery::on(static fn(array $context): bool => current($context['list']) instanceof AccessListItemInterface)
-            )
-            ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -79,6 +74,19 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn(new ArrayIterator([$access]));
+
+        // the list template renders each row, so the item's collaborators have to answer
+        $user = $this->mock(User::class);
+        $this->modelFactory->shouldReceive('createUser')->andReturn($user);
+        $user->shouldReceive('isNew')->andReturnFalse();
+        $user->shouldReceive('getFullDisplayName')->andReturn('some-user');
+        $access->shouldReceive('getName')->andReturn('some-name');
+        $access->shouldReceive('getStartIp')->andReturn('1.2.3.4');
+        $access->shouldReceive('getEndIp')->andReturn('1.2.3.5');
+        $access->shouldReceive('getLevelName')->andReturn('read');
+        $access->shouldReceive('getUserName')->andReturn('some-user');
+        $access->shouldReceive('getTypeName')->andReturn('interface');
+        $access->shouldReceive('getId')->andReturn(666);
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
@@ -106,11 +114,15 @@ class ShowActionTest extends MockeryTestCase
         $this->ui               = $this->mock(UiInterface::class);
         $this->accessRepository = $this->mock(AccessRepositoryInterface::class);
         $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
+
+        $this->configContainer->shouldReceive('getWebPath')->andReturn('some-web-path');
 
         $this->subject = new ShowAction(
             $this->ui,
             $this->accessRepository,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->configContainer
         );
     }
 }

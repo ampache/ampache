@@ -27,10 +27,17 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\ConfirmationView;
+use Ampache\Gui\Form\ConfirmationWithReturnView;
+use Ampache\Gui\Form\ContinueView;
+use Ampache\Gui\System\QueryStatsView;
+use Ampache\Gui\System\StandaloneErrorTypeEnum;
+use Ampache\Gui\System\StandaloneErrorView;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
@@ -879,6 +886,26 @@ class Ui implements UiInterface
     /**
      * Displays the default error page
      */
+    /**
+     * The three standalone error pages carry their own chrome, so each needs the logo and title the
+     * normal header would otherwise have supplied.
+     */
+    private static function createStandaloneErrorView(
+        StandaloneErrorTypeEnum $type,
+        string $detail = '',
+    ): StandaloneErrorView {
+        $logoUrl = (string) AmpConfig::get('custom_login_logo', '');
+
+        return new StandaloneErrorView(
+            $type,
+            AmpConfig::get_web_path(),
+            ($logoUrl === '') ? self::get_logo_url('dark') : $logoUrl,
+            (string) AmpConfig::get('site_title'),
+            (bool) AmpConfig::get('demo_mode'),
+            $detail
+        );
+    }
+
     public function accessDenied(string $error = 'Access Denied'): void
     {
         // Clear any buffered crap
@@ -891,7 +918,7 @@ class Ui implements UiInterface
         if (!headers_sent()) {
             header('HTTP/1.1 403 ' . $error);
         }
-        require_once self::find_template('show_denied.inc.php');
+        echo self::createStandaloneErrorView(StandaloneErrorTypeEnum::ACCESS_DENIED)->render();
     }
 
     /**
@@ -1563,7 +1590,7 @@ class Ui implements UiInterface
         // Clear any buffered crap
         ob_end_clean();
         header("HTTP/1.1 403 Permission Denied");
-        require_once self::find_template('show_denied_permission.inc.php');
+        echo self::createStandaloneErrorView(StandaloneErrorTypeEnum::PERMISSION_DENIED, $fileName)->render();
     }
 
     /**
@@ -1614,16 +1641,14 @@ class Ui implements UiInterface
         $webPath = $this->configContainer->getWebPath();
         $path    = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 
-        $this->show(
-            'show_confirmation.inc.php',
-            [
-                'title' => $title,
-                'text' => $text,
-                'path' => $path,
-                'form_name' => $form_name,
-                'cancel' => $cancel
-            ]
-        );
+        echo (new ConfirmationView(
+            $webPath,
+            $title,
+            $text,
+            $path,
+            (string) $form_name,
+            ($cancel) ? $webPath . '/' . return_referer() : null
+        ))->render();
     }
 
     /**
@@ -1641,16 +1666,14 @@ class Ui implements UiInterface
         $return  = (substr_count($return_url, $webPath) !== 0) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
         $cancel  = (substr_count($cancel_url, $webPath) !== 0) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
 
-        $this->show(
-            'show_confirmation_with_return.inc.php',
-            [
-                'title' => $title,
-                'text' => $text,
-                'form_name' => $form_name,
-                'return' => $return,
-                'cancel' => $cancel,
-            ]
-        );
+        echo (new ConfirmationWithReturnView(
+            $webPath,
+            $title,
+            $text,
+            $return,
+            (string) $form_name,
+            $cancel
+        ))->render();
     }
 
     /**
@@ -1666,14 +1689,12 @@ class Ui implements UiInterface
         // callers pass both absolute urls and bare page paths; only prefix the relative ones
         $path = str_starts_with($next_url, $webPath) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 
-        $this->show(
-            'show_continue.inc.php',
-            [
-                'title' => $title,
-                'text' => $text,
-                'path' => $path
-            ]
-        );
+        echo (new ContinueView(
+            $webPath,
+            $title,
+            $text,
+            $path
+        ))->render();
     }
 
     public function showErrorPage(): void
@@ -1687,7 +1708,7 @@ class Ui implements UiInterface
             header('HTTP/1.1 500 Internal Server Error');
         }
 
-        require_once self::find_template('show_error.inc.php');
+        echo self::createStandaloneErrorView(StandaloneErrorTypeEnum::ERROR)->render();
     }
 
     public function showFooter(): void
@@ -1758,7 +1779,16 @@ class Ui implements UiInterface
      */
     public function showQueryStats(): void
     {
-        require self::find_template('show_query_stats.inc.php');
+        if (!AmpConfig::get('show_footer_statistics')) {
+            return;
+        }
+
+        echo (new QueryStatsView(
+            Dba::$stats['query'],
+            database_object::$cache_hit,
+            (float) AmpConfig::get('load_time_begin'),
+            memory_get_peak_usage(true)
+        ))->render();
     }
 
     public function showRightbar(): string

@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// manage_filters.phtml -- rendered by Ampache\Gui\Form\ManageFiltersView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Form\ManageFiltersView $this */
+$t_name      = T_('Filter Name');
+$t_num_users = T_('Number of Users');
+$t_num_cats  = T_('Number of Catalogs');
+$t_actions   = T_('Actions');
+// show_filter_row.inc.php
+$t_edit   = T_('Edit');
+$t_delete = T_('Delete');
+?>
+<div id="information_actions">
+    <ul style="float: left;">
+        <li>
+            <a class="option-list" href="<?php echo $this->e($this->getWebPath()); ?>/filter.php?action=show_add_filter"><?php echo T_('Add Catalog Filter'); ?></a>
+        </li>
+    </ul>
+</div>
+<table class="tabledata striped-rows" data-objecttype="filter">
+    <thead>
+        <tr class="th-top">
+            <th class="cel_name essential persist"><?php echo T_('Filter name'); ?></th>
+            <th class="cel_num_users essential"><?php echo T_('Users'); ?></th>
+            <th class="cel_num_catalogs essential"><?php echo T_('Catalogs'); ?></th>
+            <th class="cel_action cel_action_text essential"><?php echo T_('Actions'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+<?php foreach ($this->getFilters() as $filter) {
+    // the row template is included as-is, so the names it expects are set here
+    $num_users    = $filter['userCount'];
+    $num_catalogs = $filter['catalogCount']; ?>
+        <tr id="<?php echo scrub_out($filter['name']); ?>">
+            <?php require Ui::find_template('show_filter_row.inc.php'); ?>
+        </tr>
+<?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <th class="cel_name"><?php echo $t_name; ?></th>
+            <th class="cel_num_users"><?php echo $t_num_users; ?></th>
+            <th class="cel_num_catalogs"><?php echo $t_num_cats; ?></th>
+            <th class="cel_action cel_action_text"><?php echo $t_actions; ?></th>
+        </tr>
+    </tfoot>
+</table>

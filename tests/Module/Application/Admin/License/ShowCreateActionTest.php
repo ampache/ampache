@@ -73,15 +73,6 @@ class ShowCreateActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showBoxTop')
             ->with('Create license')
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_edit_license.inc.php',
-                [
-                    'license' => $license,
-                    'adminPath' => $webPath,
-                ]
-            )
-            ->once();
         $this->ui->shouldReceive('showBoxBottom')
             ->once();
         $this->ui->shouldReceive('showQueryStats')

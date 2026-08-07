@@ -25,12 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Filter;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\ManageFiltersView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,7 +45,12 @@ final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    public function __construct(private UiInterface $ui) {}
+    public function __construct(
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private CatalogFilterRepositoryInterface $catalogFilterRepository,
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -51,7 +60,21 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         $this->ui->showBoxTop('Show Catalog Filters', 'box box_manage_filter');
-        $this->ui->show('show_manage_filters.inc.php');
+        $filters = [];
+        foreach ($this->catalogFilterRepository->findGroups() as $filter) {
+            $filterId  = (int) $filter['id'];
+            $filters[] = [
+                'id' => $filterId,
+                'name' => (string) $filter['name'],
+                'userCount' => $this->userRepository->countByCatalogFilterGroup($filterId),
+                'catalogCount' => $this->catalogFilterRepository->countCatalogs($filterId),
+            ];
+        }
+
+        echo (new ManageFiltersView(
+            $this->configContainer->getWebPath('/admin'),
+            $filters
+        ))->render();
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

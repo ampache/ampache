@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\LocalPlay;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\LocalplayEditInstanceView;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -66,13 +67,12 @@ final class EditInstanceAction extends AbstractLocalPlayAction
         $localplay = new LocalPlay($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_CONTROLLER));
         $instance  = $localplay->get_instance($_REQUEST['instance']);
         $fields    = $localplay->get_instance_fields();
-        $this->ui->show(
-            'show_localplay_edit_instance.inc.php',
-            [
-                'instance' => $instance,
-                'fields' => $fields
-            ]
-        );
+        echo (new LocalplayEditInstanceView(
+            $this->configContainer->getWebPath(),
+            (int) $_REQUEST['instance'],
+            $instance,
+            $fields
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

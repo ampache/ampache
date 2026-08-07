@@ -30,6 +30,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -41,6 +42,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
 {
     private ConfigContainerInterface|MockInterface|null $configContainer;
     private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private SingleItemUpdaterInterface|MockInterface|null $singleItemUpdater;
     private ?UpdateFromTagsAction $subject;
     private UiInterface|MockInterface|null $ui;
 
@@ -76,21 +78,9 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_update_items.inc.php',
-                [
-                    'object_id' => $artistId,
-                    'catalog_id' => null,
-                    'type' => 'artist',
-                    'target_url' => sprintf(
-                        '%s/artists.php?action=show&artist=%d',
-                        $webPath,
-                        $artistId
-                    )
-                ]
-            )
-            ->once();
+        $this->singleItemUpdater->shouldReceive('update')
+            ->once()
+            ->andReturn('some-target-url');
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -111,14 +101,16 @@ class UpdateFromTagsActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
+        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->singleItemUpdater = $this->mock(SingleItemUpdaterInterface::class);
+        $this->ui                = $this->mock(UiInterface::class);
 
         $this->subject = new UpdateFromTagsAction(
             $this->modelFactory,
             $this->configContainer,
-            $this->ui
+            $this->ui,
+            $this->singleItemUpdater
         );
     }
 }

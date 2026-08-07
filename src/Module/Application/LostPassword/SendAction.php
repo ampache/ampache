@@ -27,13 +27,13 @@ namespace Ampache\Module\Application\LostPassword;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\NewPasswordSenderInterface;
 use Ampache\Module\Util\Mailer;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,7 +44,7 @@ final readonly class SendAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private NewPasswordSenderInterface $newPasswordSender,
-        private UiInterface $ui,
+        private LoginFormViewFactoryInterface $loginFormViewFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -66,7 +66,10 @@ final readonly class SendAction implements ApplicationActionInterface
         }
 
         // Do not acknowledge a password has been sent or failed and go back to login
-        $this->ui->show('show_login_form.inc.php');
+        $loginView = $this->loginFormViewFactory->create();
+        if ($loginView !== null) {
+            echo $loginView->render();
+        }
 
         return null;
     }

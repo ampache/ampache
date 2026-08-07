@@ -25,11 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Playlist;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\CreatePlaylistFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,6 +46,8 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -52,7 +57,11 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show('show_add_playlist.inc.php');
+        echo (new CreatePlaylistFormView(
+            $this->configContainer->getWebPath(),
+            $this->requestParser->getFromRequest('name'),
+            $this->requestParser->getFromRequest('type') ?: 'private'
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

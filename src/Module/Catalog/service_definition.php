@@ -41,6 +41,7 @@ use Ampache\Module\Catalog\Update\UpdateSingleCatalogFolderInterface;
 use function DI\autowire;
 
 return [
+    SingleItemUpdaterInterface::class => autowire(SingleItemUpdater::class),
     AddCatalogInterface::class => autowire(AddCatalog::class),
     UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
     UpdateSingleCatalogFolderInterface::class => autowire(UpdateSingleCatalogFolder::class),

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Index;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\StatsFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -48,6 +49,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private FolderRepositoryInterface $folderRepository,
         private VideoRepositoryInterface $videoRepository,
+        private StatsFormViewFactoryInterface $statsFormViewFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -81,6 +83,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         // the header form show_index.inc.php picks is required into this scope, so name its services here
         $folderRepository = $this->folderRepository;
         $videoRepository  = $this->videoRepository;
+        $browseForm       = $this->statsFormViewFactory->createBrowse()->render();
         require_once Ui::find_template('show_index.inc.php');
 
         // Show the Footer

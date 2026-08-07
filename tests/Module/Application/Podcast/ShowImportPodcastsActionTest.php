@@ -61,14 +61,6 @@ class ShowImportPodcastsActionTest extends TestCase
             ->method('showBoxTop')
             ->with('Import Podcasts', 'box box_add_podcast');
         $this->ui->expects(static::once())
-            ->method('show')
-            ->with(
-                'show_import_podcasts.inc.php',
-                [
-                    'catalogId' => 0,
-                ]
-            );
-        $this->ui->expects(static::once())
             ->method('showBoxBottom');
         $this->ui->expects(static::once())
             ->method('showQueryStats');

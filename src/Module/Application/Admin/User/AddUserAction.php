@@ -25,15 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\AddUserFormView;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -114,7 +115,15 @@ final class AddUserAction extends AbstractUserAction
             AmpError::occurred()
             || $user_id < 1
         ) {
-            require_once Ui::find_template('show_add_user.inc.php');
+            echo (new AddUserFormView(
+                $this->configContainer->getWebPath('/admin'),
+                $this->requestParser->getFromRequest('username'),
+                $this->requestParser->getFromRequest('fullname'),
+                $this->requestParser->getFromRequest('email'),
+                $this->requestParser->getFromRequest('website'),
+                (int) AmpConfig::get('max_upload_size'),
+                (bool) AmpConfig::get('catalog_filter')
+            ))->render();
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

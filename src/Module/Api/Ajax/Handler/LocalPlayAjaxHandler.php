@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Form\LocalplayStatusView;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -150,13 +151,11 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if (in_array($command, $refresh_commands, true)) {
-                    ob_start();
-                    $objects = $localplay->get();
-                    // the status template builds its own browse in this scope
-                    $browseFactory = $this->browseFactory;
-                    require Ui::find_template('show_localplay_status.inc.php');
-                    $results['localplay_status'] = (string) ob_get_contents();
-                    ob_end_clean();
+                    $results['localplay_status'] = (new LocalplayStatusView(
+                        $localplay,
+                        $this->browseFactory,
+                        $localplay->get()
+                    ))->render();
                 }
 
                 break;
@@ -220,13 +219,11 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $localplay->connect();
                 $localplay->repeat(make_bool($_REQUEST['value'] ?? false));
 
-                ob_start();
-                $objects = $localplay->get();
-                // the status template builds its own browse in this scope
-                $browseFactory = $this->browseFactory;
-                require_once Ui::find_template('show_localplay_status.inc.php');
-                $results['localplay_status'] = ob_get_contents();
-                ob_end_clean();
+                $results['localplay_status'] = (new LocalplayStatusView(
+                    $localplay,
+                    $this->browseFactory,
+                    $localplay->get()
+                ))->render();
 
                 break;
             case 'random':
@@ -242,13 +239,11 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $localplay->connect();
                 $localplay->random(make_bool($_REQUEST['value'] ?? false));
 
-                ob_start();
-                $objects = $localplay->get();
-                // the status template builds its own browse in this scope
-                $browseFactory = $this->browseFactory;
-                require_once Ui::find_template('show_localplay_status.inc.php');
-                $results['localplay_status'] = ob_get_contents();
-                ob_end_clean();
+                $results['localplay_status'] = (new LocalplayStatusView(
+                    $localplay,
+                    $this->browseFactory,
+                    $localplay->get()
+                ))->render();
         } // switch on action;
 
         // We always do this

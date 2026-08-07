@@ -25,11 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Mail;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Override;
@@ -37,6 +39,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private RequestParserInterface|MockInterface|null $requestParser;
     private ?ShowAction $subject;
     private MockInterface|UiInterface|null $ui;
 
@@ -50,11 +54,11 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
+        $this->configContainer->shouldReceive('getWebPath')->andReturn('some-web-path');
+        $this->requestParser->shouldReceive('getFromRequest')->andReturn('');
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('show')
-            ->with('show_mail_users.inc.php')
             ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
@@ -92,10 +96,14 @@ class ShowActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->ui = $this->mock(UiInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->requestParser   = $this->mock(RequestParserInterface::class);
 
         $this->subject = new ShowAction(
-            $this->ui
+            $this->ui,
+            $this->configContainer,
+            $this->requestParser
         );
     }
 }

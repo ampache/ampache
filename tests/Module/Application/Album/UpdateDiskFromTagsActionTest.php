@@ -30,6 +30,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -41,6 +42,7 @@ class UpdateDiskFromTagsActionTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
     private ModelFactoryInterface&MockObject $modelFactory;
+    private SingleItemUpdaterInterface&MockObject $singleItemUpdater;
     private UpdateDiskFromTagsAction $subject;
     private UiInterface&MockObject $ui;
 
@@ -105,21 +107,9 @@ class UpdateDiskFromTagsActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showBoxTop')
             ->with('Starting Update from Tags', 'box box_update_items');
-        $this->ui->expects(static::once())
-            ->method('show')
-            ->with(
-                'show_update_items.inc.php',
-                [
-                    'object_id' => $albumDiskId,
-                    'catalog_id' => $catalogId,
-                    'type' => 'album_disk',
-                    'target_url' => sprintf(
-                        '%s/albums.php?action=show_disk&album_disk=%d',
-                        $webPath,
-                        $albumDiskId
-                    )
-                ]
-            );
+        $this->singleItemUpdater->expects(static::once())
+            ->method('update')
+            ->willReturn('some-target-url');
         $this->ui->expects(static::once())
             ->method('showBoxBottom');
         $this->ui->expects(static::once())
@@ -134,14 +124,16 @@ class UpdateDiskFromTagsActionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
+        $this->ui                = $this->createMock(UiInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->singleItemUpdater = $this->createMock(SingleItemUpdaterInterface::class);
 
         $this->subject = new UpdateDiskFromTagsAction(
             $this->modelFactory,
             $this->ui,
-            $this->configContainer
+            $this->configContainer,
+            $this->singleItemUpdater
         );
     }
 }

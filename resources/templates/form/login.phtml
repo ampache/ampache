@@ -1,0 +1,122 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// login.phtml -- rendered by Ampache\Gui\Form\LoginFormView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Form\LoginFormView $this */
+?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->e($this->getHtmlLanguage()); ?>" lang="<?php echo $this->e($this->getHtmlLanguage()); ?>" dir="<?php echo $this->e($this->getDirection()); ?>">
+
+<head>
+    <!-- Propelled by Ampache | ampache.org -->
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $this->e($this->getCharset()); ?>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
+    <title><?php echo $this->e($this->getSiteTitle()); ?></title>
+</head>
+
+<body id="loginPage">
+    <div id="maincontainer">
+        <?php if (!$this->isMobileSession()) {
+            echo "<div id=\"header\"><!-- This is the header -->";
+            echo "<a href=\"" . $this->e($this->getWebPath()) . "\" id=\"logo\"><img src=\"" . $this->e($this->getLogoUrl()) . "\" title=\"" . $this->e(T_('Ampache')) . "\" alt=\"" . $this->e(T_('Ampache')) . "\"></a>";
+            echo "</div>";
+        } ?>
+        <div id="loginbox">
+            <h2><?php echo $this->e($this->getSiteTitle()); ?></h2>
+            <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $this->e($this->getWebPath()); ?>/login.php">
+                <div class="loginfield" id="usernamefield">
+                    <label for="username"><?php echo T_('Username'); ?>:</label>
+                    <input type="text" id="username" name="username" maxlength="128" value="<?php echo $this->e($this->getUsername()); ?>" autofocus />
+                </div>
+                <div class="loginfield" id="passwordfield">
+                    <label for="password"><?php echo T_('Password'); ?>:</label>
+                    <input id="password" type="password" name="password" maxlength="64" value="" />
+                </div>
+                <?php echo $this->raw($this->getError('general')); ?>
+                <div class="loginfield">
+                    <div id="remembermefield">
+                        <label for="rememberme"><?php echo T_('Remember Me'); ?></label>
+                        <input type="checkbox" id="rememberme" name="rememberme" <?php echo ($this->isRememberDisabled()) ? 'disabled="disabled"' : ''; ?> />
+                    </div>
+                    <div class="formValidation">
+                        <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
+                        <input type="hidden" id="referrer" name="referrer" value="<?php echo $this->e($this->getReferrer()); ?>" />
+                        <input type="hidden" name="action" value="login" />
+                    </div>
+                </div>
+                <div class="loginmessage"><?php echo $this->raw($this->getLoginMessage()); ?></div>
+                <div class="loginoptions">
+                <?php if ($this->isRegistrationEnabled()) { ?>
+                            <a class="button nohtml" id="registerbutton" href="<?php echo $this->e($this->getWebPath()); ?>/register.php"><?php echo T_('Register'); ?></a>
+                <?php } ?>
+                <?php if ($this->isLostPasswordEnabled()) { ?>
+                        <a class="button nohtml" id="lostpasswordbutton" href="<?php echo $this->e($this->getWebPath()); ?>/lostpassword.php"><?php echo T_('Lost Password'); ?></a>
+                <?php } ?>
+                <?php if ($this->isMiniPlayerEnabled()) { ?>
+                        <a class="button nohtml<?php echo ($this->isMiniPlayerReferrer()) ? ' selected' : ''; ?>" id="miniplayerbutton" href="<?php echo $this->e($this->getWebPath()); ?>/login.php?referrer=<?php echo $this->e(urlencode($this->getMiniPlayerUrl())); ?>"><?php echo T_('Mini player'); ?></a>
+                <?php } ?>
+                <?php if ($this->isOidcEnabled()) { ?>
+                        <a class="button nohtml" id="oidcbutton" href="<?php echo $this->e($this->getWebPath()); ?>/login.php?action=oidc"><?php echo $this->e($this->getOidcButtonText()); ?></a>
+                <?php } ?>
+                </div>
+            </form>
+            <script>
+                // The server never sees the '#browse.php?...' part of a url, but browsers carry the
+                // fragment across the redirect that sent us here, so recover it from the address bar
+                // and hand it back as the referrer.
+                (function () {
+                    var webPath  = "<?php echo addslashes($this->getWebPath()); ?>";
+                    var referrer = document.getElementById('referrer');
+
+                    function keepHash() {
+                        var hash = window.location.hash;
+                        if (referrer && hash.length > 1 && hash.indexOf('.php') > -1) {
+                            referrer.value = webPath + '/index.php' + hash;
+                        }
+                    }
+
+                    keepHash();
+                    document.forms.login.addEventListener('submit', keepHash);
+                })();
+            </script>
+            <?php if ($this->isMobileSession()) {
+                echo '<div id="mobileheader"><!-- This is the header -->';
+                echo "<h1 id=\"logo\"><img src=\"" . $this->e($this->getLogoUrl()) . "\" title=\"" . $this->e(T_('Ampache')) . "\" alt=\"" . $this->e(T_('Ampache')) . "\"></h1>";
+                echo '</div>';
+            }
+if ($this->isCookieDisclaimerEnabled()) {
+    echo '<div id="cookie_notice">';
+    echo T_("Ampache places cookies on your computer to help make this website better.");
+    echo '<br>';
+    echo T_("Cookies are used for core site functionality and are not used for tracking or analytics.");
+    echo '<br>';
+    echo T_("By logging in you agree to the use of cookies while using this site.");
+    echo '</div>';
+}
+Ui::show_footer();

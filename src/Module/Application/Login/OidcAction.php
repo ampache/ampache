@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Login;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authentication\Oidc\Exception\OidcException;
@@ -41,7 +42,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Preference;
 use Ampache\Module\System\Session;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -55,7 +55,7 @@ final readonly class OidcAction implements ApplicationActionInterface
         private LoggerInterface $logger,
         private NetworkCheckerInterface $networkChecker,
         private OidcAuthenticationServiceInterface $oidcAuthenticationService,
-        private UiInterface $ui,
+        private LoginFormViewFactoryInterface $loginFormViewFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -91,7 +91,10 @@ final readonly class OidcAction implements ApplicationActionInterface
             );
             AmpError::add('general', T_('OpenID Connect is not configured correctly'));
 
-            $this->ui->show('show_login_form.inc.php');
+            $loginView = $this->loginFormViewFactory->create();
+            if ($loginView !== null) {
+                echo $loginView->render();
+            }
         }
 
         return null;

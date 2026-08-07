@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -34,13 +34,13 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Mockery;
 use Mockery\MockInterface;
 use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowEditRecordActionTest extends MockeryTestCase
 {
+    private ConfigContainerInterface|MockInterface|null $configContainer;
     private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?ShowEditRecordAction $subject;
     private UiInterface|MockInterface|null $ui;
@@ -71,12 +71,6 @@ class ShowEditRecordActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_edit_access.inc.php',
-                Mockery::on(static fn(array $context): bool => $context['access'] instanceof AccessListItemInterface)
-            )
-            ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -105,12 +99,17 @@ class ShowEditRecordActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+
+        $this->configContainer->shouldReceive('getWebPath')->andReturn('some-web-path');
+
 
         $this->subject = new ShowEditRecordAction(
             $this->ui,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->configContainer
         );
     }
 }

@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PrivateMessageInterface;
@@ -46,6 +47,7 @@ class ShowAddMessageActionTest extends MockeryTestCase
     private ConfigContainerInterface&MockInterface $configContainer;
     private ModelFactoryInterface&MockInterface $modelFactory;
     private PrivateMessageRepositoryInterface&MockInterface $pmRepository;
+    private RequestParserInterface|MockInterface|null $requestParser;
     private ShowAddMessageAction $subject;
     private UiInterface&MockInterface $ui;
 
@@ -66,9 +68,6 @@ class ShowAddMessageActionTest extends MockeryTestCase
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('show')
-            ->with('show_add_pvmsg.inc.php')
             ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
@@ -106,9 +105,6 @@ class ShowAddMessageActionTest extends MockeryTestCase
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('show')
-            ->with('show_add_pvmsg.inc.php')
             ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
@@ -162,9 +158,6 @@ class ShowAddMessageActionTest extends MockeryTestCase
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('show')
-            ->with('show_add_pvmsg.inc.php')
             ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
@@ -265,12 +258,17 @@ class ShowAddMessageActionTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->requestParser   = $this->mock(RequestParserInterface::class);
+
+        $this->configContainer->shouldReceive('getWebPath')->andReturn('some-web-path');
+        $this->requestParser->shouldReceive('getFromRequest')->andReturn('');
         $this->ui              = $this->mock(UiInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->pmRepository    = $this->mock(PrivateMessageRepositoryInterface::class);
 
         $this->subject = new ShowAddMessageAction(
             $this->configContainer,
+            $this->requestParser,
             $this->ui,
             $this->modelFactory,
             $this->pmRepository

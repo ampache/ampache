@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\ImportPodcastsFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -60,10 +61,10 @@ final readonly class ShowImportPodcastsAction implements ApplicationActionInterf
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Import Podcasts'), 'box box_add_podcast');
-        $this->ui->show(
-            'show_import_podcasts.inc.php',
-            ['catalogId' => 0]
-        );
+        echo (new ImportPodcastsFormView(
+            $this->configContainer->getWebPath(),
+            0
+        ))->render();
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

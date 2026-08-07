@@ -26,12 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\UpdateItemsView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -45,6 +47,7 @@ final readonly class UpdateDiskFromTagsAction implements ApplicationActionInterf
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
+        private SingleItemUpdaterInterface $singleItemUpdater,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -65,19 +68,18 @@ final readonly class UpdateDiskFromTagsAction implements ApplicationActionInterf
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Starting Update from Tags'), 'box box_update_items');
-        $this->ui->show(
-            'show_update_items.inc.php',
-            [
-                'object_id' => $albumDiskId,
-                'catalog_id' => $albumDisk->getCatalogId(),
-                'type' => 'album_disk',
-                'target_url' => sprintf(
+        echo (new UpdateItemsView(
+            $this->singleItemUpdater->update(
+                'album_disk',
+                $albumDiskId,
+                $albumDisk->getCatalogId(),
+                sprintf(
                     '%s/albums.php?action=show_disk&album_disk=%d',
                     $this->configContainer->getWebPath(),
                     $albumDiskId
                 )
-            ]
-        );
+            )
+        ))->render();
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
