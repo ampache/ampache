@@ -26,12 +26,19 @@ declare(strict_types=1);
 // show_genres.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Genre\GenreRowView;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Tag;
 
 /** @var Browse $browse */
 /** @var list<int> $object_ids */
+/** @var AjaxUriRetrieverInterface $ajaxUriRetriever */
 
 $show_video = (bool) AmpConfig::get('allow_video');
 $thcount    = ($show_video) ? 9 : 8;
@@ -70,7 +77,16 @@ if ($browse->is_show_header()) {
                 continue;
             } ?>
         <tr id="genre_<?php echo $libitem->id; ?>">
-            <?php require Ui::find_template('show_genre_row.inc.php'); ?>
+            <?php echo (new GenreRowView(
+                $ajaxUriRetriever->getAjaxUri(),
+                $libitem,
+                $show_video,
+                (bool) AmpConfig::get('directplay'),
+                Stream_Playlist::check_autoplay_next(),
+                Stream_Playlist::check_autoplay_append(),
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ))->render(); ?>
         </tr>
         <?php } ?>
         <?php if (!count($object_ids)) { ?>

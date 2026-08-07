@@ -26,7 +26,13 @@ declare(strict_types=1);
 // show_videos.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Video\VideoRowView;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
@@ -85,7 +91,25 @@ foreach ($object_ids as $video_id) {
         continue;
     } ?>
         <tr id="video_<?php echo $libitem->id; ?>">
-            <?php require Ui::find_template('show_video_row.inc.php'); ?>
+            <?php echo (new VideoRowView(
+                $libitem,
+                AmpConfig::get_web_path(),
+                $cel_cover,
+                $cel_counter,
+                $cel_tags,
+                $browse->getId(),
+                $browse->is_grid_view(),
+                (bool) $hide_genres,
+                $show_ratings,
+                (bool) AmpConfig::get('show_played_times'),
+                (bool) AmpConfig::get('directplay'),
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) && (bool) AmpConfig::get('sociable'),
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && (bool) AmpConfig::get('share'),
+                Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+                Catalog::can_remove($libitem)
+            ))->render(); ?>
         </tr>
         <?php
 } ?>

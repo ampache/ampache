@@ -26,10 +26,12 @@ declare(strict_types=1);
 // show_artists.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Artist\ArtistRowView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
@@ -37,6 +39,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 
 /** @var Ampache\Module\Database\Query\Browse $browse */
+/** @var Ampache\Module\Authorization\GuiGatekeeperInterface $gatekeeper */
 /** @var list<int> $object_ids */
 /** @var string $limit_threshold */
 
@@ -121,7 +124,25 @@ foreach ($object_ids as $artist_id) {
         }
     } ?>
         <tr id="artist_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="artist" data-object-id="<?php echo $libitem->id; ?>">
-            <?php require Ui::find_template('show_artist_row.inc.php'); ?>
+            <?php echo (new ArtistRowView(
+                $libitem,
+                AmpConfig::get_web_path(),
+                $cel_cover,
+                $cel_artist,
+                $cel_time,
+                $cel_counter,
+                $cel_tags,
+                $browse->getId(),
+                $browse->is_grid_view(),
+                (bool) $hide_genres,
+                $show_ratings,
+                (bool) AmpConfig::get('show_played_times'),
+                $show_direct_play,
+                $show_playlist_add,
+                (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) && (bool) AmpConfig::get('sociable'),
+                (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) && canEditArtist($libitem, $gatekeeper->getUserId()),
+                (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) && Catalog::can_remove($libitem)
+            ))->render(); ?>
         </tr>
         <?php
 }

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // show_wanted_albums.inc.php
 
+use Ampache\Gui\Wanted\WantedAlbumRowView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Util\Ui;
@@ -53,7 +54,7 @@ use Ampache\Repository\WantedRepositoryInterface;
                 continue;
             } ?>
         <tr id="walbum_<?php echo $libitem->getMusicBrainzId(); ?>">
-            <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>
+            <?php echo (new WantedAlbumRowView($libitem))->render(); ?>
         </tr>
         <?php
         } ?>

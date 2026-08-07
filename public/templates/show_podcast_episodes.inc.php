@@ -26,7 +26,13 @@ declare(strict_types=1);
 // show_podcast_episodes.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Podcast\PodcastEpisodeRowView;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
@@ -89,7 +95,24 @@ foreach ($object_ids as $episode_id) {
         continue;
     } ?>
         <tr id="podcast_episode_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="podcast_episode" data-object-id="<?php echo $libitem->id; ?>">
-            <?php require Ui::find_template('show_podcast_episode_row.inc.php'); ?>
+            <?php echo (new PodcastEpisodeRowView(
+                $libitem,
+                AmpConfig::get_web_path(),
+                $cel_cover,
+                $cel_time,
+                $cel_counter,
+                $browse->getId(),
+                $is_mashup,
+                $is_table,
+                $browse->is_grid_view(),
+                $show_ratings,
+                (bool) AmpConfig::get('show_played_times'),
+                (bool) AmpConfig::get('directplay'),
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+                Catalog::can_remove($libitem)
+            ))->render(); ?>
         </tr>
         <?php } ?>
         <?php if (!count($object_ids)) { ?>

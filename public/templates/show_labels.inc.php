@@ -26,10 +26,12 @@ declare(strict_types=1);
 // show_labels.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Label\LabelRowView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -79,7 +81,15 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) &
                 continue;
             } ?>
         <tr id="label_<?php echo $libitem->id; ?>">
-                <?php require Ui::find_template('show_label_row.inc.php'); ?>
+                <?php echo (new LabelRowView(
+                    AmpConfig::get_web_path(),
+                    $libitem,
+                    $cel_cover,
+                    !AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                    (bool) AmpConfig::get('sociable'),
+                    Catalog::can_remove($libitem)
+                ))->render(); ?>
         </tr>
         <?php } ?>
         <?php if (!count($object_ids)) { ?>

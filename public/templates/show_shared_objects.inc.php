@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // show_shared_objects.inc.php
 
+use Ampache\Gui\Share\ShareRowView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Share;
@@ -54,7 +55,7 @@ use Ampache\Repository\Model\Share;
     $libitem = new Share($share_id);
     if ($libitem->hasObject()) { ?>
         <tr id="share_<?php echo $libitem->id; ?>">
-        <?php require Ui::find_template('show_share_row.inc.php'); ?>
+        <?php echo (new ShareRowView($libitem))->render(); ?>
         </tr>
     <?php } ?>
 <?php } ?>

@@ -26,16 +26,14 @@ declare(strict_types=1);
 // show_manage_license_hidden.inc.php
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\Ui;
+use Ampache\Gui\License\LicenseRowView;
 use Ampache\Repository\LicenseRepositoryInterface;
 
 /** @var LicenseRepositoryInterface $licenseRepository */
 
 /** @var list<int> $object_ids */
 
-$admin_path = AmpConfig::get_web_path('/admin');
-$t_edit     = T_('Edit');
-$t_delete   = T_('Delete'); ?>
+$admin_path = AmpConfig::get_web_path('/admin'); ?>
 <div id="information_actions">
     <ul>
         <li>
@@ -62,7 +60,7 @@ $t_delete   = T_('Delete'); ?>
             if ($libitem === null) {
                 continue;
             }
-            require Ui::find_template('show_license_row.inc.php');
+            echo (new LicenseRowView($admin_path, $libitem))->render();
         } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>

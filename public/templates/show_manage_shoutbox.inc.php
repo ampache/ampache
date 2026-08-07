@@ -26,8 +26,8 @@ declare(strict_types=1);
 // show_manage_shoutbox.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Shout\ShoutRowView;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
 
@@ -43,12 +43,7 @@ $t_user    = T_('User');
 $t_sticky  = T_('Sticky');
 $t_comment = T_('Comment');
 $t_added   = T_('Date Added');
-$t_action  = T_('Action');
-// show_shout_row.inc.php
-$t_edit   = T_('Edit');
-$t_delete = T_('Delete');
-$t_yes    = T_('Yes');
-$t_no     = T_('No'); ?>
+$t_action  = T_('Action'); ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
@@ -70,8 +65,7 @@ $t_no     = T_('No'); ?>
                 $client !== null
                 && $object instanceof displayable_item
             ) {
-                $f_link = $object->get_f_link();
-                require Ui::find_template('show_shout_row.inc.php');
+                echo (new ShoutRowView($admin_path, $libitem, $object->get_f_link(), $client))->render();
             }
             ?>
         <?php

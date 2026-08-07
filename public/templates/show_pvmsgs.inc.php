@@ -26,6 +26,7 @@ declare(strict_types=1);
 // show_pvmsgs.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\PrivateMessage\PrivateMessageRowView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\PrivateMsg;
@@ -75,8 +76,8 @@ $web_path = AmpConfig::get_web_path(); ?>
             if ($libitem->isNew()) {
                 continue;
             } ?>
-        <tr id="label_<?php echo $libitem->getId(); ?>" class="<?php echo (!$libitem->isRead()) ? "unread" : ""; ?>">
-            <?php require Ui::find_template('show_pvmsg_row.inc.php'); ?>
+        <tr id="pvmsg_<?php echo $libitem->getId(); ?>" class="<?php echo (!$libitem->isRead()) ? "unread" : ""; ?>">
+            <?php echo (new PrivateMessageRowView($web_path, $libitem))->render(); ?>
         </tr>
         <?php
         } ?>

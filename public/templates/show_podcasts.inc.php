@@ -26,6 +26,7 @@ declare(strict_types=1);
 // show_podcasts.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Podcast\PodcastRowView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -116,7 +117,18 @@ foreach ($object_ids as $podcastId) {
         continue;
     } ?>
         <tr id="podcast_<?php echo $libitem->getId(); ?>" class="libitem_menu" data-object-type="podcast" data-object-id="<?php echo $libitem->getId(); ?>">
-            <?php require Ui::find_template('show_podcast_row.inc.php'); ?>
+            <?php echo (new PodcastRowView(
+                $libitem,
+                AmpConfig::get_web_path(),
+                $cel_cover,
+                $cel_counter,
+                $show_ratings,
+                (bool) AmpConfig::get('show_played_times'),
+                (bool) AmpConfig::get('directplay'),
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ))->render(); ?>
         </tr>
         <?php
 } ?>

@@ -26,6 +26,7 @@ declare(strict_types=1);
 // show_broadcasts.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Broadcast\BroadcastRowView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Broadcast;
@@ -62,7 +63,7 @@ $started_filter = $browse->get_filter('started'); ?>
                 continue;
             } ?>
         <tr id="broadcast_row_<?php echo $libitem->id; ?>">
-            <?php require Ui::find_template('show_broadcast_row.inc.php'); ?>
+            <?php echo (new BroadcastRowView($libitem, (bool) AmpConfig::get('directplay')))->render(); ?>
         </tr>
         <?php
         } ?>

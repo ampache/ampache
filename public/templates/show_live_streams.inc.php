@@ -26,6 +26,7 @@ declare(strict_types=1);
 // show_live_streams.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\LiveStream\LiveStreamRowView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -89,7 +90,17 @@ foreach ($object_ids as $radio_id) {
         continue;
     } ?>
         <tr id="live_stream_<?php echo $libitem->id; ?>">
-                <?php require Ui::find_template('show_live_stream_row.inc.php'); ?>
+                <?php echo (new LiveStreamRowView(
+                    $libitem,
+                    $cel_cover,
+                    $browse->getId(),
+                    $browse->is_grid_view(),
+                    $show_ratings,
+                    (bool) AmpConfig::get('directplay'),
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+                ))->render(); ?>
         </tr>
         <?php } ?>
         <?php if (!count($object_ids)) { ?>

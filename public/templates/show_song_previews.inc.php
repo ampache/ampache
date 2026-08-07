@@ -25,6 +25,9 @@ declare(strict_types=1);
 
 // show_song_previews.inc.php
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Song\SongPreviewRowView;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song_Preview;
 
@@ -49,7 +52,12 @@ use Ampache\Repository\Model\Song_Preview;
                 continue;
             } ?>
         <tr id="song_preview_<?php echo $libitem->id; ?>">
-            <?php require Ui::find_template('show_song_preview_row.inc.php'); ?>
+            <?php echo (new SongPreviewRowView(
+                $libitem,
+                (bool) AmpConfig::get('directplay'),
+                Stream_Playlist::check_autoplay_next(),
+                Stream_Playlist::check_autoplay_append()
+            ))->render(); ?>
         </tr>
         <?php } ?>
     </tbody>
