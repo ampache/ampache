@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -44,7 +43,7 @@ use Ampache\Repository\Model\User;
 /** @var list<int> $object_ids */
 
 $is_table          = !$browse->is_grid_view();
-$show_art          = AmpConfig::get('playlist_art') || $browse->is_mashup();
+$show_art          = (bool) (AmpConfig::get('playlist_art') || $browse->is_mashup());
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $hide_genres       = AmpConfig::get('hide_genres');
@@ -87,17 +86,13 @@ if ($browse->is_show_header()) {
         </tr>
     </thead>
     <tbody>
-        <?php /** @var TalFactoryInterface $talFactory */
-/** @var GuiFactoryInterface $guiFactory */
+        <?php /** @var GuiFactoryInterface $guiFactory */
 /** @var GuiGatekeeperInterface $gatekeeper */
 $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
 if ($show_ratings) {
     Rating::build_cache('playlist', $object_ids);
     Userflag::build_cache('playlist', $object_ids);
 }
-
-// One TAL view reused for all rows
-$playlistRowView = $talFactory->createTalView()->setTemplate('playlist_row.xhtml');
 
 foreach ($object_ids as $playlist_id) {
     $libitem = new Playlist($playlist_id);
@@ -109,15 +104,14 @@ foreach ($object_ids as $playlist_id) {
     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) || $libitem->get_user_owner() == $user_id || $libitem->get_media_count() > 0) { ?>
         <tr id="playlist_row_<?php echo $libitem->id; ?>">
             <?php
-             // Reassign EVERY key each row. Prev row's value sticks otherwise.
-             // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
-            $content = $playlistRowView
-                           ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-                           ->setContext('PLAYLIST', $guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
-                           ->setContext('IS_SHOW_ART', $show_art)
-                           ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
-                           ->setContext('CLASS_COVER', $cel_cover)
-                           ->render();
+            $content = $guiFactory->createPlaylistRowView(
+                $gatekeeper,
+                $libitem,
+                User::is_registered() && (AmpConfig::get('ratings')),
+                $show_art,
+                $show_playlist_add,
+                $cel_cover
+            )->render();
 
         echo $content; ?>
         </tr>

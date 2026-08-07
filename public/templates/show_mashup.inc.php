@@ -24,21 +24,34 @@
 // show_mashup.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Browse\DashboardFormView;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var BrowseFactoryInterface $browseFactory */
 /** @var string $object_type */
+/** @var VideoRepositoryInterface $videoRepository */
 /** @var User $user */
 
 $threshold = AmpConfig::get('stats_threshold', 7);
 $limit     = (int) AmpConfig::get('popular_threshold', 10);
 $web_path  = AmpConfig::get_web_path();
 
-require_once Ui::find_template('show_form_mashup.inc.php');
+echo (new DashboardFormView(
+    $web_path,
+    (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS),
+    (bool) AmpConfig::get('album_group'),
+    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+    (bool) AmpConfig::get('podcast'),
+    (bool) AmpConfig::get('allow_video') && $videoRepository->getItemCount() > 0
+))->render();
 
 //debug_event('show_mashup.inc', "Newest: Stats::get_newest", 5);
 $object_ids = Stats::get_newest($object_type, $limit, 0, 0, $user);

@@ -27,7 +27,6 @@ namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Catalog\Catalog;
@@ -193,7 +192,6 @@ class Browse extends Query
         private readonly PodcastRepositoryInterface $podcastRepository,
         private readonly ShoutObjectLoaderInterface $shoutObjectLoader,
         private readonly ShoutRepositoryInterface $shoutRepository,
-        private readonly TalFactoryInterface $talFactory,
         private readonly UiInterface $ui,
         private readonly UserFollowStateRendererInterface $userFollowStateRenderer,
         private readonly VideoRepositoryInterface $videoRepository,
@@ -691,7 +689,6 @@ class Browse extends Query
             $podcastRepository       = $this->podcastRepository;
             $shoutObjectLoader       = $this->shoutObjectLoader;
             $shoutRepository         = $this->shoutRepository;
-            $talFactory              = $this->talFactory;
             $ui                      = $this->ui;
             $userFollowStateRenderer = $this->userFollowStateRenderer;
             $videoRepository         = $this->videoRepository;

@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -47,15 +46,15 @@ use Ampache\Repository\Model\User;
 $web_path = AmpConfig::get_web_path();
 
 $access25          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
-$show_playlist_add = $access25;
+$show_playlist_add = (bool) $access25;
 $show_direct_play  = AmpConfig::get('directplay');
 $directplay_limit  = AmpConfig::get('direct_play_limit', 500);
 // album_row data and options
 $thcount           = 9;
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $original_year     = AmpConfig::get('use_original_year');
-$hide_genres       = AmpConfig::get('hide_genres');
-$show_played_times = AmpConfig::get('show_played_times');
+$hide_genres       = (bool) AmpConfig::get('hide_genres');
+$show_played_times = (bool) AmpConfig::get('show_played_times');
 $is_table          = !$browse->is_grid_view();
 $year_sort         = ($original_year) ? "&sort=original_year" : "&sort=year";
 // translate once
@@ -111,8 +110,7 @@ if ($show_ratings) {
         </tr>
     </thead>
     <tbody>
-<?php /** @var TalFactoryInterface $talFactory */
-/** @var GuiFactoryInterface $guiFactory */
+<?php /** @var GuiFactoryInterface $guiFactory */
 /** @var GuiGatekeeperInterface $gatekeeper */
 
 if (AmpConfig::get('ratings')) {
@@ -120,9 +118,6 @@ if (AmpConfig::get('ratings')) {
     Userflag::build_cache('album_disk', $object_ids);
 }
 /* Foreach through the album_disks */
-// One TAL view reused for all rows
-$albumDiskRowView = $talFactory->createTalView()->setTemplate('album_disk_row.xhtml');
-
 foreach ($object_ids as $album_disk_id) {
     $libitem = new AlbumDisk($album_disk_id);
     if ($libitem->isNew()) {
@@ -130,26 +125,24 @@ foreach ($object_ids as $album_disk_id) {
     }
 
     if ($directplay_limit > 0 && $is_table) {
-        $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
+        $show_playlist_add = (bool) ($access25 && ($libitem->song_count <= $directplay_limit));
     } ?>
         <tr id="album_disk_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="album_disk" data-object-id="<?php echo $libitem->id; ?>">
             <?php
-            // Reassign EVERY key each row. Prev row's value sticks otherwise.
-            // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
-            $content = $albumDiskRowView
-                    ->setContext('USER_IS_REGISTERED', User::is_registered())
-                    ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-                    ->setContext('ALBUMDISK', $guiFactory->createAlbumDiskViewAdapter($gatekeeper, $browse, $libitem))
-                    ->setContext('IS_TABLE_VIEW', $is_table)
-                    ->setContext('IS_HIDE_GENRE', $hide_genres)
-                    ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
-                    ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
-                    ->setContext('CLASS_COVER', $cel_cover)
-                    ->setContext('CLASS_ALBUM', $cel_album)
-                    ->setContext('CLASS_ARTIST', $cel_artist)
-                    ->setContext('CLASS_TAGS', $cel_tags)
-                    ->setContext('CLASS_COUNTER', $cel_counter)
-                    ->render();
+            $content = $guiFactory->createAlbumDiskRowView(
+                $gatekeeper,
+                $browse,
+                $libitem,
+                User::is_registered() && (AmpConfig::get('ratings')),
+                $hide_genres,
+                $show_played_times,
+                $show_playlist_add,
+                $cel_cover,
+                $cel_album,
+                $cel_artist,
+                $cel_tags,
+                $cel_counter
+            )->render();
     echo $content; ?>
         </tr>
         <?php

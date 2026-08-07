@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
@@ -55,7 +54,6 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
         private PodcastRepositoryInterface $podcastRepository,
         private ShoutObjectLoaderInterface $shoutObjectLoader,
         private ShoutRepositoryInterface $shoutRepository,
-        private TalFactoryInterface $talFactory,
         private UiInterface $ui,
         private UserFollowStateRendererInterface $userFollowStateRenderer,
         private VideoRepositoryInterface $videoRepository,
@@ -78,7 +76,6 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
             $this->podcastRepository,
             $this->shoutObjectLoader,
             $this->shoutRepository,
-            $this->talFactory,
             $this->ui,
             $this->userFollowStateRenderer,
             $this->videoRepository,

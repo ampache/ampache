@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -50,10 +49,10 @@ $web_path = AmpConfig::get_web_path();
 $show_ratings       = User::is_registered() && AmpConfig::get('ratings');
 $show_played_times  = AmpConfig::get('show_played_times');
 $show_skipped_times = AmpConfig::get('show_skipped_times');
-$hide_genres        = AmpConfig::get('hide_genres');
+$hide_genres        = (bool) AmpConfig::get('hide_genres');
 $thcount            = 7;
 $is_table           = !$browse->is_grid_view();
-$is_group           = AmpConfig::get('album_group');
+$is_group           = (bool) AmpConfig::get('album_group');
 $albumString        = ($is_group)
     ? 'album'
     : 'album_disk';
@@ -62,7 +61,7 @@ $hide_artist   = in_array('cel_artist', $hide_columns);
 $hide_album    = in_array('cel_album', $hide_columns);
 $hide_year     = in_array('cel_year', $hide_columns);
 $hide_drag     = in_array('cel_drag', $hide_columns);
-$show_license  = AmpConfig::get('licensing') && AmpConfig::get('show_license');
+$show_license  = (bool) (AmpConfig::get('licensing') && AmpConfig::get('show_license'));
 $show_track    = !empty($argument) && $is_table;
 $cel_play_text = ($show_track)
     ? Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, '#', 'song_sort_track' . $browse->id)
@@ -210,17 +209,13 @@ if ($browse->is_show_header()) {
         </tr>
     </thead>
     <tbody id="sortableplaylist_<?php echo $browse->get_filter('album') ?? $browse->id; ?>">
-        <?php /** @var TalFactoryInterface $talFactory */
-/** @var GuiFactoryInterface $guiFactory */
+        <?php /** @var GuiFactoryInterface $guiFactory */
 /** @var GuiGatekeeperInterface $gatekeeper */
 
 // repeating a browse's prefetch would also overwrite the threshold-adjusted play counts it cached
 if (empty($browse_cached)) {
     Song::build_cache($object_ids);
 }
-
-// One TAL view reused for all rows
-$songRowView = $talFactory->createTalView()->setTemplate('song_row.xhtml');
 
 foreach ($object_ids as $song_id) {
     $libitem = new Song($song_id);
@@ -229,8 +224,8 @@ foreach ($object_ids as $song_id) {
     } ?>
             <tr id="song_<?php echo $libitem->id; ?>">
                 <?php if ($libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-                    // The rest of the row is a TAL template, so the checkbox cell is emitted here; it only ever
-                    // has to lead the row, and keeping it out of song_row.xhtml leaves that template untouched.
+                    // The rest of the row is its own view, so the checkbox cell is emitted here; it only ever
+                    // has to lead the row, and keeping it out of song_row.phtml leaves that template untouched.
                     if ($can_multiselect) {
                         $checkbox = ($show_multiselect)
                             ? '<input type="checkbox" class="multiselect-item" title="' . T_('Select') . '" data-id="' . $libitem->id . '" data-type="song" />'
@@ -238,23 +233,21 @@ foreach ($object_ids as $song_id) {
                         echo '<td class="cel_select">' . $checkbox . '</td>';
                     }
 
-                    // Reassign EVERY key each row. Prev row's value sticks otherwise.
-                    // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
-                    $content = $songRowView
-                                ->setContext('USER_IS_REGISTERED', User::is_registered())
-                                ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-                                ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
-                                ->setContext('ARGUMENT_PARAM', $argument_param)
-                                ->setContext('IS_TABLE_VIEW', $is_table)
-                                ->setContext('IS_ALBUM_GROUP', $is_group)
-                                ->setContext('IS_SHOW_TRACK', $show_track)
-                                ->setContext('IS_SHOW_LICENSE', $show_license)
-                                ->setContext('IS_HIDE_GENRE', $hide_genres)
-                                ->setContext('IS_HIDE_ARTIST', $hide_artist)
-                                ->setContext('IS_HIDE_ALBUM', $hide_album)
-                                ->setContext('IS_HIDE_YEAR', $hide_year)
-                                ->setContext('IS_HIDE_DRAG', (empty($argument) || $hide_drag))
-                                ->render();
+                    $content = $guiFactory->createSongRowView(
+                        $gatekeeper,
+                        $libitem,
+                        $argument_param,
+                        User::is_registered() && (AmpConfig::get('ratings')),
+                        $is_table,
+                        $is_group,
+                        $show_track,
+                        $show_license,
+                        $hide_genres,
+                        $hide_artist,
+                        $hide_album,
+                        $hide_year,
+                        (empty($argument) || $hide_drag)
+                    )->render();
 
                     echo $content;
                 } ?>

@@ -40,6 +40,7 @@ use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\User;
 
 /** @var BrowseFactoryInterface $browseFactory */
+/** @var string $browseForm */
 /** @var ZipHandlerInterface $zipHandler */
 /** @var User|null $current_user */
 $current_user = $current_user ?? Core::get_global('user');
@@ -77,12 +78,14 @@ if ($directplay_limit > 0) {
 
 $show_direct_play  = $show_direct_play && $media_count > 0;
 $show_playlist_add = $show_playlist_add && $media_count > 0; ?>
-<?php require_once Ui::find_template('show_form_browse.inc.php'); ?>
+<?php echo $browseForm; ?>
 <?php Ui::show_box_top($title, 'info-box'); ?>
 
 <div class="item_right_info">
 </div>
 
+<?php // the root listing is a virtual folder with nothing to act on, so the panel is omitted rather than drawn empty
+if ($show_direct_play || $show_playlist_add) { ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?></h3>
     <ul>
@@ -101,8 +104,8 @@ if (Stream_Playlist::check_autoplay_append()) { ?>
         </li>
 <?php }
 }
-if ($show_playlist_add) {
-    $addtoexist = Ui::get_add_to_list_label(); ?>
+    if ($show_playlist_add) {
+        $addtoexist = Ui::get_add_to_list_label(); ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=folder&id=' . $folder->getId(), 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $folder->getId()); ?>
         </li>
@@ -118,6 +121,7 @@ if ($show_playlist_add) {
 <?php } ?>
     </ul>
 </div>
+<?php } ?>
 <?php Ui::show_box_bottom(); ?>
 <div id="additional_information">
 &nbsp;

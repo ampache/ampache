@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Browse;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Browse\BrowseContentView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
@@ -93,9 +94,7 @@ final readonly class TagAction implements ApplicationActionInterface
             require_once Ui::find_template('show_tagcloud.inc.php');
 
             $this->ui->showBoxBottom();
-            $type = $browse->get_content_div();
-
-            require_once Ui::find_template('browse_content.inc.php');
+            echo (new BrowseContentView($browse->get_content_div()))->render();
         }
 
         $browse->store();

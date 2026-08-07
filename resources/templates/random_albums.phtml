@@ -1,0 +1,70 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// random_albums.phtml -- rendered by Ampache\Gui\Index\RandomAlbumsView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Index\RandomAlbumsView $this */
+
+$objectType = $this->getObjectType();
+$button     = Ajax::button('?page=index&action=random_albums', 'refresh', T_('Refresh'), 'random_refresh');
+
+Ui::show_box_top($this->getTitle() . ' ' . $button, 'box box_random_albums');
+foreach ($this->getItems() as $item) { ?>
+    <div class="random_album">
+        <div id="<?php echo $this->e($objectType . '_' . $item->id); ?>" class="art_album libitem_menu" data-object-type="<?php echo $this->e($objectType); ?>" data-object-id="<?php echo $this->e($item->id); ?>">
+            <?php $item->display_art($this->getArtSize(), true); ?>
+        </div>
+        <?php if ($this->isPlayShown()) { ?>
+        <div class="play_album">
+        <?php if ($this->isDirectPlayEnabled()) {
+            echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=' . $objectType . '&object_id=' . $item->id, 'play_circle', T_('Play'), 'play_' . $objectType . '_' . $item->id));
+            if ($this->isAutoplayNextEnabled()) {
+                echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=' . $objectType . '&object_id=' . $item->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_' . $objectType . '_' . $item->id));
+            }
+
+            if ($this->isAutoplayAppendEnabled()) {
+                echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=' . $objectType . '&object_id=' . $item->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_' . $objectType . '_' . $item->id));
+            }
+        }
+
+            echo $this->raw(Ajax::button('?action=basket&type=' . $objectType . '&id=' . $item->id, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $item->id)); ?>
+        </div>
+        <?php }
+
+        if ($this->areRatingsShown()) { ?>
+        <div class="rating">
+            <span class="cel_rating" id="rating_<?php echo $this->e($item->id); ?>_album"><?php echo $this->raw(Rating::show($item->id, $objectType)); ?></span>
+            <span class="cel_rating" id="userflag_<?php echo $this->e($item->id); ?>_album"><?php echo $this->raw(Userflag::show($item->id, $objectType)); ?></span>
+        </div>
+    <?php } ?>
+    </div>
+<?php }
+
+Ui::show_box_bottom();

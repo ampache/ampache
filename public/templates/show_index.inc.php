@@ -26,7 +26,11 @@ declare(strict_types=1);
 // show_index.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Browse\DashboardFormView;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\Plugin;
@@ -35,12 +39,24 @@ use Ampache\Module\Util\Ui;
 use Ampache\Plugin\PluginDisplayHomeInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\VideoRepositoryInterface;
 
-$header_form = (AmpConfig::get('index_dashboard_form', false))
-    ? 'show_form_mashup.inc.php'
-    : 'show_form_browse.inc.php'; ?>
+/** @var string $browseForm */
+/** @var VideoRepositoryInterface $videoRepository */
+?>
 <div id="browse_header">
-<?php require_once Ui::find_template($header_form); ?>
+<?php if (AmpConfig::get('index_dashboard_form', false)) {
+    echo (new DashboardFormView(
+        AmpConfig::get_web_path(),
+        (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS),
+        (bool) AmpConfig::get('album_group'),
+        Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+        (bool) AmpConfig::get('podcast'),
+        (bool) AmpConfig::get('allow_video') && $videoRepository->getItemCount() > 0
+    ))->render();
+} else {
+    echo $browseForm;
+} ?>
 </div> <!-- Close browse_header Div -->
 
 <div id="home_plugin" style="display:flex;flex-direction:column;">

@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Register;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Register\RegistrationConfirmationView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -36,7 +38,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
 use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
 use Ampache\Module\Util\Mailer;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -196,7 +197,16 @@ final class AddUserAction implements ApplicationActionInterface
             Registration::send_confirmation($username, $fullname, $email, $website, $validation);
         }
 
-        require_once Ui::find_template('show_registration_confirmation.inc.php');
+        $_SESSION['login'] = true;
+
+        echo (new RegistrationConfirmationView(
+            AmpConfig::get_web_path(),
+            str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US')),
+            (string) AmpConfig::get('site_charset', 'UTF-8'),
+            (string) AmpConfig::get('site_title'),
+            (bool) AmpConfig::get('admin_enable_required'),
+            !AmpConfig::get('user_no_email_confirm')
+        ))->render();
 
         return null;
     }

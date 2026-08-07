@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -43,6 +42,8 @@ use Ampache\Repository\Model\Video;
 /** @var Ampache\Module\Database\Query\Browse $browse */
 /** @var Ampache\Repository\Model\Folder|null $folder */
 /** @var string[] $object_ids */
+/** @var GuiFactoryInterface $guiFactory */
+/** @var GuiGatekeeperInterface $gatekeeper */
 
 $web_path = AmpConfig::get_web_path();
 
@@ -94,14 +95,7 @@ if ($browse->is_show_header()) {
             </tr>
         </thead>
         <tbody>
-<?php /** @var TalFactoryInterface $talFactory */
-/** @var GuiFactoryInterface $guiFactory */
-/** @var GuiGatekeeperInterface $gatekeeper */
-
-/* Foreach through the objects e.g. folder-12 song-125 podcast_episode-233 */
-// One TAL view reused for all rows
-$folderRowView = $talFactory->createTalView()->setTemplate('folder_row.xhtml');
-
+<?php /* Foreach through the objects e.g. folder-12 song-125 podcast_episode-233 */
 foreach ($object_ids as $object) {
     // A bare id is a folder: that is what a collection pinned to folders hands over, having no types to send
     if (preg_match('/^[0-9]+$/', (string) $object)) {
@@ -141,18 +135,19 @@ foreach ($object_ids as $object) {
     } ?>
             <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu" data-object-type="<?php echo $object_type; ?>" data-object-id="<?php echo $libitem->getId(); ?>">
     <?php
-            // Reassign EVERY key each row. Prev row's value sticks otherwise.
-            $content = $folderRowView
-            ->setContext('USER_IS_REGISTERED', User::is_registered())
-            ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-            ->setContext('FOLDER', $guiFactory->createFolderViewAdapter($gatekeeper, $folder, $libitem, $object_type))
-            ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
-            ->setContext('IS_SHOW_PLAYLIST_ADD', $show_temp_add)
-            ->setContext('IS_SHOW_LIST_ADD', $access25)
-            ->setContext('CLASS_COVER', $cel_cover)
-            ->setContext('CLASS_FOLDER', $cel_folder)
-            ->setContext('CLASS_COUNTER', $cel_counter)
-            ->render();
+            $content = $guiFactory->createFolderRowView(
+                $gatekeeper,
+                $folder,
+                $libitem,
+                $object_type,
+                User::is_registered() && (AmpConfig::get('ratings')),
+                $show_played_times,
+                $show_temp_add,
+                $access25,
+                $cel_cover,
+                $cel_folder,
+                $cel_counter
+            )->render();
     echo $content; ?>
             </tr>
 <?php } ?>

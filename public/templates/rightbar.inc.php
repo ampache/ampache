@@ -26,6 +26,7 @@ declare(strict_types=1);
 // rightbar.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Playback\LocalplayControlView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -121,7 +122,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
     </li>
 </ul>
 <?php if (AmpConfig::get('play_type') == 'localplay') {
-    require_once Ui::find_template('show_localplay_control.inc.php');
+    echo (new LocalplayControlView())->render();
 } ?>
 <ul id="rb_current_playlist" class="striped-rows">
 <?php

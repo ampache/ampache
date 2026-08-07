@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\PrivateMessage;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\PrivateMessage\PrivateMessageView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -75,10 +76,10 @@ final readonly class ShowAction implements ApplicationActionInterface
             $this->pmRepository->setIsRead($pvmsg, 1);
         }
 
-        $this->ui->show(
-            'show_pvmsg.inc.php',
-            ['pvmsg' => $pvmsg]
-        );
+        echo (new PrivateMessageView(
+            $this->configContainer->getWebPath(),
+            $pvmsg
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -42,13 +41,15 @@ use Ampache\Repository\Model\User;
 /** @var string[] $hide_columns */
 /** @var string $argument_param */
 /** @var Artist $artist */
+/** @var GuiFactoryInterface $guiFactory */
+/** @var GuiGatekeeperInterface $gatekeeper */
 
 $web_path = AmpConfig::get_web_path();
 
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
-$hide_genres  = AmpConfig::get('hide_genres');
+$hide_genres  = (bool) AmpConfig::get('hide_genres');
 $is_table     = true;
-$is_group     = (AmpConfig::get('album_group'));
+$is_group     = (bool) AmpConfig::get('album_group');
 // hide columns you don't always need
 $hide_artist  = in_array('cel_artist', $hide_columns);
 $hide_album   = in_array('cel_album', $hide_columns);
@@ -90,44 +91,35 @@ $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
     </tr>
     </thead>
     <tbody>
-        <?php /** @var TalFactoryInterface $talFactory */
-/** @var GuiFactoryInterface $guiFactory */
-/** @var GuiGatekeeperInterface $gatekeeper */
-
-// One TAL view reused for all rows
-$songRowView = $talFactory->createTalView()->setTemplate('song_row.xhtml');
-
-foreach ($object_ids as $song_id) {
-    $libitem = new Song($song_id);
-    if ($libitem->isNew()) {
-        continue;
-    } ?>
+        <?php foreach ($object_ids as $song_id) {
+            $libitem = new Song($song_id);
+            if ($libitem->isNew()) {
+                continue;
+            } ?>
             <tr id="song_<?php echo $libitem->id; ?>">
                 <?php
-        if ($libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-            // Reassign EVERY key each row. Prev row's value sticks otherwise.
-            // CONFIG omitted: TalView::render() sets it (was overwritten anyway).
-            $content = $songRowView
-                ->setContext('USER_IS_REGISTERED', User::is_registered())
-                ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-                ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
-                ->setContext('ARGUMENT_PARAM', '')
-                ->setContext('IS_TABLE_VIEW', $is_table)
-                ->setContext('IS_ALBUM_GROUP', $is_group)
-                ->setContext('IS_SHOW_TRACK', !empty($argument))
-                ->setContext('IS_SHOW_LICENSE', $show_license)
-                ->setContext('IS_HIDE_GENRE', $hide_genres)
-                ->setContext('IS_HIDE_ARTIST', $hide_artist)
-                ->setContext('IS_HIDE_ALBUM', $hide_album)
-                ->setContext('IS_HIDE_YEAR', $hide_year)
-                ->setContext('IS_HIDE_DRAG', (empty($argument) || $hide_drag))
-                ->render();
+                if ($libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+                    $content = $guiFactory->createSongRowView(
+                        $gatekeeper,
+                        $libitem,
+                        '',
+                        User::is_registered() && (AmpConfig::get('ratings')),
+                        $is_table,
+                        $is_group,
+                        !empty($argument),
+                        $show_license,
+                        $hide_genres,
+                        $hide_artist,
+                        $hide_album,
+                        $hide_year,
+                        (empty($argument) || $hide_drag)
+                    )->render();
 
-            echo $content;
-        } ?>
+                    echo $content;
+                } ?>
             </tr>
             <?php
-} ?>
+        } ?>
 
         <?php if (!count($object_ids)) { ?>
             <tr>

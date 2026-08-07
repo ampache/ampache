@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Search;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Wanted\MissingArtistsView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -82,7 +84,7 @@ final readonly class SearchAction implements ApplicationActionInterface
             $browse->store();
         } else {
             $wartists = $this->missingArtistFinder->find($this->requestParser->getFromRequest('rule_1_input'));
-            require_once Ui::find_template('show_missing_artists.inc.php');
+            echo (new MissingArtistsView(AmpConfig::get_web_path(), $wartists))->render();
 
             printf(
                 '<a href="http://musicbrainz.org/search?query=%s&type=artist&method=indexed" target="_blank">%s</a><br />',
