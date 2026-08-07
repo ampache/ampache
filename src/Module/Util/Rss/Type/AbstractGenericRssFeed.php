@@ -26,24 +26,25 @@ declare(strict_types=1);
 namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\View\TemplateInterface;
+use Ampache\Module\Util\Rss\View\GenericRssFeedView;
 use Generator;
-use PhpTal\PhpTalInterface;
+use Override;
 use Traversable;
 
 abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
 {
-    public function configureTemplate(PhpTalInterface $tal): void
+    #[Override]
+    public function createView(): TemplateInterface
     {
-        $tal->setTemplate((string) realpath(__DIR__ . '/../../../../../resources/templates/rss/generic_rss_feed.xml'));
-        $tal->set('TITLE', AmpConfig::get('site_title') . ' - ' . $this->getTitle());
-        $tal->set('ITEMS', $this->getItems());
-        $tal->set('LINK', AmpConfig::get_web_path());
-        $tal->set('LINK_RSS', AmpConfig::get_web_path() . ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING']);
-        $tal->set(
-            'PUBDATE',
-            ($this->getPubDate()) ? date('r', (int) $this->getPubDate()) : null
+        return new GenericRssFeedView(
+            AmpConfig::get('site_title') . ' - ' . $this->getTitle(),
+            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path() . ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING'],
+            ($this->getPubDate()) ? date('r', (int) $this->getPubDate()) : null,
+            $this->getImage(),
+            $this->getItems()
         );
-        $tal->set('IMAGE', $this->getImage());
     }
 
     /**
@@ -62,6 +63,7 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
      *     comments: ?string,
      *     pubDate: string,
      *     guid: string,
+     *     isPermaLink: string,
      *     image?: string
      * }>
      */

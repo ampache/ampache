@@ -25,9 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Type;
 
-use PhpTal\PhpTalInterface;
+use Ampache\Gui\View\TemplateInterface;
 
 interface FeedTypeInterface
 {
-    public function configureTemplate(PhpTalInterface $tal): void;
+    /**
+     * The view that renders this feed's channel.
+     */
+    public function createView(): TemplateInterface;
 }

@@ -1,0 +1,91 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// folder_row.phtml -- rendered by Ampache\Gui\Folder\FolderRowView
+
+/** @var Ampache\Gui\Folder\FolderRowView $this */
+
+$folder   = $this->getFolder();
+$folderId = $folder->getId(); ?>
+    <td class="cel_play">
+        <span class="cel_play_content"> </span>
+        <div class="cel_play_hover">
+<?php if ($folder->canDirectplay()) {
+    echo $this->raw($folder->getDirectplayButton());
+
+    if ($folder->canAutoplayNext()) {
+        echo $this->raw($folder->getAutoplayNextButton());
+    }
+
+    if ($folder->canAppendNext()) {
+        echo $this->raw($folder->getAppendNextButton());
+    }
+} ?>
+        </div>
+    </td>
+    <td class="<?php echo $this->e($this->getClassCover()); ?>"><?php echo $this->raw($folder->getArt()); ?></td>
+    <td class="<?php echo $this->e($this->getClassFolder()); ?>"><?php echo $this->raw($folder->getFolderLink()); ?></td>
+    <td class="cel_add">
+        <span class="cel_item_add">
+<?php if ($this->isShowPlaylistAdd()) {
+    echo $this->raw($folder->getAddToTemporaryPlaylistButton());
+    echo $this->raw($folder->getRandomToTemporaryPlaylistButton());
+}
+
+if ($this->isShowListAdd()) { ?>
+            <a id="add_to_playlist_<?php echo $folderId; ?>" onclick="showPlaylistDialog(event, '<?php echo $this->e($folder->getObjectType()); ?>', '<?php echo $folderId; ?>')"><?php echo $this->raw($folder->getAddToPlaylistIcon()); ?></a>
+<?php } ?>
+        </span>
+    </td>
+    <td class="cel_songs optional"><?php echo $this->e($folder->getSongCount()); ?></td>
+<?php if ($this->isShowPlayedTimes()) { ?>
+    <td class="<?php echo $this->e($this->getClassCounter()); ?> optional"><?php echo $this->e($folder->getPlayedTimes()); ?></td>
+<?php }
+if ($this->isUsingRatings()) { ?>
+    <td class="cel_ratings">
+        <div class="rating">
+            <span class="cel_rating" id="rating_<?php echo $folderId; ?>_folder"><?php echo $this->raw($folder->getRating()); ?></span>
+            <span class="cel_userflag" id="userflag_<?php echo $folderId; ?>_folder"><?php echo $this->raw($folder->getUserFlags()); ?></span>
+        </div>
+    </td>
+<?php } ?>
+    <td class="cel_action">
+<?php if ($folder->canPostShout()) { ?>
+        <a href="<?php echo $this->e($folder->getPostShoutUrl()); ?>"><?php echo $this->raw($folder->getPostShoutIcon()); ?></a>
+<?php }
+if ($folder->canShare()) {
+    echo $this->raw($folder->getShareUi());
+}
+
+if ($folder->canBatchDownload()) { ?>
+        <a class="nohtml" rel="nofollow" href="<?php echo $this->e($folder->getBatchDownloadUrl()); ?>"><?php echo $this->raw($folder->getBatchDownloadIcon()); ?></a>
+<?php }
+if ($folder->isEditable()) { ?>
+        <a id="edit_folder_<?php echo $folderId; ?>" onclick="showEditDialog('folder_row', '<?php echo $folderId; ?>', 'edit_folder_<?php echo $folderId; ?>', '<?php echo $this->e($folder->getEditButtonTitle()); ?>', 'folder_')"><?php echo $this->raw($folder->getEditIcon()); ?></a>
+<?php }
+if ($folder->canBeDeleted()) { ?>
+        <a id="delete_folder_<?php echo $folderId; ?>" href="<?php echo $this->e($folder->getDeletionUrl()); ?>"><?php echo $this->raw($folder->getDeletionIcon()); ?></a>
+<?php } ?>
+    </td>

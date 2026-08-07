@@ -23,16 +23,29 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui;
+namespace Ampache\Module\Util\Rss\View;
 
-use PhpTal\PhpTalInterface;
-use PhpTal\TranslationServiceInterface;
+use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Util\Rss\Surrogate\RssItemInterface;
+use Override;
 
-interface TalFactoryInterface
+/**
+ * Renders the itunes-flavoured RSS channel a playable item is published as.
+ */
+final class PodcastRssFeedView extends AbstractView
 {
-    public function createPhpTal(): PhpTalInterface;
+    public function __construct(
+        private readonly RssItemInterface $item,
+    ) {}
 
-    public function createTalTranslationService(): TranslationServiceInterface;
+    public function getItem(): RssItemInterface
+    {
+        return $this->item;
+    }
 
-    public function createTalView(): TalViewInterface;
+    #[Override]
+    protected function templateFile(): string
+    {
+        return $this->findTemplate('rss/podcast.phtml');
+    }
 }

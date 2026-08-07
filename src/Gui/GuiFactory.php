@@ -26,18 +26,25 @@ declare(strict_types=1);
 namespace Ampache\Gui;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Album\AlbumRowView;
 use Ampache\Gui\Album\AlbumViewAdapter;
 use Ampache\Gui\Album\AlbumViewAdapterInterface;
+use Ampache\Gui\AlbumDisk\AlbumDiskRowView;
 use Ampache\Gui\AlbumDisk\AlbumDiskViewAdapter;
 use Ampache\Gui\AlbumDisk\AlbumDiskViewAdapterInterface;
 use Ampache\Gui\Catalog\CatalogDetails;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
+use Ampache\Gui\Collection\CollectionViewAdapter;
+use Ampache\Gui\Collection\CollectionViewAdapterInterface;
+use Ampache\Gui\Folder\FolderRowView;
 use Ampache\Gui\Folder\FolderViewAdapter;
 use Ampache\Gui\Folder\FolderViewAdapterInterface;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapter;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapterInterface;
+use Ampache\Gui\Playlist\PlaylistRowView;
 use Ampache\Gui\Playlist\PlaylistViewAdapter;
 use Ampache\Gui\Playlist\PlaylistViewAdapterInterface;
+use Ampache\Gui\Song\SongRowView;
 use Ampache\Gui\Song\SongViewAdapter;
 use Ampache\Gui\Song\SongViewAdapterInterface;
 use Ampache\Gui\Stats\CatalogStats;
@@ -52,6 +59,7 @@ use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Update\UpdateHelperInterface;
 use Ampache\Module\System\Update\UpdaterInterface;
@@ -60,11 +68,14 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
@@ -85,6 +96,35 @@ final readonly class GuiFactory implements GuiFactoryInterface
         private UpdaterInterface $updater,
     ) {}
 
+    public function createAlbumDiskRowView(
+        GuiGatekeeperInterface $gatekeeper,
+        Browse $browse,
+        AlbumDisk $albumDisk,
+        bool $usingRatings,
+        bool $isHideGenre,
+        bool $isShowPlayedTimes,
+        bool $isShowPlaylistAdd,
+        string $classCover,
+        string $classAlbum,
+        string $classArtist,
+        string $classTags,
+        string $classCounter,
+    ): AlbumDiskRowView {
+        return new AlbumDiskRowView(
+            $this->createAlbumDiskViewAdapter($gatekeeper, $browse, $albumDisk),
+            $this->createConfigViewAdapter(),
+            $usingRatings,
+            $isHideGenre,
+            $isShowPlayedTimes,
+            $isShowPlaylistAdd,
+            $classCover,
+            $classAlbum,
+            $classArtist,
+            $classTags,
+            $classCounter
+        );
+    }
+
     public function createAlbumDiskViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Browse $browse,
@@ -98,6 +138,35 @@ final readonly class GuiFactory implements GuiFactoryInterface
             $gatekeeper,
             $browse,
             $albumDisk
+        );
+    }
+
+    public function createAlbumRowView(
+        GuiGatekeeperInterface $gatekeeper,
+        Browse $browse,
+        Album $album,
+        bool $usingRatings,
+        bool $isHideGenre,
+        bool $isShowPlayedTimes,
+        bool $isShowPlaylistAdd,
+        string $classCover,
+        string $classAlbum,
+        string $classArtist,
+        string $classTags,
+        string $classCounter,
+    ): AlbumRowView {
+        return new AlbumRowView(
+            $this->createAlbumViewAdapter($gatekeeper, $browse, $album),
+            $this->createConfigViewAdapter(),
+            $usingRatings,
+            $isHideGenre,
+            $isShowPlayedTimes,
+            $isShowPlaylistAdd,
+            $classCover,
+            $classAlbum,
+            $classArtist,
+            $classTags,
+            $classCounter
         );
     }
 
@@ -134,10 +203,53 @@ final readonly class GuiFactory implements GuiFactoryInterface
         return new CatalogStats($stats);
     }
 
+    /**
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int, time: int}> $objectIds
+     */
+    public function createCollectionViewAdapter(
+        BrowseFactoryInterface $browseFactory,
+        Collection $collection,
+        ?User $user,
+        array $objectIds,
+    ): CollectionViewAdapterInterface {
+        return new CollectionViewAdapter(
+            $this->configContainer,
+            $browseFactory,
+            $collection,
+            $user,
+            $objectIds
+        );
+    }
+
     public function createConfigViewAdapter(): ConfigViewAdapterInterface
     {
         return new ConfigViewAdapter(
             $this->configContainer
+        );
+    }
+
+    public function createFolderRowView(
+        GuiGatekeeperInterface $gatekeeper,
+        Folder $folder,
+        Podcast_Episode|Video|Song|Folder $object,
+        string $object_type,
+        bool $usingRatings,
+        bool $isShowPlayedTimes,
+        bool $isShowPlaylistAdd,
+        bool $isShowListAdd,
+        string $classCover,
+        string $classFolder,
+        string $classCounter,
+    ): FolderRowView {
+        return new FolderRowView(
+            $this->createFolderViewAdapter($gatekeeper, $folder, $object, $object_type),
+            $usingRatings,
+            $isShowPlayedTimes,
+            $isShowPlaylistAdd,
+            $isShowListAdd,
+            $classCover,
+            $classFolder,
+            $classCounter
         );
     }
 
@@ -176,6 +288,24 @@ final readonly class GuiFactory implements GuiFactoryInterface
         );
     }
 
+    public function createPlaylistRowView(
+        GuiGatekeeperInterface $gatekeeper,
+        Playlist $playlist,
+        bool $usingRatings,
+        bool $isShowArt,
+        bool $isShowPlaylistAdd,
+        string $classCover,
+    ): PlaylistRowView {
+        return new PlaylistRowView(
+            $this->createPlaylistViewAdapter($gatekeeper, $playlist),
+            $this->createConfigViewAdapter(),
+            $usingRatings,
+            $isShowArt,
+            $isShowPlaylistAdd,
+            $classCover
+        );
+    }
+
     public function createPlaylistViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Playlist $playlist,
@@ -190,6 +320,38 @@ final readonly class GuiFactory implements GuiFactoryInterface
         );
     }
 
+    public function createSongRowView(
+        GuiGatekeeperInterface $gatekeeper,
+        Song $song,
+        string $argumentParam,
+        bool $usingRatings,
+        bool $isTableView,
+        bool $isAlbumGroup,
+        bool $isShowTrack,
+        bool $isShowLicense,
+        bool $isHideGenre,
+        bool $isHideArtist,
+        bool $isHideAlbum,
+        bool $isHideYear,
+        bool $isHideDrag,
+    ): SongRowView {
+        return new SongRowView(
+            $this->createSongViewAdapter($gatekeeper, $song),
+            $this->createConfigViewAdapter(),
+            $argumentParam,
+            $usingRatings,
+            $isTableView,
+            $isAlbumGroup,
+            $isShowTrack,
+            $isShowLicense,
+            $isHideGenre,
+            $isHideArtist,
+            $isHideAlbum,
+            $isHideYear,
+            $isHideDrag
+        );
+    }
+
     public function createSongViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Song $song,
@@ -197,6 +359,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
         return new SongViewAdapter(
             $this->configContainer,
             $this->modelFactory,
+            $this->createConfigViewAdapter(),
             $gatekeeper,
             $song
         );

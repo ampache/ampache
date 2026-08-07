@@ -23,13 +23,19 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui;
+// export.phtml -- rendered by Ampache\Module\Podcast\Exchange\PodcastOpmlView
 
-interface TalViewInterface
-{
-    public function render(): string;
+/** @var Ampache\Module\Podcast\Exchange\PodcastOpmlView $this */
 
-    public function setContext(string $key, mixed $context): TalViewInterface;
-
-    public function setTemplate(string $templateFilePath): TalViewInterface;
-}
+echo '<?xml version="1.0" encoding="UTF-8"?>', "\n"; ?>
+<opml version="2.0">
+    <head>
+        <title><?php echo $this->e($this->getTitle()); ?></title>
+        <dateCreated><?php echo $this->e($this->getCreationDate()); ?></dateCreated>
+    </head>
+    <body>
+<?php foreach ($this->getPodcasts() as $podcast) { ?>
+        <outline text="<?php echo $this->e($podcast['title']); ?>" language="<?php echo $this->e($podcast['language']); ?>" description="<?php echo $this->e($podcast['description']); ?>" xmlUrl="<?php echo $this->e($podcast['feedUrl']); ?>" htmlUrl="<?php echo $this->e($podcast['website']); ?>"/>
+<?php } ?>
+    </body>
+</opml>

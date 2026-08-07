@@ -24,12 +24,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Type;
 
+use Ampache\Gui\View\TemplateInterface;
 use Ampache\Module\Util\Rss\Surrogate\PlayableItemRssItemAdapter;
+use Ampache\Module\Util\Rss\View\PodcastRssFeedView;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
-use PhpTal\PhpTalInterface;
+use Override;
 
 /**
  * Configures a rss feed for a certain library-item
@@ -43,17 +45,16 @@ final readonly class LibraryItemFeed implements FeedTypeInterface
         private library_item $libraryItem,
     ) {}
 
-    public function configureTemplate(PhpTalInterface $tal): void
+    #[Override]
+    public function createView(): TemplateInterface
     {
-        $tal->setTemplate((string) realpath(__DIR__ . '/../../../../../resources/templates/rss/podcast.xml'));
-        $tal->set(
-            'THIS',
+        return new PodcastRssFeedView(
             new PlayableItemRssItemAdapter(
                 $this->libraryItemLoader,
                 $this->modelFactory,
                 $this->libraryItem,
                 $this->user
-            ),
+            )
         );
     }
 }
