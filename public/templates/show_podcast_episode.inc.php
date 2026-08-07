@@ -36,6 +36,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\Waveform;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 
@@ -59,7 +60,7 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 
         </div>
     </dd>
 <?php } ?>
-    <?php if (AmpConfig::get('waveform')) { ?>
+    <?php if (AmpConfig::get('waveform') && Waveform::is_available($episode, 'podcast_episode')) { ?>
         <dt><?php echo T_('Waveform'); ?></dt>
         <dd>
             <div id="waveform_<?php echo $episode->id; ?>">

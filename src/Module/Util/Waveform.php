@@ -122,6 +122,32 @@ class Waveform
     }
 
     /**
+     * Whether a waveform can be shown for this media at all.
+     *
+     * `get()` renders on demand from the media file, so a stored waveform is not required -- but with no
+     * readable local file there is nothing to render from and the request answers with no image.
+     */
+    public static function is_available(Podcast_Episode|Song $media, string $object_type): bool
+    {
+        if ($media->isNew()) {
+            return false;
+        }
+
+        if (AmpConfig::get('album_art_store_disk')) {
+            $file = self::get_filepath($media->id, $object_type);
+            if ($file !== null && $file !== '' && is_file($file)) {
+                return true;
+            }
+        } elseif (!in_array($media->waveform, [null, '', '0'], true)) {
+            return true;
+        }
+
+        return $media->file !== null
+            && $media->file !== ''
+            && is_readable($media->file);
+    }
+
+    /**
      * Save content of a Waveform into a file.
      */
     public static function save_to_file(int $object_id, string $object_type, string $waveform): void

@@ -40,6 +40,7 @@ use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\Waveform;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
@@ -569,6 +570,11 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
     public function getYear(): int
     {
         return $this->song->year;
+    }
+
+    public function hasWaveform(): bool
+    {
+        return Waveform::is_available($this->song, 'song');
     }
 
     public function isEditable(): bool

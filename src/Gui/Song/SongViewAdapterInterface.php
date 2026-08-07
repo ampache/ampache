@@ -135,5 +135,10 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function getYear(): int;
 
+    /**
+     * A waveform is rendered on demand, so this is false when there is nothing to render it from.
+     */
+    public function hasWaveform(): bool;
+
     public function isEditable(): bool;
 }

@@ -44,7 +44,7 @@ $config        = $this->getConfig(); ?>
     <dd>
         <div id="userflag_<?php echo $songId; ?>_song"><?php echo $this->raw($this->getUserFlags()); ?></div>
     </dd>
-<?php if ($config->isWaveformEnabled()) { ?>
+<?php if ($config->isWaveformEnabled() && $this->hasWaveform()) { ?>
         <dt><?php echo T_('Waveform'); ?></dt>
         <dd>
             <div id="waveform_<?php echo $songId; ?>">
