@@ -56,7 +56,7 @@ $directplay_limit = AmpConfig::get('direct_play_limit', 500);
 $thcount           = 9;
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $original_year     = AmpConfig::get('use_original_year');
-$show_played_times = AmpConfig::get('show_played_times');
+$show_played_times = (bool) AmpConfig::get('show_played_times');
 // translate once
 $name_text   = T_('Name');
 $items_text  = T_('# Items');
@@ -135,9 +135,9 @@ foreach ($object_ids as $object) {
 
     // The temporary playlist queues the item itself, so a folder holding nothing playable has nothing to offer;
     // the add-to-list dialog is a different question, because a collection curates the folder rather than plays it
-    $show_temp_add = $access25;
+    $show_temp_add = (bool) $access25;
     if ($libitem instanceof Folder && $directplay_limit > 0 && !$browse->is_grid_view()) {
-        $show_temp_add = $access25 && $libitem->playable && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
+        $show_temp_add = (bool) ($access25 && $libitem->playable && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit));
     } ?>
             <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu" data-object-type="<?php echo $object_type; ?>" data-object-id="<?php echo $libitem->getId(); ?>">
     <?php
@@ -158,7 +158,7 @@ foreach ($object_ids as $object) {
 <?php } ?>
 <?php if (!count($object_ids)) { ?>
             <tr>
-                <td colspan="<?php echo $thcount; ?>"><span class="nodata"></span></td>
+                <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
             </tr>
 <?php } ?>
         </tbody>
