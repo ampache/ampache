@@ -37,6 +37,7 @@ use Ampache\Gui\Browse\ListRenderer\PodcastListRenderer;
 use Ampache\Gui\Browse\ListRenderer\PrivateMessageListRenderer;
 use Ampache\Gui\Browse\ListRenderer\ShareListRenderer;
 use Ampache\Gui\Browse\ListRenderer\ShoutboxListRenderer;
+use Ampache\Gui\Browse\ListRenderer\SmartPlaylistListRenderer;
 use Ampache\Gui\Browse\ListRenderer\SongPreviewListRenderer;
 use Ampache\Gui\Browse\ListRenderer\VideoListRenderer;
 use Ampache\Gui\Browse\ListRenderer\WantedListRenderer;
@@ -66,6 +67,8 @@ return [
             'pvmsg' => get(PrivateMessageListRenderer::class),
             'share' => get(ShareListRenderer::class),
             'shoutbox' => get(ShoutboxListRenderer::class),
+            'playlist_search' => get(SmartPlaylistListRenderer::class),
+            'smartplaylist' => get(SmartPlaylistListRenderer::class),
             'song_preview' => get(SongPreviewListRenderer::class),
             'video' => get(VideoListRenderer::class),
             'wanted' => get(WantedListRenderer::class),

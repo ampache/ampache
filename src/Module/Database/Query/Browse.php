@@ -152,8 +152,6 @@ class Browse extends Query
         'playlist' => 'show_playlists.inc.php',
         'playlist_localplay' => 'show_localplay_playlist.inc.php',
         'playlist_media' => 'show_playlist_medias.inc.php',
-        'playlist_search' => 'show_searches.inc.php',
-        'smartplaylist' => 'show_searches.inc.php',
         'song' => 'show_songs.inc.php',
         'tag' => 'show_tagcloud.inc.php',
         'user' => 'show_users.inc.php',
