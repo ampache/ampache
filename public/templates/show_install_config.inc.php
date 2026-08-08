@@ -26,6 +26,8 @@ declare(strict_types=1);
 // show_install_config.inc.php
 
 // Try to guess the web path
+use Ampache\Gui\Install\InstallFooterView;
+use Ampache\Gui\Install\InstallHeaderView;
 use Ampache\Module\Application\Installation\DefaultAction;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -55,7 +57,7 @@ if (empty($local_pass)) {
 $has_usecase  = array_key_exists('usecase', $_REQUEST);
 $has_backends = array_key_exists('backends', $_REQUEST);
 
-require __DIR__ . '/install_header.inc.php'; ?>
+echo (new InstallHeaderView($charset, $htmllang))->render(); ?>
     <div class="alert alert-dark" style="margin-top: 70px">
         <h1><?php echo T_('Install Progress'); ?></h1>
         <div class="progress">
@@ -308,4 +310,4 @@ echo debug_result(check_config_values($results ?: [])); ?></div>
 		</div>
     </form>
     <br /><br />
-<?php require __DIR__ . '/install_footer.inc.php'; ?>
+<?php echo (new InstallFooterView($web_path))->render(); ?>

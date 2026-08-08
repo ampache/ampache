@@ -25,12 +25,15 @@ declare(strict_types=1);
 
 // show_install_lang.inc.php
 
+use Ampache\Gui\Install\InstallFooterView;
+use Ampache\Gui\Install\InstallHeaderView;
 use Ampache\Module\System\AmpError;
 
 /** @var string $web_path */
+/** @var string $charset */
 /** @var string $htmllang */
 
-require __DIR__ . '/install_header.inc.php'; ?>
+echo (new InstallHeaderView($charset, $htmllang))->render(); ?>
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <br><br>
         <div class="page-header">
@@ -54,4 +57,4 @@ echo "</select>\n"; ?>
             </div>
             <button type="submit" class="btn btn-warning"><?php echo T_('Start Configuration'); ?></button>
         </form>
-<?php require __DIR__ . '/install_footer.inc.php'; ?>
+<?php echo (new InstallFooterView($web_path))->render(); ?>

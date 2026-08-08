@@ -25,13 +25,15 @@ declare(strict_types=1);
 
 // show_install.inc.php
 
+use Ampache\Gui\Install\InstallFooterView;
+use Ampache\Gui\Install\InstallHeaderView;
 use Ampache\Module\System\AmpError;
 
 /** @var string $web_path */
 /** @var string $htmllang */
 /** @var string $charset */
 
-require __DIR__ . '/install_header.inc.php'; ?>
+echo (new InstallHeaderView($charset, $htmllang))->render(); ?>
 <div class="alert alert-dark" style="margin-top: 70px">
     <h1><?php echo T_('Install Progress'); ?></h1>
     <div class="progress">
@@ -145,4 +147,4 @@ require __DIR__ . '/install_header.inc.php'; ?>
         </div>
     </div>
 </form>
-<?php require __DIR__ . '/install_footer.inc.php'; ?>
+<?php echo (new InstallFooterView($web_path))->render(); ?>

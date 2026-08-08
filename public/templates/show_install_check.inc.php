@@ -25,10 +25,13 @@ declare(strict_types=1);
 
 // show_install_check.inc.php
 
+use Ampache\Gui\Install\InstallHeaderView;
+
 /** @var string $web_path */
+/** @var string $charset */
 /** @var string $htmllang */
 
-require __DIR__ . '/install_header.inc.php'; ?>
+echo (new InstallHeaderView($charset, $htmllang))->render(); ?>
 <?php if (!defined('INSTALL')) {
     return false;
 } ?>
