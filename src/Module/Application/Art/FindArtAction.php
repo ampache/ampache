@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Art;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Art\ArtSelectionView;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
@@ -162,15 +164,13 @@ final class FindArtAction extends AbstractArtAction
 
             // Store the results for further use
             $_SESSION['form']['images'] = $images;
-            $this->ui->show(
-                'show_arts.inc.php',
-                [
-                    'images' => $images,
-                    'object_id' => $object_id,
-                    'object_type' => $object_type,
-                    'burl' => $burl
-                ]
-            );
+            echo (new ArtSelectionView(
+                AmpConfig::get_web_path(),
+                $object_id,
+                $object_type,
+                $burl,
+                $images
+            ))->render();
         }
 
         $this->ui->show(

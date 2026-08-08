@@ -1,0 +1,60 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// art_selection.phtml -- rendered by Ampache\Gui\Art\ArtSelectionView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Art\ArtSelectionView $this */
+
+$columnCount = $this->getColumnCount();
+
+Ui::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
+<table class="table-data">
+<?php foreach ($this->getRows() as $row) { ?>
+<tr>
+    <?php foreach ($row as $cell) { ?>
+    <td>
+        <a href="<?php echo $this->e($cell['url']); ?>" title="<?php echo $this->e($cell['title']); ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $this->e($cell['url']); ?>" alt="<?php echo T_('Art'); ?>" width="175" /></a>
+        <br />
+        <p>
+        <?php if ($cell['selectUrl'] !== null) { ?>
+        [<?php echo $this->e($cell['width']); ?>x<?php echo $this->e($cell['height']); ?>]
+        [<a href="<?php echo $this->e($cell['selectUrl']); ?>"><?php echo T_('Select'); ?></a>]
+        <?php } else { ?>
+        <span class="error"><?php echo T_('Invalid'); ?></span>
+        <?php } ?>
+        </p>
+    </td>
+    <?php }
+
+    // pad the last row so the grid keeps its shape
+    for ($empty = count($row); $empty < $columnCount; $empty++) { ?>
+    <td>&nbsp;</td>
+    <?php } ?>
+</tr>
+<?php } ?>
+</table>
+<?php Ui::show_box_bottom(); ?>
