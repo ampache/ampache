@@ -1,0 +1,82 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/artists.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\ArtistListRenderer
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Browse\ListRenderer\ArtistListRenderer $this */
+
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$artists        = $this->getArtists();
+$sortUrl        = '?page=browse&action=set_sort&browse_id=' . $browse->id;
+if ($this->showRatings()) {
+    Rating::build_cache('artist', $this->getObjectIds());
+    Userflag::build_cache('artist', $this->getObjectIds());
+}
+
+if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+} ?>
+<table class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="artist">
+    <thead>
+        <tr class="th-top">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php
+                echo ($column['sort'] === null)
+                    ? $this->e($column['label'])
+                    : $this->raw(Ajax::text($sortUrl . (($column['type']) ? '&type=artist' : '') . '&sort=' . $column['sort'], $column['label'], 'artist_sort_' . $column['sort'])); ?></th>
+            <?php } ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($artists as $artist) { ?>
+        <tr id="artist_<?php echo $this->e($artist->getId()); ?>" class="libitem_menu" data-object-type="artist" data-object-id="<?php echo $this->e($artist->getId()); ?>">
+            <?php echo $this->raw($this->renderRow($artist)); ?>
+        </tr>
+        <?php } ?>
+        <?php if ($artists === []) { ?>
+        <tr>
+            <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <?php } ?>
+        </tr>
+    </tfoot>
+</table>
+<?php show_table_render(); ?>
+<?php if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+} ?>

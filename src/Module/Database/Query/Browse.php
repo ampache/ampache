@@ -137,7 +137,6 @@ class Browse extends Query
     private const array TEMPLATE_MAP = [
         'album' => 'show_albums.inc.php',
         'album_disk' => 'show_album_disks.inc.php',
-        'artist' => 'show_artists.inc.php',
         'song' => 'show_songs.inc.php',
     ];
 
