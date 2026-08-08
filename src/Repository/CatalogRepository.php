@@ -216,6 +216,32 @@ final readonly class CatalogRepository implements CatalogRepositoryInterface
     }
 
     /**
+     * @param array<int> $catalogIds
+     * @return array<int, string>
+     */
+    public function getNamesByIds(array $catalogIds): array
+    {
+        if ($catalogIds === []) {
+            return [];
+        }
+
+        // the ids are bound positionally, so they have to be a list whatever the caller passed
+        $ids          = array_values($catalogIds);
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $result       = $this->connection->query(
+            sprintf('SELECT `id`, `name` FROM `catalog` WHERE `id` IN (%s) ORDER BY `name`;', $placeholders),
+            $ids
+        );
+
+        $names = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $names[(int) $row['id']] = (string) $row['name'];
+        }
+
+        return $names;
+    }
+
+    /**
      * The configured path of every catalog of one backend, keyed by catalog id
      *
      * @return array<int, string>

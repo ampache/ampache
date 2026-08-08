@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Browse\BrowseFiltersView;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -33,7 +34,7 @@ use Ampache\Module\Database\Query\Query;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -48,6 +49,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         private BrowseFactoryInterface $browseFactory,
         private LiveStreamRepositoryInterface $liveStreamRepository,
         private ShareUiLinkRendererInterface $shareUiLinkRenderer,
+        private CatalogRepositoryInterface $catalogRepository,
     ) {}
 
     public function handle(User $user): void
@@ -235,9 +237,19 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_filters':
-                ob_start();
-                require_once Ui::find_template('browse_filters.inc.php');
-                $results['browse_filters'] = ob_get_clean();
+                // the box shows a catalog picker, and picking one narrows the browse from here on
+                $selectedCatalogId = (int) ($_SESSION['catalog'] ?? 0);
+                if ($selectedCatalogId > 0) {
+                    $browse->set_catalog($selectedCatalogId);
+                }
+
+                $results['browse_filters'] = (new BrowseFiltersView(
+                    $browse,
+                    Browse::get_allowed_filters($browse->get_type()),
+                    $this->catalogRepository->getNamesByIds(User::get_user_catalogs($user->getId())),
+                    $selectedCatalogId,
+                    $argument_param
+                ))->render();
                 break;
             case 'hide_filters':
                 ob_start();
