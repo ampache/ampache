@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Browse\BrowseContentView;
+use Ampache\Gui\Genre\GenreCloudView;
 use Ampache\Gui\Genre\GenreFormView;
 use Ampache\Gui\Genre\GenreOrderView;
 use Ampache\Gui\Genre\HiddenGenreCloudView;
@@ -41,7 +42,6 @@ use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\TagRepositoryInterface;
@@ -91,10 +91,6 @@ final readonly class TagAction implements ApplicationActionInterface
 
         $browse = $this->browseFactory->create();
         $browse->set_type($browse_type);
-        // the tagcloud is still a template and is required into this scope, so its services are named here
-        $ui               = $this->ui;
-        $ajaxUriRetriever = $this->ajaxUriRetriever;
-        $videoRepository  = $this->videoRepository;
         if ($request_type === 'tag_hidden') {
             echo (new HiddenGenreCloudView(
                 $this->createGenreFormView('tag_hidden'),
@@ -107,10 +103,16 @@ final readonly class TagAction implements ApplicationActionInterface
 
             $this->ui->showBoxBottom();
         } else {
-            $genreForm  = $this->createGenreFormView($browse_type);
-            $genreOrder = new GenreOrderView(AmpConfig::get_web_path(), $browse_type, $countOrder);
-
-            require_once Ui::find_template('show_tagcloud.inc.php');
+            $showGenre = $this->requestParser->getFromRequest('show_tag');
+            echo (new GenreCloudView(
+                $this->createGenreFormView($browse_type),
+                new GenreOrderView(AmpConfig::get_web_path(), $browse_type, $countOrder),
+                $this->ajaxUriRetriever->getAjaxUri(),
+                $browse->getId(),
+                $object_ids,
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+                ($showGenre !== '') ? (int) $showGenre : null
+            ))->render();
 
             $this->ui->showBoxBottom();
             echo (new BrowseContentView($browse->get_content_div()))->render();
