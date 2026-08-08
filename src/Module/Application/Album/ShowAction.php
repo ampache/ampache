@@ -76,16 +76,17 @@ final readonly class ShowAction implements ApplicationActionInterface
             echo T_('You have requested an object that does not exist');
         } elseif ($album->getDiskCount() > 1) {
             // Multi disk albums
-            $this->ui->show(
-                'show_album_group_disks.inc.php',
-                [
-                    'album' => $album,
-                    'isAlbumEditable' => $this->editabilityChecker->check($gatekeeper, $album),
-                    'user' => $user,
-                    'zipHandler' => $this->zipHandler,
-                    'browseFactory' => $this->browseFactory
-                ]
-            );
+            echo (new AlbumPageView(
+                $album,
+                $this->browseFactory,
+                $gatekeeper->getUser(),
+                $this->configContainer->getWebPath(),
+                $this->editabilityChecker->check($gatekeeper, $album),
+                $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('album_disk'),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+                true
+            ))->render();
         } else {
             // Single disk albums
             echo (new AlbumPageView(

@@ -41,7 +41,7 @@ $type    = $this->getObjectType();
 Ui::show_box_top($this->getTitle(), 'info-box'); ?>
 <div class="item_right_info">
     <?php echo $this->raw($this->getExternalLinks()->render()); ?>
-    <?php echo $this->raw($this->getArt()); ?>
+    <?php echo ($this->showArt()) ? $this->raw($this->getArt()) : ''; ?>
 </div>
 <?php if ($this->showRatings()) { ?>
 <span id="rating_<?php echo $albumId; ?>_album"><?php echo $this->raw(Rating::show($albumId, 'album', true)); ?></span>
@@ -155,15 +155,23 @@ Ui::show_box_top($this->getTitle(), 'info-box'); ?>
 </div>
 <?php Ui::show_box_bottom(); ?>
 <div id="additional_information">&nbsp;</div>
+<?php if ($this->isGrouped()) {
+    // each disk renders its own table, so the shared reorder script is emitted once for all of them
+    define('TABLE_RENDERED', 1);
+    foreach ($this->getDiskSections() as $section) {
+        echo $this->raw($section->render());
+    }
+} else { ?>
 <div id="reordered_list_<?php echo $albumId; ?>">
 <?php $browse = $this->createBrowse();
-$browse->set_type('song');
-$browse->set_simple_browse(true);
-$browse->set_skip_catalog_check(true);
-$browse->set_limit(0);
-$browse->set_offset(0);
-$browse->set_sort('track', 'ASC', false);
-$browse->set_filter($this->getBrowseFilter(), $albumId);
-$browse->show_objects([], ['hide' => $this->getHiddenColumns()]);
-$browse->store(); ?>
+    $browse->set_type('song');
+    $browse->set_simple_browse(true);
+    $browse->set_skip_catalog_check(true);
+    $browse->set_limit(0);
+    $browse->set_offset(0);
+    $browse->set_sort('track', 'ASC', false);
+    $browse->set_filter($this->getBrowseFilter(), $albumId);
+    $browse->show_objects([], ['hide' => $this->getHiddenColumns()]);
+    $browse->store(); ?>
 </div>
+<?php } ?>

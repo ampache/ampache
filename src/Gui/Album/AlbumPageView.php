@@ -57,6 +57,7 @@ final class AlbumPageView extends AbstractView
         private readonly bool $mayZip,
         private readonly bool $mayUse,
         private readonly bool $mayManage,
+        private readonly bool $grouped = false,
     ) {}
 
     public function createBrowse(): Browse
@@ -96,6 +97,33 @@ final class AlbumPageView extends AbstractView
     public function getBrowseFilter(): string
     {
         return $this->getObjectType();
+    }
+
+    /**
+     * A multi-disk album lists each disk with its own actions instead of one flat song list.
+     *
+     * @return list<AlbumDiskSectionView>
+     */
+    public function getDiskSections(): array
+    {
+        if (!$this->grouped || !$this->album instanceof Album) {
+            return [];
+        }
+
+        $sections = [];
+        foreach ($this->album->getDisks() as $disk) {
+            $sections[] = new AlbumDiskSectionView(
+                $disk,
+                $this->browseFactory,
+                $this->webPath,
+                $this->getHiddenColumns(),
+                $this->isEditable,
+                $this->mayZip,
+                $this->mayUse
+            );
+        }
+
+        return $sections;
     }
 
     public function getExternalLinks(): ExternalLinksView
@@ -215,6 +243,11 @@ final class AlbumPageView extends AbstractView
         return $this->isEditable;
     }
 
+    public function isGrouped(): bool
+    {
+        return $this->grouped;
+    }
+
     public function mayDelete(): bool
     {
         return Catalog::can_remove($this->album);
@@ -253,6 +286,14 @@ final class AlbumPageView extends AbstractView
         $limit = (int) AmpConfig::get('direct_play_limit');
 
         return $this->mayUse && ($limit <= 0 || $this->album->song_count <= $limit);
+    }
+
+    /**
+     * The orphan bucket has no cover of its own, so the page does not ask for one.
+     */
+    public function showArt(): bool
+    {
+        return $this->album->name !== T_('Unknown (Orphaned)');
     }
 
     public function showDirectPlay(): bool
