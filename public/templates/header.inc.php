@@ -26,6 +26,7 @@ declare(strict_types=1);
 // header.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Partial\TopMenuView;
 use Ampache\Gui\Playback\PlayTypeSwitchView;
 use Ampache\Gui\Search\SearchBarView;
 use Ampache\Module\Authorization\Access;
@@ -152,7 +153,7 @@ if ($is_session) {
             </div><!-- End header -->
 
 <?php if (AmpConfig::get('topmenu')) {
-    require_once Ui::find_template('show_topmenu.inc.php');
+    echo (new TopMenuView($web_path, $albumString, (bool) $ui_fixed, $access25, $is_session, (bool) $allow_upload))->render();
 }
 $sidebarLight = AmpConfig::get('sidebar_light');
 $hideSwitcher = AmpConfig::get('sidebar_hide_switcher', false);
