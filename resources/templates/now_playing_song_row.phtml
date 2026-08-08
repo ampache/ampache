@@ -1,0 +1,102 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// now_playing_song_row.phtml -- rendered by Ampache\Gui\NowPlaying\NowPlayingSongRowView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+
+/** @var Ampache\Gui\NowPlaying\NowPlayingSongRowView $this */
+
+$songId = $this->getSongId(); ?>
+<div class="np_group" id="np_group_1">
+    <div class="np_cell cel_username">
+        <label><?php echo T_('Username'); ?></label>
+        <a title="<?php echo $this->e($this->getAgent()); ?>" href="<?php echo $this->e($this->getClientUrl()); ?>">
+            <?php echo $this->e($this->getClientName()); ?>
+            <div><?php echo $this->raw($this->getAvatar()); ?></div>
+        </a>
+    </div>
+</div>
+<div class="np_group" id="np_group_2">
+    <div class="np_cell cel_left">
+        <label><?php echo T_('Song'); ?></label>
+        <?php echo $this->raw($this->getSongLink()); ?>
+    </div>
+    <div class="np_cell cel_left">
+        <label><?php echo T_('Album'); ?></label>
+        <?php echo $this->raw($this->getAlbumLink()); ?>
+    </div>
+    <div class="np_cell cel_left">
+        <label><?php echo T_('Artist'); ?></label>
+        <?php echo $this->raw($this->getArtistLink()); ?>
+    </div>
+    <div class="np_cell cel_left">
+        <label><?php echo T_('Year'); ?></label>
+        <a href="<?php echo $this->e($this->getYearUrl()); ?>"><?php echo $this->e($this->getYear()); ?></a>
+    </div>
+    <?php if ($this->hasGenres()) { ?>
+    <div id="np_song_tags_<?php echo $songId; ?>" class="np_cell cel_left">
+        <label><?php echo T_('Genres'); ?></label>
+        <?php // get_f_tags() builds its own escaped links?>
+        <?php echo $this->raw($this->getGenres()); ?>
+    </div>
+    <?php } ?>
+</div>
+<div class="np_group" id="np_group_3">
+    <div id="album_<?php echo $this->e($this->getAlbumId()); ?>" class="np_cell cel_albumart libitem_menu" data-object-type="album" data-object-id="<?php echo $this->e($this->getAlbumId()); ?>">
+        <?php echo $this->raw($this->getArt()); ?>
+    </div>
+</div>
+<?php if ($this->showSimilar()) { ?>
+<div class="np_group similars" id="similar_items_<?php echo $songId; ?>">
+    <div class="np_group similars">
+        <div class="np_cell cel_similar">
+            <label><?php echo T_('Similar Artists'); ?></label>
+            <p><?php echo T_('Loading...'); ?></p>
+        </div>
+    </div>
+    <div class="np_group similars">
+        <div class="np_cell cel_similar">
+            <label><?php echo T_('Similar Songs'); ?></label>
+            <p><?php echo T_('Loading...'); ?></p>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function () {
+    <?php echo $this->raw(Ajax::action($this->getSimilarAction(), 'similar_now_playing')); ?>
+});
+</script>
+<?php } ?>
+<?php if ($this->showUserBlock()) { ?>
+<div class="np_group" id="np_group_4">
+    <?php if ($this->showRatings()) { ?>
+    <span id="rating_<?php echo $songId; ?>_song"><?php echo $this->raw(Rating::show($songId, 'song')); ?></span>
+    <span id="userflag_<?php echo $songId; ?>_song"><?php echo $this->raw(Userflag::show($songId, 'song')); ?></span>
+    <?php } ?>
+</div>
+<?php } ?>
