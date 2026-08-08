@@ -32,7 +32,6 @@ use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
@@ -49,15 +48,11 @@ use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Video;
-use Ampache\Repository\PodcastRepositoryInterface;
-use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
-use Ampache\Repository\WantedRepositoryInterface;
 
 /**
  * Browse Class
@@ -163,11 +158,9 @@ class Browse extends Query
         'playlist_localplay' => 'show_localplay_playlist.inc.php',
         'playlist_media' => 'show_playlist_medias.inc.php',
         'playlist_search' => 'show_searches.inc.php',
-        'podcast' => 'show_podcasts.inc.php',
         'podcast_episode' => 'show_podcast_episodes.inc.php',
         'pvmsg' => 'show_pvmsgs.inc.php',
         'share' => 'show_shared_objects.inc.php',
-        'shoutbox' => 'show_manage_shoutbox.inc.php',
         'smartplaylist' => 'show_searches.inc.php',
         'song' => 'show_songs.inc.php',
         'song_preview' => 'show_song_previews.inc.php',
@@ -175,7 +168,6 @@ class Browse extends Query
         'tag_hidden' => 'show_tagcloud_hidden.inc.php',
         'user' => 'show_users.inc.php',
         'video' => 'show_videos.inc.php',
-        'wanted' => 'show_wanted_albums.inc.php',
     ];
 
     public ?int $duration = null;
@@ -187,13 +179,9 @@ class Browse extends Query
         private readonly GuiFactoryInterface $guiFactory,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
         private readonly LicenseRepositoryInterface $licenseRepository,
-        private readonly PodcastRepositoryInterface $podcastRepository,
-        private readonly ShoutObjectLoaderInterface $shoutObjectLoader,
-        private readonly ShoutRepositoryInterface $shoutRepository,
         private readonly UiInterface $ui,
         private readonly UserFollowStateRendererInterface $userFollowStateRenderer,
         private readonly VideoRepositoryInterface $videoRepository,
-        private readonly WantedRepositoryInterface $wantedRepository,
         private readonly ZipHandlerInterface $zipHandler,
         private readonly BrowseListRendererLocatorInterface $browseListRendererLocator,
         ?int $browse_id = 0,
@@ -668,11 +656,6 @@ class Browse extends Query
             $group_release = (bool) ($argument['group_disks'] ?? false);
         }
 
-        // the shoutbox template lists the records themselves rather than their ids
-        $shouts = ($type === 'shoutbox')
-            ? $this->_getShouts($object_ids)
-            : [];
-
         Ajax::start_container($this->get_content_div(), 'browse_content');
         $hasBody = $renderer !== null || $box_req !== '';
         if ($this->is_show_header() && $hasBody && $box_title !== '') {
@@ -700,12 +683,9 @@ class Browse extends Query
             $guiFactory              = $this->guiFactory;
             $libraryItemLoader       = $this->libraryItemLoader;
             $licenseRepository       = $this->licenseRepository;
-            $podcastRepository       = $this->podcastRepository;
-            $shoutObjectLoader       = $this->shoutObjectLoader;
             $ui                      = $this->ui;
             $userFollowStateRenderer = $this->userFollowStateRenderer;
             $videoRepository         = $this->videoRepository;
-            $wantedRepository        = $this->wantedRepository;
             $zipHandler              = $this->zipHandler;
 
             require $box_req;
@@ -854,31 +834,6 @@ class Browse extends Query
         }
 
         return '';
-    }
-
-    /**
-     * The shoutbox template lists the records themselves, so the ids are resolved before it renders.
-     *
-     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
-     * @return list<Shoutbox>
-     */
-    private function _getShouts(array $object_ids): array
-    {
-        $shouts = [];
-        foreach ($object_ids as $shoutId) {
-            if ($shoutId instanceof Song_Preview) {
-                continue;
-            }
-
-            $shout = (is_array($shoutId) && isset($shoutId['object_id']))
-                ? $this->shoutRepository->findById((int) $shoutId['object_id'])
-                : $this->shoutRepository->findById((int) $shoutId);
-            if ($shout !== null) {
-                $shouts[] = $shout;
-            }
-        }
-
-        return $shouts;
     }
 
     /**

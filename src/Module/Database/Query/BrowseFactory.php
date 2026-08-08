@@ -28,7 +28,6 @@ namespace Ampache\Module\Database\Query;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
-use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\UiInterface;
@@ -36,10 +35,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
-use Ampache\Repository\PodcastRepositoryInterface;
-use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
-use Ampache\Repository\WantedRepositoryInterface;
 
 final readonly class BrowseFactory implements BrowseFactoryInterface
 {
@@ -50,13 +46,9 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
         private GuiFactoryInterface $guiFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
         private LicenseRepositoryInterface $licenseRepository,
-        private PodcastRepositoryInterface $podcastRepository,
-        private ShoutObjectLoaderInterface $shoutObjectLoader,
-        private ShoutRepositoryInterface $shoutRepository,
         private UiInterface $ui,
         private UserFollowStateRendererInterface $userFollowStateRenderer,
         private VideoRepositoryInterface $videoRepository,
-        private WantedRepositoryInterface $wantedRepository,
         private ZipHandlerInterface $zipHandler,
         private BrowseListRendererLocatorInterface $browseListRendererLocator,
     ) {}
@@ -72,13 +64,9 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
             $this->guiFactory,
             $this->libraryItemLoader,
             $this->licenseRepository,
-            $this->podcastRepository,
-            $this->shoutObjectLoader,
-            $this->shoutRepository,
             $this->ui,
             $this->userFollowStateRenderer,
             $this->videoRepository,
-            $this->wantedRepository,
             $this->zipHandler,
             $this->browseListRendererLocator,
             (int) $browse_id,

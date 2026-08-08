@@ -29,6 +29,9 @@ use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocator;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Gui\Browse\ListRenderer\LabelListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer;
+use Ampache\Gui\Browse\ListRenderer\PodcastListRenderer;
+use Ampache\Gui\Browse\ListRenderer\ShoutboxListRenderer;
+use Ampache\Gui\Browse\ListRenderer\WantedListRenderer;
 use Ampache\Gui\Form\LoginFormViewFactory;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Gui\Form\StatsFormViewFactory;
@@ -44,6 +47,9 @@ return [
         ->constructorParameter('renderers', [
             'label' => get(LabelListRenderer::class),
             'live_stream' => get(LiveStreamListRenderer::class),
+            'podcast' => get(PodcastListRenderer::class),
+            'shoutbox' => get(ShoutboxListRenderer::class),
+            'wanted' => get(WantedListRenderer::class),
         ]),
     LoginFormViewFactoryInterface::class => autowire(LoginFormViewFactory::class),
     StatsFormViewFactoryInterface::class => autowire(StatsFormViewFactory::class),
