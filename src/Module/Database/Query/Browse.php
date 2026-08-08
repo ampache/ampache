@@ -40,7 +40,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
-use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Collection;
@@ -152,8 +151,6 @@ class Browse extends Query
         'folder' => 'show_folders.inc.php',
         'follower' => 'show_users.inc.php',
         'genre' => 'show_genres.inc.php',
-        'license' => 'show_manage_license.inc.php',
-        'license_hidden' => 'show_manage_license_hidden.inc.php',
         'playlist' => 'show_playlists.inc.php',
         'playlist_localplay' => 'show_localplay_playlist.inc.php',
         'playlist_media' => 'show_playlist_medias.inc.php',
@@ -178,7 +175,6 @@ class Browse extends Query
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
         private readonly GuiFactoryInterface $guiFactory,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
-        private readonly LicenseRepositoryInterface $licenseRepository,
         private readonly UiInterface $ui,
         private readonly UserFollowStateRendererInterface $userFollowStateRenderer,
         private readonly VideoRepositoryInterface $videoRepository,
@@ -682,7 +678,6 @@ class Browse extends Query
             $gatekeeper              = $this->gatekeeperFactory->createGuiGatekeeper();
             $guiFactory              = $this->guiFactory;
             $libraryItemLoader       = $this->libraryItemLoader;
-            $licenseRepository       = $this->licenseRepository;
             $ui                      = $this->ui;
             $userFollowStateRenderer = $this->userFollowStateRenderer;
             $videoRepository         = $this->videoRepository;

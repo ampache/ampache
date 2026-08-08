@@ -28,6 +28,7 @@ namespace Ampache\Gui;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocator;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Gui\Browse\ListRenderer\LabelListRenderer;
+use Ampache\Gui\Browse\ListRenderer\LicenseListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer;
 use Ampache\Gui\Browse\ListRenderer\PodcastListRenderer;
 use Ampache\Gui\Browse\ListRenderer\ShoutboxListRenderer;
@@ -46,6 +47,8 @@ return [
     BrowseListRendererLocatorInterface::class => autowire(BrowseListRendererLocator::class)
         ->constructorParameter('renderers', [
             'label' => get(LabelListRenderer::class),
+            'license' => get(LicenseListRenderer::class),
+            'license_hidden' => get(LicenseListRenderer::class),
             'live_stream' => get(LiveStreamListRenderer::class),
             'podcast' => get(PodcastListRenderer::class),
             'shoutbox' => get(ShoutboxListRenderer::class),

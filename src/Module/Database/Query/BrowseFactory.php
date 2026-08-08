@@ -33,7 +33,6 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
-use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 
@@ -45,7 +44,6 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
         private GatekeeperFactoryInterface $gatekeeperFactory,
         private GuiFactoryInterface $guiFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-        private LicenseRepositoryInterface $licenseRepository,
         private UiInterface $ui,
         private UserFollowStateRendererInterface $userFollowStateRenderer,
         private VideoRepositoryInterface $videoRepository,
@@ -63,7 +61,6 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
             $this->gatekeeperFactory,
             $this->guiFactory,
             $this->libraryItemLoader,
-            $this->licenseRepository,
             $this->ui,
             $this->userFollowStateRenderer,
             $this->videoRepository,
