@@ -55,6 +55,7 @@ use Ampache\Gui\Browse\ListRenderer\VideoListRenderer;
 use Ampache\Gui\Browse\ListRenderer\WantedListRenderer;
 use Ampache\Gui\Edit\EditFormRendererLocator;
 use Ampache\Gui\Edit\EditFormRendererLocatorInterface;
+use Ampache\Gui\Edit\Renderer\AlbumEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\ArtistEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\BroadcastEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\CollectionEditFormRenderer;
@@ -80,6 +81,8 @@ return [
     // one renderer per migrated browse type; a type absent here still falls back to its .inc.php template
     EditFormRendererLocatorInterface::class => autowire(EditFormRendererLocator::class)
         ->constructorParameter('renderers', [
+            'album_disk_row' => get(AlbumEditFormRenderer::class),
+            'album_row' => get(AlbumEditFormRenderer::class),
             'artist_row' => get(ArtistEditFormRenderer::class),
             'broadcast_row' => get(BroadcastEditFormRenderer::class),
             'collection_row' => get(CollectionEditFormRenderer::class),
