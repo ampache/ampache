@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Gui\PrivateMessage\PrivateMessageView $this */
 
 $pvmsg = $this->getMessage();
-Ui::show_box_top($this->e($pvmsg->getSubjectFormatted()), 'info-box'); ?>
+Ui::show_box_top($this->e($pvmsg->getSubject()), 'info-box'); ?>
 <div>
     <?php echo T_('Sent by') . ' ' . $this->raw($pvmsg->getSenderUserLink()) . ' at ' . $this->e($pvmsg->getCreationDateFormatted()); ?>
 </div>

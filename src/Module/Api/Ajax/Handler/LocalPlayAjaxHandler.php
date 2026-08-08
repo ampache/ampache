@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Form\LocalplayStatusView;
+use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -34,18 +35,14 @@ use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
-use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\VideoRepositoryInterface;
 
 final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
         private BrowseFactoryInterface $browseFactory,
-        private FolderRepositoryInterface $folderRepository,
-        private VideoRepositoryInterface $videoRepository,
+        private SidebarViewFactoryInterface $sidebarViewFactory,
     ) {}
 
     public function handle(User $user): void
@@ -69,15 +66,10 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $localplay->set_active_instance((int) ($_REQUEST['instance'] ?? 0));
                 Preference::update('play_type', $user->getId(), $type);
 
-                // We should also refresh the sidebar
-                ob_start();
-                // sidebar_home renders in this scope
-                $folderRepository = $this->folderRepository;
-
-                $videoRepository = $this->videoRepository;
-                require_once Ui::find_template('sidebar.inc.php');
-                $results['sidebar-content'] = ob_get_contents();
-                ob_end_clean();
+                // the play type just changed, so the sidebar is rebuilt to match
+                $results['sidebar-content'] = $this->sidebarViewFactory
+                    ->createSidebarView((string) ($_SESSION['state']['sidebar_tab'] ?? 'home'))
+                    ->render();
                 break;
             case 'command':
                 // Make sure they are allowed to do this

@@ -32,6 +32,7 @@ use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Index\NowPlayingSimilarView;
 use Ampache\Gui\Index\RandomAlbumsView;
 use Ampache\Gui\Index\RandomVideosView;
+use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
 use Ampache\Gui\Song\SongListPanelView;
 use Ampache\Gui\Stats\RecentlyPlayedMode;
 use Ampache\Gui\Stats\RecentlyPlayedView;
@@ -52,7 +53,6 @@ use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -77,7 +77,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         private GatekeeperFactoryInterface $gatekeeperFactory,
         private GuiFactoryInterface $guiFactory,
         private BrowseFactoryInterface $browseFactory,
-        private FolderRepositoryInterface $folderRepository,
+        private SidebarViewFactoryInterface $sidebarViewFactory,
     ) {}
 
     public function handle(User $user): void
@@ -513,15 +513,8 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 }
 
                 Ajax::set_include_override(true);
-                ob_start();
                 $_SESSION['state']['sidebar_tab'] = $button;
-                // sidebar_home renders in this scope
-                $folderRepository = $this->folderRepository;
-
-                $videoRepository = $this->videoRepository;
-                require_once Ui::find_template('sidebar.inc.php');
-                $results['sidebar-content'] = ob_get_contents();
-                ob_end_clean();
+                $results['sidebar-content']       = $this->sidebarViewFactory->createSidebarView($button)->render();
                 break;
             case 'slideshow':
                 ob_start();

@@ -104,7 +104,7 @@ class ShowActionTest extends MockeryTestCase
         $message->shouldReceive('getId')
             ->withNoArgs()
             ->andReturn($msgId);
-        $message->shouldReceive('getSubjectFormatted')
+        $message->shouldReceive('getSubject')
             ->withNoArgs()
             ->andReturn('some-subject');
         $message->shouldReceive('getSenderUserLink')

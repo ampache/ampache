@@ -66,7 +66,7 @@ final class CollectionRowView extends AbstractView
 
     public function getFullname(): string
     {
-        return $this->collection->getFullname();
+        return (string) $this->collection->get_fullname();
     }
 
     public function getItemCount(): int

@@ -40,7 +40,7 @@ $items = $this->getItems(); ?>
         <ul id="pl_action_additems" class="submenu">
             <li><?php echo $this->raw(Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist')); ?></li>
             <?php foreach ($this->getPlaylists() as $playlist) { ?>
-            <li><?php echo $this->raw(Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, scrub_out($playlist->getFullname()), 'rb_append_playlist_' . $playlist->id)); ?></li>
+            <li><?php echo $this->raw(Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, scrub_out($playlist->get_fullname()), 'rb_append_playlist_' . $playlist->id)); ?></li>
             <?php } ?>
             <?php $collections = $this->getCollections();
         if ($collections !== []) { ?>

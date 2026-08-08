@@ -74,6 +74,8 @@ use Ampache\Gui\Form\StatsFormViewFactory;
 use Ampache\Gui\Form\StatsFormViewFactoryInterface;
 use Ampache\Gui\Preferences\PreferencesViewFactory;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
+use Ampache\Gui\Sidebar\SidebarViewFactory;
+use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
 
 use function DI\autowire;
 use function DI\get;
@@ -136,4 +138,5 @@ return [
     LoginFormViewFactoryInterface::class => autowire(LoginFormViewFactory::class),
     PreferencesViewFactoryInterface::class => autowire(PreferencesViewFactory::class),
     StatsFormViewFactoryInterface::class => autowire(StatsFormViewFactory::class),
+    SidebarViewFactoryInterface::class => autowire(SidebarViewFactory::class),
 ];

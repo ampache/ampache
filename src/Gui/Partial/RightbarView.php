@@ -154,7 +154,7 @@ final class RightbarView extends AbstractView
     }
 
     /**
-     * @return iterable<mixed>
+     * @return array<\Ampache\Repository\Model\Playlist>
      */
     public function getPlaylists(): iterable
     {

@@ -1,0 +1,181 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// partial/header.phtml -- rendered by Ampache\Gui\Partial\HeaderView
+
+use Ampache\Gui\Asset\ScriptsView;
+use Ampache\Gui\Asset\StylesheetsView;
+use Ampache\Gui\Partial\TopMenuView;
+use Ampache\Gui\Playback\PlayTypeSwitchView;
+use Ampache\Gui\Search\SearchBarView;
+use Ampache\Gui\Sidebar\LightSidebarView;
+use Ampache\Module\System\AutoUpdate;
+use Ampache\Module\System\Plugin\Plugin;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Partial\HeaderView $this */
+
+$_SESSION['login'] = false;
+
+// the player headers read this out of the including scope to pick their iframed stylesheet
+$iframed          = true;
+$ajaxUriRetriever = $this->getAjaxUriRetriever();
+$web_path         = $this->getWebPath(); ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->e($this->getDocumentLanguage()); ?>" lang="<?php echo $this->e($this->getDocumentLanguage()); ?>" dir="<?php echo $this->e($this->getTextDirection()); ?>">
+    <head>
+        <!-- Propelled by Ampache | ampache.org -->
+        <link rel="search" href="<?php echo $this->e($this->getWebPath()); ?>/opensearch.php?action=descriptor" type="application/opensearchdescription+xml" title="<?php echo $this->e($this->getSiteTitle()); ?>">
+        <?php foreach ($this->getRssFeeds() as $feed) { ?>
+        <link rel="alternate" href="<?php echo $this->e($this->getWebPath()); ?>/rss.php?type=<?php echo $this->e($feed['type']); ?>" type="application/rss+xml" title="<?php echo $this->e($feed['title']); ?>">
+        <?php } ?>
+        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo $this->e($this->getSiteCharset()); ?>">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><?php echo $this->e($this->getSiteTitle()); ?></title>
+
+        <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render());
+echo $this->raw((new ScriptsView($this->getEnvironment(), $this->getWebPath(), $ajaxUriRetriever))->render());
+
+require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
+    </head>
+    <body id="main-page">
+        <div id="aslideshow">
+            <div id="aslideshow_container">
+                <div id="fslider"></div>
+                <div id="fslider_script"></div>
+            </div>
+        </div>
+
+        <!-- rfc3514 implementation -->
+        <div id="rfc3514" style="display:none;">0x0</div>
+        <div id="reloader" style="display:none;"></div>
+        <div id="notification" class="notification-out"><?php echo $this->raw(Ui::get_material_symbol('info', T_('Information'))); ?><span id="notification-content"></span></div>
+        <div id="maincontainer">
+            <div id="header" class="header-<?php echo ($this->isUiFixed()) ? 'fixed' : 'float'; ?>"><!-- This is the header -->
+                <a id="mobile-menu-toggle" href="javascript:ToggleMobileSidebar();" aria-label="<?php echo $this->e(T_('Menu')); ?>"><?php echo $this->raw(Ui::get_material_symbol('menu', T_('Menu'))); ?></a>
+                <h1 id="headerlogo">
+                  <a href="<?php echo $this->e($this->getWebPath()); ?>/index.php">
+                    <img src="<?php echo $this->e($this->getLogoUrl()); ?>" title="<?php echo $this->e($this->getSiteTitle()); ?>" alt="<?php echo $this->e($this->getSiteTitle()); ?>">
+                  </a>
+                </h1>
+                <div id="headerbox">
+                    <?php Ui::show_box_top('', 'box box_headerbox');
+echo $this->raw((new SearchBarView($this->getEnvironment(), $this->getWebPath()))->render());
+if ($this->isSession()) {
+    echo $this->raw((new PlayTypeSwitchView())->render()); ?>
+                        <span id="loginInfo">
+                            <a href="<?php echo $this->e($this->getWebPath()); ?>/stats.php?action=show_user&user_id=<?php echo $this->getUserId(); ?>"><?php echo $this->e($this->getUserFullname()); ?></a>
+                        <?php if ($this->isSociable()) { ?>
+                            <a href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=pvmsg" title="<?php echo $this->e(T_('New messages')); ?>">(<?php echo $this->getUnreadMessageCount(); ?>)</a>
+                        <?php } ?>
+                        </span>
+                    <?php
+} elseif ($this->showHeaderLogin()) { ?>
+                        <span id="loginInfo">
+                            <a href="<?php echo $this->e($this->getWebPath()); ?>/login.php?force_display=1" class="nohtml"><?php echo $this->e(T_('Login')); ?></a>
+                        <?php if ($this->showRegisterLink()) { ?>
+                                / <a href="<?php echo $this->e($this->getWebPath()); ?>/register.php" class="nohtml"><?php echo $this->e(T_('Register')); ?></a>
+                        <?php } ?>
+                        </span>
+<?php } ?>
+                        <div id="rightbar-minimize">
+                            <a href="javascript:ToggleRightbarVisibility();"><?php echo $this->raw(Ui::get_material_symbol('dock_to_left', T_('Show/Hide Playlist'))); ?></a>
+                        </div>
+<?php Ui::show_box_bottom(); ?>
+                </div> <!-- End headerbox -->
+                <?php echo ($this->isUiFixed()) ? '<div id="ajax-loading">' . $this->e(T_('Loading')) . ' . . .</div>' : ''; ?>
+            </div><!-- End header -->
+
+<?php if ($this->showTopMenu()) {
+    echo $this->raw((new TopMenuView(
+        $this->getWebPath(),
+        $this->getAlbumType(),
+        $this->isUiFixed(),
+        $this->mayUse(),
+        $this->isSession(),
+        $this->allowsUpload()
+    ))->render());
+} ?>
+            <div id="sidebar" class="sidebar-<?php echo ($this->isUiFixed()) ? 'fixed' : 'float'; ?>">
+                <a id="mobile-drawer-close" href="javascript:CloseMobileNav();" aria-label="<?php echo $this->e(T_('Close')); ?>"><?php echo $this->raw(Ui::get_material_symbol('close', T_('Close'))); ?></a>
+            <?php if (!$this->isSwitcherHidden()) { ?>
+                <div id="sidebar-header" class="<?php echo ($this->isSidebarCollapsed()) ? 'sidebar-header-collapsed' : ''; ?>">
+                    <span id="sidebar-header-content"></span>
+                </div>
+            <?php } ?>
+                <div id="sidebar-content" class="<?php echo ($this->isSidebarCollapsed()) ? 'sidebar-content-collapsed' : ''; ?>">
+                    <?php echo $this->raw($this->renderSidebar()); ?>
+                </div>
+                <div id="sidebar-content-light" class="<?php echo ($this->isSidebarCollapsed()) ? 'sidebar-content-light-collapsed' : ''; ?>">
+                    <?php echo $this->raw((new LightSidebarView(
+                        $this->getWebPath(),
+                        $this->getAlbumType(),
+                        $this->mayUse(),
+                        $this->isSession(),
+                        $this->allowsUpload()
+                    ))->render()); ?>
+                </div>
+            </div>
+
+            <div id="rightbar" class="rightbar-fixed">
+                <?php echo $this->raw($this->renderRightbar()); ?>
+            </div>
+
+            <!-- Tiny little div, used to cheat the system -->
+            <?php echo ($this->isUiFixed()) ? '' : '<div id="ajax-loading">' . $this->e(T_('Loading')) . ' . . .</div>'; ?>
+            <div id="util_div" style="display:none;"></div>
+            <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $this->e($this->getWebPath()); ?>/util.php"></iframe>
+
+            <div id="content" class="<?php echo $this->e($this->getContentClass()); ?>">
+
+                <?php if ($this->isAdmin()) { ?>
+                <div id="update_notify">
+                    <?php if ($this->showAmpacheMessage()) {
+                        AutoUpdate::show_ampache_message();
+                    }
+
+                    if ($this->showNewVersion()) {
+                        AutoUpdate::show_new_version();
+                    }
+
+                    if ($this->showPluginUpdate()) {
+                        Plugin::show_update_available();
+                        echo '<br>';
+                    }
+
+                    if ($this->showConfigOutOfDate()) { ?>
+                    <div class="fatalerror">
+                        <?php echo $this->e(T_('Your Ampache config file is out of date!')); ?>
+                        <br>
+                        <a class="nohtml" href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=write_config"><?php echo $this->e(T_('Update your current config file automatically')); ?></a> |
+                        <a class="nohtml" href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=generate_config"><?php echo $this->e(T_('Download a copy of the new version')); ?></a>
+                        <br>
+                    </div>
+                    <?php } ?>
+                </div>
+                <?php }
+
+                require Ui::find_template('show_web_player_embedded.inc.php'); ?>
+                <div id="guts">

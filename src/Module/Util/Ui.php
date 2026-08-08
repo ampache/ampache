@@ -33,8 +33,10 @@ use Ampache\Gui\Form\ContinueView;
 use Ampache\Gui\Partial\BoxBottomView;
 use Ampache\Gui\Partial\BoxTopView;
 use Ampache\Gui\Partial\FooterView;
+use Ampache\Gui\Partial\HeaderView;
 use Ampache\Gui\Partial\RightbarView;
 use Ampache\Gui\Preferences\PreferenceBoxView;
+use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
 use Ampache\Gui\System\QueryStatsView;
 use Ampache\Gui\System\StandaloneErrorTypeEnum;
 use Ampache\Gui\System\StandaloneErrorView;
@@ -58,13 +60,11 @@ use Ampache\Plugin\AmpacheLastfm;
 use Ampache\Plugin\Ampachelibrefm;
 use Ampache\Plugin\PluginDisplayOnFooterInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
-use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
-use Ampache\Repository\VideoRepositoryInterface;
 
 /**
  * A collection of methods related to the user interface
@@ -97,12 +97,11 @@ class Ui implements UiInterface
         private readonly AjaxUriRetrieverInterface $ajaxUriRetriever,
         private readonly CollectionRepositoryInterface $collectionRepository,
         private readonly EnvironmentInterface $environment,
-        private readonly FolderRepositoryInterface $folderRepository,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
         private readonly PlaylistLoaderInterface $playlistLoader,
         private readonly PrivateMessageRepositoryInterface $privateMessageRepository,
-        private readonly VideoRepositoryInterface $videoRepository,
         private readonly ZipHandlerInterface $zipHandler,
+        private readonly SidebarViewFactoryInterface $sidebarViewFactory,
     ) {}
 
     /**
@@ -1741,18 +1740,29 @@ class Ui implements UiInterface
             exit;
         }
 
-        // header.inc.php and everything it requires render in this scope, so the services they use are named here
-        $ajaxUriRetriever         = $this->ajaxUriRetriever;
-        $collectionRepository     = $this->collectionRepository;
-        $environment              = $this->environment;
-        $folderRepository         = $this->folderRepository;
-        $libraryItemLoader        = $this->libraryItemLoader;
-        $playlistLoader           = $this->playlistLoader;
-        $privateMessageRepository = $this->privateMessageRepository;
-        $videoRepository          = $this->videoRepository;
-        $zipHandler               = $this->zipHandler;
+        $isAdmin = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
+        if (!array_key_exists('state', $_SESSION) || !array_key_exists('sidebar_tab', $_SESSION['state'])) {
+            $_SESSION['state']['sidebar_tab'] = 'home';
+        }
 
-        require_once self::find_template('header.inc.php');
+        echo (new HeaderView(
+            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/admin'),
+            $this->environment,
+            $this->ajaxUriRetriever,
+            $this->collectionRepository,
+            $this->libraryItemLoader,
+            $this->playlistLoader,
+            $this->privateMessageRepository,
+            $this->zipHandler,
+            $this->sidebarViewFactory,
+            ($user instanceof User) ? $user : null,
+            (string) $_SESSION['state']['sidebar_tab'],
+            $isAdmin,
+            $isAdmin || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+            Upload::can_upload($user),
+            User::is_registered() && ($user?->getId() ?? 0) > 0
+        ))->render();
     }
 
     public function showObjectNotFound(): void
