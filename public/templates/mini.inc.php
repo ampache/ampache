@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Partial\VisualizerView;
+use Ampache\Gui\Playback\PlayTypeSwitchView;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
@@ -279,7 +280,7 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
             </span>
             <span id="mini-title"><?php echo $site_title; ?></span>
             <div id="ajax-loading"><?php echo T_('Loading'); ?> . . .</div>
-            <?php require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
+            <?php echo (new PlayTypeSwitchView())->render(); ?>
             <a class="mini-action nohtml" href="javascript:ToggleRightbarVisibility();" title="<?php echo $t_playlist; ?>"><?php echo Ui::get_material_symbol('dock_to_left', $t_playlist); ?></a>
             <a class="mini-action nohtml" target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" title="<?php echo $t_logout; ?>"><?php echo Ui::get_material_symbol('logout', $t_logout); ?></a>
         </div>

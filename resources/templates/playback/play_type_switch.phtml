@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// playback/play_type_switch.phtml -- rendered by Ampache\Gui\Playback\PlayTypeSwitchView
+
+use Ampache\Module\Api\Ajax;
+
+/** @var Ampache\Gui\Playback\PlayTypeSwitchView $this */
+
+$current = $this->getCurrent(); ?>
+<div id="play_type_switch">
+    <?php if ($this->mayChange()) { ?>
+    <form method="post" id="play_type_form" action="javascript.void(0);">
+        <select id="play_type_select" name="type">
+            <?php foreach ($this->getOptions() as $option) { ?>
+            <option value="<?php echo $this->e($option['value']); ?>"<?php echo ($option['value'] === $current) ? ' selected="selected"' : ''; ?>><?php echo $this->e($option['label']); ?></option>
+            <?php } ?>
+        </select>
+        <?php echo $this->raw(Ajax::observe('play_type_select', 'change', Ajax::action('?page=stream&action=set_play_type', 'play_type_select', 'play_type_form'))); ?>
+    </form>
+    <?php } else {
+        echo $this->e($this->getCurrentLabel());
+    } ?>
+</div>

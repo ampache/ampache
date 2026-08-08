@@ -26,6 +26,8 @@ declare(strict_types=1);
 // header.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Playback\PlayTypeSwitchView;
+use Ampache\Gui\Search\SearchBarView;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -33,6 +35,7 @@ use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Preference;
+use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
@@ -40,6 +43,7 @@ use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
+/** @var EnvironmentInterface $environment */
 /** @var PrivateMessageRepositoryInterface $privateMessageRepository */
 
 $web_path = AmpConfig::get_web_path();
@@ -120,9 +124,9 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
                 </h1>
                 <div id="headerbox">
                     <?php Ui::show_box_top('', 'box box_headerbox');
-require_once Ui::find_template('show_search_bar.inc.php');
+echo (new SearchBarView($environment, $web_path))->render();
 if ($is_session) {
-    require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
+    echo (new PlayTypeSwitchView())->render(); ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $current_user_id; ?>"><?php echo scrub_out($current_user?->fullname); ?></a>
                         <?php if ($site_social && $current_user instanceof User) { ?>
