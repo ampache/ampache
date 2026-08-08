@@ -29,6 +29,7 @@ use Ampache\Gui\Browse\ListRenderer\BroadcastListRenderer;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocator;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Gui\Browse\ListRenderer\CatalogListRenderer;
+use Ampache\Gui\Browse\ListRenderer\CollectionItemsListRenderer;
 use Ampache\Gui\Browse\ListRenderer\CollectionListRenderer;
 use Ampache\Gui\Browse\ListRenderer\DemocraticListRenderer;
 use Ampache\Gui\Browse\ListRenderer\FolderListRenderer;
@@ -76,6 +77,7 @@ return [
             'share' => get(ShareListRenderer::class),
             'shoutbox' => get(ShoutboxListRenderer::class),
             'collection' => get(CollectionListRenderer::class),
+            'collection_items' => get(CollectionItemsListRenderer::class),
             'democratic' => get(DemocraticListRenderer::class),
             'playlist' => get(PlaylistListRenderer::class),
             'playlist_localplay' => get(LocalplayPlaylistListRenderer::class),
