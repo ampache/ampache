@@ -32,6 +32,7 @@ use Ampache\Gui\Browse\ListRenderer\CatalogListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LabelListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LicenseListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer;
+use Ampache\Gui\Browse\ListRenderer\PodcastEpisodeListRenderer;
 use Ampache\Gui\Browse\ListRenderer\PodcastListRenderer;
 use Ampache\Gui\Browse\ListRenderer\PrivateMessageListRenderer;
 use Ampache\Gui\Browse\ListRenderer\ShareListRenderer;
@@ -61,6 +62,7 @@ return [
             'license_hidden' => get(LicenseListRenderer::class),
             'live_stream' => get(LiveStreamListRenderer::class),
             'podcast' => get(PodcastListRenderer::class),
+            'podcast_episode' => get(PodcastEpisodeListRenderer::class),
             'pvmsg' => get(PrivateMessageListRenderer::class),
             'share' => get(ShareListRenderer::class),
             'shoutbox' => get(ShoutboxListRenderer::class),
