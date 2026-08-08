@@ -1,0 +1,94 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/live_streams.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer $this */
+
+$browse  = $this->getBrowse();
+$columns = $this->getColumns();
+$streams = $this->getLiveStreams();
+if ($this->areRatingsShown()) {
+    Rating::build_cache('live_stream', $this->getObjectIds());
+    Userflag::build_cache('live_stream', $this->getObjectIds());
+}
+
+if ($this->mayManage()) {
+    Ui::show_box_top(T_('Manage'), 'info-box'); ?>
+<div id="information_actions">
+<ul>
+<li>
+    <a href="<?php echo $this->e($this->getCreateUrl()); ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('add_circle', T_('Add'))); ?>
+        <?php echo T_('Add Radio Station'); ?>
+    </a>
+</li>
+</ul>
+</div>
+<?php Ui::show_box_bottom();
+}
+
+if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+} ?>
+<table class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="live_stream">
+    <thead>
+        <tr class="th-top">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php
+                echo ($column['sort'] === null)
+                    ? $this->e($column['label'])
+                    : $this->raw(Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=' . $column['sort'], $column['label'], 'live_stream_sort_' . $column['sort'])); ?></th>
+            <?php } ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($streams as $stream) { ?>
+        <tr id="live_stream_<?php echo $this->e($stream->id); ?>">
+            <?php echo $this->raw($this->renderRow($stream)); ?>
+        </tr>
+        <?php } ?>
+        <?php if ($streams === []) { ?>
+        <tr>
+            <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <?php } ?>
+        </tr>
+    </tfoot>
+</table>
+<?php if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+} ?>

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database\Query;
 
+use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
@@ -33,7 +34,6 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
-use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -48,7 +48,6 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
         private CollectionRepositoryInterface $collectionRepository,
         private GatekeeperFactoryInterface $gatekeeperFactory,
         private GuiFactoryInterface $guiFactory,
-        private LabelRepositoryInterface $labelRepository,
         private LibraryItemLoaderInterface $libraryItemLoader,
         private LicenseRepositoryInterface $licenseRepository,
         private PodcastRepositoryInterface $podcastRepository,
@@ -59,6 +58,7 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
         private VideoRepositoryInterface $videoRepository,
         private WantedRepositoryInterface $wantedRepository,
         private ZipHandlerInterface $zipHandler,
+        private BrowseListRendererLocatorInterface $browseListRendererLocator,
     ) {}
 
     public function create(
@@ -70,7 +70,6 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
             $this->collectionRepository,
             $this->gatekeeperFactory,
             $this->guiFactory,
-            $this->labelRepository,
             $this->libraryItemLoader,
             $this->licenseRepository,
             $this->podcastRepository,
@@ -81,6 +80,7 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
             $this->videoRepository,
             $this->wantedRepository,
             $this->zipHandler,
+            $this->browseListRendererLocator,
             (int) $browse_id,
             $cached
         );

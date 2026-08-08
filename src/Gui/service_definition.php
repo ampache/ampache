@@ -25,15 +25,26 @@ declare(strict_types=1);
 
 namespace Ampache\Gui;
 
+use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocator;
+use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
+use Ampache\Gui\Browse\ListRenderer\LabelListRenderer;
+use Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer;
 use Ampache\Gui\Form\LoginFormViewFactory;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Gui\Form\StatsFormViewFactory;
 use Ampache\Gui\Form\StatsFormViewFactoryInterface;
 
 use function DI\autowire;
+use function DI\get;
 
 return [
     GuiFactoryInterface::class => autowire(GuiFactory::class),
+    // one renderer per migrated browse type; a type absent here still falls back to its .inc.php template
+    BrowseListRendererLocatorInterface::class => autowire(BrowseListRendererLocator::class)
+        ->constructorParameter('renderers', [
+            'label' => get(LabelListRenderer::class),
+            'live_stream' => get(LiveStreamListRenderer::class),
+        ]),
     LoginFormViewFactoryInterface::class => autowire(LoginFormViewFactory::class),
     StatsFormViewFactoryInterface::class => autowire(StatsFormViewFactory::class),
 ];

@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Browse\ListRenderer\BrowseListContext;
+use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
@@ -39,7 +41,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
-use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -156,10 +157,8 @@ class Browse extends Query
         'folder' => 'show_folders.inc.php',
         'follower' => 'show_users.inc.php',
         'genre' => 'show_genres.inc.php',
-        'label' => 'show_labels.inc.php',
         'license' => 'show_manage_license.inc.php',
         'license_hidden' => 'show_manage_license_hidden.inc.php',
-        'live_stream' => 'show_live_streams.inc.php',
         'playlist' => 'show_playlists.inc.php',
         'playlist_localplay' => 'show_localplay_playlist.inc.php',
         'playlist_media' => 'show_playlist_medias.inc.php',
@@ -186,7 +185,6 @@ class Browse extends Query
         private readonly CollectionRepositoryInterface $collectionRepository,
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
         private readonly GuiFactoryInterface $guiFactory,
-        private readonly LabelRepositoryInterface $labelRepository,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
         private readonly LicenseRepositoryInterface $licenseRepository,
         private readonly PodcastRepositoryInterface $podcastRepository,
@@ -197,6 +195,7 @@ class Browse extends Query
         private readonly VideoRepositoryInterface $videoRepository,
         private readonly WantedRepositoryInterface $wantedRepository,
         private readonly ZipHandlerInterface $zipHandler,
+        private readonly BrowseListRendererLocatorInterface $browseListRendererLocator,
         ?int $browse_id = 0,
         ?bool $cached = true,
     ) {
@@ -656,7 +655,10 @@ class Browse extends Query
             $browse->set_grid_view(false);
         }
 
-        $box_req   = $this->_getTemplate($type);
+        // a migrated type renders through its own renderer, which brings its own services; everything else
+        // reaches them through the local scope built further down
+        $renderer  = $this->browseListRendererLocator->find($type);
+        $box_req   = ($renderer === null) ? $this->_getTemplate($type) : '';
         $box_title = $this->_getBoxTitle($type, $match);
 
         // an album list may be titled and grouped by whatever asked for it
@@ -672,23 +674,34 @@ class Browse extends Query
             : [];
 
         Ajax::start_container($this->get_content_div(), 'browse_content');
-        if ($this->is_show_header() && $box_req !== '' && $box_title !== '') {
+        $hasBody = $renderer !== null || $box_req !== '';
+        if ($this->is_show_header() && $hasBody && $box_title !== '') {
             $this->set_title($box_title);
             Ui::show_box_top($box_title, $class);
         }
 
-        if ($box_req !== '') {
+        if ($renderer !== null) {
+            echo $renderer->renderList(
+                new BrowseListContext(
+                    $this,
+                    $object_ids,
+                    $hide_columns,
+                    $argument_param,
+                    $limit_threshold,
+                    $browse_cached,
+                    $group_release
+                )
+            );
+        } elseif ($box_req !== '') {
             // the browse template and its row templates render in this scope, so the services they use are named here
             $ajaxUriRetriever        = $this->ajaxUriRetriever;
             $collectionRepository    = $this->collectionRepository;
             $gatekeeper              = $this->gatekeeperFactory->createGuiGatekeeper();
             $guiFactory              = $this->guiFactory;
-            $labelRepository         = $this->labelRepository;
             $libraryItemLoader       = $this->libraryItemLoader;
             $licenseRepository       = $this->licenseRepository;
             $podcastRepository       = $this->podcastRepository;
             $shoutObjectLoader       = $this->shoutObjectLoader;
-            $shoutRepository         = $this->shoutRepository;
             $ui                      = $this->ui;
             $userFollowStateRenderer = $this->userFollowStateRenderer;
             $videoRepository         = $this->videoRepository;
@@ -699,7 +712,7 @@ class Browse extends Query
         }
 
         if ($this->is_show_header()) {
-            if ($box_req !== '') {
+            if ($hasBody) {
                 Ui::show_box_bottom();
             }
 

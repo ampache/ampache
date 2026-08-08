@@ -272,9 +272,9 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->set_simple_browse(false);
                     $browse->save_objects($object_ids);
                     $browse->store();
+                    // the browse renders the label list itself now, so this only has to hand it the ids
                     ob_start();
-                    $labelRepository = $this->labelRepository;
-                    require_once Ui::find_template('show_labels.inc.php');
+                    $browse->show_objects($object_ids);
                     $results['labels'] = ob_get_clean();
                 }
 
