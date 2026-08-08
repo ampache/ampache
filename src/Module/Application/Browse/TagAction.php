@@ -25,10 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Browse;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Browse\BrowseContentView;
+use Ampache\Gui\Genre\GenreFormView;
+use Ampache\Gui\Genre\HiddenGenreCloudView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -82,12 +88,18 @@ final readonly class TagAction implements ApplicationActionInterface
 
         $browse = $this->browseFactory->create();
         $browse->set_type($browse_type);
-        // the tagcloud and the genre form it renders are required into this scope, so their services are named here
+        // the tagcloud is still a template and is required into this scope, so its services are named here
         $ui               = $this->ui;
         $ajaxUriRetriever = $this->ajaxUriRetriever;
         $videoRepository  = $this->videoRepository;
         if ($request_type === 'tag_hidden') {
-            require_once Ui::find_template('show_tagcloud_hidden.inc.php');
+            echo (new HiddenGenreCloudView(
+                $this->createGenreFormView('tag_hidden'),
+                $this->ajaxUriRetriever->getAjaxUri(),
+                $browse->getId(),
+                $object_ids,
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ))->render();
 
             $this->ui->showBoxBottom();
         } else {
@@ -103,5 +115,19 @@ final readonly class TagAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
+    }
+
+    /**
+     * The category bar is shared by both cloud views, so its inputs are gathered in one place.
+     */
+    private function createGenreFormView(string $currentType): GenreFormView
+    {
+        return new GenreFormView(
+            AmpConfig::get_web_path(),
+            $currentType,
+            (bool) AmpConfig::get('album_group'),
+            (bool) AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0,
+            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) && Tag::get_merged_count() > 0
+        );
     }
 }
