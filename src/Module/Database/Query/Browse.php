@@ -144,7 +144,6 @@ class Browse extends Query
         'artist' => 'show_artists.inc.php',
         'collection' => 'show_collections.inc.php',
         'collection_items' => 'show_collection_items.inc.php',
-        'folder' => 'show_folders.inc.php',
         'playlist' => 'show_playlists.inc.php',
         'playlist_media' => 'show_playlist_medias.inc.php',
         'song' => 'show_songs.inc.php',
@@ -650,7 +649,8 @@ class Browse extends Query
                     $argument_param,
                     $limit_threshold,
                     $browse_cached,
-                    $group_release
+                    $group_release,
+                    $extra_objects
                 )
             );
         } elseif ($box_req !== '') {

@@ -30,6 +30,7 @@ use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocator;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Gui\Browse\ListRenderer\CatalogListRenderer;
 use Ampache\Gui\Browse\ListRenderer\DemocraticListRenderer;
+use Ampache\Gui\Browse\ListRenderer\FolderListRenderer;
 use Ampache\Gui\Browse\ListRenderer\GenreListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LabelListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LicenseListRenderer;
@@ -75,6 +76,7 @@ return [
             'playlist_localplay' => get(LocalplayPlaylistListRenderer::class),
             'playlist_search' => get(SmartPlaylistListRenderer::class),
             'smartplaylist' => get(SmartPlaylistListRenderer::class),
+            'folder' => get(FolderListRenderer::class),
             'follower' => get(UserListRenderer::class),
             'genre' => get(GenreListRenderer::class),
             'song_preview' => get(SongPreviewListRenderer::class),

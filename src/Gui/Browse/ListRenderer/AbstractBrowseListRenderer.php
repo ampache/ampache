@@ -27,6 +27,10 @@ namespace Ampache\Gui\Browse\ListRenderer;
 
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\Search;
+use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Playlist;
 use LogicException;
 use Override;
 
@@ -59,6 +63,14 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
     final public function getObjectIds(): array
     {
         return array_map(intval(...), array_values($this->getContext()->objectIds));
+    }
+
+    /**
+     * The container a browse was opened from, e.g. the folder being walked into or the playlist being listed.
+     */
+    final public function getSupplementalObject(string $name): Collection|Folder|Playlist|Search|null
+    {
+        return $this->getContext()->supplementalObjects[$name] ?? null;
     }
 
     final public function getTableClass(): string

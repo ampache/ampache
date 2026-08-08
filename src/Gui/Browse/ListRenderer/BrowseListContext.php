@@ -26,6 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Gui\Browse\ListRenderer;
 
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\Search;
+use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Playlist;
 
 /**
  * Everything a browse list needs that is decided per render.
@@ -38,6 +42,7 @@ final readonly class BrowseListContext
     /**
      * @param array<mixed> $objectIds
      * @param array<mixed> $hideColumns
+     * @param array<string, Collection|Folder|Playlist|Search> $supplementalObjects
      */
     public function __construct(
         public Browse $browse,
@@ -47,5 +52,6 @@ final readonly class BrowseListContext
         public string $limitThreshold,
         public bool $prefetched,
         public bool $groupRelease,
+        public array $supplementalObjects = [],
     ) {}
 }
