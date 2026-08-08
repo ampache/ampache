@@ -33,7 +33,9 @@ use Ampache\Gui\Browse\ListRenderer\LicenseListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer;
 use Ampache\Gui\Browse\ListRenderer\PodcastListRenderer;
 use Ampache\Gui\Browse\ListRenderer\PrivateMessageListRenderer;
+use Ampache\Gui\Browse\ListRenderer\ShareListRenderer;
 use Ampache\Gui\Browse\ListRenderer\ShoutboxListRenderer;
+use Ampache\Gui\Browse\ListRenderer\SongPreviewListRenderer;
 use Ampache\Gui\Browse\ListRenderer\WantedListRenderer;
 use Ampache\Gui\Form\LoginFormViewFactory;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
@@ -57,7 +59,9 @@ return [
             'live_stream' => get(LiveStreamListRenderer::class),
             'podcast' => get(PodcastListRenderer::class),
             'pvmsg' => get(PrivateMessageListRenderer::class),
+            'share' => get(ShareListRenderer::class),
             'shoutbox' => get(ShoutboxListRenderer::class),
+            'song_preview' => get(SongPreviewListRenderer::class),
             'wanted' => get(WantedListRenderer::class),
         ]),
     LoginFormViewFactoryInterface::class => autowire(LoginFormViewFactory::class),
