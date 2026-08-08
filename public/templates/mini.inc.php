@@ -26,6 +26,7 @@ declare(strict_types=1);
 // mini.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Partial\VisualizerView;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
@@ -307,7 +308,7 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
           <a href="javascript:TogglePlayerVisibility();"><?php echo Ui::get_material_symbol('dock_to_bottom', T_('Show/Hide Player')); ?></a>
         </div>
         <div id="webplayer"></div>
-        <?php require_once Ui::find_template('uberviz.inc.php'); ?>
+        <?php echo (new VisualizerView())->render(); ?>
         <script>
             // The mini player is a dead end: tiles play, they don't navigate. src/js/ajax.js delegates
             // link clicks on <body> and turns any in-site href into a hash page load, so catch them

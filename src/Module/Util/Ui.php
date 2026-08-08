@@ -30,6 +30,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Form\ConfirmationView;
 use Ampache\Gui\Form\ConfirmationWithReturnView;
 use Ampache\Gui\Form\ContinueView;
+use Ampache\Gui\Partial\BoxBottomView;
+use Ampache\Gui\Partial\BoxTopView;
 use Ampache\Gui\System\QueryStatsView;
 use Ampache\Gui\System\StandaloneErrorTypeEnum;
 use Ampache\Gui\System\StandaloneErrorView;
@@ -612,7 +614,7 @@ class Ui implements UiInterface
      */
     public static function show_box_bottom(): void
     {
-        require self::find_template('show_box_bottom.inc.php');
+        echo (new BoxBottomView())->render();
     }
 
     /**
@@ -622,7 +624,7 @@ class Ui implements UiInterface
      */
     public static function show_box_top(string $title = '', string $class = ''): void
     {
-        require self::find_template('show_box_top.inc.php');
+        echo (new BoxTopView($title, $class))->render();
     }
 
     public static function show_custom_style(): void

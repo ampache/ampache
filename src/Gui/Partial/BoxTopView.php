@@ -23,42 +23,34 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui\Form;
+namespace Ampache\Gui\Partial;
 
+use Ampache\Gui\View\AbstractView;
 use Override;
 
 /**
- * The catalog-filter management page.
+ * The opening half of the box chrome every page section sits in.
  */
-final class ManageFiltersView extends AbstractFormView
+final class BoxTopView extends AbstractView
 {
-    /**
-     * @param list<array{id: int, name: string, userCount: int, catalogCount: int}> $filters
-     */
     public function __construct(
-        string $webPath,
-        private readonly array $filters,
-        private readonly bool $mayEdit,
-    ) {
-        parent::__construct($webPath);
+        private readonly string $title = '',
+        private readonly string $class = '',
+    ) {}
+
+    public function getClass(): string
+    {
+        return ($this->class === '') ? 'box' : $this->class;
     }
 
-    /**
-     * @return list<array{id: int, name: string, userCount: int, catalogCount: int}>
-     */
-    public function getFilters(): array
+    public function getTitle(): string
     {
-        return $this->filters;
-    }
-
-    public function mayEdit(): bool
-    {
-        return $this->mayEdit;
+        return $this->title;
     }
 
     #[Override]
     protected function templateFile(): string
     {
-        return $this->findTemplate('form/manage_filters.phtml');
+        return $this->findTemplate('partial/box_top.phtml');
     }
 }

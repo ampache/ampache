@@ -23,32 +23,56 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui\Form;
+namespace Ampache\Gui\Partial;
 
+use Ampache\Gui\View\AbstractView;
 use Override;
 
 /**
- * The catalog-filter management page.
+ * One row of the catalog filter list.
  */
-final class ManageFiltersView extends AbstractFormView
+final class CatalogFilterRowView extends AbstractView
 {
-    /**
-     * @param list<array{id: int, name: string, userCount: int, catalogCount: int}> $filters
-     */
     public function __construct(
-        string $webPath,
-        private readonly array $filters,
+        private readonly string $adminPath,
+        private readonly int $filterId,
+        private readonly string $name,
+        private readonly int $userCount,
+        private readonly int $catalogCount,
         private readonly bool $mayEdit,
-    ) {
-        parent::__construct($webPath);
+    ) {}
+
+    public function getAdminPath(): string
+    {
+        return $this->adminPath;
+    }
+
+    public function getCatalogCount(): int
+    {
+        return $this->catalogCount;
+    }
+
+    public function getFilterId(): int
+    {
+        return $this->filterId;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getUserCount(): int
+    {
+        return $this->userCount;
     }
 
     /**
-     * @return list<array{id: int, name: string, userCount: int, catalogCount: int}>
+     * The catch-all filter (id 0) is the fallback every user without one gets, so it cannot be deleted.
      */
-    public function getFilters(): array
+    public function mayDelete(): bool
     {
-        return $this->filters;
+        return $this->mayEdit && $this->filterId > 0;
     }
 
     public function mayEdit(): bool
@@ -59,6 +83,6 @@ final class ManageFiltersView extends AbstractFormView
     #[Override]
     protected function templateFile(): string
     {
-        return $this->findTemplate('form/manage_filters.phtml');
+        return $this->findTemplate('partial/catalog_filter_row.phtml');
     }
 }

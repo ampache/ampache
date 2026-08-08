@@ -25,17 +25,15 @@ declare(strict_types=1);
 
 // manage_filters.phtml -- rendered by Ampache\Gui\Form\ManageFiltersView
 
-use Ampache\Module\Util\Ui;
+use Ampache\Gui\Partial\CatalogFilterRowView;
 
 /** @var Ampache\Gui\Form\ManageFiltersView $this */
 $t_name      = T_('Filter Name');
 $t_num_users = T_('Number of Users');
 $t_num_cats  = T_('Number of Catalogs');
 $t_actions   = T_('Actions');
-// show_filter_row.inc.php
-$t_edit   = T_('Edit');
-$t_delete = T_('Delete');
-?>
+$adminPath   = $this->getWebPath();
+$mayEdit     = $this->mayEdit(); ?>
 <div id="information_actions">
     <ul style="float: left;">
         <li>
@@ -53,12 +51,16 @@ $t_delete = T_('Delete');
         </tr>
     </thead>
     <tbody>
-<?php foreach ($this->getFilters() as $filter) {
-    // the row template is included as-is, so the names it expects are set here
-    $num_users    = $filter['userCount'];
-    $num_catalogs = $filter['catalogCount']; ?>
-        <tr id="<?php echo scrub_out($filter['name']); ?>">
-            <?php require Ui::find_template('show_filter_row.inc.php'); ?>
+<?php foreach ($this->getFilters() as $filter) { ?>
+        <tr id="<?php echo $this->e($filter['name']); ?>">
+            <?php echo $this->raw((new CatalogFilterRowView(
+                $adminPath,
+                (int) $filter['id'],
+                (string) $filter['name'],
+                (int) $filter['userCount'],
+                (int) $filter['catalogCount'],
+                $mayEdit
+            ))->render()); ?>
         </tr>
 <?php } ?>
     </tbody>

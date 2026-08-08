@@ -23,42 +23,18 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui\Form;
+// partial/box_top.phtml -- rendered by Ampache\Gui\Partial\BoxTopView
 
-use Override;
-
-/**
- * The catalog-filter management page.
- */
-final class ManageFiltersView extends AbstractFormView
-{
-    /**
-     * @param list<array{id: int, name: string, userCount: int, catalogCount: int}> $filters
-     */
-    public function __construct(
-        string $webPath,
-        private readonly array $filters,
-        private readonly bool $mayEdit,
-    ) {
-        parent::__construct($webPath);
-    }
-
-    /**
-     * @return list<array{id: int, name: string, userCount: int, catalogCount: int}>
-     */
-    public function getFilters(): array
-    {
-        return $this->filters;
-    }
-
-    public function mayEdit(): bool
-    {
-        return $this->mayEdit;
-    }
-
-    #[Override]
-    protected function templateFile(): string
-    {
-        return $this->findTemplate('form/manage_filters.phtml');
-    }
-}
+/** @var Ampache\Gui\Partial\BoxTopView $this */
+?>
+<div class="<?php echo $this->e($this->getClass()); ?>">
+  <div class="box-inside">
+    <div class="box-top">
+      <div class="box-left-top"></div>
+      <div class="box-right-top"></div>
+    </div>
+    <?php if ($this->getTitle() !== '') { ?>
+    <?php // callers compose the title from links and ajax buttons, so it arrives as markup?>
+    <h3 class="box-title"><?php echo $this->raw($this->getTitle()); ?></h3>
+    <?php } ?>
+    <div class="box-content clearfix">

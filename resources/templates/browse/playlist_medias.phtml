@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // browse/playlist_medias.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\PlaylistMediaListRenderer
 
+use Ampache\Gui\Partial\MultiselectActionsView;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
@@ -56,7 +57,7 @@ if ($browse->is_show_header()) {
 } ?>
 <div<?php echo ($showMultiselect) ? ' data-multiselect-scope' : ''; ?>>
     <?php if ($showMultiselect) {
-        require Ui::find_template('show_multiselect_actions.inc.php');
+        echo $this->raw((new MultiselectActionsView($multiselect_actions))->render());
     } ?>
     <form method="post" id="reorder_playlist_<?php echo $this->e($playlistId); ?>">
         <table id="reorder_playlist_table" class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="media" data-offset="<?php echo $this->e($browse->get_start()); ?>">

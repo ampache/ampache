@@ -23,42 +23,24 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui\Form;
+// partial/javascript_refresh.phtml -- rendered by Ampache\Gui\Partial\JavascriptRefreshView
 
-use Override;
-
-/**
- * The catalog-filter management page.
- */
-final class ManageFiltersView extends AbstractFormView
-{
-    /**
-     * @param list<array{id: int, name: string, userCount: int, catalogCount: int}> $filters
-     */
-    public function __construct(
-        string $webPath,
-        private readonly array $filters,
-        private readonly bool $mayEdit,
-    ) {
-        parent::__construct($webPath);
-    }
-
-    /**
-     * @return list<array{id: int, name: string, userCount: int, catalogCount: int}>
-     */
-    public function getFilters(): array
-    {
-        return $this->filters;
-    }
-
-    public function mayEdit(): bool
-    {
-        return $this->mayEdit;
-    }
-
-    #[Override]
-    protected function templateFile(): string
-    {
-        return $this->findTemplate('form/manage_filters.phtml');
-    }
+/** @var Ampache\Gui\Partial\JavascriptRefreshView $this */
+?>
+<script>
+// Set refresh interval (in seconds)
+var refreshInterval = <?php echo $this->getRefreshLimit(); ?>;
+function refresh() {
+    <?php echo $this->raw($this->getAction()); ?>;
 }
+$(document).ready(function () {
+    clearInterval(window.reloaditv);
+    window.reloaditv = setInterval(function () {
+        refresh();
+    }, refreshInterval * 1000);
+});
+// remove the timer when navigating away
+$(window).on('popstate', function () {
+    clearInterval(window.reloaditv);
+});
+</script>

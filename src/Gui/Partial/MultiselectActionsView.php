@@ -23,42 +23,37 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui\Form;
+namespace Ampache\Gui\Partial;
 
+use Ampache\Gui\View\AbstractView;
 use Override;
 
 /**
- * The catalog-filter management page.
+ * The action bar for a multi-select browse.
+
+ * Rendered inside a `[data-multiselect-scope]` element beside the table whose rows carry the checkboxes;
+ * `src/js/multiselect.js` fills the placeholders in each url.
  */
-final class ManageFiltersView extends AbstractFormView
+final class MultiselectActionsView extends AbstractView
 {
     /**
-     * @param list<array{id: int, name: string, userCount: int, catalogCount: int}> $filters
+     * @param list<array{action: string, url: string, icon: string, text: string, confirm?: string}> $actions
      */
     public function __construct(
-        string $webPath,
-        private readonly array $filters,
-        private readonly bool $mayEdit,
-    ) {
-        parent::__construct($webPath);
-    }
+        private readonly array $actions,
+    ) {}
 
     /**
-     * @return list<array{id: int, name: string, userCount: int, catalogCount: int}>
+     * @return list<array{action: string, url: string, icon: string, text: string, confirm?: string}>
      */
-    public function getFilters(): array
+    public function getActions(): array
     {
-        return $this->filters;
-    }
-
-    public function mayEdit(): bool
-    {
-        return $this->mayEdit;
+        return $this->actions;
     }
 
     #[Override]
     protected function templateFile(): string
     {
-        return $this->findTemplate('form/manage_filters.phtml');
+        return $this->findTemplate('partial/multiselect_actions.phtml');
     }
 }

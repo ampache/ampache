@@ -23,12 +23,35 @@ declare(strict_types=1);
  *
  */
 
-// show_box_bottom.inc.php
-?>
-    </div>
-    <div class="box-bottom">
-      <div class="box-left-bottom"></div>
-      <div class="box-right-bottom"></div>
-    </div>
-  </div>
-</div>
+namespace Ampache\Gui\Partial;
+
+use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Api\Ajax;
+use Override;
+
+/**
+ * The timer that re-requests a page region on an interval.
+ */
+final class JavascriptRefreshView extends AbstractView
+{
+    public function __construct(
+        private readonly int $refreshLimit,
+        private readonly string $ajaxUrl,
+    ) {}
+
+    public function getAction(): string
+    {
+        return Ajax::action($this->ajaxUrl, '');
+    }
+
+    public function getRefreshLimit(): int
+    {
+        return $this->refreshLimit;
+    }
+
+    #[Override]
+    protected function templateFile(): string
+    {
+        return $this->findTemplate('partial/javascript_refresh.phtml');
+    }
+}

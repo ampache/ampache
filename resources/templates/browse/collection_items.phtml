@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // browse/collection_items.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\CollectionItemsListRenderer
 
+use Ampache\Gui\Partial\MultiselectActionsView;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
@@ -55,7 +56,7 @@ if ($browse->is_show_header()) {
 } ?>
 <div<?php echo ($showMultiselect) ? ' data-multiselect-scope' : ''; ?>>
     <?php if ($showMultiselect) {
-        require Ui::find_template('show_multiselect_actions.inc.php');
+        echo $this->raw((new MultiselectActionsView($multiselect_actions))->render());
     } ?>
     <form method="post" id="reorder_collection_<?php echo $this->e($collectionId); ?>">
         <table id="reorder_collection_table" class="tabledata striped-rows" data-objecttype="collection_item" data-offset="<?php echo $this->e($browse->get_start()); ?>">

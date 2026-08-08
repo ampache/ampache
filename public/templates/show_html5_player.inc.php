@@ -1,6 +1,7 @@
 <?php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Partial\VisualizerView;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -771,7 +772,7 @@ if ($isVideo === false) {
     </div>
 </div>
 <?php if ($iframed === false && $isShare === false) {
-    require_once Ui::find_template('uberviz.inc.php');
+    echo (new VisualizerView())->render();
 } ?>
 <?php if ($isShare === false) { ?>
 <?php echo Ui::material_symbol_sprite(); ?>

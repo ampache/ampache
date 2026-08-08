@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Index;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Form\StatsFormViewFactoryInterface;
+use Ampache\Gui\Partial\JavascriptRefreshView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -75,9 +76,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $refreshLimit > 5
             && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HOME_NOW_PLAYING)
         ) {
-            $refresh_limit = $refreshLimit;
-            $ajax_url      = '?page=index&action=refresh_index';
-            require_once Ui::find_template('javascript_refresh.inc.php');
+            echo (new JavascriptRefreshView($refreshLimit, '?page=index&action=refresh_index'))->render();
         }
 
         // the header form show_index.inc.php picks is required into this scope, so name its services here

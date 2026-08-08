@@ -23,42 +23,27 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui\Form;
+namespace Ampache\Gui\Partial;
 
+use Ampache\Gui\View\AbstractView;
 use Override;
 
 /**
- * The catalog-filter management page.
+ * The web audio analyser overlay and its equaliser bands.
  */
-final class ManageFiltersView extends AbstractFormView
+final class VisualizerView extends AbstractView
 {
     /**
-     * @param list<array{id: int, name: string, userCount: int, catalogCount: int}> $filters
+     * @return list<string>
      */
-    public function __construct(
-        string $webPath,
-        private readonly array $filters,
-        private readonly bool $mayEdit,
-    ) {
-        parent::__construct($webPath);
-    }
-
-    /**
-     * @return list<array{id: int, name: string, userCount: int, catalogCount: int}>
-     */
-    public function getFilters(): array
+    public function getBands(): array
     {
-        return $this->filters;
-    }
-
-    public function mayEdit(): bool
-    {
-        return $this->mayEdit;
+        return ['80', '240', '750', '2.2k', '6k'];
     }
 
     #[Override]
     protected function templateFile(): string
     {
-        return $this->findTemplate('form/manage_filters.phtml');
+        return $this->findTemplate('partial/visualizer.phtml');
     }
 }

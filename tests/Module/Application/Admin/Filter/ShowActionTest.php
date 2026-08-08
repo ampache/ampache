@@ -52,10 +52,12 @@ class ShowActionTest extends TestCase
         $request    = $this->createMock(ServerRequestInterface::class);
         $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
 
-        $gatekeeper->expects(static::once())
+        $gatekeeper->expects(static::exactly(2))
             ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->willReturn(true);
+            ->willReturnMap([
+                [AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, true],
+                [AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, true],
+            ]);
 
         $this->ui->expects(static::once())
             ->method('showHeader');

@@ -23,18 +23,18 @@ declare(strict_types=1);
  *
  */
 
-// show_box_top.inc.php
+// partial/visualizer.phtml -- rendered by Ampache\Gui\Partial\VisualizerView
 
-$class = $class ?? 'box';
-$title = $title ?? ''; ?>
-
-<div class="<?php echo $class; ?>">
-  <div class="box-inside">
-    <div class="box-top">
-      <div class="box-left-top"></div>
-      <div class="box-right-top"></div>
+/** @var Ampache\Gui\Partial\VisualizerView $this */
+?>
+<div id="visualizer" style="visibility: hidden;">
+    <canvas id="viz-canvas"></canvas>
+</div>
+<div id="equalizer" style="visibility: hidden;">
+    <?php foreach ($this->getBands() as $index => $label) { ?>
+    <div class="eq-band">
+        <input type="range" min="-20" max="20" step="1" value="0" oninput="setEqBand(<?php echo $index; ?>, this.value)" title="<?php echo $this->e($label); ?> Hz">
+        <span><?php echo $this->e($label); ?></span>
     </div>
-    <?php if ($title) { ?>
-       <h3 class="box-title"><?php echo $title; ?></h3>
-      <?php } ?>
-    <div class="box-content clearfix">
+    <?php } ?>
+</div>

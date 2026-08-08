@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // browse/songs.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\SongListRenderer
 
+use Ampache\Gui\Partial\MultiselectActionsView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
@@ -43,7 +44,7 @@ if ($browse->is_show_header()) {
 } ?>
 <div<?php echo ($showMultiselect) ? ' data-multiselect-scope' : ''; ?>>
     <?php if ($showMultiselect) {
-        require Ui::find_template('show_multiselect_actions.inc.php');
+        echo $this->raw((new MultiselectActionsView($multiselect_actions))->render());
     } ?>
     <table id="reorder_songs_table_<?php echo $this->e($tableKey); ?>" class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="song" data-offset="<?php echo $this->e($browse->get_start()); ?>">
         <thead>

@@ -26,6 +26,7 @@ declare(strict_types=1);
 // footer.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Partial\VisualizerView;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
@@ -58,7 +59,7 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']) {
           <a href="javascript:TogglePlayerVisibility();"><?php echo Ui::get_material_symbol('dock_to_bottom', T_('Show/Hide Player')); ?></a>
         </div>
         <div id="webplayer"></div>
-        <?php require_once Ui::find_template('uberviz.inc.php');
+        <?php echo (new VisualizerView())->render();
         } ?>
         <div id="mobile-nav-backdrop" onclick="CloseMobileNav();"></div>
         <script>

@@ -23,42 +23,14 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Gui\Form;
+// partial/box_bottom.phtml -- rendered by Ampache\Gui\Partial\BoxBottomView
 
-use Override;
-
-/**
- * The catalog-filter management page.
- */
-final class ManageFiltersView extends AbstractFormView
-{
-    /**
-     * @param list<array{id: int, name: string, userCount: int, catalogCount: int}> $filters
-     */
-    public function __construct(
-        string $webPath,
-        private readonly array $filters,
-        private readonly bool $mayEdit,
-    ) {
-        parent::__construct($webPath);
-    }
-
-    /**
-     * @return list<array{id: int, name: string, userCount: int, catalogCount: int}>
-     */
-    public function getFilters(): array
-    {
-        return $this->filters;
-    }
-
-    public function mayEdit(): bool
-    {
-        return $this->mayEdit;
-    }
-
-    #[Override]
-    protected function templateFile(): string
-    {
-        return $this->findTemplate('form/manage_filters.phtml');
-    }
-}
+/** @var Ampache\Gui\Partial\BoxBottomView $this */
+?>
+    </div>
+    <div class="box-bottom">
+      <div class="box-left-bottom"></div>
+      <div class="box-right-bottom"></div>
+    </div>
+  </div>
+</div>

@@ -23,34 +23,28 @@ declare(strict_types=1);
  *
  */
 
-// show_multiselect_actions.inc.php
+// partial/multiselect_actions.phtml -- rendered by Ampache\Gui\Partial\MultiselectActionsView
 
 use Ampache\Module\Util\Ui;
 
-/**
- * The action bar for a multi-select browse. Include it inside a [data-multiselect-scope] element together with
- * the table whose rows carry the checkboxes; src/js/multiselect.js fills the placeholders in each url.
- *
- * @var list<array{action: string, url: string, icon: string, text: string, confirm?: string}> $multiselect_actions
- */
+/** @var Ampache\Gui\Partial\MultiselectActionsView $this */
 
-if (empty($multiselect_actions)) {
+$actions = $this->getActions();
+if ($actions === []) {
     return;
 } ?>
 <div class="multiselect-actions multiselect-empty" data-multiselect-bar>
     <span class="multiselect-summary">
         <?php printf(T_('%s selected'), '<span data-multiselect-count>0</span>'); ?>
     </span>
-    <?php foreach ($multiselect_actions as $multiselect_action) { ?>
+    <?php foreach ($actions as $action) { ?>
     <a href="javascript:void(0);" aria-disabled="true"
-       data-multiselect-action="<?php echo scrub_out($multiselect_action['action']); ?>"
-       data-multiselect-url="<?php echo scrub_out($multiselect_action['url']); ?>"
-        <?php if (!empty($multiselect_action['confirm'])) { ?>
-       data-multiselect-confirm="<?php echo scrub_out($multiselect_action['confirm']); ?>"
-        <?php } ?>
+       data-multiselect-action="<?php echo $this->e($action['action']); ?>"
+       data-multiselect-url="<?php echo $this->e($action['url']); ?>"
+       <?php if (!empty($action['confirm'])) { ?>data-multiselect-confirm="<?php echo $this->e($action['confirm']); ?>"<?php } ?>
     >
-        <?php echo Ui::get_material_symbol($multiselect_action['icon'], $multiselect_action['text']); ?>
-        <span class="multiselect-label"><?php echo scrub_out($multiselect_action['text']); ?></span>
+        <?php echo $this->raw(Ui::get_material_symbol($action['icon'], $action['text'])); ?>
+        <span class="multiselect-label"><?php echo $this->e($action['text']); ?></span>
     </a>
     <?php } ?>
 </div>

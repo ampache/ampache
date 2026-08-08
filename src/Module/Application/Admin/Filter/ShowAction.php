@@ -73,7 +73,8 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         echo (new ManageFiltersView(
             $this->configContainer->getWebPath('/admin'),
-            $filters
+            $filters,
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
         ))->render();
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();

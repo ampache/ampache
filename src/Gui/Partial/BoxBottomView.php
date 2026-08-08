@@ -23,29 +23,19 @@ declare(strict_types=1);
  *
  */
 
-// javascript_refresh.inc.php
+namespace Ampache\Gui\Partial;
 
-use Ampache\Module\Api\Ajax;
+use Ampache\Gui\View\AbstractView;
+use Override;
 
-/** @var int $refresh_limit */
-/** @var string $ajax_url */
-?>
-<script>
-// Set refresh interval (in seconds)
-var refreshInterval=<?php echo $refresh_limit; ?>;
-
-function refresh() {
-    <?php echo Ajax::action($ajax_url, ''); ?>;
+/**
+ * The closing half of the box chrome.
+ */
+final class BoxBottomView extends AbstractView
+{
+    #[Override]
+    protected function templateFile(): string
+    {
+        return $this->findTemplate('partial/box_bottom.phtml');
+    }
 }
-$(document).ready(function() {
-    clearInterval(window.reloaditv);
-    window.reloaditv = setInterval(function(){
-        refresh();
-    }, refreshInterval * 1000);
-});
-
-// remove the timer when navigating away
-$(window).on('popstate', function() {
-    clearInterval(window.reloaditv);
-});
-</script>
