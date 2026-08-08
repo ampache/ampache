@@ -27,6 +27,7 @@ namespace Ampache\Module\Util\Rss\Surrogate;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -141,13 +142,12 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
             }
 
             if ($media->mime) {
-                $data['type'] = $media->mime;
-                $data['size'] = (string) $media->size;
+                [$stream_params, $data['type'], $data['size']] = $this->resolveEnclosureTarget($media);
                 if ($this->user !== null) {
-                    $data['url'] = $media->play_url('', 'api', false, $this->user->getId(), $this->user->streamtoken);
+                    $data['url'] = $media->play_url($stream_params, 'api', false, $this->user->getId(), $this->user->streamtoken);
                 } elseif (!AmpConfig::get('use_auth') || !AmpConfig::get('require_session')) {
                     // Streaming is open on this instance; play_url() already omits session info in that case
-                    $data['url'] = $media->play_url('', 'api');
+                    $data['url'] = $media->play_url($stream_params, 'api');
                 }
             }
 
@@ -213,5 +213,36 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     public function hasSummary(): bool
     {
         return $this->playable->get_description() !== '';
+    }
+
+    /**
+     * Enclosure target without on-the-fly transcoding: mp3 raw, otherwise cached file if present, else raw.
+     *
+     * @return array{0: string, 1: string, 2: string} [play_url params, mime, size]
+     */
+    private function resolveEnclosureTarget(Song|Podcast_Episode $media): array
+    {
+        $cache_target = (string) AmpConfig::get('cache_target', '');
+
+        if (
+            $media instanceof Song
+            && $media->type !== 'mp3'
+            && $cache_target !== ''
+            && $media->type !== $cache_target
+        ) {
+            $cache_path  = (string) AmpConfig::get('cache_path', '');
+            $file_target = ($cache_path !== '')
+                ? Catalog::get_cache_path($media->id, $media->catalog, $cache_path, $cache_target)
+                : null;
+            if ($file_target !== null && is_file($file_target)) {
+                return [
+                    '&format=' . $cache_target,
+                    Song::type_to_mime($cache_target),
+                    (string) filesize($file_target),
+                ];
+            }
+        }
+
+        return ['&format=raw', (string) $media->mime, (string) $media->size];
     }
 }
