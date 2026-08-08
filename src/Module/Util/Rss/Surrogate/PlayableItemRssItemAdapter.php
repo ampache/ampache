@@ -238,7 +238,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                 return [
                     '&format=' . $cache_target,
                     Song::type_to_mime($cache_target),
-                    (string) filesize($file_target),
+                    (string) (filesize($file_target) ?: $media->size),
                 ];
             }
         }
