@@ -27,23 +27,18 @@ namespace Ampache\Gui\Browse\ListRenderer;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\LiveStream\LiveStreamRowView;
-use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
-use Ampache\Module\Database\Query\Browse;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\User;
-use LogicException;
 use Override;
 
 /**
  * The radio station browse.
  */
-final class LiveStreamListRenderer extends AbstractView implements BrowseListRendererInterface
+final class LiveStreamListRenderer extends AbstractBrowseListRenderer
 {
-    private ?BrowseListContext $context = null;
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
@@ -52,11 +47,6 @@ final class LiveStreamListRenderer extends AbstractView implements BrowseListRen
     public function areRatingsShown(): bool
     {
         return User::is_registered() && (bool) $this->configContainer->get('ratings');
-    }
-
-    public function getBrowse(): \Ampache\Module\Database\Query\Browse
-    {
-        return $this->getContext()->browse;
     }
 
     /**
@@ -86,7 +76,7 @@ final class LiveStreamListRenderer extends AbstractView implements BrowseListRen
 
     public function getCoverClass(): string
     {
-        return $this->getContext()->browse->is_grid_view() ? 'grid_cover' : 'cel_cover';
+        return $this->getCellClass('cel_cover', 'grid_cover');
     }
 
     public function getCreateUrl(): string
@@ -100,8 +90,8 @@ final class LiveStreamListRenderer extends AbstractView implements BrowseListRen
     public function getLiveStreams(): array
     {
         $streams = [];
-        foreach ($this->getContext()->objectIds as $objectId) {
-            $stream = new Live_Stream((int) $objectId);
+        foreach ($this->getObjectIds() as $objectId) {
+            $stream = new Live_Stream($objectId);
             if (!$stream->isNew()) {
                 $streams[] = $stream;
             }
@@ -110,40 +100,10 @@ final class LiveStreamListRenderer extends AbstractView implements BrowseListRen
         return $streams;
     }
 
-    /**
-     * @return list<int>
-     */
-    public function getObjectIds(): array
-    {
-        return array_map(intval(...), array_values($this->getContext()->objectIds));
-    }
-
-    public function getTableClass(): string
-    {
-        return $this->getContext()->browse->is_grid_view() ? ' gridview' : '';
-    }
-
     public function mayManage(): bool
     {
         return $this->gatekeeperFactory->createGuiGatekeeper()
             ->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
-    }
-
-    /**
-     * Renderers are shared services, so the previous context is put back afterwards: a template that
-     * renders a second browse of the same type would otherwise leave this one pointing at the wrong data.
-     */
-    #[Override]
-    public function renderList(BrowseListContext $context): string
-    {
-        $previous      = $this->context;
-        $this->context = $context;
-
-        try {
-            return $this->render();
-        } finally {
-            $this->context = $previous;
-        }
     }
 
     public function renderRow(Live_Stream $stream): string
@@ -153,8 +113,8 @@ final class LiveStreamListRenderer extends AbstractView implements BrowseListRen
         return (new LiveStreamRowView(
             $stream,
             $this->getCoverClass(),
-            $this->getContext()->browse->getId(),
-            $this->getContext()->browse->is_grid_view(),
+            $this->getBrowse()->getId(),
+            $this->getBrowse()->is_grid_view(),
             $this->areRatingsShown(),
             (bool) $this->configContainer->get('directplay'),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
@@ -167,14 +127,5 @@ final class LiveStreamListRenderer extends AbstractView implements BrowseListRen
     protected function templateFile(): string
     {
         return $this->findTemplate('browse/live_streams.phtml');
-    }
-
-    private function getContext(): BrowseListContext
-    {
-        if ($this->context === null) {
-            throw new LogicException('The list renderer was rendered outside renderList()');
-        }
-
-        return $this->context;
     }
 }

@@ -27,7 +27,6 @@ namespace Ampache\Gui\Browse\ListRenderer;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Label\LabelRowView;
-use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
@@ -35,7 +34,6 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
-use LogicException;
 use Override;
 
 /**
@@ -43,20 +41,13 @@ use Override;
  *
  * The label repository is injected here rather than lent by `Browse`, which is the point of the interface.
  */
-final class LabelListRenderer extends AbstractView implements BrowseListRendererInterface
+final class LabelListRenderer extends AbstractBrowseListRenderer
 {
-    private ?BrowseListContext $context = null;
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
         private readonly LabelRepositoryInterface $labelRepository,
     ) {}
-
-    public function getBrowse(): Browse
-    {
-        return $this->getContext()->browse;
-    }
 
     /**
      * @return list<array{class: string, label: string, sort: null|string}>
@@ -76,7 +67,7 @@ final class LabelListRenderer extends AbstractView implements BrowseListRenderer
 
     public function getCoverClass(): string
     {
-        return $this->getBrowse()->is_grid_view() ? 'grid_cover' : 'cel_cover';
+        return $this->getCellClass('cel_cover', 'grid_cover');
     }
 
     public function getCreateUrl(): string
@@ -100,32 +91,11 @@ final class LabelListRenderer extends AbstractView implements BrowseListRenderer
         return $labels;
     }
 
-    public function getTableClass(): string
-    {
-        return $this->getBrowse()->is_grid_view() ? ' gridview' : '';
-    }
-
     public function mayCreate(): bool
     {
         return $this->gatekeeperFactory->createGuiGatekeeper()
             ->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             && (bool) $this->configContainer->get('label');
-    }
-
-    /**
-     * Renderers are shared services, so the previous context is put back afterwards.
-     */
-    #[Override]
-    public function renderList(BrowseListContext $context): string
-    {
-        $previous      = $this->context;
-        $this->context = $context;
-
-        try {
-            return $this->render();
-        } finally {
-            $this->context = $previous;
-        }
     }
 
     public function renderRow(Label $label): string
@@ -148,14 +118,5 @@ final class LabelListRenderer extends AbstractView implements BrowseListRenderer
     protected function templateFile(): string
     {
         return $this->findTemplate('browse/labels.phtml');
-    }
-
-    private function getContext(): BrowseListContext
-    {
-        if ($this->context === null) {
-            throw new LogicException('The list renderer was rendered outside renderList()');
-        }
-
-        return $this->context;
     }
 }
