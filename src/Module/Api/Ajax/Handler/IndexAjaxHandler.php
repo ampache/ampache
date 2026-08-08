@@ -33,6 +33,8 @@ use Ampache\Gui\Index\NowPlayingSimilarView;
 use Ampache\Gui\Index\RandomAlbumsView;
 use Ampache\Gui\Index\RandomVideosView;
 use Ampache\Gui\Song\SongListPanelView;
+use Ampache\Gui\Stats\RecentlyPlayedMode;
+use Ampache\Gui\Stats\RecentlyPlayedView;
 use Ampache\Gui\Wanted\MissingAlbumsView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -378,15 +380,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 ob_start();
                 $user_id   = $user->id ?: -1;
-                $ajax_page = 'index';
-                if (AmpConfig::get('home_recently_played_all')) {
-                    $data = Stats::get_recently_played($user_id);
-                    require_once Ui::find_template('show_recently_played_all.inc.php');
-                } else {
-                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
-                    Song::build_cache(array_keys($data));
-                    require Ui::find_template('show_recently_played.inc.php');
-                }
+                echo $this->createRecentlyPlayedView($user, $user_id, false)->render();
 
                 $results['recently_played'] = ob_get_clean();
                 break;
@@ -411,16 +405,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int) $this->requestParser->getFromRequest('user_id')
                     : ($user->id ?: -1);
-                $user_only = isset($_REQUEST['user_only']);
-                $ajax_page = 'index';
-                if (AmpConfig::get('home_recently_played_all')) {
-                    $data = Stats::get_recently_played($user_id);
-                    require_once Ui::find_template('show_recently_played_all.inc.php');
-                } else {
-                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
-                    Song::build_cache(array_keys($data));
-                    require Ui::find_template('show_recently_played.inc.php');
-                }
+                echo $this->createRecentlyPlayedView($user, $user_id, isset($_REQUEST['user_only']))->render();
 
                 $results['recently_played'] = ob_get_clean();
                 break;
@@ -634,6 +619,29 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             Stream_Playlist::check_autoplay_next(),
             Stream_Playlist::check_autoplay_append(),
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && (bool) AmpConfig::get('ratings')
+        );
+    }
+
+    /**
+     * The home page and the stats page share this list; `home_recently_played_all` decides which one.
+     */
+    private function createRecentlyPlayedView(User $user, int $userId, bool $userOnly): RecentlyPlayedView
+    {
+        $allTypes = (bool) AmpConfig::get('home_recently_played_all');
+        $data     = ($allTypes)
+            ? Stats::get_recently_played($userId, 'stream', null, $userOnly)
+            : Stats::get_recently_played($userId, 'stream', 'song', $userOnly);
+        if (!$allTypes) {
+            Song::build_cache(array_keys($data));
+        }
+
+        return new RecentlyPlayedView(
+            ($allTypes) ? RecentlyPlayedMode::ALL_TYPES : RecentlyPlayedMode::SONGS,
+            $data,
+            $user,
+            $userId,
+            $userOnly,
+            AmpConfig::get_web_path()
         );
     }
 

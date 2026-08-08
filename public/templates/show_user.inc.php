@@ -26,6 +26,8 @@ declare(strict_types=1);
 // show_user.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Stats\RecentlyPlayedMode;
+use Ampache\Gui\Stats\RecentlyPlayedView;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -180,25 +182,34 @@ if ($current_list) {
         <?php Ui::show_box_bottom();
     }
 }
-$ajax_page = 'stats';
-$limit     = AmpConfig::get('popular_threshold', 10);
-$user      = $client;
-$user_only = true;
-if (AmpConfig::get('home_recently_played_all')) {
-    $data = Stats::get_recently_played($client->getId(), 'stream', null, $user_only);
-    require_once Ui::find_template('show_recently_played_all.inc.php');
-} else {
-    $data = Stats::get_recently_played($client->getId(), 'stream', 'song', $user_only);
+$all_types = (bool) AmpConfig::get('home_recently_played_all');
+$data      = ($all_types)
+    ? Stats::get_recently_played($client->getId(), 'stream', null, true)
+    : Stats::get_recently_played($client->getId(), 'stream', 'song', true);
+if (!$all_types) {
     Song::build_cache(array_keys($data));
-    require Ui::find_template('show_recently_played.inc.php');
-} ?>
+}
+
+echo (new RecentlyPlayedView(
+    ($all_types) ? RecentlyPlayedMode::ALL_TYPES : RecentlyPlayedMode::SONGS,
+    $data,
+    $client,
+    $client->getId(),
+    true,
+    AmpConfig::get_web_path()
+))->render(); ?>
         </div>
         <div id="recently_skipped" class="tab_content">
-<?php $ajax_page = 'stats';
-$limit           = AmpConfig::get('popular_threshold', 10);
-$data            = Stats::get_recently_played($client->getId(), 'skip', 'song', $user_only);
+<?php $data = Stats::get_recently_played($client->getId(), 'skip', 'song', true);
 Song::build_cache(array_keys($data));
-require Ui::find_template('show_recently_skipped.inc.php'); ?>
+echo (new RecentlyPlayedView(
+    RecentlyPlayedMode::SKIPPED,
+    $data,
+    $client,
+    $client->getId(),
+    true,
+    AmpConfig::get_web_path()
+))->render(); ?>
         </div>
 <?php if ($allow_upload) { ?>
         <div id="artists" class="tab_content">

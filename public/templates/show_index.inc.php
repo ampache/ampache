@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Browse\DashboardFormView;
+use Ampache\Gui\Stats\RecentlyPlayedMode;
+use Ampache\Gui\Stats\RecentlyPlayedView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -106,14 +108,21 @@ if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
 <?php
     $user      = Core::get_global('user');
     $user_id   = $user->id ?? -1;
-    $ajax_page = 'index';
-    if (AmpConfig::get('home_recently_played_all')) {
-        $data = Stats::get_recently_played($user_id);
-        require_once Ui::find_template('show_recently_played_all.inc.php');
-    } else {
-        $data = Stats::get_recently_played($user_id, 'stream', 'song');
+    $all_types = (bool) AmpConfig::get('home_recently_played_all');
+    $data      = ($all_types)
+        ? Stats::get_recently_played($user_id)
+        : Stats::get_recently_played($user_id, 'stream', 'song');
+    if (!$all_types) {
         Song::build_cache(array_keys($data));
-        require_once Ui::find_template('show_recently_played.inc.php');
-    } ?>
+    }
+
+    echo (new RecentlyPlayedView(
+        ($all_types) ? RecentlyPlayedMode::ALL_TYPES : RecentlyPlayedMode::SONGS,
+        $data,
+        $user,
+        $user_id,
+        false,
+        AmpConfig::get_web_path()
+    ))->render(); ?>
 </div>
 <?php } ?>
