@@ -26,6 +26,7 @@ declare(strict_types=1);
 // sidebar.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Sidebar\AdminSidebarView;
 use Ampache\Gui\Sidebar\LocalplaySidebarView;
 use Ampache\Gui\Sidebar\PreferencesSidebarView;
 use Ampache\Module\Api\Ajax;
@@ -136,7 +137,9 @@ $t_logout          = T_('Log out'); ?>
             if ($item['id'] == $_SESSION['state']['sidebar_tab']) { ?>
             <div id="sidebar-page" class="sidebar-page-float">
                 <?php $tab = (string) $_SESSION['state']['sidebar_tab'];
-                if ($tab === 'localplay') {
+                if ($tab === 'admin') {
+                    echo (new AdminSidebarView($web_path, $admin_path, Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)))->render();
+                } elseif ($tab === 'localplay') {
                     echo (new LocalplaySidebarView($web_path))->render();
                 } elseif ($tab === 'preferences') {
                     echo (new PreferencesSidebarView(
