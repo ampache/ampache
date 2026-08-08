@@ -1,0 +1,101 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/playlist_medias.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\PlaylistMediaListRenderer
+
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Browse\ListRenderer\PlaylistMediaListRenderer $this */
+
+$browse              = $this->getBrowse();
+$argument_param      = $this->getArgumentParam();
+$columns             = $this->getColumns();
+$rows                = $this->getRows();
+$playlistId          = $this->getPlaylistId();
+$showMultiselect     = $this->showMultiselect();
+$multiselect_actions = $this->getMultiselectActions();
+if ($this->showRatings()) {
+    $ratingIds = [];
+    foreach ($rows as $row) {
+        $ratingIds[$row['type']][] = $row['item']->getId();
+    }
+
+    foreach ($ratingIds as $ratingType => $ratingIdList) {
+        Rating::build_cache($ratingType, $ratingIdList);
+        Userflag::build_cache($ratingType, $ratingIdList);
+    }
+}
+
+if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+    echo '<span class="item-duration">| ' . T_('Duration') . ': ' . $this->e($this->getDuration()) . '</span>';
+} ?>
+<div<?php echo ($showMultiselect) ? ' data-multiselect-scope' : ''; ?>>
+    <?php if ($showMultiselect) {
+        require Ui::find_template('show_multiselect_actions.inc.php');
+    } ?>
+    <form method="post" id="reorder_playlist_<?php echo $this->e($playlistId); ?>">
+        <table id="reorder_playlist_table" class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="media" data-offset="<?php echo $this->e($browse->get_start()); ?>">
+            <thead>
+                <tr class="th-top">
+                    <?php foreach ($columns as $column) { ?>
+                    <th class="<?php echo $this->e($column['class']); ?>"><?php
+                        if ($column['class'] === 'cel_select essential persist' && $showMultiselect) {
+                            echo '<input type="checkbox" class="multiselect-all" title="' . $this->e(T_('Select')) . '" />';
+                        } elseif ($column['header']) {
+                            echo $this->e($column['label']);
+                        } ?></th>
+                    <?php } ?>
+                </tr>
+            </thead>
+            <tbody id="sortableplaylist_<?php echo $this->e($playlistId); ?>">
+                <?php foreach ($rows as $row) { ?>
+                <tr id="track_<?php echo $this->e($row['trackId']); ?>">
+                    <?php echo $this->raw($this->renderRow($row)); ?>
+                </tr>
+                <?php } ?>
+                <?php if ($rows === []) { ?>
+                <tr>
+                    <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
+                </tr>
+                <?php } ?>
+            </tbody>
+            <tfoot>
+                <tr class="th-bottom">
+                    <?php foreach ($columns as $column) { ?>
+                    <th class="<?php echo $this->e(explode(' ', $column['class'])[0]); ?>"><?php echo $this->e($column['label']); ?></th>
+                    <?php } ?>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<?php show_table_render($this->isReorderable()); ?>
+<?php if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+    echo '<span class="item-duration">| ' . T_('Duration') . ': ' . $this->e($this->getDuration()) . '</span>';
+} ?>

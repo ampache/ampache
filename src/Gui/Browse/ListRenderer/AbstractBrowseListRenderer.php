@@ -86,6 +86,14 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
         return $this->getBrowse()->is_grid_view() ? ' gridview' : '';
     }
 
+    /**
+     * A drag-to-reorder list emits the re-init script; the browse decides, not the renderer.
+     */
+    final public function isReorderable(): bool
+    {
+        return $this->getContext()->reorder;
+    }
+
     #[Override]
     final public function renderList(BrowseListContext $context): string
     {

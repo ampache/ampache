@@ -38,6 +38,7 @@ use Ampache\Gui\Browse\ListRenderer\LicenseListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LocalplayPlaylistListRenderer;
 use Ampache\Gui\Browse\ListRenderer\PlaylistListRenderer;
+use Ampache\Gui\Browse\ListRenderer\PlaylistMediaListRenderer;
 use Ampache\Gui\Browse\ListRenderer\PodcastEpisodeListRenderer;
 use Ampache\Gui\Browse\ListRenderer\PodcastListRenderer;
 use Ampache\Gui\Browse\ListRenderer\PrivateMessageListRenderer;
@@ -78,6 +79,7 @@ return [
             'democratic' => get(DemocraticListRenderer::class),
             'playlist' => get(PlaylistListRenderer::class),
             'playlist_localplay' => get(LocalplayPlaylistListRenderer::class),
+            'playlist_media' => get(PlaylistMediaListRenderer::class),
             'playlist_search' => get(SmartPlaylistListRenderer::class),
             'smartplaylist' => get(SmartPlaylistListRenderer::class),
             'folder' => get(FolderListRenderer::class),

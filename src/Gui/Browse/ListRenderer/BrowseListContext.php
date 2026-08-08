@@ -52,6 +52,7 @@ final readonly class BrowseListContext
         public string $limitThreshold,
         public bool $prefetched,
         public bool $groupRelease,
+        public bool $reorder = false,
         public array $supplementalObjects = [],
     ) {}
 }
