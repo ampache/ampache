@@ -25,12 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Gui;
 
+use Ampache\Gui\Browse\ListRenderer\BroadcastListRenderer;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocator;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Gui\Browse\ListRenderer\LabelListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LicenseListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer;
 use Ampache\Gui\Browse\ListRenderer\PodcastListRenderer;
+use Ampache\Gui\Browse\ListRenderer\PrivateMessageListRenderer;
 use Ampache\Gui\Browse\ListRenderer\ShoutboxListRenderer;
 use Ampache\Gui\Browse\ListRenderer\WantedListRenderer;
 use Ampache\Gui\Form\LoginFormViewFactory;
@@ -49,10 +51,12 @@ return [
     BrowseListRendererLocatorInterface::class => autowire(BrowseListRendererLocator::class)
         ->constructorParameter('renderers', [
             'label' => get(LabelListRenderer::class),
+            'broadcast' => get(BroadcastListRenderer::class),
             'license' => get(LicenseListRenderer::class),
             'license_hidden' => get(LicenseListRenderer::class),
             'live_stream' => get(LiveStreamListRenderer::class),
             'podcast' => get(PodcastListRenderer::class),
+            'pvmsg' => get(PrivateMessageListRenderer::class),
             'shoutbox' => get(ShoutboxListRenderer::class),
             'wanted' => get(WantedListRenderer::class),
         ]),

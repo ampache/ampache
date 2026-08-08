@@ -1,0 +1,93 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/private_messages.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\PrivateMessageListRenderer
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Browse\ListRenderer\PrivateMessageListRenderer $this */
+
+$browse   = $this->getBrowse();
+$columns  = $this->getColumns();
+$messages = $this->getMessages();
+$webPath  = $this->getWebPath(); ?>
+<script>
+    function getSelectionArray()
+    {
+        var checked = []
+        $("input[name='pvmsg_select[]']:checked").each(function () {
+            checked.push(parseInt($(this).val(), 10));
+        });
+        return checked.join(",");
+    }
+</script>
+<div id="information_actions">
+    <ul>
+        <li><a href="<?php echo $this->e($webPath); ?>/pvmsg.php?action=show_add_message"><?php echo $this->raw(Ui::get_material_symbol('mail', T_('Compose'))); ?> <?php echo T_('Compose a New Message'); ?></a></li>
+        <li><a href="javascript:NavigateTo('<?php echo $this->e($webPath); ?>/pvmsg.php?action=set_is_read&read=1&msgs=' + getSelectionArray());"><?php echo T_('Mark as Read'); ?></a></li>
+        <li><a href="javascript:NavigateTo('<?php echo $this->e($webPath); ?>/pvmsg.php?action=set_is_read&read=0&msgs=' + getSelectionArray());"><?php echo T_('Mark as Unread'); ?></a></li>
+        <li><a href="javascript:NavigateTo('<?php echo $this->e($webPath); ?>/pvmsg.php?action=delete&msgs=' + getSelectionArray());"><?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?> <?php echo T_('Delete'); ?></a></li>
+    </ul>
+</div>
+<?php if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+} ?>
+<table class="tabledata striped-rows <?php echo $this->e($browse->get_css_class()); ?>" data-objecttype="pvmsg">
+    <thead>
+        <tr class="th-top">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php
+                echo ($column['sort'] === null)
+                    ? $this->e($column['label'])
+                    : $this->raw(Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=' . $column['sort'], $column['label'], 'pvmsg_sort_' . $column['sort'])); ?></th>
+            <?php } ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($messages as $message) { ?>
+        <tr id="pvmsg_<?php echo $this->e($message->getId()); ?>" class="<?php echo $message->isRead() ? '' : 'unread'; ?>">
+            <?php echo $this->raw($this->renderRow($message)); ?>
+        </tr>
+        <?php } ?>
+        <?php if ($messages === []) { ?>
+        <tr>
+            <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <?php } ?>
+        </tr>
+    </tfoot>
+</table>
+<?php show_table_render();
+
+if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+} ?>
