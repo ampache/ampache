@@ -23,17 +23,16 @@ declare(strict_types=1);
  *
  */
 
-// create_web_player_embedded.inc.php
+// playback/web_player_frame.phtml -- rendered by Ampache\Gui\Playback\WebPlayerFrameView
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\WebPlayer;
 
-/** @var Stream_Playlist $this */ ?>
+/** @var Ampache\Gui\Playback\WebPlayerFrameView $this */
+?>
 <!DOCTYPE html>
 <html>
 <head>
-<title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
+<title><?php echo $this->e($this->getSiteTitle()); ?></title>
 <script>
 function PlayerFrame()
 {
@@ -41,25 +40,24 @@ function PlayerFrame()
     var playnext = false;
     var webplayer = $("#webplayer");
     if (webplayer.is(':visible')) {
-<?php
-if (array_key_exists('append', $_REQUEST)) { ?>
+<?php if ($this->appendsMedia()) { ?>
         appendmedia = true;
-<?php } elseif (array_key_exists('playnext', $_REQUEST)) { ?>
+<?php } elseif ($this->playsNext()) { ?>
         playnext = true;
 <?php } ?>
     }
 
-<?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
+<?php if ($this->clearsBeforeUnload()) { ?>
     document.onbeforeunload = null;
 <?php } ?>
     if (appendmedia) {
-        <?php echo WebPlayer::add_media_js($this); ?>
+        <?php echo $this->raw(WebPlayer::add_media_js($this->getPlaylist())); ?>
     } else if (playnext) {
-        <?php echo WebPlayer::play_next_js($this); ?>
+        <?php echo $this->raw(WebPlayer::play_next_js($this->getPlaylist())); ?>
     } else {
         webplayer.show();
         $("#webplayer-minimize").show();
-        $.get('<?php echo AmpConfig::get_web_path(); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>', function (data) {
+        $.get('<?php echo $this->e($this->getEmbedUrl()); ?>', function (data) {
             var $response = $(data);
             webplayer.empty().append($response);
         }, 'html');

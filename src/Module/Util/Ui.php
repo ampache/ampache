@@ -214,6 +214,18 @@ class Ui implements UiInterface
     }
 
     /**
+     * A cache-busting token for a theme asset: its mtime, falling back to the app version.
+     *
+     * The `public/` base lives here with the other path literals, so the structure transform sees it.
+     */
+    public static function find_template_version(string $template): string
+    {
+        $realpath = __DIR__ . '/../../../public' . self::find_template($template, true);
+
+        return (is_file($realpath)) ? (string) filemtime($realpath) : (string) AmpConfig::get('version');
+    }
+
+    /**
      * format_bytes
      *
      * Turns a size in bytes into the best human-readable value

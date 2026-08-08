@@ -23,9 +23,8 @@ declare(strict_types=1);
  *
  */
 
-// mini.inc.php
+// playback/mini_player.phtml -- rendered by Ampache\Gui\Playback\MiniPlayerView
 
-use Ampache\Config\AmpConfig;
 use Ampache\Gui\Asset\ScriptsView;
 use Ampache\Gui\Asset\StylesheetsView;
 use Ampache\Gui\Partial\RightbarView;
@@ -34,47 +33,30 @@ use Ampache\Gui\Playback\PlayTypeSwitchView;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
-use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Plugin\PluginDisplayHomeInterface;
 use Ampache\Repository\Model\User;
 
-/** @var Ampache\Repository\CollectionRepositoryInterface $collectionRepository */
-/** @var Ampache\Repository\Model\LibraryItemLoaderInterface $libraryItemLoader */
-/** @var Ampache\Module\Playlist\PlaylistLoaderInterface $playlistLoader */
-/** @var Ampache\Module\Util\ZipHandlerInterface $zipHandler */
-
-/** @var Ampache\Module\Util\AjaxUriRetrieverInterface $ajaxUriRetriever */
-/** @var Ampache\Module\Util\EnvironmentInterface $environment */
-
-$web_path   = AmpConfig::get_web_path();
-$site_lang  = AmpConfig::get('lang', 'en_US');
-$site_title = scrub_out(AmpConfig::get('site_title'));
-$htmllang   = str_replace("_", "-", $site_lang);
-$user       = Core::get_global('user');
-$logo_url   = Ui::get_logo_url();
+/** @var Ampache\Gui\Playback\MiniPlayerView $this */
 
 $_SESSION['login'] = false;
 
-$t_logout   = T_('Log out');
-$t_playlist = T_('Show/Hide Playlist');
-
-// The theme swaps the loading spinner per colour, the same test show_html5_player_headers.inc.php makes
-$ajax_loader = $web_path . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ajax-loader'
-    . ((AmpConfig::get('theme_color', 'dark') == 'light') ? '-light' : '') . '.gif'; ?>
+// js_globals.php reads this out of the including scope
+$ajaxUriRetriever = $this->getAjaxUriRetriever();
+$user             = Core::get_global('user'); ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl($site_lang) ? 'rtl' : 'ltr'; ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->e($this->getDocumentLanguage()); ?>" lang="<?php echo $this->e($this->getDocumentLanguage()); ?>" dir="<?php echo $this->e($this->getTextDirection()); ?>">
     <head>
         <!-- Propelled by Ampache | ampache.org -->
-        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset', 'UTF-8'); ?>">
+        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo $this->e($this->getSiteCharset()); ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo $site_title; ?></title>
+        <title><?php echo $this->e($this->getSiteTitle()); ?></title>
 
-        <?php echo (new StylesheetsView(AmpConfig::get_web_path()))->render(); ?>
-        <?php echo (new ScriptsView($environment, AmpConfig::get_web_path(), $ajaxUriRetriever))->render(); ?>
+        <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render()); ?>
+        <?php echo $this->raw((new ScriptsView($this->getEnvironment(), $this->getWebPath(), $ajaxUriRetriever))->render()); ?>
 
         <?php $iframed = true;
-require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
+echo $this->raw($this->renderPlayerHeaders()); ?>
 <style>
     /* The mini player is theme independent; it borrows the theme colours but none of the shell
        geometry, so it never inherits the desktop only min-width that forces mobile browsers to zoom. */
@@ -250,7 +232,7 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
             padding: 0;
             border-radius: 0;
             font-size: 0;
-            background-image: url('<?php echo $ajax_loader; ?>') !important;
+            background-image: url('<?php echo $this->e($this->getAjaxLoaderUrl()); ?>') !important;
         }
 
         /* the mini header is ~40px here, not the ~114px the theme's mobile rules assume */
@@ -283,21 +265,21 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
     <body id="mini-page">
         <div id="rfc3514" style="display:none;">0x0</div>
         <div id="reloader" style="display:none;"></div>
-        <div id="notification" class="notification-out"><?php echo Ui::get_material_symbol('info', T_('Information')); ?><span id="notification-content"></span></div>
+        <div id="notification" class="notification-out"><?php echo $this->raw(Ui::get_material_symbol('info', T_('Information'))); ?><span id="notification-content"></span></div>
 
         <div id="mini-header">
             <span id="mini-logo">
-                <img src="<?php echo $logo_url; ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
+                <img src="<?php echo $this->e($this->getLogoUrl()); ?>" title="<?php echo $this->e($this->getSiteTitle()); ?>" alt="<?php echo $this->e($this->getSiteTitle()); ?>">
             </span>
-            <span id="mini-title"><?php echo $site_title; ?></span>
-            <div id="ajax-loading"><?php echo T_('Loading'); ?> . . .</div>
-            <?php echo (new PlayTypeSwitchView())->render(); ?>
-            <a class="mini-action nohtml" href="javascript:ToggleRightbarVisibility();" title="<?php echo $t_playlist; ?>"><?php echo Ui::get_material_symbol('dock_to_left', $t_playlist); ?></a>
-            <a class="mini-action nohtml" target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" title="<?php echo $t_logout; ?>"><?php echo Ui::get_material_symbol('logout', $t_logout); ?></a>
+            <span id="mini-title"><?php echo $this->e($this->getSiteTitle()); ?></span>
+            <div id="ajax-loading"><?php echo $this->e(T_('Loading')); ?> . . .</div>
+            <?php echo $this->raw((new PlayTypeSwitchView())->render()); ?>
+            <a class="mini-action nohtml" href="javascript:ToggleRightbarVisibility();" title="<?php echo $this->e(T_('Show/Hide Playlist')); ?>"><?php echo $this->raw(Ui::get_material_symbol('dock_to_left', T_('Show/Hide Playlist'))); ?></a>
+            <a class="mini-action nohtml" target="_top" href="<?php echo $this->e($this->getWebPath()); ?>/logout.php?session=<?php echo $this->e($this->getSessionId()); ?>" title="<?php echo $this->e(T_('Log out')); ?>"><?php echo $this->raw(Ui::get_material_symbol('logout', T_('Log out'))); ?></a>
         </div>
 
         <div id="rightbar" class="rightbar-fixed">
-            <?php echo (new RightbarView($collectionRepository, $libraryItemLoader, $playlistLoader, $zipHandler, AmpConfig::get_web_path()))->render(); ?>
+            <?php echo $this->raw((new RightbarView($this->getCollectionRepository(), $this->getLibraryItemLoader(), $this->getPlaylistLoader(), $this->getZipHandler(), $this->getWebPath()))->render()); ?>
         </div>
 
         <div id="mini-content">
@@ -314,13 +296,13 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         </div> <!-- Close mini-content Div -->
 
         <div id="util_div" style="display:none;"></div>
-        <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
+        <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $this->e($this->getWebPath()); ?>/util.php"></iframe>
 
         <div id="webplayer-minimize">
-          <a href="javascript:TogglePlayerVisibility();"><?php echo Ui::get_material_symbol('dock_to_bottom', T_('Show/Hide Player')); ?></a>
+          <a href="javascript:TogglePlayerVisibility();"><?php echo $this->raw(Ui::get_material_symbol('dock_to_bottom', T_('Show/Hide Player'))); ?></a>
         </div>
         <div id="webplayer"></div>
-        <?php echo (new VisualizerView())->render(); ?>
+        <?php echo $this->raw((new VisualizerView())->render()); ?>
         <script>
             // The mini player is a dead end: tiles play, they don't navigate. src/js/ajax.js delegates
             // link clicks on <body> and turns any in-site href into a hash page load, so catch them

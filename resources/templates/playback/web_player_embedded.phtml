@@ -23,10 +23,9 @@ declare(strict_types=1);
  *
  */
 
-// show_web_player_embedded.inc.php
+// playback/web_player_embedded.phtml -- rendered by Ampache\Gui\Playback\WebPlayerEmbeddedView
 
-use Ampache\Config\AmpConfig;
-
+/** @var Ampache\Gui\Playback\WebPlayerEmbeddedView $this */
 ?>
 <script>
 function PlayerFrame()
@@ -35,7 +34,7 @@ function PlayerFrame()
     var playnext = false;
     var webplayer = $("#webplayer");
     if (webplayer.is(':visible')) {
-<?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
+<?php if ($this->clearsBeforeUnload()) { ?>
     document.onbeforeunload = null;
 <?php } ?>
         webplayer.show();

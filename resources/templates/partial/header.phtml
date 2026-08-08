@@ -29,6 +29,8 @@ use Ampache\Gui\Asset\ScriptsView;
 use Ampache\Gui\Asset\StylesheetsView;
 use Ampache\Gui\Partial\TopMenuView;
 use Ampache\Gui\Playback\PlayTypeSwitchView;
+use Ampache\Gui\Playback\WebPlayerEmbeddedView;
+use Ampache\Gui\Playback\WebPlayerHeadersView;
 use Ampache\Gui\Search\SearchBarView;
 use Ampache\Gui\Sidebar\LightSidebarView;
 use Ampache\Module\System\AutoUpdate;
@@ -58,7 +60,7 @@ $web_path         = $this->getWebPath(); ?>
         <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render());
 echo $this->raw((new ScriptsView($this->getEnvironment(), $this->getWebPath(), $ajaxUriRetriever))->render());
 
-require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
+echo $this->raw((new WebPlayerHeadersView($this->getWebPath(), $ajaxUriRetriever, true))->render()); ?>
     </head>
     <body id="main-page">
         <div id="aslideshow">
@@ -177,5 +179,5 @@ if ($this->isSession()) {
                 </div>
                 <?php }
 
-                require Ui::find_template('show_web_player_embedded.inc.php'); ?>
+                echo $this->raw((new WebPlayerEmbeddedView())->render()); ?>
                 <div id="guts">

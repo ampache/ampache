@@ -80,7 +80,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                         $albumText  = scrub_out((string) $media->get_album_fullname());
 
                         // per-song action row (album button + rating/flag placeholder) mirroring the regular
-                        // playlist flow in show_html5_player.inc.php, which random/democratic streams skip
+                        // playlist flow in playback/web_player.phtml, which random/democratic streams skip
                         $showAlbum = T_('Show Album');
                         $actions   = ($albumId > 0)
                             ? '<a href="javascript:NavigateTo(\'' . $web_path . '/albums.php?action=show&album=' . $albumId . '\')" title="' . $showAlbum . '">' . Ui::get_material_symbol('album', $showAlbum) . '</a> | '

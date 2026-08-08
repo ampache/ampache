@@ -1,58 +1,62 @@
 <?php
 
-// show_html5_player_headers.inc.php
+declare(strict_types=1);
 
-use Ampache\Config\AmpConfig;
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// playback/web_player_headers.phtml -- rendered by Ampache\Gui\Playback\WebPlayerHeadersView
+
 use Ampache\Gui\Asset\StylesheetsView;
-use Ampache\Module\Broadcast\Broadcast_Server;
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\Util\AjaxUriRetrieverInterface;
-use Ampache\Module\Util\Ui;
 
-/** @var AjaxUriRetrieverInterface $ajaxUriRetriever */
+/** @var Ampache\Gui\Playback\WebPlayerHeadersView $this */
 
-$web_path        = AmpConfig::get_web_path();
-$ampache_version = AmpConfig::get('version');
-// Cache-bust the skin CSS by file mtime so edits load immediately (falls back to app version).
-$cssBust = static fn(string $file): string => is_file(__DIR__ . '/' . $file) ? (string) filemtime(__DIR__ . '/' . $file) : $ampache_version;
 
-$cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
-    ? "path: '/', secure: true, samesite: 'Strict'"
-    : "path: '/', samesite: 'Strict'";
-$iframed   = $iframed ?? false;
-$isShare   = $isShare ?? false;
-$isLight   = (AmpConfig::get('theme_color', 'dark') == 'light');
-$highlight = ($isLight)
-    ? 'blue'
-    : 'orange';
-
-if ($iframed) { ?>
-    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) . '?v=' . $cssBust('jplayer.midnight.black-iframed.css'); ?>" type="text/css">
+if ($this->isIframed()) { ?>
+    <link rel="stylesheet" href="<?php echo $this->e($this->getCssUrl('jplayer.midnight.black-iframed.css')); ?>" type="text/css">
 <?php } else { ?>
-    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true) . '?v=' . $cssBust('jplayer.midnight.black.css'); ?>" type="text/css">
+    <link rel="stylesheet" href="<?php echo $this->e($this->getCssUrl('jplayer.midnight.black.css')); ?>" type="text/css">
 <?php } ?>
-<?php if (!$iframed) { ?>
-    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen">
-    <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen">
-    <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
-    <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
-    <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js.cookie.js"></script>
+<?php if (!$this->isIframed()) { ?>
+    <link rel="stylesheet" href="<?php echo $this->e($this->getCssUrl('jquery-editdialog.css')); ?>" type="text/css" media="screen">
+    <link rel="stylesheet" href="<?php echo $this->e($this->getWebPath()); ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen">
+    <script src="<?php echo $this->e($this->getWebPath()); ?>/lib/components/jquery/jquery.min.js"></script>
+    <script src="<?php echo $this->e($this->getWebPath()); ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="<?php echo $this->e($this->getWebPath()); ?>/lib/components/js-cookie/js.cookie.js"></script>
     <script>
-        var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
-        var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
+        var jsAjaxServer = <?php echo $this->raw($this->getAjaxServerUriJs()); ?>;
+        var jsAjaxUrl = <?php echo $this->raw($this->getAjaxUriJs()); ?>;
 
         function update_action()
         {
             // Stub
         }
     </script>
-    <?php  echo (new StylesheetsView(AmpConfig::get_web_path()))->render();
+    <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render());
 } ?>
 <script>
-    window.jpDebug = <?php echo (AmpConfig::get('webplayer_debug')) ? 'true' : 'false'; ?>;
+    window.jpDebug = <?php echo ($this->showDebug()) ? 'true' : 'false'; ?>;
 </script>
-<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.min.js"></script>
-<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.min.js"></script>
+<script src="<?php echo $this->e($this->getWebPath()); ?>/lib/modules/jplayer/jquery.jplayer.min.js"></script>
+<script src="<?php echo $this->e($this->getWebPath()); ?>/lib/modules/jplayer/jplayer.playlist.min.js"></script>
 
 <script>
     var jplaylist = new Array();
@@ -108,8 +112,8 @@ if ($iframed) { ?>
         $('body').addClass('webplayer-hidden');
 
         <?php
-        if (AmpConfig::get('song_page_title')) {
-            echo "window.parent.document.title = '" . addslashes(AmpConfig::get('site_title')) . "';";
+        if ($this->showSongPageTitle()) {
+            echo 'window.parent.document.title = ' . $this->raw($this->getSiteTitleJs()) . ';';
         } ?>
         document.onbeforeunload = null;
     }
@@ -136,9 +140,9 @@ if ($iframed) { ?>
         if (collapsed) {
             // hiding the playlist also closes the expanded side panel
             container.removeClass('jp-playlist-expanded');
-            Cookies.set('jp_playlist_expanded', 'false', {expires: 7, <?php echo $cookie_string; ?>});
+            Cookies.set('jp_playlist_expanded', 'false', {expires: 7, <?php echo $this->raw($this->getCookieOptions()); ?>});
         }
-        Cookies.set('jp_playlist_collapsed', collapsed, {expires: 7, <?php echo $cookie_string; ?>});
+        Cookies.set('jp_playlist_collapsed', collapsed, {expires: 7, <?php echo $this->raw($this->getCookieOptions()); ?>});
         updatePlaylistControls();
     }
 
@@ -146,7 +150,7 @@ if ($iframed) { ?>
     {
         // Expand the visible playlist into a tall side panel above the player bar.
         var expanded = $('#jp_container_1').toggleClass('jp-playlist-expanded').hasClass('jp-playlist-expanded');
-        Cookies.set('jp_playlist_expanded', expanded, {expires: 7, <?php echo $cookie_string; ?>});
+        Cookies.set('jp_playlist_expanded', expanded, {expires: 7, <?php echo $this->raw($this->getCookieOptions()); ?>});
     }
 
     function updatePlaylistControls()
@@ -161,11 +165,11 @@ if ($iframed) { ?>
     {
         // .playing_info lives outside #jp_container_1, so toggle on <body>.
         var hidden = $('body').toggleClass('jp-nowplaying-hidden').hasClass('jp-nowplaying-hidden');
-        Cookies.set('jp_nowplaying_hidden', hidden, {expires: 7, <?php echo $cookie_string; ?>});
+        Cookies.set('jp_nowplaying_hidden', hidden, {expires: 7, <?php echo $this->raw($this->getCookieOptions()); ?>});
     }
 </script>
 <?php
-if ($iframed) { ?>
+if ($this->isIframed()) { ?>
     <script>
         function NotifyOfNewSong(title, artist, icon)
         {
@@ -194,7 +198,7 @@ if ($iframed) { ?>
 
         function NotifyBrowser(title, artist, icon)
         {
-            var notyTimeout = <?php echo AmpConfig::get('browser_notify_timeout'); ?>;
+            var notyTimeout = <?php echo $this->getNotifyTimeout(); ?>;
             var notification = new Notification(title, {
                 body: artist,
                 icon: icon,
@@ -384,11 +388,11 @@ if ($iframed) { ?>
             }
 
             if (currentTrackIsRemote()) {
-                alert("<?php echo addslashes(T_('The visualizer and equalizer are not available for remote catalog streams.')); ?>");
+                alert(<?php echo $this->raw($this->getRemoteStreamMessageJs()); ?>);
                 return;
             }
             if (!ensureAudioGraph()) {
-                alert("<?php echo addslashes(T_("Your browser doesn't support this feature.")); ?>");
+                alert(<?php echo $this->raw($this->getUnsupportedFeatureMessageJs()); ?>);
                 return;
             }
             if (audioContext && audioContext.state === 'suspended') {
@@ -415,14 +419,14 @@ if ($iframed) { ?>
             } else if (element.webkitRequestFullscreen) {
                 element.webkitRequestFullscreen();
             } else {
-                alert("<?php echo addslashes(T_('Full-Screen not supported by your browser')); ?>");
+                alert(<?php echo $this->raw($this->getFullscreenUnsupportedMessageJs()); ?>);
             }
         }
 
         function SavePlaylist()
         {
             if (jplaylist['playlist'].length > 0) {
-                var url = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>?page=playlist&action=append_item&item_type=" + jplaylist['playlist'][0]['media_type'] + "&item_id=";
+                var url = <?php echo $this->raw($this->getAjaxUriJs()); ?> + "?page=playlist&action=append_item&item_type=" + jplaylist['playlist'][0]['media_type'] + "&item_id=";
                 for (var i = 0; i < jplaylist['playlist'].length; i++) {
                     url += "," + jplaylist['playlist'][i]["media_id"];
                 }
@@ -555,7 +559,7 @@ if ($iframed) { ?>
         function ShowEqualizer()
         {
             if (currentTrackIsRemote()) {
-                alert("<?php echo addslashes(T_('The visualizer and equalizer are not available for remote catalog streams.')); ?>");
+                alert(<?php echo $this->raw($this->getRemoteStreamMessageJs()); ?>);
                 return;
             }
             ensureAudioGraph();
@@ -576,11 +580,11 @@ if ($iframed) { ?>
             }
 
             replaygainEnabled = !replaygainEnabled;
-            Cookies.set('replaygain', replaygainEnabled, {<?php echo $cookie_string; ?>});
+            Cookies.set('replaygain', replaygainEnabled, {<?php echo $this->raw($this->getCookieOptions()); ?>});
             ApplyReplayGain();
 
             if (replaygainEnabled) {
-                $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight; ?>');
+                $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $this->e($this->getHighlightColour()); ?>');
             } else {
                 $('#replaygainbtn').css('box-shadow', '');
             }
@@ -599,7 +603,7 @@ if ($iframed) { ?>
             }
 
             if (loopEnabled) {
-                $('#playlistloopbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight; ?>');
+                $('#playlistloopbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $this->e($this->getHighlightColour()); ?>');
             } else {
                 $('#playlistloopbtn').css('box-shadow', '');
             }
@@ -656,7 +660,7 @@ if ($iframed) { ?>
 
         listenBroadcast();
         brconn.onopen = function(e) {
-            sendBroadcastMessage('AUTH_SID', '<?php echo session_id(); ?>');
+            sendBroadcastMessage('AUTH_SID', <?php echo $this->raw($this->getSessionIdJs()); ?>);
             sendBroadcastMessage('REGISTER_BROADCAST', brkey);
             sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
         };
@@ -680,7 +684,7 @@ if ($iframed) { ?>
         $('.jp-seek-bar').css('pointer-events', 'none');
 
         brconn.onopen = function(e) {
-            sendBroadcastMessage('AUTH_SID', '<?php echo Stream::get_session(); ?>');
+            sendBroadcastMessage('AUTH_SID', <?php echo $this->raw($this->getStreamSessionJs()); ?>);
             sendBroadcastMessage('REGISTER_LISTENER', broadcast_id);
         };
     }
@@ -700,7 +704,7 @@ if ($iframed) { ?>
 
     function onBroadcastSocketError(e)
     {
-        console.error('[broadcast] websocket error connecting to <?php echo Broadcast_Server::get_address(); ?>', e);
+        console.error('[broadcast] websocket error connecting to', <?php echo $this->raw($this->getBroadcastAddressJs()); ?>, e);
     }
 
     function onBroadcastSocketClose(e)
@@ -709,7 +713,7 @@ if ($iframed) { ?>
 
         if (brListening) {
             restoreListenerControls();
-            displayNotification('<?php echo addslashes(T_('Could not connect to the broadcast. Resuming normal playback.')); ?>', 5000);
+            displayNotification(<?php echo $this->raw($this->getBroadcastFailedMessageJs()); ?>, 5000);
         }
 
         brListening = false;
@@ -723,7 +727,7 @@ if ($iframed) { ?>
             stopBroadcast();
         }
 
-        brconn = new WebSocket('<?php echo Broadcast_Server::get_address(); ?>');
+        brconn = new WebSocket(<?php echo $this->raw($this->getBroadcastAddressJs()); ?>);
         brconn.onmessage = receiveBroadcastMessage;
         brconn.onerror = onBroadcastSocketError;
         brconn.onclose = onBroadcastSocketClose;
@@ -812,11 +816,11 @@ if ($iframed) { ?>
         brconn = null;
     }
 
-    <?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$isShare) { ?>
+    <?php if ($this->showConfirmClose()) { ?>
     window.parent.onbeforeunload = function (evt) {
         if (typeof $("#jquery_jplayer_1") !== 'undefined' && typeof $("#jquery_jplayer_1").data("jPlayer") !== 'undefined' && !$("#jquery_jplayer_1").data("jPlayer").status.paused &&
             (typeof document.activeElement === 'undefined' || (typeof document.activeElement.href !== 'undefined' && document.activeElement.href.indexOf('/batch.php') < 0 && document.activeElement.href.indexOf('/stream.php') < 0))) {
-            var message = '<?php echo addslashes(T_('Media is currently playing, are you sure you want to close?')) . ' ' . AmpConfig::get('site_title') . '?'; ?>';
+            var message = <?php echo $this->raw($this->getConfirmCloseMessageJs()); ?>;
             if (typeof evt == "undefined") {
                 evt = window.event;
             }
@@ -829,7 +833,7 @@ if ($iframed) { ?>
         return null;
     }
     <?php } ?>
-    <?php if ($iframed && AmpConfig::get('webplayer_pausetabs') && !$isShare) { ?>
+    <?php if ($this->showPauseTabs()) { ?>
     window.addEventListener('storage', function (event) {
         if (event.key == 'ampache-current-webplayer') {
             // The latest used webplayer is not this player, pause song if playing
