@@ -26,6 +26,7 @@ declare(strict_types=1);
 // show_tagcloud.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Genre\GenreFormView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -42,15 +43,13 @@ use Ampache\Repository\VideoRepositoryInterface;
 /** @var VideoRepositoryInterface $videoRepository */
 /** @var Browse $browse */
 /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $object_ids */
+/** @var GenreFormView $genreForm */
 /** @var string $browse_type */
 /** @var string $countOrder */
 
 $webPath = AmpConfig::get_web_path();
 
-$ui->show(
-    'show_form_genre.inc.php',
-    ['type' => $browse_type, 'videoRepository' => $videoRepository]
-); ?>
+echo $genreForm->render(); ?>
 <div id="information_actions">
     <h3><?php echo T_('Order'); ?></h3>
     <ul>

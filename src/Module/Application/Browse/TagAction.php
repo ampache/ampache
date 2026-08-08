@@ -43,6 +43,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -58,6 +59,7 @@ final readonly class TagAction implements ApplicationActionInterface
         private UiInterface $ui,
         private AjaxUriRetrieverInterface $ajaxUriRetriever,
         private VideoRepositoryInterface $videoRepository,
+        private TagRepositoryInterface $tagRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -103,6 +105,8 @@ final readonly class TagAction implements ApplicationActionInterface
 
             $this->ui->showBoxBottom();
         } else {
+            $genreForm = $this->createGenreFormView($browse_type);
+
             require_once Ui::find_template('show_tagcloud.inc.php');
 
             $this->ui->showBoxBottom();
@@ -127,7 +131,8 @@ final readonly class TagAction implements ApplicationActionInterface
             $currentType,
             (bool) AmpConfig::get('album_group'),
             (bool) AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0,
-            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) && Tag::get_merged_count() > 0
+            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+                && $this->tagRepository->getHiddenCount() > 0
         );
     }
 }
