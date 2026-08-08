@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Register\RegistrationConfirmationView;
+use Ampache\Gui\Register\RegistrationView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -93,14 +94,13 @@ final class AddUserAction implements ApplicationActionInterface
         $state    = (string) scrub_in(Core::get_post('state'));
         $city     = (string) scrub_in(Core::get_post('city'));
 
-        /* If we're using the captcha stuff */
+        // the answer lives in the session, so the form cannot post the phrase it is being checked against
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG)) {
-            $captcha_phrase = $_POST['captcha_phrase'] ?? false;
-            $captcha_user   = $_POST['captcha_user'] ?? '';
-            if (
-                $captcha_user !== ''
-                && !PhraseBuilder::comparePhrases($captcha_phrase, $captcha_user)
-            ) {
+            $expected = $_SESSION[RegistrationView::CAPTCHA_SESSION_KEY] ?? null;
+            $answer   = (string) ($_POST['captcha_user'] ?? '');
+            unset($_SESSION[RegistrationView::CAPTCHA_SESSION_KEY]);
+
+            if (!is_string($expected) || !PhraseBuilder::comparePhrases($expected, $answer)) {
                 AmpError::add('captcha_user', T_('Captcha failed'));
             }
         }
@@ -149,10 +149,10 @@ final class AddUserAction implements ApplicationActionInterface
 
         // If we've hit an error anywhere up there break!
         if (AmpError::occurred()) {
-            $this->ui->show(
-                'show_user_registration.inc.php',
-                ['registrationAgreementRenderer' => $this->registrationAgreementRenderer]
-            );
+            echo (new RegistrationView(
+                AmpConfig::get_web_path(),
+                $this->registrationAgreementRenderer
+            ))->render();
 
             return null;
         }
@@ -180,10 +180,10 @@ final class AddUserAction implements ApplicationActionInterface
         if ($userId <= 0) {
             AmpError::add('duplicate_user', T_("Failed to create user"));
 
-            $this->ui->show(
-                'show_user_registration.inc.php',
-                ['registrationAgreementRenderer' => $this->registrationAgreementRenderer]
-            );
+            echo (new RegistrationView(
+                AmpConfig::get_web_path(),
+                $this->registrationAgreementRenderer
+            ))->render();
 
             return null;
         }

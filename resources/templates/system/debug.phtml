@@ -1,0 +1,177 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// system/debug.phtml -- rendered by Ampache\Gui\System\DebugView
+
+use Ampache\Module\System\AutoUpdate;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\System\DebugView $this */
+
+Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
+    <div id="information_actions">
+        <ul>
+            <li>
+                <a class="nohtml" href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=generate_config"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Generate Configuration File'))) . ' ' . $this->e(T_('Generate Configuration File')); ?></a>
+            </li>
+            <li>
+                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=write_config"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Write New Config'))) . ' ' . $this->e(T_('Write New Config')); ?></a>
+            </li>
+            <li>
+                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=reset_db_charset"><?php echo $this->raw(Ui::get_material_symbol('dns', T_('Set Database Charset'))) . ' ' . $this->e(T_('Set Database Charset')); ?></a>
+            </li>
+            <li>
+                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=clear_cache&type=song"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Songs Cache'))) . ' ' . $this->e(T_('Clear Songs Cache')); ?></a>
+            </li>
+            <li>
+                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=clear_cache&type=artist"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Artists Cache'))) . ' ' . $this->e(T_('Clear Artists Cache')); ?></a>
+            </li>
+            <li>
+                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=clear_cache&type=album"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Albums Cache'))) . ' ' . $this->e(T_('Clear Albums Cache')); ?></a>
+            </li>
+<?php if ($this->showPerpetualApiSession()) { ?>
+            <li>
+                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=clear_cache&type=perpetual_api_session"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Perpetual API Sessions'))) . ' ' . $this->e(T_('Clear Perpetual API Sessions')); ?></a>
+            </li>
+<?php } ?>
+        </ul>
+    </div>
+<?php Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
+    <div><?php echo $this->e(T_('Installed Ampache version')); ?>: <?php echo $this->e($this->getCurrentVersion());
+echo ($this->hasNamedStructure()) ? ' (' . $this->e($this->getStructure()) . ')' : ''; ?></div>
+<?php if ($this->showAutoUpdate()) { ?>
+    <div><?php echo $this->e(T_('Latest Ampache version')); ?>: <?php echo $this->e($this->getLatestVersion()); ?></div>
+    <?php if ($this->getForcedGitBranch() !== '') { ?>
+    <div><?php echo $this->e(T_('GitHub Branch')); ?>: <?php echo $this->e($this->getForcedGitBranch()); ?></div>
+    <?php } ?>
+    <div><?php echo $this->e(T_('Last Update')); ?>: <?php echo $this->e($this->getLastUpdateCheck()); ?></div>
+    <div><a class="nohtml" href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=show_debug&autoupdate=force"><?php echo $this->e(T_('Force check')); ?>...</a></div>
+    <?php if ($this->showNewVersion()) {
+        AutoUpdate::show_new_version();
+    }
+} ?>
+    <br />
+<?php Ui::show_box_bottom();
+
+if ($this->showCron()) {
+    Ui::show_box_top(T_('Ampache Cron'), 'box'); ?>
+    <div><?php echo $this->e(T_('The last cron was completed')); ?>: <?php echo $this->e($this->getLastCronDate()); ?></div>
+    <br />
+    <?php Ui::show_box_bottom();
+}
+
+Ui::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
+    <table class="tabledata striped-rows">
+        <colgroup>
+            <col id="col_php_setting">
+            <col id="col_php_value">
+        </colgroup>
+        <thead>
+        <tr class="th-top">
+            <th class="cel_php_setting"><?php echo $this->e(T_('Setting')); ?></th>
+            <th class="cel_php_value"><?php echo $this->e(T_('Value')); ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><?php echo $this->e(T_('Version')); ?></td>
+            <td><?php echo $this->e($this->getPhpVersion()); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo $this->e(T_('Memory Limit')); ?></td>
+            <td><?php echo $this->e($this->getMemoryLimit()); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo $this->e(T_('Maximum Execution Time')); ?></td>
+            <td><?php echo $this->e($this->getMaxExecutionTime()); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo $this->e(T_('Override Execution Time')); ?></td>
+            <td><?php echo $this->e(($this->mayOverrideExecutionTime()) ? T_('Succeeded') : T_('Failed')); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo $this->e(T_('Open Basedir')); ?></td>
+            <td><?php echo $this->e($this->getOpenBasedir()); ?></td>
+        </tr>
+        </tbody>
+    </table>
+<?php Ui::show_box_bottom();
+
+Ui::show_box_top(T_('PHP Modules'), 'box box_php_modules'); ?>
+    <table class="tabledata striped-rows">
+        <colgroup>
+            <col id="col_php_module">
+            <col id="col_php_module_value">
+            <col id="col_php_module_description">
+        </colgroup>
+        <thead>
+        <tr class="th-top">
+            <th class="cel_php_module"><?php echo $this->e(T_('Modules')); ?></th>
+            <th class="cel_php_module_value"><?php echo $this->e(T_('Value')); ?></th>
+            <th class="cel_php_module_description"><?php echo $this->e(T_('Description')); ?></th>
+        </tr>
+        </thead>
+        <tbody>
+<?php foreach ($this->getExtensions() as $extension) { ?>
+        <tr>
+            <td><?php echo $this->e($extension['name']); ?></td>
+            <td><?php echo $this->raw(Ui::printBool($extension['loaded'])); ?></td>
+            <td><?php echo $this->e(($extension['required']) ? T_('Required') : $extension['description']); ?></td>
+        </tr>
+<?php } ?>
+        </tbody>
+    </table>
+<?php Ui::show_box_bottom();
+
+Ui::show_box_top(T_('Current Configuration'), 'box box_current_configuration'); ?>
+    <table class="tabledata">
+        <colgroup>
+           <col id="col_configuration">
+           <col id="col_value">
+        </colgroup>
+        <thead>
+        <tr class="th-top">
+            <th class="cel_configuration"><?php echo $this->e(T_('Preference')); ?></th>
+            <th class="cel_value"><?php echo $this->e(T_('Value')); ?></th>
+        </tr>
+        </thead>
+        <tbody>
+<?php foreach ($this->getConfigurationRows() as $row) { ?>
+        <tr>
+            <td><strong><?php echo $this->e($row['key']); ?></strong></td>
+            <td><?php if ($row['flag'] !== null) {
+                echo $this->raw(Ui::printBool($row['flag']));
+            } else {
+                foreach ($row['lines'] as $line) {
+                    echo $this->e($line) . '<br />';
+                }
+            } ?></td>
+        </tr>
+<?php } ?>
+        </tbody>
+    </table>
+<?php Ui::show_box_bottom();
+
+Ui::show_box_bottom(); ?>
