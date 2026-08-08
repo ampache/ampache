@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Surrogate;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\library_item;
@@ -78,12 +79,16 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      * @return Generator<array{
      *     title: string,
      *     guid: string,
+     *     link: string,
      *     length: string,
      *     author: null|string,
      *     pubDate: null|string,
      *     type: null|string,
      *     size: null|string,
-     *     url: null|string
+     *     url: null|string,
+     *     season: null|string,
+     *     season_name: null|string,
+     *     episode: null|string
      * }>
      */
     public function getMedias(): Generator
@@ -110,13 +115,26 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                     ? 'https://musicbrainz.org/recording/' . $media->mbid
                     : $media->get_link(),
                 'isPermaLink' => 'true',
+                'link' => $media->get_link(),
                 'length' => $media->get_f_time(),
                 'author' => $media->get_parent_fullname(),
                 'pubDate' => null,
                 'type' => null,
                 'size' => null,
                 'url' => null,
+                'season' => null,
+                'season_name' => null,
+                'episode' => null,
             ];
+
+            // Group songs by their album (podcast namespace season/episode)
+            if ($media instanceof Song && $media->album > 0) {
+                $data['season']      = (string) $media->album;
+                $data['season_name'] = $media->get_album_fullname();
+                if (($media->track ?? 0) > 0) {
+                    $data['episode'] = (string) $media->track;
+                }
+            }
 
             if ($media->addition_time > 0) {
                 $data['pubDate'] = date("r", $media->addition_time);
@@ -127,6 +145,9 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                 $data['size'] = (string) $media->size;
                 if ($this->user !== null) {
                     $data['url'] = $media->play_url('', 'api', false, $this->user->getId(), $this->user->streamtoken);
+                } elseif (!AmpConfig::get('use_auth') || !AmpConfig::get('require_session')) {
+                    // Streaming is open on this instance; play_url() already omits session info in that case
+                    $data['url'] = $media->play_url('', 'api');
                 }
             }
 

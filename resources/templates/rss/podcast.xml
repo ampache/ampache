@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+<rss xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://podcastindex.org/namespace/1.0" version="2.0">
     <channel>
         <title tal:content="THIS/getTitle">some-title</title>
         <link tal:content="THIS/getLink">some-link</link>
@@ -14,10 +14,13 @@
         </itunes:owner>
         <item tal:repeat="media THIS/getMedias">
             <title tal:content="media/title">media-title</title>
+            <link tal:condition="media/link" tal:content="media/link">media-link</link>
             <itunes:author tal:condition="media/author" tal:content="media/author">media-author</itunes:author>
             <guid tal:content="media/guid">media-guid</guid>
             <pubDate tal:condition="media/pubDate" tal:content="media/pubDate">some-pubDate</pubDate>
             <itunes:duration tal:content="media/length">media-length</itunes:duration>
+            <podcast:season tal:condition="media/season" tal:attributes="name media/season_name" tal:content="media/season">media-season</podcast:season>
+            <podcast:episode tal:condition="media/episode" tal:content="media/episode">media-episode</podcast:episode>
             <enclosure tal:condition="media/url" tal:attributes="type media/type; length media/size; url media/url"/>
         </item>
     </channel>
