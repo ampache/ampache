@@ -45,6 +45,17 @@ class Result:
     contexts: list[str] = field(default_factory=list)
 
 
+def is_truncated(body: str) -> bool:
+    """A page that stops mid-markup means the request threw and ApplicationRunner swallowed it.
+
+    That failure answers 200 with a partial body, so nothing else notices it. It is checked here
+    because this script already fetches every page.
+    """
+    stripped = body.rstrip()
+
+    return stripped != "" and not stripped.endswith(("</html>", "</OpenSearchDescription>", "</root>"))
+
+
 # Every column here is settable by some user through the UI or the API.
 TARGETS = [
     Target("user", "fullname", "id = 1"),
@@ -277,6 +288,7 @@ def main() -> int:
     print(f"seeding {len(TARGETS)} columns ...", flush=True)
     saved: list[tuple[Target, list[tuple[str, str]]]] = []
     findings: list[Result] = []
+    truncated: list[str] = []
     try:
         # seeding is inside the try so a failure part way through still restores what it wrote
         seed(args.db_container, args.database, TARGETS, saved)
@@ -286,6 +298,10 @@ def main() -> int:
         for page in PAGES:
             body = fetch(args.base_url, args.jar, page)
             # the escaped form contains the marker too, so only the literal payload counts
+            if is_truncated(body):
+                truncated.append(page)
+                print(f"  TRUNC {page}", flush=True)
+
             contexts = find_unescaped(body)
             if contexts:
                 findings.append(Result(page, contexts))
@@ -296,15 +312,22 @@ def main() -> int:
         restore(args.db_container, args.database, saved)
         print("\nrestored original values")
 
+    if truncated:
+        print(f"\n{len(truncated)} page(s) stopped mid-render, so something threw:\n")
+        for page in truncated:
+            print(f"  {page}")
+
     if findings:
         print(f"\n{len(findings)} page(s) rendered the payload unescaped:\n")
         for finding in findings:
             print(f"  {finding.url}")
             for context in finding.contexts[:2]:
                 print(f"      {context}")
+
+    if findings or truncated:
         return 1
 
-    print("\nno unescaped output found")
+    print("\nno unescaped output found, no truncated pages")
     return 0
 
 

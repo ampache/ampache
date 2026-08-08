@@ -9,6 +9,12 @@ python3 resources/scripts/xss-probe/xss_probe.py --base-url http://localhost:808
 
 Exit status is 0 when nothing was found and 1 when something was, so it can gate a branch.
 
+It also reports **truncated** pages. A php error inside a render answers `200` with a partial body,
+because `ApplicationRunner` swallows the exception -- nothing logs, nothing fails, and the page simply
+stops mid-markup. Grepping a response for the markers you expect will not catch it, because those markers
+are usually already present before the point it died. This checks the response actually ends with
+`</html>`, which is what caught a `strict_types` `TypeError` in the artists browse under grid view.
+
 ## Why this exists alongside the unit test
 
 `tests/Gui/View/TemplateEscapingTest.php` covers the other half. It walks the php tokens of every

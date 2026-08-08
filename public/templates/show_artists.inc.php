@@ -105,8 +105,8 @@ if ($browse->is_show_header()) {
                     Userflag::build_cache('artist', $object_ids);
                 }
 
-$show_direct_play_cfg = AmpConfig::get('directplay');
-$directplay_limit     = AmpConfig::get('direct_play_limit', 500);
+$show_direct_play_cfg = (bool) AmpConfig::get('directplay');
+$directplay_limit     = (int) AmpConfig::get('direct_play_limit', 500);
 
 /* Foreach through every artist that has been passed to us */
 foreach ($object_ids as $artist_id) {

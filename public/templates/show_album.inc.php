@@ -65,7 +65,7 @@ $title  = ($album->findAlbumArtist() !== null)
     ? scrub_out($f_name) . '&nbsp;-&nbsp;' . $album->get_f_parent_link()
     : scrub_out($f_name);
 
-$show_direct_play  = AmpConfig::get('directplay');
+$show_direct_play  = (bool) AmpConfig::get('directplay');
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $directplay_limit  = AmpConfig::get('direct_play_limit', 500);
 $hide_array        = (AmpConfig::get('hide_single_artist') && $album->get_artist_count() == 1)

@@ -47,7 +47,7 @@ $web_path = AmpConfig::get_web_path();
 
 $access25          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_playlist_add = (bool) $access25;
-$show_direct_play  = AmpConfig::get('directplay');
+$show_direct_play  = (bool) AmpConfig::get('directplay');
 $directplay_limit  = AmpConfig::get('direct_play_limit', 500);
 // album_row data and options
 $thcount           = 9;

@@ -56,7 +56,7 @@ use Ampache\Repository\Model\User;
 
 $web_path = AmpConfig::get_web_path();
 
-$show_direct_play  = AmpConfig::get('directplay');
+$show_direct_play  = (bool) AmpConfig::get('directplay');
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_similar      = AmpConfig::get('show_similar');
 $directplay_limit  = (int) AmpConfig::get('direct_play_limit', 500);

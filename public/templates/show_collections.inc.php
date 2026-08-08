@@ -47,7 +47,7 @@ $cel_cover = ($is_table) ? 'cel_cover' : 'grid_cover';
 $css_class = ($is_table) ? '' : ' gridview';
 
 // Rows are rendered here rather than through a Gui view adapter
-$show_direct_play = AmpConfig::get('directplay');
+$show_direct_play = (bool) AmpConfig::get('directplay');
 $show_ratings     = User::is_registered() && AmpConfig::get('ratings');
 
 // translate once

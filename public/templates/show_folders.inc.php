@@ -51,7 +51,7 @@ $web_path = AmpConfig::get_web_path();
 $folder = $folder ?? new Folder(-1);
 
 $access25         = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
-$show_direct_play = AmpConfig::get('directplay');
+$show_direct_play = (bool) AmpConfig::get('directplay');
 $directplay_limit = AmpConfig::get('direct_play_limit', 500);
 // folder_row data and options
 $thcount           = 9;

@@ -61,7 +61,7 @@ if ($folder->getId() === -1) {
 }
 $access50          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 $access25          = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
-$show_direct_play  = AmpConfig::get('directplay');
+$show_direct_play  = (bool) AmpConfig::get('directplay');
 $show_playlist_add = $access25;
 $directplay_limit  = AmpConfig::get('direct_play_limit', 500);
 // Every action here queues what sits below the folder, subfolders included, so that is what decides playability
