@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui;
 
+use Ampache\Gui\Browse\ListRenderer\AlbumListRenderer;
 use Ampache\Gui\Browse\ListRenderer\ArtistListRenderer;
 use Ampache\Gui\Browse\ListRenderer\BroadcastListRenderer;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocator;
@@ -67,6 +68,8 @@ return [
     BrowseListRendererLocatorInterface::class => autowire(BrowseListRendererLocator::class)
         ->constructorParameter('renderers', [
             'label' => get(LabelListRenderer::class),
+            'album' => get(AlbumListRenderer::class),
+            'album_disk' => get(AlbumListRenderer::class),
             'artist' => get(ArtistListRenderer::class),
             'broadcast' => get(BroadcastListRenderer::class),
             'catalog' => get(CatalogListRenderer::class),

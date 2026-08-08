@@ -135,8 +135,6 @@ class Browse extends Query
      * @var array<string, string>
      */
     private const array TEMPLATE_MAP = [
-        'album' => 'show_albums.inc.php',
-        'album_disk' => 'show_album_disks.inc.php',
         'song' => 'show_songs.inc.php',
     ];
 
