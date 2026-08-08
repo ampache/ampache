@@ -28,10 +28,16 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Artist\ArtistRowView;
+use Ampache\Gui\Broadcast\BroadcastRowView;
+use Ampache\Gui\Genre\GenreRowView;
 use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Gui\Label\LabelRowView;
 use Ampache\Gui\LiveStream\LiveStreamRowView;
 use Ampache\Gui\Podcast\PodcastEpisodeRowView;
 use Ampache\Gui\Podcast\PodcastRowView;
+use Ampache\Gui\Search\SearchRowView;
+use Ampache\Gui\Share\ShareRowView;
+use Ampache\Gui\Song\SongPreviewRowView;
 use Ampache\Gui\Video\VideoRowView;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -41,11 +47,16 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Broadcast;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Live_Stream;
@@ -54,6 +65,8 @@ use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -67,11 +80,12 @@ final class RefreshUpdatedAction extends AbstractEditAction
 {
     public const string REQUEST_KEY = 'refresh_updated';
 
+    private AjaxUriRetrieverInterface $ajaxUriRetriever;
     private Browse $browse;
     private GuiFactoryInterface $guiFactory;
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
-    private UiInterface $ui;
+    private ZipHandlerInterface $zipHandler;
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
@@ -83,14 +97,16 @@ final class RefreshUpdatedAction extends AbstractEditAction
         BrowseFactoryInterface $browseFactory,
         GuiFactoryInterface $guiFactory,
         Browse $browse,
-        UiInterface $ui,
+        AjaxUriRetrieverInterface $ajaxUriRetriever,
+        ZipHandlerInterface $zipHandler,
     ) {
         parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository, $browseFactory);
         $this->responseFactory   = $responseFactory;
         $this->streamFactory     = $streamFactory;
         $this->guiFactory        = $guiFactory;
         $this->browse            = $browse;
-        $this->ui                = $ui;
+        $this->ajaxUriRetriever  = $ajaxUriRetriever;
+        $this->zipHandler        = $zipHandler;
     }
 
     /**
@@ -123,8 +139,8 @@ final class RefreshUpdatedAction extends AbstractEditAction
         switch ($object_type) {
             case 'song_row':
                 /** @var Song $libitem */
-                $hide_genres    = AmpConfig::get('hide_genres');
-                $is_group       = AmpConfig::get('album_group');
+                $hide_genres    = (bool) AmpConfig::get('hide_genres');
+                $is_group       = (bool) AmpConfig::get('album_group');
                 $show_license   = (bool) (AmpConfig::get('licensing') && AmpConfig::get('show_license'));
                 $hide           = Core::get_request('hide');
                 $argument_param = '&hide=' . $hide;
@@ -293,36 +309,67 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
                 ))->render();
                 break;
+            case 'broadcast_row':
+                /** @var Broadcast $libitem */
+                $results = (new BroadcastRowView(
+                    $libitem,
+                    (bool) AmpConfig::get('directplay')
+                ))->render();
+                break;
+            case 'label_row':
+                /** @var Label $libitem */
+                $results = (new LabelRowView(
+                    AmpConfig::get_web_path(),
+                    $libitem,
+                    'cel_cover',
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                    (bool) AmpConfig::get('sociable'),
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+                ))->render();
+                break;
+            case 'search_row':
+                /** @var Search $libitem */
+                $results = (new SearchRowView(
+                    AmpConfig::get_web_path(),
+                    $libitem,
+                    (bool) AmpConfig::get('directplay'),
+                    Stream_Playlist::check_autoplay_next(),
+                    Stream_Playlist::check_autoplay_append(),
+                    $show_ratings,
+                    Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('search'),
+                    $libitem->has_access()
+                ))->render();
+                break;
+            case 'share_row':
+                /** @var Share $libitem */
+                $results = (new ShareRowView($libitem))->render();
+                break;
+            case 'song_preview_row':
+                /** @var Song_Preview $libitem */
+                $results = (new SongPreviewRowView(
+                    $libitem,
+                    (bool) AmpConfig::get('directplay'),
+                    Stream_Playlist::check_autoplay_next(),
+                    Stream_Playlist::check_autoplay_append()
+                ))->render();
+                break;
+            case 'tag_row':
+                /** @var Tag $libitem */
+                $results = (new GenreRowView(
+                    $this->ajaxUriRetriever->getAjaxUri(),
+                    $libitem,
+                    (bool) AmpConfig::get('allow_video'),
+                    (bool) AmpConfig::get('directplay'),
+                    Stream_Playlist::check_autoplay_next(),
+                    Stream_Playlist::check_autoplay_append(),
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+                ))->render();
+                break;
             default:
-                /**
-                * Templates that don't need anything special
-                *
-                * broadcast_row
-                * label_row
-                * pvmsg_row
-                * search_row
-                * share_row
-                * song_preview_row
-                * tag_row
-                * wanted_album_row
-                */
-                ob_start();
-
-                $this->ui->show(
-                    'show_' . $object_type . '.inc.php',
-                    [
-                        'libitem' => $libitem,
-                        'is_table' => true,
-                        'object_type' => $object_type,
-                        'object_id' => $object_id,
-                        'show_ratings' => $show_ratings,
-                        'browse' => $browse,
-                    ]
-                );
-
-                $results = ob_get_contents();
-
-                ob_end_clean();
+                // pvmsg and wanted are not library items, so `loadItem()` refuses them before this point
+                $results = '';
         }
 
         return $this->responseFactory->createResponse()
