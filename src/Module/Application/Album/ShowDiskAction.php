@@ -25,18 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -51,10 +46,9 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
         private LoggerInterface $logger,
-        private PrivilegeCheckerInterface $privilegeChecker,
-        private ConfigContainerInterface $configContainer,
         private ZipHandlerInterface $zipHandler,
         private BrowseFactoryInterface $browseFactory,
+        private AlbumEditabilityCheckerInterface $editabilityChecker,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -77,10 +71,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
                 'show_album_disk.inc.php',
                 [
                     'albumDisk' => $albumDisk,
-                    'isAlbumEditable' => $this->isEditable(
-                        $gatekeeper,
-                        $albumDisk
-                    ),
+                    'isAlbumEditable' => $this->editabilityChecker->check($gatekeeper, $albumDisk),
                     'user' => $user,
                     'zipHandler' => $this->zipHandler,
                     'browseFactory' => $this->browseFactory
@@ -93,26 +84,5 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
-    }
-
-    private function isEditable(
-        GuiGatekeeperInterface $gatekeeper,
-        AlbumDisk $albumDisk,
-    ): bool {
-        if (
-            $this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-        ) {
-            return true;
-        }
-
-        if (!$albumDisk->album_artist) {
-            return false;
-        }
-
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === false) {
-            return false;
-        }
-
-        return $albumDisk->get_user_owner() === $gatekeeper->getUserId();
     }
 }

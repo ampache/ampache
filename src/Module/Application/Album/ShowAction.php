@@ -26,17 +26,18 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Album\AlbumPageView;
+use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -51,10 +52,11 @@ final readonly class ShowAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
         private LoggerInterface $logger,
-        private PrivilegeCheckerInterface $privilegeChecker,
         private ConfigContainerInterface $configContainer,
         private ZipHandlerInterface $zipHandler,
         private BrowseFactoryInterface $browseFactory,
+        private AlbumEditabilityCheckerInterface $editabilityChecker,
+        private FunctionCheckerInterface $functionChecker,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -78,10 +80,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 'show_album_group_disks.inc.php',
                 [
                     'album' => $album,
-                    'isAlbumEditable' => $this->isEditable(
-                        $gatekeeper,
-                        $album
-                    ),
+                    'isAlbumEditable' => $this->editabilityChecker->check($gatekeeper, $album),
                     'user' => $user,
                     'zipHandler' => $this->zipHandler,
                     'browseFactory' => $this->browseFactory
@@ -89,19 +88,16 @@ final readonly class ShowAction implements ApplicationActionInterface
             );
         } else {
             // Single disk albums
-            $this->ui->show(
-                'show_album.inc.php',
-                [
-                    'album' => $album,
-                    'isAlbumEditable' => $this->isEditable(
-                        $gatekeeper,
-                        $album
-                    ),
-                    'user' => $user,
-                    'zipHandler' => $this->zipHandler,
-                    'browseFactory' => $this->browseFactory
-                ]
-            );
+            echo (new AlbumPageView(
+                $album,
+                $this->browseFactory,
+                $gatekeeper->getUser(),
+                $this->configContainer->getWebPath(),
+                $this->editabilityChecker->check($gatekeeper, $album),
+                $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('album'),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ))->render();
         }
 
         // Show the Footer
@@ -109,26 +105,5 @@ final readonly class ShowAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
-    }
-
-    private function isEditable(
-        GuiGatekeeperInterface $gatekeeper,
-        Album $album,
-    ): bool {
-        if (
-            $this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-        ) {
-            return true;
-        }
-
-        if ($album->getAlbumArtist() === 0) {
-            return false;
-        }
-
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === false) {
-            return false;
-        }
-
-        return $album->get_user_owner() === ($gatekeeper->getUserId());
     }
 }
