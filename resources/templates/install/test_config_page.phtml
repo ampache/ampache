@@ -23,10 +23,11 @@ declare(strict_types=1);
  *
  */
 
-// show_test_config.inc.php
+// install/test_config_page.phtml -- rendered by Ampache\Gui\Install\TestConfigPageView
 
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Gui\Install\TestConfigPageView $this */
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -34,7 +35,7 @@ use Ampache\Module\Util\Ui;
 <head>
   <!-- Propelled by Ampache | ampache.org -->
   <?php Ui::show_custom_style(); ?>
-  <title><?php echo T_('Ampache -- Config Debug Page'); ?></title>
+  <title><?php echo $this->e(T_('Ampache -- Config Debug Page')); ?></title>
   <link rel="stylesheet" href="themes/reborn/templates/default.css">
   <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
@@ -43,16 +44,16 @@ use Ampache\Module\Util\Ui;
         <div class="navbar navbar-dark navbar-inverse" role="navigation">
             <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
-                    <img src="./images/ampache-dark.png" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
-                    <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music'); ?>
+                    <img src="./images/ampache-dark.png" title="<?php echo $this->e(T_('Ampache')); ?>" alt="<?php echo $this->e(T_('Ampache')); ?>">
+                    <?php echo $this->e(T_('Ampache') . ' :: ' . T_('For the Love of Music')); ?>
                 </a>
             </div>
         </div>
   <div class="container" role="main">
     <div class="jumbotron" style="margin-top: 70px">
-      <h1><?php echo T_('Ampache Configuration Parse Error'); ?></h1>
+      <h1><?php echo $this->e(T_('Ampache Configuration Parse Error')); ?></h1>
       <p><?php /* HINT: ampache config file path */ echo sprintf(T_('You may have reached this page because your %s configuration file was not parsable'), '<strong>/config/ampache.cfg.php</strong>'); ?></p>
-      <p><a href="https://ampache.org/docs/help/troubleshooting/faq#im-getting-ampache-configuration-parse-error" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>
+      <p><a href="https://ampache.org/docs/help/troubleshooting/faq#im-getting-ampache-configuration-parse-error" rel="nofollow"><?php echo $this->e(T_('Please visit the wiki for help')); ?></a></p>
     </div>
   </div>
 </body>

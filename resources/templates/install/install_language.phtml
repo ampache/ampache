@@ -23,38 +23,28 @@ declare(strict_types=1);
  *
  */
 
-// show_install_lang.inc.php
+// install/install_language.phtml -- rendered by Ampache\Gui\Install\InstallLanguageView
 
-use Ampache\Gui\Install\InstallFooterView;
-use Ampache\Gui\Install\InstallHeaderView;
 use Ampache\Module\System\AmpError;
 
-/** @var string $web_path */
-/** @var string $charset */
-/** @var string $htmllang */
-
-echo (new InstallHeaderView($charset, $htmllang))->render(); ?>
+/** @var Ampache\Gui\Install\InstallLanguageView $this */
+?>
+<?php echo $this->raw($this->renderHeader()); ?>
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <br><br>
         <div class="page-header">
-            <h1><?php echo T_('Choose Installation Language'); ?></h1>
+            <h1><?php echo $this->e(T_('Choose Installation Language')); ?></h1>
         </div>
-        <p><?php echo AmpError::display('general'); ?></p>
-        <form role="form" method="post" action="<?php echo $web_path . "/install.php?action=check"; ?>" enctype="multipart/form-data" >
+        <p><?php echo $this->raw(AmpError::display('general')); ?></p>
+        <form role="form" method="post" action="<?php echo $this->e($this->getWebPath()) . "/install.php?action=check"; ?>" enctype="multipart/form-data" >
             <div class="row mb-3">
-        <?php $languages = get_languages();
-$var_name                = $htmllang . "_lang";
-
-echo "<select class=\"form-control\" name=\"htmllang\">\n";
-
-foreach ($languages as $lang => $name) {
-    $lang_name = $lang . "_lang";
-    $selected  = ($var_name == $lang_name) ? "selected=\"selected\"" : '';
-
-    echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
-}
-echo "</select>\n"; ?>
+        <?php // the locale names arrive as html entities, which survive whatever charset the installer is set to?>
+        <select class="form-control" name="htmllang">
+        <?php foreach ($this->getLanguages() as $lang => $name) { ?>
+            <option value="<?php echo $this->e($lang); ?>"<?php echo ($this->isSelected($lang)) ? ' selected="selected"' : ''; ?>><?php echo $this->raw($name); ?></option>
+        <?php } ?>
+        </select>
             </div>
-            <button type="submit" class="btn btn-warning"><?php echo T_('Start Configuration'); ?></button>
+            <button type="submit" class="btn btn-warning"><?php echo $this->e(T_('Start Configuration')); ?></button>
         </form>
-<?php echo (new InstallFooterView($web_path))->render(); ?>
+<?php echo $this->raw($this->renderFooter()); ?>

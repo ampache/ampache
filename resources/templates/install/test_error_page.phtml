@@ -23,21 +23,20 @@ declare(strict_types=1);
  *
  */
 
-// test_error_page.inc.php
+// install/test_error_page.phtml -- rendered by Ampache\Gui\Install\TestErrorPageView
 
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 
-$t_ampache = T_('Ampache');
-$htmllang  = $htmllang ?? 'en_US';
-$dir       = $dir ?? 'ltr'; ?>
+/** @var Ampache\Gui\Install\TestErrorPageView $this */
+?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->e($this->getDocumentLanguage()); ?>" lang="<?php echo $this->e($this->getDocumentLanguage()); ?>" dir="<?php echo $this->e($this->getTextDirection()); ?>">
 
 <head>
 <!-- Propelled by Ampache | ampache.org -->
 <?php Ui::show_custom_style(); ?>
-<title><?php echo("Ampache Error Page"); ?></title>
+<title><?php echo $this->e("Ampache Error Page"); ?></title>
 <link rel="stylesheet" href="themes/reborn/templates/default.css">
 <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
@@ -49,18 +48,18 @@ $dir       = $dir ?? 'ltr'; ?>
     <div class="navbar navbar-dark navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container" style="height: 70px;">
             <a class="navbar-brand" href="#">
-                <img src="<?php echo Ui::get_logo_url('dark'); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>">
-                <?php echo $t_ampache . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?>
+                <img src="<?php echo $this->e(Ui::get_logo_url('dark')); ?>" title="<?php echo $this->e(T_('Ampache')); ?>" alt="<?php echo $this->e(T_('Ampache')); ?>">
+                <?php echo $this->e(T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation')); ?>
             </a>
         </div>
     </div>
     <div class="container" role="main">
         <div class="jumbotron" style="margin-top: 70px">
-        <h1><?php echo T_('Error'); ?></h1>
-            <p><?php echo T_('You may have reached this page because Ampache was unable to load the required dependencies'); ?></p>
-            <p><a href="https://ampache.org/docs/" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>
+        <h1><?php echo $this->e(T_('Error')); ?></h1>
+            <p><?php echo $this->e(T_('You may have reached this page because Ampache was unable to load the required dependencies')); ?></p>
+            <p><a href="https://ampache.org/docs/" rel="nofollow"><?php echo $this->e(T_('Please visit the wiki for help')); ?></a></p>
         </div>
-        <?php echo AmpError::display('general'); ?>
+        <?php echo $this->raw(AmpError::display('general')); ?>
     </div>
 </body>
 </html>
