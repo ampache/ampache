@@ -142,7 +142,6 @@ class Browse extends Query
         'album' => 'show_albums.inc.php',
         'album_disk' => 'show_album_disks.inc.php',
         'artist' => 'show_artists.inc.php',
-        'collection' => 'show_collections.inc.php',
         'collection_items' => 'show_collection_items.inc.php',
         'playlist_media' => 'show_playlist_medias.inc.php',
         'song' => 'show_songs.inc.php',
