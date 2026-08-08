@@ -43,6 +43,7 @@ final readonly class BrowseListContext
      * @param array<mixed> $objectIds
      * @param array<mixed> $hideColumns
      * @param array<string, Collection|Folder|Playlist|Search> $supplementalObjects
+     * @param array<string, mixed>|bool|string $argument
      */
     public function __construct(
         public Browse $browse,
@@ -52,7 +53,7 @@ final readonly class BrowseListContext
         public string $limitThreshold,
         public bool $prefetched,
         public bool $groupRelease,
-        public bool $reorder = false,
+        public bool|array|string $argument = false,
         public array $supplementalObjects = [],
     ) {}
 }

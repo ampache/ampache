@@ -26,18 +26,12 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
-use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
-use Ampache\Module\Util\ZipHandlerInterface;
 
 final readonly class BrowseFactory implements BrowseFactoryInterface
 {
     public function __construct(
         private AjaxUriRetrieverInterface $ajaxUriRetriever,
-        private GatekeeperFactoryInterface $gatekeeperFactory,
-        private GuiFactoryInterface $guiFactory,
-        private ZipHandlerInterface $zipHandler,
         private BrowseListRendererLocatorInterface $browseListRendererLocator,
     ) {}
 
@@ -47,9 +41,6 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
     ): Browse {
         return new Browse(
             $this->ajaxUriRetriever,
-            $this->gatekeeperFactory,
-            $this->guiFactory,
-            $this->zipHandler,
             $this->browseListRendererLocator,
             (int) $browse_id,
             $cached

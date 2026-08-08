@@ -28,15 +28,12 @@ namespace Ampache\Module\Database\Query;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Browse\ListRenderer\BrowseListContext;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
-use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Collection;
@@ -128,23 +125,11 @@ class Browse extends Query
         'playlist_localplay',
         'playlist_media',
     ];
-    /**
-     * The template each browse type renders through. A type with no entry here renders nothing, so every type in
-     * BROWSE_TYPES needs one; the matching box title lives in _getBoxTitle().
-     *
-     * @var array<string, string>
-     */
-    private const array TEMPLATE_MAP = [
-        'song' => 'show_songs.inc.php',
-    ];
 
     public ?int $duration = null;
 
     public function __construct(
         private readonly AjaxUriRetrieverInterface $ajaxUriRetriever,
-        private readonly GatekeeperFactoryInterface $gatekeeperFactory,
-        private readonly GuiFactoryInterface $guiFactory,
-        private readonly ZipHandlerInterface $zipHandler,
         private readonly BrowseListRendererLocatorInterface $browseListRendererLocator,
         ?int $browse_id = 0,
         ?bool $cached = true,
@@ -605,11 +590,12 @@ class Browse extends Query
             $browse->set_grid_view(false);
         }
 
-        // a migrated type renders through its own renderer, which brings its own services; everything else
-        // reaches them through the local scope built further down
+        // every browse type renders through its own renderer, which brings the services it needs with it
         $renderer  = $this->browseListRendererLocator->find($type);
-        $box_req   = ($renderer === null) ? $this->_getTemplate($type) : '';
         $box_title = $this->_getBoxTitle($type, $match);
+        if ($renderer === null) {
+            debug_event(self::class, 'show_objects: no renderer for browse type {' . $type . '}', 1);
+        }
 
         // an album list may be titled and grouped by whatever asked for it
         $group_release = false;
@@ -619,7 +605,7 @@ class Browse extends Query
         }
 
         Ajax::start_container($this->get_content_div(), 'browse_content');
-        $hasBody = $renderer !== null || $box_req !== '';
+        $hasBody = $renderer !== null;
         if ($this->is_show_header() && $hasBody && $box_title !== '') {
             $this->set_title($box_title);
             Ui::show_box_top($box_title, $class);
@@ -635,17 +621,10 @@ class Browse extends Query
                     $limit_threshold,
                     $browse_cached,
                     $group_release,
-                    !is_array($argument) && (bool) $argument,
+                    $argument,
                     $extra_objects
                 )
             );
-        } elseif ($box_req !== '') {
-            // the browse template and its row templates render in this scope, so the services they use are named here
-            $gatekeeper              = $this->gatekeeperFactory->createGuiGatekeeper();
-            $guiFactory              = $this->guiFactory;
-            $zipHandler              = $this->zipHandler;
-
-            require $box_req;
         }
 
         if ($this->is_show_header()) {
@@ -791,20 +770,6 @@ class Browse extends Query
         }
 
         return '';
-    }
-
-    /**
-     * The template this type renders through, or an empty string when the type has none.
-     */
-    private function _getTemplate(string $type): string
-    {
-        if (!array_key_exists($type, self::TEMPLATE_MAP)) {
-            debug_event(self::class, 'show_objects: no template for browse type {' . $type . '}', 1);
-
-            return '';
-        }
-
-        return Ui::find_template(self::TEMPLATE_MAP[$type]);
     }
 
     /**

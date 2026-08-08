@@ -48,7 +48,6 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
@@ -75,7 +74,6 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         private WantedManagerInterface $wantedManager,
         private GatekeeperFactoryInterface $gatekeeperFactory,
         private GuiFactoryInterface $guiFactory,
-        private ZipHandlerInterface $zipHandler,
         private BrowseFactoryInterface $browseFactory,
         private FolderRepositoryInterface $folderRepository,
     ) {}
@@ -610,12 +608,8 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->save_objects($object_ids);
                     $browse->store();
 
-                    $hide_columns = [];
                     Ui::show_box_top(T_('Songs'), 'info-box');
-                    $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
-                    $guiFactory = $this->guiFactory;
-                    $zipHandler = $this->zipHandler;
-                    require_once Ui::find_template('show_songs.inc.php');
+                    $browse->show_objects($object_ids);
                     Ui::show_box_bottom();
                 }
 

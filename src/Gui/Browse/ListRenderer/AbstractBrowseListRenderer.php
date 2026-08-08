@@ -87,11 +87,21 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
     }
 
     /**
+     * A browse opened from a container passes it as the argument, which is what makes the list orderable.
+     */
+    final public function hasArgument(): bool
+    {
+        return !empty($this->getContext()->argument);
+    }
+
+    /**
      * A drag-to-reorder list emits the re-init script; the browse decides, not the renderer.
      */
     final public function isReorderable(): bool
     {
-        return $this->getContext()->reorder;
+        $argument = $this->getContext()->argument;
+
+        return !is_array($argument) && (bool) $argument;
     }
 
     #[Override]

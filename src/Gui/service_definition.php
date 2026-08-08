@@ -48,6 +48,7 @@ use Ampache\Gui\Browse\ListRenderer\PrivateMessageListRenderer;
 use Ampache\Gui\Browse\ListRenderer\ShareListRenderer;
 use Ampache\Gui\Browse\ListRenderer\ShoutboxListRenderer;
 use Ampache\Gui\Browse\ListRenderer\SmartPlaylistListRenderer;
+use Ampache\Gui\Browse\ListRenderer\SongListRenderer;
 use Ampache\Gui\Browse\ListRenderer\SongPreviewListRenderer;
 use Ampache\Gui\Browse\ListRenderer\UserListRenderer;
 use Ampache\Gui\Browse\ListRenderer\VideoListRenderer;
@@ -92,6 +93,7 @@ return [
             'folder' => get(FolderListRenderer::class),
             'follower' => get(UserListRenderer::class),
             'genre' => get(GenreListRenderer::class),
+            'song' => get(SongListRenderer::class),
             'song_preview' => get(SongPreviewListRenderer::class),
             'user' => get(UserListRenderer::class),
             'video' => get(VideoListRenderer::class),
