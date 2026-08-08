@@ -34,7 +34,7 @@ use Ampache\Module\Util\Ui;
 
 <div class="category_options">
     <a class="category <?php echo ($this->getFilter() == 'popular_song') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/stats.php?action=popular_song"><?php echo T_('Songs'); ?></a>
-    <a class="category <?php echo ($this->getFilter() == 'popular_album_disk' || $this->getFilter() == 'popular_album') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/stats.php?action=popular_<?php echo $this->getAlbumString(); ?>"><?php echo T_('Albums'); ?></a>
+    <a class="category <?php echo ($this->getFilter() == 'popular_album_disk' || $this->getFilter() == 'popular_album') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/stats.php?action=popular_<?php echo $this->e($this->getAlbumString()); ?>"><?php echo T_('Albums'); ?></a>
     <?php if ($this->isShowArtist() || $this->getFilter() == 'popular_artist') { ?>
         <a class="category <?php echo ($this->getFilter() == 'popular_artist') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/stats.php?action=popular_artist"><?php echo T_('Artists'); ?></a>
     <?php } ?>
@@ -53,12 +53,12 @@ use Ampache\Module\Util\Ui;
     <ul>
         <li>
             <?php if ($this->isByUser()) { ?>
-                <a href="<?php echo $this->e($this->getWebPath()); ?>/stats.php?action=<?php echo $this->getFilter(); ?>&by_user=0">
+                <a href="<?php echo $this->e($this->getWebPath()); ?>/stats.php?action=<?php echo $this->e($this->getFilter()); ?>&by_user=0">
                     <?php echo Ui::get_material_symbol('group', T_('Show All')); ?>
                     <?php echo T_('Show All'); ?>
                 </a>
             <?php } else { ?>
-                <a href="<?php echo $this->e($this->getWebPath()); ?>/stats.php?action=<?php echo $this->getFilter(); ?>&by_user=1">
+                <a href="<?php echo $this->e($this->getWebPath()); ?>/stats.php?action=<?php echo $this->e($this->getFilter()); ?>&by_user=1">
                     <?php echo Ui::get_material_symbol('person', T_('Personal')); ?>
                     <?php echo T_('Personal'); ?>
                 </a>

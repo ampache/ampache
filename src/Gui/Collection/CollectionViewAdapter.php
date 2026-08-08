@@ -126,7 +126,7 @@ final class CollectionViewAdapter extends AbstractView implements CollectionView
     public function getDeletionUrl(): string
     {
         return sprintf(
-            '%s/collection.php?action=%s&amp;collection=%d',
+            '%s/collection.php?action=%s&collection=%d',
             $this->configContainer->getWebPath(),
             DeleteCollectionAction::REQUEST_KEY,
             $this->getId()

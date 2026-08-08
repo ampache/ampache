@@ -79,7 +79,7 @@ if ($this->canReorder()) { ?>
             <?php // Confirmed first: the link sits next to Edit and Delete, and a stray click would overwrite the
             // stored order with whatever the page happens to be showing. `data-confirm` is no use here because an
             // inline onclick fires before the delegated handler can intercept it.?>
-            <a onclick="window.ampacheConfirm('<?php echo $this->raw($this->getReorderConfirmation()); ?>').then(function (ok) { if (ok) { submitNewItemsOrder('<?php echo $this->getId(); ?>', 'reorder_collection_table', 'track_', '<?php echo $this->getTrackNumbersUrl(); ?>', '<?php echo RefreshCollectionItemsAction::REQUEST_KEY; ?>'); } })">
+            <a onclick="window.ampacheConfirm('<?php echo $this->raw($this->getReorderConfirmation()); ?>').then(function (ok) { if (ok) { submitNewItemsOrder('<?php echo $this->getId(); ?>', 'reorder_collection_table', 'track_', '<?php echo $this->e($this->getTrackNumbersUrl()); ?>', '<?php echo RefreshCollectionItemsAction::REQUEST_KEY; ?>'); } })">
                 <?php echo $this->raw($this->getReorderIcon());
     echo "&nbsp;" . T_('Save Track Order'); ?>
             </a>
@@ -87,7 +87,7 @@ if ($this->canReorder()) { ?>
 <?php }
 if ($this->canDelete()) { ?>
         <li>
-            <a href="<?php echo $this->getDeletionUrl(); ?>" data-confirm="<?php echo $this->e($this->getDeletionConfirmation()); ?>">
+            <a href="<?php echo $this->e($this->getDeletionUrl()); ?>" data-confirm="<?php echo $this->e($this->getDeletionConfirmation()); ?>">
                 <?php echo $this->raw($this->getDeletionIcon()); ?>
                 <?php echo T_('Delete'); ?>
             </a>

@@ -141,7 +141,7 @@ class CollectionViewAdapterTest extends MockeryTestCase
 
         $this->assertSame(
             sprintf(
-                '%s/collection.php?action=%s&amp;collection=%d',
+                '%s/collection.php?action=%s&collection=%d',
                 $webPath,
                 DeleteCollectionAction::REQUEST_KEY,
                 42

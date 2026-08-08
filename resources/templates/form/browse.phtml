@@ -35,7 +35,7 @@ declare(strict_types=1);
         <a class="category <?php echo ($this->getFilter() == 'show') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/folders.php?action=show&folder=-1"><?php echo T_('Folders'); ?></a>
     <?php } ?>
     <a class="category <?php echo ($this->getFilter() == 'song') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=song"><?php echo T_('Songs'); ?></a>
-    <a class="category <?php echo ($this->getFilter() == 'album_disk' || $this->getFilter() == 'album') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=<?php echo $this->getAlbumString(); ?>"><?php echo T_('Albums'); ?></a>
+    <a class="category <?php echo ($this->getFilter() == 'album_disk' || $this->getFilter() == 'album') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=<?php echo $this->e($this->getAlbumString()); ?>"><?php echo T_('Albums'); ?></a>
     <?php if ($this->isShowArtist() || $this->getFilter() == 'artist') { ?>
         <a class="category <?php echo ($this->getFilter() == 'artist') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=artist"><?php echo T_('Artists'); ?></a>
     <?php } ?>
