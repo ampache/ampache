@@ -1,0 +1,91 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// sidebar/preferences.phtml -- rendered by Ampache\Gui\Sidebar\PreferencesSidebarView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Sidebar\PreferencesSidebarView $this */
+
+$webPath   = $this->getWebPath();
+$expander  = T_('Expand/Collapse'); ?>
+<ul class="sb2" id="sb_preferences">
+    <?php if ($this->showBrowseFilter()) { ?>
+    <li>
+        <?php Ajax::start_container('browse_filters');
+        Ajax::end_container(); ?>
+    </li>
+    <?php } ?>
+    <li>
+        <h4 class="header">
+            <span class="sidebar-header-title"><?php echo T_('Preferences'); ?></span>
+            <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'preference_prefs', 'header-img ' . $this->getState('preference_prefs'))); ?>
+        </h4>
+        <ul class="sb3" id="sb_preference_prefs"<?php echo ($this->isCollapsed('preference_prefs')) ? ' style="display: none;"' : ''; ?>>
+            <?php foreach ($this->getCategories() as $category) { ?>
+            <li id="sb_preference_prefs_<?php echo $this->e(ucfirst($category['tab'])); ?>"><a href="<?php echo $this->e($webPath); ?>/preferences.php?tab=<?php echo $this->e($category['tab']); ?>"><?php echo $this->e($category['label']); ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php if ($this->mayManage()) { ?>
+    <li>
+        <h4 class="header">
+            <span class="sidebar-header-title"><?php echo T_('Playlist'); ?></span>
+            <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'preference_playlist', 'header-img ' . $this->getState('preference_playlist'))); ?>
+        </h4>
+        <ul class="sb3" id="sb_preference_playlist"<?php echo ($this->isCollapsed('preference_playlist')) ? ' style="display: none;"' : ''; ?>>
+            <li id="sb_preference_prefs_playlist_import"><a href="<?php echo $this->e($webPath); ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import'); ?></a></li>
+        </ul>
+    </li>
+    <?php } ?>
+    <?php if ($this->allowUpload()) { ?>
+    <li>
+        <h4 class="header">
+            <span class="sidebar-header-title"><?php echo T_('Uploads'); ?></span>
+            <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'preference_upload', 'header-img ' . $this->getState('preference_upload'))); ?>
+        </h4>
+        <ul class="sb3" id="sb_preference_upload"<?php echo ($this->isCollapsed('preference_upload')) ? ' style="display: none;"' : ''; ?>>
+            <li id="sb_preference_upload_browse"><a href="<?php echo $this->e($webPath); ?>/stats.php?action=upload"><?php echo T_('Browse'); ?></a></li>
+            <li id="sb_preference_upload_upload"><a href="<?php echo $this->e($webPath); ?>/upload.php"><?php echo T_('Upload'); ?></a></li>
+        </ul>
+    </li>
+    <?php } ?>
+    <?php if ($this->showHelp()) { ?>
+    <li>
+        <h4 class="header">
+            <span class="sidebar-header-title"><?php echo T_('Help'); ?></span>
+            <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'preference_help', 'header-img ' . $this->getState('preference_help'))); ?>
+        </h4>
+        <ul class="sb3" id="sb_preference_help"<?php echo ($this->isCollapsed('preference_help')) ? ' style="display: none;"' : ''; ?>>
+            <li id="sb_preference_help_wiki"><a href="https://ampache.org/docs/" target="_blank"><?php echo T_('Ampache Wiki'); ?></a></li>
+            <li id="sb_preference_help_api"><a href="https://ampache.org/api/" target="_blank"><?php echo T_('API Documentation'); ?></a></li>
+            <?php if ($this->showCookieDisclaimer()) { ?>
+            <li id="sb_preference_help_cookies"><a href="<?php echo $this->e($webPath); ?>/cookie_disclaimer.php"><?php echo T_('Cookie Information'); ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+</ul>

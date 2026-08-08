@@ -26,6 +26,7 @@ declare(strict_types=1);
 // sidebar.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Sidebar\PreferencesSidebarView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -33,6 +34,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\User;
 
 /** require@ public/templates/header.inc.php */
@@ -132,7 +134,16 @@ $t_logout          = T_('Log out'); ?>
     <?php print_r(Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']));
             if ($item['id'] == $_SESSION['state']['sidebar_tab']) { ?>
             <div id="sidebar-page" class="sidebar-page-float">
-                <?php require_once Ui::find_template('sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'); ?>
+                <?php $tab = (string) $_SESSION['state']['sidebar_tab'];
+                if ($tab === 'preferences') {
+                    echo (new PreferencesSidebarView(
+                        $web_path,
+                        Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+                        Upload::can_upload(Core::get_global('user'))
+                    ))->render();
+                } else {
+                    require_once Ui::find_template('sidebar_' . $tab . '.inc.php');
+                } ?>
             </div>
     <?php } ?>
         </li>
