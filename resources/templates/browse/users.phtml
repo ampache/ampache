@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 // browse/users.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\UserListRenderer
 
+use Ampache\Gui\Browse\ListHeaderView;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\UserListRenderer $this */
 
@@ -36,7 +36,7 @@ $columns        = $this->getColumns();
 $users          = $this->getUsers();
 $type           = $browse->get_type();
 if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
 <table class="tabledata striped-rows <?php echo $this->e($browse->get_css_class()); ?>" data-objecttype="user">
     <colgroup>
@@ -78,5 +78,5 @@ if ($browse->is_show_header()) {
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
 } ?>

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // browse/live_streams.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer
 
+use Ampache\Gui\Browse\ListHeaderView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -57,7 +58,7 @@ if ($this->mayManage()) {
 }
 
 if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
 <table class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="live_stream">
     <thead>
@@ -91,5 +92,5 @@ if ($browse->is_show_header()) {
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
 } ?>

@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 // browse/playlist_medias.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\PlaylistMediaListRenderer
 
+use Ampache\Gui\Browse\ListHeaderView;
 use Ampache\Gui\Partial\MultiselectActionsView;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
-use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\PlaylistMediaListRenderer $this */
 
@@ -52,7 +52,7 @@ if ($this->showRatings()) {
 }
 
 if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
     echo '<span class="item-duration">| ' . T_('Duration') . ': ' . $this->e($this->getDuration()) . '</span>';
 } ?>
 <div<?php echo ($showMultiselect) ? ' data-multiselect-scope' : ''; ?>>
@@ -97,6 +97,6 @@ if ($browse->is_show_header()) {
 </div>
 <?php show_table_render($this->isReorderable()); ?>
 <?php if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
     echo '<span class="item-duration">| ' . T_('Duration') . ': ' . $this->e($this->getDuration()) . '</span>';
 } ?>

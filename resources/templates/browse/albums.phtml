@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 // browse/albums.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\AlbumListRenderer
 
+use Ampache\Gui\Browse\ListHeaderView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
-use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\AlbumListRenderer $this */
 
@@ -45,7 +45,7 @@ if ($this->showRatings()) {
 }
 
 if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
 <table class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="<?php echo $this->e($objectType); ?>">
     <thead>
@@ -80,7 +80,7 @@ if ($browse->is_show_header()) {
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-    $is_header = $this->getGroupRelease();
-    $hide_view = $this->getGroupRelease();
-    require Ui::find_template('list_header.inc.php');
+    // a release-grouped album hides the view options down here; the flags used to steer the header
+    // toggle instead, which gave this browse two bars with the same control ids
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param, $this->getGroupRelease(), $this->getGroupRelease()))->render());
 } ?>

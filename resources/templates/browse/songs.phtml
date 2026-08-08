@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 // browse/songs.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\SongListRenderer
 
+use Ampache\Gui\Browse\ListHeaderView;
 use Ampache\Gui\Partial\MultiselectActionsView;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\SongListRenderer $this */
 
@@ -40,7 +40,7 @@ $showMultiselect     = $this->showMultiselect();
 $multiselect_actions = $this->getMultiselectActions();
 $sortUrl             = '?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=';
 if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
 <div<?php echo ($showMultiselect) ? ' data-multiselect-scope' : ''; ?>>
     <?php if ($showMultiselect) {
@@ -96,5 +96,5 @@ if ($browse->is_show_header()) {
 </div>
 <?php show_table_render($this->isReorderable()); ?>
 <?php if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
 } ?>

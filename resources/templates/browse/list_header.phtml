@@ -1,0 +1,118 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/list_header.phtml -- rendered by Ampache\Gui\Browse\ListHeaderView
+
+use Ampache\Module\Api\Ajax;
+
+/** @var Ampache\Gui\Browse\ListHeaderView $this */
+
+$browse   = $this->getBrowse();
+$id       = $this->getBrowseId();
+$suffix   = $this->getIdSuffix();
+$uid      = $this->getUid();
+$param    = $this->getArgumentParam();
+$usePages = $browse->is_use_pages();
+if (!$usePages && !$this->isHeader()) { ?>
+<?php $browse->show_next_link(); ?>
+</p>
+</div>
+<script>
+$('#browse_<?php echo $id; ?>_scroll').jscroll({
+    autoTrigger: true,
+    nextSelector: 'a.jscroll-next:last',
+    autoTriggerUntil: 5,
+});
+</script>
+<?php } ?>
+<div class="list-header">
+    <?php if ($browse->is_use_alpha()) { ?>
+    <div class="list-header-alpha">
+        <?php foreach ($this->getAlphabet() as $entry) {
+            echo $this->raw(Ajax::text('?page=browse&action=browse&browse_id=' . $id . '&key=regex_match&multi_alpha_filter=' . $entry['filter'] . $param, $entry['label'], 'browse_' . $uid . '_alpha_' . $entry['key']));
+        } ?>
+    </div>
+    <?php } ?>
+    <?php if ($this->showPaging()) { ?>
+    <span class="list-header-navmenu-border">
+        <span><?php echo $this->raw(Ajax::text('?page=browse&action=page&browse_id=' . $id . '&start=' . $this->getPrevOffset() . '&browse_uid=' . $uid . $param, T_('Prev'), 'browse_' . $uid . 'prev', '', 'prev')); ?></span>
+        &nbsp;
+        <span class="page-text"><?php echo '&nbsp;' . T_('Page') . ':'; ?></span>
+        <input class="list-header-navmenu-input" type="text" id="browse_<?php echo $id; ?>_custom_value_<?php echo $suffix; ?>" name="value" value="<?php echo $this->getCurrentPage() + 1; ?>">
+        <script>
+            $('#browse_<?php echo $id; ?>_custom_value_<?php echo $suffix; ?>').on('blur keydown',function(e) {
+                if (e.type === 'blur' || e.key === "Enter") {
+                    delayRun(this, '50', 'ajaxState', '<?php echo $this->raw(Ajax::url('?page=browse&action=options&browse_id=' . $id . '&option=custom' . $param)); ?>', 'browse_<?php echo $id; ?>_custom_value_<?php echo $suffix; ?>')
+                }
+            });
+        </script>
+        <span class="page-text"><?php echo T_('of') . '&nbsp;' . $this->getPages(); ?></span>
+        &nbsp;
+        <span><?php echo $this->raw(Ajax::text('?page=browse&action=page&browse_id=' . $id . '&start=' . $this->getNextOffset() . '&browse_uid=' . $uid . $param, T_('Next'), 'browse_' . $uid . 'next', '', 'next')); ?></span>
+        &nbsp;
+        <span><?php echo $this->raw(Ajax::text('?page=browse&action=page&browse_id=' . $id . '&start=-1&browse_uid=' . $uid . $param, T_('All'), 'browse_' . $uid . 'all', '', 'all')); ?></span>
+    </span>
+    <?php } ?>
+    <span class="browse-options">
+        <?php if ($this->showView()) { ?>
+        <a href="javascript:showFilters(this, '_<?php echo $id; ?>', <?php echo ($this->isGroupRelease()) ? 'true' : 'false'; ?>);" class="browse-options-link" id="browse-options-link_<?php echo $id; ?>"><?php echo T_('View'); ?></a>
+        <span class="browse-options-content" id="browse-options-content_<?php echo $id; ?>">
+            <span><input type="checkbox" id="browse_<?php echo $id; ?>_use_pages_<?php echo $suffix; ?>" value="true" <?php echo ($usePages) ? 'checked' : ''; ?> onClick="javascript:<?php echo $this->raw(Ajax::action('?page=browse&action=options&browse_id=' . $id . "&option=use_pages&value=' + $('#browse_" . $id . '_use_pages_' . $suffix . "').is(':checked') + '" . $param, 'browse_' . $id . '_use_pages_' . $suffix)); ?>"><?php echo T_('Pages'); ?></span>
+            <span><input type="checkbox" id="browse_<?php echo $id; ?>_use_scroll_<?php echo $suffix; ?>" value="true" <?php echo (!$usePages) ? 'checked' : ''; ?> onClick="javascript:<?php echo $this->raw(Ajax::action('?page=browse&action=options&browse_id=' . $id . "&option=use_pages&value=' + !($('#browse_" . $id . '_use_scroll_' . $suffix . "').is(':checked')) + '" . $param, 'browse_' . $id . '_use_scroll_' . $suffix)); ?>"><?php echo T_('Infinite Scroll'); ?></span>
+            <?php if ($this->showGridView()) { ?>
+            <span><input type="checkbox" id="browse_<?php echo $id; ?>_grid_view_<?php echo $suffix; ?>" value="true" <?php echo ($browse->is_grid_view()) ? 'checked' : ''; ?> onClick="javascript:<?php echo $this->raw(Ajax::action('?page=browse&action=options&browse_id=' . $id . '&object_type=' . $browse->get_type() . "&option=grid_view&value=' + ($('#browse_" . $id . '_grid_view_' . $suffix . "').is(':checked')) + '" . $param, 'browse_' . $id . '_grid_view_' . $suffix)); ?>"><?php echo T_('Grid View'); ?></span>
+            <?php } ?>
+            <?php if ($this->showSelect()) { ?>
+            <span><input type="checkbox" id="browse_<?php echo $id; ?>_use_select_<?php echo $suffix; ?>" value="true" <?php echo ($browse->is_use_select()) ? 'checked' : ''; ?> onClick="javascript:<?php echo $this->raw(Ajax::action('?page=browse&action=options&browse_id=' . $id . "&option=use_select&value=' + $('#browse_" . $id . '_use_select_' . $suffix . "').is(':checked') + '" . $param, 'browse_' . $id . '_use_select_' . $suffix)); ?>"><?php echo T_('Select'); ?></span>
+            <?php } ?>
+            <?php if ($this->showAlpha()) { ?>
+            <span><input type="checkbox" id="browse_<?php echo $id; ?>_use_alpha_<?php echo $suffix; ?>" value="true" <?php echo ($browse->is_use_alpha()) ? 'checked' : ''; ?> onClick="javascript:<?php echo $this->raw(Ajax::action('?page=browse&action=options&browse_id=' . $id . "&option=use_alpha&value=' + $('#browse_" . $id . '_use_alpha_' . $suffix . "').is(':checked') + '" . $param, 'browse_' . $id . '_use_alpha_' . $suffix)); ?>"><?php echo T_('Alphabet'); ?></span>
+            <?php } ?>
+            <?php if ($usePages) { ?>
+            <span>|</span>
+            <span>
+                <form id="browse_<?php echo $id; ?>_limit_form_<?php echo $suffix; ?>" method="post" action="javascript:void(0);">
+                    <label id="limit_label_<?php echo $id; ?>_<?php echo $suffix; ?>" for="multi_alpha_filter"><?php echo T_('Limit'); ?>:</label>
+                    <input type="text" id="limit_value_<?php echo $id; ?>_<?php echo $suffix; ?>" name="value" value="<?php echo $this->getLimit(); ?>">
+                    <script>
+                        $('#limit_value_<?php echo $id; ?>_<?php echo $suffix; ?>').on('blur keydown',function(e) {
+                            if (e.type === 'blur' || e.key === "Enter") {
+                                delayRun(this, '50', 'ajaxState', '<?php echo $this->raw(Ajax::url('?page=browse&action=options&browse_id=' . $id . '&option=limit' . $param)); ?>', 'limit_value_<?php echo $id; ?>_<?php echo $suffix; ?>');
+                            }
+                        });
+                    </script>
+                </form>
+            </span>
+            <?php } ?>
+            <a href="javascript:hideFilters(this, '_<?php echo $id; ?>', <?php echo ($this->isGroupRelease()) ? 'true' : 'false'; ?>);" class="browse-options-hidelink" id="browse-options-hidelink_<?php echo $id; ?>" style="display:none;"><?php echo T_('View'); ?></a>
+        </span>
+        <?php } ?>
+    </span>
+</div>
+<span class="item-count"><?php echo T_('Item Count') . ': ' . $this->getTotal(); ?></span>
+<?php if (!$usePages && $this->isHeader()) { ?>
+<div id="browse_<?php echo $id; ?>_scroll">
+<p>
+<?php } ?>

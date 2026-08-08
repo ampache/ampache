@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // browse/searches.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\SmartPlaylistListRenderer
 
+use Ampache\Gui\Browse\ListHeaderView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -53,7 +54,7 @@ if ($this->areRatingsShown()) {
     </ul>
 </div>
 <?php if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
 <table class="tabledata striped-rows <?php echo $this->e($browse->get_css_class()); ?>" data-objecttype="smartplaylist">
     <thead>
@@ -87,5 +88,5 @@ if ($this->areRatingsShown()) {
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
 } ?>

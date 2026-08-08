@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 // browse/broadcasts.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\BroadcastListRenderer
 
+use Ampache\Gui\Browse\ListHeaderView;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\BroadcastListRenderer $this */
 
@@ -36,7 +36,7 @@ $columns        = $this->getColumns();
 $broadcasts     = $this->getBroadcasts();
 
 if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
 <div class="browse_filters">
     <?php foreach ($this->getStartedFilters() as $filter) { ?>
@@ -68,5 +68,5 @@ if ($browse->is_show_header()) {
     </tbody>
 </table>
 <?php if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
 } ?>

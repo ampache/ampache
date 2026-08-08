@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // browse/playlists.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\PlaylistListRenderer
 
+use Ampache\Gui\Browse\ListHeaderView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -55,7 +56,7 @@ if ($this->mayAdd()) { ?>
 <?php }
 
 if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
 <table class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="playlist">
     <thead>
@@ -89,5 +90,5 @@ if ($browse->is_show_header()) {
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
 } ?>

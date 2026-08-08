@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 // browse/catalogs.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\CatalogListRenderer
 
-use Ampache\Module\Util\Ui;
+use Ampache\Gui\Browse\ListHeaderView;
 
 /** @var Ampache\Gui\Browse\ListRenderer\CatalogListRenderer $this */
 
@@ -35,7 +35,7 @@ $columns        = $this->getColumns();
 $catalogs       = $this->getCatalogs();
 
 if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
 <table class="tabledata striped-rows <?php echo $this->e($browse->get_css_class()); ?>" data-objecttype="catalog">
     <thead>
@@ -66,5 +66,5 @@ if ($browse->is_show_header()) {
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
 } ?>

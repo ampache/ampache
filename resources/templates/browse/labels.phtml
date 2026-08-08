@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // browse/labels.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\LabelListRenderer
 
+use Ampache\Gui\Browse\ListHeaderView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
@@ -49,7 +50,7 @@ if ($this->mayCreate()) { ?>
 <?php }
 
 if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
 <table class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="label">
     <thead>
@@ -85,5 +86,5 @@ if ($browse->is_show_header()) {
 <?php show_table_render();
 
 if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
 } ?>

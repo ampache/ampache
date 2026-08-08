@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 // browse/genres.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\GenreListRenderer
 
-use Ampache\Module\Util\Ui;
+use Ampache\Gui\Browse\ListHeaderView;
 
 /** @var Ampache\Gui\Browse\ListRenderer\GenreListRenderer $this */
 
@@ -34,7 +34,7 @@ $argument_param = $this->getArgumentParam();
 $columns        = $this->getColumns();
 $genres         = $this->getGenres();
 if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
 <table class="tabledata striped-rows" data-objecttype="tag">
     <thead>
@@ -66,5 +66,5 @@ if ($browse->is_show_header()) {
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
 } ?>
