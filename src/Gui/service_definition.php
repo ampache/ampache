@@ -53,6 +53,14 @@ use Ampache\Gui\Browse\ListRenderer\SongPreviewListRenderer;
 use Ampache\Gui\Browse\ListRenderer\UserListRenderer;
 use Ampache\Gui\Browse\ListRenderer\VideoListRenderer;
 use Ampache\Gui\Browse\ListRenderer\WantedListRenderer;
+use Ampache\Gui\Edit\EditFormRendererLocator;
+use Ampache\Gui\Edit\EditFormRendererLocatorInterface;
+use Ampache\Gui\Edit\Renderer\BroadcastEditFormRenderer;
+use Ampache\Gui\Edit\Renderer\LiveStreamEditFormRenderer;
+use Ampache\Gui\Edit\Renderer\PodcastEditFormRenderer;
+use Ampache\Gui\Edit\Renderer\PodcastEpisodeEditFormRenderer;
+use Ampache\Gui\Edit\Renderer\TagEditFormRenderer;
+use Ampache\Gui\Edit\Renderer\VideoEditFormRenderer;
 use Ampache\Gui\Form\LoginFormViewFactory;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Gui\Form\StatsFormViewFactory;
@@ -66,6 +74,16 @@ use function DI\get;
 return [
     GuiFactoryInterface::class => autowire(GuiFactory::class),
     // one renderer per migrated browse type; a type absent here still falls back to its .inc.php template
+    EditFormRendererLocatorInterface::class => autowire(EditFormRendererLocator::class)
+        ->constructorParameter('renderers', [
+            'broadcast_row' => get(BroadcastEditFormRenderer::class),
+            'live_stream_row' => get(LiveStreamEditFormRenderer::class),
+            'podcast_episode_row' => get(PodcastEpisodeEditFormRenderer::class),
+            'podcast_row' => get(PodcastEditFormRenderer::class),
+            'tag_hidden_row' => get(TagEditFormRenderer::class),
+            'tag_row' => get(TagEditFormRenderer::class),
+            'video_row' => get(VideoEditFormRenderer::class),
+        ]),
     BrowseListRendererLocatorInterface::class => autowire(BrowseListRendererLocator::class)
         ->constructorParameter('renderers', [
             'label' => get(LabelListRenderer::class),

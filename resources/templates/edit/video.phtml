@@ -23,29 +23,28 @@ declare(strict_types=1);
  *
  */
 
-// show_edit_video_row.inc.php
+// edit/video.phtml -- rendered by Ampache\Gui\Edit\Renderer\VideoEditFormRenderer
 
-use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\Video;
-
-/** @var Video $libitem */ ?>
+/** @var Ampache\Gui\Edit\Renderer\VideoEditFormRenderer $this */
+?>
 <div>
-    <form method="post" id="edit_video_<?php echo $libitem->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_video_<?php echo $this->e($this->getVideoId()); ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Title'); ?></td>
-                <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
+                <td><input type="text" name="title" value="<?php echo $this->e($this->getTitle()); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Release Date'); ?></td>
-                <td><input type="text" name="release_date" value="<?php echo ($libitem->release_date) ? get_datetime((int) $libitem->release_date, 'short', 'none') : ''; ?>" /></td>
+                <td><input type="text" name="release_date" value="<?php echo $this->e($this->getReleaseDate()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->get_tags()); ?>" /></td>
+                <?php // Tag::get_display() escapes the link text and title itself?>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo $this->raw($this->getGenres()); ?>" /></td>
             </tr>
         </table>
-        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $this->e($this->getVideoId()); ?>" />
         <input type="hidden" name="type" value="video_row" />
     </form>
 </div>

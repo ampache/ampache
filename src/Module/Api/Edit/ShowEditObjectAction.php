@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Edit\EditFormContext;
+use Ampache\Gui\Edit\EditFormRendererLocatorInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -47,6 +49,7 @@ final class ShowEditObjectAction extends AbstractEditAction
 {
     public const string REQUEST_KEY = 'show_edit_object';
 
+    private EditFormRendererLocatorInterface $editFormRendererLocator;
     private MetadataManagerInterface $metadataManager;
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
@@ -66,14 +69,16 @@ final class ShowEditObjectAction extends AbstractEditAction
         UserRepositoryInterface $userRepository,
         MetadataManagerInterface $metadataManager,
         ZipHandlerInterface $zipHandler,
+        EditFormRendererLocatorInterface $editFormRendererLocator,
     ) {
         parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository, $browseFactory);
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
-        $this->ui              = $ui;
-        $this->userRepository  = $userRepository;
-        $this->metadataManager = $metadataManager;
-        $this->zipHandler      = $zipHandler;
+        $this->editFormRendererLocator = $editFormRendererLocator;
+        $this->responseFactory         = $responseFactory;
+        $this->streamFactory           = $streamFactory;
+        $this->ui                      = $ui;
+        $this->userRepository          = $userRepository;
+        $this->metadataManager         = $metadataManager;
+        $this->zipHandler              = $zipHandler;
     }
 
     protected function handle(
@@ -84,23 +89,29 @@ final class ShowEditObjectAction extends AbstractEditAction
         int $object_id,
         ?Browse $browse = null,
     ): ResponseInterface {
-        ob_start();
         $users     = $this->userRepository->getValidArray();
         $users[-1] = T_('System');
 
-        $this->ui->show(
-            'show_edit_' . $object_type . '.inc.php',
-            [
-                'libitem' => $libitem,
-                'users' => $users,
-                'metadataManager' => $this->metadataManager,
-                'zipHandler' => $this->zipHandler
-            ]
-        );
+        // a migrated form renders through its own view; everything else still reaches its locals via Ui::show()
+        $renderer = $this->editFormRendererLocator->find($object_type);
+        if ($renderer !== null) {
+            $results = $renderer->renderForm(
+                new EditFormContext($object_type, $libitem, $users, $this->metadataManager, $this->zipHandler)
+            );
+        } else {
+            ob_start();
+            $this->ui->show(
+                'show_edit_' . $object_type . '.inc.php',
+                [
+                    'libitem' => $libitem,
+                    'users' => $users,
+                    'metadataManager' => $this->metadataManager,
+                    'zipHandler' => $this->zipHandler
+                ]
+            );
 
-        $results = ob_get_contents();
-
-        ob_end_clean();
+            $results = (string) ob_get_clean();
+        }
 
         return $this->responseFactory->createResponse()
             ->withBody(

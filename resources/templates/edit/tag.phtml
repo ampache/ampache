@@ -23,38 +23,41 @@ declare(strict_types=1);
  *
  */
 
-// show_edit_tag_row.inc.php
+// edit/tag.phtml -- rendered by Ampache\Gui\Edit\Renderer\TagEditFormRenderer
 
-use Ampache\Repository\Model\Tag;
-
-/** @var Tag $libitem */
+/** @var Ampache\Gui\Edit\Renderer\TagEditFormRenderer $this */
 ?>
 <div>
-    <form method="post" id="edit_tag_<?php echo $libitem->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_tag_<?php echo $this->e($this->getTagId()); ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" autofocus /></td>
+                <td><input type="text" name="name" value="<?php echo $this->e($this->getName()); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Hidden'); ?></td>
-                <td><input type="checkbox" <?php echo $string = ((int) $libitem->is_hidden == 1) ? 'checked="checked"' : ''; ?> name="is_hidden" value="1" /></td>
+                <td><input type="checkbox" <?php echo ($this->isHidden()) ? 'checked="checked"' : ''; ?> name="is_hidden" value="1" /></td>
             </tr>
             <tr><td>&nbsp;</td></tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Re-tag'); ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->get_merged_tags()); ?>" /></td>
+                <?php // Tag::get_display() escapes the link text and title itself?>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo $this->raw($this->getMergedTags()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Persistent'); ?></td>
-                <td><input type="checkbox" name="merge_persist" value="1" /></td>
+                <td><input type="checkbox" <?php echo ($this->isHiddenVariant()) ? 'checked="checked"' : ''; ?> name="merge_persist" value="1" /></td>
             </tr>
+            <?php if ($this->isHiddenVariant()) { ?>
+            <input type="hidden" name="keep_existing" value="0" />
+            <?php } else { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Keep Existing'); ?></td>
                 <td><input type="checkbox" name="keep_existing" value="1" /></td>
             </tr>
+            <?php } ?>
         </table>
-        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $this->e($this->getTagId()); ?>" />
         <input type="hidden" name="type" value="tag_row" />
     </form>
 </div>
