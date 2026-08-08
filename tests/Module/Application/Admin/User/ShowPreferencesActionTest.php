@@ -82,7 +82,9 @@ class ShowPreferencesActionTest extends TestCase
         $user       = $this->createMock(User::class);
 
         $userId      = 666;
-        $preferences = ['some-preferences'];
+        $preferences = [
+            ['name' => 'some-name', 'description' => 'Some Description', 'value' => 'some-value'],
+        ];
 
         $gatekeeper->expects(static::once())
             ->method('mayAccess')
@@ -107,16 +109,6 @@ class ShowPreferencesActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showHeader');
         $this->ui->expects(static::once())
-            ->method('show')
-            ->with(
-                'show_user_preferences.inc.php',
-                [
-                    'ui' => $this->ui,
-                    'preferences' => $preferences,
-                    'client' => $user
-                ]
-            );
-        $this->ui->expects(static::once())
             ->method('showFooter');
 
         $this->preferenceRepository->expects(static::once())
@@ -124,9 +116,21 @@ class ShowPreferencesActionTest extends TestCase
             ->with($user)
             ->willReturn($preferences);
 
-        self::assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        $this->ui->expects(static::once())
+            ->method('createPreferenceInput')
+            ->with('some-name', 'some-value');
+
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertStringContainsString('Some Description', $output);
+        self::assertStringContainsString('admin_update_preferences', $output);
     }
 
     protected function setUp(): void

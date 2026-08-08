@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Stats\GraphsView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ApplicationException;
@@ -34,7 +35,6 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Graph;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -133,9 +133,23 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
             $blink = $user->get_f_link();
         }
 
-        // named here because the template renders in this scope and cannot reach the container itself
-        $graph = $this->graph;
-
-        require_once Ui::find_template('show_graphs.inc.php');
+        echo (new GraphsView(
+            $this->graph,
+            AmpConfig::get_web_path(),
+            $gtypes,
+            $user_id,
+            $object_type,
+            $object_id,
+            $start_date,
+            $end_date,
+            $zoom,
+            (string) $f_start_date,
+            (string) $f_end_date,
+            (string) Core::get_request('action'),
+            // nothing here has ever set a type, so the form's hidden field has always posted empty
+            '',
+            $blink,
+            (bool) AmpConfig::get('geolocation')
+        ))->render();
     }
 }
