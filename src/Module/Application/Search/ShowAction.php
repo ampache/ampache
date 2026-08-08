@@ -25,7 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Search;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Search\SearchFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\VideoRepositoryInterface;
@@ -45,10 +49,14 @@ final readonly class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        $this->ui->show(
-            'show_form_search.inc.php',
-            ['videoRepository' => $this->videoRepository]
-        );
+        echo (new SearchFormView(
+            null,
+            null,
+            null,
+            $this->videoRepository,
+            AmpConfig::get_web_path(),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

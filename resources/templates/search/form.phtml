@@ -1,0 +1,84 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// search/form.phtml -- rendered by Ampache\Gui\Search\SearchFormView
+
+use Ampache\Gui\Search\SearchRulesView;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Search\SearchFormView $this */
+
+$webPath     = $this->getWebPath();
+$currentType = $this->getCurrentType();
+if ($currentType === null) {
+    // an unknown type has nothing to search, so the song form is the fallback
+    header('Location: ' . $webPath . '/search.php?type=song');
+
+    return;
+}
+
+$selected = $this->getSelectedLimit();
+Ui::show_box_top(T_('Search Ampache') . '...', 'box box_advanced_search'); ?>
+<form id="search" name="search" method="post" action="<?php echo $this->e($webPath); ?>/search.php?type=<?php echo $this->e($currentType); ?>" enctype="multipart/form-data" style="display:inline">
+    <div class="category_options">
+        <?php foreach ($this->getCategories() as $category) { ?>
+        <a class="category <?php echo ($category['current']) ? 'current' : ''; ?>" href="<?php echo $this->e($webPath); ?>/search.php?type=<?php echo $this->e($category['type']); ?>"><?php echo $this->e($category['label']); ?></a>
+        <?php } ?>
+    </div>
+    <table class="tabledata">
+        <tr id="search_max_results">
+            <td><?php echo T_('Maximum Results'); ?></td>
+            <td>
+                <select name="limit">
+                    <option value="0"><?php echo T_('Unlimited'); ?></option>
+                    <?php foreach ($this->getLimits() as $limit) { ?>
+                    <option value="<?php echo $limit; ?>"<?php echo ($limit === $selected) ? ' selected="selected"' : ''; ?>><?php echo $limit; ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr id="random_results">
+            <td><?php echo T_('Random'); ?></td>
+            <?php // the hidden zero posts first so unchecking is a value rather than a missing key?>
+            <td><input type="hidden" name="random" value="0" /><input type="checkbox" name="random" value="1" <?php echo ($this->isRandom()) ? 'checked' : ''; ?> /></td>
+        </tr>
+    </table>
+    <?php echo $this->raw((new SearchRulesView($this->getPlaylist(), $currentType, $webPath))->render()); ?>
+    <div class="formValidation">
+        <?php if ($this->showPermalink()) { ?>
+        <a href="<?php echo $this->e($this->getPermalink()); ?>" target="_blank"><?php echo T_('Permalink'); ?></a>
+        <?php } ?>
+        <input class="button" type="submit" value="<?php echo $this->e(T_('Search')); ?>" />&nbsp;&nbsp;
+        <?php if ($this->showSaveButtons()) { ?>
+        <input id="savesearchbutton" class="button" type="submit" value="<?php echo $this->e(T_('Save as Smart Playlist')); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;
+        <input id="saveasplaylistbutton" class="button" type="submit" value="<?php echo $this->e(T_('Save as Playlist')); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
+        <?php } ?>
+        <input type="hidden" id="hiddenaction" name="action" value="search" />
+        <input type="hidden" name="browse_id" value="<?php echo $this->e($this->getBrowseId()); ?>" />
+    </div>
+</form>
+<script>
+    document.getElementById('searchString').value = '';
+</script>

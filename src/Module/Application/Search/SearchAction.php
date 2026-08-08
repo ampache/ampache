@@ -26,16 +26,18 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Search;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Search\SearchFormView;
 use Ampache\Gui\Search\SearchOptionsView;
 use Ampache\Gui\Wanted\MissingArtistsView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;
@@ -77,10 +79,14 @@ final readonly class SearchAction implements ApplicationActionInterface
 
         if ($rule_1 !== 'missing_artist') {
             $browse = $this->browseFactory->create();
-            // both templates are required into this scope, so the services they use are named here
-            $videoRepository = $this->videoRepository;
-            $zipHandler      = $this->zipHandler;
-            require_once Ui::find_template('show_form_search.inc.php');
+            echo (new SearchFormView(
+                $browse,
+                null,
+                $searchType,
+                $this->videoRepository,
+                AmpConfig::get_web_path(),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ))->render();
             echo (new SearchOptionsView(
                 $browse,
                 $searchType,
