@@ -37,6 +37,8 @@ use Ampache\Gui\Form\LoginFormViewFactory;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Gui\Form\StatsFormViewFactory;
 use Ampache\Gui\Form\StatsFormViewFactoryInterface;
+use Ampache\Gui\Preferences\PreferencesViewFactory;
+use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 
 use function DI\autowire;
 use function DI\get;
@@ -55,5 +57,6 @@ return [
             'wanted' => get(WantedListRenderer::class),
         ]),
     LoginFormViewFactoryInterface::class => autowire(LoginFormViewFactory::class),
+    PreferencesViewFactoryInterface::class => autowire(PreferencesViewFactory::class),
     StatsFormViewFactoryInterface::class => autowire(StatsFormViewFactory::class),
 ];

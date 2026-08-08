@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -38,7 +39,10 @@ final readonly class AdminAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'admin';
 
-    public function __construct(private UiInterface $ui) {}
+    public function __construct(
+        private UiInterface $ui,
+        private PreferencesViewFactoryInterface $preferencesViewFactory,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -51,14 +55,11 @@ final readonly class AdminAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
         if ($user !== null) {
             $this->ui->showHeader();
-            $this->ui->show(
-                'show_preferences.inc.php',
-                [
-                    'fullname' => T_('Server'),
-                    'preferences' => $user->get_preferences($tab, true),
-                    'ui' => $this->ui
-                ]
-            );
+            echo $this->preferencesViewFactory->create(
+                $gatekeeper,
+                T_('Server'),
+                $user->get_preferences($tab, true)
+            )->render();
         }
 
         $this->ui->showQueryStats();
