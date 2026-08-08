@@ -36,6 +36,7 @@ use Ampache\Module\Util\Ui;
     <dt><?php echo T_('Minutes Played'); ?></dt>
     <dd><?php echo $this->e($this->getMinutesPlayed()); ?></dd>
 </dl>
+<br/>
 <?php foreach ($this->getSections() as $section) {
     Ui::show_box_top($this->e($section['title']));
     echo $this->raw($this->renderSection($section));
