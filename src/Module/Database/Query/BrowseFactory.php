@@ -29,22 +29,16 @@ use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
-use Ampache\Repository\VideoRepositoryInterface;
 
 final readonly class BrowseFactory implements BrowseFactoryInterface
 {
     public function __construct(
         private AjaxUriRetrieverInterface $ajaxUriRetriever,
-        private CollectionRepositoryInterface $collectionRepository,
         private GatekeeperFactoryInterface $gatekeeperFactory,
         private GuiFactoryInterface $guiFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-        private UiInterface $ui,
-        private VideoRepositoryInterface $videoRepository,
         private ZipHandlerInterface $zipHandler,
         private BrowseListRendererLocatorInterface $browseListRendererLocator,
     ) {}
@@ -55,12 +49,9 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
     ): Browse {
         return new Browse(
             $this->ajaxUriRetriever,
-            $this->collectionRepository,
             $this->gatekeeperFactory,
             $this->guiFactory,
             $this->libraryItemLoader,
-            $this->ui,
-            $this->videoRepository,
             $this->zipHandler,
             $this->browseListRendererLocator,
             (int) $browse_id,

@@ -36,9 +36,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Collection;
@@ -50,7 +48,6 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Video;
-use Ampache\Repository\VideoRepositoryInterface;
 
 /**
  * Browse Class
@@ -151,12 +148,9 @@ class Browse extends Query
 
     public function __construct(
         private readonly AjaxUriRetrieverInterface $ajaxUriRetriever,
-        private readonly CollectionRepositoryInterface $collectionRepository,
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
         private readonly GuiFactoryInterface $guiFactory,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
-        private readonly UiInterface $ui,
-        private readonly VideoRepositoryInterface $videoRepository,
         private readonly ZipHandlerInterface $zipHandler,
         private readonly BrowseListRendererLocatorInterface $browseListRendererLocator,
         ?int $browse_id = 0,
@@ -653,13 +647,9 @@ class Browse extends Query
             );
         } elseif ($box_req !== '') {
             // the browse template and its row templates render in this scope, so the services they use are named here
-            $ajaxUriRetriever        = $this->ajaxUriRetriever;
-            $collectionRepository    = $this->collectionRepository;
             $gatekeeper              = $this->gatekeeperFactory->createGuiGatekeeper();
             $guiFactory              = $this->guiFactory;
             $libraryItemLoader       = $this->libraryItemLoader;
-            $ui                      = $this->ui;
-            $videoRepository         = $this->videoRepository;
             $zipHandler              = $this->zipHandler;
 
             require $box_req;
