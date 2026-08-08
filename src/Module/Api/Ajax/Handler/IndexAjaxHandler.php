@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Artist\ArtistInfoView;
+use Ampache\Gui\Artist\RecommendedArtistsView;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Index\NowPlayingSimilarView;
 use Ampache\Gui\Index\RandomAlbumsView;
@@ -199,10 +200,25 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         }
                     }
 
-                    ob_start();
-                    $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
-                    require_once Ui::find_template('show_recommended_artists.inc.php');
-                    $results['similar_artist'] = ob_get_clean();
+                    $mayInteract = !AmpConfig::get('use_auth')
+                        || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
+
+                    $results['similar_artist'] = (new RecommendedArtistsView(
+                        $this->gatekeeperFactory->createGuiGatekeeper(),
+                        AmpConfig::get_web_path(),
+                        $object_ids,
+                        $missing_objects,
+                        0,
+                        false,
+                        (bool) AmpConfig::get('hide_genres'),
+                        User::is_registered() && (bool) AmpConfig::get('ratings'),
+                        (bool) AmpConfig::get('show_played_times'),
+                        (bool) AmpConfig::get('directplay'),
+                        (int) AmpConfig::get('direct_play_limit', 500),
+                        $mayInteract,
+                        (bool) AmpConfig::get('sociable'),
+                        false
+                    ))->render();
                 }
 
                 break;
