@@ -32,7 +32,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
-use Ampache\Module\Util\UiInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -53,7 +53,6 @@ final class ShowEditObjectAction extends AbstractEditAction
     private MetadataManagerInterface $metadataManager;
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
-    private UiInterface $ui;
     private UserRepositoryInterface $userRepository;
     private ZipHandlerInterface $zipHandler;
 
@@ -65,7 +64,6 @@ final class ShowEditObjectAction extends AbstractEditAction
         LoggerInterface $logger,
         ShareRepositoryInterface $shareRepository,
         BrowseFactoryInterface $browseFactory,
-        UiInterface $ui,
         UserRepositoryInterface $userRepository,
         MetadataManagerInterface $metadataManager,
         ZipHandlerInterface $zipHandler,
@@ -75,7 +73,6 @@ final class ShowEditObjectAction extends AbstractEditAction
         $this->editFormRendererLocator = $editFormRendererLocator;
         $this->responseFactory         = $responseFactory;
         $this->streamFactory           = $streamFactory;
-        $this->ui                      = $ui;
         $this->userRepository          = $userRepository;
         $this->metadataManager         = $metadataManager;
         $this->zipHandler              = $zipHandler;
@@ -92,25 +89,19 @@ final class ShowEditObjectAction extends AbstractEditAction
         $users     = $this->userRepository->getValidArray();
         $users[-1] = T_('System');
 
-        // a migrated form renders through its own view; everything else still reaches its locals via Ui::show()
+        // every form renders through its own view; a type with no renderer has no dialog to show
         $renderer = $this->editFormRendererLocator->find($object_type);
-        if ($renderer !== null) {
+        if ($renderer === null) {
+            $this->logger->warning(
+                'show_edit_object: no renderer for type {' . $object_type . '}',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            $results = '';
+        } else {
             $results = $renderer->renderForm(
                 new EditFormContext($object_type, $libitem, $users, $this->metadataManager, $this->zipHandler)
             );
-        } else {
-            ob_start();
-            $this->ui->show(
-                'show_edit_' . $object_type . '.inc.php',
-                [
-                    'libitem' => $libitem,
-                    'users' => $users,
-                    'metadataManager' => $this->metadataManager,
-                    'zipHandler' => $this->zipHandler
-                ]
-            );
-
-            $results = (string) ob_get_clean();
         }
 
         return $this->responseFactory->createResponse()

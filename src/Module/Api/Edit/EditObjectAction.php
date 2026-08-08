@@ -50,8 +50,8 @@ final class EditObjectAction extends AbstractEditAction
 {
     public const string REQUEST_KEY = 'edit_object';
 
+    protected LoggerInterface $logger;
     private LabelRepositoryInterface $labelRepository;
-    private LoggerInterface $logger;
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
 
