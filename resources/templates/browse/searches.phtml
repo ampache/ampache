@@ -32,9 +32,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\SmartPlaylistListRenderer $this */
 
-$browse   = $this->getBrowse();
-$columns  = $this->getColumns();
-$searches = $this->getSearches();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$searches       = $this->getSearches();
 if ($this->areRatingsShown()) {
     Rating::build_cache('search', $this->getObjectIds());
     Userflag::build_cache('search', $this->getObjectIds());

@@ -30,9 +30,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\BroadcastListRenderer $this */
 
-$browse     = $this->getBrowse();
-$columns    = $this->getColumns();
-$broadcasts = $this->getBroadcasts();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$broadcasts     = $this->getBroadcasts();
 
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');

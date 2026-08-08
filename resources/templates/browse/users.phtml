@@ -30,10 +30,11 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\UserListRenderer $this */
 
-$browse  = $this->getBrowse();
-$columns = $this->getColumns();
-$users   = $this->getUsers();
-$type    = $browse->get_type();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$users          = $this->getUsers();
+$type           = $browse->get_type();
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>

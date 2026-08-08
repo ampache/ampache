@@ -30,9 +30,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\LabelListRenderer $this */
 
-$browse  = $this->getBrowse();
-$columns = $this->getColumns();
-$labels  = $this->getLabels();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$labels         = $this->getLabels();
 
 if ($this->mayCreate()) { ?>
 <div id="information_actions">

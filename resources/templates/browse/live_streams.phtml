@@ -32,9 +32,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer $this */
 
-$browse  = $this->getBrowse();
-$columns = $this->getColumns();
-$streams = $this->getLiveStreams();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$streams        = $this->getLiveStreams();
 if ($this->areRatingsShown()) {
     Rating::build_cache('live_stream', $this->getObjectIds());
     Userflag::build_cache('live_stream', $this->getObjectIds());

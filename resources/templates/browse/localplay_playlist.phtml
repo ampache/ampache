@@ -30,8 +30,9 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\LocalplayPlaylistListRenderer $this */
 
-$browse = $this->getBrowse();
-$tracks = $this->getTracks();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$tracks         = $this->getTracks();
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>

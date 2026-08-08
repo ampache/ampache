@@ -30,10 +30,11 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\PrivateMessageListRenderer $this */
 
-$browse   = $this->getBrowse();
-$columns  = $this->getColumns();
-$messages = $this->getMessages();
-$webPath  = $this->getWebPath(); ?>
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$messages       = $this->getMessages();
+$webPath        = $this->getWebPath(); ?>
 <script>
     function getSelectionArray()
     {

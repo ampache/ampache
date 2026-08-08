@@ -30,11 +30,12 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\DemocraticListRenderer $this */
 
-$browse     = $this->getBrowse();
-$columns    = $this->getColumns();
-$democratic = $this->getDemocratic();
-$isAdmin    = $this->isAdmin();
-$grouped    = $this->isAlbumGrouped();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$democratic     = $this->getDemocratic();
+$isAdmin        = $this->isAdmin();
+$grouped        = $this->isAlbumGrouped();
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>

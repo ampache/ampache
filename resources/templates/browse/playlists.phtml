@@ -32,9 +32,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\PlaylistListRenderer $this */
 
-$browse    = $this->getBrowse();
-$columns   = $this->getColumns();
-$playlists = $this->getPlaylists();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$playlists      = $this->getPlaylists();
 if ($this->showRatings()) {
     Rating::build_cache('playlist', $this->getObjectIds());
     Userflag::build_cache('playlist', $this->getObjectIds());

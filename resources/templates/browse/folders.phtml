@@ -30,9 +30,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\FolderListRenderer $this */
 
-$browse  = $this->getBrowse();
-$columns = $this->getColumns();
-$rows    = $this->getRows();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$rows           = $this->getRows();
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>

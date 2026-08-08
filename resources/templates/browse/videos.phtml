@@ -32,9 +32,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\VideoListRenderer $this */
 
-$browse  = $this->getBrowse();
-$columns = $this->getColumns();
-$videos  = $this->getVideos();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$videos         = $this->getVideos();
 if ($this->areRatingsShown()) {
     Rating::build_cache('video', $this->getObjectIds());
     Userflag::build_cache('video', $this->getObjectIds());

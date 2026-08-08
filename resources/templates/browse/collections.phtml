@@ -32,10 +32,11 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\CollectionListRenderer $this */
 
-$browse      = $this->getBrowse();
-$columns     = $this->getColumns();
-$collections = $this->getCollections();
-$sortUrl     = '?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=collection&sort=';
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$collections    = $this->getCollections();
+$sortUrl        = '?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=collection&sort=';
 if ($this->showRatings()) {
     Rating::build_cache('collection', $this->getObjectIds());
     Userflag::build_cache('collection', $this->getObjectIds());

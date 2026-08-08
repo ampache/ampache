@@ -32,9 +32,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\PodcastListRenderer $this */
 
-$browse   = $this->getBrowse();
-$columns  = $this->getColumns();
-$podcasts = $this->getPodcasts();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$podcasts       = $this->getPodcasts();
 if ($this->areRatingsShown()) {
     Rating::build_cache('podcast', $this->getObjectIds());
     Userflag::build_cache('podcast', $this->getObjectIds());

@@ -29,9 +29,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Browse\ListRenderer\GenreListRenderer $this */
 
-$browse  = $this->getBrowse();
-$columns = $this->getColumns();
-$genres  = $this->getGenres();
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$genres         = $this->getGenres();
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>

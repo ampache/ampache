@@ -44,6 +44,14 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
 {
     private ?BrowseListContext $context = null;
 
+    /**
+     * The list header appends this to its paging and alpha links, so a filtered browse keeps its filter.
+     */
+    final public function getArgumentParam(): string
+    {
+        return $this->getContext()->argumentParam;
+    }
+
     final public function getBrowse(): Browse
     {
         return $this->getContext()->browse;
