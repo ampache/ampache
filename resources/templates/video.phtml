@@ -1,0 +1,122 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// video.phtml -- rendered by Ampache\Gui\Video\VideoView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Share;
+
+/** @var Ampache\Gui\Video\VideoView $this */
+
+$video   = $this->getVideo();
+$videoId = $video->id;
+$name    = $this->getName();
+
+Ui::show_box_top($this->e($name), 'box box_video_details'); ?>
+<div class="item_right_info">
+<?php Art::display('video', $videoId, $name, ['width' => 200, 'height' => 300], null, true, false, 'preview');
+
+if ($this->areSubtitlesShown()) { ?>
+<div class="subtitles">
+<?php echo T_('Subtitle'); ?>:
+<select name="subtitle" id="play_setting_subtitle">
+    <option value=""><?php echo T_('None'); ?></option>
+    <?php foreach ($this->getSubtitles() as $subtitle) { ?>
+    <option value="<?php echo $this->e($subtitle['lang_code']); ?>"<?php echo ($subtitle['lang_code'] === $this->getSelectedSubtitle()) ? ' selected="selected"' : ''; ?>><?php echo $this->e($subtitle['lang_name']); ?></option>
+    <?php } ?>
+</select>
+</div>
+<?php } ?>
+</div>
+<dl class="media_details">
+<?php if ($this->areRatingsShown()) { ?>
+    <dt><?php echo T_('Rating'); ?></dt>
+    <dd><div id="rating_<?php echo $this->e($videoId); ?>_video"><?php echo $this->raw(Rating::show($videoId, 'video')); ?></div></dd>
+    <dt><?php echo T_('Fav.'); ?></dt>
+    <dd><div id="userflag_<?php echo $this->e($videoId); ?>_video"><?php echo $this->raw(Userflag::show($videoId, 'video')); ?></div></dd>
+<?php } ?>
+<dt><?php echo T_('Action'); ?></dt>
+    <dd>
+        <?php if ($this->isDirectPlayEnabled()) {
+            echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $videoId, 'play_circle', T_('Play'), 'play_video_' . $videoId));
+            if ($this->isAutoplayNextEnabled()) {
+                echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $videoId . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_video_' . $videoId));
+            }
+
+            if ($this->isAutoplayAppendEnabled()) {
+                echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $videoId . '&append=true', 'low_priority', T_('Play last'), 'addplay_video_' . $videoId));
+            }
+        }
+
+echo $this->raw(Ajax::button('?action=basket&type=video&id=' . $videoId, 'new_window', T_('Add to Temporary Playlist'), 'add_video_' . $videoId));
+
+if ($this->mayInteract()) { ?>
+        <a id="add_to_playlist_<?php echo $this->e($videoId); ?>" onclick="showPlaylistDialog(event, 'video', '<?php echo $this->e($videoId); ?>')">
+            <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label())); ?>
+        </a>
+        <?php }
+
+if ($this->mayShout()) { ?>
+        <a href="<?php echo $this->e($this->getShoutUrl()); ?>"><?php echo $this->raw(Ui::get_material_symbol('comment', T_('Post Shout'))); ?></a>
+        <?php }
+
+if ($this->mayShare()) {
+    echo $this->raw(Share::display_ui('video', $videoId, false));
+} else { ?>
+        <a href="<?php echo $this->e($video->get_link()); ?>" target="_blank" rel="noopener">
+            <?php echo $this->raw(Ui::get_material_symbol('open_in_new', T_('Link'))); ?>
+            <?php echo T_('Link'); ?>
+        </a>
+        <?php }
+
+if ($this->mayDownload()) { ?>
+        <a class="nohtml" href="<?php echo $this->e($video->play_url()); ?>"><?php echo $this->raw(Ui::get_material_symbol('link', T_('Link'))); ?></a>
+        <a class="nohtml" rel="nofollow" href="<?php echo $this->e($this->getDownloadUrl()); ?>"><?php echo $this->raw(Ui::get_material_symbol('download', T_('Download'))); ?></a>
+        <?php }
+
+if ($this->mayManage()) {
+    if ($this->isStatisticalGraphsEnabled()) { ?>
+        <a href="<?php echo $this->e($this->getGraphUrl()); ?>"><?php echo $this->raw(Ui::get_material_symbol('bar_chart', T_('Graphs'))); ?></a>
+    <?php } ?>
+        <a onclick="showEditDialog('video_row', '<?php echo $this->e($videoId); ?>', 'edit_video_<?php echo $this->e($videoId); ?>', '<?php echo addslashes(T_('Video Edit')); ?>', '')">
+            <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+        </a>
+        <?php }
+
+if ($this->mayDelete()) { ?>
+        <a id="delete_video_<?php echo $this->e($videoId); ?>" href="<?php echo $this->e($this->getDeleteUrl()); ?>">
+            <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
+        </a>
+        <?php } ?>
+    </dd>
+<?php foreach ($this->getProperties() as $property) { ?>
+    <dt><?php echo $this->e($property['label']); ?></dt><dd><?php echo $this->raw($property['value']); ?></dd>
+<?php } ?>
+</dl>
+<?php Ui::show_box_bottom(); ?>
