@@ -44,7 +44,7 @@ use Ampache\Repository\Model\User;
 
 $web_path = AmpConfig::get_web_path();
 
-Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 'box box_podcast_episode_details'); ?>
+Ui::show_box_top(scrub_out($episode->get_fullname()) . ' - ' . $episode->getPodcastLink(), 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
     <dt><?php echo T_('Rating'); ?></dt>
@@ -124,7 +124,7 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 
         <?php } ?>
     </dd>
 <?php
-    $songprops[T_('Title')]        = $episode->get_fullname();
+    $songprops[T_('Title')]        = scrub_out($episode->get_fullname());
 $songprops[T_('Description')]      = $episode->get_description();
 $songprops[T_('Category')]         = $episode->getCategory();
 $songprops[T_('Author')]           = $episode->getAuthor();

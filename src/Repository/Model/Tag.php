@@ -216,7 +216,7 @@ class Tag extends database_object implements library_item, displayable_item, con
                 $results .= '<a href="' . $web_path . '/browse.php?action=tag&show_tag=' . $value['id'] . (empty($filter_type) ? '' : '&type=' . $filter_type) . '" title="' . scrub_out($value['name']) . '">';
             }
 
-            $results .= $value['name'];
+            $results .= scrub_out($value['name']);
             if ($link) {
                 $results .= '</a>';
             }

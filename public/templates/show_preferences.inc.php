@@ -45,7 +45,7 @@ use Ampache\Module\Util\UiInterface;
 $tab = Core::get_request('tab');
 if (!empty($tab)) {
     /* HINT: Username FullName */
-    Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences');
+    Ui::show_box_top(sprintf(T_('Editing %s Preferences'), scrub_out($fullname)), 'box box_preferences');
     if ($tab !== 'account' && $tab !== 'modules') {
         debug_event('show_preferences.inc', $tab, 5); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get_web_path(); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">

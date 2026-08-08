@@ -53,7 +53,7 @@ $browse   = $browseFactory->create();
 $browse->set_type($object_type);
 $browse->set_use_filters(false);
 $browse->set_skip_catalog_check(true);
-Ui::show_box_top((string) $podcast->get_fullname(), 'info-box'); ?>
+Ui::show_box_top(scrub_out($podcast->get_fullname()), 'info-box'); ?>
 <div class="item_right_info">
 <?php $size = Ui::is_grid_view('album')
     ? ['width' => 150, 'height' => 150]

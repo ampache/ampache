@@ -55,7 +55,7 @@ if (array_key_exists('argument', $_REQUEST)) {
 }
 $f_name     = (string) $label->get_fullname();
 $url_f_name = rawurlencode($f_name);
-Ui::show_box_top($f_name, 'info-box');
+Ui::show_box_top(scrub_out($f_name), 'info-box');
 if ($label->website) {
     echo "<a href=\"" . scrub_out($label->website) . "\">" . scrub_out($label->website) . "</a><br />";
 } ?>
