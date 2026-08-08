@@ -25,17 +25,20 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Index;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Form\StatsFormViewFactoryInterface;
+use Ampache\Gui\Index\HomeView;
 use Ampache\Gui\Partial\JavascriptRefreshView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\FolderRepositoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -48,7 +51,6 @@ final readonly class ShowAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-        private FolderRepositoryInterface $folderRepository,
         private VideoRepositoryInterface $videoRepository,
         private StatsFormViewFactoryInterface $statsFormViewFactory,
     ) {}
@@ -79,11 +81,14 @@ final readonly class ShowAction implements ApplicationActionInterface
             echo (new JavascriptRefreshView($refreshLimit, '?page=index&action=refresh_index'))->render();
         }
 
-        // the header form show_index.inc.php picks is required into this scope, so name its services here
-        $folderRepository = $this->folderRepository;
-        $videoRepository  = $this->videoRepository;
-        $browseForm       = $this->statsFormViewFactory->createBrowse()->render();
-        require_once Ui::find_template('show_index.inc.php');
+        $user = Core::get_global('user');
+        echo (new HomeView(
+            ($user instanceof User) ? $user : null,
+            $this->statsFormViewFactory->createBrowse()->render(),
+            $this->videoRepository,
+            AmpConfig::get_web_path(),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+        ))->render();
 
         // Show the Footer
         $this->ui->showQueryStats();
