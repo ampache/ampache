@@ -23,6 +23,7 @@ from dataclasses import dataclass, field
 # Angle brackets and quotes all have to survive for a finding to be real, and the marker makes the
 # payload greppable in a response that legitimately contains a lot of markup.
 MARKER = "AMPXSSPROBE"
+MARKER_HEX = MARKER.encode().hex().upper()
 PAYLOAD = f'<img src=x onerror={MARKER}>"\'</title>'
 # some columns are as narrow as varchar(32), so a trimmed variant is used where the full one will not fit
 SHORT_PAYLOAD = f"<b {MARKER}>"
@@ -53,6 +54,7 @@ TARGETS = [
     Target("playlist", "name"),
     Target("search", "name"),
     Target("podcast", "title"),
+    Target("podcast", "website"),
     Target("podcast", "description"),
     Target("podcast", "author"),
     Target("podcast_episode", "title"),
@@ -69,6 +71,10 @@ TARGETS = [
     Target("label", "website"),
     Target("tag", "name"),
     Target("share", "description"),
+    Target("user_shout", "text"),
+    Target("user_pvmsg", "subject"),
+    Target("broadcast", "name"),
+    Target("bookmark", "comment"),
     Target("catalog", "name"),
     Target("collection", "name"),
     Target("song", "title"),
@@ -92,6 +98,8 @@ PAGES = [
     "browse.php?action=video",
     "browse.php?action=share",
     "browse.php?action=collection",
+    "browse.php?action=broadcast",
+    "browse.php?action=pvmsg",
     "stats.php?action=show_user&user_id=1",
     "stats.php?action=newest",
     "stats.php?action=popular",
@@ -169,13 +177,15 @@ def column_length(container: str, database: str, table: str, column: str) -> int
     return int(rows[1].strip()) if len(rows) > 1 and rows[1].strip().isdigit() else 0
 
 
-def seed(container: str, database: str, targets: list[Target]) -> list[tuple[Target, list[tuple[str, str]]]]:
+def seed(
+    container: str, database: str, targets: list[Target],
+    saved: list[tuple[Target, list[tuple[str, str]]]],
+) -> None:
     """Writes the payload into each target, returning what was there so it can be put back.
 
     Values round-trip as hex, because a description holding a tab or a newline would otherwise break
     the row-per-line output this parses.
     """
-    saved = []
     skipped = []
     for target in targets:
         if not column_exists(container, database, target.table, target.column):
@@ -187,6 +197,12 @@ def seed(container: str, database: str, targets: list[Target]) -> list[tuple[Tar
             f"WHERE {target.where} ORDER BY `id` LIMIT {target.limit};",
         ).splitlines()[1:]
         originals = [(row.split("\t")[0], row.split("\t")[1]) for row in rows if "\t" in row]
+        poisoned = [row_id for row_id, hex_value in originals if MARKER_HEX in hex_value]
+        if poisoned:
+            raise RuntimeError(
+                f"{target.table}.{target.column} already holds the payload (ids {', '.join(poisoned)}). "
+                "A previous run did not restore; fix those rows before probing again."
+            )
         if not originals:
             continue
         ids = ",".join(row_id for row_id, _ in originals)
@@ -199,7 +215,6 @@ def seed(container: str, database: str, targets: list[Target]) -> list[tuple[Tar
         saved.append((target, originals))
     if skipped:
         print(f"  (not in this schema, skipped: {', '.join(skipped)})")
-    return saved
 
 
 def restore(container: str, database: str, saved: list[tuple[Target, list[tuple[str, str]]]]) -> None:
@@ -260,12 +275,13 @@ def main() -> int:
     args = parser.parse_args()
 
     print(f"seeding {len(TARGETS)} columns ...", flush=True)
-    saved = seed(args.db_container, args.database, TARGETS)
-    seeded = ", ".join(f"{t.table}.{t.column}" for t, _ in saved)
-    print(f"seeded: {seeded}\n", flush=True)
-
+    saved: list[tuple[Target, list[tuple[str, str]]]] = []
     findings: list[Result] = []
     try:
+        # seeding is inside the try so a failure part way through still restores what it wrote
+        seed(args.db_container, args.database, TARGETS, saved)
+        print(f"seeded: {', '.join(f'{t.table}.{t.column}' for t, _ in saved)}\n", flush=True)
+
         login(args.base_url, args.jar, args.user, args.password)
         for page in PAGES:
             body = fetch(args.base_url, args.jar, page)

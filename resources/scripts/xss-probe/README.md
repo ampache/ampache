@@ -46,5 +46,9 @@ Anything reachable only by POST is out of scope.
 ## Safety
 
 It writes to the database and restores from an in-memory copy taken at the start, so **point it at a
-throwaway instance**: an interrupted run leaves the payloads in place. Values round-trip as hex, so a
-description holding a tab or a newline survives.
+throwaway instance**. Values round-trip as hex, so a description holding a tab or a newline survives.
+
+Seeding happens inside the same `try` as the crawl, so a failure part way through still restores the
+columns it had already written. If it finds the payload already in a column it refuses to start rather
+than "restoring" the payload as if it were the original value — that is the one way a run can lose data,
+and it is worth the abort. Clean those rows by hand and run again.
