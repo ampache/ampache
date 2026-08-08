@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Art;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Art\ArtSelectionView;
+use Ampache\Gui\Art\GetArtView;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
@@ -173,15 +174,13 @@ final class FindArtAction extends AbstractArtAction
             ))->render();
         }
 
-        $this->ui->show(
-            'show_get_art.inc.php',
-            [
-                'item' => $item,
-                'object_id' => $object_id,
-                'object_type' => $object_type,
-                'burl' => $burl
-            ]
-        );
+        echo (new GetArtView(
+            $item,
+            $object_id,
+            $object_type,
+            $burl,
+            AmpConfig::get_web_path()
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
