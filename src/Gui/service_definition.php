@@ -37,6 +37,7 @@ use Ampache\Gui\Browse\ListRenderer\PrivateMessageListRenderer;
 use Ampache\Gui\Browse\ListRenderer\ShareListRenderer;
 use Ampache\Gui\Browse\ListRenderer\ShoutboxListRenderer;
 use Ampache\Gui\Browse\ListRenderer\SongPreviewListRenderer;
+use Ampache\Gui\Browse\ListRenderer\VideoListRenderer;
 use Ampache\Gui\Browse\ListRenderer\WantedListRenderer;
 use Ampache\Gui\Form\LoginFormViewFactory;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
@@ -64,6 +65,7 @@ return [
             'share' => get(ShareListRenderer::class),
             'shoutbox' => get(ShoutboxListRenderer::class),
             'song_preview' => get(SongPreviewListRenderer::class),
+            'video' => get(VideoListRenderer::class),
             'wanted' => get(WantedListRenderer::class),
         ]),
     LoginFormViewFactoryInterface::class => autowire(LoginFormViewFactory::class),

@@ -158,7 +158,6 @@ class Browse extends Query
         'song' => 'show_songs.inc.php',
         'tag' => 'show_tagcloud.inc.php',
         'user' => 'show_users.inc.php',
-        'video' => 'show_videos.inc.php',
     ];
 
     public ?int $duration = null;
