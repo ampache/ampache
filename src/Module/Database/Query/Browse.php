@@ -145,7 +145,6 @@ class Browse extends Query
         'collection' => 'show_collections.inc.php',
         'collection_items' => 'show_collection_items.inc.php',
         'folder' => 'show_folders.inc.php',
-        'genre' => 'show_genres.inc.php',
         'playlist' => 'show_playlists.inc.php',
         'playlist_media' => 'show_playlist_medias.inc.php',
         'song' => 'show_songs.inc.php',
