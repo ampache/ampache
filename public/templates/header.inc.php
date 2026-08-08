@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Gui\Partial\TopMenuView;
 use Ampache\Gui\Playback\PlayTypeSwitchView;
 use Ampache\Gui\Search\SearchBarView;
+use Ampache\Gui\Sidebar\LightSidebarView;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -174,7 +175,7 @@ $isCollapsed  = (
                     <?php require_once Ui::find_template('sidebar.inc.php'); ?>
                 </div>
                 <div id="sidebar-content-light" class="<?php echo ($isCollapsed) ? 'sidebar-content-light-collapsed' : ''; ?>" >
-                    <?php require_once Ui::find_template('sidebar.light.inc.php'); ?>
+                    <?php echo (new LightSidebarView($web_path, $albumString, $access25, $is_session, (bool) $allow_upload))->render(); ?>
                 </div>
             </div>
 
