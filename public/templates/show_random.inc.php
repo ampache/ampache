@@ -26,6 +26,7 @@ declare(strict_types=1);
 // show_random.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Search\SearchRulesView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Random;
@@ -130,7 +131,7 @@ foreach ([64, 128, 256, 512, 1024] as $value) {
         </td>
 </tr>
 </table>
-<?php require Ui::find_template('show_rules.inc.php'); ?>
+<?php echo (new SearchRulesView($playlist ?? null, $currentType ?? 'song', AmpConfig::get_web_path()))->render(); ?>
     <div class="formValidation">
         <input type="submit" value="<?php echo T_('Enqueue'); ?>" />
     </div>

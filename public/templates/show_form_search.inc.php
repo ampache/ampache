@@ -26,6 +26,7 @@ declare(strict_types=1);
 // show_form_search.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Search\SearchRulesView;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -118,7 +119,7 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
     </tr>
 </table>
 
-<?php require Ui::find_template('show_rules.inc.php'); ?>
+<?php echo (new SearchRulesView($playlist ?? null, $currentType ?? 'song', AmpConfig::get_web_path()))->render(); ?>
 
 <div class="formValidation">
 <?php if (isset($data['action']) && $data['action'] === 'search') { ?>

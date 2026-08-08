@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // playlist/smartplaylist.phtml -- rendered by Ampache\Gui\Playlist\SmartPlaylistPageView
 
+use Ampache\Gui\Search\SearchRulesView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
@@ -80,7 +81,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlistId . '">' . $this->get
     </ul>
 </div>
 <form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo $this->e($this->getFormAction()); ?>" style="display:inline">
-    <?php require Ui::find_template('show_rules.inc.php'); ?>
+    <?php echo $this->raw((new SearchRulesView($playlist, $currentType, $webPath))->render()); ?>
     <div class="formValidation">
         <?php if ($this->showEditButtons()) { ?>
         <input class="button" type="submit" value="<?php echo $this->e(T_('Refresh')); ?>" onClick="$('#hiddenaction').val('refresh_playlist');" />&nbsp;&nbsp;
