@@ -26,6 +26,7 @@ declare(strict_types=1);
 // show_user_registration.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Asset\StylesheetsView;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
@@ -57,7 +58,7 @@ if (!$logo_url) {
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset', 'UTF-8'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo AmpConfig::get('site_title') . ' - ' . T_('Registration'); ?></title>
-    <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
+    <?php echo (new StylesheetsView(AmpConfig::get_web_path()))->render(); ?>
 </head>
 
 <body id="registerPage">

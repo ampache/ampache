@@ -26,6 +26,8 @@ declare(strict_types=1);
 // mini.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Asset\ScriptsView;
+use Ampache\Gui\Asset\StylesheetsView;
 use Ampache\Gui\Partial\VisualizerView;
 use Ampache\Gui\Playback\PlayTypeSwitchView;
 use Ampache\Module\System\Core;
@@ -35,6 +37,9 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Plugin\PluginDisplayHomeInterface;
 use Ampache\Repository\Model\User;
+
+/** @var Ampache\Module\Util\AjaxUriRetrieverInterface $ajaxUriRetriever */
+/** @var Ampache\Module\Util\EnvironmentInterface $environment */
 
 $web_path   = AmpConfig::get_web_path();
 $site_lang  = AmpConfig::get('lang', 'en_US');
@@ -59,8 +64,8 @@ $ajax_loader = $web_path . AmpConfig::get('theme_path', '/themes/reborn') . '/im
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo $site_title; ?></title>
 
-        <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
-        <?php require_once Ui::find_template('scripts.inc.php'); ?>
+        <?php echo (new StylesheetsView(AmpConfig::get_web_path()))->render(); ?>
+        <?php echo (new ScriptsView($environment, AmpConfig::get_web_path(), $ajaxUriRetriever))->render(); ?>
 
         <?php $iframed = true;
 require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>

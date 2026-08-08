@@ -3,6 +3,7 @@
 // show_html5_player_headers.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Asset\StylesheetsView;
 use Ampache\Module\Broadcast\Broadcast_Server;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
@@ -45,7 +46,7 @@ if ($iframed) { ?>
             // Stub
         }
     </script>
-    <?php  require_once Ui::find_template('stylesheets.inc.php');
+    <?php  echo (new StylesheetsView(AmpConfig::get_web_path()))->render();
 } ?>
 <script>
     window.jpDebug = <?php echo (AmpConfig::get('webplayer_debug')) ? 'true' : 'false'; ?>;

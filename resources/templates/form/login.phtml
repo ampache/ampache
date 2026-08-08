@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 // login.phtml -- rendered by Ampache\Gui\Form\LoginFormView
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Asset\StylesheetsView;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Form\LoginFormView $this */
@@ -36,7 +38,7 @@ use Ampache\Module\Util\Ui;
     <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $this->e($this->getCharset()); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
+    <?php echo $this->raw((new StylesheetsView(AmpConfig::get_web_path()))->render()); ?>
     <title><?php echo $this->e($this->getSiteTitle()); ?></title>
 </head>
 
