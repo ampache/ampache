@@ -50,7 +50,6 @@ final class GraphsView extends AbstractView
         private readonly string $formattedStartDate,
         private readonly string $formattedEndDate,
         private readonly string $requestAction,
-        private readonly string $requestType,
         private readonly string $breadcrumbLink,
         private readonly bool $geolocationEnabled,
     ) {}
@@ -110,11 +109,6 @@ final class GraphsView extends AbstractView
     public function getRequestAction(): string
     {
         return $this->requestAction;
-    }
-
-    public function getRequestType(): string
-    {
-        return $this->requestType;
     }
 
     public function getTitle(): string

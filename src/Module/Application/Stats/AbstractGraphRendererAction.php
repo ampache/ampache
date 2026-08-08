@@ -146,8 +146,6 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
             (string) $f_start_date,
             (string) $f_end_date,
             (string) Core::get_request('action'),
-            // nothing here has ever set a type, so the form's hidden field has always posted empty
-            '',
             $blink,
             (bool) AmpConfig::get('geolocation')
         ))->render();
