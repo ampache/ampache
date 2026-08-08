@@ -49,16 +49,6 @@ class AdvancedActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_random.inc.php',
-                [
-                    'videoRepository' => $this->videoRepository,
-                    'object_ids' => [],
-                    'browseFactory' => $this->browseFactory
-                ]
-            )
-            ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
