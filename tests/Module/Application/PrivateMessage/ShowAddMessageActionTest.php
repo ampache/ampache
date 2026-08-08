@@ -81,9 +81,16 @@ class ShowAddMessageActionTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunRendersWithNotOwnedReply(): void
@@ -123,9 +130,16 @@ class ShowAddMessageActionTest extends MockeryTestCase
             ->once()
             ->andReturnNull();
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunRendersWithReplyTo(): void
@@ -200,9 +214,16 @@ class ShowAddMessageActionTest extends MockeryTestCase
 
         $senderUser->username = $senderUserName;
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
         $this->assertStringContainsString(
             $senderUserName,
             $_REQUEST['to_user']

@@ -123,12 +123,19 @@ class ShowEditActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
-            $this->subject->run(
+        ob_start();
+
+        try {
+            $result = $this->subject->run(
                 $request,
                 $gatekeeper
-            )
-        );
+            );
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void

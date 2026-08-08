@@ -65,9 +65,16 @@ class ShowActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showQueryStats');
 
-        self::assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunThrowsIfAccessIsDenied(): void

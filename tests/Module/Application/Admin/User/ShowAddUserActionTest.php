@@ -64,9 +64,16 @@ class ShowAddUserActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        self::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($this->request, $this->gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunReturnsNullInDemoMode(): void

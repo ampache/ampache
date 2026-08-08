@@ -64,7 +64,15 @@ class ShowAddAdvancedActionTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $this->subject->run($request, $gatekeeper);
+        ob_start();
+
+        try {
+            $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNotSame('', $output);
     }
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void

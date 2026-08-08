@@ -78,7 +78,15 @@ class ShowEditRecordActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->subject->run($request, $gatekeeper);
+        ob_start();
+
+        try {
+            $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNotSame('', $output);
     }
 
     public function testRunThrowExceptionIfAccessIsDenied(): void
