@@ -121,6 +121,11 @@ final readonly class TagRepository implements TagRepositoryInterface
             : (int) $tagId;
     }
 
+    public function getHiddenCount(): int
+    {
+        return (int) $this->connection->fetchOne('SELECT COUNT(*) AS `tag_count` FROM `tag` WHERE `is_hidden` = 1;');
+    }
+
     public function getMergedCount(): int
     {
         return (int) $this->connection->fetchOne('SELECT COUNT(DISTINCT `tag_id`) AS `tag_count` FROM `tag_merge`;');
