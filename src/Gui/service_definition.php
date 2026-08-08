@@ -55,8 +55,10 @@ use Ampache\Gui\Browse\ListRenderer\VideoListRenderer;
 use Ampache\Gui\Browse\ListRenderer\WantedListRenderer;
 use Ampache\Gui\Edit\EditFormRendererLocator;
 use Ampache\Gui\Edit\EditFormRendererLocatorInterface;
+use Ampache\Gui\Edit\Renderer\ArtistEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\BroadcastEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\CollectionEditFormRenderer;
+use Ampache\Gui\Edit\Renderer\LabelEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\LiveStreamEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\PlaylistEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\PodcastEditFormRenderer;
@@ -78,8 +80,10 @@ return [
     // one renderer per migrated browse type; a type absent here still falls back to its .inc.php template
     EditFormRendererLocatorInterface::class => autowire(EditFormRendererLocator::class)
         ->constructorParameter('renderers', [
+            'artist_row' => get(ArtistEditFormRenderer::class),
             'broadcast_row' => get(BroadcastEditFormRenderer::class),
             'collection_row' => get(CollectionEditFormRenderer::class),
+            'label_row' => get(LabelEditFormRenderer::class),
             'live_stream_row' => get(LiveStreamEditFormRenderer::class),
             'playlist_row' => get(PlaylistEditFormRenderer::class),
             'podcast_episode_row' => get(PodcastEpisodeEditFormRenderer::class),
