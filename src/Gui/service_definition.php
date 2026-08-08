@@ -64,6 +64,7 @@ use Ampache\Gui\Edit\Renderer\LiveStreamEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\PlaylistEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\PodcastEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\PodcastEpisodeEditFormRenderer;
+use Ampache\Gui\Edit\Renderer\ShareEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\SongEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\TagEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\VideoEditFormRenderer;
@@ -93,6 +94,7 @@ return [
             'podcast_episode_row' => get(PodcastEpisodeEditFormRenderer::class),
             'podcast_row' => get(PodcastEditFormRenderer::class),
             'search_row' => get(PlaylistEditFormRenderer::class),
+            'share_row' => get(ShareEditFormRenderer::class),
             'song_row' => get(SongEditFormRenderer::class),
             'tag_hidden_row' => get(TagEditFormRenderer::class),
             'tag_row' => get(TagEditFormRenderer::class),

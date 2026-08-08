@@ -23,43 +23,42 @@ declare(strict_types=1);
  *
  */
 
-// show_edit_share_row.inc.php
+// edit/share.phtml -- rendered by Ampache\Gui\Edit\Renderer\ShareEditFormRenderer
 
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Authorization\AccessFunctionEnum;
-use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\Model\Share;
+/** @var Ampache\Gui\Edit\Renderer\ShareEditFormRenderer $this */
 
-/** @var Share $libitem */ ?>
+$shareId = $this->getShareId(); ?>
 <div>
-    <form method="post" id="edit_share_<?php echo $libitem->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_share_<?php echo $shareId; ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Share'); ?></td>
-                <td><?php echo $libitem->getObjectUrl(); ?></td>
+                <?php // getObjectUrl() returns the item's own link markup?>
+                <td><?php echo $this->raw($this->getObjectUrl()); ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Max Counter'); ?></td>
-                <td><input type="text" name="max_counter" value="<?php echo scrub_out((string) $libitem->max_counter); ?>" /></td>
+                <td><input type="text" name="max_counter" value="<?php echo $this->e($this->getMaxCounter()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Expiry Days'); ?></td>
-                <td><input type="text" name="expire" value="<?php echo scrub_out((string) $libitem->expire_days); ?>" /></td>
+                <td><input type="text" name="expire" value="<?php echo $this->e($this->getExpireDays()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($libitem->allow_stream) ? 'checked' : ''; ?> /> <?php echo T_('Allow Stream'); ?></td>
+                <?php // the hidden zero posts first so unchecking is a value rather than a missing key?>
+                <td><input type="hidden" name="allow_stream" value="0" /><input type="checkbox" name="allow_stream" value="1" <?php echo ($this->allowStream()) ? 'checked' : ''; ?> /> <?php echo T_('Allow Stream'); ?></td>
             </tr>
-<?php /** @var ZipHandlerInterface $zipHandler */
-$objectType = $libitem->object_type ?? '';
-if ((in_array($objectType, ['song', 'video', 'podcast_episode']) && (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD))) || (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable($objectType))) { ?>
+            <?php if ($this->showDownload()) { ?>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="allow_download" value="1" <?php echo ($libitem->allow_download) ? 'checked' : ''; ?> /> <?php echo T_('Allow Download'); ?></td>
+                <td><input type="hidden" name="allow_download" value="0" /><input type="checkbox" name="allow_download" value="1" <?php echo ($this->allowDownload()) ? 'checked' : ''; ?> /> <?php echo T_('Allow Download'); ?></td>
             </tr>
-        <?php } ?>
+            <?php } else { ?>
+            <input type="hidden" name="allow_download" value="<?php echo ($this->allowDownload()) ? '1' : '0'; ?>" />
+            <?php } ?>
         </table>
-        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $shareId; ?>" />
         <input type="hidden" name="type" value="share_row" />
     </form>
 </div>
