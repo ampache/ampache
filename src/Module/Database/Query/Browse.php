@@ -34,7 +34,6 @@ use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -162,7 +161,6 @@ class Browse extends Query
         private readonly GuiFactoryInterface $guiFactory,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
         private readonly UiInterface $ui,
-        private readonly UserFollowStateRendererInterface $userFollowStateRenderer,
         private readonly VideoRepositoryInterface $videoRepository,
         private readonly ZipHandlerInterface $zipHandler,
         private readonly BrowseListRendererLocatorInterface $browseListRendererLocator,
@@ -665,7 +663,6 @@ class Browse extends Query
             $guiFactory              = $this->guiFactory;
             $libraryItemLoader       = $this->libraryItemLoader;
             $ui                      = $this->ui;
-            $userFollowStateRenderer = $this->userFollowStateRenderer;
             $videoRepository         = $this->videoRepository;
             $zipHandler              = $this->zipHandler;
 

@@ -28,7 +28,6 @@ namespace Ampache\Module\Database\Query;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
-use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -45,7 +44,6 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
         private GuiFactoryInterface $guiFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
         private UiInterface $ui,
-        private UserFollowStateRendererInterface $userFollowStateRenderer,
         private VideoRepositoryInterface $videoRepository,
         private ZipHandlerInterface $zipHandler,
         private BrowseListRendererLocatorInterface $browseListRendererLocator,
@@ -62,7 +60,6 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
             $this->guiFactory,
             $this->libraryItemLoader,
             $this->ui,
-            $this->userFollowStateRenderer,
             $this->videoRepository,
             $this->zipHandler,
             $this->browseListRendererLocator,
