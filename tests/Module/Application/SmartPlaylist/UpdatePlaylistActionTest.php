@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Smartlist;
@@ -93,7 +94,8 @@ class UpdatePlaylistActionTest extends MockeryTestCase
             $this->ui,
             $this->modelFactory,
             $this->zipHandler,
-            $this->browseFactory
+            $this->browseFactory,
+            $this->mock(FunctionCheckerInterface::class)
         );
     }
 }

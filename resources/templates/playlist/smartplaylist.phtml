@@ -1,0 +1,112 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// playlist/smartplaylist.phtml -- rendered by Ampache\Gui\Playlist\SmartPlaylistPageView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Playlist\SmartPlaylistPageView $this */
+
+$playlistId = $this->getPlaylistId();
+$webPath    = $this->getWebPath();
+$browse     = $this->getBrowse();
+// the rule editor reads these from its own scope, as it does on the search and random pages
+$playlist    = $this->getPlaylist();
+$currentType = $this->getObjectType();
+Ui::show_box_top('<div id="smartplaylist_row_' . $playlistId . '">' . $this->getFullname() . '</div>', 'box box_smartplaylist'); ?>
+<?php if ($this->showRatings()) { ?>
+<span id="rating_<?php echo $playlistId; ?>_search"><?php echo $this->raw(Rating::show($playlistId, 'search')); ?></span>
+<span id="userflag_<?php echo $playlistId; ?>_search"><?php echo $this->raw(Userflag::show($playlistId, 'search')); ?></span>
+<?php } ?>
+<div id="information_actions">
+    <ul>
+        <?php if ($this->mayBatchDownload()) { ?>
+        <li>
+            <a class="nohtml" href="<?php echo $this->e($webPath); ?>/batch.php?action=search&id=<?php echo $playlistId; ?>" rel="nofollow">
+                <?php echo $this->raw(Ui::get_material_symbol('folder_zip', T_('Batch download'))); ?>
+                <?php echo T_('Batch download'); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=random&action=send_playlist&random_type=search&random_id=' . $playlistId, 'autorenew', T_('Random Play'), 'play_random_' . $playlistId)); ?></li>
+        <?php if ($this->mayUse()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?action=basket&type=search&id=' . $playlistId, 'new_window', T_('Add All to Temporary Playlist'), 'add_' . $playlistId)); ?></li>
+        <li>
+            <a id="add_to_playlist_<?php echo $playlistId; ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $playlistId; ?>')">
+                <?php echo $this->raw(Ui::get_material_symbol('playlist_add', $this->getAddToListLabel())); ?>
+                <?php echo $this->e($this->getAddToListLabel()); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <?php if ($this->mayEdit()) { ?>
+        <li>
+            <a id="edit_playlist_<?php echo $playlistId; ?>" onclick="showEditDialog('search_row', '<?php echo $playlistId; ?>', 'edit_playlist_<?php echo $playlistId; ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', '')">
+                <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+                <?php echo T_('Edit'); ?>
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo $this->e($webPath); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlistId; ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('close')); ?>
+                <?php echo T_('Delete'); ?>
+            </a>
+        </li>
+        <?php } ?>
+    </ul>
+</div>
+<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo $this->e($this->getFormAction()); ?>" style="display:inline">
+    <?php require Ui::find_template('show_rules.inc.php'); ?>
+    <div class="formValidation">
+        <?php if ($this->showEditButtons()) { ?>
+        <input class="button" type="submit" value="<?php echo $this->e(T_('Refresh')); ?>" onClick="$('#hiddenaction').val('refresh_playlist');" />&nbsp;&nbsp;
+        <input class="button" type="submit" value="<?php echo $this->e(T_('Save Changes')); ?>" onClick="$('#hiddenaction').val('update_playlist');" />&nbsp;&nbsp;
+        <input class="button" type="submit" value="<?php echo $this->e(T_('Save as Playlist')); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
+        <?php } ?>
+        <input type="hidden" id="hiddenaction" name="action" value="search" />
+        <input type="hidden" name="browse_id" value="<?php echo $this->e($browse->id); ?>" />
+        <input type="hidden" name="playlist_id" value="<?php echo $playlistId; ?>" />
+        <input type="hidden" name="playlist_type" value="<?php echo $this->e($this->getType()); ?>" />
+        <input type="hidden" name="playlist_name" value="<?php echo $this->e($this->getName()); ?>" />
+        <input type="hidden" name="playlist_user" value="<?php echo $this->e($this->getOwnerId()); ?>" />
+        <input type="hidden" name="limit" value="<?php echo $this->e($this->getLimit()); ?>" />
+        <input type="hidden" name="random" value="<?php echo $this->e($this->getRandom()); ?>" />
+    </div>
+</form>
+<?php Ui::show_box_bottom(); ?>
+<div>
+<?php if ($this->showSearchOptions()) {
+    // the options partial still reads these from the enclosing scope, as it does on the search page
+    $search_type = $currentType;
+    $zipHandler  = $this->getZipHandler();
+    require_once Ui::find_template('show_search_options.inc.php');
+}
+
+$browse->duration = $this->getTotalDuration();
+$browse->show_objects($this->getObjectIds());
+$browse->store(); ?>
+</div>
