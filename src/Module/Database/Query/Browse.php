@@ -150,7 +150,6 @@ class Browse extends Query
         'follower' => 'show_users.inc.php',
         'genre' => 'show_genres.inc.php',
         'playlist' => 'show_playlists.inc.php',
-        'playlist_localplay' => 'show_localplay_playlist.inc.php',
         'playlist_media' => 'show_playlist_medias.inc.php',
         'song' => 'show_songs.inc.php',
         'tag' => 'show_tagcloud.inc.php',

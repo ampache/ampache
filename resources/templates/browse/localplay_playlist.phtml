@@ -23,20 +23,16 @@ declare(strict_types=1);
  *
  */
 
-// show_localplay_playlist.inc.php
+// browse/localplay_playlist.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\LocalplayPlaylistListRenderer
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
-/** @var Ampache\Module\Database\Query\Browse $browse */
-/** @var array<int, array{track: string, id: int, raw?: string, name?: string|null}> $object_ids */
+/** @var Ampache\Gui\Browse\ListRenderer\LocalplayPlaylistListRenderer $this */
 
-$localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
-$localplay->connect();
-$status = $localplay->status(); ?>
-<?php if ($browse->is_show_header()) {
+$browse = $this->getBrowse();
+$tracks = $this->getTracks();
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata striped-rows">
@@ -48,35 +44,25 @@ $status = $localplay->status(); ?>
         </tr>
     </thead>
     <tbody>
-        <?php
-        if (!empty($status)) {
-            foreach ($object_ids as $object) {
-                $class = ' class="cel_name"';
-                if ($status['track'] == $object['track']) {
-                    $class=' class="cel_name lp_current"';
-                } ?>
-        <tr id="localplay_playlist_<?php echo $object['id']; ?>">
-            <td class="cel_track">
-                <?php echo scrub_out((string) $object['track']); ?>
-            </td>
-            <td<?php echo $class; ?>>
-                <?php if (!empty($object['name'])) {
-                    echo $localplay->format_name((string) $object['name'], (int) $object['id']);
+        <?php foreach ($tracks as $track) { ?>
+        <tr id="localplay_playlist_<?php echo $this->e($track['id']); ?>">
+            <td class="cel_track"><?php echo $this->e($track['track']); ?></td>
+            <td class="cel_name<?php echo $this->isCurrent($track) ? ' lp_current' : ''; ?>"><?php
+                if (!empty($track['name'])) {
+                    echo $this->raw($this->formatName($track['id'], (string) $track['name']));
                 } else {
                     // an entry we couldn't resolve shows the raw player url as plain text so it can't be clicked
-                    echo scrub_out((string) ($object['raw'] ?? ''));
-                } ?>
-            </td>
+                    echo $this->e($track['raw'] ?? '');
+                } ?></td>
             <td class="cel_action">
-            <?php echo Ajax::button('?page=localplay&action=delete_track&browse_id=' . $browse->getId() . '&id=' . (int) ($object['id']), 'close', T_('Delete'), 'localplay_delete_' . (int) ($object['id'])); ?>
+                <?php echo $this->raw(Ajax::button('?page=localplay&action=delete_track&browse_id=' . $browse->getId() . '&id=' . $track['id'], 'close', T_('Delete'), 'localplay_delete_' . $track['id'])); ?>
             </td>
         </tr>
-        <?php
-            } if (!count($object_ids)) { ?>
+        <?php } ?>
+        <?php if ($tracks === []) { ?>
         <tr>
             <td colspan="3"><span class="error"><?php echo T_('Found nothing to show'); ?></span></td>
         </tr>
-        <?php } ?>
         <?php } ?>
     </tbody>
     <tfoot>
