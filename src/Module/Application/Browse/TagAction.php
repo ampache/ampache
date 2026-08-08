@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Browse\BrowseContentView;
 use Ampache\Gui\Genre\GenreFormView;
+use Ampache\Gui\Genre\GenreOrderView;
 use Ampache\Gui\Genre\HiddenGenreCloudView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
@@ -97,6 +98,7 @@ final readonly class TagAction implements ApplicationActionInterface
         if ($request_type === 'tag_hidden') {
             echo (new HiddenGenreCloudView(
                 $this->createGenreFormView('tag_hidden'),
+                new GenreOrderView(AmpConfig::get_web_path(), 'tag_hidden', $countOrder),
                 $this->ajaxUriRetriever->getAjaxUri(),
                 $browse->getId(),
                 $object_ids,
@@ -105,7 +107,8 @@ final readonly class TagAction implements ApplicationActionInterface
 
             $this->ui->showBoxBottom();
         } else {
-            $genreForm = $this->createGenreFormView($browse_type);
+            $genreForm  = $this->createGenreFormView($browse_type);
+            $genreOrder = new GenreOrderView(AmpConfig::get_web_path(), $browse_type, $countOrder);
 
             require_once Ui::find_template('show_tagcloud.inc.php');
 

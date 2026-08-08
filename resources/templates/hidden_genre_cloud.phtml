@@ -31,6 +31,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Gui\Genre\HiddenGenreCloudView $this */
 
 echo $this->raw($this->getForm()->render());
+echo $this->raw($this->getOrder()->render());
 
 Ajax::start_container('tag_filter');
 foreach ($this->getGenres() as $genre) { ?>

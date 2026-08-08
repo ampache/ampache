@@ -38,6 +38,7 @@ final class HiddenGenreCloudView extends AbstractView
      */
     public function __construct(
         private readonly GenreFormView $form,
+        private readonly GenreOrderView $order,
         private readonly string $ajaxUri,
         private readonly int $browseId,
         private readonly array $genres,
@@ -65,6 +66,11 @@ final class HiddenGenreCloudView extends AbstractView
     public function getGenres(): array
     {
         return $this->genres;
+    }
+
+    public function getOrder(): GenreOrderView
+    {
+        return $this->order;
     }
 
     public function mayEdit(): bool
