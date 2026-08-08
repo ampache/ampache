@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 // user_activation.phtml -- rendered by Ampache\Gui\Register\UserActivationView
 
-use Ampache\Config\AmpConfig;
 use Ampache\Gui\Asset\StylesheetsView;
 use Ampache\Module\Util\Ui;
 
@@ -39,7 +38,7 @@ $t_ampache = T_('Ampache'); ?>
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $this->e($this->getCharset()); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo $this->e($this->getTitle()); ?></title>
-        <?php echo $this->raw((new StylesheetsView(AmpConfig::get_web_path()))->render()); ?>
+        <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render()); ?>
     </head>
     <body id="registerPage">
         <div id="maincontainer">
