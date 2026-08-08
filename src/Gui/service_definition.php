@@ -28,6 +28,7 @@ namespace Ampache\Gui;
 use Ampache\Gui\Browse\ListRenderer\BroadcastListRenderer;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocator;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
+use Ampache\Gui\Browse\ListRenderer\CatalogListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LabelListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LicenseListRenderer;
 use Ampache\Gui\Browse\ListRenderer\LiveStreamListRenderer;
@@ -54,6 +55,7 @@ return [
         ->constructorParameter('renderers', [
             'label' => get(LabelListRenderer::class),
             'broadcast' => get(BroadcastListRenderer::class),
+            'catalog' => get(CatalogListRenderer::class),
             'license' => get(LicenseListRenderer::class),
             'license_hidden' => get(LicenseListRenderer::class),
             'live_stream' => get(LiveStreamListRenderer::class),

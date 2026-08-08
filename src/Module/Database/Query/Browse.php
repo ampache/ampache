@@ -143,7 +143,6 @@ class Browse extends Query
         'album' => 'show_albums.inc.php',
         'album_disk' => 'show_album_disks.inc.php',
         'artist' => 'show_artists.inc.php',
-        'catalog' => 'show_catalogs.inc.php',
         'collection' => 'show_collections.inc.php',
         'collection_items' => 'show_collection_items.inc.php',
         'democratic' => 'show_democratic_playlist.inc.php',
@@ -158,7 +157,6 @@ class Browse extends Query
         'smartplaylist' => 'show_searches.inc.php',
         'song' => 'show_songs.inc.php',
         'tag' => 'show_tagcloud.inc.php',
-        'tag_hidden' => 'show_tagcloud_hidden.inc.php',
         'user' => 'show_users.inc.php',
         'video' => 'show_videos.inc.php',
     ];
