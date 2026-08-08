@@ -261,9 +261,11 @@ class Dba
 
     /**
      * @param class-string<object> $class
+     * @deprecated dead since 2024-02 (#3804); probe logs callers, remove if silent
      */
     public static function fetch_object(?PDOStatement $resource, string $class = 'stdClass', bool $finish = true): ?object
     {
+        debug_deprecated();
         if (!$resource instanceof PDOStatement) {
             return null;
         }
@@ -315,12 +317,14 @@ class Dba
      * (or null, if the query fails). Useful, e.g. for count-results
      *
      * @param list<scalar> $parameter
+     * @deprecated dead since 2026-08-01; probe logs callers, remove if silent
      */
     public static function fetch_single_column(
         string $query,
         array $parameter = [],
         bool $finish = true,
     ): ?string {
+        debug_deprecated();
         $resource = self::query(
             $query,
             $parameter

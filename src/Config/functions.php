@@ -572,6 +572,21 @@ function debug_event(string $type, string $message, int $level, string $username
 }
 
 /**
+ * Log a call to a deprecated method with its caller, and raise E_USER_DEPRECATED.
+ * Call as the first statement of the deprecated method: debug_deprecated();
+ */
+function debug_deprecated(): void
+{
+    $trace  = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+    $self   = $trace[1] ?? [];
+    $caller = $trace[2] ?? [];
+    $method = ($self['class'] ?? '') . ($self['type'] ?? '') . ($self['function'] ?? '?');
+    $from   = ($caller['class'] ?? '') . ($caller['type'] ?? '') . ($caller['function'] ?? 'main') . ' (' . basename((string) ($caller['file'] ?? '?')) . ':' . ($caller['line'] ?? '?') . ')';
+    debug_event('deprecated', $method . '() called from ' . $from, 1);
+    trigger_error($method . ' is deprecated', E_USER_DEPRECATED);
+}
+
+/**
  * @param int[]|null $catalogs
  * @param array<string, bool>|null $options
  */

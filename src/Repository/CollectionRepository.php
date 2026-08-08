@@ -91,8 +91,12 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
         }
     }
 
+    /**
+     * @deprecated dead since 2026-07-29; probe logs callers, remove if silent
+     */
     public function countByUser(?User $user): int
     {
+        debug_deprecated();
         // Same visibility scope as getByUser(), so the link appears exactly when a browse would list something
         $userId = ($user?->getId()) ?? -1;
 
