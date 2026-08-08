@@ -1,0 +1,43 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// wrapped.phtml -- rendered by Ampache\Gui\Stats\WrappedView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Stats\WrappedView $this */
+?>
+<h3 class="box-title"><?php echo $this->e($this->getTitle()); ?></h3>
+<dl class="media_details">
+    <dt><?php echo T_('Songs Played'); ?></dt>
+    <dd><?php echo $this->e($this->getSongCount()); ?></dd>
+    <dt><?php echo T_('Minutes Played'); ?></dt>
+    <dd><?php echo $this->e($this->getMinutesPlayed()); ?></dd>
+</dl>
+<?php foreach ($this->getSections() as $section) {
+    Ui::show_box_top($this->e($section['title']));
+    echo $this->raw($this->renderSection($section));
+    Ui::show_box_bottom();
+} ?>
