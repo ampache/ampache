@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Sidebar\AdminSidebarView;
+use Ampache\Gui\Sidebar\HomeSidebarView;
 use Ampache\Gui\Sidebar\LocalplaySidebarView;
 use Ampache\Gui\Sidebar\PreferencesSidebarView;
 use Ampache\Module\Api\Ajax;
@@ -37,15 +38,31 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\VideoRepositoryInterface;
 
 /** require@ public/templates/header.inc.php */
 /** require@ src/Application/Api/Ajax/Handler/IndexAjaxHandler.php */
 /** require@ src/Application/Api/Ajax/Handler/LocalPlayAjaxHandler.php */
 
+/** @var FolderRepositoryInterface $folderRepository */
+/** @var VideoRepositoryInterface $videoRepository */
+
 $web_path = AmpConfig::get_web_path();
 
 $admin_path = AmpConfig::get_web_path('/admin');
+
+// both the tab body and the always-on fallback below render this, so it is built once
+$homeSidebar = static fn(): string => (new HomeSidebarView(
+    AmpConfig::get_web_path(),
+    (AmpConfig::get('album_group')) ? 'album' : 'album_disk',
+    $videoRepository,
+    $folderRepository,
+    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+    Upload::can_upload(Core::get_global('user'))
+))->render();
 
 $is_session    = (User::is_registered() && (Core::get_global('user')->id ?? 0) > 0);
 $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
@@ -136,8 +153,10 @@ $t_logout          = T_('Log out'); ?>
     <?php print_r(Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']));
             if ($item['id'] == $_SESSION['state']['sidebar_tab']) { ?>
             <div id="sidebar-page" class="sidebar-page-float">
-                <?php $tab = (string) $_SESSION['state']['sidebar_tab'];
-                if ($tab === 'admin') {
+                <?php $tab   = (string) $_SESSION['state']['sidebar_tab'];
+                if ($tab === 'home') {
+                    echo $homeSidebar();
+                } elseif ($tab === 'admin') {
                     echo (new AdminSidebarView($web_path, $admin_path, Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)))->render();
                 } elseif ($tab === 'localplay') {
                     echo (new LocalplaySidebarView($web_path))->render();
@@ -170,7 +189,7 @@ $t_logout          = T_('Log out'); ?>
 } else { ?>
     <li id="sb_tab_home" class="sb1">
         <div id="sidebar-page" class="sidebar-page-float">
-        <?php require_once Ui::find_template('sidebar_home.inc.php'); ?>
+        <?php echo $homeSidebar(); ?>
         </div>
     </li>
 <?php } ?>
