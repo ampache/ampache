@@ -1,0 +1,82 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// user_row.phtml -- rendered by Ampache\Gui\User\UserRowView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\User\UserRowView $this */
+
+$userId = $this->getUserId(); ?>
+<td class="cel_username">
+    <a href="<?php echo $this->e($this->getWebPath()); ?>/stats.php?action=show_user&user_id=<?php echo $userId; ?>">
+        <?php echo $this->raw($this->getAvatar()); ?>
+        <?php echo $this->e($this->getUsername()); ?>
+        <?php echo ($this->showFullname()) ? '(' . $this->e($this->getFullname()) . ')' : ''; ?>
+    </a>
+</td>
+<td class="cel_lastseen"><?php echo $this->e($this->getLastSeen()); ?></td>
+<td class="cel_registrationdate"><?php echo $this->e($this->getCreateDate()); ?></td>
+<?php if ($this->showActivity()) { ?>
+<td class="cel_activity"><?php echo $this->e($this->getUsage()); ?></td>
+<?php } ?>
+<?php if ($this->showLastIp()) { ?>
+<td class="cel_lastip">
+    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=show_ip_history&user_id=<?php echo $userId; ?>">
+        <?php echo $this->e($this->getIpHistory()); ?>
+    </a>
+</td>
+<?php } ?>
+<?php if ($this->showFollow()) { ?>
+<td class="cel_follow"><?php echo $this->raw($this->getFollowState()); ?></td>
+<?php } ?>
+<td class="cel_action">
+    <?php if ($this->showPrivateMessage()) { ?>
+    <a id="reply_pvmsg_<?php echo $userId; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $this->e(urlencode($this->getUsername())); ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('mail', T_('Send private message'))); ?>
+    </a>
+    <?php } ?>
+    <?php if ($this->mayAdminister()) { ?>
+    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=show_edit&user_id=<?php echo $userId; ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+    </a>
+    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=show_preferences&user_id=<?php echo $userId; ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('page_info', T_('Preferences'))); ?>
+    </a>
+    <?php if ($this->isDisabled()) { ?>
+    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=enable&user_id=<?php echo $userId; ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('person', T_('Enable'))); ?>
+    </a>
+    <?php } else { ?>
+    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=disable&user_id=<?php echo $userId; ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('person_off', T_('Disable'))); ?>
+    </a>
+    <?php } ?>
+    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=delete&user_id=<?php echo $userId; ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
+    </a>
+    <?php } ?>
+</td>
+<td class="cel_online <?php echo $this->e($this->getOnlineClass()); ?>">&nbsp;</td>
