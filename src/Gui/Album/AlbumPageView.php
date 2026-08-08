@@ -36,16 +36,20 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\User;
 use Override;
 
 /**
- * An album's own page.
+ * An album's own page, and the same page for one of its disks.
+ *
+ * The two differed only in the object type they name in their urls and in the disk page having no track
+ * reorder, so they share one view rather than two near-identical templates.
  */
 final class AlbumPageView extends AbstractView
 {
     public function __construct(
-        private readonly Album $album,
+        private readonly Album|AlbumDisk $album,
         private readonly BrowseFactoryInterface $browseFactory,
         private readonly ?User $currentUser,
         private readonly string $webPath,
@@ -65,7 +69,7 @@ final class AlbumPageView extends AbstractView
         return Ui::get_add_to_list_label();
     }
 
-    public function getAlbum(): Album
+    public function getAlbum(): Album|AlbumDisk
     {
         return $this->album;
     }
@@ -79,7 +83,7 @@ final class AlbumPageView extends AbstractView
     {
         $name = '[' . $this->getParentName() . '] ' . $this->getFullname();
         ob_start();
-        Art::display('album', $this->getAlbumId(), $name, ['width' => 384, 'height' => 384], null, true, false);
+        Art::display($this->getObjectType(), $this->getAlbumId(), $name, ['width' => 384, 'height' => 384], null, true, false);
 
         return (string) ob_get_clean();
     }
@@ -87,6 +91,11 @@ final class AlbumPageView extends AbstractView
     public function getArtistId(): int
     {
         return (int) $this->album->album_artist;
+    }
+
+    public function getBrowseFilter(): string
+    {
+        return $this->getObjectType();
     }
 
     public function getExternalLinks(): ExternalLinksView
@@ -125,6 +134,14 @@ final class AlbumPageView extends AbstractView
         return $this->album->get_link();
     }
 
+    /**
+     * The disk page names `album_disk` everywhere the album page names `album`.
+     */
+    public function getObjectType(): string
+    {
+        return ($this->album instanceof AlbumDisk) ? 'album_disk' : 'album';
+    }
+
     public function getOwner(): ?User
     {
         $ownerId = $this->album->get_user_owner();
@@ -147,11 +164,30 @@ final class AlbumPageView extends AbstractView
         return $this->album->total_count;
     }
 
+    public function getRetagUrl(): string
+    {
+        return ($this->album instanceof AlbumDisk)
+            ? $this->webPath . '/albums.php?action=update_disk_from_tags&album_disk=' . $this->getAlbumId()
+            : $this->webPath . '/albums.php?action=update_from_tags&album_id=' . $this->getAlbumId();
+    }
+
     public function getTitle(): string
     {
-        return ($this->album->findAlbumArtist() !== null)
+        $hasArtist = ($this->album instanceof AlbumDisk)
+            ? $this->album->album_artist !== null
+            : $this->album->findAlbumArtist() !== null;
+
+        return ($hasArtist)
             ? scrub_out($this->getFullname()) . '&nbsp;-&nbsp;' . $this->getParentLink()
             : scrub_out($this->getFullname());
+    }
+
+    /**
+     * A disk's upload link points at the album it belongs to, not at the disk.
+     */
+    public function getUploadAlbumId(): int
+    {
+        return ($this->album instanceof AlbumDisk) ? $this->album->album_id : $this->getAlbumId();
     }
 
     public function getUser(): ?User
@@ -237,6 +273,14 @@ final class AlbumPageView extends AbstractView
     public function showRatings(): bool
     {
         return User::is_registered() && (bool) AmpConfig::get('ratings');
+    }
+
+    /**
+     * Only the whole album offers a track reorder; a single disk has no ordering of its own to save.
+     */
+    public function showReorder(): bool
+    {
+        return !$this->album instanceof AlbumDisk;
     }
 
     public function showRss(): bool

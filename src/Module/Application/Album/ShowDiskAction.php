@@ -25,8 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Album\AlbumPageView;
 use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
@@ -48,6 +54,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         private LoggerInterface $logger,
         private ZipHandlerInterface $zipHandler,
         private BrowseFactoryInterface $browseFactory,
+        private FunctionCheckerInterface $functionChecker,
         private AlbumEditabilityCheckerInterface $editabilityChecker,
     ) {}
 
@@ -67,16 +74,16 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->show(
-                'show_album_disk.inc.php',
-                [
-                    'albumDisk' => $albumDisk,
-                    'isAlbumEditable' => $this->editabilityChecker->check($gatekeeper, $albumDisk),
-                    'user' => $user,
-                    'zipHandler' => $this->zipHandler,
-                    'browseFactory' => $this->browseFactory
-                ]
-            );
+            echo (new AlbumPageView(
+                $albumDisk,
+                $this->browseFactory,
+                $gatekeeper->getUser(),
+                AmpConfig::get_web_path(),
+                $this->editabilityChecker->check($gatekeeper, $albumDisk),
+                $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('album_disk'),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ))->render();
         }
 
         // Show the Footer
