@@ -462,7 +462,9 @@ class Ui implements UiInterface
         }
 
         $rsstoken = '';
-        if ($user !== null) {
+        if ($user !== null && AmpConfig::get('use_auth')) {
+            // On an open instance (use_auth false) every visitor shares the same default user,
+            // so a token adds nothing and would leak into publicly served pages
             $rsstoken = "&rsstoken=" . $user->getRssToken();
         }
 
