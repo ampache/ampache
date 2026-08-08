@@ -32,6 +32,8 @@ use Ampache\Gui\Form\ConfirmationWithReturnView;
 use Ampache\Gui\Form\ContinueView;
 use Ampache\Gui\Partial\BoxBottomView;
 use Ampache\Gui\Partial\BoxTopView;
+use Ampache\Gui\Partial\FooterView;
+use Ampache\Gui\Partial\RightbarView;
 use Ampache\Gui\Preferences\PreferenceBoxView;
 use Ampache\Gui\System\QueryStatsView;
 use Ampache\Gui\System\StandaloneErrorTypeEnum;
@@ -664,7 +666,7 @@ class Ui implements UiInterface
             }
         }
 
-        require_once self::find_template('footer.inc.php');
+        echo (new FooterView())->render();
         if (Core::get_request('profiling') !== '') {
             Dba::show_profile();
         }
@@ -1790,14 +1792,12 @@ class Ui implements UiInterface
 
     public function showRightbar(): string
     {
-        return self::ajax_include(
-            'rightbar.inc.php',
-            [
-                'collectionRepository' => $this->collectionRepository,
-                'libraryItemLoader' => $this->libraryItemLoader,
-                'playlistLoader' => $this->playlistLoader,
-                'zipHandler' => $this->zipHandler,
-            ]
-        );
+        return (new RightbarView(
+            $this->collectionRepository,
+            $this->libraryItemLoader,
+            $this->playlistLoader,
+            $this->zipHandler,
+            AmpConfig::get_web_path()
+        ))->render();
     }
 }

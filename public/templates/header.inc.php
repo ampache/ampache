@@ -28,6 +28,7 @@ declare(strict_types=1);
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Asset\ScriptsView;
 use Ampache\Gui\Asset\StylesheetsView;
+use Ampache\Gui\Partial\RightbarView;
 use Ampache\Gui\Partial\TopMenuView;
 use Ampache\Gui\Playback\PlayTypeSwitchView;
 use Ampache\Gui\Search\SearchBarView;
@@ -46,6 +47,11 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
+
+/** @var Ampache\Repository\CollectionRepositoryInterface $collectionRepository */
+/** @var Ampache\Repository\Model\LibraryItemLoaderInterface $libraryItemLoader */
+/** @var Ampache\Module\Playlist\PlaylistLoaderInterface $playlistLoader */
+/** @var Ampache\Module\Util\ZipHandlerInterface $zipHandler */
 
 /** @var Ampache\Module\Util\AjaxUriRetrieverInterface $ajaxUriRetriever */
 /** @var EnvironmentInterface $environment */
@@ -183,7 +189,7 @@ $isCollapsed  = (
             </div>
 
             <div id="rightbar" class="rightbar-fixed">
-                <?php require_once Ui::find_template('rightbar.inc.php'); ?>
+                <?php echo (new RightbarView($collectionRepository, $libraryItemLoader, $playlistLoader, $zipHandler, AmpConfig::get_web_path()))->render(); ?>
             </div>
 
             <!-- Tiny little div, used to cheat the system -->

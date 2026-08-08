@@ -23,43 +23,34 @@ declare(strict_types=1);
  *
  */
 
-// footer.inc.php
+// partial/footer.phtml -- rendered by Ampache\Gui\Partial\FooterView
 
-use Ampache\Config\AmpConfig;
-use Ampache\Gui\Partial\VisualizerView;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Gui\Partial\FooterView $this */
 ?>
-                <?php echo Ui::material_symbol_sprite(); ?>
+                <?php echo $this->raw($this->getSprite()); ?>
                 </div>
                 <div style="clear:both;">
                 </div>
             </div>
         </div> <!-- end id="maincontainer"-->
-        <?php
-            $has_temp_playlist = false;
-if (!isset($_SESSION['login']) || !$_SESSION['login']) {
-    if (!empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
-        $has_temp_playlist = Core::get_global('user')->playlist->has_items();
-    }
-} ?>
-        <div id="footer" class="<?php echo(($has_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
-        <?php if (AmpConfig::get('show_donate')) { ?>
-            <a id="donate" href="//ampache.org/donate.html" title="<?php echo T_('Donate'); ?>" target="_blank"><?php echo T_('Donate'); ?></a> |
+        <div id="footer" class="<?php echo $this->e($this->getFooterClass()); ?>">
+        <?php if ($this->showDonate()) { ?>
+            <a id="donate" href="//ampache.org/donate.html" title="<?php echo $this->e(T_('Donate')); ?>" target="_blank"><?php echo T_('Donate'); ?></a> |
         <?php } ?>
-        <?php if (AmpConfig::get('custom_text_footer')) {
-            echo AmpConfig::get('custom_text_footer');
+        <?php if ($this->showCustomText()) {
+            echo $this->raw($this->getCustomText());
         } else { ?>
-            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © Ampache.org, 2001-2026"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
+            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo $this->e(T_('Copyright')); ?> © Ampache.org, 2001-2026"><?php echo $this->e($this->getVersion()); ?></a>
         <?php } ?>
         </div>
-        <?php if (!isset($_SESSION['login']) || !$_SESSION['login']) { ?>
+        <?php if ($this->isLoggedIn()) { ?>
         <div id="webplayer-minimize">
-          <a href="javascript:TogglePlayerVisibility();"><?php echo Ui::get_material_symbol('dock_to_bottom', T_('Show/Hide Player')); ?></a>
+          <a href="javascript:TogglePlayerVisibility();"><?php echo $this->raw(Ui::get_material_symbol('dock_to_bottom', T_('Show/Hide Player'))); ?></a>
         </div>
         <div id="webplayer"></div>
-        <?php echo (new VisualizerView())->render();
+        <?php echo $this->raw($this->getVisualizer());
         } ?>
         <div id="mobile-nav-backdrop" onclick="CloseMobileNav();"></div>
         <script>
@@ -96,6 +87,6 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']) {
                 });
             }
         </script>
-        <?php echo Ui::material_symbol_sprite(); ?>
+        <?php echo $this->raw($this->getSprite()); ?>
     </body>
 </html>

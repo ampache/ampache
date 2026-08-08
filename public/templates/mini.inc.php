@@ -28,6 +28,7 @@ declare(strict_types=1);
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Asset\ScriptsView;
 use Ampache\Gui\Asset\StylesheetsView;
+use Ampache\Gui\Partial\RightbarView;
 use Ampache\Gui\Partial\VisualizerView;
 use Ampache\Gui\Playback\PlayTypeSwitchView;
 use Ampache\Module\System\Core;
@@ -37,6 +38,11 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Plugin\PluginDisplayHomeInterface;
 use Ampache\Repository\Model\User;
+
+/** @var Ampache\Repository\CollectionRepositoryInterface $collectionRepository */
+/** @var Ampache\Repository\Model\LibraryItemLoaderInterface $libraryItemLoader */
+/** @var Ampache\Module\Playlist\PlaylistLoaderInterface $playlistLoader */
+/** @var Ampache\Module\Util\ZipHandlerInterface $zipHandler */
 
 /** @var Ampache\Module\Util\AjaxUriRetrieverInterface $ajaxUriRetriever */
 /** @var Ampache\Module\Util\EnvironmentInterface $environment */
@@ -291,7 +297,7 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         </div>
 
         <div id="rightbar" class="rightbar-fixed">
-            <?php require_once Ui::find_template('rightbar.inc.php'); ?>
+            <?php echo (new RightbarView($collectionRepository, $libraryItemLoader, $playlistLoader, $zipHandler, AmpConfig::get_web_path()))->render(); ?>
         </div>
 
         <div id="mini-content">
