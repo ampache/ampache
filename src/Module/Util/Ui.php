@@ -32,6 +32,7 @@ use Ampache\Gui\Form\ConfirmationWithReturnView;
 use Ampache\Gui\Form\ContinueView;
 use Ampache\Gui\Partial\BoxBottomView;
 use Ampache\Gui\Partial\BoxTopView;
+use Ampache\Gui\Preferences\PreferenceBoxView;
 use Ampache\Gui\System\QueryStatsView;
 use Ampache\Gui\System\StandaloneErrorTypeEnum;
 use Ampache\Gui\System\StandaloneErrorView;
@@ -1767,13 +1768,7 @@ class Ui implements UiInterface
      */
     public function showPreferenceBox(array $preferences): void
     {
-        $this->show(
-            'show_preference_box.inc.php',
-            [
-                'preferences' => $preferences,
-                'ui' => $this
-            ]
-        );
+        echo (new PreferenceBoxView($preferences, $this))->render();
     }
 
     /**
