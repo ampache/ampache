@@ -1,0 +1,246 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// artist/artist.phtml -- rendered by Ampache\Gui\Artist\ArtistPageView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Artist\ArtistPageView $this */
+
+$artistId    = $this->getArtistId();
+$webPath     = $this->getWebPath();
+$isAlbumType = $this->isAlbumType();
+Ui::show_box_top($this->e($this->getFullname()), 'info-box'); ?>
+<div class="item_right_info">
+    <?php echo $this->raw($this->getExternalLinks()->render()); ?>
+    <?php if ($this->showBiography()) {
+        echo $this->raw(Ajax::observe('window', 'load', Ajax::action($this->getBiographyAction(), 'artist_info'))); ?>
+    <div id="artist_biography"><?php echo T_('Loading...'); ?></div>
+    <?php } else {
+        echo $this->raw($this->getArt());
+    } ?>
+</div>
+<?php if ($this->showRatings()) { ?>
+<span id="rating_<?php echo $artistId; ?>_artist"><?php echo $this->raw(Rating::show($artistId, 'artist', true)); ?></span>
+<span id="userflag_<?php echo $artistId; ?>_artist"><?php echo $this->raw(Userflag::show($artistId, 'artist')); ?></span>
+<?php } ?>
+<?php if ($this->showPlayedTimes()) { ?>
+<br />
+<div style="display:inline;"><?php /* HINT: Number of times an object has been played */
+    echo T_('Played') . ' ' . sprintf(nT_('%d time', '%d times', $this->getPlayedTimes()), $this->getPlayedTimes()); ?></div>
+<?php } ?>
+<?php if ($this->showUploader()) { ?>
+<div class="item_uploaded_by"><?php echo T_('Uploaded by'); ?> <?php echo $this->raw($this->getOwner()?->get_f_link() ?? ''); ?></div>
+<?php } ?>
+<div id="information_actions">
+    <h3><?php echo T_('Actions'); ?></h3>
+    <ul>
+        <?php if ($isAlbumType) { ?>
+        <li>
+            <a href="<?php echo $this->e($webPath); ?>/artists.php?action=show_songs&artist=<?php echo $artistId; ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('search', T_('Show Artist Songs'))); ?>
+                <?php echo T_('Show Artist Songs'); ?>
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo $this->e($webPath); ?>/artists.php?action=show_all_songs&artist=<?php echo $artistId; ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('search', T_('Show All'))); ?>
+                <?php echo T_('Show All'); ?>
+            </a>
+        </li>
+        <?php } else { ?>
+        <li>
+            <a href="<?php echo $this->e($webPath); ?>/artists.php?action=show&artist=<?php echo $artistId; ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('search', T_('Show Albums'))); ?>
+                <?php echo T_('Show Albums'); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <?php if ($this->showDirectPlay()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artistId, 'play_circle', T_('Play All'), 'directplay_full_' . $artistId)); ?></li>
+        <?php if ($this->isAutoplayNext()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artistId . '&playnext=true', 'menu_open', T_('Play All Next'), 'nextplay_artist_' . $artistId)); ?></li>
+        <?php } ?>
+        <?php if ($this->isAutoplayAppend()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artistId . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_artist_' . $artistId)); ?></li>
+        <?php } ?>
+        <?php } ?>
+        <?php if ($this->showAdd()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?action=basket&type=artist&id=' . $artistId, 'new_window', T_('Add All to Temporary Playlist'), 'add_' . $artistId)); ?></li>
+        <li><?php echo $this->raw(Ajax::button_with_text('?action=basket&type=artist_random&id=' . $artistId, 'shuffle', T_('Random All to Temporary Playlist'), 'random_' . $artistId)); ?></li>
+        <li>
+            <a id="add_to_playlist_<?php echo $artistId; ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $artistId; ?>')">
+                <?php echo $this->raw(Ui::get_material_symbol('playlist_add', $this->getAddToListLabel())); ?>
+                <?php echo $this->e($this->getAddToListLabel()); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <?php if ($this->mayManage()) { ?>
+        <li>
+            <a href="javascript:NavigateTo('<?php echo $this->e($webPath); ?>/artists.php?action=update_from_tags&artist=<?php echo $artistId; ?>');" data-confirm="<?php echo $this->e(T_('Do you really want to update from tags?')); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('sync_alt', T_('Update from tags'))); ?>&nbsp;<?php echo T_('Update from tags'); ?>
+            </a>
+        </li>
+        <?php if ($this->showMusicbrainzUpdate()) { ?>
+        <li>
+            <a href="javascript:NavigateTo('<?php echo $this->e($webPath); ?>/artists.php?action=update_from_musicbrainz&artist=<?php echo $artistId; ?>');" data-confirm="<?php echo $this->e(T_('Are you sure? This will overwrite Artist details using MusicBrainz data')); ?>">
+                <?php echo $this->raw(Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz'))); ?>
+                <?php echo T_('Update details from MusicBrainz'); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <?php } ?>
+        <?php if ($this->showRss()) { ?>
+        <li><?php echo $this->raw(Ui::getRssLink(RssFeedTypeEnum::LIBRARY_ITEM, $this->getUser(), T_('RSS Feed'), ['object_type' => 'artist', 'object_id' => (string) $artistId])); ?></li>
+        <?php } ?>
+        <?php if ($this->showShout()) { ?>
+        <li>
+            <a href="<?php echo $this->e($webPath); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artistId; ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('comment', T_('Post Shout'))); ?>
+                <?php echo T_('Post Shout'); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <?php if ($this->mayZip()) { ?>
+        <li>
+            <a class="nohtml" href="<?php echo $this->e($webPath); ?>/batch.php?action=artist&id=<?php echo $artistId; ?>" rel="nofollow">
+                <?php echo $this->raw(Ui::get_material_symbol('folder_zip', T_('Download'))); ?>&nbsp;<?php echo T_('Download'); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <?php if ($this->maySeeGraphs() && $this->showGraphs()) { ?>
+        <li>
+            <a href="<?php echo $this->e($webPath); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artistId; ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('bar_chart', T_('Graphs'))); ?>
+                <?php echo T_('Graphs'); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <?php if ($this->mayEdit()) { ?>
+        <?php if ($this->mayUpload()) { ?>
+        <li>
+            <a href="<?php echo $this->e($webPath); ?>/upload.php?artist=<?php echo $artistId; ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('upload', T_('Upload'))); ?>&nbsp;<?php echo T_('Upload'); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <li>
+            <a id="edit_artist_<?php echo $artistId; ?>" onclick="showEditDialog('artist_row', '<?php echo $artistId; ?>', 'edit_artist_<?php echo $artistId; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', '')">
+                <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>&nbsp;<?php echo T_('Edit Artist'); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <?php if ($this->mayDelete()) { ?>
+        <li>
+            <a id="delete_artist_<?php echo $artistId; ?>" href="<?php echo $this->e($webPath); ?>/artists.php?action=delete&artist_id=<?php echo $artistId; ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
+                <?php echo T_('Delete'); ?>
+            </a>
+        </li>
+        <?php } ?>
+    </ul>
+</div>
+<?php Ui::show_box_bottom(); ?>
+<div class="tabs_wrapper">
+    <div id="tabs_container">
+        <ul id="tabs">
+            <li class="tab_active"><a href="#albums"><?php echo T_('Albums'); ?></a></li>
+            <li><a id="top_tracks_link" href="#top_tracks"><?php echo T_('Top Tracks'); ?></a></li>
+            <?php if ($this->showWanted()) { ?>
+            <li><a id="missing_albums_link" href="#missing_albums"><?php echo T_('Missing Albums'); ?></a></li>
+            <?php } ?>
+            <?php if ($this->showSimilar()) { ?>
+            <li><a id="similar_artist_link" href="#similar_artist"><?php echo T_('Similar Artists'); ?></a></li>
+            <li><a id="similar_songs_link" href="#similar_songs"><?php echo T_('Similar Songs'); ?></a></li>
+            <?php } ?>
+            <?php if ($this->showLabels()) { ?>
+            <li><a id="labels_link" href="#labels"><?php echo T_('Labels'); ?></a></li>
+            <?php } ?>
+            <!-- Needed to avoid the 'only one' bug -->
+            <li></li>
+        </ul>
+    </div>
+    <div id="tabs_content">
+        <div id="albums" class="tab_content" style="display: block;">
+<?php [$sort, $order] = $this->getSort();
+foreach ($this->getMultiObjectIds() as $key => $objectIds) {
+    $browse = $this->createBrowse();
+    $browse->set_type($this->getObjectType());
+    $browse->set_use_filters(false);
+    if ($isAlbumType) {
+        $browse->set_sort($sort, $order, false);
+    }
+
+    $browse->set_use_alpha(false, false);
+    if ($key !== '') {
+        $browse->set_content_div_ak($key);
+    }
+
+    $browse->show_objects($objectIds, ['group_disks' => true, 'title' => ($key !== '') ? ucwords($key) : '']);
+    $browse->store();
+} ?>
+        </div>
+        <?php echo $this->raw(Ajax::observe('top_tracks_link', 'click', Ajax::action('?page=index&action=top_tracks&artist=' . $artistId, 'top_tracks'))); ?>
+        <div id="top_tracks" class="tab_content">
+            <?php Ui::show_box_top('', 'info-box');
+echo T_('Loading...');
+Ui::show_box_bottom(); ?>
+        </div>
+        <?php if ($this->showWanted()) {
+            echo $this->raw(Ajax::observe('missing_albums_link', 'click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artistId, 'missing_albums'))); ?>
+        <div id="missing_albums" class="tab_content">
+            <?php Ui::show_box_top(T_('Missing Albums'), 'info-box');
+            echo T_('Loading...');
+            Ui::show_box_bottom(); ?>
+        </div>
+        <?php } ?>
+        <?php if ($this->showSimilar()) {
+            echo $this->raw(Ajax::observe('similar_artist_link', 'click', Ajax::action('?page=index&action=similar_artist&artist=' . $artistId, 'similar_artist'))); ?>
+        <div id="similar_artist" class="tab_content">
+            <?php Ui::show_box_top(T_('Similar Artists'), 'info-box');
+            echo T_('Loading...');
+            Ui::show_box_bottom(); ?>
+        </div>
+        <?php echo $this->raw(Ajax::observe('similar_songs_link', 'click', Ajax::action('?page=index&action=similar_songs&artist=' . $artistId, 'similar_songs'))); ?>
+        <div id="similar_songs" class="tab_content">
+            <?php Ui::show_box_top('', 'info-box');
+            echo T_('Loading...');
+            Ui::show_box_bottom(); ?>
+        </div>
+        <?php } ?>
+        <?php if ($this->showLabels()) {
+            echo $this->raw(Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artistId, 'labels'))); ?>
+        <div id="labels" class="tab_content">
+            <?php Ui::show_box_top(T_('Labels'), 'info-box');
+            echo T_('Loading...');
+            Ui::show_box_bottom(); ?>
+        </div>
+        <?php } ?>
+    </div>
+</div>
