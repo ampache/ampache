@@ -56,7 +56,9 @@ use Ampache\Gui\Browse\ListRenderer\WantedListRenderer;
 use Ampache\Gui\Edit\EditFormRendererLocator;
 use Ampache\Gui\Edit\EditFormRendererLocatorInterface;
 use Ampache\Gui\Edit\Renderer\BroadcastEditFormRenderer;
+use Ampache\Gui\Edit\Renderer\CollectionEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\LiveStreamEditFormRenderer;
+use Ampache\Gui\Edit\Renderer\PlaylistEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\PodcastEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\PodcastEpisodeEditFormRenderer;
 use Ampache\Gui\Edit\Renderer\TagEditFormRenderer;
@@ -77,9 +79,12 @@ return [
     EditFormRendererLocatorInterface::class => autowire(EditFormRendererLocator::class)
         ->constructorParameter('renderers', [
             'broadcast_row' => get(BroadcastEditFormRenderer::class),
+            'collection_row' => get(CollectionEditFormRenderer::class),
             'live_stream_row' => get(LiveStreamEditFormRenderer::class),
+            'playlist_row' => get(PlaylistEditFormRenderer::class),
             'podcast_episode_row' => get(PodcastEpisodeEditFormRenderer::class),
             'podcast_row' => get(PodcastEditFormRenderer::class),
+            'search_row' => get(PlaylistEditFormRenderer::class),
             'tag_hidden_row' => get(TagEditFormRenderer::class),
             'tag_row' => get(TagEditFormRenderer::class),
             'video_row' => get(VideoEditFormRenderer::class),
