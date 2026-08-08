@@ -42,7 +42,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -148,7 +147,6 @@ class Browse extends Query
         private readonly AjaxUriRetrieverInterface $ajaxUriRetriever,
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
         private readonly GuiFactoryInterface $guiFactory,
-        private readonly LibraryItemLoaderInterface $libraryItemLoader,
         private readonly ZipHandlerInterface $zipHandler,
         private readonly BrowseListRendererLocatorInterface $browseListRendererLocator,
         ?int $browse_id = 0,
@@ -648,7 +646,6 @@ class Browse extends Query
             // the browse template and its row templates render in this scope, so the services they use are named here
             $gatekeeper              = $this->gatekeeperFactory->createGuiGatekeeper();
             $guiFactory              = $this->guiFactory;
-            $libraryItemLoader       = $this->libraryItemLoader;
             $zipHandler              = $this->zipHandler;
 
             require $box_req;

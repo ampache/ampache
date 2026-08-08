@@ -30,7 +30,6 @@ use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\Model\LibraryItemLoaderInterface;
 
 final readonly class BrowseFactory implements BrowseFactoryInterface
 {
@@ -38,7 +37,6 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
         private AjaxUriRetrieverInterface $ajaxUriRetriever,
         private GatekeeperFactoryInterface $gatekeeperFactory,
         private GuiFactoryInterface $guiFactory,
-        private LibraryItemLoaderInterface $libraryItemLoader,
         private ZipHandlerInterface $zipHandler,
         private BrowseListRendererLocatorInterface $browseListRendererLocator,
     ) {}
@@ -51,7 +49,6 @@ final readonly class BrowseFactory implements BrowseFactoryInterface
             $this->ajaxUriRetriever,
             $this->gatekeeperFactory,
             $this->guiFactory,
-            $this->libraryItemLoader,
             $this->zipHandler,
             $this->browseListRendererLocator,
             (int) $browse_id,
