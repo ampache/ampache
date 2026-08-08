@@ -63,6 +63,14 @@ final class SmartPlaylistPageView extends AbstractView
         private readonly bool $mayBatchDownload,
     ) {}
 
+    /**
+     * The raw permission, before any per-type zip check.
+     */
+    public function canBatchDownload(): bool
+    {
+        return $this->mayBatchDownload;
+    }
+
     public function getAddToListLabel(): string
     {
         return Ui::get_add_to_list_label();

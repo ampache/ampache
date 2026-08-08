@@ -26,8 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Search;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Search\SearchOptionsView;
 use Ampache\Gui\Wanted\MissingArtistsView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
@@ -51,6 +54,7 @@ final readonly class SearchAction implements ApplicationActionInterface
         private MissingArtistFinderInterface $missingArtistFinder,
         private VideoRepositoryInterface $videoRepository,
         private ZipHandlerInterface $zipHandler,
+        private FunctionCheckerInterface $functionChecker,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -77,7 +81,13 @@ final readonly class SearchAction implements ApplicationActionInterface
             $videoRepository = $this->videoRepository;
             $zipHandler      = $this->zipHandler;
             require_once Ui::find_template('show_form_search.inc.php');
-            require_once Ui::find_template('show_search_options.inc.php');
+            echo (new SearchOptionsView(
+                $browse,
+                $searchType,
+                $this->zipHandler,
+                AmpConfig::get_web_path(),
+                $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            ))->render();
             $results = Search::run($_REQUEST);
             $browse->set_type($searchType);
             $browse->show_objects($results);
