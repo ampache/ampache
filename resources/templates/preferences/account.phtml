@@ -1,0 +1,159 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// preferences/account.phtml -- rendered by Ampache\Gui\Preferences\AccountView
+
+use Ampache\Module\System\AmpError;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Preferences\AccountView $this */
+
+$userId    = $this->getUserId();
+$adminPath = $this->getAdminPath();
+$readOnly  = $this->isReadOnly();
+$apikey    = $this->getApikey();
+echo $this->raw(AmpError::display('general'));
+if (!$readOnly) { ?>
+<form method="post" name="preferences" action="<?php echo $this->e($this->getFormAction()); ?>" enctype="multipart/form-data">
+<?php } ?>
+    <table class="tabledata">
+        <?php if ($this->showField('fullname')) { ?>
+        <tr>
+            <td><?php echo T_('Full Name'); ?>:</td>
+            <td><?php echo ($readOnly) ? $this->e($this->getFullname()) : '<input type="text" name="fullname" id="fullname" value="' . $this->e($this->getFullname()) . '" />'; ?></td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td><?php echo T_('E-mail'); ?>:</td>
+            <td><?php echo ($readOnly) ? $this->e($this->getEmail()) : '<input type="text" name="email" id="email" value="' . $this->e($this->getEmail()) . '" />'; ?></td>
+        </tr>
+        <?php if ($this->showField('website')) { ?>
+        <tr>
+            <td><?php echo T_('Website'); ?>:</td>
+            <td><?php echo ($readOnly) ? $this->e($this->getWebsite()) : '<input type="text" name="website" id="website" value="' . $this->e($this->getWebsite()) . '" />'; ?></td>
+        </tr>
+        <?php } ?>
+        <?php if ($this->showField('state')) { ?>
+        <tr>
+            <td><?php echo T_('State'); ?>:</td>
+            <td><?php echo ($readOnly) ? $this->e($this->getState()) : '<input type="text" name="state" id="state" value="' . $this->e($this->getState()) . '" />'; ?></td>
+        </tr>
+        <?php } ?>
+        <?php if ($this->showField('city')) { ?>
+        <tr>
+            <td><?php echo T_('City'); ?>:</td>
+            <td><?php echo ($readOnly) ? $this->e($this->getCity()) : '<input type="text" name="city" id="city" value="' . $this->e($this->getCity()) . '" />'; ?></td>
+        </tr>
+        <?php } ?>
+        <?php if (!$readOnly) { ?>
+        <tr>
+            <td><?php echo T_('Password'); ?>:</td>
+            <td><?php echo $this->raw(AmpError::display('password')); ?><input id="password1" type="password" name="password1" maxlength="64" autocomplete="new-password" /></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Confirm Password'); ?>:</td>
+            <td><input id="password2" type="password" name="password2" maxlength="64" autocomplete="new-password" /></td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td><?php echo T_('API key'); ?>
+                <?php if ($this->isAdmin()) { ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_generate_apikey&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('cycle', T_('Generate new API key'))); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <span>
+                    <?php if ($apikey !== '') { ?>
+                    <br />
+                    <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;"><div id="apikey_qrcode"></div></div>
+                    <br />
+                    <?php // the key is json encoded rather than pasted into the literal, so a quote cannot end it?>
+                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: <?php echo $this->raw((string) json_encode($apikey, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP)); ?>, background: '#ffffff', foreground: '#000000'});</script>
+                    <?php echo $this->e($apikey);
+                    } ?>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Subsonic Password'); ?></td>
+            <td>
+                <?php if ($readOnly) { ?>
+                <span><?php echo ($this->hasSubsonicSecret()) ? T_('Currently set') : T_('Not set'); ?></span>
+                <?php } else { ?>
+                <input id="subsonic_password1" type="password" name="subsonic_password1" maxlength="64" autocomplete="new-password" />
+                <?php } ?>
+            </td>
+        </tr>
+        <?php if (!$readOnly) { ?>
+        <tr>
+            <td><?php echo T_('Confirm Subsonic Password'); ?></td>
+            <td><input id="subsonic_password2" type="password" name="subsonic_password2" maxlength="64" autocomplete="new-password" /></td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td><?php echo T_('Stream Token'); ?>
+                <?php if ($this->isAdmin()) { ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_generate_streamtoken&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('cycle', T_('Generate new Stream token'))); ?></a>
+                <?php } ?>
+            </td>
+            <td><span><?php echo $this->e($this->getStreamToken()); ?></span></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('RSS Token'); ?>
+                <?php if ($this->isAdmin()) { ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_generate_rsstoken&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('cycle', T_('Generate new RSS token'))); ?></a>
+                <?php } ?>
+            </td>
+            <td><span><?php echo $this->e($this->getRssToken()); ?></span></td>
+        </tr>
+        <?php if (!$readOnly) { ?>
+        <tr>
+            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo $this->e(Ui::format_bytes($this->getMaxUploadSize())); ?>)</td>
+            <td>
+                <input type="file" id="avatar" name="avatar" value="" />
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $this->e($this->getMaxUploadSize()); ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <?php echo $this->raw($this->getAvatar()); ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_delete_avatar&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?></a>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Clear Stats'); ?></td>
+            <td><input type="checkbox" name="clear_stats" value="1" /></td>
+        </tr>
+        <?php } ?>
+    </table>
+    <?php if (!$readOnly) { ?>
+    <div class="formValidation">
+        <input type="hidden" name="user_id" value="<?php echo $userId; ?>" />
+        <input type="hidden" name="tab" value="<?php echo $this->e($this->getTab()); ?>" />
+        <input class="button" type="submit" value="<?php echo $this->e(T_('Update Account')); ?>" />
+    </div>
+</form>
+<?php } ?>

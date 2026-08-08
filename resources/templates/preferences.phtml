@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
 /** @var Ampache\Gui\Preferences\PreferencesView $this */
 
@@ -54,8 +55,9 @@ if ($this->hasPreferenceForm()) { ?>
 // the account templates bring their own form, so this does not wrap them in one
 if ($this->isAccountTab()) {
     $client = Core::get_global('user');
-
-    require Ui::find_template($this->getAccountTemplate());
+    if ($client instanceof User) {
+        echo $this->raw($this->getAccountView($client)->render());
+    }
 }
 
 Ui::show_box_bottom();

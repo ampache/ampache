@@ -27,6 +27,7 @@ namespace Ampache\Gui\Preferences;
 
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Override;
 
 /**
@@ -55,13 +56,11 @@ final class PreferencesView extends AbstractView
     ) {}
 
     /**
-     * The account tab has its own template and its own form; simple mode gets the cut-down one.
+     * The account tab brings its own form; simple mode gets a read-only version of the same fields.
      */
-    public function getAccountTemplate(): string
+    public function getAccountView(User $client): AccountView
     {
-        return ($this->simpleUserMode && !$this->isAdmin)
-            ? 'show_account_simple.inc.php'
-            : 'show_account.inc.php';
+        return new AccountView($client, $this->webPath, $this->simpleUserMode && !$this->isAdmin);
     }
 
     public function getActionUrl(): string
