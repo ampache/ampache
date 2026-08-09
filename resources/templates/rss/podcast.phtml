@@ -30,7 +30,7 @@ declare(strict_types=1);
 $item = $this->getItem();
 
 echo '<?xml version="1.0" encoding="utf-8"?>', "\n"; ?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://podcastindex.org/namespace/1.0" version="2.0">
     <channel>
         <title><?php echo $this->e($item->getTitle()); ?></title>
         <link><?php echo $this->e($item->getLink()); ?></link>
@@ -52,7 +52,10 @@ if ($item->hasSummary()) { ?>
 foreach ($item->getMedias() as $media) { ?>
         <item>
             <title><?php echo $this->e($media['title']); ?></title>
-<?php   if (!empty($media['author'])) { ?>
+<?php   if (!empty($media['link'])) { ?>
+            <link><?php echo $this->e($media['link']); ?></link>
+<?php   }
+    if (!empty($media['author'])) { ?>
             <itunes:author><?php echo $this->e($media['author']); ?></itunes:author>
 <?php   } ?>
             <guid><?php echo $this->e($media['guid']); ?></guid>
@@ -60,7 +63,13 @@ foreach ($item->getMedias() as $media) { ?>
             <pubDate><?php echo $this->e($media['pubDate']); ?></pubDate>
 <?php   } ?>
             <itunes:duration><?php echo $this->e($media['length']); ?></itunes:duration>
-<?php   if (!empty($media['url'])) { ?>
+<?php   if (!empty($media['season'])) { ?>
+            <podcast:season<?php echo (!empty($media['season_name'])) ? ' name="' . $this->e($media['season_name']) . '"' : ''; ?>><?php echo $this->e($media['season']); ?></podcast:season>
+<?php   }
+    if (!empty($media['episode'])) { ?>
+            <podcast:episode><?php echo $this->e($media['episode']); ?></podcast:episode>
+<?php   }
+    if (!empty($media['url'])) { ?>
             <enclosure type="<?php echo $this->e($media['type']); ?>" length="<?php echo $this->e($media['size']); ?>" url="<?php echo $this->e($media['url']); ?>"/>
 <?php   } ?>
         </item>

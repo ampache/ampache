@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Rss\RssFeedTypeFactoryInterface;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -75,7 +76,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $item = $this->libraryItemLoader->load(
                 LibraryItemEnum::from($queryParams['object_type'] ?? ''),
                 (int) ($queryParams['object_id'] ?? 0),
-                [Album::class, Artist::class, Podcast::class, Song::class]
+                [Album::class, AlbumDisk::class, Artist::class, Podcast::class, Song::class]
             );
 
             if ($item === null) {

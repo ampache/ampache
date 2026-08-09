@@ -50,12 +50,16 @@ interface RssItemInterface
      * @return Traversable<array{
      *   title: string,
      *   guid: string,
+     *   link: string,
      *   length: string,
      *   author: ?string,
      *   pubDate: ?string,
      *   type: ?string,
      *   size: ?string,
-     *   url: ?string
+     *   url: ?string,
+     *   season: ?string,
+     *   season_name: ?string,
+     *   episode: ?string
      * }>
      */
     public function getMedias(): Traversable;
