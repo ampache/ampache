@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\AddPodcastFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -90,13 +91,11 @@ final readonly class CreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         if (AmpError::occurred()) {
-            $this->ui->show(
-                'show_add_podcast.inc.php',
-                [
-                    'catalog_id' => (int) ($data['catalog'] ?? 0),
-                    'feed' => ($data['feed'] ?? '')
-                ]
-            );
+            echo (new AddPodcastFormView(
+                $this->configContainer->getWebPath(),
+                ($data['feed'] ?? ''),
+                (int) ($data['catalog'] ?? 0)
+            ))->render();
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),

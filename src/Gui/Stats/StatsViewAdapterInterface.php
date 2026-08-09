@@ -26,9 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Gui\Stats;
 
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
+use Ampache\Gui\View\TemplateInterface;
 
-interface StatsViewAdapterInterface
+interface StatsViewAdapterInterface extends TemplateInterface
 {
+    public function displayAlbum(): bool;
+
+    public function displayAlbumDisk(): bool;
+
     public function displayPodcast(): bool;
 
     public function displayVideo(): bool;

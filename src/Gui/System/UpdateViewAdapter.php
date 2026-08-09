@@ -27,6 +27,7 @@ namespace Ampache\Gui\System;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Application\Update\UpdateAction;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Update\UpdateHelperInterface;
@@ -35,14 +36,15 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Generator;
+use Override;
 
-final readonly class UpdateViewAdapter implements UpdateViewAdapterInterface
+final class UpdateViewAdapter extends AbstractView implements UpdateViewAdapterInterface
 {
     public function __construct(
-        private ConfigContainerInterface $configContainer,
-        private UpdateInfoRepositoryInterface $updateInfoRepository,
-        private UpdateHelperInterface $updateHelper,
-        private UpdaterInterface $updater,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly UpdateInfoRepositoryInterface $updateInfoRepository,
+        private readonly UpdateHelperInterface $updateHelper,
+        private readonly UpdaterInterface $updater,
     ) {}
 
     public function getCharset(): string
@@ -130,5 +132,11 @@ final readonly class UpdateViewAdapter implements UpdateViewAdapterInterface
     public function hasUpdate(): bool
     {
         return $this->updater->hasPendingUpdates();
+    }
+
+    #[Override]
+    protected function templateFile(): string
+    {
+        return $this->findTemplate('update.phtml');
     }
 }

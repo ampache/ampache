@@ -34,6 +34,7 @@ use Ampache\Module\Application\Browse\CollectionAction;
 use Ampache\Module\Application\Browse\FileAction;
 use Ampache\Module\Application\Browse\LabelAction;
 use Ampache\Module\Application\Browse\LiveStreamAction;
+use Ampache\Module\Application\Browse\MoodAction;
 use Ampache\Module\Application\Browse\PlaylistAction;
 use Ampache\Module\Application\Browse\PodcastAction;
 use Ampache\Module\Application\Browse\PodcastEpisodeAction;
@@ -52,6 +53,7 @@ $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
         TagAction::REQUEST_KEY => TagAction::class,
+        MoodAction::REQUEST_KEY => MoodAction::class,
         FileAction::REQUEST_KEY => FileAction::class,
         AlbumAction::REQUEST_KEY => AlbumAction::class,
         AlbumDiskAction::REQUEST_KEY => AlbumDiskAction::class,

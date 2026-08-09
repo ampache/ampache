@@ -1,0 +1,93 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// playlist_row.phtml -- rendered by Ampache\Gui\Playlist\PlaylistRowView
+
+/** @var Ampache\Gui\Playlist\PlaylistRowView $this */
+
+$playlist   = $this->getPlaylist();
+$config     = $this->getConfig();
+$playlistId = $playlist->getId(); ?>
+    <td class="cel_play">
+        <span class="cel_play_content"> </span>
+        <div class="cel_play_hover">
+<?php if ($config->isDirectplayEnabled()) {
+    echo $this->raw($playlist->getDirectplayButton());
+
+    if ($playlist->canAutoplayNext()) {
+        echo $this->raw($playlist->getAutoplayNextButton());
+    }
+
+    if ($playlist->canAppendNext()) {
+        echo $this->raw($playlist->getAppendNextButton());
+    }
+} ?>
+        </div>
+    </td>
+<?php if ($this->isShowArt()) { ?>
+    <td class="<?php echo $this->e($this->getClassCover()); ?>"><?php // getArt() echoes rather than returning, so it is called as a statement and lands inside this cell
+        $playlist->getArt(); ?></td>
+<?php } ?>
+    <td class="cel_playlist"><?php echo $this->raw($playlist->getPlaylistLink()); ?></td>
+    <td class="cel_add_list">
+        <span class="cel_item_add">
+<?php if ($this->isShowPlaylistAdd()) {
+    echo $this->raw($playlist->getRandomPlayPlaylistButton());
+    echo $this->raw($playlist->getAddToTemporaryPlaylistButton());
+    echo $this->raw($playlist->getRandomToTemporaryPlaylistButton()); ?>
+                <a id="add_to_playlist_<?php echo $playlistId; ?>" onclick="showPlaylistDialog(event, 'playlist', '<?php echo $playlistId; ?>')"><?php echo $this->raw($playlist->getAddToPlaylistIcon()); ?></a>
+<?php } ?>
+        </span>
+    </td>
+    <td class="cel_last_update"><?php echo $this->e($playlist->getLastUpdate()); ?></td>
+    <td class="cel_type"><?php echo $this->e($playlist->getType()); ?></td>
+    <td class="cel_medias"><?php echo $this->e($playlist->getMediaCount()); ?></td>
+<?php if ($this->isUsingRatings()) { ?>
+    <td class="cel_ratings">
+        <div class="rating">
+            <span class="cel_rating" id="rating_<?php echo $playlistId; ?>_playlist"><?php echo $this->raw($playlist->getRating()); ?></span>
+            <span class="cel_userflag" id="userflag_<?php echo $playlistId; ?>_playlist"><?php echo $this->raw($playlist->getUserFlags()); ?></span>
+        </div>
+    </td>
+<?php } ?>
+    <td class="cel_owner"><?php echo $this->e($playlist->getUsername()); ?></td>
+    <td class="cel_action">
+<?php if ($playlist->canShare()) {
+    echo $this->raw($playlist->getShareUi());
+}
+
+if ($playlist->canBatchDownload()) { ?>
+        <a class="nohtml" rel="nofollow" href="<?php echo $this->e($playlist->getBatchDownloadUrl()); ?>"><?php echo $this->raw($playlist->getBatchDownloadIcon()); ?></a>
+<?php }
+if ($playlist->canBeRefreshed()) { ?>
+        <a href="<?php echo $this->e($playlist->getRefreshUrl()); ?>"><?php echo $this->raw($playlist->getRefreshIcon()); ?></a>
+<?php }
+if ($playlist->isEditable()) { ?>
+        <a id="edit_playlist_<?php echo $playlistId; ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlistId; ?>', 'edit_playlist_<?php echo $playlistId; ?>', '<?php echo $this->e($playlist->getEditButtonTitle()); ?>', 'playlist_row_')"><?php echo $this->raw($playlist->getEditIcon()); ?></a>
+<?php }
+if ($playlist->canBeDeleted()) {
+    echo $this->raw($playlist->getDeletionButton());
+} ?>
+    </td>

@@ -25,8 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\SmartPlaylist;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Playlist\SmartPlaylistPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
@@ -44,6 +50,7 @@ final readonly class UpdatePlaylistAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private ZipHandlerInterface $zipHandler,
         private BrowseFactoryInterface $browseFactory,
+        private FunctionCheckerInterface $functionChecker,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,15 +71,15 @@ final readonly class UpdatePlaylistAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_search.inc.php',
-            [
-                'playlist' => $playlist,
-                'object_ids' => $playlist->get_items(),
-                'zipHandler' => $this->zipHandler,
-                'browseFactory' => $this->browseFactory
-            ]
-        );
+        echo (new SmartPlaylistPageView(
+            $playlist,
+            $playlist->get_items(),
+            $this->zipHandler,
+            $this->browseFactory,
+            AmpConfig::get_web_path(),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+            $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

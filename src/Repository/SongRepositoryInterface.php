@@ -171,15 +171,6 @@ interface SongRepositoryInterface
      *
      * @return list<int>
      */
-    public function getByFolder(
-        string $folderName,
-    ): array;
-
-    /**
-     * gets the songs for a label, based on label name
-     *
-     * @return list<int>
-     */
     public function getByLabel(
         string $labelName,
     ): array;
@@ -287,6 +278,15 @@ interface SongRepositoryInterface
     public function getParentIdsBulk(array $objectIds, bool $forAlbum): array;
 
     /**
+     * Reads the playback columns of the extended row, the one partial read the callers ask for
+     *
+     * These are the scalars a player or an api response needs, leaving the comment, lyrics and waveform behind.
+     *
+     * @return array<string, mixed>
+     */
+    public function getPartialDataRow(int $songId): array;
+
+    /**
      * Gets the songs from the artist in a random order
      *
      * @return list<int>
@@ -303,13 +303,6 @@ interface SongRepositoryInterface
     public function getRandomByGenre(
         Tag $genre,
     ): array;
-
-    /**
-     * Reads the replaygain columns of the extended row, the one partial read the callers ask for
-     *
-     * @return array<string, mixed>
-     */
-    public function getReplaygainRow(int $songId): array;
 
     /**
      * Reads one song row with the album and artist identity a `Song` object is built from

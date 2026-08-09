@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Collection;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\CreateCollectionFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -86,7 +87,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         }
 
         if (AmpError::occurred()) {
-            $this->ui->show('show_add_collection.inc.php');
+            echo $this->createFormView()->render();
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
@@ -102,7 +103,7 @@ final readonly class CreateAction implements ApplicationActionInterface
 
         if ($collectionId === null) {
             AmpError::add('name', T_('Failed to create collection'));
-            $this->ui->show('show_add_collection.inc.php');
+            echo $this->createFormView()->render();
         } else {
             // Straight to the new collection, because the next thing to do is put something in it
             $this->ui->showConfirmation(
@@ -116,5 +117,15 @@ final readonly class CreateAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
+    }
+
+    private function createFormView(): CreateCollectionFormView
+    {
+        return new CreateCollectionFormView(
+            $this->configContainer->getWebPath(),
+            $this->requestParser->getFromRequest('name'),
+            $this->requestParser->getFromRequest('type') ?: 'private',
+            $this->requestParser->getFromRequest('object_type')
+        );
     }
 }

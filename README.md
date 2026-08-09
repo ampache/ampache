@@ -103,7 +103,8 @@ Admins can see which of these the server actually has under `Admin -> Server Con
   * php-intl
   * php-zip
 
-* Node.js v15+, npm v7+ ([Required](https://ampache.org/docs/help/troubleshooting/ampache7-for-admins#npm-is-required-for-js-package-installation) in Ampache 7.0.0 and higher)
+* Node.js `^20.19.0 || >=22.12.0`, and the npm that ships with it ([Required](https://ampache.org/docs/installation#npm-is-required-for-js-package-installation) in Ampache 7.0.0 and higher)
+  * The constraint comes from Vite, which builds the front-end assets. An older Node fails at `npm run build`.
 
 * MySQL 5.x / MySQL 8.x / MariaDB 10.x
 

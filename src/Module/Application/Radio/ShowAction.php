@@ -25,13 +25,20 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Radio;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\LiveStream\LiveStreamView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -70,10 +77,14 @@ final readonly class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->show(
-                'show_live_stream.inc.php',
-                ['radio' => $radio]
-            );
+            echo (new LiveStreamView(
+                $radio,
+                Ui::is_grid_view('live_stream'),
+                (bool) AmpConfig::get('directplay'),
+                Stream_Playlist::check_autoplay_next(),
+                Stream_Playlist::check_autoplay_append(),
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ))->render();
         }
 
         $this->ui->showQueryStats();

@@ -112,13 +112,16 @@ class Song_Preview extends database_object implements Media, displayable_item, c
 
     /**
      * get_song_previews
-     * @return Song_Preview[]
+     *
+     * The album name is not on the preview row, so it is threaded through from the caller that knows it.
+     *
+     * @return list<Song_Preview>
      */
-    public static function get_song_previews(string $album_mbid): array
+    public static function get_song_previews(string $album_mbid, ?string $album_name = null): array
     {
         $songs = [];
         foreach (self::getSongPreviewRepository()->findIdsBySession((string) session_id(), $album_mbid) as $previewId) {
-            $songs[] = new Song_Preview($previewId);
+            $songs[] = new Song_Preview($previewId, $album_name);
         }
 
         return $songs;
@@ -192,7 +195,7 @@ class Song_Preview extends database_object implements Media, displayable_item, c
     public function get_f_album_link(): ?string
     {
         if ($this->f_album_link === null && $this->f_album !== null) {
-            $this->f_album_link = "<a href=\"" . AmpConfig::get_web_path('/client') . "/albums.php?action=show_missing&mbid=" . $this->album_mbid . "&;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
+            $this->f_album_link = "<a href=\"" . AmpConfig::get_web_path('/client') . "/albums.php?action=show_missing&mbid=" . rawurlencode((string) $this->album_mbid) . "&artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_album) . "\">" . scrub_out($this->f_album) . "</a>";
         }
 
         return $this->f_album_link;

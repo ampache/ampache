@@ -118,8 +118,4 @@ interface ModelFactoryInterface
     public function createVideo(
         int $videoId,
     ): Video;
-
-    public function createWanted(
-        ?int $wantedId = null,
-    ): Wanted;
 }

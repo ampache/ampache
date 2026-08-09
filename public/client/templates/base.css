@@ -68,6 +68,10 @@ a.tag_size4 { text-decoration: none; }
     color: #f00;
 }
 
+.item_inactive {
+    color: #000;
+}
+
 #tabs_wrapper {
     width: auto;
 }

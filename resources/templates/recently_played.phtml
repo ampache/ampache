@@ -1,0 +1,111 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// recently_played.phtml -- rendered by Ampache\Gui\Stats\RecentlyPlayedView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Stats\RecentlyPlayedView $this */
+
+$columns = $this->getColumns();
+$rows    = $this->getRows();
+$grouped = $this->isAlbumGrouped();
+$isAdmin = $this->isAdmin();
+Ui::show_box_top($this->getBoxTitle(), $this->getBoxClass()); ?>
+<table class="tabledata striped-rows">
+    <thead>
+        <tr class="th-top">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <?php } ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($rows as $index => $row) {
+            $media = $row['media'];
+            $type  = $row['type'];
+            $id    = $media->getId(); ?>
+        <tr>
+            <td class="cel_play">
+                <span class="cel_play_content">&nbsp;</span>
+                <div class="cel_play_hover">
+                    <?php if ($this->isDirectPlay()) {
+                        echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=' . $type . '&object_id=' . $id, 'play_circle', T_('Play'), 'play_' . $type . '_' . $index . '_' . $id));
+                        if (Stream_Playlist::check_autoplay_next()) {
+                            echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=' . $type . '&object_id=' . $id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_' . $type . '_' . $index . '_' . $id));
+                        }
+
+                        if (Stream_Playlist::check_autoplay_append()) {
+                            echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=' . $type . '&object_id=' . $id . '&append=true', 'low_priority', T_('Play last'), 'addplay_' . $type . '_' . $index . '_' . $id));
+                        }
+                    } ?>
+                </div>
+            </td>
+            <td class="cel_song"><?php echo $this->raw($media->get_f_link()); ?></td>
+            <td class="cel_add">
+                <span class="cel_item_add">
+                    <?php echo $this->raw(Ajax::button('?action=basket&type=' . $type . '&id=' . $id, 'new_window', T_('Add to Temporary Playlist'), 'add_' . $index . '_' . $id)); ?>
+                    <a id="add_to_playlist_<?php echo $index; ?>_<?php echo $id; ?>" onclick="showPlaylistDialog(event, '<?php echo $this->e($type); ?>', '<?php echo $id; ?>')">
+                        <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label())); ?>
+                    </a>
+                </span>
+            </td>
+            <td class="cel_artist"><?php echo $this->raw($media->get_f_parent_link() ?? ''); ?></td>
+            <td class="cel_album"><?php echo $this->raw(($grouped) ? $media->get_f_album_link() : $media->get_f_album_disk_link()); ?></td>
+            <td class="cel_year"><?php echo $this->e($media->getYear()); ?></td>
+            <?php if ($this->showUser()) { ?>
+            <td class="cel_username">
+                <a href="<?php echo $this->e($this->getUserUrl($row['userId'])); ?>"><?php echo $this->e($row['username']); ?></a>
+            </td>
+            <?php } ?>
+            <td class="<?php echo $this->e($this->getPlayedColumnClass()); ?>"><?php echo $this->e($row['time']); ?></td>
+            <?php if ($isAdmin) { ?>
+            <td class="cel_agent"><?php echo ($row['agent'] !== '') ? $this->raw(Ui::get_material_symbol('info', $row['agent'])) : ''; ?></td>
+            <td class="cel_delete"><?php echo $this->raw($this->getDeleteButton($row['activityId'])); ?></td>
+            <?php } ?>
+        </tr>
+        <?php } ?>
+        <?php if ($rows === []) { ?>
+        <tr>
+            <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('No recently played items found'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <?php } ?>
+        </tr>
+    </tfoot>
+</table>
+<?php if ($this->showMore()) { ?>
+<div id="recent_more">
+    <a href="<?php echo $this->e($this->getMoreLink()); ?>"><?php echo T_('More'); ?></a>
+</div>
+<?php } ?>
+<?php Ui::show_box_bottom(); ?>

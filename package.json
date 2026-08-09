@@ -23,7 +23,6 @@
     "build": "vite build --minify false",
     "postinstall": "npm-run-all copy:*",
     "verify:install": "node resources/scripts/verify-install.js",
-    "crawl": "node resources/scripts/crawl/crawl.mjs",
     "minify": "npm-run-all minify:*",
     "minify:jplayer": "uglifyjs public/client/lib/modules/jplayer/jquery.jplayer.js -o public/client/lib/modules/jplayer/jquery.jplayer.min.js",
     "minify:jplayer-playlist": "uglifyjs public/client/lib/modules/jplayer/jplayer.playlist.js -o public/client/lib/modules/jplayer/jplayer.playlist.min.js",

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Label;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\AddLabelFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -75,7 +76,18 @@ final readonly class AddLabelAction implements ApplicationActionInterface
 
         $label_id = Label::create($_POST);
         if (!$label_id) {
-            $this->ui->show('show_add_label.inc.php');
+            echo (new AddLabelFormView(
+                $this->configContainer->getWebPath(),
+                $this->requestParser->getFromRequest('name'),
+                $this->requestParser->getFromRequest('mbid'),
+                $this->requestParser->getFromRequest('category'),
+                $this->requestParser->getFromRequest('summary'),
+                $this->requestParser->getFromRequest('address'),
+                $this->requestParser->getFromRequest('email'),
+                $this->requestParser->getFromRequest('website'),
+                $this->requestParser->getFromRequest('country'),
+                $this->requestParser->getFromRequest('active')
+            ))->render();
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),

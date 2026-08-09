@@ -1,0 +1,104 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// collection_item_row.phtml -- rendered by Ampache\Gui\Collection\CollectionItemRowView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Share;
+
+/** @var Ampache\Gui\Collection\CollectionItemRowView $this */
+
+$itemId = $this->getItemId();
+$type   = $this->getObjectType(); ?>
+<?php if ($this->canMultiselect()) { ?>
+<td class="cel_select">
+    <?php if ($this->showMultiselect()) { ?>
+    <input type="checkbox" class="multiselect-item" title="<?php echo T_('Select'); ?>"
+           data-id="<?php echo $itemId; ?>"
+           data-type="<?php echo $this->e($type); ?>"
+           data-track-id="<?php echo $this->e($this->getTrackId()); ?>" />
+    <?php } ?>
+</td>
+<?php } ?>
+<td class="cel_play">
+    <span class="cel_play_content"><b><?php echo $this->e($this->getTrack()); ?></b></span>
+    <div class="cel_play_hover">
+        <?php if ($this->isPlayable()) {
+            echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=' . $type . '&object_id=' . $itemId, 'play_circle', T_('Play'), 'play_collection_' . $type . '_' . $itemId));
+            if ($this->isAutoplayNext()) {
+                echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=' . $type . '&object_id=' . $itemId . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_' . $type . '_' . $itemId));
+            }
+
+            if ($this->isAutoplayAppend()) {
+                echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=' . $type . '&object_id=' . $itemId . '&append=true', 'low_priority', T_('Play last'), 'addplay_' . $type . '_' . $itemId));
+            }
+        } ?>
+    </div>
+</td>
+<td class="cel_cover">
+    <div style="max-width: 80px;"><?php echo $this->raw($this->getArt()); ?></div>
+</td>
+<td class="cel_title"><?php echo $this->raw($this->getLink()); ?></td>
+<td class="cel_type"><?php echo $this->e($this->getTypeLabel()); ?></td>
+<td class="cel_artist"><?php echo $this->raw($this->getParentLink()); ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+        <?php echo $this->raw(Ajax::button('?action=basket&type=' . $type . '&id=' . $itemId, 'new_window', T_('Add to Temporary Playlist'), 'collection_add_' . $itemId)); ?>
+        <?php if ($this->mayAdd()) { ?>
+        <a id="add_to_playlist_<?php echo $itemId; ?>" onclick="showPlaylistDialog(event, '<?php echo $this->e($type); ?>', '<?php echo $itemId; ?>')">
+            <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label(true))); ?>
+        </a>
+        <?php } ?>
+    </span>
+</td>
+<td class="cel_time"><?php echo $this->e($this->getTime()); ?></td>
+<?php if ($this->showRatings()) { ?>
+<td class="cel_ratings">
+    <div class="rating">
+        <span class="cel_rating" id="rating_<?php echo $itemId; ?>_<?php echo $this->e($type); ?>"><?php echo $this->raw(Rating::show($itemId, $type)); ?></span>
+        <span class="cel_userflag" id="userflag_<?php echo $itemId; ?>_<?php echo $this->e($type); ?>"><?php echo $this->raw(Userflag::show($itemId, $type)); ?></span>
+    </div>
+</td>
+<?php } ?>
+<td class="cel_action">
+    <?php if ($this->mayDownload()) { ?>
+    <a class="nohtml" href="<?php echo $this->e($this->getWebPath()); ?>/stream.php?action=download&<?php echo $this->e($type); ?>_id=<?php echo $itemId; ?>" rel="nofollow">
+        <?php echo $this->raw(Ui::get_material_symbol('download', T_('Download'))); ?>
+    </a>
+    <?php } ?>
+    <?php if ($this->mayShare()) {
+        echo $this->raw(Share::display_ui($type, $itemId, false));
+    } ?>
+    <?php // the member is named by its `collection_map` row, so removing one of two copies removes the right one
+    if ($this->canRemove()) {
+        echo $this->raw(Ajax::button('?page=collection&action=delete_track&collection_id=' . $this->getCollectionId() . '&browse_id=' . $this->getBrowseId() . '&track_id=' . $this->getTrackId(), 'close', T_('Delete'), 'track_del_' . $this->getTrackId()));
+    } ?>
+</td>
+<?php if ($this->canRemove()) { ?>
+<td class="cel_drag"><?php echo $this->raw(Ui::get_material_symbol('drag_indicator', T_('Reorder'))); ?></td>
+<?php } ?>

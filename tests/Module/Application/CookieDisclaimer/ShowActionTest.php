@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\CookieDisclaimer;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -34,6 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
+    private ConfigContainerInterface|MockInterface|null $configContainer;
     private ?ShowAction $subject;
     private MockInterface|UiInterface|null $ui;
 
@@ -42,28 +44,33 @@ class ShowActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
+        $this->configContainer->shouldReceive('getWebPath')
+            ->andReturn('some-web-path');
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('show')
-            ->with('cookie_disclaimer.inc.php')
             ->once();
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+        $result = $this->subject->run($request, $gatekeeper);
+        $output = (string) ob_get_clean();
+
+        $this->assertNull($result);
+        $this->assertStringContainsString('cookie', $output);
     }
 
     #[Override]
     protected function setUp(): void
     {
-        $this->ui = $this->mock(UiInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
 
         $this->subject = new ShowAction(
-            $this->ui
+            $this->ui,
+            $this->configContainer
         );
     }
 }

@@ -1676,8 +1676,48 @@ class OpenSubsonic_Api
     public function getcaptions(array $input, User $user): void
     {
         unset($user);
+        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        if ($sub_id === false) {
+            return;
+        }
 
-        $this->_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+        $video = self::getAmpacheObject($sub_id);
+        if (!$video instanceof Video || $video->isNew()) {
+            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        // Captions are .srt files sitting beside the video file; the one with no language suffix is the default
+        $captions = null;
+        foreach ($video->get_subtitles() as $subtitle) {
+            if ($captions === null || $subtitle['lang_code'] === '__') {
+                $captions = $subtitle;
+            }
+            if ($subtitle['lang_code'] === '__') {
+                break;
+            }
+        }
+
+        $body = ($captions !== null && is_readable($captions['file']))
+            ? file_get_contents($captions['file'])
+            : false;
+        if ($body === false) {
+            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        // What is stored is always SubRip, so `vtt` is answered by converting it rather than by finding another file
+        if (strtolower((string) ($input['format'] ?? 'srt')) === 'vtt') {
+            header('Content-Type: text/vtt; charset=UTF-8');
+            echo $this->_srtToVtt($body);
+
+            return;
+        }
+
+        header('Content-Type: application/x-subrip; charset=UTF-8');
+        echo $body;
     }
 
     /**
@@ -2903,7 +2943,7 @@ class OpenSubsonic_Api
     /**
      * getUser
      *
-     * Get details about all users, including which authorization roles and folder access they have.
+     * Get details about a given user, including which authorization roles and folder access it has.
      * https://opensubsonic.netlify.app/docs/endpoints/getuser/
      * @param array<string, mixed> $input
      */
@@ -3019,46 +3059,6 @@ class OpenSubsonic_Api
             $response = $this->openSubsonicJsonData->addVideos($response, $videos);
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
-    }
-
-    /**
-     * getUser
-     *
-     * Get details about a given user, including which authorization roles and folder access it has.
-     * https://opensubsonic.netlify.app/docs/endpoints/getuser/
-     * @param array<string, mixed> $input
-     */
-    public function geuser(array $input, User $user): void
-    {
-        $username = $this->_check_parameter($input, 'username', __FUNCTION__);
-        if ($username === false) {
-            return;
-        }
-
-        if ($user->access === 100 || $user->username == $username) {
-            if ($user->username == $username) {
-                $update_user = $user;
-            } else {
-                $update_user = User::get_from_username((string) $username);
-            }
-            if (!$update_user) {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-                return;
-            }
-
-            $format = (string) ($input['f'] ?? 'xml');
-            if ($format === 'xml') {
-                $response = $this->_addXmlResponse(__FUNCTION__);
-                $response = $this->openSubsonicXmlData->addUser($response, $update_user);
-            } else {
-                $response = $this->_addJsonResponse(__FUNCTION__);
-                $response = $this->openSubsonicJsonData->addUser($response, $update_user);
-            }
-            $this->_responseOutput($input, __FUNCTION__, $response);
-        }
-
-        $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
     }
 
     /**
@@ -4599,6 +4599,25 @@ class OpenSubsonic_Api
         $count = (int) ($input['count'] ?? 50);
 
         return ($count < 0) ? 50 : $count;
+    }
+
+    /**
+     * Convert a SubRip caption body to WebVTT.
+     *
+     * The two formats differ only in the header line and in the decimal separator of a cue's timestamps, so the
+     * cue text itself is passed through untouched.
+     */
+    private function _srtToVtt(string $srt): string
+    {
+        $body = str_replace(["\r\n", "\r"], "\n", $srt);
+        $body = (string) preg_replace('/^\xEF\xBB\xBF/', '', $body);
+        $body = (string) preg_replace(
+            '/(\d{2}:\d{2}:\d{2}),(\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}),(\d{3})/',
+            '$1.$2 --> $3.$4',
+            $body
+        );
+
+        return "WEBVTT\n\n" . ltrim($body, "\n");
     }
 
     /**

@@ -162,10 +162,4 @@ final class ModelFactory implements ModelFactoryInterface
     ): Video {
         return new Video($videoId);
     }
-
-    public function createWanted(
-        ?int $wantedId = null,
-    ): Wanted {
-        return new Wanted((int) $wantedId);
-    }
 }

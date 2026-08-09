@@ -4,6 +4,10 @@ parameters:
   paths:
     - public
     - src
+    - resources/templates
+  fileExtensions:
+    - php
+    - phtml
   excludePaths:
     - public/lib
     - public/themes

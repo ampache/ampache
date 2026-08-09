@@ -1,0 +1,78 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// podcast.phtml -- rendered by Ampache\Module\Util\Rss\View\PodcastRssFeedView
+
+/** @var Ampache\Module\Util\Rss\View\PodcastRssFeedView $this */
+
+$item = $this->getItem();
+
+echo '<?xml version="1.0" encoding="utf-8"?>', "\n"; ?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://podcastindex.org/namespace/1.0" version="2.0">
+    <channel>
+        <title><?php echo $this->e($item->getTitle()); ?></title>
+        <link><?php echo $this->e($item->getLink()); ?></link>
+        <atom:link href="<?php echo $this->e($item->getRssLink()); ?>" rel="self" type="application/rss+xml"/>
+<?php if ($item->hasImage()) { ?>
+        <itunes:image href="<?php echo $this->e($item->getImageUrl()); ?>"/>
+<?php }
+if ($item->hasSummary()) { ?>
+        <description><?php echo $this->e($item->getSummary()); ?></description>
+        <itunes:summary><?php echo $this->e($item->getSummary()); ?></itunes:summary>
+<?php } ?>
+        <generator>ampache</generator>
+        <itunes:category text="<?php echo $this->e($item->getCategory()); ?>"/>
+<?php if ($item->hasOwner()) { ?>
+        <itunes:owner>
+            <itunes:name><?php echo $this->e($item->getOwnerName()); ?></itunes:name>
+        </itunes:owner>
+<?php }
+foreach ($item->getMedias() as $media) { ?>
+        <item>
+            <title><?php echo $this->e($media['title']); ?></title>
+<?php   if (!empty($media['link'])) { ?>
+            <link><?php echo $this->e($media['link']); ?></link>
+<?php   }
+    if (!empty($media['author'])) { ?>
+            <itunes:author><?php echo $this->e($media['author']); ?></itunes:author>
+<?php   } ?>
+            <guid><?php echo $this->e($media['guid']); ?></guid>
+<?php   if (!empty($media['pubDate'])) { ?>
+            <pubDate><?php echo $this->e($media['pubDate']); ?></pubDate>
+<?php   } ?>
+            <itunes:duration><?php echo $this->e($media['length']); ?></itunes:duration>
+<?php   if (!empty($media['season'])) { ?>
+            <podcast:season<?php echo (!empty($media['season_name'])) ? ' name="' . $this->e($media['season_name']) . '"' : ''; ?>><?php echo $this->e($media['season']); ?></podcast:season>
+<?php   }
+    if (!empty($media['episode'])) { ?>
+            <podcast:episode><?php echo $this->e($media['episode']); ?></podcast:episode>
+<?php   }
+    if (!empty($media['url'])) { ?>
+            <enclosure type="<?php echo $this->e($media['type']); ?>" length="<?php echo $this->e($media['size']); ?>" url="<?php echo $this->e($media['url']); ?>"/>
+<?php   } ?>
+        </item>
+<?php } ?>
+    </channel>
+</rss>

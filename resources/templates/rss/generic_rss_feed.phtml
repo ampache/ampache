@@ -1,0 +1,62 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// generic_rss_feed.phtml -- rendered by Ampache\Module\Util\Rss\View\GenericRssFeedView
+
+/** @var Ampache\Module\Util\Rss\View\GenericRssFeedView $this */
+
+echo '<?xml version="1.0"?>', "\n"; ?>
+<rss version="2.0">
+    <channel>
+        <title><?php echo $this->e($this->getTitle()); ?></title>
+        <link><?php echo $this->e($this->getLink()); ?></link>
+        <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rss+xml" href="<?php echo $this->e($this->getRssLink()); ?>"/>
+        <description><?php echo $this->e($this->getTitle()); ?></description>
+<?php if ($this->getPubDate() !== null) { ?>
+        <pubDate><?php echo $this->e($this->getPubDate()); ?></pubDate>
+<?php }
+if ($this->getImage() !== null && $this->getImage() !== '') { ?>
+        <image>
+            <url><?php echo $this->e($this->getImage()); ?></url>
+            <link><?php echo $this->e($this->getLink()); ?></link>
+            <title><?php echo $this->e($this->getTitle()); ?></title>
+        </image>
+<?php }
+foreach ($this->getItems() as $item) { ?>
+        <item>
+            <title><?php echo $this->e($item['title']); ?></title>
+            <guid isPermaLink="<?php echo $this->e($item['isPermaLink']); ?>"><?php echo $this->e($item['guid']); ?></guid>
+            <link><?php echo $this->e($item['link']); ?></link>
+            <description><?php echo $this->e($item['description']); ?></description>
+<?php   if (!empty($item['comments'])) { ?>
+            <comments><?php echo $this->e($item['comments']); ?></comments>
+<?php   }
+    if (!empty($item['pubDate'])) { ?>
+            <pubDate><?php echo $this->e($item['pubDate']); ?></pubDate>
+<?php   } ?>
+        </item>
+<?php } ?>
+    </channel>
+</rss>

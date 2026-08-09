@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Share;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Share\ShareView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Batch\DefaultAction;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -38,7 +40,6 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use DateTime;
 use Psr\Container\ContainerInterface;
@@ -54,7 +55,6 @@ final readonly class ConsumeAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private NetworkCheckerInterface $networkChecker,
         private ContainerInterface $dic,
-        private UiInterface $ui,
         private ShareRepositoryInterface $shareRepository,
         private AjaxUriRetrieverInterface $ajaxUriRetriever,
     ) {}
@@ -120,13 +120,11 @@ final readonly class ConsumeAction implements ApplicationActionInterface
 
             return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
         } elseif ($action === 'stream') {
-            $this->ui->show(
-                'show_share.inc.php',
-                [
-                    'share' => $share,
-                    'ajaxUriRetriever' => $this->ajaxUriRetriever
-                ]
-            );
+            echo (new ShareView(
+                AmpConfig::get_web_path(),
+                $this->ajaxUriRetriever,
+                $share
+            ))->render();
         } else {
             throw new AccessDeniedException('Access Denied: unknown action.');
         }

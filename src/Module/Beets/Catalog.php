@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Beets;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Gui\Catalog\CatalogProgressTypeEnum;
+use Ampache\Gui\Catalog\CatalogProgressView;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
@@ -93,7 +95,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            require Ui::find_template('show_adds_catalog.inc.php');
+            echo (new CatalogProgressView(CatalogProgressTypeEnum::ADD, $this->getId(), $this->name))->render();
             flush();
         }
 

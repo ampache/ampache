@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -43,6 +44,7 @@ final readonly class UpdatePreferencesAction implements ApplicationActionInterfa
     public const string REQUEST_KEY = 'update_preferences';
 
     public function __construct(
+        private PreferencesViewFactoryInterface $preferencesViewFactory,
         private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
         private UiInterface $ui,
         private RequestParserInterface $requestParser,
@@ -96,14 +98,11 @@ final readonly class UpdatePreferencesAction implements ApplicationActionInterfa
 
         if ($user !== null) {
             // Show the default preferences page
-            $this->ui->show(
-                'show_preferences.inc.php',
-                [
-                    'fullname' => $fullname,
-                    'preferences' => $user->get_preferences($_REQUEST['tab'], $system),
-                    'ui' => $this->ui
-                ]
-            );
+            echo $this->preferencesViewFactory->create(
+                $gatekeeper,
+                $fullname,
+                $user->get_preferences($_REQUEST['tab'], $system)
+            )->render();
         }
 
         $this->ui->showQueryStats();

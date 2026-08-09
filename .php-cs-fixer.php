@@ -5,6 +5,8 @@ $finder = PhpCsFixer\Finder::create()
     ->in('public/')
     ->in('src/')
     ->in('tests/')
+    ->in('resources/templates/')
+    ->name('*.phtml')
 ;
 
 return (new PhpCsFixer\Config())

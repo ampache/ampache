@@ -39,7 +39,7 @@ curl -X POST "https://music.com.au/server/json.server.php" -H "Content-Type: app
 
 After each release, a documentation page will be created to allow pruning old features from the current version.
 
-API8 is the current version and is documented in this repository (`docs/openapi.json` plus the `API-JSON-methods.md` / `API-XML-methods.md` references). The pages below document the last major release of the older versions:
+API8 is the current version and is documented on these pages: [JSON methods](/api/api-json-methods), [XML methods](/api/api-xml-methods) and the [REST/OpenAPI reference](/rest). The pages below document the last major release of the older versions:
 
 * [API 6.9 Documentation](https://ampache.org/api/api-6)
 * [API 5.6 Documentation](https://ampache.org/api/api-5)

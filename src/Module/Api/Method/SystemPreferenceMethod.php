@@ -60,7 +60,7 @@ final class SystemPreferenceMethod implements MethodInterface
      *
      * Get your system preferences by name
      *
-     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * filter = (string) Preference name e.g ('notify_email', 'popular_threshold')
      *
      * @param array{
      *     filter?: string,

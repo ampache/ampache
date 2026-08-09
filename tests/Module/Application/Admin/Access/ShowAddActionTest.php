@@ -25,11 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Override;
@@ -37,6 +39,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowAddActionTest extends MockeryTestCase
 {
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private RequestParserInterface|MockInterface|null $requestParser;
     private ?ShowAddAction $subject;
     private MockInterface|UiInterface|null $ui;
 
@@ -60,12 +64,6 @@ class ShowAddActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_add_access.inc.php',
-                ['add_type' => $addType]
-            )
-            ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -73,9 +71,16 @@ class ShowAddActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void
@@ -96,10 +101,19 @@ class ShowAddActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->ui = $this->mock(UiInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->requestParser   = $this->mock(RequestParserInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+
+        $this->configContainer->shouldReceive('getWebPath')->andReturn('some-web-path');
+
+        $this->requestParser->shouldReceive('getFromRequest')->andReturn('');
+
 
         $this->subject = new ShowAddAction(
-            $this->ui
+            $this->ui,
+            $this->configContainer,
+            $this->requestParser
         );
     }
 }

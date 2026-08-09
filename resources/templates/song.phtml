@@ -1,0 +1,101 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// song.phtml -- rendered by Ampache\Gui\Song\SongViewAdapter
+
+/** @var Ampache\Gui\Song\SongViewAdapter $this */
+
+$songId        = $this->getId();
+$averageRating = $this->getAverageRating();
+$config        = $this->getConfig(); ?>
+<dl class="media_details">
+    <dt><?php echo T_('Rating'); ?></dt>
+    <dd>
+        <div id="rating_<?php echo $songId; ?>_song">
+            <?php echo $this->raw($this->getRating()); ?>
+<?php if ($averageRating) { ?>
+                (<span title="<?php echo $this->e(T_('Average for all users')); ?>"><?php echo T_('average'); ?></span> <?php echo $this->e($averageRating); ?>)
+<?php } ?>
+        </div>
+    </dd>
+    <dt><?php echo T_('Fav'); ?></dt>
+    <dd>
+        <div id="userflag_<?php echo $songId; ?>_song"><?php echo $this->raw($this->getUserFlags()); ?></div>
+    </dd>
+<?php if ($config->isWaveformEnabled() && $this->hasWaveform()) { ?>
+        <dt><?php echo T_('Waveform'); ?></dt>
+        <dd>
+            <div id="waveform_<?php echo $songId; ?>">
+                <img src="<?php echo $this->e($this->getWaveformUrl()); ?>" title="<?php echo $this->e(T_('Waveform')); ?>" alt="<?php echo $this->e(T_('Waveform')); ?>" />
+            </div>
+        </dd>
+<?php } ?>
+    <dt>Action</dt>
+    <dd>
+<?php if ($config->isDirectplayEnabled()) {
+    echo $this->raw($this->getDirectPlayButton());
+
+    if ($this->canAutoplayNext()) {
+        echo $this->raw($this->getAutoplayNextButton());
+    }
+
+    if ($this->canAppendNext()) {
+        echo $this->raw($this->getAppendNextButton());
+    }
+}
+
+echo $this->raw($this->getCustomPlayActions());
+echo $this->raw($this->getTemporaryPlaylistButton());
+
+if ($this->canPostShout()) { ?>
+        <a href="<?php echo $this->e($this->getPostShoutUrl()); ?>"><?php echo $this->raw($this->getPostShoutIcon()); ?></a>
+<?php }
+if ($this->canShare()) {
+    echo $this->raw($this->getShareUi());
+}
+
+if ($this->canDownload()) { ?>
+            <a class="nohtml" rel="nofollow" href="<?php echo $this->e($this->getExternalPlayUrl()); ?>" target="_blank"><?php echo $this->raw($this->getExternalPlayIcon()); ?></a>
+            <a class="nohtml" rel="nofollow" href="<?php echo $this->e($this->getDownloadUrl()); ?>"><?php echo $this->raw($this->getDownloadIcon()); ?></a>
+<?php }
+if ($this->canDisplayStats()) { ?>
+        <a href="<?php echo $this->e($this->getDisplayStatsUrl()); ?>"><?php echo $this->raw($this->getDisplayStatsIcon()); ?></a>
+<?php }
+if ($this->isEditable()) { ?>
+        <a href="<?php echo $this->e($this->getUpdateFromTagsUrl()); ?>"><?php echo $this->raw($this->getRefreshIcon()); ?></a>
+        <a onclick="showEditDialog('song_row', '<?php echo $songId; ?>', 'edit_song_<?php echo $songId; ?>', '<?php echo $this->e($this->getEditButtonTitle()); ?>', '')"><?php echo $this->raw($this->getEditIcon()); ?></a>
+<?php }
+if ($this->canToggleState()) { ?>
+        <span id="button_flip_state_<?php echo $songId; ?>"><?php echo $this->raw($this->getToggleStateButton()); ?></span>
+<?php }
+if ($this->canBeDeleted()) { ?>
+        <a href="<?php echo $this->e($this->getDeletionUrl()); ?>"><?php echo $this->raw($this->getDeletionIcon()); ?></a>
+<?php } ?>
+    </dd>
+<?php foreach ($this->getProperties() as $label => $value) { ?>
+            <dt><?php echo $this->e($label); ?></dt>
+            <dd><?php echo $this->raw((string) $value); ?></dd>
+<?php } ?>
+</dl>

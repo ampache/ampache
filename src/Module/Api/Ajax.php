@@ -84,6 +84,9 @@ class Ajax
      * button
      * This prints out an img of the specified icon with the specified alt
      * text and then sets up the required ajax for it.
+     *
+     * @param string $notice Shown as a notification the moment the request goes out, for an action that
+     *                       runs long enough that the click would otherwise look like it did nothing
      */
     public static function button(
         string $action,
@@ -93,6 +96,7 @@ class Ajax
         string $post = '',
         string $class = '',
         string $confirm = '',
+        string $notice = '',
     ): string {
         // If they passed a span class
         if ($class) {
@@ -112,6 +116,9 @@ class Ajax
         }
         if ($confirm !== '') {
             $attributes .= ' data-ajax-confirm="' . scrub_out($confirm) . '"';
+        }
+        if ($notice !== '') {
+            $attributes .= ' data-ajax-notice="' . scrub_out($notice) . '"';
         }
 
         // Generate an <a> so that it's more compliant with older
@@ -133,6 +140,7 @@ class Ajax
         ?string $post = '',
         ?string $class = '',
         ?string $confirm = '',
+        ?string $notice = '',
     ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
@@ -146,7 +154,7 @@ class Ajax
 
         $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>" . $button . " " . $text . "</a>\n";
 
-        $string .= self::observe($source, 'click', $ajax_string, $confirm);
+        $string .= self::observe($source, 'click', $ajax_string, $confirm, $notice);
 
         return $string;
     }
@@ -171,7 +179,7 @@ class Ajax
      * This returns a string with the correct and full ajax 'observe' stuff
      * from jQuery
      */
-    public static function observe(string $source, string $method, string $action, ?string $confirm = ''): string
+    public static function observe(string $source, string $method, string $action, ?string $confirm = '', ?string $notice = ''): string
     {
         $non_quoted = ['document', 'window'];
 
@@ -189,11 +197,16 @@ class Ajax
         } else {
             $source_txt = "$(" . $source_txt . ").on('" . $method . "', ";
         }
+        // json_encode writes the js string literal, because translated text may carry a quote or a sequence that would close the <script>
+        $notify = (empty($notice))
+            ? ''
+            : 'window.displayNotification(' . json_encode($notice, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_THROW_ON_ERROR) . ', 5000); ';
+
         if (!empty($confirm)) {
             // Non-blocking confirm (ampacheConfirm) so the web player is not paused while it is open
-            $observe .= $source_txt . "function(){ " . $methodact . " window.ampacheConfirm(\"" . $confirm . "\").then(function(c){ if (c) { " . $action . " } });});";
+            $observe .= $source_txt . "function(){ " . $methodact . " window.ampacheConfirm(\"" . $confirm . "\").then(function(c){ if (c) { " . $notify . $action . " } });});";
         } else {
-            $observe .= $source_txt . "function(){ " . $methodact . " " . $action . ";});";
+            $observe .= $source_txt . "function(){ " . $methodact . " " . $notify . $action . ";});";
         }
         $observe .= "</script>";
 

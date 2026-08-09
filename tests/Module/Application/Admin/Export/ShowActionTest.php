@@ -30,8 +30,8 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogLoaderInterface;
-use Ampache\Module\Catalog\Export\CatalogExportTypeEnum;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Override;
@@ -49,7 +49,11 @@ class ShowActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
-        $catalogs = ['some-catalog'];
+        $catalog = $this->createMock(Catalog::class);
+        $catalog->method('getId')->willReturn(666);
+        $catalog->method('get_fullname')->willReturn('Rock & Roll');
+
+        $catalogs = [$catalog];
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
@@ -63,18 +67,6 @@ class ShowActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_export.inc.php',
-                [
-                    'catalogs' => $catalogs,
-                    'exportTypes' => [
-                        CatalogExportTypeEnum::CSV->value => 'CSV',
-                        CatalogExportTypeEnum::ITUNES->value => 'iTunes',
-                    ]
-                ]
-            )
-            ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -82,12 +74,17 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        self::assertNull(
-            $this->subject->run(
-                $request,
-                $gatekeeper
-            )
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertStringContainsString('value="666"', $output);
+        self::assertStringContainsString('Rock &amp; Roll', $output);
     }
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void

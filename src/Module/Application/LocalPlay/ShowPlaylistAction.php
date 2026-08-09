@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\LocalPlay;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\LocalplayStatusView;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -70,14 +71,11 @@ final class ShowPlaylistAction extends AbstractLocalPlayAction
 
         // Pull the current playlist and require the template
         $objects = $localplay->get();
-        $this->ui->show(
-            'show_localplay_status.inc.php',
-            [
-                'localplay' => $localplay,
-                'objects' => $objects,
-                'browseFactory' => $this->browseFactory
-            ]
-        );
+        echo (new LocalplayStatusView(
+            $localplay,
+            $this->browseFactory,
+            $objects
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

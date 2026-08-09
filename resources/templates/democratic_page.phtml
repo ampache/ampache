@@ -1,0 +1,74 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// democratic_page.phtml -- rendered by Ampache\Gui\Playback\DemocraticPageView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Playback\DemocraticPageView $this */
+
+Ui::show_box_top($this->getBoxTitle(), 'info-box'); ?>
+<div id="information_actions">
+    <ul>
+        <?php if ($this->isEnabled()) { ?>
+        <li><?php echo T_('Cooldown'); ?>:<?php echo $this->e($this->getCooldown()); ?></li>
+        <?php } ?>
+        <?php if ($this->mayManage()) { ?>
+        <li>
+            <a href="<?php echo $this->e($this->getConfigureUrl()); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('dns', T_('Configure Democratic Playlist'))); ?>
+                <?php echo T_('Configure Democratic Playlist'); ?>
+            </a>
+        </li>
+        <?php if ($this->isEnabled()) { ?>
+        <li><?php echo $this->raw($this->getPlayButton()); ?></li>
+        <?php } ?>
+        <?php if ($this->showClear()) { ?>
+        <li><?php echo $this->raw($this->getClearButton()); ?></li>
+        <?php } ?>
+        <?php } ?>
+    </ul>
+</div>
+<div style="text-align: right;">
+    <script>
+        function reloadPageChanged(obj)
+        {
+            if (obj.checked) {
+                setTimeout(function () {
+                    if (obj.checked) {
+                        window.location.href = window.location.href + <?php echo $this->raw($this->getReloadSuffix()); ?>;
+                    }
+                }, <?php echo $this->getRefreshMilliseconds(); ?>);
+            }
+        }
+        <?php if ($this->isReloadPage()) { ?>
+        $(document).ready(function () {
+            reloadPageChanged(document.getElementById('chkreloadpage'));
+        });
+        <?php } ?>
+    </script>
+    <input type="checkbox" id="chkreloadpage" onClick="reloadPageChanged(this);" <?php echo ($this->isReloadPage()) ? 'checked' : ''; ?> /> <?php echo T_('Reload this page automatically'); ?>
+</div>
+<?php Ui::show_box_bottom(); ?>

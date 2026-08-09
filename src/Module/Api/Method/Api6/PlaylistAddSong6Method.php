@@ -41,7 +41,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Adds a song to a playlist
  *
- * This method is deprecated and will be removed in **API7** (Use playlist_add). It only exists in
+ * This method is deprecated and removed in **API8** (Use playlist_add). It only exists in
  * api version 6.
  */
 final class PlaylistAddSong6Method implements MethodInterface

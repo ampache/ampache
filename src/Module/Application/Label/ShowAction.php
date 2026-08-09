@@ -25,16 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Label;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\AddLabelFormView;
+use Ampache\Gui\Label\LabelView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
@@ -49,6 +54,7 @@ final readonly class ShowAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
+        private RequestParserInterface $requestParser,
         private LoggerInterface $logger,
         private PrivilegeCheckerInterface $privilegeChecker,
         private LabelRepositoryInterface $labelRepository,
@@ -89,19 +95,26 @@ final readonly class ShowAction implements ApplicationActionInterface
 
             return null;
         } elseif ($label instanceof Label) {
-            $this->ui->show(
-                'show_label.inc.php',
-                [
-                    'label' => $label,
-                    'object_ids' => $label->get_artists(),
-                    'object_type' => 'artist',
-                    'isLabelEditable' => $this->isEditable(
-                        $gatekeeper->getUserId(),
-                        $label
-                    ),
-                    'browseFactory' => $this->browseFactory
-                ]
-            );
+            $browse = $this->browseFactory->create();
+            $browse->set_type('artist');
+            $browse->set_use_filters(false);
+
+            $externalLinks = [];
+            foreach (LabelView::getExternalLinkKeys() as $configKey) {
+                $externalLinks[$configKey] = (bool) AmpConfig::get($configKey);
+            }
+
+            echo (new LabelView(
+                AmpConfig::get_web_path(),
+                $label,
+                $browse,
+                $label->get_artists(),
+                $externalLinks,
+                (!AmpConfig::get('use_auth') || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER))
+                    && (bool) AmpConfig::get('sociable'),
+                $this->isEditable($gatekeeper->getUserId(), $label),
+                Catalog::can_remove($label)
+            ))->render();
 
             $this->ui->showFooter();
 
@@ -110,9 +123,18 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         // if you didn't set a label_id or name, show the add label form
         if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-            $this->ui->show(
-                'show_add_label.inc.php'
-            );
+            echo (new AddLabelFormView(
+                $this->configContainer->getWebPath(),
+                $this->requestParser->getFromRequest('name'),
+                $this->requestParser->getFromRequest('mbid'),
+                $this->requestParser->getFromRequest('category'),
+                $this->requestParser->getFromRequest('summary'),
+                $this->requestParser->getFromRequest('address'),
+                $this->requestParser->getFromRequest('email'),
+                $this->requestParser->getFromRequest('website'),
+                $this->requestParser->getFromRequest('country'),
+                $this->requestParser->getFromRequest('active')
+            ))->render();
         } else {
             throw new AccessDeniedException();
         }

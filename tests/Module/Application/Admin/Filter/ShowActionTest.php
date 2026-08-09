@@ -25,11 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Filter;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\CatalogFilterRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -37,17 +40,24 @@ use Psr\Http\Message\ServerRequestInterface;
 class ShowActionTest extends TestCase
 {
     protected ShowAction $subject;
+    private CatalogFilterRepositoryInterface&MockObject $catalogFilterRepository;
+    private ConfigContainerInterface&MockObject $configContainer;
     private UiInterface&MockObject $ui;
+    private UserRepositoryInterface&MockObject $userRepository;
 
     public function testRunRenders(): void
     {
+        $this->catalogFilterRepository->method('findGroups')->willReturn(new \ArrayIterator([]));
+
         $request    = $this->createMock(ServerRequestInterface::class);
         $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
 
-        $gatekeeper->expects(static::once())
+        $gatekeeper->expects(static::exactly(2))
             ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->willReturn(true);
+            ->willReturnMap([
+                [AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, true],
+                [AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, true],
+            ]);
 
         $this->ui->expects(static::once())
             ->method('showHeader');
@@ -55,14 +65,18 @@ class ShowActionTest extends TestCase
             ->method('showBoxTop')
             ->with('Show Catalog Filters', 'box box_manage_filter');
         $this->ui->expects(static::once())
-            ->method('show')
-            ->with('show_manage_filters.inc.php');
-        $this->ui->expects(static::once())
             ->method('showQueryStats');
 
-        self::assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunThrowsIfAccessIsDenied(): void
@@ -82,10 +96,16 @@ class ShowActionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->ui = $this->createMock(UiInterface::class);
+        $this->ui                      = $this->createMock(UiInterface::class);
+        $this->configContainer         = $this->createMock(ConfigContainerInterface::class);
+        $this->catalogFilterRepository = $this->createMock(CatalogFilterRepositoryInterface::class);
+        $this->userRepository          = $this->createMock(UserRepositoryInterface::class);
 
         $this->subject = new ShowAction(
-            $this->ui
+            $this->ui,
+            $this->configContainer,
+            $this->catalogFilterRepository,
+            $this->userRepository
         );
     }
 }

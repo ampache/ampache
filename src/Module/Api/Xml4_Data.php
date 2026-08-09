@@ -330,13 +330,17 @@ class Xml4_Data
                     } else {
                         $artist = new Artist((int) $object_id);
                         if ($artist->isNew()) {
-                            break;
+                            continue;
                         }
                         $albums = $this->albumRepository->getAlbumByArtist((int) $object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
                                 $album = new Album($album_id);
+                                if ($album->isNew()) {
+                                    continue;
+                                }
+
                                 $string .= "\t<album id=\"" . $album_id . '"><![CDATA[' . $album->get_fullname() . "]]></album>\n";
                             }
                         }
@@ -350,6 +354,10 @@ class Xml4_Data
                         $string .= $this->albums([(int) $object_id], ['songs'], $user, $auth, false);
                     } else {
                         $album = new Album((int) $object_id);
+                        if ($album->isNew()) {
+                            continue;
+                        }
+
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n"
                             . "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->get_parent_fullname() . "]]></artist>\n</$object_type>\n";
                     }
@@ -358,6 +366,10 @@ class Xml4_Data
             case 'song':
                 foreach ($objects as $object_id) {
                     $song = new Song((int) $object_id);
+                    if ($song->isNew()) {
+                        continue;
+                    }
+
                     $song->fill_ext_info();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n"
                         . "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_parent_fullname() . "]]></artist>\n"
@@ -370,7 +382,7 @@ class Xml4_Data
                     if ((int) $object_id === 0) {
                         $playlist = new Search((int) str_replace('smart_', '', (string) $object_id), 'song', $user);
                         if ($playlist->isNew()) {
-                            break;
+                            continue;
                         }
 
                         $playlist_user = ($playlist->type !== 'public')
@@ -378,13 +390,13 @@ class Xml4_Data
                             : $playlist->type;
                         $playitem_total = $playlist->last_count;
                     } else {
-                        $playlist = new Playlist((int) $object_id);
-                        if ($playlist->isNew()) {
-                            break;
-                        }
-
+                        $playlist       = new Playlist((int) $object_id);
                         $playlist_user  = $playlist->username;
                         $playitem_total = $playlist->get_media_count('song');
+                    }
+
+                    if ($playlist->isNew()) {
+                        continue;
                     }
                     $playlist_name = $playlist->get_fullname();
                     $songs         = ($include) ? $playlist->get_items() : [];
@@ -740,6 +752,10 @@ class Xml4_Data
 
         foreach ($objects as $tag_id) {
             $tag = new Tag((int) $tag_id);
+            if ($tag->isNew()) {
+                continue;
+            }
+
             $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<stream>0</stream>\n</tag>\n";
         }
 

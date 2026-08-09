@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -45,6 +46,7 @@ final readonly class GrantAction implements ApplicationActionInterface
     public const string REQUEST_KEY = 'grant';
 
     public function __construct(
+        private PreferencesViewFactoryInterface $preferencesViewFactory,
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
@@ -99,14 +101,11 @@ final readonly class GrantAction implements ApplicationActionInterface
                 }
             }
 
-            $this->ui->show(
-                'show_preferences.inc.php',
-                [
-                    'fullname' => $user->fullname,
-                    'preferences' => $user->get_preferences($this->requestParser->getFromRequest('tab')),
-                    'ui' => $this->ui,
-                ]
-            );
+            echo $this->preferencesViewFactory->create(
+                $gatekeeper,
+                $user->fullname,
+                $user->get_preferences($this->requestParser->getFromRequest('tab'))
+            )->render();
         }
 
         $this->ui->showQueryStats();

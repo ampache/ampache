@@ -1,0 +1,60 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/mashup.phtml -- rendered by Ampache\Gui\Browse\MashupView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Browse\MashupView $this */
+
+echo $this->raw($this->getDashboardForm()->render());
+
+foreach ($this->getSections() as $section => $objectIds) {
+    if ($objectIds === []) {
+        continue;
+    }
+
+    $url   = $this->getSectionUrl($section);
+    $title = $this->getSectionTitle($section) . '&nbsp' . Ajax::button($this->getRefreshAction($section), 'refresh', T_('Refresh'), $section, 'dashboard_' . $section);
+    if ($url !== null) {
+        echo '<a href="' . $this->e($url) . '">';
+    }
+
+    Ui::show_box_top($title, $section);
+    if ($url !== null) {
+        echo '</a>';
+    } ?>
+<div id="dashboard_<?php echo $this->e($section); ?>">
+<?php $browse = $this->createBrowse();
+    $browse->set_type($this->getObjectType());
+    $browse->set_use_filters(false);
+    $browse->set_show_header(false);
+    $browse->set_grid_view(true, false);
+    $browse->set_mashup(true);
+    $browse->show_objects($objectIds); ?>
+</div>
+<?php Ui::show_box_bottom();
+}

@@ -27,12 +27,12 @@ namespace Ampache\Module\Application\NowPlaying;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\NowPlaying\NowPlayingView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -45,7 +45,6 @@ final readonly class ShowAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
-        private UiInterface $ui,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -115,13 +114,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $user_id = (int) $this->requestParser->getFromRequest('user_id');
         $results = Stream::get_now_playing($user_id);
 
-        $this->ui->show(
-            'show_now_playing.inc.php',
-            [
-                'web_path' => $this->configContainer->get(ConfigurationKeyEnum::WEB_PATH),
-                'results' => $results
-            ]
-        );
+        echo (new NowPlayingView($results, $this->configContainer->getWebPath()))->render();
         print('</body></html>');
 
         return null;

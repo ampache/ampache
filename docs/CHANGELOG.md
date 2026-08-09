@@ -68,14 +68,16 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
   * New `user`.`subsonic_secret` column holding the per-user Subsonic password
   * New database tables `collection` and `collection_map`
+  * New database tables `playlist_folder` and `playlist_folder_map`, holding a private per-user tree that organises playlists, smartlists and collections
   * New maintained `last_played` column on `album`, `album_disk`, `artist`, `podcast`, `podcast_episode`, `song` and `video`, written on the same statement that increments the play counter and backfilled from the existing play history (live counts, archived detail and consolidated summaries)
   * `collection` added to the `object_type` enum on `image`, `object_count`, `cache_object_count`, `cache_object_count_run`, `object_count_summary` and `object_count_archive`, so a collection carries its own art and play statistics
   * `collection` added to the `object_type` enum on `rating` and `user_flag`, so a collection can be rated and flagged
   * New `position_ms`, `playback_rate` and `state` columns on `now_playing`, holding what an OpenSubsonic client reports through `reportPlayback`
   * New `artist`.`lastfm_url` column keeping the last.fm page url with the rest of the cached artist info
   * `label_asso` gains a nullable `album` column and its `artist` column becomes nullable, so a label can be associated with an album as well as an artist
+  * New `song_data`.`bpm` column holding the tagged beats per minute
 * Subsonic
-  * OpenSubsonic implementation audited against the published specification on 2026-07-27; the audited build is committed as `docs/openapi-opensubsonic.json` and pinned by a test so a refreshed copy prompts a re-audit instead of drifting silently
+  * OpenSubsonic implementation audited against the published specification on 2026-08-07; the audited build is committed as `docs/openapi-opensubsonic.json` and pinned by a test so a refreshed copy prompts a re-audit instead of drifting silently
   * New `transcoding` extension: `getTranscodeDecision` (POST, with the client's playback capabilities as a JSON body) reports whether a file can be played as-is, and `getTranscodeStream` serves the result. The decision is derived from the same transcode settings that serve the bytes, and its `transcodeParams` token is signed with `secret_key` so a client cannot choose its own output format or bitrate
   * New `playbackReport` extension: `reportPlayback` updates now-playing from a client's playback timeline, with `ignoreScrobble=true` refreshing the display without touching play counts
   * New `topSongsByArtistId` extension: `getTopSongs` accepts an artist `id` as well as a name
@@ -86,6 +88,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `AlbumID3` reports `recordLabels`, from a new album-to-label association the scanner writes off the release's label tag. The label text already reached `song_data`, but reading it back per album meant a query over a free-text column for every album of every list response
   * Songs, albums, videos and podcast episodes now report `played`, the moment they were last streamed. Ampache's own `played` column is a boolean and the date lived in the play-history tables, which cannot be queried once per song of every list response — so the date is now stored on the object and kept current when the play is recorded
   * `getLyricsBySongId` supports `enhanced=true`, returning word-level `cueLine` timing when the stored lyrics carry Enhanced LRC timings
+  * Songs report `bpm`. The spec types the field as an integer, so a tag carrying a fraction is rounded here; the native API keeps the value as tagged
   * OpenSubsonic responses now carry the documented extra fields in **both** JSON and XML — the XML serializer previously emitted little more than plain Subsonic. Songs gain `artists`, `albumArtists`, `displayArtist`, `displayAlbumArtist`, `displayComposer`, `contributors`, `mediaType`, `samplingRate`, `channelCount`, `isrc`, `replayGain` and `bookmarkPosition`; albums gain `artists`, `displayArtist`, `sortName`, `releaseDate`, `originalReleaseDate`, `releaseTypes` and `discTitles`; artists gain `sortName` and `artistImageUrl`; playlists gain `allowedUser`; users gain `maxBitRate`; videos gain `originalWidth`/`originalHeight`
   * Fixed the internet radio station response field, which was emitted as `homepageUrl` instead of the specified `homePageUrl`. This also affected the pure Subsonic API, where it did not match the 1.16.1 schema
   * Fixed OpenSubsonic action routing: handler names in camelCase were compared against a lowercased action and never matched, so `reportPlayback`, `findSonicPath` and `getSonicSimilarTracks` were unreachable
@@ -117,9 +120,16 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New `sonic_match` method (REST `songs/{song_id}/sonic-match`) returning songs that sound like a given song, each with a `similarity` score. It shares the OpenSubsonic `sonicMatch` scale (0.0-1.0, 1.0 being the same recording) so a client sees the same number from either API, and needs a sonic-analysis plugin — with none enabled it refuses the request rather than returning an empty list
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
   * Album disks are available to API8 clients (`album_disks`, `album_disk`, `album_disk_songs`, plus `index`, `list`, `browse`, `stats` and `get_art` support). With the `album_group` preference disabled the web interface browses album disks, and until now the API had no way to reach them
+  * API8 song responses carry `bpm`
+* BPM
+  * The `BPM` tag is read on scan and kept, instead of being discarded before the catalog saw it. `TBPM`, the quicktime `tmpo` atom and the vorbis/APE `BPM` comment all land in the same place
+  * A fraction is kept as tagged, since detection tools write one and rounding it away cannot be undone without a rescan
+  * New `BPM` smart playlist rule under `Song Data`, so a list can be built from a tempo range
+  * The song page shows it, next to `Channels`
 * Browse
   * Add `addition_time` sort to album, album_disk and artist. (A disk has no time of its own, so it sorts on its album's)
   * Add `update_time` sort to podcast_episode. (The column has existed since `750001` but was never a sort)
+  * Every browse filter and sort is now documented with what it actually does, what value it takes and which methods use it, instead of a copy of the raw name list. The pages are generated from the query classes by `composer api:docs`, and cover the `folder`, `playlist_search` and `smartplaylist` browses for the first time
 * CLI
   * New `admin:exportSchema` command regenerates `resources/sql/ampache.sql` from a clean install; it refuses to run against a database with pending updates
   * New user commands `admin:deleteUser`, `admin:enableUser` and `admin:disableUser`
@@ -148,6 +158,28 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Add to playlist
   * The action is on the artist, smartlist, podcast, podcast episode, radio station and video pages, which only offered the temporary playlist before
   * Podcast rows carry it as well, so a whole podcast can be added from a browse the way an album already could
+* Moods
+  * Database 800047
+    * New `mood` and `mood_map` tables, the same shape a genre has in `tag` and `tag_map`. OpenSubsonic asks for a list of moods on a Child and an AlbumID3 and Ampache had nowhere to keep one
+    * New `show_mood` preference to show/hide the `Moods` link in the main sidebar
+  * A mood is read out of the file tags on a scan: id3v2 `TMOO`, and the `MOOD` comment of vorbis and APE. Several in the one frame are split on your `additional_genre_delimiters`, so `Melancholy;Dreamy` becomes two
+  * Album and artist moods are derived from the songs, never from a file of their own. Drop a mood from every song of an album and it leaves the album too
+  * New browse page at `browse.php?action=mood`, a cloud whose buttons filter the songs, albums, artists or videos carrying that mood
+  * The sidebar link appears once something has been scanned; a library with no moods is not offered a link to an empty page
+  * The song page lists them, and the song, album and artist edit dialogs carry a `Moods` field next to `Genres`
+  * New `Mood` search rule on songs, albums and artists
+  * Moods you set by hand are written back into the file tags when `write_tags` is on, so the file and the database converge instead of fighting. Albums and artists have no file, so theirs stay derived
+  * `mood` on the song object of the Ampache API (json and xml), and `moods` on the OpenSubsonic `Child` and `AlbumID3`
+  * **NOTE** the tables are empty until a catalog is scanned
+* Podcast details can be refreshed from the feed
+  * New `Update details from the feed` action on the podcast page, next to `Sync`, in the same spirit as the artist's `Update details from MusicBrainz`
+  * Until now the title, website, description, language, copyright, generator and art were only read when the podcast was created; a sync added episodes and nothing else, so a podcast that renamed itself or replaced its art kept the details it was first created with
+  * Values the channel does not supply are left alone rather than blanked, and the art is only replaced when the channel advertises one
+  * Requires content manager access, and asks for confirmation first because it overwrites details you may have edited by hand
+* A podcast `Sync` shows a `Started` notification
+  * The sync fetches the feed and downloads episodes, which can run for minutes, and the request renders nothing back. With no acknowledgement the click looked like it had done nothing, so people pressed it again
+  * The notification appears as the request goes out, on the `Sync` button of the podcast page and of a podcast row, and on the episode `Sync` that downloads a single episode
+  * `Ajax::button()` and `Ajax::button_with_text()` take an optional `notice` for this, so any other long running ajax action can say the same
 * A `PHP Modules` table on `Admin -> Server Config -> Ampache Debug` listing every php extension Ampache requires or suggests, whether this server has it, and what an optional one is needed for
 * Webserver rules that keep private files out of the web root
   * Optional hardening; nothing in Ampache needs these rules, so an install without them keeps working exactly as before
@@ -162,6 +194,22 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Changed (8.0.0)
 
+* A genre you set by hand survives an update from tags
+  * `tag_map` has always had a `user` column but nothing ever filled it, so every genre was stored as owned by nobody and a re-read of the file tags cleared whatever was not in the file. Setting a genre in the interface only lasted until the next scan
+  * A genre added through the interface or the api is now attributed to the person who added it, and an update from tags treats it as if it were in the file rather than deleting it
+  * Removing one by hand still removes it whoever set it, so a manager is not locked out by a user's choice. Only the tag read is restricted
+  * User set genres are marked with a `*` carrying a `User set` tooltip, on the pages that render genres as links. The plain text form the edit fields, daap and upnp use is unchanged
+  * Moods work the same way, and the two share the marker
+* Podcast feed text is stored as plain text
+  * Feeds routinely put markup in their titles and descriptions, and some escape that markup a second time on the way into the xml. Both used to be stored as-is, so the podcast and episode pages showed `&lt;p&gt;` and `<br />` as words
+  * Paragraphs and lists are kept as line breaks, the remaining tags are dropped and the entities are decoded; the podcast and episode pages render those breaks
+  * An episode description is cleaned before its length is capped, so the 4096 character limit is spent on text rather than on tags
+* A sync refreshes the descriptions of the episodes you already have
+  * An item the feed still carries used to be recognised and then dropped, so a description was only ever written the once. A feed correcting a typo, expanding its show notes or fixing its own markup never reached the episodes you subscribed to first
+  * The description is read by the same lookup that recognises the episode and only written when it actually differs, so a sync over an unchanged feed costs nothing extra
+  * An item that supplies no description leaves the stored one alone, and nothing else about an existing episode is touched: its state, downloaded file, play counts and any edits you made to its other fields stay as they are
+  * This is also what carries the plain-text conversion above to episodes already in the database
+  * A feed item with no guid no longer matches the first episode that has none. That lookup used to compare an empty guid against every episode without one, which silently skipped a genuinely new episode; now it would have overwritten the wrong description, so it is guarded
 * The browse filter box matches a name in more than one way
   * A **Starts With** / **Contains** menu sits above the box; Contains matches anywhere in the name, so a browse no longer has to be abandoned for the search page to find something by a word in the middle of its title
   * Only one match applies at a time and the choice is remembered per browse, so emptying the box does not put it back to Starts With
@@ -404,6 +452,8 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `musicFolderId` was ignored by `getStarred`, `getStarred2` and `getSongsByGenre`
   * `musicFolderId` was ignored by `getAlbumList`/`getAlbumList2` for the `random`, `highest`, `frequent`, `recent`, `starred`, `byYear` and `byGenre` types
   * A `musicFolderId` naming a catalog the user can't browse returned everything instead of nothing
+  * `hls.m3u8` answered with an error; the endpoint is named with the suffix in the Subsonic specification, and only the suffixless `hls` was served
+  * An object deleted since the id list was built is left out of the response instead of being returned as an entry with no name or content; `getGenres` and `getInternetRadioStations` were the most visible, along with the song results of `search2`/`search3`
 * User avatars requested through a `/play/art/{sid}/user/{id}/...` url were always denied when `public_images` is disabled, because the `user` rewrite rules dropped the `auth` parameter that the other art rules pass on
 * Upload
   * An artist created while uploading was never mapped to the upload catalog, so it was missing from an artist browse filtered to that catalog until the next catalog update; the artists of an uploaded song are now mapped as the song is added

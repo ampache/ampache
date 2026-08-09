@@ -239,7 +239,7 @@ final readonly class VideoRepository implements VideoRepositoryInterface
     /**
      * This returns a number of random videos.
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getRandom(
         int $userId,

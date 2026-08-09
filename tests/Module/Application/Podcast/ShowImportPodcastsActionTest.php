@@ -61,23 +61,22 @@ class ShowImportPodcastsActionTest extends TestCase
             ->method('showBoxTop')
             ->with('Import Podcasts', 'box box_add_podcast');
         $this->ui->expects(static::once())
-            ->method('show')
-            ->with(
-                'show_import_podcasts.inc.php',
-                [
-                    'catalogId' => 0,
-                ]
-            );
-        $this->ui->expects(static::once())
             ->method('showBoxBottom');
         $this->ui->expects(static::once())
             ->method('showQueryStats');
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        self::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($this->request, $this->gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunReturnsNullIfPodcastsAreDisabled(): void

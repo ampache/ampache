@@ -25,12 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Podcast;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Podcast\PodcastView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -72,16 +78,32 @@ final readonly class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->show(
-                'show_podcast.inc.php',
-                [
-                    'podcast' => $podcast,
-                    'object_ids' => $podcast->getEpisodeIds(),
-                    'object_type' => 'podcast_episode',
-                    'current_user' => $user,
-                    'browseFactory' => $this->browseFactory,
-                ]
-            );
+            // the episode list is a browse, so it is configured here rather than inside the view
+            $browse = $this->browseFactory->create();
+            $browse->set_type('podcast_episode');
+            $browse->set_use_filters(false);
+            $browse->set_skip_catalog_check(true);
+
+            $mayDelete = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER);
+            $mayManage = $mayDelete || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
+
+            echo (new PodcastView(
+                AmpConfig::get_web_path(),
+                $podcast,
+                $browse,
+                $podcast->getEpisodeIds(),
+                $user,
+                Ui::is_grid_view('album'),
+                (bool) AmpConfig::get('directplay'),
+                Stream_Playlist::check_autoplay_next(),
+                Stream_Playlist::check_autoplay_append(),
+                User::is_registered() && (bool) AmpConfig::get('ratings'),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                $mayManage,
+                $mayDelete,
+                (bool) AmpConfig::get('statistical_graphs'),
+                (bool) AmpConfig::get('use_rss')
+            ))->render();
         }
 
         $this->ui->showQueryStats();

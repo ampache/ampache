@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Shout;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Shout\EditShoutView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
@@ -33,6 +35,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -48,6 +51,7 @@ final readonly class ShowEditAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ShoutObjectLoaderInterface $shoutObjectLoader,
         private ShoutRepositoryInterface $shoutRepository,
+        private ConfigContainerInterface $configContainer,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -65,7 +69,8 @@ final readonly class ShowEditAction implements ApplicationActionInterface
 
         // load the object the shout is referring to
         $object = $this->shoutObjectLoader->loadByShout($shout);
-        if ($object === null) {
+        // the form prints a link to the object, so a type that cannot render one is treated as missing
+        if (!$object instanceof displayable_item) {
             throw new ObjectNotFoundException($shout->getObjectId());
         }
 
@@ -77,14 +82,12 @@ final readonly class ShowEditAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_edit_shout.inc.php',
-            [
-                'shout' => $shout,
-                'object' => $object,
-                'client' => $user,
-            ]
-        );
+        echo (new EditShoutView(
+            $this->configContainer->getWebPath('/admin'),
+            $shout,
+            $object,
+            $user
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

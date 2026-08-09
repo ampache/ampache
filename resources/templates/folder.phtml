@@ -1,0 +1,79 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// folder.phtml -- rendered by Ampache\Gui\Folder\FolderView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Folder\FolderView $this */
+
+$folder   = $this->getFolder();
+$folderId = $folder->getId();
+
+echo $this->raw($this->getBrowseForm());
+Ui::show_box_top($this->raw($this->getTitle()), 'info-box'); ?>
+<div class="item_right_info">
+</div>
+<?php // the root listing is a virtual folder with nothing to act on, so the panel is omitted rather than drawn empty
+if ($this->isPlayShown() || $this->isQueueShown()) { ?>
+<div id="information_actions">
+    <h3><?php echo T_('Actions'); ?></h3>
+    <ul>
+    <?php if ($this->isPlayShown()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=folder&object_id=' . $folderId, 'play_circle', T_('Play'), 'directplay_full_' . $folderId)); ?></li>
+        <?php if ($this->isAutoplayNextEnabled()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=folder&object_id=' . $folderId . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_folder_' . $folderId)); ?></li>
+        <?php }
+
+        if ($this->isAutoplayAppendEnabled()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=folder&object_id=' . $folderId . '&append=true', 'low_priority', T_('Play last'), 'addplay_folder_' . $folderId)); ?></li>
+        <?php }
+        }
+
+    if ($this->isQueueShown()) {
+        $addToList = Ui::get_add_to_list_label(); ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?action=basket&type=folder&id=' . $folderId, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $folderId)); ?></li>
+        <li><?php echo $this->raw(Ajax::button_with_text('?action=basket&type=folder_random&id=' . $folderId, 'shuffle', T_('Random to Temporary Playlist'), 'play_random_' . $folderId)); ?></li>
+        <li>
+            <a id="add_to_playlist_<?php echo $this->e($folderId); ?>" onclick="showPlaylistDialog(event, 'folder', '<?php echo $this->e($folderId); ?>')">
+                <?php echo $this->raw(Ui::get_material_symbol('playlist_add', $addToList)); ?>
+                <?php echo $this->e($addToList); ?>
+            </a>
+        </li>
+    <?php } ?>
+    </ul>
+</div>
+<?php }
+
+Ui::show_box_bottom(); ?>
+<div id="additional_information">
+&nbsp;
+</div>
+<div id="reordered_list_<?php echo $this->e($folderId); ?>">
+<?php $browse = $this->getBrowse();
+$browse->show_objects();
+$browse->store(); ?>
+</div>

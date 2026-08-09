@@ -1,0 +1,98 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// album_row.phtml -- rendered by Ampache\Gui\Album\AlbumRowView
+
+/** @var Ampache\Gui\Album\AlbumRowView $this */
+
+$album   = $this->getAlbum();
+$config  = $this->getConfig();
+$albumId = $album->getId(); ?>
+    <td class="cel_play">
+        <span class="cel_play_content"> </span>
+        <div class="cel_play_hover">
+<?php if ($config->isDirectplayEnabled()) {
+    echo $this->raw($album->getDirectplayButton());
+
+    if ($album->canAutoplayNext()) {
+        echo $this->raw($album->getAutoplayNextButton());
+    }
+
+    if ($album->canAppendNext()) {
+        echo $this->raw($album->getAppendNextButton());
+    }
+} ?>
+        </div>
+    </td>
+    <td class="<?php echo $this->e($this->getClassCover()); ?>"><?php echo $this->raw($album->getArt()); ?></td>
+    <td class="<?php echo $this->e($this->getClassAlbum()); ?>"><?php echo $this->raw($album->getAlbumLink()); ?></td>
+    <td class="cel_add">
+        <span class="cel_item_add">
+<?php if ($this->isShowPlaylistAdd()) {
+    echo $this->raw($album->getAddToTemporaryPlaylistButton());
+    echo $this->raw($album->getRandomToTemporaryPlaylistButton()); ?>
+                <a id="add_to_playlist_<?php echo $albumId; ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $albumId; ?>')"><?php echo $this->raw($album->getAddToPlaylistIcon()); ?></a>
+<?php } ?>
+        </span>
+    </td>
+    <td class="<?php echo $this->e($this->getClassArtist()); ?>"><?php echo $this->raw($album->getArtistLink()); ?></td>
+    <td class="cel_songs optional"><?php echo $this->e($album->getSongCount()); ?></td>
+    <td class="cel_year">
+<?php if ($album->canShowYear()) {
+    echo $this->e($album->getDisplayYear());
+} ?>
+    </td>
+<?php if ($this->isShowPlayedTimes()) { ?>
+    <td class="<?php echo $this->e($this->getClassCounter()); ?> optional"><?php echo $this->e($album->getPlayedTimes()); ?></td>
+<?php }
+if (!$this->isHideGenre()) { ?>
+    <td class="<?php echo $this->e($this->getClassTags()); ?> optional"><?php echo $this->raw($album->getGenre()); ?></td>
+<?php }
+if ($this->isUsingRatings()) { ?>
+    <td class="cel_ratings">
+        <div class="rating">
+            <span class="cel_rating" id="rating_<?php echo $albumId; ?>_album"><?php echo $this->raw($album->getRating()); ?></span>
+            <span class="cel_userflag" id="userflag_<?php echo $albumId; ?>_album"><?php echo $this->raw($album->getUserFlags()); ?></span>
+        </div>
+    </td>
+<?php } ?>
+    <td class="cel_action">
+<?php if ($album->canPostShout()) { ?>
+        <a href="<?php echo $this->e($album->getPostShoutUrl()); ?>"><?php echo $this->raw($album->getPostShoutIcon()); ?></a>
+<?php }
+if ($album->canShare()) {
+    echo $this->raw($album->getShareUi());
+}
+
+if ($album->canBatchDownload()) { ?>
+        <a class="nohtml" rel="nofollow" href="<?php echo $this->e($album->getBatchDownloadUrl()); ?>"><?php echo $this->raw($album->getBatchDownloadIcon()); ?></a>
+<?php }
+if ($album->isEditable()) { ?>
+        <a id="edit_album_<?php echo $albumId; ?>" onclick="showEditDialog('album_row', '<?php echo $albumId; ?>', 'edit_album_<?php echo $albumId; ?>', '<?php echo $this->e($album->getEditButtonTitle()); ?>', 'album_')"><?php echo $this->raw($album->getEditIcon()); ?></a>
+<?php }
+if ($album->canBeDeleted()) { ?>
+        <a id="delete_album_<?php echo $albumId; ?>" href="<?php echo $this->e($album->getDeletionUrl()); ?>"><?php echo $this->raw($album->getDeletionIcon()); ?></a>
+<?php } ?>
+    </td>

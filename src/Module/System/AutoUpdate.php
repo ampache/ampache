@@ -266,19 +266,14 @@ class AutoUpdate
                 self::_is_develop()
                 || $git_branch !== ''
             ) {
-                $ccommit = AmpConfig::get($current) ?? self::github_request('/commits/' . $current);
-                $lcommit = AmpConfig::get($latest) ?? self::github_request('/commits/' . $latest);
+                // Comparison based on commit date
+                $ctime = self::_get_commit_time($current);
+                $ltime = self::_get_commit_time($latest);
 
                 if (
-                    !empty($ccommit)
-                    && !empty($lcommit)
+                    $ctime > 0
+                    && $ltime > 0
                 ) {
-                    // Comparison based on commit date
-                    $ctime = strtotime((string) $ccommit->commit->author->date);
-                    $ltime = strtotime((string) $lcommit->commit->author->date);
-                    AmpConfig::set($current, $ctime, true);
-                    AmpConfig::set($latest, $ltime, true);
-
                     $available = ($ctime < $ltime);
                 }
             }
@@ -503,6 +498,27 @@ class AutoUpdate
         }
 
         return true;
+    }
+
+    /**
+     * Get the author date of a commit as a timestamp, or 0 when GitHub didn't return one.
+     */
+    protected static function _get_commit_time(string $version): int
+    {
+        $cache_key = 'autoupdate_commit_time_' . $version;
+        $cached    = AmpConfig::get($cache_key);
+        if (is_numeric($cached)) {
+            return (int) $cached;
+        }
+
+        $commit = self::github_request('/commits/' . $version);
+        $ctime  = ($commit instanceof \stdClass && isset($commit->commit->author->date))
+            ? (int) strtotime((string) $commit->commit->author->date)
+            : 0;
+
+        AmpConfig::set($cache_key, $ctime, true);
+
+        return $ctime;
     }
 
     /**

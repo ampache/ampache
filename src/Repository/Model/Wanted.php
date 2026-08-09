@@ -423,7 +423,7 @@ class Wanted extends database_object
                     : null;
 
                 // Load from database if already cached
-                $this->songs = Song_Preview::get_song_previews($this->mbid);
+                $this->songs = Song_Preview::get_song_previews($this->mbid, $this->name);
                 if (count($releases) > 0) {
                     // Use the first release as reference for track content
                     $release_mbid = $releases[0]->id;

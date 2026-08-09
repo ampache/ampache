@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Stats\RecentlyPlayedMode;
+use Ampache\Gui\Stats\RecentlyPlayedView;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -34,7 +36,6 @@ use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Plugin\PluginLocationInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -110,15 +111,22 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     ? (int) $this->requestParser->getFromRequest('user_id')
                     : ($user->id ?: -1);
                 $user_only = isset($_REQUEST['user_only']);
-                $ajax_page = 'stats';
-                if (AmpConfig::get('home_recently_played_all')) {
-                    $data = Stats::get_recently_played($user_id, 'stream', null, $user_only);
-                    require_once Ui::find_template('show_recently_played_all.inc.php');
-                } else {
-                    $data = Stats::get_recently_played($user_id, 'stream', 'song', $user_only);
+                $all_types = (bool) AmpConfig::get('home_recently_played_all');
+                $data      = ($all_types)
+                    ? Stats::get_recently_played($user_id, 'stream', null, $user_only)
+                    : Stats::get_recently_played($user_id, 'stream', 'song', $user_only);
+                if (!$all_types) {
                     Song::build_cache(array_keys($data));
-                    require Ui::find_template('show_recently_played.inc.php');
                 }
+
+                echo (new RecentlyPlayedView(
+                    ($all_types) ? RecentlyPlayedMode::ALL_TYPES : RecentlyPlayedMode::SONGS,
+                    $data,
+                    $user,
+                    $user_id,
+                    $user_only,
+                    AmpConfig::get_web_path()
+                ))->render();
 
                 $results['recently_played'] = ob_get_clean();
                 break;
@@ -140,9 +148,15 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     : ($user->id ?: -1);
                 $user_only = isset($_REQUEST['user_only']);
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
-                $ajax_page = 'stats';
                 Song::build_cache(array_keys($data));
-                require_once Ui::find_template('show_recently_skipped.inc.php');
+                echo (new RecentlyPlayedView(
+                    RecentlyPlayedMode::SKIPPED,
+                    $data,
+                    $user,
+                    $user_id,
+                    $user_only,
+                    AmpConfig::get_web_path()
+                ))->render();
                 $results['recently_skipped'] = ob_get_clean();
                 break;
             case 'refresh_skipped':
@@ -155,9 +169,15 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     : ($user->id ?: -1);
                 $user_only = isset($_REQUEST['user_only']);
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
-                $ajax_page = 'stats';
                 Song::build_cache(array_keys($data));
-                require_once Ui::find_template('show_recently_skipped.inc.php');
+                echo (new RecentlyPlayedView(
+                    RecentlyPlayedMode::SKIPPED,
+                    $data,
+                    $user,
+                    $user_id,
+                    $user_only,
+                    AmpConfig::get_web_path()
+                ))->render();
                 $results['recently_skipped'] = ob_get_clean();
                 break;
         } // switch on action;

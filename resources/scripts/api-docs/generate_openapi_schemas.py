@@ -72,6 +72,8 @@ TYPES: dict[str, dict[str, str]] = {
     "catalog": {"builder": "catalogs_array", "object": "CatalogObject", "list": "CatalogsResponse", "key": "catalog"},
     # collections answer with a bare {collection: [...]} envelope; the contents live on a separate endpoint
     "collection": {"builder": "collections_array", "object": "CollectionObject", "list": "CollectionsResponse", "key": "collection", "envelope": "bare"},
+    # a playlist folder is a node of the per-user tree; its contents live on a separate endpoint
+    "playlist_folder": {"builder": "playlist_folders_array", "object": "PlaylistFolderObject", "list": "PlaylistFoldersResponse", "key": "playlist_folder"},
     "license": {"builder": "licenses_array", "object": "LicenseObject", "list": "LicensesResponse", "key": "license"},
     "share": {"builder": "shares_array", "object": "ShareObject", "list": "SharesResponse", "key": "share"},
     "bookmark": {"builder": "bookmarks_array", "object": "BookmarkObject", "list": "BookmarksResponse", "key": "bookmark"},
@@ -127,6 +129,29 @@ def build_collection_items_schema(collection: dict) -> dict:
         "type": "object",
         "properties": {"collection": node},
         "required": ["collection"],
+        "additionalProperties": True,
+    }
+
+
+def build_playlist_folder_items_schema(folder: dict) -> dict:
+    """PlaylistFolderItemsResponse = the folder's own fields plus the lists filed in it.
+
+    Composed from the generated PlaylistFolderObject for the same reason as the collection one: the two
+    cannot drift, and the method-reference table lists real fields rather than a bare `allOf`.
+    """
+    node = {
+        "type": "object",
+        "properties": {
+            **folder.get("properties", {}),
+            "contents": {"type": "array", "items": {"$ref": "#/components/schemas/PlaylistFolderItemObject"}},
+        },
+        "required": [*folder.get("required", []), "contents"],
+        "additionalProperties": True,
+    }
+    return {
+        "type": "object",
+        "properties": {"playlist_folder": node},
+        "required": ["playlist_folder"],
         "additionalProperties": True,
     }
 
@@ -265,6 +290,10 @@ WIRING: dict[str, str] = {
     "collections": "CollectionsResponse",
     "collection": "CollectionsResponse",
     "collection_items": "CollectionItemsResponse",
+    # the single-folder read answers with the same list envelope as the tree read
+    "playlist_folders": "PlaylistFoldersResponse",
+    "playlist_folder": "PlaylistFoldersResponse",
+    "playlist_folder_items": "PlaylistFolderItemsResponse",
     # Licenses
     "licenses": "LicensesResponse",
     "license": "LicenseObject",
@@ -445,6 +474,9 @@ WIRING_BY_METHOD: dict[tuple[str, str], str] = {
     # both collection writers echo the collection back through the list envelope rather than a bare object
     ("put", "collection_create"): "CollectionsResponse",
     ("patch", "collection_edit"): "CollectionsResponse",
+    # both playlist folder writers echo the folder back through the list envelope
+    ("put", "playlist_folder_create"): "PlaylistFoldersResponse",
+    ("patch", "playlist_folder_edit"): "PlaylistFoldersResponse",
     ("post", "register"): "SuccessResponse",
     ("post", "player"): "NowPlayingResponse",
     ("post", "localplay"): "LocalplayResponse",
@@ -461,6 +493,8 @@ SUCCESS_ACTIONS: dict[str, tuple[str, ...]] = {
         "collection_remove",
         "live_stream_delete",
         "playlist_delete",
+        "playlist_folder_delete",
+        "playlist_folder_remove",
         "podcast_delete",
         "podcast_episode_delete",
         "preference_delete",
@@ -504,6 +538,7 @@ SUCCESS_ACTIONS: dict[str, tuple[str, ...]] = {
     ),
     "put": (
         "collection_add",
+        "playlist_folder_add",
         "preference_create",
         "user_create",
     ),
@@ -852,6 +887,23 @@ MANUAL_SCHEMAS: dict[str, dict] = {
         "required": ["track", "track_id", "object_type"],
         "additionalProperties": {"type": "object"},
     },
+    # playlist_folder_items has no *_array() builder either: each member is rendered by its own type's
+    # builder and nested under a property named for that type, so the payload key changes per entry.
+    "PlaylistFolderItemObject": {
+        "type": "object",
+        "description": (
+            "One list filed in a playlist folder. `object_type` is `playlist`, `smartlist` or `collection` "
+            "and the property of the same name carries that type's own object, e.g. "
+            "`{\"sort_order\": 1, \"object_type\": \"playlist\", \"playlist\": {...}}`. `sort_order` is "
+            "client-assigned and shared with the sibling folders, so ties are broken by name."
+        ),
+        "properties": {
+            "sort_order": {"type": "integer", "description": "position among its siblings; 0 when never placed"},
+            "object_type": {"type": "string", "description": _OBJECT_TYPE_DESCRIPTION},
+        },
+        "required": ["sort_order", "object_type"],
+        "additionalProperties": {"type": "object"},
+    },
     "IndexReferenceObject": {
         "type": "object",
         "properties": {"id": {"type": "string"}, "type": {"type": "string"}},
@@ -1142,6 +1194,7 @@ def build_schemas(sources: dict[str, dict[str, str]]) -> dict[str, dict]:
     schemas["PingResponse"] = build_ping_schema(schemas["HandshakeResponse"])
     schemas.update(MANUAL_SCHEMAS)
     schemas["CollectionItemsResponse"] = build_collection_items_schema(schemas["CollectionObject"])
+    schemas["PlaylistFolderItemsResponse"] = build_playlist_folder_items_schema(schemas["PlaylistFolderObject"])
     return schemas
 
 

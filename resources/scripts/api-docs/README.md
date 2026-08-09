@@ -14,8 +14,11 @@ that file.
 ```sh
 python resources/scripts/api-docs/generate_openapi_schemas.py     # -> docs/openapi.json
 python resources/scripts/api-docs/generate_api_methods_md.py      # -> docs/API-{JSON,XML}-methods.md
+python resources/scripts/api-docs/generate_browse_docs.py         # -> docs/API-browse.md, docs/browse/*.md
 python resources/scripts/api-docs/check_openapi_examples.py --strict
 ```
+
+`generate_browse_docs.py` reads nothing from the spec, so it can run on its own.
 
 Or all three in check-only mode, which is what CI runs:
 
@@ -34,6 +37,7 @@ last command, which will mask a failure.
 |---|---|
 | `docs/openapi.json` | `generate_openapi_schemas.py` |
 | `docs/API-JSON-methods.md`, `docs/API-XML-methods.md` | `generate_api_methods_md.py` (response tables only) |
+| `docs/API-browse.md`, `docs/browse/*-browse.md` | `generate_browse_docs.py` (whole file, never hand-edit) |
 | `docs/openapi-6.json` | **hand-maintained**, guarded by `Api6SpecConformanceTest` |
 | `docs/openapi-opensubsonic.json` | **upstream's artefact**, copied verbatim — never hand-edit (see below) |
 | `docs/REST-to-RPC.md` | hand-maintained; its "Alternative action" column is the source of truth for aliases |
@@ -41,6 +45,22 @@ last command, which will mask a failure.
 In the markdown documents only the block between `<!-- GENERATED:RESPONSE:BEGIN -->` and
 `<!-- GENERATED:RESPONSE:END -->` is generated. The prose, the input-parameter tables, the `* throws`
 blocks and the `[Example]` links are hand-written and are left alone.
+
+## Browse pages
+
+`generate_browse_docs.py` writes those pages end to end, so an edit made in `docs/browse/` is lost on
+the next run. The filter and sort names come from the query classes in `src/Module/Database/Query`;
+the sentence describing each one comes from `browse_reference.py`, and a name the code implements
+with no entry there is a hard error. Adding a filter or a sort therefore means adding its description
+in the same commit.
+
+The generator also compares each query class's declared `FILTERS`/`$sorts` against the case labels
+`get_sql_filter()`/`get_sql_sort()` really answer to. A declared name with no implementation is left
+out of the table and listed in a note instead, and printed as `DRIFT` on stderr — accepted, silently
+does nothing, worth fixing in the query class.
+
+A new browse type needs an entry in `TYPES` here **and** a page with docusaurus frontmatter on the
+site side, or `build_www.sh` skips it.
 
 ## Refreshing the OpenSubsonic spec
 
@@ -60,8 +80,18 @@ composer qa
 ```
 
 `OpenSubsonicSpecVersionTest` will fail, which is the point — it means the surface moved. Re-audit the
-implementation against the new build, then update `SPEC_SHA256` (and `SPEC_PATH_COUNT` if endpoints were added or
-removed) in that test and the compliance date in `docs/API-subsonic.md`. `testEveryDocumentedEndpointHasAHandler`
+implementation against the new build, then record it:
+
+```shell
+composer spec:refresh
+```
+
+That rewrites `SPEC_SHA256` in the test and the compliance date in `docs/API-subsonic.md` together, so the two
+cannot drift apart. `composer spec:refresh -- --check` reports what would change without writing and exits non-zero,
+which is the form to use in CI; `-- --date=YYYY-MM-DD` stamps a date other than today.
+
+It deliberately leaves `SPEC_PATH_COUNT` alone and only warns when it no longer matches — a changed endpoint count
+means endpoints came or went, which is a bigger review than a re-hash. `testEveryDocumentedEndpointHasAHandler`
 names any endpoint the new build documents that Ampache does not serve.
 
 Response fixtures are captured separately with `capture_subsonic_fixtures.php`; see its header for what it covers

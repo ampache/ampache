@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\EditAccessFormView;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListItem;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -88,15 +89,13 @@ final readonly class UpdateRecordAction implements ApplicationActionInterface
         }
 
         if (AmpError::occurred()) {
-            $this->ui->show(
-                'show_edit_access.inc.php',
-                [
-                    'access' => new AccessListItem(
-                        $this->modelFactory,
-                        $this->modelFactory->createAccess($accessId)
-                    )
-                ]
-            );
+            echo (new EditAccessFormView(
+                $this->configContainer->getWebPath('/admin'),
+                new AccessListItem(
+                    $this->modelFactory,
+                    $this->modelFactory->createAccess($accessId)
+                )
+            ))->render();
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),

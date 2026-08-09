@@ -88,7 +88,6 @@ final class PlaylistDeleteMethod implements MethodInterface
 
         $playlist->delete();
 
-
         $response->getBody()->write(
             $output->success($apiVersion, 'playlist deleted')
         );

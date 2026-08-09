@@ -465,6 +465,10 @@ msgid "Show lyrics"
 msgstr ""
 
 #: Ampache preference description
+msgid "Show 'Moods' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
 msgid "Show Album original year on links (if available)"
 msgstr ""
 

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\EditLicenseFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -54,13 +55,10 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Create license'));
-        $this->ui->show(
-            'show_edit_license.inc.php',
-            [
-                'license' => $this->licenseRepository->prototype(),
-                'adminPath' => $this->configContainer->getWebPath('/admin'),
-            ]
-        );
+        echo (new EditLicenseFormView(
+            $this->configContainer->getWebPath('/admin'),
+            $this->licenseRepository->prototype()
+        ))->render();
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

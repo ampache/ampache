@@ -25,13 +25,22 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\PodcastEpisode;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Podcast\PodcastEpisodeView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\Waveform;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -69,10 +78,24 @@ final readonly class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->show(
-                'show_podcast_episode.inc.php',
-                ['episode' => $episode]
-            );
+            $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
+
+            echo (new PodcastEpisodeView(
+                AmpConfig::get_web_path(),
+                $episode,
+                (bool) AmpConfig::get('directplay'),
+                Stream_Playlist::check_autoplay_next(),
+                Stream_Playlist::check_autoplay_append(),
+                User::is_registered() && (bool) AmpConfig::get('ratings'),
+                (bool) AmpConfig::get('waveform') && Waveform::is_available($episode, 'podcast_episode'),
+                $mayInteract,
+                (!AmpConfig::get('use_auth') || $mayInteract) && (bool) AmpConfig::get('sociable'),
+                $mayInteract && (bool) AmpConfig::get('share'),
+                Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+                Catalog::can_remove($episode),
+                (bool) AmpConfig::get('statistical_graphs')
+            ))->render();
         }
 
         $this->ui->showQueryStats();

@@ -26,6 +26,13 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Installation;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Install\InstallAccountView;
+use Ampache\Gui\Install\InstallCheckView;
+use Ampache\Gui\Install\InstallConfigView;
+use Ampache\Gui\Install\InstallLanguageView;
+use Ampache\Gui\Install\InstallStartView;
+use Ampache\Gui\Install\TestErrorPageView;
+use Ampache\Gui\Installation\InstallErrorView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
@@ -34,7 +41,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\InstallationHelperInterface;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\EnvironmentInterface;
-use Ampache\Module\Util\Ui;
 use Exception;
 use Gettext\Translations;
 use Psr\Http\Message\ResponseInterface;
@@ -60,8 +66,7 @@ final class DefaultAction implements ApplicationActionInterface
 
         // Redirect if installation is already complete.
         if (!$this->installationHelper->install_check_status($configfile)) {
-            $redirect_url = 'login.php';
-            require_once Ui::find_template('error_page.inc.php');
+            echo (new InstallErrorView('login.php'))->render();
 
             return null;
         }
@@ -136,7 +141,7 @@ final class DefaultAction implements ApplicationActionInterface
         AmpConfig::set('lang', $htmllang, true);
         AmpConfig::set('site_charset', $charset, true);
         if (!class_exists(Translations::class)) {
-            require_once __DIR__ . '/../../../../public/client/templates/test_error_page.inc.php';
+            echo (new TestErrorPageView())->render();
             throw new Exception('load_gettext()');
         }
 
@@ -171,13 +176,13 @@ final class DefaultAction implements ApplicationActionInterface
 
                     if (!strlen($new_user) || !strlen($new_pass)) {
                         AmpError::add('general', T_('The Ampache database username or password is missing'));
-                        require_once __DIR__ . '/../../../../public/client/templates/show_install.inc.php';
+                        echo (new InstallStartView($web_path, (string) $charset, (string) $htmllang))->render();
                         break;
                     }
                 }
 
                 if (!$skip_admin && !$this->installationHelper->install_insert_db($new_user, $new_pass, array_key_exists('create_db', $_REQUEST), array_key_exists('overwrite_db', $_REQUEST), array_key_exists('create_tables', $_REQUEST))) {
-                    require_once __DIR__ . '/../../../../public/client/templates/show_install.inc.php';
+                    echo (new InstallStartView($web_path, (string) $charset, (string) $htmllang))->render();
                     break;
                 }
 
@@ -185,7 +190,7 @@ final class DefaultAction implements ApplicationActionInterface
                 Preference::update('lang', -1, AmpConfig::get('lang', 'en_US'));
                 // Intentional break fall-through
             case 'show_create_config':
-                require_once __DIR__ . '/../../../../public/client/templates/show_install_config.inc.php';
+                echo (new InstallConfigView($web_path, (string) $charset, (string) $htmllang, $this->installationHelper, $htaccess_play_file, $htaccess_rest_file))->render();
                 break;
             case 'create_config':
                 // Intentional break fall-through
@@ -229,13 +234,13 @@ final class DefaultAction implements ApplicationActionInterface
                     || !$created_config
                 ) {
                     AmpError::add('general', T_('Configuration files were either not found or unreadable'));
-                    require_once Ui::find_template('show_install_config.inc.php');
+                    echo (new InstallConfigView($web_path, (string) $charset, (string) $htmllang, $this->installationHelper, $htaccess_play_file, $htaccess_rest_file))->render();
                     break;
                 }
 
                 // Don't try to add administrator user on existing database
                 if ($this->installationHelper->install_check_status($configfile)) {
-                    require_once Ui::find_template('show_install_account.inc.php');
+                    echo (new InstallAccountView($web_path, (string) $charset, (string) $htmllang))->render();
                 } else {
                     header("Location: " . $web_path . '/login.php');
                 }
@@ -248,23 +253,21 @@ final class DefaultAction implements ApplicationActionInterface
                 $password2 = $_REQUEST['local_pass2'];
 
                 if (!$this->installationHelper->install_create_account($username, $password, $password2)) {
-                    require_once Ui::find_template('show_install_account.inc.php');
+                    echo (new InstallAccountView($web_path, (string) $charset, (string) $htmllang))->render();
                     break;
                 }
 
                 header("Location: " . $web_path . '/index.php');
                 break;
             case 'init':
-                require_once __DIR__ . '/../../../../public/client/templates/show_install.inc.php';
+                echo (new InstallStartView($web_path, (string) $charset, (string) $htmllang))->render();
                 break;
             case 'check':
-                // show_test_table.inc.php renders into this scope from show_install_check.inc.php
-                $environment = $this->environment;
-                require_once __DIR__ . '/../../../../public/client/templates/show_install_check.inc.php';
+                echo (new InstallCheckView($web_path, (string) $charset, (string) $htmllang, $this->environment))->render();
                 break;
             default:
                 // Show the language options first
-                require_once __DIR__ . '/../../../../public/client/templates/show_install_lang.inc.php';
+                echo (new InstallLanguageView($web_path, (string) $charset, (string) $htmllang))->render();
                 break;
         }
 

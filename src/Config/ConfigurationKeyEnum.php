@@ -208,6 +208,7 @@ final class ConfigurationKeyEnum
     public const string SHOW_LICENSE                          = 'show_license';
     public const string SHOW_LYRICS                           = 'show_lyrics';
     public const string SHOW_MINI_PLAYER                      = 'show_mini_player';
+    public const string SHOW_MOOD                             = 'show_mood';
     public const string SHOW_PLAYED_TIMES                     = 'show_played_times';
     public const string SHOW_PLAYLIST_USERNAME                = 'show_playlist_username';
     public const string SHOW_SKIPPED_TIMES                    = 'show_skipped_times';

@@ -509,6 +509,17 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     }
 
     /**
+     * Writes the description an episode's feed item now carries
+     */
+    public function updateDescription(int $episodeId, string $description): void
+    {
+        $this->connection->query(
+            'UPDATE `podcast_episode` SET `description` = ? WHERE `id` = ?',
+            [$description, $episodeId]
+        );
+    }
+
+    /**
      * Writes back what reading the downloaded file told us about it, and marks the episode complete
      *
      * @param array<string, mixed> $values

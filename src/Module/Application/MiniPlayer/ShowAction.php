@@ -25,12 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\MiniPlayer;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Playback\MiniPlayerView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\EnvironmentInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -60,15 +61,15 @@ final readonly class ShowAction implements ApplicationActionInterface
         // without reaching their preferences. The page ships everything each type needs: #webplayer,
         // the util_iframe for stream/democratic and the rightbar for localplay. Don't force a type
         // here or the switcher can't stick.
-        // mini.inc.php and everything it requires render in this scope, so the services they use are named here
-        $ajaxUriRetriever     = $this->ajaxUriRetriever;
-        $collectionRepository = $this->collectionRepository;
-        $environment          = $this->environment;
-        $libraryItemLoader    = $this->libraryItemLoader;
-        $playlistLoader       = $this->playlistLoader;
-        $zipHandler           = $this->zipHandler;
-
-        require_once Ui::find_template('mini.inc.php');
+        echo (new MiniPlayerView(
+            AmpConfig::get_web_path(),
+            $this->environment,
+            $this->ajaxUriRetriever,
+            $this->collectionRepository,
+            $this->libraryItemLoader,
+            $this->playlistLoader,
+            $this->zipHandler
+        ))->render();
 
         return null;
     }

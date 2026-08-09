@@ -1,0 +1,64 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// edit/share.phtml -- rendered by Ampache\Gui\Edit\Renderer\ShareEditFormRenderer
+
+/** @var Ampache\Gui\Edit\Renderer\ShareEditFormRenderer $this */
+
+$shareId = $this->getShareId(); ?>
+<div>
+    <form method="post" id="edit_share_<?php echo $shareId; ?>" class="edit_dialog_content">
+        <table class="tabledata">
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Share'); ?></td>
+                <?php // getObjectUrl() returns the item's own link markup?>
+                <td><?php echo $this->raw($this->getObjectUrl()); ?></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Max Counter'); ?></td>
+                <td><input type="text" name="max_counter" value="<?php echo $this->e($this->getMaxCounter()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Expiry Days'); ?></td>
+                <td><input type="text" name="expire" value="<?php echo $this->e($this->getExpireDays()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"></td>
+                <?php // the hidden zero posts first so unchecking is a value rather than a missing key?>
+                <td><input type="hidden" name="allow_stream" value="0" /><input type="checkbox" name="allow_stream" value="1" <?php echo ($this->allowStream()) ? 'checked' : ''; ?> /> <?php echo T_('Allow Stream'); ?></td>
+            </tr>
+            <?php if ($this->showDownload()) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"></td>
+                <td><input type="hidden" name="allow_download" value="0" /><input type="checkbox" name="allow_download" value="1" <?php echo ($this->allowDownload()) ? 'checked' : ''; ?> /> <?php echo T_('Allow Download'); ?></td>
+            </tr>
+            <?php } else { ?>
+            <input type="hidden" name="allow_download" value="<?php echo ($this->allowDownload()) ? '1' : '0'; ?>" />
+            <?php } ?>
+        </table>
+        <input type="hidden" name="id" value="<?php echo $shareId; ?>" />
+        <input type="hidden" name="type" value="share_row" />
+    </form>
+</div>

@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// opensearch_descriptor.phtml -- rendered by Ampache\Gui\Search\OpenSearchDescriptorView
+
+/** @var Ampache\Gui\Search\OpenSearchDescriptorView $this */
+
+echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+<ShortName><?php echo $this->e($this->getShortName()); ?></ShortName>
+<Description><?php echo $this->e($this->getDescription()); ?></Description>
+<InputEncoding><?php echo $this->e($this->getCharset()); ?></InputEncoding>
+<OutputEncoding><?php echo $this->e($this->getCharset()); ?></OutputEncoding>
+<Image width="16" height="16"><?php echo $this->e($this->getFaviconUrl()); ?></Image>
+<Url type="text/html" method="get" template="<?php echo $this->e($this->getSearchUrl()); ?>">
+<Param name="type" value="song"></Param>
+<Param name="rule_1" value="anywhere"></Param>
+<Param name="rule_1_operator" value="0"></Param>
+<Param name="rule_1_input" value="{searchTerms}"></Param>
+<Param name="action" value="search"></Param>
+</Url>
+<Url type="application/opensearchdescription+xml" rel="self" template="<?php echo $this->e($this->getSelfUrl()); ?>" />
+</OpenSearchDescription>

@@ -1,0 +1,60 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// search/rules.phtml -- rendered by Ampache\Gui\Search\SearchRulesView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Search\SearchRulesView $this */
+
+$operator = $this->getLogicOperator();
+$webPath  = $this->getWebPath(); ?>
+<script src="<?php echo $this->e($webPath); ?>/lib/javascript/search.js"></script>
+<script src="<?php echo $this->e($webPath); ?>/lib/javascript/search-data.php?type=<?php echo $this->e($this->getCurrentType()); ?>"></script>
+<?php Ui::show_box_top(T_('Rules') . '...', 'box box_rules'); ?>
+<table class="tabledata">
+    <tbody id="searchtable">
+        <tr id="rules_operator">
+            <td><?php echo T_('Match'); ?></td>
+            <td>
+                <select name="operator">
+                    <option value="and"<?php echo ($operator !== 'or') ? ' selected="selected"' : ''; ?>><?php echo T_('all rules'); ?></option>
+                    <option value="or"<?php echo ($operator === 'or') ? ' selected="selected"' : ''; ?>><?php echo T_('any rule'); ?></option>
+                </select>
+            </td>
+        </tr>
+        <tr id="rules_addrowbutton">
+            <td>
+                <a id="addrowbutton" href="javascript:void(0)">
+                    <?php echo $this->raw(Ui::get_material_symbol('add_circle')); ?>
+                    <?php echo T_('Add Another Rule'); ?>
+                </a>
+                <script>$('#addrowbutton').on('click', SearchRow.add);</script>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<?php Ui::show_box_bottom(); ?>
+<?php echo $this->raw($this->getRuleScript()); ?>

@@ -25,10 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\WebPlayer;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Playback\WebPlayerPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
-use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -42,11 +46,15 @@ final class ShowEmbeddedAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $iframed = true;
+        header('Cache-Control: no-cache');
+        header('Pragma: no-cache');
+        header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 
-        // the player headers render in this scope
-        $ajaxUriRetriever = $this->ajaxUriRetriever;
-        require_once Ui::find_template('show_web_player.inc.php');
+        echo (new WebPlayerPageView(
+            AmpConfig::get_web_path(),
+            $this->ajaxUriRetriever,
+            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+        ))->render();
 
         return null;
     }

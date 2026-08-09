@@ -76,7 +76,9 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
             $html .= "<div class='shoutbox-date'>" . get_datetime($shout->getDate()) . "</div>";
         }
 
-        $html .= "<div class='shoutbox-text'>" . preg_replace('/(\r\n|\n|\r)/', '<br />', $shout->getText()) . "</div>";
+        // the text is escaped before the line breaks become markup, so only the breaks reach the page as html
+        $text = preg_replace('/(\r\n|\n|\r)/', '<br />', scrub_out($shout->getText()));
+        $html .= "<div class='shoutbox-text'>" . $text . "</div>";
         $html .= "</div>";
         $html .= "</div>";
         $html .= "<div class='shoutbox-footer'>";

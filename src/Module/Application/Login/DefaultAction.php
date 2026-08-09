@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Login;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
@@ -43,7 +44,6 @@ use Ampache\Module\System\Preference;
 use Ampache\Module\System\Session;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -62,8 +62,8 @@ final readonly class DefaultAction implements ApplicationActionInterface
         private ResponseFactoryInterface $responseFactory,
         private LoggerInterface $logger,
         private NetworkCheckerInterface $networkChecker,
-        private UiInterface $ui,
         private UserTrackerInterface $userTracker,
+        private LoginFormViewFactoryInterface $loginFormViewFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -362,7 +362,10 @@ final readonly class DefaultAction implements ApplicationActionInterface
                 );
         } // auth success
 
-        $this->ui->show('show_login_form.inc.php');
+        $loginView = $this->loginFormViewFactory->create();
+        if ($loginView !== null) {
+            echo $loginView->render();
+        }
 
         return null;
     }

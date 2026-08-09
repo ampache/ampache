@@ -1,0 +1,121 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// podcast_episode.phtml -- rendered by Ampache\Gui\Podcast\PodcastEpisodeView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Share;
+
+/** @var Ampache\Gui\Podcast\PodcastEpisodeView $this */
+
+$episode   = $this->getEpisode();
+$episodeId = $episode->id;
+
+Ui::show_box_top($this->e($episode->get_fullname()) . ' - ' . $episode->getPodcastLink(), 'box box_podcast_episode_details'); ?>
+<dl class="media_details">
+<?php if ($this->areRatingsShown()) { ?>
+    <dt><?php echo T_('Rating'); ?></dt>
+    <dd>
+        <div id="rating_<?php echo $this->e($episodeId); ?>_podcast_episode"><?php echo $this->raw(Rating::show($episodeId, 'podcast_episode')); ?></div>
+    </dd>
+    <dt><?php echo T_('Fav.'); ?></dt>
+    <dd>
+        <div id="userflag_<?php echo $this->e($episodeId); ?>_podcast_episode"><?php echo $this->raw(Userflag::show($episodeId, 'podcast_episode')); ?></div>
+    </dd>
+<?php }
+
+if ($this->isWaveformShown()) { ?>
+    <dt><?php echo T_('Waveform'); ?></dt>
+    <dd>
+        <div id="waveform_<?php echo $this->e($episodeId); ?>">
+            <img src="<?php echo $this->e($this->getWaveformUrl()); ?>" title="<?php echo T_('Waveform'); ?>" alt="<?php echo T_('Waveform'); ?>" />
+        </div>
+    </dd>
+<?php } ?>
+<dt><?php echo T_('Action'); ?></dt>
+    <dd>
+        <?php if ($this->hasFile()) {
+            if ($this->isDirectPlayEnabled()) {
+                echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episodeId, 'play_circle', T_('Play'), 'play_podcast_episode_' . $episodeId));
+                if ($this->isAutoplayNextEnabled()) {
+                    echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episodeId . '&playnext=true', 'menu_open', T_('Play next'), 'addnext_podcast_episode_' . $episodeId));
+                }
+
+                if ($this->isAutoplayAppendEnabled()) {
+                    echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episodeId . '&append=true', 'low_priority', T_('Play last'), 'addplay_podcast_episode_' . $episodeId));
+                }
+            }
+
+            echo $this->raw(Ajax::button('?action=basket&type=podcast_episode&id=' . $episodeId, 'new_window', T_('Add to Temporary Playlist'), 'add_podcast_episode_' . $episodeId));
+            if ($this->mayInteract()) { ?>
+            <a id="add_to_playlist_<?php echo $this->e($episodeId); ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $this->e($episodeId); ?>')">
+                <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label())); ?>
+            </a>
+            <?php }
+            }
+
+if ($this->mayShout()) { ?>
+        <a href="<?php echo $this->e($this->getShoutUrl()); ?>">
+            <?php echo $this->raw(Ui::get_material_symbol('comment', T_('Post Shout'))); ?>
+        </a>
+        <?php }
+
+if ($this->mayShare()) {
+    echo $this->raw(Share::display_ui('podcast_episode', $episodeId, false));
+} else { ?>
+        <a href="<?php echo $this->e($episode->get_link()); ?>" target="_blank" rel="noopener">
+            <?php echo $this->raw(Ui::get_material_symbol('open_in_new', T_('Link'))); ?>
+            <?php echo T_('Link'); ?>
+        </a>
+        <?php }
+
+if ($this->mayDownload() && $this->hasFile()) { ?>
+        <a class="nohtml" href="<?php echo $this->e($episode->play_url()); ?>"><?php echo $this->raw(Ui::get_material_symbol('link', T_('Link'))); ?></a>
+        <a class="nohtml" rel="nofollow" href="<?php echo $this->e($this->getDownloadUrl()); ?>"><?php echo $this->raw(Ui::get_material_symbol('download', T_('Download'))); ?></a>
+        <?php }
+
+if ($this->mayManage()) {
+    if ($this->isStatisticalGraphsEnabled()) { ?>
+        <a href="<?php echo $this->e($this->getGraphUrl()); ?>"><?php echo $this->raw(Ui::get_material_symbol('bar_chart', T_('Graphs'))); ?></a>
+    <?php } ?>
+        <a onclick="showEditDialog('podcast_episode_row', '<?php echo $this->e($episodeId); ?>', 'edit_podcast_episode_<?php echo $this->e($episodeId); ?>', '<?php echo addslashes(T_('Podcast Episode Edit')); ?>', '')">
+            <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+        </a>
+        <?php }
+
+if ($this->mayDelete()) { ?>
+        <a href="<?php echo $this->e($this->getDeleteUrl()); ?>">
+            <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
+        </a>
+        <?php } ?>
+    </dd>
+<?php foreach ($this->getProperties() as $property) { ?>
+    <dt><?php echo $this->e($property['label']); ?></dt><dd><?php echo $this->raw($property['value']); ?></dd>
+<?php } ?>
+</dl>
+<?php Ui::show_box_bottom(); ?>

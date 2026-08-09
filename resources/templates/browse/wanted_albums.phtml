@@ -1,0 +1,60 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/wanted_albums.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\WantedListRenderer
+
+use Ampache\Gui\Wanted\WantedAlbumRowView;
+use Ampache\Module\Api\Ajax;
+
+/** @var Ampache\Gui\Browse\ListRenderer\WantedListRenderer $this */
+
+// show_objects() closes the box itself, so this does not emit its own box bottom
+$browse  = $this->getBrowse();
+$columns = $this->getColumns();
+$albums  = $this->getWantedAlbums(); ?>
+<table class="tabledata striped-rows <?php echo $this->e($browse->get_css_class()); ?>" data-objecttype="wanted">
+    <thead>
+        <tr class="th-top">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php
+                echo ($column['sort'] === null)
+                    ? $this->e($column['label'])
+                    : $this->raw(Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=' . $column['sort'], $column['label'], 'wanted_sort_' . $column['sort'])); ?></th>
+            <?php } ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($albums as $album) { ?>
+        <tr id="walbum_<?php echo $this->e($album->getMusicBrainzId()); ?>">
+            <?php echo $this->raw((new WantedAlbumRowView($album))->render()); ?>
+        </tr>
+        <?php } ?>
+        <?php if ($albums === []) { ?>
+        <tr>
+            <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('No missing albums found'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>

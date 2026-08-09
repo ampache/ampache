@@ -20,35 +20,53 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Module\Podcast\Exchange;
 
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\PodcastRepositoryInterface;
 use ArrayIterator;
-use PhpTal\PHPTAL;
-use PhpTal\PhpTalInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use SEEC\PhpUnit\Helper\ConsecutiveParams;
-use Traversable;
+use SimpleXMLElement;
 
 class PodcastOpmlExporterTest extends TestCase
 {
-    use ConsecutiveParams;
-
     private PodcastRepositoryInterface&MockObject $podcastRepository;
     private PodcastOpmlExporter $subject;
-    private TalFactoryInterface&MockObject $talFactory;
+
+    /**
+     * A title carrying markup must not be able to close the attribute it is written into.
+     */
+    public function testExportEscapesPodcastValues(): void
+    {
+        $podcast = $this->createMock(Podcast::class);
+
+        $this->podcastRepository->expects(static::once())
+            ->method('findAll')
+            ->willReturn(new ArrayIterator([$podcast]));
+
+        $podcast->expects(static::once())->method('getTitle')->willReturn('a "quoted" & <tagged> title');
+        $podcast->expects(static::once())->method('getFeedUrl')->willReturn('');
+        $podcast->expects(static::once())->method('getWebsite')->willReturn('');
+        $podcast->expects(static::once())->method('getLanguage')->willReturn('');
+        $podcast->expects(static::once())->method('getDescription')->willReturn('');
+
+        $result = $this->subject->export();
+
+        self::assertStringNotContainsString('<tagged>', $result);
+        self::assertSame(
+            'a "quoted" & <tagged> title',
+            (string) (new SimpleXMLElement($result))->body->outline[0]['text']
+        );
+    }
 
     public function testExportExportsPodcasts(): void
     {
         $podcast = $this->createMock(Podcast::class);
-        $talPage = $this->createMock(PhpTalInterface::class);
 
-        $result      = 'some-result';
         $title       = 'some-title';
         $feedUrl     = 'some-feed-url';
         $website     = 'some-website';
@@ -59,62 +77,25 @@ class PodcastOpmlExporterTest extends TestCase
             ->method('findAll')
             ->willReturn(new ArrayIterator([$podcast]));
 
-        $this->talFactory->expects(static::once())
-            ->method('createPhpTal')
-            ->willReturn($talPage);
+        $podcast->expects(static::once())->method('getTitle')->willReturn($title);
+        $podcast->expects(static::once())->method('getFeedUrl')->willReturn($feedUrl);
+        $podcast->expects(static::once())->method('getWebsite')->willReturn($website);
+        $podcast->expects(static::once())->method('getLanguage')->willReturn($language);
+        $podcast->expects(static::once())->method('getDescription')->willReturn($description);
 
-        $talPage->expects(static::once())
-            ->method('setTemplate')
-            ->with((string) realpath(__DIR__ . '/../../../../resources/templates/podcast/export.opml'));
-        $talPage->expects(static::once())
-            ->method('setOutputMode')
-            ->with(PHPTAL::XML);
-        $talPage->expects(static::exactly(3))
-            ->method('set')
-            ->with(
-                ...self::withConsecutive(
-                    ['TITLE', 'Ampache podcast subscriptions'],
-                    ['CREATION_DATE', self::isType('string')],
-                    [
-                        'PODCASTS',
-                        self::callback(function (Traversable $value) use ($title, $feedUrl, $website, $language, $description): bool {
-                            $item = current(iterator_to_array($value));
+        $xml = new SimpleXMLElement($this->subject->export());
 
-                            return $item === [
-                                'title' => $title,
-                                'feedUrl' => $feedUrl,
-                                'website' => $website,
-                                'language' => $language,
-                                'description' => $description,
-                            ];
-                        })
-                    ],
-                )
-            );
-        $talPage->expects(static::once())
-            ->method('execute')
-            ->willReturn($result);
+        self::assertSame('Ampache podcast subscriptions', (string) $xml->head->title);
+        self::assertNotSame('', (string) $xml->head->dateCreated);
 
-        $podcast->expects(static::once())
-            ->method('getTitle')
-            ->willReturn($title);
-        $podcast->expects(static::once())
-            ->method('getFeedUrl')
-            ->willReturn($feedUrl);
-        $podcast->expects(static::once())
-            ->method('getWebsite')
-            ->willReturn($website);
-        $podcast->expects(static::once())
-            ->method('getLanguage')
-            ->willReturn($language);
-        $podcast->expects(static::once())
-            ->method('getDescription')
-            ->willReturn($description);
+        $outline = $xml->body->outline[0];
 
-        self::assertSame(
-            $result,
-            $this->subject->export()
-        );
+        self::assertNotNull($outline);
+        self::assertSame($title, (string) $outline['text']);
+        self::assertSame($language, (string) $outline['language']);
+        self::assertSame($description, (string) $outline['description']);
+        self::assertSame($feedUrl, (string) $outline['xmlUrl']);
+        self::assertSame($website, (string) $outline['htmlUrl']);
     }
 
     public function testGetContentTypeReturnsValue(): void
@@ -127,11 +108,9 @@ class PodcastOpmlExporterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->talFactory        = $this->createMock(TalFactoryInterface::class);
         $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
 
         $this->subject = new PodcastOpmlExporter(
-            $this->talFactory,
             $this->podcastRepository
         );
     }

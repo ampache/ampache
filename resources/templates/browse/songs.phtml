@@ -1,0 +1,100 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/songs.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\SongListRenderer
+
+use Ampache\Gui\Browse\ListHeaderView;
+use Ampache\Gui\Partial\MultiselectActionsView;
+use Ampache\Module\Api\Ajax;
+
+/** @var Ampache\Gui\Browse\ListRenderer\SongListRenderer $this */
+
+$browse              = $this->getBrowse();
+$argument_param      = $this->getArgumentParam();
+$columns             = $this->getColumns();
+$songs               = $this->getSongs();
+$tableKey            = $this->getTableKey();
+$showMultiselect     = $this->showMultiselect();
+$multiselect_actions = $this->getMultiselectActions();
+$sortUrl             = '?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=';
+if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
+} ?>
+<div<?php echo ($showMultiselect) ? ' data-multiselect-scope' : ''; ?>>
+    <?php if ($showMultiselect) {
+        echo $this->raw((new MultiselectActionsView($multiselect_actions))->render());
+    } ?>
+    <table id="reorder_songs_table_<?php echo $this->e($tableKey); ?>" class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="song" data-offset="<?php echo $this->e($browse->get_start()); ?>">
+        <thead>
+            <tr class="th-top">
+                <?php foreach ($columns as $column) { ?>
+                <th class="<?php echo $this->e($column['class']); ?>"><?php
+                    if ($column['class'] === 'cel_select essential persist') {
+                        echo ($showMultiselect) ? '<input type="checkbox" class="multiselect-all" title="' . $this->e(T_('Select')) . '" />' : '';
+                    } elseif ($column['sort'] === null) {
+                        echo $this->e($column['label']);
+                    } elseif ($column['id'] === 'song_sort_track' . $browse->id && !$this->showTrack()) {
+                        echo '';
+                    } else {
+                        echo $this->raw(Ajax::text($sortUrl . $column['sort'] . $argument_param, $column['label'], (string) $column['id']));
+                    } ?></th>
+                <?php } ?>
+            </tr>
+        </thead>
+        <tbody id="sortableplaylist_<?php echo $this->e($tableKey); ?>">
+            <?php foreach ($songs as $song) { ?>
+            <tr id="song_<?php echo $this->e($song->getId()); ?>">
+                <?php if ($this->canMultiselect()) { ?>
+                <td class="cel_select"><?php echo ($showMultiselect) ? '<input type="checkbox" class="multiselect-item" title="' . $this->e(T_('Select')) . '" data-id="' . $this->e($song->getId()) . '" data-type="song" />' : ''; ?></td>
+                <?php } ?>
+                <?php echo $this->raw($this->renderRow($song)); ?>
+            </tr>
+            <?php } ?>
+            <?php if ($songs === []) { ?>
+            <tr>
+                <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
+            </tr>
+            <?php } ?>
+        </tbody>
+        <tfoot>
+            <tr class="th-bottom">
+                <?php foreach ($columns as $column) { ?>
+                <th class="<?php echo $this->e(explode(' ', $column['class'])[0]); ?>"><?php
+                    if (!$column['footer']) {
+                        echo '';
+                    } elseif ($column['sort'] === null) {
+                        echo $this->e($column['label']);
+                    } else {
+                        echo $this->raw(Ajax::text($sortUrl . $column['sort'] . $argument_param, $column['label'], (string) $column['id']));
+                    } ?></th>
+                <?php } ?>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<?php show_table_render($this->isReorderable()); ?>
+<?php if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
+} ?>

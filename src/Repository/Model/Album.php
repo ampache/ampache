@@ -1055,6 +1055,11 @@ class Album extends database_object implements
             );
         }
 
+        if (isset($data['edit_moods'])) {
+            // no from_file_tags, so these belong to whoever is editing and outlive the next scan
+            Mood::update_mood_list((string) $data['edit_moods'], 'album', $this->id, true);
+        }
+
         return $current_id;
     }
 

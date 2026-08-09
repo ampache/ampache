@@ -34,6 +34,7 @@
             },
             "disk": 1,
             "disksubtitle": null,
+            "bpm": null,
             "track": 1,
             "filename": "/media/music\/_ and The Secret Formula\/(1999) The Amazing Power of The... [m211.mp3.015]\/1-01 - The Amazing Power of The....mp3",
             "genre": [
@@ -50,6 +51,7 @@
                     "name": "Broken Beat"
                 }
             ],
+            "mood": [],
             "playlisttrack": 1,
             "time": 279,
             "year": 1999,

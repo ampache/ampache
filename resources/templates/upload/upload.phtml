@@ -1,0 +1,376 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// upload/upload.phtml -- rendered by Ampache\Gui\Upload\UploadView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Upload\UploadView $this */
+
+// the tree markup comes from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/
+Ui::show_box_top(T_('Upload')); ?>
+
+<?php echo $this->e(T_('Target folder')); ?>
+<div id="uploadtree" class="wb-alternate"></div>
+<div class="upload-actions">
+    <button onclick="UUTCreateNode()">
+        <?php echo $this->raw(Ui::get_material_symbol('folder')); ?>
+        <?php echo $this->e(T_('New folder')); ?>
+    </button>
+    <button onclick="UUTRenameNode()">
+        <?php echo $this->raw(Ui::get_material_symbol('edit')); ?>
+        <?php echo $this->e(T_('Rename')); ?>
+    </button>
+    <button onclick="UUTDeleteNode()">
+        <?php echo $this->raw(Ui::get_material_symbol('close')); ?>
+        <?php echo $this->e(T_('Delete')); ?>
+    </button>
+    <button onclick="UUTReload()">
+        <?php echo $this->raw(Ui::get_material_symbol('refresh')); ?>
+        <?php echo $this->e(T_('Reload')); ?>
+    </button>
+    <button onclick="UUTCut()">
+        <?php echo $this->raw(Ui::get_material_symbol('cut')); ?>
+        <?php echo $this->e(T_('Cut')); ?>
+    </button>
+    <button onclick="UUTCopy()">
+        <?php echo $this->raw(Ui::get_material_symbol('folder_copy')); ?>
+        <?php echo $this->e(T_('Copy')); ?>
+    </button>
+    <button onclick="UUTPaste()">
+        <?php echo $this->raw(Ui::get_material_symbol('content_paste')); ?>
+        <?php echo $this->e(T_('Paste')); ?>
+    </button>
+</div>
+
+<link rel="stylesheet" href="<?php echo $this->e($this->getWebPath()); ?>/lib/components/wunderbaum/wunderbaum.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $this->e($this->getWebPath()); ?>/templates/file-upload.css" type="text/css" media="screen">
+<script src="<?php echo $this->e($this->getWebPath()); ?>/lib/components/wunderbaum/wunderbaum.umd.min.js"></script>
+
+<script>
+(function() {
+    const AJAXFS = <?php echo $this->raw($this->getTreeSourceJs()); ?>;
+    const NEW_FOLDER = <?php echo $this->raw($this->getNewFolderLabelJs()); ?>;
+
+    let nodeBeingCut;
+    let nodeBeingCopied;
+
+    const tree = new mar10.Wunderbaum({
+        debugLevel: 0,
+        element: document.getElementById("uploadtree"),
+        source: `${AJAXFS}?operation=get_node&id=%23`,
+        iconMap: {
+            "error": "uut-icon uut-warning",
+            "loading": "uut-icon uut-chevron-right wb-busy",
+            "noData": "uut-icon uut-help",
+            "expanderExpanded": "uut-icon uut-chevron-down",
+            "expanderCollapsed": "uut-icon uut-chevron-right",
+            "expanderLazy": "uut-icon uut-chevron-right wb-helper-lazy-expander",
+            "checkChecked": "uut-icon uut-check-box",
+            "checkUnchecked": "uut-icon uut-check-box-blank",
+            "checkUnknown": "uut-icon uut-indeterminate-check-box",
+            "radioChecked": "uut-icon uut-radio-button-checked",
+            "radioUnchecked": "uut-icon uut-radio-button",
+            "radioUnknown": "uut-icon uut-radio-button-partial",
+            "folder": "uut-icon uut-folder",
+            "folderOpen": "uut-icon uut-folder-open",
+            "folderLazy": "uut-icon uut-folder-special",
+            "doc": "uut-icon uut-description"
+        },
+        lazyLoad: function (e) {
+            return { url: `${AJAXFS}?operation=get_node&id=${e.node.key}` };
+        },
+        activate: function (e) {
+            document.getElementById("folder").value = e.node.key;
+        },
+        init: function (e) {
+            e.tree.setActiveNode("/");
+        },
+        beforeExpand: function (e) {
+            if (e.node.key === "/") return false;
+        },
+        dnd: {
+            autoExpandMS: 300,
+            preventNonNodes: true,
+            dragStart: () => {
+                return true;
+            },
+            dragEnter: () => {
+                return true;
+            },
+            drop: async (e) => {
+                let newParent = e.node;
+                let draggedItem = e.sourceNode;
+
+                moveNode(draggedItem, newParent);
+            },
+        },
+        edit: {
+            select: true,
+            trim: true,
+            apply: function (e) {
+                fetch(`${AJAXFS}?operation=rename_node&id=${e.node.key}&text=${encodeURIComponent(e.newValue)}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(d => {
+                        // One day we can update the key with:
+                        // e.node.setKey(d.id, null);
+                        // but until then just refetch the parent and reset the focus to the new item
+                        e.node.parent.loadLazy(true)
+                            .then(() => {
+                                tree.findKey("/").setActive();
+                                tree.findKey(d.id)?.setActive();
+                            });
+                    })
+                    .catch(error => {
+                        e.node.setTitle(e.oldValue);
+                    });
+            }
+        }
+    });
+
+    function createNode() {
+        getActiveNode().setExpanded();
+
+        fetch(`${AJAXFS}?operation=create_node&id=${encodeURIComponent(getActiveNode().key)}&text=${encodeURIComponent(NEW_FOLDER)}`)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(async (d) => {
+                const newNode = await tree.findKey(d.id) || await getActiveNode().addNode({ title: 'New folder', key: d.id, children: [] }, 'prependChild');
+                setTimeout(function () {
+                    newNode.startEditTitle();
+                }, 100);
+            })
+    }
+
+    function renameNode() {
+        if (getActiveNode().key === "/") return;
+        getActiveNode().startEditTitle();
+    }
+
+    function deleteNode() {
+        if (getActiveNode().key === "/") return;
+
+        window.ampacheConfirm("Do you want to proceed with this action?").then(function (confirmed) {
+            if (!confirmed) {
+                return;
+            }
+            fetch(`${AJAXFS}?operation=delete_node&id=${encodeURIComponent(getActiveNode().key)}`)
+                .then(() => {
+                    let parent = getActiveNode().parent;
+                    getActiveNode().remove();
+                    parent.setActive();
+                })
+        });
+    }
+
+    function getActiveNode() {
+        return tree.activeNode || tree.findKey("/");
+    }
+
+    async function reloadTree() {
+        await tree.load(tree.options.source);
+        tree.setActiveNode("/");
+        nodeBeingCut = null;
+        nodeBeingCopied = null;
+    }
+
+    function moveNode(itemNode, destinationNode) {
+        let finalParent = destinationNode.key === "/" ? tree.root : destinationNode;
+
+        fetch(`${AJAXFS}?operation=move_node&id=${itemNode.key}&parent=${destinationNode.key}`)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(async (d) => {
+                let sameNameExists = destinationNode.findDirectChild(itemNode.title);
+
+                if (!sameNameExists) {
+                    itemNode.moveTo(destinationNode, "appendChild");
+
+                    // One day we can update the key with:
+                    // e.node.setKey(d.id, null);
+                    // but until then just refetch the parent
+
+                    if (finalParent.isLazy()) {
+                        await finalParent.loadLazy(true);
+                    } else {
+                        await tree.load(tree.options.source);
+                    }
+
+                    finalParent?.setExpanded();
+                }
+            })
+            .catch(error => {
+                reloadTree();
+            });
+    }
+
+    function copyNode(itemNode, destinationNode) {
+        let finalParent = destinationNode.key === "/" ? tree.root : destinationNode;
+
+        fetch(`${AJAXFS}?operation=copy_node&id=${itemNode.key}&parent=${destinationNode.key}`)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(async (d) => {
+                if (finalParent.isLazy()) {
+                    await finalParent.loadLazy(true);
+                } else {
+                    await tree.load(tree.options.source);
+                }
+
+                finalParent?.setExpanded();
+            })
+            .catch(error => {
+                reloadTree();
+            });
+    }
+
+    function requestCut() {
+        nodeBeingCopied = null;
+        nodeBeingCut = getActiveNode();
+    }
+
+    function requestCopy() {
+        nodeBeingCut = null;
+        nodeBeingCopied = getActiveNode();
+    }
+
+    function requestPaste() {
+        // if cutting, perform move
+        if (nodeBeingCut) {
+            moveNode(nodeBeingCut, getActiveNode());
+            nodeBeingCut = null;
+        }
+
+        // if copying, perform copy
+        if (nodeBeingCopied) {
+            copyNode(nodeBeingCopied, getActiveNode());
+        }
+    }
+
+    // Expose functions globally
+    // UUT = user upload tree
+    window.UUTTree = tree;
+    window.UUTCreateNode = createNode;
+    window.UUTRenameNode = renameNode;
+    window.UUTDeleteNode = deleteNode;
+    window.UUTReload = reloadTree;
+    window.UUTCut = requestCut;
+    window.UUTCopy = requestCopy;
+    window.UUTPaste = requestPaste;
+})();
+</script>
+
+<table class="tabledata">
+<tr class="upload_select_row">
+    <small class="upload_select_row">
+        <?php echo $this->raw(Ui::get_material_symbol('info')); ?>
+        <?php echo $this->e(T_('Leave the artist and album fields blank to read file tags')); ?>
+    </small>
+</tr>
+<tr class="upload_select_row">
+    <td class="edit_dialog_content_header"><?php echo $this->e(T_('Artist')); ?></td>
+    <td id="artist_select" class="upload_select">
+        <div id="artist_select">
+        <?php show_artist_select('artist', $this->getArtistId(), true, 1, true);
+echo $this->raw(Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)')); ?>
+        </div>
+    </td>
+</tr>
+<tr class="upload_select_row">
+    <td class="edit_dialog_content_header"><?php echo $this->e(T_('Album')); ?></td>
+    <td id="album_select" class="upload_select">
+        <div id="album_select">
+        <?php show_album_select('album_id', $this->getAlbumId(), true, 1, true);
+echo $this->raw(Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)')); ?>
+        </div>
+    </td>
+</tr>
+<?php if ($this->showLicensing()) { ?>
+<tr>
+    <td class="edit_dialog_content_header"><?php echo $this->e(T_('Music License')); ?></td>
+    <td id="license_select" class="upload_select">
+        <div id="album_select_license">
+        <?php show_license_select('license');
+    echo $this->raw(Ajax::observe('license_select', 'change', 'check_inline_song_edit("license", "0")')); ?>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td style="font-size: 20px;"><?php echo $this->e(T_('WARNING')); ?></td>
+    <td>
+        <?php echo $this->e(T_('The music license you choose may give away some rights in an irrevocable manner.')); ?><br>
+        <?php echo $this->e(T_("Read the text of the license you choose carefully with the 'View License' link.")); ?>
+    </td>
+</tr>
+<?php } else { ?>
+<input type="hidden" id="license_select_c1" name="license" value="" />
+<?php } ?>
+</table>
+
+<?php echo $this->e(T_('Files')); ?>
+<input type="file" class="filepond" name="upl" multiple>
+<input type="hidden" id="folder" name="folder" value="" />
+
+<small>
+    <?php if ($this->hasUploadMax()) { ?>
+    <?php echo $this->e(T_('Max upload size')) . ': ' . $this->e($this->getFormattedUploadMax()); ?><br>
+    <?php } ?>
+    <?php echo $this->e(T_('Allowed file type')); ?>:
+    <?php echo $this->e($this->getAllowedTypes()); ?>
+</small>
+<script>
+    FilePond?.create(document.querySelector('input[type="file"].filepond'), {
+        server: {
+            url: <?php echo $this->raw($this->getUploadUrlJs()); ?>,
+            process: {
+                method: 'POST',
+                ondata: (formData) => {
+                    formData.append('upload_action', 'upload');
+                    formData.append('folder', document.querySelector("#folder").value);
+                    if (document.querySelector("#artist_select_1") !== null) formData.append('artist_id', document.querySelector("#artist_select_1").value);
+                    if (document.querySelector("#album_select_1") !== null) formData.append('album_id', document.querySelector("#album_select_1").value);
+                    if (document.querySelector("#artist_name") !== null) formData.append('artist_name', document.querySelector("#artist_name").value);
+                    if (document.querySelector("#album_name") !== null) formData.append('album_name', document.querySelector("#album_name").value);
+                    formData.append('license', document.querySelector("#license_select_c1").value);
+                    return formData;
+                }
+            },
+        },
+    });
+
+    FilePond?.setOptions(<?php echo $this->raw($this->getFilePondLabels()); ?>);
+</script>
+
+<?php Ui::show_box_bottom(); ?>

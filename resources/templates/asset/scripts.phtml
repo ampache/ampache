@@ -1,0 +1,50 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// asset/scripts.phtml -- rendered by Ampache\Gui\Asset\ScriptsView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Asset\ScriptsView $this */
+
+$webPath = $this->getWebPath();
+// js_globals.php reads both of these from this scope
+$web_path         = $webPath;
+$ajaxUriRetriever = $this->getAjaxUriRetriever(); ?>
+<?php foreach ($this->getLibraries() as $library) { ?>
+<script src="<?php echo $this->e($library['url']); ?>"<?php echo ($library['defer']) ? ' defer' : ''; ?>></script>
+<?php } ?>
+<?php require_once Ui::find_template('js_globals.php'); ?>
+<?php if ($this->isDevServer()) { ?>
+<script type="module" src="http://localhost:5177/@vite/client" crossorigin></script>
+<script type="module" src="http://localhost:5177/src/js/main.js" crossorigin></script>
+<?php } elseif (($entrypoint = $this->getEntrypointUrl()) !== null) { ?>
+<script type="module" src="<?php echo $this->e($entrypoint); ?>" crossorigin></script>
+<?php } else { ?>
+<script>console.warn("No vite manifest file was found")</script>
+<?php } ?>
+<?php if ($this->hasCustomScript()) { ?>
+<script src="<?php echo $this->e($webPath); ?>/lib/javascript/custom.js" defer></script>
+<?php } ?>

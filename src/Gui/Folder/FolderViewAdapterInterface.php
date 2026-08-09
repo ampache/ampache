@@ -35,6 +35,8 @@ interface FolderViewAdapterInterface
 
     public function canBeDeleted(): bool;
 
+    public function canDirectplay(): bool;
+
     public function canPostShout(): bool;
 
     public function canShare(): bool;

@@ -71,6 +71,8 @@ class Song extends database_object implements
     CatalogItemInterface,
     MetadataEnabledInterface
 {
+    // the value a player or an api response passes to fill_ext_info() for the scalars, without the comment or lyrics
+    public const string PARTIAL_FILTER  = 'partial';
     protected const string DB_TABLENAME = 'song';
     // the value Waveform passes to fill_ext_info() to reach the blob the other reads leave behind
     private const string WAVEFORM_FILTER = 'waveform';
@@ -95,8 +97,9 @@ class Song extends database_object implements
     public ?int $artist         = null;
     public ?string $artist_mbid = null;
     public int $bitrate;
-    public int $catalog   = 0;
-    public ?int $channels = null;
+    public ?float $bpm           = null;
+    public int $catalog          = 0;
+    public ?int $channels        = null;
 
     /**
      * song_data table
@@ -126,6 +129,10 @@ class Song extends database_object implements
     public ?string $mbid     = null;
     public ?string $mime     = null;
     public ?string $mode     = null;
+
+    /** @var null|list<array{id: int, name: string, user: int, count: int}> $moods */
+    public ?array $moods = null;
+
     public bool $played;
     public ?int $r128_album_gain = null;
     public ?int $r128_track_gain = null;
@@ -162,6 +169,7 @@ class Song extends database_object implements
     private ?string $f_link             = null;
     private ?bool $has_art              = null;
     private ?License $licenseObj        = null;
+    private bool $partial_data_loaded   = false;
     private bool $song_data_loaded      = false;
 
     /**
@@ -420,6 +428,7 @@ class Song extends database_object implements
             'mb_albumid_group',
             'mbid',
             'mime',
+            'partial_data_loaded',
             'played',
             'song_data_loaded',
             'total_count',
@@ -608,6 +617,7 @@ class Song extends database_object implements
         $year             = $filtered_results['year'];
         $comment          = $filtered_results['comment'];
         $tags             = $filtered_results['genre']; // multiple genre support makes this an array
+        $moods            = $filtered_results['mood'] ?? []; // a file can carry more than one mood too
         $lyrics           = $filtered_results['lyrics'];
         $user_upload      = $filtered_results['user_upload'];
         $composer         = $filtered_results['composer'];
@@ -652,6 +662,7 @@ class Song extends database_object implements
         $replaygain_album_peak = $filtered_results['replaygain_album_peak'];
         $r128_track_gain       = $filtered_results['r128_track_gain'];
         $r128_album_gain       = $filtered_results['r128_album_gain'];
+        $bpm                   = $filtered_results['bpm'];
         $original_year         = $filtered_results['original_year'];
         $barcode               = $filtered_results['barcode'];
         $catalog_number        = $filtered_results['catalog_number'];
@@ -806,7 +817,23 @@ class Song extends database_object implements
             }
         }
 
-        self::getSongRepository()->insertData([$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain]);
+        // the moods reach the album and artists the way genres do, with no owner, so a later re-read of the tags can replace them
+        if (is_array($moods)) {
+            foreach ($moods as $mood) {
+                $mood = trim((string) $mood);
+                if ($mood !== '') {
+                    Mood::add('song', $song_id, $mood);
+                    Mood::add('album', $album_id, $mood);
+                    foreach (array_unique($artists) as $found_artist_id) {
+                        if ($found_artist_id > 0) {
+                            Mood::add('artist', $found_artist_id, $mood);
+                        }
+                    }
+                }
+            }
+        }
+
+        self::getSongRepository()->insertData([$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain, $bpm]);
 
         return $song_id;
     }
@@ -823,6 +850,7 @@ class Song extends database_object implements
         self::getShareRepository()->migrate('album', $old_album, $new_album);
         self::getShoutRepository()->migrate('album', $old_album, $new_album);
         Tag::migrate('album', $old_album, $new_album);
+        Mood::migrate('album', $old_album, $new_album);
         Userflag::migrate('album', $old_album, $new_album);
         Rating::migrate('album', $old_album, $new_album);
         Art::duplicate('album', $old_album, $new_album);
@@ -844,6 +872,7 @@ class Song extends database_object implements
             self::getShareRepository()->migrate('artist', $old_artist, $new_artist);
             self::getShoutRepository()->migrate('artist', $old_artist, $new_artist);
             Tag::migrate('artist', $old_artist, $new_artist);
+            Mood::migrate('artist', $old_artist, $new_artist);
             Userflag::migrate('artist', $old_artist, $new_artist);
             Rating::migrate('artist', $old_artist, $new_artist);
             Art::duplicate('artist', $old_artist, $new_artist);
@@ -1061,7 +1090,7 @@ class Song extends database_object implements
         self::getSongRepository()->updateSong(
             $song_id,
             [$new_song->album, $new_song->album_disk, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer ?: null, $new_song->bitrate, $new_song->rate, $new_song->mode, $new_song->channels, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id],
-            [$new_song->label ?: null, $new_song->lyrics ?: null, $new_song->language ?: null, $new_song->disksubtitle ?: null, $new_song->comment ?: null, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id]
+            [$new_song->label ?: null, $new_song->lyrics ?: null, $new_song->language ?: null, $new_song->disksubtitle ?: null, $new_song->comment ?: null, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $new_song->bpm, $song_id]
         );
     }
 
@@ -1145,6 +1174,11 @@ class Song extends database_object implements
         return $value;
     }
 
+    private static function _is_codec_name(string $codec): bool
+    {
+        return preg_match('/^[A-Za-z0-9_+-]+$/', $codec) === 1;
+    }
+
     /**
      * Downgrades the required access level to USER when the current user uploaded the song
      *
@@ -1163,6 +1197,11 @@ class Song extends database_object implements
         return ($ownerId !== false && $ownerId == Core::get_global('user')?->id)
             ? AccessLevelEnum::USER
             : $level;
+    }
+
+    private static function _scrub_custom_play_arg(string $value): string
+    {
+        return (string) preg_replace('/[;|&$`\\\\"\'<>(){}*?!#~\x00-\x1F]/u', '', $value);
     }
 
     /**
@@ -1341,7 +1380,7 @@ class Song extends database_object implements
             if ($this->waveform !== null) {
                 return;
             }
-        } elseif ($this->song_data_loaded) {
+        } elseif ($this->song_data_loaded || ($data_filter !== '' && $this->partial_data_loaded)) {
             return;
         }
 
@@ -1361,6 +1400,8 @@ class Song extends database_object implements
         // don't repeat this process if you've got it all
         if ($data_filter === '') {
             $this->song_data_loaded = true;
+        } elseif ($data_filter !== self::WAVEFORM_FILTER) {
+            $this->partial_data_loaded = true;
         }
     }
 
@@ -1632,6 +1673,14 @@ class Song extends database_object implements
     }
 
     /**
+     * The moods of this song as links, with the ones a user set marked
+     */
+    public function get_f_moods(): string
+    {
+        return Mood::get_display($this->get_moods(), true, 'song');
+    }
+
+    /**
      * Return a formatted link to the parent object (if appliccable)
      */
     public function get_f_parent_link(): ?string
@@ -1803,6 +1852,20 @@ class Song extends database_object implements
         }
 
         return $medias;
+    }
+
+    /**
+     * The moods mapped onto this song, whoever set them
+     *
+     * @return list<array{id: int, name: string, user: int, count: int}>
+     */
+    public function get_moods(): array
+    {
+        if ($this->moods === null) {
+            $this->moods = Mood::get_top_moods('song', $this->id, 0);
+        }
+
+        return $this->moods;
     }
 
     /**
@@ -2131,17 +2194,26 @@ class Song extends database_object implements
     {
         $transcoder = [];
         $actions    = self::get_custom_play_actions();
-        if ($action_index <= count($actions)) {
+        if ($action_index >= 1 && $action_index <= count($actions)) {
             $action = $actions[$action_index - 1];
             if (!$codec) {
                 $codec = $this->type;
             }
 
-            $run = str_replace("%f", $this->file ?? '%f', (string) $action['run']);
+            if (!self::_is_codec_name($codec)) {
+                $codec = $this->type;
+                if (!self::_is_codec_name($codec)) {
+                    debug_event(self::class, 'Custom play action skipped: {' . $this->id . '} has no usable format', 2);
+
+                    return $transcoder;
+                }
+            }
+
+            $run = str_replace("%f", self::_scrub_custom_play_arg($this->file ?? '%f'), (string) $action['run']);
             $run = str_replace("%c", $codec, $run);
-            $run = str_replace("%a", (empty($this->get_parent_fullname())) ? '%a' : $this->get_parent_fullname(), $run);
-            $run = str_replace("%A", (empty($this->get_album_fullname())) ? '%A' : $this->get_album_fullname(), $run);
-            $run = str_replace("%t", $this->get_fullname() ?? '%t', $run);
+            $run = str_replace("%a", (empty($this->get_parent_fullname())) ? '%a' : self::_scrub_custom_play_arg($this->get_parent_fullname()), $run);
+            $run = str_replace("%A", (empty($this->get_album_fullname())) ? '%A' : self::_scrub_custom_play_arg($this->get_album_fullname()), $run);
+            $run = str_replace("%t", self::_scrub_custom_play_arg($this->get_fullname() ?? '%t'), $run);
 
             debug_event(self::class, "Running custom play action: " . $run, 3);
 
@@ -2356,6 +2428,10 @@ class Song extends database_object implements
                     Tag::update_tag_list((string) $value, 'song', $this->id, true);
                     $this->tags = Tag::get_top_tags('song', $this->id);
                     break;
+                case 'edit_moods':
+                    // no from_file_tags, so these belong to whoever is editing and outlive the next scan
+                    Mood::update_mood_list((string) $value, 'song', $this->id, true);
+                    break;
                 case 'metadata':
                     $this->updateMetadata($value);
                     break;
@@ -2407,7 +2483,7 @@ class Song extends database_object implements
         }
 
         if ($select !== '') {
-            return $repository->getReplaygainRow($this->id);
+            return $repository->getPartialDataRow($this->id);
         }
 
         if (parent::is_cached('song_data', $this->id)) {
@@ -2548,6 +2624,9 @@ class Song extends database_object implements
                 break;
             case 'disksubtitle':
                 $this->disksubtitle = $value !== null ? (string) $value : null;
+                break;
+            case 'bpm':
+                $this->bpm = $value === null ? null : (float) $value;
                 break;
         }
     }

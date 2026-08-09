@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// playback/web_player_frame.phtml -- rendered by Ampache\Gui\Playback\WebPlayerFrameView
+
+use Ampache\Module\Playback\WebPlayer;
+
+/** @var Ampache\Gui\Playback\WebPlayerFrameView $this */
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<title><?php echo $this->e($this->getSiteTitle()); ?></title>
+<script>
+function PlayerFrame()
+{
+    var appendmedia = false;
+    var playnext = false;
+    var webplayer = $("#webplayer");
+    if (webplayer.is(':visible')) {
+<?php if ($this->appendsMedia()) { ?>
+        appendmedia = true;
+<?php } elseif ($this->playsNext()) { ?>
+        playnext = true;
+<?php } ?>
+    }
+
+<?php if ($this->clearsBeforeUnload()) { ?>
+    document.onbeforeunload = null;
+<?php } ?>
+    if (appendmedia) {
+        <?php echo $this->raw(WebPlayer::add_media_js($this->getPlaylist())); ?>
+    } else if (playnext) {
+        <?php echo $this->raw(WebPlayer::play_next_js($this->getPlaylist())); ?>
+    } else {
+        webplayer.show();
+        $("#webplayer-minimize").show();
+        $.get('<?php echo $this->e($this->getEmbedUrl()); ?>', function (data) {
+            var $response = $(data);
+            webplayer.empty().append($response);
+        }, 'html');
+    }
+    return false;
+}
+
+PlayerFrame();
+</script>
+</head>
+<body>
+</body>
+</html>

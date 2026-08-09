@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Artist\MissingArtistView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -50,10 +52,12 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
 
         $wartist = $musicBrainzId === null ? [] : $this->missingArtistRetriever->retrieve($musicBrainzId);
 
-        $this->ui->show(
-            'show_missing_artist.inc.php',
-            ['wartist' => $wartist]
-        );
+        echo (new MissingArtistView(
+            (string) ($wartist['name'] ?? ''),
+            (string) ($wartist['mbid'] ?? ''),
+            (bool) AmpConfig::get('lastfm_api_key'),
+            (bool) AmpConfig::get('wanted')
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

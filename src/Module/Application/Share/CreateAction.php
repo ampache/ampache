@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Share\AddShareView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -36,6 +37,7 @@ use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Share;
@@ -121,7 +123,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                 $object_id
             );
 
-            if ($object === null) {
+            if (!$object instanceof displayable_item) {
                 $this->ui->showContinue(
                     T_('There Was a Problem'),
                     T_('Failed to create share'),
@@ -134,17 +136,16 @@ final readonly class CreateAction implements ApplicationActionInterface
                 $message   = T_('Failed to create share');
                 $token     = $this->passwordGenerator->generate_token();
                 $isZipable = $this->zipHandler->isZipable($object_type->value);
-                $this->ui->show(
-                    'show_add_share.inc.php',
-                    [
-                        'has_failed' => true,
-                        'message' => $message,
-                        'object' => $object,
-                        'object_type' => $object_type,
-                        'token' => $token,
-                        'isZipable' => $isZipable
-                    ]
-                );
+                echo (new AddShareView(
+                    $object,
+                    $object_type,
+                    $token,
+                    $isZipable,
+                    true,
+                    $message,
+                    $this->configContainer->getWebPath(),
+                    (int) $this->configContainer->get('share_expire')
+                ))->render();
             }
         }
 
