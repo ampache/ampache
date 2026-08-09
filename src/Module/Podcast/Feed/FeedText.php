@@ -28,21 +28,17 @@ namespace Ampache\Module\Podcast\Feed;
 /**
  * Turns the markup feeds put into their text fields back into plain text
  *
- * Some send plain text, some html, and some html escaped a second time on the way into the xml. All three end up as text.
+ * Some send plain text, some html, and some html escaped a second time on the way into the xml.
  */
 final class FeedText
 {
+    /** Tags that break a line, opener and closer alike */
+    private const string BLOCK_TAGS = '#<\s*/?\s*(?:br|p|div|ul|ol|li|tr|h[1-6]|blockquote|section)\b[^>]*>#i';
     /** An escaped tag such as "&lt;p&gt;", meaning the markup was encoded a second time */
     private const string ESCAPED_TAG = '#&lt;\s*/?\s*[a-z][a-z0-9]*(?:\s[^&]*)?/?\s*&gt;#i';
 
-    /** Tags that only start a new line; the openers cover feeds that never close their paragraphs */
-    private const string LINE_TAGS = '#<\s*(?:br\b[^>]*|p\b[^>]*|div\b[^>]*|/\s*li|/\s*tr)\s*/?\s*>#i';
-
-    /** Tags that end a block, so the next text starts a new paragraph */
-    private const string PARAGRAPH_TAGS = '#<\s*/\s*(?:p|div|ul|ol|h[1-6]|blockquote|section)\s*>#i';
-
     /**
-     * Convert a feed value to plain text, keeping paragraphs and breaks as newlines
+     * Convert a feed value to plain text, keeping the breaks of the markup
      */
     public static function clean(string $value): string
     {
@@ -55,9 +51,7 @@ final class FeedText
             $value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
 
-        // record the layout as line breaks before the markup goes away
-        $value = (string) preg_replace(self::PARAGRAPH_TAGS, "\n\n", $value);
-        $value = (string) preg_replace(self::LINE_TAGS, "\n", $value);
+        $value = (string) preg_replace(self::BLOCK_TAGS, "\n", $value);
         $value = strip_tags($value);
         $value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
@@ -65,7 +59,8 @@ final class FeedText
         $value = str_replace("\xc2\xa0", ' ', $value);
 
         $value = (string) preg_replace('#[ \t]*\R[ \t]*#', "\n", $value);
-        $value = (string) preg_replace('#\n{3,}#', "\n\n", $value);
+        // `<br><br>` and `</p><p>` are two breaks in a row; one is enough
+        $value = (string) preg_replace('#\n{2,}#', "\n", $value);
         $value = (string) preg_replace('#[ \t]{2,}#', ' ', $value);
 
         return trim($value);

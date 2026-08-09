@@ -38,10 +38,12 @@ class FeedTextTest extends TestCase
         return [
             ['', ''],
             ['just text', 'just text'],
-            // paragraphs are separated by a blank line, lighter breaks by a single one
-            ['<p>first</p><p>second</p>', "first\n\nsecond"],
+            // every break is a single one, however many tags produced it
+            ['<p>first</p><p>second</p>', "first\nsecond"],
             ['<p>first<p>second', "first\nsecond"],
             ['one<br />two<br>three<br/>four', "one\ntwo\nthree\nfour"],
+            // the shape real feeds ship: a <br> pair with a newline between them
+            ["a.<br>\n<br>\nb.<br>\n<br>\nc.", "a.\nb.\nc."],
             ['<ul><li>one</li><li>two</li></ul>', "one\ntwo"],
             // inline markup is dropped without leaving a break
             ['a <strong>bold</strong> claim', 'a bold claim'],
@@ -51,11 +53,11 @@ class FeedTextTest extends TestCase
             ['spaced&nbsp;out', 'spaced out'],
             ['&#8220;quoted&#8221;', '“quoted”'],
             // feeds that encoded their markup a second time
-            ['&lt;p&gt;first&lt;/p&gt;&lt;p&gt;second&lt;/p&gt;', "first\n\nsecond"],
+            ['&lt;p&gt;first&lt;/p&gt;&lt;p&gt;second&lt;/p&gt;', "first\nsecond"],
             // ... but a lone escaped bracket is text the feed meant to write
             ['5 &lt; 6', '5 < 6'],
             // whitespace is tidied up
-            ["  padded  \n\n\n\n  text  ", "padded\n\ntext"],
+            ["  padded  \n\n\n\n  text  ", "padded\ntext"],
             ['<p></p><p>only one</p>', 'only one'],
         ];
     }
