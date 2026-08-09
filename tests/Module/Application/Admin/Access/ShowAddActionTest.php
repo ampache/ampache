@@ -109,7 +109,6 @@ class ShowAddActionTest extends MockeryTestCase
 
         $this->requestParser->shouldReceive('getFromRequest')->andReturn('');
 
-
         $this->subject = new ShowAddAction(
             $this->ui,
             $this->configContainer,

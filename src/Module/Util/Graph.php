@@ -49,8 +49,6 @@ class Graph
         private readonly UserRepositoryInterface $userRepository,
     ) {}
 
-    /**
-     */
     public function display_map(
         int    $user_id,
         string $object_type,
@@ -75,8 +73,6 @@ class Graph
         return false;
     }
 
-    /**
-     */
     public function get_total_bandwidth(int $user_id = 0, ?int $start_date = null, ?int $end_date = null): int
     {
         $total  = 0;
@@ -88,8 +84,6 @@ class Graph
         return (int) $total;
     }
 
-    /**
-     */
     public function get_total_hits(int $user_id = 0, ?int $start_date = null, ?int $end_date = null): int
     {
         $total  = 0;
@@ -101,8 +95,6 @@ class Graph
         return (int) $total;
     }
 
-    /**
-     */
     public function get_total_time(int $user_id = 0, ?int $start_date = null, ?int $end_date = null): int
     {
         $total  = 0;
@@ -114,8 +106,6 @@ class Graph
         return (int) $total;
     }
 
-    /**
-     */
     public function render_catalog_files(
         int     $catalog_id = 0,
         ?string $object_type = null,
@@ -141,8 +131,6 @@ class Graph
         $this->render_graph('Files', $series, self::FORMAT_METRIC, '', $zoom, $width, $height);
     }
 
-    /**
-     */
     public function render_catalog_size(
         int     $catalog_id = 0,
         ?string $object_type = null,
@@ -168,8 +156,6 @@ class Graph
         $this->render_graph('Size', $series, self::FORMAT_BYTES, 'Size', $zoom, $width, $height);
     }
 
-    /**
-     */
     public function render_user_bandwidth(
         int     $user_id = 0,
         ?string $object_type = null,
@@ -186,8 +172,6 @@ class Graph
         $this->render_graph('Bandwidth', $series, self::FORMAT_BYTES, 'Bandwidth', $zoom, $width, $height);
     }
 
-    /**
-     */
     public function render_user_hits(
         int     $user_id,
         ?string $object_type,
@@ -330,8 +314,6 @@ class Graph
         }
     }
 
-    /**
-     */
     protected function get_catalog_files_pts(
         int    $catalog_id = 0,
         string $object_type = 'song',
@@ -393,8 +375,6 @@ class Graph
         };
     }
 
-    /**
-     */
     protected function get_catalog_size_pts(
         int    $catalog_id = 0,
         string $object_type = 'song',
@@ -438,8 +418,6 @@ class Graph
             : '';
     }
 
-    /**
-     */
     protected function get_catalog_sql_where(
         string $object_type = 'song',
         ?int   $start_date = null,
@@ -458,8 +436,6 @@ class Graph
         return "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date;
     }
 
-    /**
-     */
     protected function get_geolocation_pts(
         int    $user_id = 0,
         string $object_type = '',
@@ -518,8 +494,6 @@ class Graph
         return $values;
     }
 
-    /**
-     */
     protected function get_sql_date_format(string $field, string $zoom): string
     {
         $dateformat = match ($zoom) {
@@ -574,8 +548,6 @@ class Graph
         }
     }
 
-    /**
-     */
     protected function get_user_bandwidth_pts(
         int    $user_id = 0,
         string $object_type = 'song',
@@ -587,8 +559,6 @@ class Graph
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
 
-    /**
-     */
     protected function get_user_hits_pts(
         int    $user_id = 0,
         string $object_type = 'song',
@@ -613,8 +583,6 @@ class Graph
         return $this->get_bucketed_pts($sql, $buckets);
     }
 
-    /**
-     */
     protected function get_user_object_count_pts(
         int    $user_id = 0,
         string $object_type = 'song',
@@ -640,8 +608,6 @@ class Graph
         return $this->get_bucketed_pts($sql, $buckets);
     }
 
-    /**
-     */
     protected function get_user_sql_where(
         int     $user_id = 0,
         ?string $object_type = null,
@@ -674,8 +640,6 @@ class Graph
         return $sql;
     }
 
-    /**
-     */
     protected function get_user_time_pts(
         int    $user_id = 0,
         string $object_type = 'song',

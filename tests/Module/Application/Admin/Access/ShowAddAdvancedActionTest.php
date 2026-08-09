@@ -101,7 +101,6 @@ class ShowAddAdvancedActionTest extends MockeryTestCase
 
         $this->requestParser->shouldReceive('getFromRequest')->andReturn('');
 
-
         $this->subject = new ShowAddAdvancedAction(
             $this->ui,
             $this->configContainer,
