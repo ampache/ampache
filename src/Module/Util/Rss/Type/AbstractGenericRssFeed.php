@@ -64,7 +64,14 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
      *     pubDate: string,
      *     guid: string,
      *     isPermaLink: string,
-     *     image?: string
+     *     image?: string,
+     *     duration?: string,
+     *     season?: ?string,
+     *     season_name?: ?string,
+     *     episode?: ?string,
+     *     type?: ?string,
+     *     size?: ?string,
+     *     url?: ?string
      * }>
      */
     abstract protected function getItems(): Traversable;
