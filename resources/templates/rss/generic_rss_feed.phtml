@@ -35,6 +35,7 @@ echo '<?xml version="1.0"?>', "\n"; ?>
         <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rss+xml" href="<?php echo $this->e($this->getRssLink()); ?>"/>
         <description><?php echo $this->e($this->getTitle()); ?></description>
         <language><?php echo $this->e($this->getLanguage()); ?></language>
+        <itunes:category text="Music"/>
 <?php if ($this->getPubDate() !== null) { ?>
         <pubDate><?php echo $this->e($this->getPubDate()); ?></pubDate>
 <?php }
