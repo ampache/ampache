@@ -44,6 +44,7 @@ return [
             get(PodcastEpisodeDownloader::class)
         ),
     PodcastCreatorInterface::class => autowire(PodcastCreator::class),
+    PodcastUpdaterInterface::class => autowire(PodcastUpdater::class),
     FeedLoaderInterface::class => autowire(FeedLoader::class),
     PodcastFolderProviderInterface::class => autowire(PodcastFolderProvider::class),
     PodcastDeleterInterface::class => autowire(PodcastDeleter::class),

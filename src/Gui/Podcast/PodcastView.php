@@ -111,6 +111,18 @@ final class PodcastView extends AbstractView
     }
 
     /**
+     * There is nothing to refresh the details from when the feed-url is missing.
+     */
+    public function getUpdateFromFeedUrl(): ?string
+    {
+        if ($this->podcast->getFeedUrl() === '') {
+            return null;
+        }
+
+        return $this->webPath . '/podcast.php?action=update_from_feed&podcast_id=' . $this->podcast->getId();
+    }
+
+    /**
      * The feed supplies this, so it is only offered when it is actually an http url.
      */
     public function getWebsiteUrl(): ?string

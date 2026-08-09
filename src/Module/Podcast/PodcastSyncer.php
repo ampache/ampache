@@ -28,6 +28,7 @@ namespace Ampache\Module\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Podcast\Feed\FeedText;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -209,19 +210,23 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
     }
 
     /**
-     * Adds the provided xml element as new podcast-episode
+     * Stores the provided xml element as a podcast-episode
+     *
+     * An item we already hold is not added again; its description is refreshed from the feed instead,
+     * so a feed correcting or expanding its notes reaches the episodes you subscribed to long ago.
      */
     private function add_episode(
         Podcast $podcast,
         SimpleXMLElement $episode,
         ?DateTimeInterface $lastSync,
     ): void {
-        $title       = html_entity_decode((string) $episode->title);
-        $website     = (string) $episode->link;
-        $guid        = (string) $episode->guid;
-        $description = html_entity_decode(Dba::check_length((string) $episode->description, 4096));
-        $author      = html_entity_decode(Dba::check_length((string) $episode->author, 64));
-        $category    = html_entity_decode((string) $episode->category);
+        $title   = FeedText::cleanLine((string) $episode->title);
+        $website = trim((string) $episode->link);
+        $guid    = (string) $episode->guid;
+        // the markup has to go before the length is capped, or the cap eats the tags instead of the text
+        $description = Dba::check_length(FeedText::clean((string) $episode->description), 4096);
+        $author      = Dba::check_length(FeedText::cleanLine((string) $episode->author), 64);
+        $category    = FeedText::cleanLine((string) $episode->category);
         $source      = '';
         if ($episode->enclosure) {
             $source = (string) $episode->enclosure['url'];
@@ -261,30 +266,15 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
             return;
         }
 
-        // don't keep adding the same episodes
-        if ($this->get_id_from_guid($guid) > 0) {
-            debug_event(self::class, 'Episode guid already exists, skipped', 3);
+        // an episode already in the database is refreshed instead of added a second time
+        $existing = $this->find_existing_episode($podcast->getId(), $guid, $source, $title, $time, $pubdate);
+        if ($existing !== null) {
+            // a feed that supplies no description must not blank the one we have
+            if ($description !== '' && $description !== $existing['description']) {
+                debug_event(self::class, 'Refreshing the description of episode ' . $existing['id'], 4);
 
-            return;
-        }
-
-        // don't keep adding urls
-        if ($this->get_id_from_source($source) > 0) {
-            debug_event(self::class, 'Episode source URL already exists, skipped', 3);
-
-            return;
-        }
-
-        // podcast urls can change over time so check these
-        if ($this->get_id_from_title($podcast->getId(), $title, $time) > 0) {
-            debug_event(self::class, 'Episode title already exists, skipped', 3);
-
-            return;
-        }
-
-        // podcast pubdate can be used to skip duplicate/fixed episodes when you already have them
-        if ($this->get_id_from_pubdate($podcast->getId(), $pubdate) > 0) {
-            debug_event(self::class, 'Episode with the same publication date already exists, skipped', 3);
+                $this->podcastEpisodeRepository->updateDescription($existing['id'], $description);
+            }
 
             return;
         }
@@ -317,70 +307,67 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
     }
 
     /**
-     * get_id_from_guid
+     * Reads one episode by whatever identifies it, along with the description a sync may refresh
      *
-     * Get episode id from the guid.
+     * @param list<mixed> $params
+     *
+     * @return null|array{id: int, description: string}
      */
-    private function get_id_from_guid(string $url): int
+    private function find_episode(string $where, array $params): ?array
     {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `guid` = ?";
-        $db_results = Dba::read($sql, [$url]);
+        $db_results = Dba::read('SELECT `id`, `description` FROM `podcast_episode` WHERE ' . $where, $params);
 
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int) $results['id'];
+        $row = Dba::fetch_assoc($db_results);
+        if ($row === []) {
+            return null;
         }
 
-        return 0;
+        return [
+            'id' => (int) $row['id'],
+            'description' => (string) ($row['description'] ?? ''),
+        ];
     }
 
     /**
-     * get_id_from_pubdate
+     * Finds the episode this feed item was already stored as, null when it is new to us
      *
-     * Get episode id from the source url.
+     * The stored description comes back with it, so an unchanged feed is recognised without a second query.
+     *
+     * @return null|array{id: int, description: string}
      */
-    private function get_id_from_pubdate(int $podcast_id, int $pubdate): int
-    {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND `pubdate` = ?";
-        $db_results = Dba::read($sql, [$podcast_id, $pubdate]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int) $results['id'];
+    private function find_existing_episode(
+        int $podcastId,
+        string $guid,
+        string $source,
+        string $title,
+        int $time,
+        int $pubdate,
+    ): ?array {
+        // a feed item without a guid would otherwise match every episode that has none
+        if ($guid !== '') {
+            $existing = $this->find_episode('`guid` = ?', [$guid]);
+            if ($existing !== null) {
+                return $existing;
+            }
         }
 
-        return 0;
-    }
-
-    /**
-     * get_id_from_source
-     *
-     * Get episode id from the source url.
-     */
-    private function get_id_from_source(string $url): int
-    {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
-        $db_results = Dba::read($sql, [$url]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int) $results['id'];
+        $existing = $this->find_episode('`source` = ?', [$source]);
+        if ($existing !== null) {
+            return $existing;
         }
 
-        return 0;
-    }
-
-    /**
-     * get_id_from_title
-     *
-     * Get episode id from the source url.
-     */
-    private function get_id_from_title(int $podcast_id, string $title, int $time): int
-    {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND `title` = ? AND `time` = ?";
-        $db_results = Dba::read($sql, [$podcast_id, $title, $time]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int) $results['id'];
+        // podcast urls can change over time, so the title is checked as well
+        if ($title !== '') {
+            $existing = $this->find_episode(
+                '`podcast` = ? AND `title` = ? AND `time` = ?',
+                [$podcastId, $title, $time]
+            );
+            if ($existing !== null) {
+                return $existing;
+            }
         }
 
-        return 0;
+        // the publication date catches the duplicate/fixed episodes you already have
+        return $this->find_episode('`podcast` = ? AND `pubdate` = ?', [$podcastId, $pubdate]);
     }
 }

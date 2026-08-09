@@ -158,6 +158,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Add to playlist
   * The action is on the artist, smartlist, podcast, podcast episode, radio station and video pages, which only offered the temporary playlist before
   * Podcast rows carry it as well, so a whole podcast can be added from a browse the way an album already could
+* Podcast details can be refreshed from the feed
+  * New `Update details from the feed` action on the podcast page, next to `Sync`, in the same spirit as the artist's `Update details from MusicBrainz`
+  * Until now the title, website, description, language, copyright, generator and art were only read when the podcast was created; a sync added episodes and nothing else, so a podcast that renamed itself or replaced its art kept the details it was first created with
+  * Values the channel does not supply are left alone rather than blanked, and the art is only replaced when the channel advertises one
+  * Requires content manager access, and asks for confirmation first because it overwrites details you may have edited by hand
 * A `PHP Modules` table on `Admin -> Server Config -> Ampache Debug` listing every php extension Ampache requires or suggests, whether this server has it, and what an optional one is needed for
 * Webserver rules that keep private files out of the web root
   * Optional hardening; nothing in Ampache needs these rules, so an install without them keeps working exactly as before
@@ -172,6 +177,16 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Changed (8.0.0)
 
+* Podcast feed text is stored as plain text
+  * Feeds routinely put markup in their titles and descriptions, and some escape that markup a second time on the way into the xml. Both used to be stored as-is, so the podcast and episode pages showed `&lt;p&gt;` and `<br />` as words
+  * Paragraphs and lists are kept as line breaks, the remaining tags are dropped and the entities are decoded; the podcast and episode pages render those breaks
+  * An episode description is cleaned before its length is capped, so the 4096 character limit is spent on text rather than on tags
+* A sync refreshes the descriptions of the episodes you already have
+  * An item the feed still carries used to be recognised and then dropped, so a description was only ever written the once. A feed correcting a typo, expanding its show notes or fixing its own markup never reached the episodes you subscribed to first
+  * The description is read by the same lookup that recognises the episode and only written when it actually differs, so a sync over an unchanged feed costs nothing extra
+  * An item that supplies no description leaves the stored one alone, and nothing else about an existing episode is touched: its state, downloaded file, play counts and any edits you made to its other fields stay as they are
+  * This is also what carries the plain-text conversion above to episodes already in the database
+  * A feed item with no guid no longer matches the first episode that has none. That lookup used to compare an empty guid against every episode without one, which silently skipped a genuinely new episode; now it would have overwritten the wrong description, so it is guarded
 * The browse filter box matches a name in more than one way
   * A **Starts With** / **Contains** menu sits above the box; Contains matches anywhere in the name, so a browse no longer has to be abandoned for the search page to find something by a word in the middle of its title
   * Only one match applies at a time and the choice is remembered per browse, so emptying the box does not put it back to Starts With

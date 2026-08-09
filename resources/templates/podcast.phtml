@@ -34,9 +34,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Podcast\PodcastView $this */
 
-$podcast    = $this->getPodcast();
-$podcastId  = $podcast->getId();
-$websiteUrl = $this->getWebsiteUrl();
+$podcast           = $this->getPodcast();
+$podcastId         = $podcast->getId();
+$websiteUrl        = $this->getWebsiteUrl();
+$updateFromFeedUrl = $this->getUpdateFromFeedUrl();
 
 Ui::show_box_top($this->e($this->getName()), 'info-box'); ?>
 <div class="item_right_info">
@@ -44,7 +45,8 @@ Ui::show_box_top($this->e($this->getName()), 'info-box'); ?>
 </div>
 <?php if ($podcast->get_description() !== '') { ?>
 <div id="item_summary">
-    <?php echo $this->raw($podcast->get_description()); ?>
+    <?php // the getter escapes, so the line breaks the feed supplied are all that is turned into markup here
+    echo $this->raw(nl2br($podcast->get_description())); ?>
 </div>
 <?php }
 
@@ -117,7 +119,15 @@ if ($this->areRatingsShown()) { ?>
             </a>
         </li>
         <li><?php echo $this->raw(Ajax::button_with_text('?page=podcast&action=syncPodcast&podcast_id=' . $podcastId, 'sync', T_('Sync'), 'sync_podcast_' . $podcastId)); ?></li>
-        <?php }
+        <?php if ($updateFromFeedUrl !== null) { ?>
+        <li>
+            <a href="javascript:NavigateTo('<?php echo $this->e($updateFromFeedUrl); ?>');" data-confirm="<?php echo $this->e(T_('Are you sure? This will overwrite Podcast details using the feed')); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('cloud_sync', T_('Update details from the feed'))); ?>
+                <?php echo T_('Update details from the feed'); ?>
+            </a>
+        </li>
+    <?php }
+        }
 
         if ($this->mayDelete()) { ?>
         <li>

@@ -87,7 +87,7 @@ final class PodcastEpisodeView extends AbstractView
         $episode    = $this->episode;
         $properties = [
             ['label' => T_('Title'), 'value' => $this->e($episode->get_fullname())],
-            ['label' => T_('Description'), 'value' => $episode->get_description()],
+            ['label' => T_('Description'), 'value' => nl2br($episode->get_description())],
             ['label' => T_('Category'), 'value' => $episode->getCategory()],
             ['label' => T_('Author'), 'value' => $episode->getAuthor()],
             ['label' => T_('Publication Date'), 'value' => $this->e($episode->getPubDate()->format(DATE_ATOM))],
