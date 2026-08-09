@@ -1,0 +1,82 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/podcast_episodes.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\PodcastEpisodeListRenderer
+
+use Ampache\Gui\Browse\ListHeaderView;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+
+/** @var Ampache\Gui\Browse\ListRenderer\PodcastEpisodeListRenderer $this */
+
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$episodes       = $this->getEpisodes();
+if ($this->areRatingsShown()) {
+    Rating::build_cache('podcast_episode', $this->getObjectIds());
+    Userflag::build_cache('podcast_episode', $this->getObjectIds());
+}
+
+if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
+} ?>
+<table class="tabledata striped-rows <?php echo $this->e($browse->get_css_class()); ?>" data-objecttype="podcast_episode">
+    <thead>
+        <tr class="th-top">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php
+                echo ($column['sort'] === null)
+                    ? $this->e($column['label'])
+                    : $this->raw(Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=' . $column['sort'], $column['label'], 'podcast_episode_sort_' . $column['sort'])); ?></th>
+            <?php } ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($episodes as $episode) { ?>
+        <tr id="podcast_episode_<?php echo $this->e($episode->id); ?>" class="libitem_menu" data-object-type="podcast_episode" data-object-id="<?php echo $this->e($episode->id); ?>">
+            <?php echo $this->raw($this->renderRow($episode)); ?>
+        </tr>
+        <?php } ?>
+        <?php if ($episodes === []) { ?>
+        <tr>
+            <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('No podcast episode found'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <?php } ?>
+        </tr>
+    </tfoot>
+</table>
+<?php show_table_render();
+
+if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
+} ?>

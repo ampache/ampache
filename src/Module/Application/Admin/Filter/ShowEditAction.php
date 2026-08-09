@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Filter;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\EditCatalogFilterFormView;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -55,13 +57,12 @@ final class ShowEditAction extends AbstractFilterAction
             : scrub_in(htmlspecialchars($body['filter_name'] ?? '', ENT_NOQUOTES));
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_edit_filter.inc.php',
-            [
-                'filter_id' => $filter_id,
-                'filter_name' => $filter_name
-            ]
-        );
+        echo (new EditCatalogFilterFormView(
+            $this->configContainer->getWebPath('/admin'),
+            $filter_id,
+            $filter_name,
+            (bool) AmpConfig::get('catalog_filter')
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

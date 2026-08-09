@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// manage_democratic.phtml -- rendered by Ampache\Gui\Democratic\ManageDemocraticView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Democratic\ManageDemocraticView $this */
+
+$columns = $this->getColumns();
+$rows    = $this->getRows();
+
+Ui::show_box_top(T_('Manage')); ?>
+<table class="tabledata striped-rows">
+    <tr class="th-top">
+        <th class="cel_number"><?php echo $this->e($columns[0]); ?></th>
+        <th class="cel_base_playlist"><?php echo $this->e($columns[1]); ?></th>
+        <th class="cel_cooldown"><?php echo $this->e($columns[2]); ?></th>
+        <th class="cel_level"><?php echo $this->e($columns[3]); ?></th>
+        <th class="cel_default"><?php echo $this->e($columns[4]); ?></th>
+        <th class="cel_vote_count"><?php echo $this->e($columns[5]); ?></th>
+        <th class="cel_action"><?php echo $this->e($columns[6]); ?></th>
+    </tr>
+    <?php foreach ($rows as $row) {
+        $democratic = $row['democratic']; ?>
+    <tr>
+        <td><?php echo $this->e($democratic->name); ?></td>
+        <td><?php echo $this->raw($row['playlist']->get_f_link()); ?></td>
+        <td><?php echo $this->e($democratic->cooldown) . ' ' . T_('minutes'); ?></td>
+        <td><?php echo $this->e($democratic->getAccessLevel()->toDescription()); ?></td>
+        <td><?php echo $democratic->primary ? T_('Primary') : ''; ?></td>
+        <td><?php echo $this->e($democratic->count_items()); ?></td>
+        <td>
+        <?php echo $this->raw(Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'cell_tower', T_('Play'), 'play_democratic')); ?>
+        <a href="<?php echo $this->e($this->getDeleteUrl($democratic)); ?>"><?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?></a>
+        </td>
+    </tr>
+    <?php }
+
+    if ($rows === []) { ?>
+    <tr>
+        <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
+    </tr>
+<?php } ?>
+</table>
+<br />
+<div>
+    <a class="button" href="<?php echo $this->e($this->getCreateUrl()); ?>"><?php echo T_('Create Playlist'); ?></a>
+</div>
+<?php Ui::show_box_bottom(); ?>

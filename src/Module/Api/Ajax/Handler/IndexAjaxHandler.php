@@ -26,8 +26,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Artist\ArtistInfoView;
+use Ampache\Gui\Artist\RecommendedArtistsView;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
+use Ampache\Gui\Index\NowPlayingSimilarView;
+use Ampache\Gui\Index\RandomAlbumsView;
+use Ampache\Gui\Index\RandomVideosView;
+use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
+use Ampache\Gui\Song\SongListPanelView;
+use Ampache\Gui\Stats\RecentlyPlayedMode;
+use Ampache\Gui\Stats\RecentlyPlayedView;
+use Ampache\Gui\Wanted\MissingAlbumsView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -35,18 +44,18 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
@@ -67,10 +76,8 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         private WantedManagerInterface $wantedManager,
         private GatekeeperFactoryInterface $gatekeeperFactory,
         private GuiFactoryInterface $guiFactory,
-        private TalFactoryInterface $talFactory,
-        private ZipHandlerInterface $zipHandler,
         private BrowseFactoryInterface $browseFactory,
-        private FolderRepositoryInterface $folderRepository,
+        private SidebarViewFactoryInterface $sidebarViewFactory,
     ) {}
 
     public function handle(User $user): void
@@ -86,16 +93,14 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'top_tracks':
-                $artist       = new Artist((int) $this->requestParser->getFromRequest('artist'));
-                $object_ids   = $this->songRepository->getTopSongsByArtist($artist, (int) AmpConfig::get('popular_threshold', 10));
-                $hide_columns = ['cel_artist'];
-                // the row template renders into this scope, so the services it uses are named here
-                $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
-                $guiFactory = $this->guiFactory;
-                $talFactory = $this->talFactory;
-                ob_start();
-                require_once Ui::find_template('show_top_tracks.inc.php');
-                $results['top_tracks'] = ob_get_clean();
+                $artist                = new Artist((int) $this->requestParser->getFromRequest('artist'));
+                $object_ids            = $this->songRepository->getTopSongsByArtist($artist, (int) AmpConfig::get('popular_threshold', 10));
+                $results['top_tracks'] = $this->createSongListPanelView(
+                    'top_tracks',
+                    $object_ids,
+                    ['cel_artist'],
+                    'topTracksIndexes();'
+                )->render();
                 break;
             case 'random_albums':
                 $albums = $this->albumRepository->getRandom(
@@ -103,9 +108,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $moment
                 );
                 if ($albums !== []) {
-                    ob_start();
-                    require_once Ui::find_template('show_random_albums.inc.php');
-                    $results['random_selection'] = ob_get_clean();
+                    $results['random_selection'] = $this->createRandomAlbumsView(LibraryItemEnum::ALBUM, $albums)->render();
                 } else {
                     $results['random_selection'] = '<!-- None found -->';
 
@@ -129,9 +132,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $moment
                 );
                 if ($albumDisks !== []) {
-                    ob_start();
-                    require_once Ui::find_template('show_random_album_disks.inc.php');
-                    $results['random_selection'] = ob_get_clean();
+                    $results['random_selection'] = $this->createRandomAlbumsView(LibraryItemEnum::ALBUM_DISK, $albumDisks)->render();
                 } else {
                     $results['random_selection'] = '<!-- None found -->';
 
@@ -155,9 +156,14 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $moment
                 );
                 if ($videos !== []) {
-                    ob_start();
-                    require_once Ui::find_template('show_random_videos.inc.php');
-                    $results['random_video_selection'] = ob_get_clean();
+                    $results['random_video_selection'] = (new RandomVideosView(
+                        $videos,
+                        Ui::is_grid_view('video'),
+                        (bool) AmpConfig::get('directplay'),
+                        Stream_Playlist::check_autoplay_next(),
+                        Stream_Playlist::check_autoplay_append(),
+                        Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && (bool) AmpConfig::get('ratings')
+                    ))->render();
                 } else {
                     $results['random_video_selection'] = '<!-- None found -->';
                 }
@@ -174,9 +180,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         $biography = Recommendation::get_artist_info_by_name(rawurldecode($fullname));
                     }
 
-                    ob_start();
-                    require_once Ui::find_template('show_artist_info.inc.php');
-                    $results['artist_biography'] = ob_get_clean();
+                    $results['artist_biography'] = (new ArtistInfoView($artist, $biography))->render();
                 }
 
                 break;
@@ -196,10 +200,25 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         }
                     }
 
-                    ob_start();
-                    $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
-                    require_once Ui::find_template('show_recommended_artists.inc.php');
-                    $results['similar_artist'] = ob_get_clean();
+                    $mayInteract = !AmpConfig::get('use_auth')
+                        || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
+
+                    $results['similar_artist'] = (new RecommendedArtistsView(
+                        $this->gatekeeperFactory->createGuiGatekeeper(),
+                        AmpConfig::get_web_path(),
+                        $object_ids,
+                        $missing_objects,
+                        0,
+                        false,
+                        (bool) AmpConfig::get('hide_genres'),
+                        User::is_registered() && (bool) AmpConfig::get('ratings'),
+                        (bool) AmpConfig::get('show_played_times'),
+                        (bool) AmpConfig::get('directplay'),
+                        (int) AmpConfig::get('direct_play_limit', 500),
+                        $mayInteract,
+                        (bool) AmpConfig::get('sociable'),
+                        false
+                    ))->render();
                 }
 
                 break;
@@ -217,16 +236,12 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 // randomize and slice
                 shuffle($object_ids);
-                $object_ids   = array_slice($object_ids, 0, (int) AmpConfig::get('popular_threshold', 10));
-                $browse       = $this->browseFactory->create();
-                $hide_columns = [];
-                // the row template renders into this scope, so the services it uses are named here
-                $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
-                $guiFactory = $this->guiFactory;
-                $talFactory = $this->talFactory;
-                ob_start();
-                require_once Ui::find_template('show_similar_songs.inc.php');
-                $results['similar_songs'] = ob_get_clean();
+                $object_ids               = array_slice($object_ids, 0, (int) AmpConfig::get('popular_threshold', 10));
+                $results['similar_songs'] = $this->createSongListPanelView(
+                    'similar_songs',
+                    $object_ids,
+                    []
+                )->render();
                 break;
             case 'similar_now_playing':
                 $media_id = (int) $this->requestParser->getFromRequest('media_id');
@@ -234,7 +249,12 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $artists = Recommendation::get_artists_like((int) $this->requestParser->getFromRequest('media_artist'), 3, false);
                     $songs   = Recommendation::get_songs_like($media_id, 3);
                     ob_start();
-                    require_once Ui::find_template('show_now_playing_similar.inc.php');
+                    echo (new NowPlayingSimilarView(
+                        AmpConfig::get_web_path(),
+                        $artists,
+                        $songs,
+                        (bool) AmpConfig::get('wanted')
+                    ))->render();
                     $results['similar_items_' . $media_id] = ob_get_clean();
                 }
 
@@ -252,15 +272,16 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->set_simple_browse(false);
                     $browse->save_objects($object_ids);
                     $browse->store();
+                    // the browse renders the label list itself now, so this only has to hand it the ids
                     ob_start();
-                    $labelRepository = $this->labelRepository;
-                    require_once Ui::find_template('show_labels.inc.php');
+                    $browse->show_objects($object_ids);
                     $results['labels'] = ob_get_clean();
                 }
 
                 break;
             case 'wanted_missing_albums':
                 if (AmpConfig::get('wanted') && (array_key_exists('artist', $_REQUEST) || array_key_exists('artist_mbid', $_REQUEST))) {
+                    $walbums = [];
                     if (array_key_exists('artist', $_REQUEST)) {
                         $artist = new Artist((int) $this->requestParser->getFromRequest('artist'));
                         if (
@@ -272,12 +293,10 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         }
                     } elseif (array_key_exists('artist_mbid', $_REQUEST)) {
                         $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);
-                    } else {
-                        $walbums = [];
                     }
 
                     ob_start();
-                    require_once Ui::find_template('show_missing_albums.inc.php');
+                    echo (new MissingAlbumsView($walbums))->render();
                     $results['missing_albums'] = ob_get_clean();
                 }
 
@@ -361,15 +380,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 ob_start();
                 $user_id   = $user->id ?: -1;
-                $ajax_page = 'index';
-                if (AmpConfig::get('home_recently_played_all')) {
-                    $data = Stats::get_recently_played($user_id);
-                    require_once Ui::find_template('show_recently_played_all.inc.php');
-                } else {
-                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
-                    Song::build_cache(array_keys($data));
-                    require Ui::find_template('show_recently_played.inc.php');
-                }
+                echo $this->createRecentlyPlayedView($user, $user_id, false)->render();
 
                 $results['recently_played'] = ob_get_clean();
                 break;
@@ -394,16 +405,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int) $this->requestParser->getFromRequest('user_id')
                     : ($user->id ?: -1);
-                $user_only = isset($_REQUEST['user_only']);
-                $ajax_page = 'index';
-                if (AmpConfig::get('home_recently_played_all')) {
-                    $data = Stats::get_recently_played($user_id);
-                    require_once Ui::find_template('show_recently_played_all.inc.php');
-                } else {
-                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
-                    Song::build_cache(array_keys($data));
-                    require Ui::find_template('show_recently_played.inc.php');
-                }
+                echo $this->createRecentlyPlayedView($user, $user_id, isset($_REQUEST['user_only']))->render();
 
                 $results['recently_played'] = ob_get_clean();
                 break;
@@ -511,15 +513,8 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 }
 
                 Ajax::set_include_override(true);
-                ob_start();
                 $_SESSION['state']['sidebar_tab'] = $button;
-                // sidebar_home renders in this scope
-                $folderRepository = $this->folderRepository;
-
-                $videoRepository = $this->videoRepository;
-                require_once Ui::find_template('sidebar.inc.php');
-                $results['sidebar-content'] = ob_get_contents();
-                ob_end_clean();
+                $results['sidebar-content']       = $this->sidebarViewFactory->createSidebarView($button)->render();
                 break;
             case 'slideshow':
                 ob_start();
@@ -591,13 +586,8 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->save_objects($object_ids);
                     $browse->store();
 
-                    $hide_columns = [];
                     Ui::show_box_top(T_('Songs'), 'info-box');
-                    $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
-                    $guiFactory = $this->guiFactory;
-                    $talFactory = $this->talFactory;
-                    $zipHandler = $this->zipHandler;
-                    require_once Ui::find_template('show_songs.inc.php');
+                    $browse->show_objects($object_ids);
                     Ui::show_box_bottom();
                 }
 
@@ -607,5 +597,71 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
         // We always do this
         echo xoutput_from_array($results);
+    }
+
+    /**
+     * @param list<int> $objectIds
+     */
+    private function createRandomAlbumsView(LibraryItemEnum $type, array $objectIds): RandomAlbumsView
+    {
+        return new RandomAlbumsView(
+            $type,
+            $objectIds,
+            Ui::is_grid_view('album'),
+            (bool) AmpConfig::get('directplay'),
+            Stream_Playlist::check_autoplay_next(),
+            Stream_Playlist::check_autoplay_append(),
+            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && (bool) AmpConfig::get('ratings')
+        );
+    }
+
+    /**
+     * The home page and the stats page share this list; `home_recently_played_all` decides which one.
+     */
+    private function createRecentlyPlayedView(User $user, int $userId, bool $userOnly): RecentlyPlayedView
+    {
+        $allTypes = (bool) AmpConfig::get('home_recently_played_all');
+        $data     = ($allTypes)
+            ? Stats::get_recently_played($userId, 'stream', null, $userOnly)
+            : Stats::get_recently_played($userId, 'stream', 'song', $userOnly);
+        if (!$allTypes) {
+            Song::build_cache(array_keys($data));
+        }
+
+        return new RecentlyPlayedView(
+            ($allTypes) ? RecentlyPlayedMode::ALL_TYPES : RecentlyPlayedMode::SONGS,
+            $data,
+            $user,
+            $userId,
+            $userOnly,
+            AmpConfig::get_web_path()
+        );
+    }
+
+    /**
+     * @param list<int> $songIds
+     * @param list<string> $hiddenColumns
+     */
+    private function createSongListPanelView(
+        string $tableId,
+        array $songIds,
+        array $hiddenColumns,
+        ?string $onRenderScript = null,
+    ): SongListPanelView {
+        return new SongListPanelView(
+            $this->guiFactory,
+            $this->gatekeeperFactory->createGuiGatekeeper(),
+            $tableId,
+            $songIds,
+            $hiddenColumns,
+            User::is_registered() && (bool) AmpConfig::get('ratings'),
+            (bool) AmpConfig::get('hide_genres'),
+            (bool) AmpConfig::get('album_group'),
+            (bool) AmpConfig::get('licensing') && (bool) AmpConfig::get('show_license'),
+            (bool) AmpConfig::get('show_played_times'),
+            (bool) AmpConfig::get('show_skipped_times'),
+            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+            $onRenderScript
+        );
     }
 }

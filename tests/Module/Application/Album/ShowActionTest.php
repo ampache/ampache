@@ -26,11 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
@@ -48,251 +46,19 @@ class ShowActionTest extends MockeryTestCase
 {
     private BrowseFactoryInterface&MockInterface $browseFactory;
     private ConfigContainerInterface&MockInterface $configContainer;
+    private AlbumEditabilityCheckerInterface&MockInterface $editabilityChecker;
+    private FunctionCheckerInterface&MockInterface $functionChecker;
     private LoggerInterface&MockInterface $logger;
     private ModelFactoryInterface&MockInterface $modelFactory;
-    private PrivilegeCheckerInterface&MockInterface $privilegeChecker;
     private ShowAction $subject;
     private UiInterface&MockInterface $ui;
     private ZipHandlerInterface&MockInterface $zipHandler;
 
-    public function testRunShowsAlbumEditabbleWithSingleDisc(): void
-    {
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $album      = $this->mock(Album::class);
-
-        $userId = 42;
-
-        $this->privilegeChecker->shouldReceive('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
-            ->once()
-            ->andReturnTrue();
-
-        $album->shouldReceive('get_user_owner')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-        $album->shouldReceive('getDiskCount')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(1);
-        $album->shouldReceive('getAlbumArtist')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(123);
-
-        $gatekeeper->shouldReceive('getUserId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-
-        $this->createExpectations(
-            $album,
-            $gatekeeper,
-            true,
-            'show_album.inc.php'
-        );
-    }
-
-    public function testRunShowsAlbumEditableIfContentManager(): void
-    {
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $album      = $this->mock(Album::class);
-
-        $this->privilegeChecker->shouldReceive('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ->once()
-            ->andReturnTrue();
-
-        $album->shouldReceive('getDiskCount')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(2);
-
-        $this->createExpectations(
-            $album,
-            $gatekeeper,
-            true,
-            'show_album_group_disks.inc.php',
-        );
-    }
-
-    public function testRunShowsAlbumEditableIfUsersMatch(): void
-    {
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $album      = $this->mock(Album::class);
-
-        $userId = 42;
-
-        $this->privilegeChecker->shouldReceive('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
-            ->once()
-            ->andReturnTrue();
-
-        $album->shouldReceive('get_user_owner')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-        $album->shouldReceive('getDiskCount')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(2);
-        $album->shouldReceive('getAlbumArtist')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(123);
-
-        $gatekeeper->shouldReceive('getUserId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-
-        $this->createExpectations(
-            $album,
-            $gatekeeper,
-            true,
-            'show_album_group_disks.inc.php'
-        );
-    }
-
-    public function testRunShowsAlbumNotEditableIfArtistIsNotSet(): void
-    {
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $album      = $this->mock(Album::class);
-
-        $this->privilegeChecker->shouldReceive('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ->once()
-            ->andReturnFalse();
-
-        $album->shouldReceive('getDiskCount')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(2);
-        $album->shouldReceive('getAlbumArtist')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(0);
-
-        $this->createExpectations(
-            $album,
-            $gatekeeper,
-            false,
-            'show_album_group_disks.inc.php'
-        );
-    }
-
-    public function testRunShowsAlbumNotEditableIfFeatureDisabled(): void
-    {
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $album      = $this->mock(Album::class);
-
-        $this->privilegeChecker->shouldReceive('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
-            ->once()
-            ->andReturnFalse();
-
-        $album->shouldReceive('getDiskCount')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(2);
-        $album->shouldReceive('getAlbumArtist')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(123);
-
-        $this->createExpectations(
-            $album,
-            $gatekeeper,
-            false,
-            'show_album_group_disks.inc.php'
-        );
-    }
-
-    public function testRunShowsAlbumWithGroups(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $album      = $this->mock(Album::class);
-        $user       = $this->createMock(User::class);
-
-        $isEditAble = true;
-
-        $albumId        = 42;
-        $album->catalog = 1;
-
-        $user->catalogs['music'] = [1];
-
-        $this->privilegeChecker->shouldReceive('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['album' => (string) $albumId]);
-
-        $this->modelFactory->shouldReceive('createAlbum')
-            ->with($albumId)
-            ->once()
-            ->andReturn($album);
-
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
-
-        $album->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-        $album->shouldReceive('getDiskCount')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(2);
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_album_group_disks.inc.php',
-                [
-                    'album' => $album,
-                    'isAlbumEditable' => $isEditAble,
-                    'user' => $user,
-                    'zipHandler' => $this->zipHandler,
-                    'browseFactory' => $this->browseFactory,
-                ]
-            )
-            ->once();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
-    }
-
+    /**
+     * Both album pages are views now, and rendering either reaches `Art` and `Ajax`, which resolve from the
+     * DI container the unit bootstrap has none of. What the action decides is covered elsewhere: the
+     * editability rule by `AlbumEditabilityCheckerTest`, and the rendered markup over http.
+     */
     public function testRunShowsErrorIfAlbumDoesNotExist(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
@@ -352,83 +118,24 @@ class ShowActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
-        $this->browseFactory    = $this->mock(BrowseFactoryInterface::class);
-        $this->ui               = $this->mock(UiInterface::class);
-        $this->logger           = $this->mock(LoggerInterface::class);
-        $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
-        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
-        $this->zipHandler       = $this->mock(ZipHandlerInterface::class);
+        $this->modelFactory       = $this->mock(ModelFactoryInterface::class);
+        $this->browseFactory      = $this->mock(BrowseFactoryInterface::class);
+        $this->ui                 = $this->mock(UiInterface::class);
+        $this->logger             = $this->mock(LoggerInterface::class);
+        $this->editabilityChecker = $this->mock(AlbumEditabilityCheckerInterface::class);
+        $this->functionChecker    = $this->mock(FunctionCheckerInterface::class);
+        $this->configContainer    = $this->mock(ConfigContainerInterface::class);
+        $this->zipHandler         = $this->mock(ZipHandlerInterface::class);
 
         $this->subject = new ShowAction(
             $this->modelFactory,
             $this->ui,
             $this->logger,
-            $this->privilegeChecker,
             $this->configContainer,
             $this->zipHandler,
-            $this->browseFactory
-        );
-    }
-
-    private function createExpectations(
-        Album&MockInterface $album,
-        GuiGatekeeperInterface&MockInterface $gatekeeper,
-        bool $isEditAble,
-        string $templateName,
-    ): void {
-        $request = $this->mock(ServerRequestInterface::class);
-        $user    = $this->mock(User::class);
-
-        $albumId        = 42;
-        $album->catalog = 1;
-
-        $user->catalogs['music'] = [1];
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['album' => (string) $albumId]);
-
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
-
-        $this->modelFactory->shouldReceive('createAlbum')
-            ->with($albumId)
-            ->once()
-            ->andReturn($album);
-
-        $album->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                $templateName,
-                [
-                    'album' => $album,
-                    'isAlbumEditable' => $isEditAble,
-                    'user' => $user,
-                    'zipHandler' => $this->zipHandler,
-                    'browseFactory' => $this->browseFactory,
-                ]
-            )
-            ->once();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
+            $this->browseFactory,
+            $this->editabilityChecker,
+            $this->functionChecker
         );
     }
 }

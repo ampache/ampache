@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Admin\UserPreferencesView;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -55,14 +57,12 @@ final class ShowPreferencesAction extends AbstractUserAction
         }
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_user_preferences.inc.php',
-            [
-                'ui' => $this->ui,
-                'preferences' => $this->preferenceRepository->getAll($user),
-                'client' => $user
-            ]
-        );
+        echo (new UserPreferencesView(
+            $this->ui,
+            AmpConfig::get_web_path(),
+            $user,
+            $this->preferenceRepository->getAll($user)
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

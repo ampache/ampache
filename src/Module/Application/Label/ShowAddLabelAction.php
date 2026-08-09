@@ -27,11 +27,13 @@ namespace Ampache\Module\Application\Label;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\AddLabelFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,6 +44,7 @@ final readonly class ShowAddLabelAction implements ApplicationActionInterface
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
         private UiInterface $ui,
     ) {}
 
@@ -56,7 +59,18 @@ final readonly class ShowAddLabelAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) {
-            $this->ui->show('show_add_label.inc.php');
+            echo (new AddLabelFormView(
+                $this->configContainer->getWebPath(),
+                $this->requestParser->getFromRequest('name'),
+                $this->requestParser->getFromRequest('mbid'),
+                $this->requestParser->getFromRequest('category'),
+                $this->requestParser->getFromRequest('summary'),
+                $this->requestParser->getFromRequest('address'),
+                $this->requestParser->getFromRequest('email'),
+                $this->requestParser->getFromRequest('website'),
+                $this->requestParser->getFromRequest('country'),
+                $this->requestParser->getFromRequest('active')
+            ))->render();
         } else {
             echo T_('The Label cannot be found');
         }

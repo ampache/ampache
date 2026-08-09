@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Smartlist;
@@ -41,20 +42,25 @@ use Psr\Log\LoggerInterface;
 class ShowPlaylistActionTest extends MockeryTestCase
 {
     private BrowseFactoryInterface&MockInterface $browseFactory;
+    private FunctionCheckerInterface&MockInterface $functionChecker;
     private LoggerInterface&MockObject $logger;
     private ModelFactoryInterface&MockInterface $modelFactory;
     private ?ShowAction $subject;
     private UiInterface&MockInterface $ui;
     private ZipHandlerInterface&MockInterface $zipHandler;
 
-    public function testRunDisplaysPlaylistSearchView(): void
+    /**
+     * The smartlist page itself is not asserted here: rendering it reaches `Ajax` and `Access`, both of
+     * which resolve out of the DI container, and the unit bootstrap has none. The markup is verified over
+     * http against the docker instance instead.
+     */
+    public function testRunSkipsRenderingAPlaylistThatDoesNotExist(): void
     {
+        $search     = $this->mock(Smartlist::class);
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $search     = $this->mock(Smartlist::class);
 
         $playlistId = 666;
-        $objectIds  = [1, 2, 3];
 
         $this->modelFactory->shouldReceive('createSmartlist')
             ->with($playlistId)
@@ -69,53 +75,43 @@ class ShowPlaylistActionTest extends MockeryTestCase
         $search->shouldReceive('isNew')
             ->withNoArgs()
             ->once()
-            ->andReturn(false);
-        $search->shouldReceive('get_items')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($objectIds);
+            ->andReturn(true);
 
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_search.inc.php',
-                [
-                    'playlist' => $search,
-                    'object_ids' => $objectIds,
-                    'zipHandler' => $this->zipHandler,
-                    'browseFactory' => $this->browseFactory
-                ]
-            )
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
+        $this->ui->shouldReceive('showHeader')->withNoArgs()->once();
+        $this->ui->shouldReceive('showQueryStats')->withNoArgs()->once();
+        $this->ui->shouldReceive('showFooter')->withNoArgs()->once();
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        $this->logger->expects(static::once())->method('warning');
+
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        $this->assertNull($result);
+        $this->assertStringNotContainsString('smartplaylist_row_', $output);
     }
 
     #[Override]
     protected function setUp(): void
     {
-        $this->ui            = $this->mock(UiInterface::class);
-        $this->logger        = $this->createMock(LoggerInterface::class);
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
-        $this->zipHandler    = $this->mock(ZipHandlerInterface::class);
-        $this->browseFactory = $this->mock(BrowseFactoryInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->logger          = $this->createMock(LoggerInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->zipHandler      = $this->mock(ZipHandlerInterface::class);
+        $this->browseFactory   = $this->mock(BrowseFactoryInterface::class);
+        $this->functionChecker = $this->mock(FunctionCheckerInterface::class);
 
         $this->subject = new ShowAction(
             $this->ui,
             $this->logger,
             $this->modelFactory,
             $this->zipHandler,
-            $this->browseFactory
+            $this->browseFactory,
+            $this->functionChecker
         );
     }
 }

@@ -1048,6 +1048,18 @@ class Preference extends database_object
                 : 'dark';
         }
 
+        // A preference with no value carries no information -- it is the seeded default, not a choice -- so it
+        // must not replace a value the config file set. `encode_target` ships as "mp3" yet seeds an empty row,
+        // which blanked it and left the transcoder with no target at all.
+        foreach ($results as $name => $value) {
+            if (
+                ($value === null || $value === '')
+                && !in_array(AmpConfig::get((string) $name), [null, ''], true)
+            ) {
+                unset($results[$name]);
+            }
+        }
+
         AmpConfig::set_by_array($results, true);
         $_SESSION['userdata']['preferences'] = $results;
         $_SESSION['userdata']['uid']         = $user_id;

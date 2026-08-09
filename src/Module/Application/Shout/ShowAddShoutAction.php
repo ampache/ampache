@@ -25,7 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Shout;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Shout\AddShoutView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Shout\ShoutRendererInterface;
@@ -80,16 +84,16 @@ final readonly class ShowAddShoutAction implements ApplicationActionInterface
         $shouts = $this->shoutRepository->getBy($object_type, $object->getId());
 
         // Now go ahead and display the page where we let them add a comment etc
-        $this->ui->show(
-            'show_add_shout.inc.php',
-            [
-                'data' => $data,
-                'object' => $object,
-                'object_type' => $object_type,
-                'shouts' => $shouts,
-                'shoutRenderer' => $this->shoutRenderer,
-            ]
-        );
+        echo (new AddShoutView(
+            $object,
+            $object_type,
+            $data,
+            iterator_to_array($shouts),
+            $this->shoutRenderer,
+            AmpConfig::get_web_path(),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

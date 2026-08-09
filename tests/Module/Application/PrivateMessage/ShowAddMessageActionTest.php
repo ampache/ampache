@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PrivateMessageInterface;
@@ -46,6 +47,7 @@ class ShowAddMessageActionTest extends MockeryTestCase
     private ConfigContainerInterface&MockInterface $configContainer;
     private ModelFactoryInterface&MockInterface $modelFactory;
     private PrivateMessageRepositoryInterface&MockInterface $pmRepository;
+    private RequestParserInterface|MockInterface|null $requestParser;
     private ShowAddMessageAction $subject;
     private UiInterface&MockInterface $ui;
 
@@ -67,9 +69,6 @@ class ShowAddMessageActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with('show_add_pvmsg.inc.php')
-            ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -82,9 +81,16 @@ class ShowAddMessageActionTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunRendersWithNotOwnedReply(): void
@@ -107,9 +113,6 @@ class ShowAddMessageActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with('show_add_pvmsg.inc.php')
-            ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -127,9 +130,16 @@ class ShowAddMessageActionTest extends MockeryTestCase
             ->once()
             ->andReturnNull();
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunRendersWithReplyTo(): void
@@ -162,9 +172,6 @@ class ShowAddMessageActionTest extends MockeryTestCase
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('show')
-            ->with('show_add_pvmsg.inc.php')
             ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
@@ -207,9 +214,16 @@ class ShowAddMessageActionTest extends MockeryTestCase
 
         $senderUser->username = $senderUserName;
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
         $this->assertStringContainsString(
             $senderUserName,
             $_REQUEST['to_user']
@@ -265,12 +279,17 @@ class ShowAddMessageActionTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->requestParser   = $this->mock(RequestParserInterface::class);
+
+        $this->configContainer->shouldReceive('getWebPath')->andReturn('some-web-path');
+        $this->requestParser->shouldReceive('getFromRequest')->andReturn('');
         $this->ui              = $this->mock(UiInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->pmRepository    = $this->mock(PrivateMessageRepositoryInterface::class);
 
         $this->subject = new ShowAddMessageAction(
             $this->configContainer,
+            $this->requestParser,
             $this->ui,
             $this->modelFactory,
             $this->pmRepository

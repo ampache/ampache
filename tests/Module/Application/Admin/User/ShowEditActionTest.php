@@ -113,16 +113,24 @@ class ShowEditActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showHeader');
         $this->ui->expects(static::once())
-            ->method('show')
-            ->with('show_edit_user.inc.php', ['client' => $user]);
-        $this->ui->expects(static::once())
             ->method('showQueryStats');
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        self::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
-        );
+        $user->method('getId')->willReturn($userId);
+        $user->method('get_f_avatar')->willReturn('');
+
+        ob_start();
+
+        try {
+            $result = $this->subject->run($this->request, $this->gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertStringContainsString('name="update_user"', $output);
+        self::assertStringContainsString('name="user_id" value="' . $userId . '"', $output);
     }
 
     public function testRunReturnsNullInDemoMode(): void

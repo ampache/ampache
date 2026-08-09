@@ -1,0 +1,82 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// share/add_share.phtml -- rendered by Ampache\Gui\Share\AddShareView
+
+use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Share\AddShareView $this */
+
+Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
+<form name="share" method="post" action="<?php echo $this->e($this->getFormAction()); ?>">
+    <input type="hidden" name="type" value="<?php echo $this->e($this->getObjectType()); ?>" />
+    <input type="hidden" name="id" value="<?php echo $this->e($this->getObjectId()); ?>" />
+    <table class="tabledata">
+        <tr>
+            <td><?php echo T_('Share'); ?></td>
+            <td><?php echo $this->raw($this->getObjectLink()); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Secret'); ?></td>
+            <td><input type="text" name="secret" maxlength="20" value="<?php echo $this->e($this->getSecret()); ?>" />
+                <?php echo $this->raw(AmpError::display('secret')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Max Counter'); ?></td>
+            <td><input type="text" name="max_counter" value="<?php echo $this->e($this->getMaxCounter()); ?>" />
+                <?php echo $this->raw(AmpError::display('max_counter')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Expiry Days'); ?></td>
+            <td><input type="text" name="expire" value="<?php echo $this->e($this->getExpire()); ?>" /></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Allow Stream'); ?></td>
+            <?php // the hidden zero posts first so unchecking is a value rather than a missing key?>
+            <td><input type="hidden" name="allow_stream" value="0" /><input type="checkbox" name="allow_stream" value="1" <?php echo ($this->isStreamChecked()) ? 'checked' : ''; ?> /></td>
+        </tr>
+        <?php if ($this->showDownload()) { ?>
+        <tr>
+            <td><?php echo T_('Allow Download'); ?></td>
+            <td><input type="hidden" name="allow_download" value="0" /><input type="checkbox" name="allow_download" value="1" <?php echo ($this->isDownloadChecked()) ? 'checked' : ''; ?> /></td>
+        </tr>
+        <?php } ?>
+        <?php if ($this->hasFailed()) { ?>
+        <tr>
+            <td>&nbsp;</td>
+            <td><p class="alert alert-danger"><?php echo $this->e($this->getMessage()); ?></p></td>
+        </tr>
+        <?php } ?>
+    </table>
+    <div class="formValidation">
+        <?php echo $this->raw(Core::form_register('add_share')); ?>
+        <input class="button" type="submit" value="<?php echo $this->e(T_('Create')); ?>" />
+    </div>
+</form>
+<?php Ui::show_box_bottom(); ?>

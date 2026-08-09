@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Radio;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\CreateLiveStreamFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -64,7 +65,14 @@ final readonly class CreateAction implements ApplicationActionInterface
 
         // Try to create the sucker
         if (!Live_Stream::create($_POST)) {
-            $this->ui->show('show_add_live_stream.inc.php');
+            echo (new CreateLiveStreamFormView(
+                $this->configContainer->getWebPath(),
+                $this->requestParser->getFromRequest('name'),
+                $this->requestParser->getFromRequest('site_url'),
+                $this->requestParser->getFromRequest('url'),
+                $this->requestParser->getFromRequest('codec'),
+                (int) $this->requestParser->getFromRequest('catalog')
+            ))->render();
         } else {
             Catalog::update_mapping('live_stream');
             $body  = T_('Radio Station created');

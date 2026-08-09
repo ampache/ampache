@@ -25,18 +25,19 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Album\AlbumPageView;
+use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -51,10 +52,10 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
         private LoggerInterface $logger,
-        private PrivilegeCheckerInterface $privilegeChecker,
-        private ConfigContainerInterface $configContainer,
         private ZipHandlerInterface $zipHandler,
         private BrowseFactoryInterface $browseFactory,
+        private FunctionCheckerInterface $functionChecker,
+        private AlbumEditabilityCheckerInterface $editabilityChecker,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -73,19 +74,16 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->show(
-                'show_album_disk.inc.php',
-                [
-                    'albumDisk' => $albumDisk,
-                    'isAlbumEditable' => $this->isEditable(
-                        $gatekeeper,
-                        $albumDisk
-                    ),
-                    'user' => $user,
-                    'zipHandler' => $this->zipHandler,
-                    'browseFactory' => $this->browseFactory
-                ]
-            );
+            echo (new AlbumPageView(
+                $albumDisk,
+                $this->browseFactory,
+                $gatekeeper->getUser(),
+                AmpConfig::get_web_path(),
+                $this->editabilityChecker->check($gatekeeper, $albumDisk),
+                $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('album_disk'),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ))->render();
         }
 
         // Show the Footer
@@ -93,26 +91,5 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
-    }
-
-    private function isEditable(
-        GuiGatekeeperInterface $gatekeeper,
-        AlbumDisk $albumDisk,
-    ): bool {
-        if (
-            $this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-        ) {
-            return true;
-        }
-
-        if (!$albumDisk->album_artist) {
-            return false;
-        }
-
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === false) {
-            return false;
-        }
-
-        return $albumDisk->get_user_owner() === $gatekeeper->getUserId();
     }
 }

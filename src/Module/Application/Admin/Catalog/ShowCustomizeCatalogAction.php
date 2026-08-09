@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Admin\EditCatalogView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
@@ -61,10 +63,10 @@ final readonly class ShowCustomizeCatalogAction implements ApplicationActionInte
 
         $this->ui->showHeader();
 
-        $this->ui->show(
-            'show_edit_catalog.inc.php',
-            ['catalog' => $catalog]
-        );
+        echo (new EditCatalogView(
+            AmpConfig::get_web_path('/admin'),
+            $catalog
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

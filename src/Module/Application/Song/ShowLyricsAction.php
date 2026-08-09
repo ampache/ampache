@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Song;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Song\LyricsView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -58,13 +60,11 @@ final readonly class ShowLyricsAction implements ApplicationActionInterface
 
         $lyrics = $song->get_lyrics();
 
-        $this->ui->show(
-            'show_lyrics.inc.php',
-            [
-                'song' => $song,
-                'lyrics' => $lyrics
-            ]
-        );
+        echo (new LyricsView(
+            AmpConfig::get_web_path(),
+            $song,
+            $lyrics
+        ))->render();
 
         // Show the Footer
         $this->ui->showQueryStats();

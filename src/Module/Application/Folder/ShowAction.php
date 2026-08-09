@@ -25,19 +25,23 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Folder;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Folder\FolderView;
+use Ampache\Gui\Form\StatsFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -52,9 +56,8 @@ final readonly class ShowAction implements ApplicationActionInterface
         private UiInterface $ui,
         private LoggerInterface $logger,
         private FolderRepositoryInterface $folderRepository,
-        private VideoRepositoryInterface $videoRepository,
-        private ZipHandlerInterface $zipHandler,
         private BrowseFactoryInterface $browseFactory,
+        private StatsFormViewFactoryInterface $statsFormViewFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -84,17 +87,29 @@ final readonly class ShowAction implements ApplicationActionInterface
 
             return null;
         } elseif ($folder instanceof Folder) {
-            $this->ui->show(
-                'show_folder.inc.php',
-                [
-                    'folder' => $folder,
-                    'user' => $user,
-                    'zipHandler' => $this->zipHandler,
-                    'videoRepository' => $this->videoRepository,
-                    'folderRepository' => $this->folderRepository,
-                    'browseFactory' => $this->browseFactory
-                ]
-            );
+            $browse = $this->browseFactory->create();
+            $browse->set_type('folder');
+            $browse->set_use_pages(true);
+            $browse->set_simple_browse(true);
+            $browse->set_skip_catalog_check($folder->id !== -1);
+            $browse->add_supplemental_object('folder', $folder);
+            $browse->set_sort('name', 'ASC', false);
+            $browse->set_filter('int_id', $folder->id);
+
+            $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+                || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
+
+            echo (new FolderView(
+                $folder,
+                $browse,
+                $this->statsFormViewFactory->createBrowse()->render(),
+                ($folder->getId() > 0) ? $folder->get_media_count() : 0,
+                (int) AmpConfig::get('direct_play_limit', 500),
+                (bool) AmpConfig::get('directplay'),
+                $mayInteract,
+                Stream_Playlist::check_autoplay_next(),
+                Stream_Playlist::check_autoplay_append()
+            ))->render();
 
             $this->ui->showFooter();
 

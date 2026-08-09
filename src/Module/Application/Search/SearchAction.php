@@ -25,12 +25,19 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Search;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Search\SearchFormView;
+use Ampache\Gui\Search\SearchOptionsView;
+use Ampache\Gui\Wanted\MissingArtistsView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;
@@ -49,6 +56,7 @@ final readonly class SearchAction implements ApplicationActionInterface
         private MissingArtistFinderInterface $missingArtistFinder,
         private VideoRepositoryInterface $videoRepository,
         private ZipHandlerInterface $zipHandler,
+        private FunctionCheckerInterface $functionChecker,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,18 +79,28 @@ final readonly class SearchAction implements ApplicationActionInterface
 
         if ($rule_1 !== 'missing_artist') {
             $browse = $this->browseFactory->create();
-            // both templates are required into this scope, so the services they use are named here
-            $videoRepository = $this->videoRepository;
-            $zipHandler      = $this->zipHandler;
-            require_once Ui::find_template('show_form_search.inc.php');
-            require_once Ui::find_template('show_search_options.inc.php');
+            echo (new SearchFormView(
+                $browse,
+                null,
+                $searchType,
+                $this->videoRepository,
+                AmpConfig::get_web_path(),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ))->render();
+            echo (new SearchOptionsView(
+                $browse,
+                $searchType,
+                $this->zipHandler,
+                AmpConfig::get_web_path(),
+                $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            ))->render();
             $results = Search::run($_REQUEST);
             $browse->set_type($searchType);
             $browse->show_objects($results);
             $browse->store();
         } else {
             $wartists = $this->missingArtistFinder->find($this->requestParser->getFromRequest('rule_1_input'));
-            require_once Ui::find_template('show_missing_artists.inc.php');
+            echo (new MissingArtistsView(AmpConfig::get_web_path(), $wartists))->render();
 
             printf(
                 '<a href="http://musicbrainz.org/search?query=%s&type=artist&method=indexed" target="_blank">%s</a><br />',

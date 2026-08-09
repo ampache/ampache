@@ -51,10 +51,11 @@ then run `composer spec:refresh` to record it — that rewrites the checksum in 
 The full procedure is in `resources/scripts/api-docs/README.md`.
 
 At the audit date Ampache implements all 87 documented endpoints. Known gaps, all optional response fields with no
-column in the Ampache schema: `bpm`, `moods`, `works`, `movements`, `groupings`, `bitDepth`, `explicitStatus`,
+column in the Ampache schema: `moods`, `works`, `movements`, `groupings`, `bitDepth`, `explicitStatus`,
 `isCompilation`, `disambiguation`, `fallbackGain`, `subRole`, `shortcut`. Nothing is awaiting a schema change any
-more: `played` (`800029`), `positionMs`/`playbackRate`/`state` on `nowPlaying` (`800032`) and `recordLabels`
-(`800034`) each got the column they needed, and `lastFmUrl` is threaded through the cached last.fm results.
+more: `played` (`800029`), `positionMs`/`playbackRate`/`state` on `nowPlaying` (`800032`), `recordLabels`
+(`800034`) and `bpm` (`800046`) each got the column they needed, and `lastFmUrl` is threaded through the cached
+last.fm results.
 
 `played` is the one worth spelling out: database version `800029` added a maintained `last_played` column to every
 table carrying a play counter, written on the same statement that increments it. Songs, albums, videos and podcast

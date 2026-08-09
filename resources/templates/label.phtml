@@ -1,0 +1,125 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// label.phtml -- rendered by Ampache\Gui\Label\LabelView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Label\LabelView $this */
+
+$label      = $this->getLabel();
+$name       = $this->getName();
+$websiteUrl = $this->getWebsiteUrl();
+
+Ui::show_box_top($this->e($name), 'info-box');
+if ($websiteUrl !== null) { ?>
+<a href="<?php echo $this->e($websiteUrl); ?>" target="_blank" rel="noopener"><?php echo $this->e($websiteUrl); ?></a><br />
+<?php } ?>
+<div class="item_right_info">
+    <div class="external_links">
+    <?php foreach ($this->getExternalLinks() as $link) { ?>
+        <a href="<?php echo $this->e($link['url']); ?>" target="_blank" rel="noopener"><?php echo $this->raw(Ui::get_icon($link['icon'], $link['title'])); ?></a>
+    <?php } ?>
+    </div>
+    <div id="artist_biography">
+        <div class="item_info">
+            <?php Art::display('label', $label->id, $name, ['width' => 128, 'height' => 128], null, true, false); ?>
+            <div class="item_properties"><?php echo $this->e($label->address); ?></div>
+        </div>
+        <div id="item_summary"><?php echo $this->raw(nl2br($this->e($label->summary))); ?></div>
+    </div>
+</div>
+<div id="information_actions">
+    <h3><?php echo T_('Actions'); ?></h3>
+    <ul>
+        <?php if ($this->mayShout()) { ?>
+        <li>
+            <a href="<?php echo $this->e($this->getShoutUrl()); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('comment', T_('Post Shout'))); ?>
+                <?php echo T_('Post Shout'); ?>
+            </a>
+        </li>
+        <?php }
+
+        if ($label->email !== null && $label->email !== '') { ?>
+        <li>
+            <a href="mailto:<?php echo $this->e($label->email); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('mail', T_('Send E-mail'))); ?>
+                <?php echo T_('Send E-mail'); ?>
+            </a>
+        </li>
+        <?php }
+
+        if ($this->mayEdit()) { ?>
+        <li>
+            <a id="edit_label_<?php echo $this->e($label->id); ?>" onclick="showEditDialog('label_row', '<?php echo $this->e($label->id); ?>', 'edit_label_<?php echo $this->e($label->id); ?>', '<?php echo addslashes(T_('Label Edit')); ?>', '')">
+                <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+                <?php echo T_('Edit Label'); ?>
+            </a>
+        </li>
+        <?php }
+
+        if ($this->mayDelete()) { ?>
+        <li>
+            <a id="delete_label_<?php echo $this->e($label->id); ?>" href="<?php echo $this->e($this->getDeleteUrl()); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
+                <?php echo T_('Delete'); ?>
+            </a>
+        </li>
+        <?php } ?>
+    </ul>
+</div>
+<?php Ui::show_box_bottom(); ?>
+<div class="tabs_wrapper">
+    <div id="tabs_container">
+        <ul id="tabs">
+            <li class="tab_active"><a href="#artists"><?php echo T_('Artists'); ?></a></li>
+            <li><a id="albums_link" href="#albums"><?php echo T_('Albums'); ?></a></li>
+            <li><a id="songs_link" href="#songs"><?php echo T_('Songs'); ?></a></li>
+        </ul>
+    </div>
+    <div id="tabs_content">
+        <div id="artists" class="tab_content" style="display: block;">
+<?php $browse = $this->getBrowse();
+$browse->show_objects($this->getArtistIds(), true);
+$browse->set_use_alpha(false, false);
+$browse->store(); ?>
+        </div>
+<?php echo $this->raw(Ajax::observe('albums_link', 'click', Ajax::action('?page=index&action=albums&label=' . $label->id, 'albums'))); ?>
+        <div id="albums" class="tab_content">
+        <?php Ui::show_box_top(T_('Albums'), 'info-box');
+echo T_('Loading...');
+Ui::show_box_bottom(); ?>
+        </div>
+<?php echo $this->raw(Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs'))); ?>
+        <div id="songs" class="tab_content">
+        <?php Ui::show_box_top(T_('Songs'), 'info-box');
+echo T_('Loading...');
+Ui::show_box_bottom(); ?>
+        </div>
+    </div>
+</div>

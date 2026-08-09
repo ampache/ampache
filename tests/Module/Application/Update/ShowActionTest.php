@@ -27,8 +27,6 @@ namespace Ampache\Module\Application\Update;
 
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
-use Ampache\Gui\TalFactoryInterface;
-use Ampache\Gui\TalViewInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Mockery\MockInterface;
@@ -45,7 +43,6 @@ class ShowActionTest extends MockeryTestCase
     private ResponseFactoryInterface|MockInterface|null $responseFactory;
     private StreamFactoryInterface|MockInterface|null $streamFactory;
     private ?ShowAction $subject;
-    private TalFactoryInterface|MockInterface|null $talFactory;
 
     public function testRunReturnsRenderedResponse(): void
     {
@@ -53,7 +50,6 @@ class ShowActionTest extends MockeryTestCase
         $gatekeeper        = $this->mock(GuiGatekeeperInterface::class);
         $response          = $this->mock(ResponseInterface::class);
         $updateViewAdapter = $this->mock(UpdateViewAdapterInterface::class);
-        $talView           = $this->mock(TalViewInterface::class);
         $stream            = $this->mock(StreamInterface::class);
 
         $output = 'some-output';
@@ -63,16 +59,7 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturn($updateViewAdapter);
 
-        $this->talFactory->shouldReceive('createTalView->setTemplate')
-            ->with('update.xhtml')
-            ->once()
-            ->andReturn($talView);
-
-        $talView->shouldReceive('setContext')
-            ->with('UPDATE', $updateViewAdapter)
-            ->once()
-            ->andReturnSelf();
-        $talView->shouldReceive('render')
+        $updateViewAdapter->shouldReceive('render')
             ->withNoArgs()
             ->once()
             ->andReturn($output);
@@ -96,13 +83,11 @@ class ShowActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->talFactory      = $this->mock(TalFactoryInterface::class);
         $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
         $this->responseFactory = $this->mock(ResponseFactoryInterface::class);
         $this->streamFactory   = $this->mock(StreamFactoryInterface::class);
 
         $this->subject = new ShowAction(
-            $this->talFactory,
             $this->guiFactory,
             $this->responseFactory,
             $this->streamFactory

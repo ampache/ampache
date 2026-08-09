@@ -1,0 +1,78 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// disabled_songs.phtml -- rendered by Ampache\Gui\Admin\DisabledSongsView
+
+/** @var Ampache\Gui\Admin\DisabledSongsView $this */
+
+$columns  = $this->getColumns();
+$hasSongs = $this->hasSongs(); ?>
+<br />
+<form name="songs" method="post" action="<?php echo $this->e($this->getActionUrl()); ?>" enctype="multipart/form-data" style="Display:inline">
+    <table class="tabledata striped-rows">
+        <thead>
+            <tr class="th-top">
+                <th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo $this->e($columns[0]); ?></a></th>
+                <th class="cel_song"><?php echo $this->e($columns[1]); ?></th>
+                <th class="cel_album"><?php echo $this->e($columns[2]); ?></th>
+                <th class="cel_artist"><?php echo $this->e($columns[3]); ?></th>
+                <th class="cel_filename"><?php echo $this->e($columns[4]); ?></th>
+                <th class="cel_additiontime"><?php echo $this->e($columns[5]); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php if (!$hasSongs) { ?>
+            <tr>
+                <td colspan="<?php echo count($columns); ?>" style="text-align: center"><span class="error"><?php echo T_('Found nothing to show'); ?></span></td>
+            </tr>
+        <?php } else {
+            foreach ($this->getSongs() as $song) { ?>
+                <tr>
+                    <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $this->e($song->getId()); ?>" /></td>
+                    <td class="cel_song"><?php echo $this->e($song->get_fullname()); ?></td>
+                    <td class="cel_album"><?php echo $this->e($song->get_album_fullname()); ?></td>
+                    <td class="cel_artist"><?php echo $this->e($song->get_parent_fullname()); ?></td>
+                    <td class="cel_filename"><?php echo $this->e($song->getFile()); ?></td>
+                    <td class="cel_additiontime"><?php echo $this->e(get_datetime($song->getAdditionTime())); ?></td>
+                </tr>
+            <?php }
+            } ?>
+        </tbody>
+        <tfoot>
+            <tr class="th-bottom">
+                <th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo $this->e($columns[0]); ?></a></th>
+                <th class="cel_song"><?php echo $this->e($columns[1]); ?></th>
+                <th class="cel_album"><?php echo $this->e($columns[2]); ?></th>
+                <th class="cel_artist"><?php echo $this->e($columns[3]); ?></th>
+                <th class="cel_filename"><?php echo $this->e($columns[4]); ?></th>
+                <th class="cel_additiontime"><?php echo $this->e($columns[5]); ?></th>
+            </tr>
+        </tfoot>
+    </table>
+    <div class="formValidation">
+        <input class="button" type="submit" value="<?php echo T_('Enable'); ?>" />&nbsp;&nbsp;
+        <input type="hidden" name="action" value="enable_disabled" />
+    </div>
+</form>

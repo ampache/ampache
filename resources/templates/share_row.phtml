@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// share_row.phtml -- rendered by Ampache\Gui\Share\ShareRowView
+
+/** @var Ampache\Gui\Share\ShareRowView $this */
+
+$share     = $this->getShare();
+$publicUrl = $share->getPublicUrl(); ?>
+<td class="cel_object"><?php echo $this->raw($share->getObjectUrl()); ?></td>
+<td class="cel_object_type"><?php echo $this->e($share->object_type); ?></td>
+<td class="cel_user"><?php echo $this->e($share->getUserName()); ?></td>
+<td class="cel_creation_date"><?php echo $this->e($share->getCreationDateFormatted()); ?></td>
+<td class="cel_lastvisit_date"><?php echo $this->e($share->getLastVisitDateFormatted()); ?></td>
+<td class="cel_counter"><?php echo $this->e($share->counter); ?></td>
+<td class="cel_max_counter"><?php echo $this->e($share->max_counter); ?></td>
+<td class="cel_allow_stream"><?php echo $share->allow_stream ? T_('Yes') : T_('No'); ?></td>
+<td class="cel_allow_download"><?php echo $share->allow_download ? T_('Yes') : T_('No'); ?></td>
+<td class="cel_expire"><?php echo $this->e($share->expire_days); ?></td>
+<td class="cel_public_url"><?php if ($publicUrl !== '') { ?><a href="<?php echo $this->e($publicUrl); ?>" target="_blank" rel="noopener"><?php echo $this->e($publicUrl); ?></a><?php } ?></td>
+<td class="cel_action">
+    <div id="share_action_<?php echo $this->e($share->id); ?>">
+    <?php $share->show_action_buttons(); ?>
+    </div>
+</td>

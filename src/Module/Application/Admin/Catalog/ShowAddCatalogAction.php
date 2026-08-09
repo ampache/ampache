@@ -25,11 +25,15 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\AddCatalogFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,7 +42,11 @@ final readonly class ShowAddCatalogAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_add_catalog';
 
-    public function __construct(private UiInterface $ui) {}
+    public function __construct(
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -47,7 +55,13 @@ final readonly class ShowAddCatalogAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show('show_add_catalog.inc.php');
+        echo (new AddCatalogFormView(
+            $this->configContainer->getWebPath('/admin'),
+            $this->requestParser->getFromRequest('name'),
+            (bool) AmpConfig::get('allow_video'),
+            (bool) AmpConfig::get('catalog_filter'),
+            (bool) AmpConfig::get('podcast')
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -60,6 +60,11 @@ interface TagRepositoryInterface
     public function findIdByName(string $name): ?int;
 
     /**
+     * Counts the tags that have been hidden, which is what the tag_hidden browse lists
+     */
+    public function getHiddenCount(): int;
+
+    /**
      * Counts the distinct tags that have been merged into another one
      */
     public function getMergedCount(): int;

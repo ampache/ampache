@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Admin\UserEditView;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -34,7 +35,6 @@ use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -127,7 +127,7 @@ final class UpdateUserAction extends AbstractUserAction
 
         /* If we've got an error then show edit form! */
         if (AmpError::occurred()) {
-            require_once Ui::find_template('show_edit_user.inc.php');
+            echo (new UserEditView($client, $this->configContainer->getWebPath('/admin'), true))->render();
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

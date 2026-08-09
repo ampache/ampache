@@ -1,0 +1,162 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// edit/song.phtml -- rendered by Ampache\Gui\Edit\Renderer\SongEditFormRenderer
+
+use Ampache\Module\Api\Ajax;
+
+/** @var Ampache\Gui\Edit\Renderer\SongEditFormRenderer $this */
+
+$songId  = $this->getSongId();
+$ownerId = $this->getOwnerId(); ?>
+<div>
+    <form method="post" id="edit_song_<?php echo $songId; ?>" class="edit_dialog_content">
+        <table class="tabledata">
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Title'); ?></td>
+                <td><input type="text" name="title" value="<?php echo $this->e($this->getTitle()); ?>" autofocus /></td>
+            </tr>
+            <?php if ($this->mayReassign()) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
+                <td>
+                    <?php show_artist_select('artist', $this->getArtistId(), true, $songId); ?>
+                    <div id="artist_select_song_<?php echo $songId; ?>">
+                        <?php echo $this->raw(Ajax::observe('artist_select_' . $songId, 'change', 'check_inline_song_edit("artist", ' . $songId . ')')); ?>
+                    </div>
+                </td>
+            </tr>
+            <?php if ($this->showAdditionalArtists()) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Additional Artists'); ?></td>
+                <?php // Artist::get_display() escapes each name itself?>
+                <td><?php echo $this->raw($this->getAdditionalArtists()); ?></td>
+            </tr>
+            <?php } ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Album'); ?></td>
+                <td>
+                    <?php show_album_select('album', $this->getAlbumId(), true, $songId); ?>
+                    <div id="album_select_song_<?php echo $songId; ?>">
+                        <?php echo $this->raw(Ajax::observe('album_select_' . $songId, 'change', 'check_inline_song_edit("album", ' . $songId . ')')); ?>
+                    </div>
+                </td>
+            </tr>
+            <?php } ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Disk'); ?></td>
+                <td><input type="text" name="disk" value="<?php echo $this->e($this->getDisk()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Track'); ?></td>
+                <td><input type="text" name="track" value="<?php echo $this->e($this->getTrack()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
+                <td>
+                    <?php if ($this->mayEditMbid()) { ?>
+                    <input type="text" name="mbid" value="<?php echo $this->e($this->getMbid()); ?>" />
+                    <?php } else { ?>
+                    <input type="hidden" name="mbid" value="<?php echo $this->e($this->getMbid()); ?>" /><?php echo $this->e($this->getMbid()); ?>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Composer'); ?></td>
+                <td><input type="text" name="composer" value="<?php echo $this->e($this->getComposer()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Comment'); ?></td>
+                <td><input type="text" name="comment" value="<?php echo $this->e($this->getComment()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Label'); ?></td>
+                <td><input type="text" name="label" value="<?php echo $this->e($this->getLabel()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Year'); ?></td>
+                <td><input type="text" name="year" value="<?php echo $this->e($this->getYear()); ?>" /></td>
+            </tr>
+            <tr>
+                <td><?php echo T_('Owner'); ?><br /></td>
+                <td>
+                    <?php if ($this->mayEdit()) { ?>
+                    <select name="user_upload">
+                        <option value="0"<?php echo ($ownerId === 0) ? ' selected="selected"' : ''; ?>></option>
+                        <?php foreach ($this->getUsers() as $userId => $username) {
+                            if ($userId < 1) {
+                                continue;
+                            } ?>
+                        <option value="<?php echo $this->e($userId); ?>"<?php echo ($userId === $ownerId) ? ' selected="selected"' : ''; ?>><?php echo $this->e($username); ?></option>
+                        <?php } ?>
+                    </select>
+                    <?php } else { ?>
+                    <input type="hidden" name="user_upload" value="<?php echo $ownerId; ?>" /><?php echo $ownerId; ?>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>
+                <?php // Tag::get_display() escapes the link text and title itself?>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo $this->raw($this->getGenres()); ?>" /></td>
+            </tr>
+            <?php if ($this->showLicense()) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Music License'); ?></td>
+                <td>
+                    <?php show_license_select('license', $this->getLicenseId(), $songId); ?>
+                    <div id="album_select_license_<?php echo $this->e($this->getLicenseId()); ?>">
+                        <?php echo $this->raw(Ajax::observe('license_select_' . $this->getLicenseId(), 'change', 'check_inline_song_edit("license", ' . $songId . ')')); ?>
+                    </div>
+                </td>
+            </tr>
+            <?php } ?>
+        </table>
+        <?php if ($this->showMetadata()) { ?>
+        <?php // the two labels are handed to the toggle, which used to compare against the english literal?>
+        <button class="metadataAccordionButton" data-more="<?php echo $this->e(T_('More Metadata')); ?>" data-less="<?php echo $this->e(T_('Less Metadata')); ?>"><?php echo T_('More Metadata'); ?></button>
+        <div class="metadataAccordion">
+            <table class="tabledata">
+                <?php foreach ($this->getMetadata() as $metadata) { ?>
+                <tr>
+                    <td class="edit_dialog_content_header"><?php echo $this->e($metadata['label']); ?></td>
+                    <td><input type="text" name="metadata[<?php echo $this->e($metadata['id']); ?>]" value="<?php echo $this->e($metadata['value']); ?>" /></td>
+                </tr>
+                <?php } ?>
+            </table>
+        </div>
+        <?php } ?>
+        <input type="hidden" name="id" value="<?php echo $songId; ?>" />
+        <input type="hidden" name="type" value="song_row" />
+    </form>
+    <script>
+        $('.metadataAccordionButton').button().click(function () {
+            var button = $(this);
+            $('.metadataAccordion').toggle();
+            button.text(button.text() === button.data('more') ? button.data('less') : button.data('more'));
+            return false;
+        });
+    </script>
+</div>

@@ -28,6 +28,7 @@ namespace Ampache\Gui;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Album\AlbumViewAdapter;
 use Ampache\Gui\Catalog\CatalogDetails;
+use Ampache\Gui\Collection\CollectionViewAdapter;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapter;
 use Ampache\Gui\Playlist\PlaylistViewAdapter;
 use Ampache\Gui\Song\SongViewAdapter;
@@ -39,6 +40,7 @@ use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Update\UpdateHelperInterface;
 use Ampache\Module\System\Update\UpdaterInterface;
@@ -46,6 +48,7 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
@@ -84,6 +87,19 @@ class GuiFactoryTest extends TestCase
         $this->assertInstanceOf(
             CatalogStats::class,
             $this->subject->createCatalogStats([])
+        );
+    }
+
+    public function testCreateCollectionViewAdapterReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            CollectionViewAdapter::class,
+            $this->subject->createCollectionViewAdapter(
+                $this->createMock(BrowseFactoryInterface::class),
+                $this->createMock(Collection::class),
+                null,
+                []
+            )
         );
     }
 

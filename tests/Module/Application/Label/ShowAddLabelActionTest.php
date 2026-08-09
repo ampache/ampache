@@ -31,6 +31,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Override;
@@ -39,6 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class ShowAddLabelActionTest extends MockeryTestCase
 {
     private ConfigContainerInterface|MockInterface|null $configContainer;
+    private RequestParserInterface|MockInterface|null $requestParser;
     private ?ShowAddLabelAction $subject;
     private UiInterface|MockInterface|null $ui;
 
@@ -98,9 +100,6 @@ class ShowAddLabelActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with('show_add_label.inc.php')
-            ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -108,19 +107,31 @@ class ShowAddLabelActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->requestParser   = $this->mock(RequestParserInterface::class);
+
+        $this->configContainer->shouldReceive('getWebPath')->andReturn('some-web-path');
+        $this->requestParser->shouldReceive('getFromRequest')->andReturn('');
         $this->ui              = $this->mock(UiInterface::class);
 
         $this->subject = new ShowAddLabelAction(
             $this->configContainer,
+            $this->requestParser,
             $this->ui
         );
     }

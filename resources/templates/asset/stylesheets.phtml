@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// asset/stylesheets.phtml -- rendered by Ampache\Gui\Asset\StylesheetsView
+
+/** @var Ampache\Gui\Asset\StylesheetsView $this */
+?>
+<?php foreach ($this->getLibraries() as $url) { ?>
+<link rel="stylesheet" href="<?php echo $this->e($url); ?>" type="text/css" media="screen">
+<?php } ?>
+<?php foreach ($this->getThemeSheets() as $sheet) { ?>
+<link rel="stylesheet" href="<?php echo $this->e($sheet['url']); ?>" type="text/css" media="<?php echo $this->e($sheet['media']); ?>">
+<?php } ?>
+<link rel="stylesheet" href="<?php echo $this->e($this->getBaseUrl()); ?>" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $this->e($this->getColourUrl()); ?>" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $this->e($this->getPrintUrl()); ?>" type="text/css" media="print">
+<?php if ($this->showRtl()) { ?>
+<link rel="stylesheet" href="<?php echo $this->e($this->getRtlUrl()); ?>" type="text/css" media="screen">
+<?php } ?>
+<?php if ($this->hasCustomStylesheet()) { ?>
+<link rel="stylesheet" href="<?php echo $this->e($this->getCustomUrl()); ?>" type="text/css" media="screen">
+<?php } ?>
+<?php echo $this->raw($this->getCustomStyle()); ?>

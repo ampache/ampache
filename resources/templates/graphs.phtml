@@ -1,0 +1,83 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// graphs.phtml -- rendered by Ampache\Gui\Stats\GraphsView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Stats\GraphsView $this */
+
+Ui::show_box_top($this->getTitle(), 'box box_graph'); ?>
+<div class="stats_graph">
+<?php
+// embed as <object> not <img> so the svg keeps its scripting context and its legend stays draggable in place;
+foreach ($this->getGraphs() as $graph) { ?>
+    <object type="image/svg+xml" data="<?php echo $this->e($graph['url']); ?>" width="700" height="260"></object>
+    <br />
+    <a href="<?php echo $this->e($graph['largeUrl']); ?>" target="_blank" rel="noopener"><?php echo $this->raw(Ui::get_material_symbol('open_in_new', T_('Link'))); ?> <?php echo T_('Link'); ?></a>
+    <br /><br />
+<?php } ?>
+</div>
+<?php if ($this->isGeolocationEnabled()) { ?>
+<div class="stats_graph">
+    <?php echo $this->raw($this->renderMap()); ?>
+</div>
+<?php } ?>
+<form action="<?php echo $this->e(get_current_path()); ?>" method="post" enctype="multipart/form-data">
+    <dl class="media_details">
+        <dt><?php echo T_('Start Date'); ?></dt>
+        <dd><input type="text" name="start_date" id="start_date" value="<?php echo $this->e($this->getFormattedStartDate()); ?>" /></dd>
+        <dt><?php echo T_('End Date'); ?></dt>
+        <dd><input type="text" name="end_date" id="end_date" value="<?php echo $this->e($this->getFormattedEndDate()); ?>" /></dd>
+        <dt><?php echo T_('Zoom'); ?></dt>
+        <dd>
+            <select name="zoom">
+            <?php foreach ($this->getZoomLevels() as $level => $label) { ?>
+                <option value="<?php echo $this->e($level); ?>"<?php echo ($level === $this->getZoom()) ? ' selected="selected"' : ''; ?>><?php echo $this->e($label); ?></option>
+            <?php } ?>
+            </select>
+        </dd>
+        <dt></dt>
+        <dd>
+            <input type="submit" value="<?php echo T_('View'); ?>" />
+        </dd>
+    </dl>
+    <input type="hidden" name="user_id" value="<?php echo $this->e($this->getUserId()); ?>" />
+    <input type="hidden" name="object_type" value="<?php echo $this->e($this->getObjectType()); ?>" />
+    <input type="hidden" name="object_id" value="<?php echo $this->e($this->getObjectId()); ?>" />
+    <input type="hidden" name="action" value="<?php echo $this->e($this->getRequestAction()); ?>" />
+    <input type="hidden" name="rendered_zoom" value="<?php echo $this->e($this->getZoom()); ?>" />
+</form>
+<script>
+    $('#start_date').datetimepicker({
+        format: 'Y-m-d H:i',
+        theme: 'dark'
+    });
+    $('#end_date').datetimepicker({
+        format: 'Y-m-d H:i',
+        theme: 'dark'
+    });
+</script>
+<?php Ui::show_box_bottom(); ?>

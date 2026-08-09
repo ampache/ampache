@@ -55,6 +55,7 @@ final class VaInfo implements VaInfoInterface
         'audio_codec' => null,
         'barcode' => null,
         'bitrate' => null,
+        'bpm' => null,
         'catalog_number' => null,
         'channels' => null,
         'comment' => null,
@@ -246,6 +247,7 @@ final class VaInfo implements VaInfoInterface
      *     'audio_codec': ?string,
      *     'barcode': ?string,
      *     'bitrate': ?int,
+     *     'bpm': ?float,
      *     'catalog_number': ?string,
      *     'channels': ?string,
      *     'comment': ?string,
@@ -319,6 +321,9 @@ final class VaInfo implements VaInfoInterface
             $info['rating']   = (!$info['rating'] && array_key_exists('rating', $tags)) ? $tags['rating'] : $info['rating'];
             $info['time']     = (!$info['time'] && array_key_exists('time', $tags)) ? (int) $tags['time'] : $info['time'];
             $info['channels'] = (!$info['channels'] && array_key_exists('channels', $tags)) ? $tags['channels'] : $info['channels'];
+
+            // getID3 normalises id3v2 TBPM, quicktime tmpo and the vorbis/APE comment to the same key, so one line covers every format
+            $info['bpm'] = (!$info['bpm'] && array_key_exists('bpm', $tags)) ? (float) $tags['bpm'] : $info['bpm'];
 
             // This because video title are almost always bad...
             $info['original_name'] = (!$info['original_name'] && array_key_exists('original_name', $tags)) ? stripslashes(trim((string) $tags['original_name'])) : $info['original_name'];

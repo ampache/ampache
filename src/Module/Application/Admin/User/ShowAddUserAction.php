@@ -25,8 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\AddUserFormView;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,6 +44,7 @@ final class ShowAddUserAction extends AbstractUserAction
     public function __construct(
         private readonly UiInterface $ui,
         private readonly ConfigContainerInterface $configContainer,
+        private readonly RequestParserInterface $requestParser,
     ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -50,7 +54,15 @@ final class ShowAddUserAction extends AbstractUserAction
         }
 
         $this->ui->showHeader();
-        $this->ui->show('show_add_user.inc.php');
+        echo (new AddUserFormView(
+            $this->configContainer->getWebPath('/admin'),
+            $this->requestParser->getFromRequest('username'),
+            $this->requestParser->getFromRequest('fullname'),
+            $this->requestParser->getFromRequest('email'),
+            $this->requestParser->getFromRequest('website'),
+            (int) AmpConfig::get('max_upload_size'),
+            (bool) AmpConfig::get('catalog_filter')
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

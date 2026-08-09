@@ -27,11 +27,13 @@ namespace Ampache\Module\Application\PrivateMessage;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\AddPrivateMessageFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
@@ -44,6 +46,7 @@ final readonly class ShowAddMessageAction implements ApplicationActionInterface
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private PrivateMessageRepositoryInterface $pmRepository,
@@ -81,7 +84,12 @@ final readonly class ShowAddMessageAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show('show_add_pvmsg.inc.php');
+        echo (new AddPrivateMessageFormView(
+            $this->configContainer->getWebPath(),
+            $this->requestParser->getFromRequest('to_user'),
+            $this->requestParser->getFromRequest('subject'),
+            $this->requestParser->getFromRequest('message')
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

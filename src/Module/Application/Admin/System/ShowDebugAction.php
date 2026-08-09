@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Admin\System;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\System\DebugView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -68,15 +69,13 @@ final readonly class ShowDebugAction implements ApplicationActionInterface
         $configuration  = AmpConfig::get_all();
         $latest_version = AutoUpdate::get_latest_version(($this->requestParser->getFromRequest('autoupdate') === 'force'));
 
-        $this->ui->show(
-            'show_debug.inc.php',
-            [
-                'configuration' => $configuration,
-                'latest_version' => $latest_version,
-                'lastCronDate' => (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::CRON_DATE),
-                'environment' => $this->environment
-            ]
-        );
+        echo (new DebugView(
+            AmpConfig::get_web_path('/admin'),
+            $this->environment,
+            $configuration,
+            $latest_version,
+            (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::CRON_DATE)
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

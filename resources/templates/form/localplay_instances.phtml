@@ -1,0 +1,61 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// localplay_instances.phtml -- rendered by Ampache\Gui\Form\LocalplayInstancesView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Form\LocalplayInstancesView $this */
+
+Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
+<table class="tabledata striped-rows">
+<tr>
+    <?php foreach ($this->getFields() as $key => $field) { ?>
+        <th><?php echo $this->e($field['description']); ?></th>
+    <?php } ?>
+    <th><?php echo T_('Action'); ?></th>
+</tr>
+<?php foreach ($this->getInstances() as $uid => $name) {
+    $instance = $this->getLocalplay()->get_instance((string) $uid); ?>
+<tr id="localplay_instance_<?php echo $this->e($uid); ?>">
+    <?php foreach ($this->getFields() as $key => $field) { ?>
+    <td>
+        <?php
+        if (isset($instance[$key])) {
+            // a stored password is never echoed back, only shown as present
+            echo ($field['type'] != 'password') ? $this->e((string) $instance[$key]) : '*****';
+        } ?>
+    </td>
+    <?php } ?>
+    <td>
+        <a href="<?php echo $this->e($this->getWebPath()); ?>/localplay.php?action=edit_instance&instance=<?php echo $this->e($uid); ?>"><?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit Instance'))); ?></a>
+        <?php echo $this->raw(Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid, 'close', T_('Delete'), 'delete_instance_' . $uid, '', '', T_('Are you sure?'))); ?>
+    </td>
+</tr>
+<?php
+} ?>
+</table>
+<?php Ui::show_box_bottom(); ?>

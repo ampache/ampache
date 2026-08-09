@@ -25,13 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Mashup;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Stats\WrappedView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -80,16 +85,30 @@ final readonly class WrappedAction implements ApplicationActionInterface
         $endTime = strtotime(date($year . '-12-31')) ?: time();
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_wrapped.inc.php',
-            [
-                'endTime' => $endTime,
-                'startTime' => $startTime,
-                'user' => $user,
-                'year' => date($year),
-                'browseFactory' => $this->browseFactory,
-            ]
-        );
+        $threshold = (int) AmpConfig::get('stats_threshold', 7);
+        $limit     = (int) AmpConfig::get('popular_threshold', 10);
+
+        // the Ratings box has always rendered as a plain list rather than a mashup, and stored its browse
+        $sections = [
+            ['title' => T_('Artists'), 'type' => 'artist', 'grid' => true, 'mashup' => true, 'store' => false,
+                'objectIds' => Stats::get_top('artist', $limit, $threshold, 0, $user, false, $startTime, $endTime)],
+            ['title' => T_('Albums'), 'type' => 'album', 'grid' => true, 'mashup' => true, 'store' => false,
+                'objectIds' => Stats::get_top('album', $limit, $threshold, 0, $user, false, $startTime, $endTime)],
+            ['title' => T_('Songs'), 'type' => 'song', 'grid' => false, 'mashup' => true, 'store' => false,
+                'objectIds' => Stats::get_top('song', $limit, $threshold, 0, $user, false, $startTime, $endTime)],
+            ['title' => T_('Favorites'), 'type' => 'song', 'grid' => false, 'mashup' => true, 'store' => false,
+                'objectIds' => Userflag::get_latest('song', $user, -1, 0, $startTime, $endTime, true)],
+            ['title' => T_('Ratings'), 'type' => 'song', 'grid' => false, 'mashup' => false, 'store' => true,
+                'objectIds' => Rating::get_latest('song', $user, -1, 0, $startTime, $endTime)],
+        ];
+
+        echo (new WrappedView(
+            $this->browseFactory,
+            date($year),
+            (int) Stats::get_object_data('song_count', $startTime, $endTime, $user),
+            (string) Stats::get_object_data('song_minutes', $startTime, $endTime, $user),
+            $sections
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

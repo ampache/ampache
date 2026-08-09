@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Playlist;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Playlist\PlaylistPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -63,15 +65,13 @@ final readonly class ShowAction implements ApplicationActionInterface
             echo T_('You have requested an object that does not exist');
         } else {
             $object_ids = $playlist->get_items();
-            $this->ui->show(
-                'show_playlist.inc.php',
-                [
-                    'playlist' => $playlist,
-                    'object_ids' => $object_ids,
-                    'zipHandler' => $this->zipHandler,
-                    'browseFactory' => $this->browseFactory
-                ]
-            );
+            echo (new PlaylistPageView(
+                $playlist,
+                $object_ids,
+                $this->zipHandler,
+                $this->browseFactory,
+                AmpConfig::get_web_path()
+            ))->render();
         }
 
         $this->ui->showQueryStats();

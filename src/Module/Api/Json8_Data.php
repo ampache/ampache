@@ -494,6 +494,7 @@ final class Json8_Data
      *         },
      *         disk: int,
      *         disksubtitle: string|null,
+     *         bpm: float|null,
      *         track: int,
      *         filename: string|null,
      *         genre: array<int, array{id: string, name: string}>,
@@ -716,6 +717,7 @@ final class Json8_Data
      *             },
      *             disk: int,
      *             disksubtitle: string|null,
+     *             bpm: float|null,
      *             track: int,
      *             filename: string|null,
      *             genre: array<int, array{id: string, name: string}>,
@@ -800,6 +802,7 @@ final class Json8_Data
      *         },
      *         disk: int,
      *         disksubtitle: string|null,
+     *         bpm: float|null,
      *         track: int,
      *         filename: string|null,
      *         genre: array<int, array{id: string, name: string}>,
@@ -3001,6 +3004,7 @@ final class Json8_Data
      *     audio_codec: null|string,
      *     barcode: null|string,
      *     bitrate: null|int,
+     *     bpm: null|float,
      *     catalog: null|int,
      *     catalog_number: null|string,
      *     channels: null|int,
@@ -3080,6 +3084,7 @@ final class Json8_Data
                 'audio_codec' => $results['audio_codec'] ?? null,
                 'barcode' => $results['barcode'] ?? null,
                 'bitrate' => $results['bitrate'] ?? null,
+                'bpm' => $results['bpm'] ?? null,
                 'catalog' => $results['catalog'] ?? null,
                 'catalog_number' => $results['catalog_number'] ?? null,
                 'channels' => $results['channels'] ?? null,
@@ -3200,6 +3205,7 @@ final class Json8_Data
      *     },
      *     disk: int,
      *     disksubtitle: string|null,
+     *     bpm: float|null,
      *     track: int,
      *     filename: string|null,
      *     genre: array<int, array{id: string, name: string}>,
@@ -3319,6 +3325,7 @@ final class Json8_Data
 
             $objArray['disk']                  = (int) $song->disk;
             $objArray['disksubtitle']          = $song->disksubtitle;
+            $objArray['bpm']                   = $song->bpm;
             $objArray['track']                 = (int) $song->track;
             $objArray['filename']              = $song->file;
             $objArray['genre']                 = self::_genre_array($song->get_tags());

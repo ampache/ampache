@@ -27,13 +27,13 @@ namespace Ampache\Module\Application\LocalPlay;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Partial\JavascriptRefreshView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ApplicationException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -65,8 +65,7 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
     {
         $refresh_limit = $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0;
         if ($refresh_limit > 5) {
-            $ajax_url = '?page=localplay&action=command&command=refresh';
-            require_once Ui::find_template('javascript_refresh.inc.php');
+            echo (new JavascriptRefreshView((int) $refresh_limit, '?page=localplay&action=command&command=refresh'))->render();
         }
     }
 }

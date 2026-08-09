@@ -28,7 +28,7 @@ namespace Ampache\Module\Wanted;
 interface MissingArtistFinderInterface
 {
     /**
-     * @return array<array<string, string>>
+     * @return list<array{mbid: string, name: string}>
      */
     public function find(string $artistName): array;
 }

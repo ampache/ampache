@@ -27,6 +27,8 @@ namespace Ampache\Module\Album;
 
 use Ampache\Module\Album\Deletion\AlbumDeleter;
 use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
+use Ampache\Module\Album\Edit\AlbumEditabilityChecker;
+use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Album\Export\AlbumArtExporter;
 use Ampache\Module\Album\Export\AlbumArtExporterInterface;
 use Ampache\Module\Album\Export\Writer\LinuxMetadataWriter;
@@ -37,6 +39,7 @@ use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use function DI\autowire;
 
 return [
+    AlbumEditabilityCheckerInterface::class => autowire(AlbumEditabilityChecker::class),
     AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
     LinuxMetadataWriter::class => autowire(),
     WindowsMetadataWriter::class => autowire(),

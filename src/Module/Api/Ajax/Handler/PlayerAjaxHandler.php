@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Broadcast\BroadcastsDialogView;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
@@ -33,7 +34,6 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\Song;
@@ -45,7 +45,6 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private AjaxUriRetrieverInterface $ajaxUriRetriever,
-        private UiInterface $ui,
     ) {}
 
     public function handle(User $user): void
@@ -81,7 +80,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                         $albumText  = scrub_out((string) $media->get_album_fullname());
 
                         // per-song action row (album button + rating/flag placeholder) mirroring the regular
-                        // playlist flow in show_html5_player.inc.php, which random/democratic streams skip
+                        // playlist flow in playback/web_player.phtml, which random/democratic streams skip
                         $showAlbum = T_('Show Album');
                         $actions   = ($albumId > 0)
                             ? '<a href="javascript:NavigateTo(\'' . $web_path . '/albums.php?action=show&album=' . $albumId . '\')" title="' . $showAlbum . '">' . Ui::get_material_symbol('album', $showAlbum) . '</a> | '
@@ -110,14 +109,15 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
 
                 return;
             case 'show_broadcasts':
-                ob_start();
-                $ajaxUri = $this->ajaxUriRetriever->getAjaxUri();
-                $this->ui->show(
-                    'show_broadcasts_dialog.inc.php',
-                    ['ajaxUri' => $ajaxUri]
-                );
-                $results = ob_get_contents();
-                ob_end_clean();
+                $broadcasts = [];
+                foreach (Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0) as $broadcastId) {
+                    $broadcasts[] = new Broadcast($broadcastId);
+                }
+
+                $results = (new BroadcastsDialogView(
+                    $this->ajaxUriRetriever->getAjaxUri(),
+                    $broadcasts
+                ))->render();
                 header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset', 'UTF-8'));
                 header_remove('Content-Disposition');
                 echo $results;

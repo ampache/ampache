@@ -1,0 +1,87 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// preferences/preference_box.phtml -- rendered by Ampache\Gui\Preferences\PreferenceBoxView
+
+/** @var Ampache\Gui\Preferences\PreferenceBoxView $this */
+
+$showAdmin = $this->showAdminColumns();
+$levels    = $this->getLevels(); ?>
+<h4><?php echo $this->e(T_($this->getTitle())); ?></h4>
+<table class="tabledata striped-rows">
+    <colgroup>
+        <col id="col_preference" />
+        <col id="col_value" />
+        <?php if ($showAdmin) { ?>
+        <col id="col_applytoall" />
+        <col id="col_level" />
+        <?php } ?>
+    </colgroup>
+    <thead>
+        <tr class="th-top">
+            <th class="cel_preference"><?php echo T_('Preference'); ?></th>
+            <th class="cel_value"><?php echo T_('Value'); ?></th>
+            <?php if ($showAdmin) { ?>
+            <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
+            <th class="cel_level"><?php echo T_('Access Level'); ?></th>
+            <?php } ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $lastSubcategory = '';
+foreach ($this->getPreferences() as $pref) {
+    if ($pref['subcategory'] !== $lastSubcategory) {
+        $lastSubcategory = $pref['subcategory'];
+        if (!empty($lastSubcategory)) { ?>
+        <tr><td colspan="<?php echo $this->getColumnCount(); ?>"><h4><?php echo $this->e(T_(ucwords((string) $lastSubcategory))); ?></h4></td></tr>
+        <?php }
+        } ?>
+        <tr>
+            <td class="cel_preference"><?php echo $this->e(T_($pref['description'])); ?></td>
+            <td class="cel_value"><?php echo $this->raw($this->getInput($pref['name'], $pref['value'], $pref['type'] ?? null)); ?></td>
+            <?php if ($showAdmin) { ?>
+            <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $this->e($pref['name']); ?>" value="1" /></td>
+            <td class="cel_level">
+                <select name="level_<?php echo $this->e($pref['name']); ?>">
+                    <?php foreach ($levels as $value => $label) { ?>
+                    <option value="<?php echo $value; ?>"<?php echo ((int) $pref['level'] === $value) ? ' selected="selected"' : ''; ?>><?php echo $this->e($label); ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+            <?php } ?>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <th class="cel_preference"><?php echo T_('Preference'); ?></th>
+            <th class="cel_value"><?php echo T_('Value'); ?></th>
+            <?php if ($showAdmin) { ?>
+            <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
+            <th class="cel_level"><?php echo T_('Access Level'); ?></th>
+            <?php } ?>
+        </tr>
+    </tfoot>
+</table>

@@ -25,9 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Search;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Search\OpenSearchDescriptorView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -37,7 +38,17 @@ final class DescriptorAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        require_once Ui::find_template('show_search_descriptor.inc.php');
+        $webPath = AmpConfig::get_web_path();
+        $charset = (string) AmpConfig::get('site_charset', 'UTF-8');
+
+        header(sprintf('Content-type: application/opensearchdescription+xml; charset=%s; filename=opensearch.xml', $charset));
+
+        echo (new OpenSearchDescriptorView(
+            $webPath,
+            $charset,
+            (string) AmpConfig::get('site_title'),
+            (string) (AmpConfig::get('custom_favicon', false) ?: $webPath . '/favicon.ico')
+        ))->render();
 
         return null;
     }

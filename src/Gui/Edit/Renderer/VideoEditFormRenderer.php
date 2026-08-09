@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Ampache\Gui\Edit\Renderer;
+
+use Ampache\Gui\Edit\AbstractEditFormRenderer;
+use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\Video;
+use Override;
+
+/**
+ * The video edit dialog.
+ */
+final class VideoEditFormRenderer extends AbstractEditFormRenderer
+{
+    public function getGenres(): string
+    {
+        return Tag::get_display($this->getItem()->get_tags());
+    }
+
+    public function getReleaseDate(): string
+    {
+        $released = $this->getItem()->release_date;
+
+        return ($released) ? get_datetime((int) $released, 'short', 'none') : '';
+    }
+
+    public function getTitle(): string
+    {
+        return (string) $this->getItem()->title;
+    }
+
+    public function getVideoId(): int
+    {
+        return $this->getItem()->getId();
+    }
+
+    #[Override]
+    protected function templateFile(): string
+    {
+        return $this->findTemplate('edit/video.phtml');
+    }
+
+    private function getItem(): Video
+    {
+        /** @var Video $item */
+        $item = $this->getContext()->item;
+
+        return $item;
+    }
+}

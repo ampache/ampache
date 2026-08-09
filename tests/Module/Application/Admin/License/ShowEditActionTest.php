@@ -80,6 +80,11 @@ class ShowEditActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $license    = $this->mock(License::class);
+        $license->shouldReceive('getId')->andReturn(666);
+        $license->shouldReceive('getName')->andReturn('some-name');
+        $license->shouldReceive('getDescription')->andReturn('some-description');
+        $license->shouldReceive('getExternalLink')->andReturn('some-link');
+        $license->shouldReceive('getOrder')->andReturn(1);
 
         $licenseId = 666;
         $webPath   = 'some-path';
@@ -109,15 +114,6 @@ class ShowEditActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showBoxTop')
             ->with('Edit license')
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_edit_license.inc.php',
-                [
-                    'license' => $license,
-                    'adminPath' => $webPath,
-                ]
-            )
-            ->once();
         $this->ui->shouldReceive('showBoxBottom')
             ->once();
         $this->ui->shouldReceive('showQueryStats')
@@ -127,12 +123,19 @@ class ShowEditActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
-            $this->subject->run(
+        ob_start();
+
+        try {
+            $result = $this->subject->run(
                 $request,
                 $gatekeeper
-            )
-        );
+            );
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void

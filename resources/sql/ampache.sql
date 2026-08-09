@@ -1291,6 +1291,7 @@ CREATE TABLE IF NOT EXISTS `song_data` (
   `r128_track_gain` smallint(5) DEFAULT NULL,
   `r128_album_gain` smallint(5) DEFAULT NULL,
   `disksubtitle` varchar(255) DEFAULT NULL,
+  `bpm` decimal(6,2) DEFAULT NULL,
   UNIQUE KEY `song_id` (`song_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

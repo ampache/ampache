@@ -1,0 +1,79 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/localplay_playlist.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\LocalplayPlaylistListRenderer
+
+use Ampache\Gui\Browse\ListHeaderView;
+use Ampache\Module\Api\Ajax;
+
+/** @var Ampache\Gui\Browse\ListRenderer\LocalplayPlaylistListRenderer $this */
+
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$tracks         = $this->getTracks();
+if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
+} ?>
+<table class="tabledata striped-rows">
+    <thead>
+        <tr class="th-top">
+            <th class="cel_track"><?php echo T_('Track'); ?></th>
+            <th class="cel_name"><?php echo T_('Name'); ?></th>
+            <th class="cel_action"><?php echo T_('Action'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($tracks as $track) { ?>
+        <tr id="localplay_playlist_<?php echo $this->e($track['id']); ?>">
+            <td class="cel_track"><?php echo $this->e($track['track']); ?></td>
+            <td class="cel_name<?php echo $this->isCurrent($track) ? ' lp_current' : ''; ?>"><?php
+                if (!empty($track['name'])) {
+                    echo $this->raw($this->formatName($track['id'], (string) $track['name']));
+                } else {
+                    // an entry we couldn't resolve shows the raw player url as plain text so it can't be clicked
+                    echo $this->e($track['raw'] ?? '');
+                } ?></td>
+            <td class="cel_action">
+                <?php echo $this->raw(Ajax::button('?page=localplay&action=delete_track&browse_id=' . $browse->getId() . '&id=' . $track['id'], 'close', T_('Delete'), 'localplay_delete_' . $track['id'])); ?>
+            </td>
+        </tr>
+        <?php } ?>
+        <?php if ($tracks === []) { ?>
+        <tr>
+            <td colspan="3"><span class="error"><?php echo T_('Found nothing to show'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <th class="cel_track"><?php echo T_('Track'); ?></th>
+            <th class="cel_name"><?php echo T_('Name'); ?></th>
+            <th class="cel_action"><?php echo T_('Action'); ?></th>
+        </tr>
+    </tfoot>
+</table>
+<?php if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
+} ?>

@@ -29,6 +29,8 @@ use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Catalog\CatalogProgressTypeEnum;
+use Ampache\Gui\Catalog\CatalogProgressView;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
@@ -720,6 +722,10 @@ abstract class Catalog extends database_object
         $results['replaygain_album_peak'] = (is_null($results['replaygain_album_peak'])) ? null : (float) $results['replaygain_album_peak'];
         $results['r128_track_gain']       = (is_null($results['r128_track_gain'])) ? null : (int) $results['r128_track_gain'];
         $results['r128_album_gain']       = (is_null($results['r128_album_gain'])) ? null : (int) $results['r128_album_gain'];
+
+        // song_data.bpm is decimal(6,2), so round to what the column can hold or every rescan reads back a different value
+        $bpm             = (float) ($results['bpm'] ?? 0);
+        $results['bpm']  = ($bpm > 0 && $bpm <= 9999.99) ? round($bpm, 2) : null;
 
         if (empty($results['genre'])) {
             $results['genre'] = [];
@@ -1808,7 +1814,7 @@ abstract class Catalog extends database_object
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
                     if ($catalog !== null) {
-                        require Ui::find_template('show_gather_art.inc.php');
+                        echo (new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id))->render();
                         flush();
                         $catalog->gather_art();
                     }
@@ -2500,6 +2506,7 @@ abstract class Catalog extends database_object
         $new_song->replaygain_album_peak = $filtered_results['replaygain_album_peak'];
         $new_song->r128_track_gain       = $filtered_results['r128_track_gain'];
         $new_song->r128_album_gain       = $filtered_results['r128_album_gain'];
+        $new_song->bpm                   = $filtered_results['bpm'];
 
         // genre is used in the tag and tag_map tables
         $new_tag_array = [];
@@ -3009,6 +3016,7 @@ abstract class Catalog extends database_object
             'audio_codec' => null,
             'barcode' => null,
             'bitrate' => null,
+            'bpm' => null,
             'catalog_number' => null,
             'channels' => null,
             'comment' => null,
@@ -3502,7 +3510,7 @@ abstract class Catalog extends database_object
         debug_event(self::class, 'Starting clean on ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            require Ui::find_template('show_clean_catalog.inc.php');
+            echo (new CatalogProgressView(CatalogProgressTypeEnum::CLEAN, $this->getId(), $this->name))->render();
             ob_flush();
             flush();
         }
@@ -4315,7 +4323,7 @@ abstract class Catalog extends database_object
     public function verify_catalog(): bool
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            require Ui::find_template('show_verify_catalog.inc.php');
+            echo (new CatalogProgressView(CatalogProgressTypeEnum::VERIFY, $this->getId(), $this->name))->render();
             ob_flush();
             flush();
         }

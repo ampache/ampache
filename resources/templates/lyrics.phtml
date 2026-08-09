@@ -1,0 +1,70 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// lyrics.phtml -- rendered by Ampache\Gui\Song\LyricsView
+
+use Ampache\Module\Art\Art;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Song\LyricsView $this */
+
+$song = $this->getSong();
+
+Ui::show_box_top(T_('Song Lyrics'), 'box box_lyrics_song');
+if ($this->hasAlbumArt()) {
+    Art::display('album', $song->album, $this->getAlbumName(), ['width' => 128, 'height' => 128]);
+}
+
+$lyricsUrl = $this->getLyricsUrl(); ?>
+<div class="np_group">
+  <div class="np_cell">
+      <label><?php echo T_('Song'); ?>:</label>
+      <a title="<?php echo $this->e($song->title); ?>" href="<?php echo $this->e($this->getSongUrl()); ?>">
+          <?php echo $this->e($song->title); ?>
+      </a>
+  </div>
+
+  <div class="np_cell">
+      <label><?php echo T_('Album'); ?>:</label>
+      <a title="<?php echo $this->e($this->getAlbumName()); ?>" href="<?php echo $this->e($this->getAlbumUrl()); ?>">
+              <?php echo $this->e($this->getAlbumName()); ?>
+      </a>
+  </div>
+
+  <div class="np_cell">
+      <label><?php echo T_('Artist'); ?>:</label>
+      <a title="<?php echo $this->e($this->getArtistName()); ?>" href="<?php echo $this->e($this->getArtistUrl()); ?>">
+              <?php echo $this->e($this->getArtistName()); ?>
+      </a>
+  </div>
+</div>
+<br /><br />
+<div class="lyrics">
+    <div id="lyrics_text"><?php echo $this->raw($this->getLyrics()); ?></div>
+<?php if ($lyricsUrl !== null) { ?>
+    <div id="lyrics_url"><a href="<?php echo $this->e($lyricsUrl); ?>" target="_blank"><?php echo T_('Show more'); ?></a></div>
+<?php } ?>
+</div>
+<?php Ui::show_box_bottom(); ?>

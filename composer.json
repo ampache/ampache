@@ -79,7 +79,6 @@
         "rmccue/requests": "^2.0",
         "rsd/seafile-php-sdk": "^2",
         "sabre/dav": "^4",
-        "scn/phptal": "^4",
         "shrikeh/teapot": "^2.3",
         "slim/slim": "^4.12"
     },

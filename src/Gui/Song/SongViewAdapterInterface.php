@@ -25,7 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Song;
 
-interface SongViewAdapterInterface
+use Ampache\Gui\System\ConfigViewAdapterInterface;
+use Ampache\Gui\View\TemplateInterface;
+
+interface SongViewAdapterInterface extends TemplateInterface
 {
     public function canAppendNext(): bool;
 
@@ -33,9 +36,13 @@ interface SongViewAdapterInterface
 
     public function canBeDeleted(): bool;
 
+    public function canBeReordered(): bool;
+
     public function canDisplayStats(): bool;
 
     public function canDownload(): bool;
+
+    public function canEditPlaylist(): bool;
 
     public function canPostShout(): bool;
 
@@ -43,11 +50,21 @@ interface SongViewAdapterInterface
 
     public function canToggleState(): bool;
 
+    public function getAddToPlaylistIcon(): string;
+
+    public function getAlbumDiskLink(): string;
+
+    public function getAlbumLink(): string;
+
     public function getAppendNextButton(): string;
+
+    public function getArtistLink(): string;
 
     public function getAutoplayNextButton(): string;
 
     public function getAverageRating(): string;
+
+    public function getConfig(): ConfigViewAdapterInterface;
 
     public function getCustomPlayActions(): string;
 
@@ -73,7 +90,17 @@ interface SongViewAdapterInterface
 
     public function getExternalPlayUrl(): string;
 
+    public function getGenre(): string;
+
     public function getId(): int;
+
+    public function getLicenseLink(): string;
+
+    public function getNumberPlayed(): int;
+
+    public function getNumberSkipped(): int;
+
+    public function getPlayDuration(): string;
 
     public function getPostShoutIcon(): string;
 
@@ -88,17 +115,30 @@ interface SongViewAdapterInterface
 
     public function getRefreshIcon(): string;
 
+    public function getReorderIcon(): string;
+
     public function getShareUi(): string;
+
+    public function getSongLink(): string;
 
     public function getTemporaryPlaylistButton(): string;
 
     public function getToggleStateButton(): string;
+
+    public function getTrackNumber(): string;
 
     public function getUpdateFromTagsUrl(): string;
 
     public function getUserFlags(): string;
 
     public function getWaveformUrl(): string;
+
+    public function getYear(): int;
+
+    /**
+     * A waveform is rendered on demand, so this is false when there is nothing to render it from.
+     */
+    public function hasWaveform(): bool;
 
     public function isEditable(): bool;
 }
