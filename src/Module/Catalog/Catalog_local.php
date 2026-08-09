@@ -37,6 +37,7 @@ use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
@@ -748,6 +749,16 @@ class Catalog_local extends Catalog
 
         $results = self::getSongRepository()->getIdsByCatalogAndExtension($this->getId(), $extensions);
 
+        // fetch all song paths and times in one query
+        $song_rows = [];
+        foreach (array_chunk($results, 500) as $chunk) {
+            $idlist     = implode(',', array_map('intval', $chunk));
+            $db_results = Dba::read("SELECT `id`, `file`, `time` FROM `song` WHERE `id` IN (" . $idlist . ");");
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $song_rows[(int) $row['id']] = ['file' => (string) $row['file'], 'time' => (int) $row['time']];
+            }
+        }
+
         foreach ($results as $song_id) {
             $target_file     = Catalog::get_cache_path($song_id, $this->getId(), $cache_path, $cache_target);
             $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->getId() . '/' . $song_id . '.' . $cache_target;
@@ -758,20 +769,28 @@ class Catalog_local extends Catalog
             }
 
             $file_exists = ($target_file !== null && is_file($target_file));
-            $media       = new Song($song_id);
+            $song_file   = $song_rows[$song_id]['file'] ?? '';
+            $song_time   = $song_rows[$song_id]['time'] ?? 0;
 
             if (
-                $media->isNew()
-                || !$media->file
-                || !is_file($media->file)
+                $song_file === ''
+                || !is_file($song_file)
             ) {
-                debug_event('local.catalog', sprintf('Not Found: %s', $media->file), 3);
+                debug_event('local.catalog', sprintf('Not Found: %s', $song_file), 3);
 
-                return false;
+                // skip, don't abort the run
+                continue;
             }
 
             // check the old path too
             if ($file_exists) {
+                // skip the expensive tag parse when the source is older than the cache
+                $source_mtime = filemtime($song_file);
+                $cache_mtime  = filemtime($target_file);
+                if ($source_mtime !== false && $cache_mtime !== false && $cache_mtime >= $source_mtime) {
+                    continue;
+                }
+
                 // get the time for the cached file and compare
                 $vainfo = $this->getUtilityFactory()->createVaInfo(
                     $target_file,
@@ -781,18 +800,28 @@ class Catalog_local extends Catalog
                     (string) $this->sort_pattern,
                     (string) $this->rename_pattern
                 );
-                if ($media->time > 0 && !$vainfo->check_time($media->time)) {
-                    debug_event('local.catalog', 'check_time FAILED for: ' . $media->id, 5);
+                if ($song_time > 0 && !$vainfo->check_time($song_time)) {
+                    debug_event('local.catalog', 'check_time FAILED for: ' . $song_id, 5);
                     unlink($target_file);
                     $file_exists = false;
                 }
             }
 
             if (!$file_exists) {
-                // transcode to the new path
+                // transcode to .tmp, only promote on success
+                $media              = new Song($song_id);
                 $transcode_settings = $media->get_transcode_settings($cache_target);
-                Stream::start_transcode($media, $transcode_settings, (string) $target_file);
-                debug_event('local.catalog', 'Saved: ' . $song_id . ' to: {' . $target_file . '}', 5);
+                $tmp_file           = $target_file . '.tmp';
+                Stream::start_transcode($media, $transcode_settings, $tmp_file);
+                if (is_file($tmp_file) && filesize($tmp_file) > 0) {
+                    rename($tmp_file, (string) $target_file);
+                    debug_event('local.catalog', 'Saved: ' . $song_id . ' to: {' . $target_file . '}', 5);
+                } else {
+                    if (is_file($tmp_file)) {
+                        unlink($tmp_file);
+                    }
+                    debug_event('local.catalog', 'Transcode failed for: ' . $song_id . ' {' . $tmp_file . '}', 3);
+                }
             }
         }
 
