@@ -99,8 +99,6 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
         return $results;
     }
 
-    /**
-     */
     public function get_photos(string $search, string $category = 'concert'): array
     {
         $photos = [];

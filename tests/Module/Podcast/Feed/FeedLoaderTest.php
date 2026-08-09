@@ -72,6 +72,29 @@ class FeedLoaderTest extends TestCase
         static::assertNull($result['lastBuildDate']);
     }
 
+    /**
+     * Plenty of feeds carry no RSS `image` at all.
+     */
+    public function testLoadFallsBackToTheItunesArtwork(): void
+    {
+        $xml = <<<XML
+            <?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+              <channel>
+                <title>Show</title>
+                <itunes:image href="https://example.com/itunes-art.jpg"/>
+              </channel>
+            </rss>
+            XML;
+
+        $this->webFetcher->method('fetch')->willReturn($xml);
+
+        static::assertSame(
+            'https://example.com/itunes-art.jpg',
+            $this->subject->load('https://example.com/feed.xml')['artUrl']
+        );
+    }
+
     public function testLoadParsesFeedContent(): void
     {
         $feedUrl = 'https://example.com/feed.xml';
@@ -113,6 +136,53 @@ class FeedLoaderTest extends TestCase
         static::assertSame('https://example.com/art.jpg', $result['artUrl']);
         static::assertNotNull($result['lastBuildDate']);
         static::assertCount(1, $result['episodes']);
+    }
+
+    /**
+     * The RSS element is the documented one, so it wins when a feed carries both.
+     */
+    public function testLoadPrefersTheRssArtworkOverTheItunesOne(): void
+    {
+        $xml = <<<XML
+            <?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+              <channel>
+                <title>Show</title>
+                <image><url>https://example.com/rss-art.jpg</url></image>
+                <itunes:image href="https://example.com/itunes-art.jpg"/>
+              </channel>
+            </rss>
+            XML;
+
+        $this->webFetcher->method('fetch')->willReturn($xml);
+
+        static::assertSame(
+            'https://example.com/rss-art.jpg',
+            $this->subject->load('https://example.com/feed.xml')['artUrl']
+        );
+    }
+
+    /**
+     * A prefix is arbitrary; only the uri identifies a namespace.
+     */
+    public function testLoadReadsTheItunesArtworkUnderAnyPrefix(): void
+    {
+        $xml = <<<XML
+            <?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0" xmlns:itns="http://www.itunes.com/dtds/podcast-1.0.dtd">
+              <channel>
+                <title>Show</title>
+                <itns:image href="https://example.com/itunes-art.jpg"/>
+              </channel>
+            </rss>
+            XML;
+
+        $this->webFetcher->method('fetch')->willReturn($xml);
+
+        static::assertSame(
+            'https://example.com/itunes-art.jpg',
+            $this->subject->load('https://example.com/feed.xml')['artUrl']
+        );
     }
 
     public function testLoadThrowsExceptionOnFetchFailure(): void

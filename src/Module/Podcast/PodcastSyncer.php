@@ -28,6 +28,8 @@ namespace Ampache\Module\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Podcast\Feed\FeedDuration;
+use Ampache\Module\Podcast\Feed\FeedNamespaceEnum;
 use Ampache\Module\Podcast\Feed\FeedText;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -231,21 +233,9 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
             $source = (string) $episode->enclosure['url'];
         }
 
-        $itunes   = $episode->children('itunes', true);
-        $duration = (string) $itunes->duration;
-        // time is missing hour e.g. "15:23"
-        if (preg_grep("/^\\d\\d\\:\\d\\d\$/", [$duration])) {
-            $duration = '00:' . $duration;
-        }
-
-        // process a time string "03:23:01"
-        $ptime = (preg_grep("/\\d?\\d\\:\\d\\d\\:\\d\\d/", [$duration]))
-            ? date_parse($duration)
-            : $duration;
-        // process "HH:MM:SS" time OR fall back to a seconds duration string e.g "24325"
-        $time = (is_array($ptime))
-            ? (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second']
-            : (int) $ptime;
+        // by uri, because the prefix is arbitrary
+        $itunes = $episode->children(FeedNamespaceEnum::ITUNES->value);
+        $time   = FeedDuration::toSeconds((string) $itunes->duration);
 
         $pubdate    = 0;
         $pubdatestr = (string) $episode->pubDate;
