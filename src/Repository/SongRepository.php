@@ -513,30 +513,6 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
-     * gets the songs for a folder, based on folder name
-     *
-     * @return int[]
-     * @deprecated dead since 2026-06-17; probe logs callers, remove if silent
-     */
-    public function getByFolder(
-        string $folderName,
-    ): array {
-        debug_deprecated();
-        $user_id = Core::get_global('user')?->getId() ?? -1;
-        $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
-            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `folder` ON `folder`.`id` = `song`.`folder` WHERE `folder`.`name` = ? AND `folder`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`, `song`.`id`"
-            : "SELECT `song`.`id` FROM `song` LEFT JOIN `folder` ON `folder`.`id` = `song`.`folder` WHERE `folder`.`name` = ? ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`, `song`.`id`";
-
-        $dbResults = $this->connection->query($sql, [$folderName]);
-        $results   = [];
-        while ($songId = $dbResults->fetchColumn()) {
-            $results[] = (int) $songId;
-        }
-
-        return $results;
-    }
-
-    /**
      * gets the songs for a label, based on label name
      *
      * @return int[]

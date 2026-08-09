@@ -45,11 +45,6 @@ interface CollectionRepositoryInterface
      */
     public function collectGarbage(): void;
 
-    /**
-     * How many collections the user may see; getItemCount() counts the members of one collection instead.
-     */
-    public function countByUser(?User $user): int;
-
     public function create(
         string $name,
         User $user,

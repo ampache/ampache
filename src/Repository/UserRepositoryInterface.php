@@ -115,15 +115,6 @@ interface UserRepositoryInterface
     public function findByUsername(string $username): ?User;
 
     /**
-     * This returns users list related to a website.
-     *
-     * @return int[]
-     *
-     * @todo rework. the query limits the results to 1, so it doesn't need to return an array
-     */
-    public function findByWebsite(string $website): array;
-
-    /**
      * Clears the validation key of everyone who has since managed to log in
      */
     public function garbageCollectUnvalidated(): void;

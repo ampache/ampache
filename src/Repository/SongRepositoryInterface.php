@@ -171,15 +171,6 @@ interface SongRepositoryInterface
      *
      * @return list<int>
      */
-    public function getByFolder(
-        string $folderName,
-    ): array;
-
-    /**
-     * gets the songs for a label, based on label name
-     *
-     * @return list<int>
-     */
     public function getByLabel(
         string $labelName,
     ): array;

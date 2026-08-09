@@ -162,15 +162,4 @@ final class ModelFactory implements ModelFactoryInterface
     ): Video {
         return new Video($videoId);
     }
-
-    /**
-     * @deprecated dead since 2024-02 (#3828); probe logs callers, remove if silent
-     */
-    public function createWanted(
-        ?int $wantedId = null,
-    ): Wanted {
-        debug_deprecated();
-
-        return new Wanted((int) $wantedId);
-    }
 }
