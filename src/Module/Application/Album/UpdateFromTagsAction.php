@@ -26,12 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\UpdateItemsView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -45,6 +47,7 @@ final readonly class UpdateFromTagsAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
+        private SingleItemUpdaterInterface $singleItemUpdater,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,19 +67,18 @@ final readonly class UpdateFromTagsAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_update_items.inc.php',
-            [
-                'object_id' => $albumId,
-                'catalog_id' => $album->getCatalogId(),
-                'type' => 'album',
-                'target_url' => sprintf(
+        echo (new UpdateItemsView(
+            $this->singleItemUpdater->update(
+                'album',
+                $albumId,
+                $album->getCatalogId(),
+                sprintf(
                     '%s/albums.php?action=show&album=%d',
                     $this->configContainer->getWebPath(),
                     $albumId
                 )
-            ]
-        );
+            )
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -173,6 +173,13 @@ interface PodcastEpisodeRepositoryInterface
     public function updateAllCounts(): void;
 
     /**
+     * Writes the description an episode's feed item now carries
+     *
+     * The caller decides whether it changed, so a sync over an unchanged feed never gets here.
+     */
+    public function updateDescription(int $episodeId, string $description): void;
+
+    /**
      * Writes back what reading the downloaded file told us about it, and marks the episode complete
      *
      * @param array<string, mixed> $values

@@ -1,0 +1,92 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/searches.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\SmartPlaylistListRenderer
+
+use Ampache\Gui\Browse\ListHeaderView;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Browse\ListRenderer\SmartPlaylistListRenderer $this */
+
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$searches       = $this->getSearches();
+if ($this->areRatingsShown()) {
+    Rating::build_cache('search', $this->getObjectIds());
+    Userflag::build_cache('search', $this->getObjectIds());
+} ?>
+<div id="information_actions">
+    <ul>
+        <?php if ($this->mayCreate()) { ?>
+        <li>
+            <a href="<?php echo $this->e($this->getCreateUrl()); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('add_circle', T_('Add'))); ?>
+                <?php echo T_('Add Smart Playlist'); ?>
+            </a>
+        </li>
+        <?php } ?>
+    </ul>
+</div>
+<?php if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
+} ?>
+<table class="tabledata striped-rows <?php echo $this->e($browse->get_css_class()); ?>" data-objecttype="smartplaylist">
+    <thead>
+        <tr class="th-top">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php
+                echo ($column['sort'] === null)
+                    ? $this->e($column['label'])
+                    : $this->raw(Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=' . $column['sort'], $column['label'], 'playlist_sort_' . $column['sort'])); ?></th>
+            <?php } ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($searches as $search) { ?>
+        <tr id="smartplaylist_row_<?php echo $this->e($search->id); ?>">
+            <?php echo $this->raw($this->renderRow($search)); ?>
+        </tr>
+        <?php } ?>
+        <?php if ($searches === []) { ?>
+        <tr>
+            <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('No smart playlist found'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"></th>
+            <?php } ?>
+        </tr>
+    </tfoot>
+</table>
+<?php if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
+} ?>

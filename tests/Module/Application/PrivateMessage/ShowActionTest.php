@@ -94,12 +94,6 @@ class ShowActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_pvmsg.inc.php',
-                ['pvmsg' => $message]
-            )
-            ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -107,9 +101,37 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        $message->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($msgId);
+        $message->shouldReceive('getSubject')
+            ->withNoArgs()
+            ->andReturn('some-subject');
+        $message->shouldReceive('getSenderUserLink')
+            ->withNoArgs()
+            ->andReturn('some-sender');
+        $message->shouldReceive('getCreationDateFormatted')
+            ->withNoArgs()
+            ->andReturn('some-date');
+        $message->shouldReceive('getMessage')
+            ->withNoArgs()
+            ->andReturn('some-message');
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->andReturn('/some-web-path');
+
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        $this->assertNull($result);
+
+        $this->assertStringContainsString('some-subject', $output);
+        $this->assertStringContainsString('some-message', $output);
     }
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void

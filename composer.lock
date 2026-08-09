@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "29a45d70ab30622a2648a8b89134ce72",
+    "content-hash": "ba1bf6b2e2725e06169016b023a00d94",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -4228,86 +4228,6 @@
                 "source": "https://github.com/fruux/sabre-xml"
             },
             "time": "2024-09-06T07:37:46+00:00"
-        },
-        {
-            "name": "scn/phptal",
-            "version": "v4.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/SC-Networks/PHPTAL.git",
-                "reference": "71961d558fac77ac252073bfaab3fbad56dfda61"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/SC-Networks/PHPTAL/zipball/71961d558fac77ac252073bfaab3fbad56dfda61",
-                "reference": "71961d558fac77ac252073bfaab3fbad56dfda61",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "ext-gettext": "*",
-                "ext-simplexml": "*",
-                "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
-                "symfony/polyfill-mbstring": "^1.12"
-            },
-            "require-dev": {
-                "ext-mbstring": "*",
-                "friendsofphp/php-cs-fixer": "^3",
-                "phpstan/phpstan": "^2",
-                "phpunit/phpunit": "^12",
-                "rector/rector": "^2"
-            },
-            "suggest": {
-                "ext-gettext": "Php gettext extension for i18n support",
-                "ext-mbstring": "Multibyte support is important for any non-english strings",
-                "scn/phptal-lint": "Linter for phptal template files",
-                "usox/tal-i18n-extract": "Extracts translation-keys from phptal templates"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PhpTal\\": "src/"
-                },
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.1+"
-            ],
-            "authors": [
-                {
-                    "name": "Daniel Jakob",
-                    "homepage": "https://www.sc-networks.com"
-                },
-                {
-                    "name": "Marcus Schwarz",
-                    "homepage": "https://www.sc-networks.com"
-                },
-                {
-                    "name": "Laurent Bédubourg",
-                    "email": "lbedubourg@motion-twin.com",
-                    "homepage": "http://labe.me"
-                },
-                {
-                    "name": "Kornel Lesiński",
-                    "email": "kornel@geekhood.net",
-                    "homepage": "http://pornel.net/"
-                }
-            ],
-            "description": "PHPTAL is a templating engine for PHP that implements Zope Page Templates syntax",
-            "homepage": "https://github.com/SC-Networks/PHPTAL/",
-            "keywords": [
-                "phptal",
-                "template engine",
-                "zope"
-            ],
-            "support": {
-                "issues": "https://github.com/SC-Networks/PHPTAL/issues",
-                "source": "https://github.com/SC-Networks/PHPTAL/tree/v4.2.1"
-            },
-            "time": "2026-04-13T04:48:31+00:00"
         },
         {
             "name": "sdo/bitmask",

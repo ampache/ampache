@@ -27,12 +27,11 @@ namespace Ampache\Module\Application\Browse;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\StatsFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\FolderRepositoryInterface;
-use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,8 +43,7 @@ final readonly class SongAction implements ApplicationActionInterface
         private BrowseFactoryInterface $browseFactory,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-        private FolderRepositoryInterface $folderRepository,
-        private VideoRepositoryInterface $videoRepository,
+        private StatsFormViewFactoryInterface $statsFormViewFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,13 +59,7 @@ final readonly class SongAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $this->ui->show(
-            'show_form_browse.inc.php',
-            [
-                'folderRepository' => $this->folderRepository,
-                'videoRepository' => $this->videoRepository
-            ]
-        );
+        echo $this->statsFormViewFactory->createBrowse()->render();
 
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);

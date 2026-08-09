@@ -93,7 +93,6 @@ final class PlaylistCreateMethod implements MethodInterface
             return $response;
         }
 
-
         $response->getBody()->write(
             $output->playlists($apiVersion, [$objectId], $user, $input['auth'], false, false)
         );

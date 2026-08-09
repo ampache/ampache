@@ -37,6 +37,7 @@ use Ampache\Repository\IpHistoryRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use ArrayIterator;
+use DateTimeImmutable;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -56,7 +57,14 @@ class ShowIpHistoryActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $userId       = 666;
-        $history      = new ArrayIterator(['some-history']);
+        $history      = new ArrayIterator([
+            [
+                'date' => new DateTimeImmutable('@1700000000'),
+                'ip' => '198.51.100.7',
+                'agent' => '<script>some-agent</script>',
+                'action' => 'some-action',
+            ],
+        ]);
         $userFullName = 'some-name';
         $userName     = 'username';
         $webPath      = 'some-path';
@@ -102,17 +110,6 @@ class ShowIpHistoryActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showBoxTop')
             ->with(sprintf('%s IP History', $userFullName))
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_ip_history.inc.php',
-                [
-                    'workingUser' => $user,
-                    'history' => $history,
-                    'showAll' => false,
-                    'adminPath' => $webPath,
-                ]
-            )
-            ->once();
         $this->ui->shouldReceive('showBoxBottom')
             ->withNoArgs()
             ->once();
@@ -123,9 +120,17 @@ class ShowIpHistoryActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        $this->assertNull($result);
+        $this->assertStringContainsString('198.51.100.7', $output);
+        $this->assertStringNotContainsString('<script>', $output);
     }
 
     public function testRunRendersCompleteHistory(): void
@@ -135,7 +140,14 @@ class ShowIpHistoryActionTest extends MockeryTestCase
         $user       = $this->createMock(User::class);
 
         $userId       = 666;
-        $history      = new ArrayIterator(['some-history']);
+        $history      = new ArrayIterator([
+            [
+                'date' => new DateTimeImmutable('@1700000000'),
+                'ip' => '198.51.100.7',
+                'agent' => '<script>some-agent</script>',
+                'action' => 'some-action',
+            ],
+        ]);
         $webPath      = 'some-path';
         $userFullName = 'some-name';
 
@@ -173,17 +185,6 @@ class ShowIpHistoryActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showBoxTop')
             ->with(sprintf('%s IP History', $userFullName))
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_ip_history.inc.php',
-                [
-                    'workingUser' => $user,
-                    'history' => $history,
-                    'showAll' => true,
-                    'adminPath' => $webPath,
-                ]
-            )
-            ->once();
         $this->ui->shouldReceive('showBoxBottom')
             ->withNoArgs()
             ->once();
@@ -194,9 +195,17 @@ class ShowIpHistoryActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        $this->assertNull($result);
+        $this->assertStringContainsString('198.51.100.7', $output);
+        $this->assertStringNotContainsString('<script>', $output);
     }
 
     public function testRunShowErrorIfUserDoesNotExist(): void

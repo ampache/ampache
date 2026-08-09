@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\AccessListView;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListItem;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -45,6 +47,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private UiInterface $ui,
         private AccessRepositoryInterface $accessRepository,
         private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,10 +67,10 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_access_list.inc.php',
-            ['list' => $items]
-        );
+        echo (new AccessListView(
+            $this->configContainer->getWebPath('/admin'),
+            $items
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

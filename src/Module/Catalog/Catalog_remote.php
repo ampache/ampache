@@ -833,6 +833,7 @@ class Catalog_remote extends Catalog
                 'audio_codec' => null,
                 'barcode' => null,
                 'bitrate' => (property_exists($song, 'bitrate') && $song->bitrate !== null) ? (string) $song->bitrate : null,
+                'bpm' => (property_exists($song, 'bpm') && $song->bpm !== null) ? (string) $song->bpm : null,
                 'catalog_number' => null,
                 'catalog' => $this->getId(),
                 'channels' => (property_exists($song, 'channels') && $song->channels !== null) ? (string) $song->channels : null,

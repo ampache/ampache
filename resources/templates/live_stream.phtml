@@ -1,0 +1,65 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// live_stream.phtml -- rendered by Ampache\Gui\LiveStream\LiveStreamView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\LiveStream\LiveStreamView $this */
+
+$radio = $this->getLiveStream();
+
+Ui::show_box_top($this->e($this->getName()), 'box box_live_stream_details'); ?>
+<div class="item_right_info">
+    <?php Art::display('live_stream', $radio->id, $this->getName(), $this->getArtSize(), null, true, false); ?>
+</div>
+<dl class="media_details">
+<dt><?php echo T_('Action'); ?></dt>
+    <dd>
+        <?php if ($this->isDirectPlayEnabled()) {
+            echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id, 'play_circle', T_('Play'), 'play_live_stream_' . $radio->id));
+            if ($this->isAutoplayNextEnabled()) {
+                echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_live_stream_' . $radio->id));
+            }
+
+            if ($this->isAutoplayAppendEnabled()) {
+                echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_live_stream_' . $radio->id));
+            }
+        }
+
+echo $this->raw(Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'new_window', T_('Add to Temporary Playlist'), 'add_live_stream_' . $radio->id));
+if ($this->mayAddToPlaylist()) { ?>
+            <a id="add_to_playlist_<?php echo $this->e($radio->id); ?>" onclick="showPlaylistDialog(event, 'live_stream', '<?php echo $this->e($radio->id); ?>')">
+                <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label())); ?>
+            </a>
+        <?php } ?>
+    </dd>
+<?php foreach ($this->getProperties() as $property) { ?>
+    <dt><?php echo $this->e($property['label']); ?></dt><dd><?php echo $this->raw($property['value']); ?></dd>
+<?php } ?>
+</dl>
+<?php Ui::show_box_bottom(); ?>

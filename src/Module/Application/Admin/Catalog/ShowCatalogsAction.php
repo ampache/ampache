@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\ManageCatalogsView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -42,6 +44,7 @@ final readonly class ShowCatalogsAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
         private BrowseFactoryInterface $browseFactory,
     ) {}
 
@@ -53,7 +56,9 @@ final readonly class ShowCatalogsAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Show Catalogs'), 'box box_manage_catalogs');
-        $this->ui->show('show_manage_catalogs.inc.php');
+        echo (new ManageCatalogsView(
+            $this->configContainer->getWebPath('/admin')
+        ))->render();
 
         $catalogs = Catalog::get_all_catalogs();
         $browse   = $this->browseFactory->create();

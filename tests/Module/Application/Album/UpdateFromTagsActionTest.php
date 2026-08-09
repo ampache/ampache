@@ -31,6 +31,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -42,6 +43,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
 {
     private ConfigContainerInterface&MockInterface $configContainer;
     private ModelFactoryInterface&MockInterface $modelFactory;
+    private SingleItemUpdaterInterface&MockInterface $singleItemUpdater;
     private UpdateFromTagsAction $subject;
     private UiInterface&MockInterface $ui;
 
@@ -105,21 +107,9 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_update_items.inc.php',
-                [
-                    'object_id' => $albumId,
-                    'catalog_id' => $catalogId,
-                    'type' => 'album',
-                    'target_url' => sprintf(
-                        '%s/albums.php?action=show&album=%d',
-                        $webPath,
-                        $albumId
-                    )
-                ]
-            )
-            ->once();
+        $this->singleItemUpdater->shouldReceive('update')
+            ->once()
+            ->andReturn('some-target-url');
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -127,9 +117,16 @@ class UpdateFromTagsActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void
@@ -179,14 +176,16 @@ class UpdateFromTagsActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->singleItemUpdater = $this->mock(SingleItemUpdaterInterface::class);
 
         $this->subject = new UpdateFromTagsAction(
             $this->modelFactory,
             $this->ui,
-            $this->configContainer
+            $this->configContainer,
+            $this->singleItemUpdater
         );
     }
 }

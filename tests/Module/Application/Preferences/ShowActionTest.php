@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Gui\Preferences\PreferencesView;
+use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -35,6 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
+    private MockInterface|PreferencesViewFactoryInterface $preferencesViewFactory;
     private ShowAction $subject;
     private MockInterface|UiInterface $ui;
 
@@ -68,16 +71,11 @@ class ShowActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_preferences.inc.php',
-                [
-                    'fullname' => $fullname,
-                    'preferences' => $preferences,
-                    'ui' => $this->ui,
-                ]
-            )
-            ->once();
+        // render() is final, so this is a real view with no tab -- the path that renders nothing
+        $this->preferencesViewFactory->shouldReceive('create')
+            ->once()
+            ->andReturn(new PreferencesView($this->ui, '', '', [], '', '', 0, false, false));
+
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
             ->once();
@@ -85,18 +83,27 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        $this->assertNull($result);
+        $this->assertSame('', $output);
     }
 
     #[Override]
     protected function setUp(): void
     {
-        $this->ui = $this->mock(UiInterface::class);
+        $this->ui                     = $this->mock(UiInterface::class);
+        $this->preferencesViewFactory = $this->mock(PreferencesViewFactoryInterface::class);
 
         $this->subject = new ShowAction(
-            $this->ui
+            $this->ui,
+            $this->preferencesViewFactory,
         );
     }
 }

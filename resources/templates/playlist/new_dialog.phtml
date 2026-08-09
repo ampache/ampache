@@ -1,0 +1,65 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// new_dialog.phtml -- rendered by Ampache\Gui\Playlist\NewPlaylistDialogAdapter
+
+/** @var Ampache\Gui\Playlist\NewPlaylistDialogAdapter $this */
+
+$ajaxUri      = $this->e($this->getAjaxUri());
+$objectType   = $this->e($this->getObjectType());
+$objectIds    = $this->e($this->getObjectIds());
+$objectGroups = $this->e($this->getObjectGroups()); ?>
+<div class="playlistdialog_lists">
+<?php if ($this->getPlaylistsEnabled()) { ?>
+    <div class="playlistdialog_group">
+        <h4 class="playlistdialog_heading"><?php echo $this->e($this->getPlaylistHeading()); ?></h4>
+        <ul>
+            <li>
+                <a href="javascript:void(0);" id="rb_append_dplaylist_new" onclick="createNewPlaylist('<?php echo $this->e($this->getNewPlaylistTitle()); ?>', '<?php echo $ajaxUri; ?>?page=playlist&action=append_item&item_type=<?php echo $objectType; ?>&item_id=<?php echo $objectIds; ?>', 'rb_append_dplaylist_new', '<?php echo $objectGroups; ?>');"><?php echo $this->e($this->getNewPlaylistTitle()); ?></a>
+            </li>
+<?php   foreach ($this->getPlaylists() as $playlist) { ?>
+            <li>
+                <a href="javascript:void(0);" id="rb_append_dplaylist_<?php echo $playlist->id; ?>" onclick="handlePlaylistAction('<?php echo $ajaxUri; ?>?page=playlist&action=append_item&playlist_id=<?php echo $playlist->id; ?>&item_type=<?php echo $objectType; ?>&item_id=<?php echo $objectIds; ?>', 'rb_append_dplaylist_<?php echo $playlist->id; ?>', '<?php echo $objectGroups; ?>');"><?php echo $this->e($playlist->get_fullname()); ?></a>
+            </li>
+<?php   } ?>
+        </ul>
+    </div>
+<?php }
+if ($this->getCollectionsEnabled()) { ?>
+    <div class="playlistdialog_group">
+        <h4 class="playlistdialog_heading"><?php echo $this->e($this->getCollectionHeading()); ?></h4>
+        <ul>
+            <li>
+                <a href="javascript:void(0);" id="rb_append_dcollection_new" onclick="createNewPlaylist('<?php echo $this->e($this->getNewCollectionTitle()); ?>', '<?php echo $ajaxUri; ?>?page=collection&action=append_item&item_type=<?php echo $objectType; ?>&item_id=<?php echo $objectIds; ?>', 'rb_append_dcollection_new', '<?php echo $objectGroups; ?>', 'collection_id');"><?php echo $this->e($this->getNewCollectionTitle()); ?></a>
+            </li>
+<?php   foreach ($this->getCollections() as $collection) { ?>
+            <li>
+                <a href="javascript:void(0);" id="rb_append_dcollection_<?php echo $collection->id; ?>" onclick="handlePlaylistAction('<?php echo $ajaxUri; ?>?page=collection&action=append_item&collection_id=<?php echo $collection->id; ?>&item_type=<?php echo $objectType; ?>&item_id=<?php echo $objectIds; ?>', 'rb_append_dcollection_<?php echo $collection->id; ?>', '<?php echo $objectGroups; ?>', 'collection_id');"><?php echo $this->e($collection->get_fullname()); ?></a>
+            </li>
+<?php   } ?>
+        </ul>
+    </div>
+<?php } ?>
+</div>

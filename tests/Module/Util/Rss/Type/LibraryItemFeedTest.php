@@ -25,33 +25,23 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Type;
 
-use Ampache\Module\Util\Rss\Surrogate\PlayableItemRssItemAdapter;
+use Ampache\Module\Util\Rss\View\PodcastRssFeedView;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
-use PhpTal\PhpTalInterface;
 use PHPUnit\Framework\TestCase;
 
 class LibraryItemFeedTest extends TestCase
 {
     private LibraryItemFeed $subject;
 
-    public function testConfigureTemplatesConfigures(): void
+    public function testCreateViewReturnsThePodcastChannelView(): void
     {
-        $tal = $this->createMock(PhpTalInterface::class);
-
-        $tal->expects(static::once())
-            ->method('setTemplate')
-            ->with((string) realpath(__DIR__ . '/../../../../../resources/templates/rss/podcast.xml'));
-        $tal->expects(static::once())
-            ->method('set')
-            ->with(
-                'THIS',
-                self::isInstanceOf(PlayableItemRssItemAdapter::class)
-            );
-
-        $this->subject->configureTemplate($tal);
+        self::assertInstanceOf(
+            PodcastRssFeedView::class,
+            $this->subject->createView()
+        );
     }
 
     protected function setUp(): void

@@ -1459,6 +1459,7 @@ class Search extends playlist_object
 
         $t_genre     = T_('Genre');
         $rule_type[] = $this->_get_rule_text('genre', $t_genre, $t_genre);
+        $rule_type[] = $this->_get_rule_text('mood', T_('Mood'), $t_genre);
         $rule_type[] = $this->_get_rule_text('song_genre', T_('Song Genre'), $t_genre);
         $rule_type[] = $this->_get_rule_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
         $rule_type[] = $this->_get_rule_numeric('genre_count_song', T_('Song Count (Genre)'), 'numeric', $t_genre);
@@ -1580,6 +1581,7 @@ class Search extends playlist_object
 
         $t_genre     = T_('Genre');
         $rule_type[] = $this->_get_rule_text('genre', $t_genre, $t_genre);
+        $rule_type[] = $this->_get_rule_text('mood', T_('Mood'), $t_genre);
         $rule_type[] = $this->_get_rule_text('song_genre', T_('Song Genre'), $t_genre);
         $rule_type[] = $this->_get_rule_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
         $rule_type[] = $this->_get_rule_numeric('genre_count_song', T_('Song Count (Genre)'), 'numeric', $t_genre);
@@ -1861,6 +1863,7 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_numeric('track', T_('Track'), 'numeric', $t_song_data);
         $rule_type[] = $this->_get_rule_numeric('year', T_('Year'), 'numeric', $t_song_data);
         $rule_type[] = $this->_get_rule_numeric('time', T_('Length (in minutes)'), 'numeric', $t_song_data);
+        $rule_type[] = $this->_get_rule_numeric('bpm', T_('BPM'), 'numeric', $t_song_data);
         $rule_type[] = $this->_get_rule_text('label', T_('Label'), $t_song_data);
         $rule_type[] = $this->_get_rule_text('comment', T_('Comment'), $t_song_data);
         $rule_type[] = $this->_get_rule_text('lyrics', T_('Lyrics'), $t_song_data);
@@ -1913,6 +1916,7 @@ class Search extends playlist_object
 
         $t_genre     = T_('Genre');
         $rule_type[] = $this->_get_rule_text('genre', $t_genre, $t_genre);
+        $rule_type[] = $this->_get_rule_text('mood', T_('Mood'), $t_genre);
         $rule_type[] = $this->_get_rule_text('album_genre', T_('Album Genre'), $t_genre);
         $rule_type[] = $this->_get_rule_text('artist_genre', T_('Artist Genre'), $t_genre);
         $rule_type[] = $this->_get_rule_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Gui\Playlist;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -34,8 +35,9 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Playlist;
+use Override;
 
-final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapterInterface
+final class NewPlaylistDialogAdapter extends AbstractView implements NewPlaylistDialogAdapterInterface
 {
     /**
      * Types a playlist can actually take.
@@ -62,13 +64,13 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
     ];
 
     public function __construct(
-        private PlaylistLoaderInterface $playlistLoader,
-        private AjaxUriRetrieverInterface $ajaxUriRetriever,
-        private CollectionRepositoryInterface $collectionRepository,
-        private GuiGatekeeperInterface $gatekeeper,
-        private string $object_type,
-        private string $object_ids,
-        private string $object_groups = '',
+        private readonly PlaylistLoaderInterface $playlistLoader,
+        private readonly AjaxUriRetrieverInterface $ajaxUriRetriever,
+        private readonly CollectionRepositoryInterface $collectionRepository,
+        private readonly GuiGatekeeperInterface $gatekeeper,
+        private readonly string $object_type,
+        private readonly string $object_ids,
+        private readonly string $object_groups = '',
     ) {}
 
     /**
@@ -192,6 +194,12 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
         }
 
         return true;
+    }
+
+    #[Override]
+    protected function templateFile(): string
+    {
+        return $this->findTemplate('playlist/new_dialog.phtml');
     }
 
     /**

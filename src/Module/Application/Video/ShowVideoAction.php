@@ -25,9 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Video;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Video\VideoView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,11 +53,28 @@ final readonly class ShowVideoAction implements ApplicationActionInterface
 
         $video = new Video((int) filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
 
-        $this->ui->show(
-            'show_video.inc.php',
-            ['video' => $video]
-        );
+        $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 
+        echo (new VideoView(
+            AmpConfig::get_web_path(),
+            $video,
+            ($video->file) ? $video->get_subtitles() : [],
+            (string) ($_SESSION['iframe']['subtitle'] ?? ''),
+            (bool) AmpConfig::get('encode_srt'),
+            (bool) AmpConfig::get('directplay'),
+            Stream_Playlist::check_autoplay_next(),
+            Stream_Playlist::check_autoplay_append(),
+            User::is_registered() && (bool) AmpConfig::get('ratings'),
+            (bool) AmpConfig::get('show_played_times'),
+            $mayInteract,
+            (!AmpConfig::get('use_auth') || $mayInteract) && (bool) AmpConfig::get('sociable'),
+            $mayInteract && (bool) AmpConfig::get('share'),
+            Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER),
+            Catalog::can_remove($video),
+            (bool) AmpConfig::get('statistical_graphs')
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

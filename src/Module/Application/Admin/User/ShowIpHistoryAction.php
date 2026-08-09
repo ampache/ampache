@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Admin\IpHistoryView;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\IpHistoryRepositoryInterface;
@@ -71,15 +72,12 @@ final class ShowIpHistoryAction extends AbstractUserAction
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(sprintf(T_('%s IP History'), $user->get_fullname()));
-        $this->ui->show(
-            'show_ip_history.inc.php',
-            [
-                'workingUser' => $user,
-                'history' => $history,
-                'showAll' => $showAll,
-                'adminPath' => $this->configContainer->getWebPath('/admin'),
-            ]
-        );
+        echo (new IpHistoryView(
+            $this->configContainer->getWebPath('/admin'),
+            $user->getId(),
+            $history,
+            $showAll
+        ))->render();
         $this->ui->showBoxBottom();
 
         $this->ui->showQueryStats();

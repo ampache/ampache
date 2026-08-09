@@ -30,6 +30,7 @@ use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
+use Throwable;
 
 class DicBuilderTest extends TestCase
 {
@@ -73,5 +74,61 @@ class DicBuilderTest extends TestCase
         }
 
         static::assertSame([], $missing, 'service_definition.php files missing from DicBuilder.php');
+    }
+
+    /**
+     * Two services that constructor-inject each other resolve to a blank page rather than an error, because
+     * `ApplicationRunner` swallows the exception -- so nothing else in the suite can see it.
+     *
+     * Entries that fail for other reasons are ignored: several need runtime config the suite has no database
+     * for, and one registered key is an abstract class.
+     */
+    public function testNoRegisteredServiceHasACircularDependency(): void
+    {
+        $container = require __DIR__ . '/../../src/Config/DicBuilder.php';
+
+        $circular = [];
+        foreach ($this->getRegisteredServiceKeys() as $key) {
+            try {
+                $container->get($key);
+            } catch (Throwable $error) {
+                if (str_contains($error->getMessage(), 'Circular dependency detected')) {
+                    $circular[$key] = $error->getMessage();
+                }
+            }
+        }
+
+        static::assertSame([], $circular);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getRegisteredServiceKeys(): array
+    {
+        $sourcePath = realpath(__DIR__ . '/../../src');
+
+        static::assertIsString($sourcePath);
+
+        $keys     = [];
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($sourcePath, FilesystemIterator::SKIP_DOTS)
+        );
+
+        /** @var SplFileInfo $file */
+        foreach ($iterator as $file) {
+            if ($file->getFilename() !== 'service_definition.php') {
+                continue;
+            }
+
+            /** @var array<string, mixed> $definitions */
+            $definitions = require $file->getRealPath();
+
+            foreach (array_keys($definitions) as $key) {
+                $keys[] = $key;
+            }
+        }
+
+        return array_values(array_unique($keys));
     }
 }

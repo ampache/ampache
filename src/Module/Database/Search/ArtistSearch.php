@@ -117,6 +117,15 @@ final readonly class ArtistSearch implements SearchInterface
                     $where[]      = sprintf('`artist`.`time` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
+                case 'mood':
+                    $where[] = match ($operator_sql) {
+                        '!=', 'NOT' => "`artist`.`id` NOT IN (SELECT `mood_map`.`object_id` FROM `mood_map` LEFT JOIN `mood` ON `mood_map`.`mood_id` = `mood`.`id` AND `mood`.`name` = ? WHERE `mood_map`.`object_type`='artist' AND `mood`.`id` IS NOT NULL)",
+                        'NOT LIKE' => "`artist`.`id` NOT IN (SELECT `mood_map`.`object_id` FROM `mood_map` LEFT JOIN `mood` ON `mood_map`.`mood_id` = `mood`.`id` AND `mood`.`name` LIKE ? WHERE `mood_map`.`object_type`='artist' AND `mood`.`id` IS NOT NULL)",
+                        'NOT SOUNDS LIKE' => "`artist`.`id` NOT IN (SELECT `mood_map`.`object_id` FROM `mood_map` LEFT JOIN `mood` ON `mood_map`.`mood_id` = `mood`.`id` AND `mood`.`name` SOUNDS LIKE ? WHERE `mood_map`.`object_type`='artist' AND `mood`.`id` IS NOT NULL)",
+                        default => sprintf("`artist`.`id` IN (SELECT `mood_map`.`object_id` FROM `mood_map` LEFT JOIN `mood` ON `mood_map`.`mood_id` = `mood`.`id` AND `mood`.`name` %s ? WHERE `mood_map`.`object_type`='artist' AND `mood`.`id` IS NOT NULL)", $operator_sql),
+                    };
+                    $parameters[] = $input;
+                    break;
                 case 'genre':
                     $negate       = in_array($operator_sql, ['NOT LIKE', 'NOT SOUNDS LIKE'], true);
                     $where[]      = sprintf("`artist`.`id` %sIN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` %s ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)", ($negate) ? 'NOT ' : '', ($negate) ? substr($operator_sql, 4) : $operator_sql);

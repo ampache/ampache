@@ -241,6 +241,10 @@ class Subsonic_Xml_Data
         $xlist = $this->_addChildToResultXml($xml, htmlspecialchars('albumList'));
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
+
             // `AlbumList` holds `Child` albums; `AlbumList2` is the ID3 variant.
             $this->addAlbum($xlist, $album);
         }
@@ -257,6 +261,10 @@ class Subsonic_Xml_Data
         $xlist = $this->_addChildToResultXml($xml, htmlspecialchars('albumList2'));
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
+
             $this->addAlbumID3($xlist, $album);
         }
 
@@ -309,6 +317,10 @@ class Subsonic_Xml_Data
             $allalbums = $this->albumRepository->getAlbumByArtist($artist->id);
             foreach ($allalbums as $album_id) {
                 $album = new Album($album_id);
+                if ($album->isNew()) {
+                    continue;
+                }
+
                 $this->addAlbumID3($xartist, $album);
             }
         }
@@ -503,7 +515,11 @@ class Subsonic_Xml_Data
         $xgenres = $this->_addChildToResultXml($xml, 'genres');
 
         foreach ($tags as $tag) {
-            $otag   = new Tag($tag['id']);
+            $otag = new Tag($tag['id']);
+            if ($otag->isNew()) {
+                continue;
+            }
+
             $xgenre = $this->_addChildToResultXml($xgenres, 'genre', htmlspecialchars((string) $otag->name));
             $xgenre->addAttribute('songCount', (string) ($otag->song));
             $xgenre->addAttribute('albumCount', (string) ($otag->album));
@@ -543,6 +559,10 @@ class Subsonic_Xml_Data
         $xradios = $this->_addChildToResultXml($xml, 'internetRadioStations');
         foreach ($radios as $radio_id) {
             $radio = new Live_Stream($radio_id);
+            if ($radio->isNew()) {
+                continue;
+            }
+
             $this->_addInternetRadioStation($xradios, $radio);
         }
 
@@ -922,6 +942,10 @@ class Subsonic_Xml_Data
 
                 foreach ($episodes as $episode_id) {
                     $episode = new Podcast_Episode($episode_id);
+                    if ($episode->isNew()) {
+                        continue;
+                    }
+
                     $this->_addPodcastEpisode($xchannel, $episode);
                 }
             }
@@ -1003,10 +1027,18 @@ class Subsonic_Xml_Data
         $xresult = $this->_addChildToResultXml($xml, htmlspecialchars('searchResult2'));
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
+            if ($artist->isNew()) {
+                continue;
+            }
+
             $this->addArtist($xresult, $artist);
         }
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
+
             $this->addAlbum($xresult, $album);
         }
         foreach ($songs as $song_id) {
@@ -1031,10 +1063,18 @@ class Subsonic_Xml_Data
         $xresult = $this->_addChildToResultXml($xml, htmlspecialchars('searchResult3'));
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
+            if ($artist->isNew()) {
+                continue;
+            }
+
             $this->addArtistID3($xresult, $artist);
         }
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
+
             $this->addAlbumID3($xresult, $album);
         }
         foreach ($songs as $song_id) {
@@ -1057,6 +1097,10 @@ class Subsonic_Xml_Data
         $xshares = $this->_addChildToResultXml($xml, 'shares');
         foreach ($shares as $share_id) {
             $share = new Share($share_id);
+            if ($share->isNew()) {
+                continue;
+            }
+
             // Don't add share with max counter already reached
             if ($share->max_counter === 0 || $share->counter < $share->max_counter) {
                 $this->_addShare($xshares, $share);
@@ -1222,11 +1266,19 @@ class Subsonic_Xml_Data
 
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
+            if ($artist->isNew()) {
+                continue;
+            }
+
             $this->addArtist($xstarred, $artist);
         }
 
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
+
             // `Starred` holds `Child` albums; `Starred2` is the ID3 variant.
             $this->addAlbum($xstarred, $album);
         }
@@ -1254,11 +1306,19 @@ class Subsonic_Xml_Data
 
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
+            if ($artist->isNew()) {
+                continue;
+            }
+
             $this->addArtistID3($xstarred, $artist);
         }
 
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
+
             $this->addAlbumID3($xstarred, $album);
         }
 
@@ -1502,6 +1562,10 @@ class Subsonic_Xml_Data
         $allalbums = $this->albumRepository->getAlbumByArtist($artist_id);
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
+
             // TODO addChild || use addChildArray
             $this->addAlbum($xdir, $album, false, 'child');
         }

@@ -104,6 +104,14 @@ interface CatalogRepositoryInterface
     ): array;
 
     /**
+     * Reads the names of the given catalogs, keyed by id and ordered by name
+     *
+     * @param array<int> $catalogIds
+     * @return array<int, string>
+     */
+    public function getNamesByIds(array $catalogIds): array;
+
+    /**
      * The configured path of every catalog of one backend, keyed by catalog id
      *
      * @return array<int, string>

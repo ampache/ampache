@@ -102,7 +102,6 @@ final class PlaylistCreate5Method implements MethodInterface
             );
         }
 
-
         return $response->withBody(
             $this->streamFactory->createStream(
                 $output->playlists($apiVersion, [$object_id], $user, $input['auth'], false, false)

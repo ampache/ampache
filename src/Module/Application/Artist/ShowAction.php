@@ -25,9 +25,15 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Artist\ArtistPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
@@ -51,6 +57,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private AlbumRepositoryInterface $albumRepository,
         private ZipHandlerInterface $zipHandler,
         private BrowseFactoryInterface $browseFactory,
+        private FunctionCheckerInterface $functionChecker,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -81,32 +88,27 @@ final readonly class ShowAction implements ApplicationActionInterface
             }
 
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_RELEASE_TYPE)) {
-                $multi_object_ids = $this->albumRepository->getByArtist(
-                    $artistId,
-                    $catalogId,
-                    true
-                );
-                $object_ids = null;
+                // grouped by release type, each list carrying the heading it renders under
+                /** @var array<string, list<int>> $multi_object_ids */
+                $multi_object_ids = $this->albumRepository->getByArtist($artistId, $catalogId, true);
             } else {
-                $object_ids = $this->albumRepository->getByArtist(
-                    $artistId,
-                    $catalogId
-                );
-                $multi_object_ids = null;
+                /** @var list<int> $object_ids */
+                $object_ids       = $this->albumRepository->getByArtist($artistId, $catalogId);
+                $multi_object_ids = ['' => $object_ids];
             }
 
-            $this->ui->show(
-                'show_artist.inc.php',
-                [
-                    'artist' => $artist,
-                    'object_type' => $objectType,
-                    'object_ids' => $object_ids,
-                    'multi_object_ids' => $multi_object_ids,
-                    'gatekeeper' => $gatekeeper,
-                    'zipHandler' => $this->zipHandler,
-                    'browseFactory' => $this->browseFactory,
-                ]
-            );
+            echo (new ArtistPageView(
+                $artist,
+                $multi_object_ids,
+                $objectType,
+                $this->browseFactory,
+                $gatekeeper->getUser(),
+                AmpConfig::get_web_path(),
+                canEditArtist($artist, $gatekeeper->getUserId()),
+                $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('artist'),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ))->render();
         }
 
         $this->ui->showQueryStats();

@@ -29,5 +29,15 @@ interface ConfigViewAdapterInterface
 {
     public function isDirectplayEnabled(): bool;
 
+    public function isLicensingEnabled(): bool;
+
+    public function isRatingEnabled(): bool;
+
+    public function isShowLicenseEnabled(): bool;
+
+    public function isShowPlayedTimesEnabled(): bool;
+
+    public function isShowSkippedTimesEnabled(): bool;
+
     public function isWaveformEnabled(): bool;
 }

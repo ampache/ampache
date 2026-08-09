@@ -60,7 +60,7 @@ final class PreferenceDeleteMethod implements MethodInterface
      *
      * Delete a non-system preference by name
      *
-     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * filter = (string) Preference name e.g ('notify_email', 'popular_threshold')
      *
      * @param array{
      *     filter?: string,

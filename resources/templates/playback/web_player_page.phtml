@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// playback/web_player_page.phtml -- rendered by Ampache\Gui\Playback\WebPlayerPageView
+
+/** @var Ampache\Gui\Playback\WebPlayerPageView $this */
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Propelled by Ampache | ampache.org -->
+<title><?php echo $this->e($this->getSiteTitle()); ?></title>
+<meta property="og:title" content="<?php echo $this->e($this->getSiteTitle()); ?>" />
+<meta property="og:image" content="<?php echo $this->e($this->getLogoUrl()); ?>"/>
+<meta property="og:description" content="A web based audio/video streaming application and file manager allowing you to access your music &amp; videos from anywhere, using almost any internet enabled device." />
+<meta property="og:site_name" content="Ampache"/>
+<?php echo $this->raw($this->renderPlayer()); ?>

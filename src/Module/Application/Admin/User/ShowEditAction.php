@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Admin\UserEditView;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -60,10 +61,7 @@ final class ShowEditAction extends AbstractUserAction
         }
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_edit_user.inc.php',
-            ['client' => $user]
-        );
+        echo (new UserEditView($user, $this->configContainer->getWebPath('/admin'), true))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

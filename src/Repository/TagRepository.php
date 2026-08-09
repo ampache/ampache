@@ -121,6 +121,11 @@ final readonly class TagRepository implements TagRepositoryInterface
             : (int) $tagId;
     }
 
+    public function getHiddenCount(): int
+    {
+        return (int) $this->connection->fetchOne('SELECT COUNT(*) AS `tag_count` FROM `tag` WHERE `is_hidden` = 1;');
+    }
+
     public function getMergedCount(): int
     {
         return (int) $this->connection->fetchOne('SELECT COUNT(DISTINCT `tag_id`) AS `tag_count` FROM `tag_merge`;');
@@ -317,8 +322,8 @@ final readonly class TagRepository implements TagRepositoryInterface
         // the per-type counter column doubles as the weight, so a type without one falls back to the summed count
         $countType = TagCountTypeEnum::tryFrom($objectType);
         $sql       = ($countType instanceof TagCountTypeEnum)
-            ? sprintf('SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`%s` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `%s` DESC, `tag`.`id` ', $countType->value, $countType->value) . $limitClause
-            : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `count` DESC, `tag`.`id` ' . $limitClause;
+            ? sprintf('SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag_map`.`user`, `tag`.`%s` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `%s` DESC, `tag`.`id` ', $countType->value, $countType->value) . $limitClause
+            : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag_map`.`user`, (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `count` DESC, `tag`.`id` ' . $limitClause;
 
         $result = $this->connection->query($sql, [$objectType, $objectId]);
 
@@ -328,6 +333,7 @@ final readonly class TagRepository implements TagRepositoryInterface
                 'id' => (int) $row['id'],
                 'name' => (string) $row['name'],
                 'is_hidden' => (int) $row['is_hidden'],
+                'user' => (int) $row['user'],
                 'count' => (int) $row['count'],
             ];
         }
@@ -389,16 +395,36 @@ final readonly class TagRepository implements TagRepositoryInterface
         );
     }
 
-    public function removeAllMaps(string $objectType, int $objectId): void
+    public function removeAllMaps(string $objectType, int $objectId, ?int $userId = null): void
     {
+        // a null user clears the lot, which is what deleting the object wants; an id keeps everybody else's, so a scan cannot drop a hand-set genre
+        if ($userId === null) {
+            $this->connection->query(
+                'DELETE FROM `tag_map` WHERE `object_type` = ? AND `object_id` = ?',
+                [$objectType, $objectId]
+            );
+
+            return;
+        }
+
         $this->connection->query(
-            'DELETE FROM `tag_map` WHERE `object_type` = ? AND `object_id` = ?',
-            [$objectType, $objectId]
+            'DELETE FROM `tag_map` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?',
+            [$objectType, $objectId, $userId]
         );
     }
 
-    public function removeMap(int $tagId, string $objectType, int $objectId, int $userId): void
+    public function removeMap(int $tagId, string $objectType, int $objectId, ?int $userId = null): void
     {
+        // a null user drops the genre whoever set it, which is what a manual edit removing it means
+        if ($userId === null) {
+            $this->connection->query(
+                'DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ?',
+                [$tagId, $objectType, $objectId]
+            );
+
+            return;
+        }
+
         $this->connection->query(
             'DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?',
             [$tagId, $objectType, $objectId, $userId]

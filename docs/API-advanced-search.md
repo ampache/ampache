@@ -103,6 +103,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | disk_count            | Disk Count                              | numeric           |                                 album                                 |
 | episode_count         | Episode Count                           | numeric           |                               podcasts                                |
 | time                  | Length (in minutes)                     | numeric           |             song, album, artist, podcast, podcast_episode             |
+| bpm                   | BPM                                     | numeric           |                                 song                                  |
 | label                 | Label                                   | text              |                                 song                                  |
 | comment               | Comment                                 | text              |                                 song                                  |
 | lyrics                | Lyrics                                  | text              |                                 song                                  |

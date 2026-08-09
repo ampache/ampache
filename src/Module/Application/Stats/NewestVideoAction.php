@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\StatsFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -45,6 +46,7 @@ final readonly class NewestVideoAction implements ApplicationActionInterface
         private BrowseFactoryInterface $browseFactory,
         private ConfigContainerInterface $configContainer,
         private VideoRepositoryInterface $videoRepository,
+        private StatsFormViewFactoryInterface $statsFormViewFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -52,10 +54,7 @@ final readonly class NewestVideoAction implements ApplicationActionInterface
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_form_newest.inc.php',
-            ['videoRepository' => $this->videoRepository]
-        );
+        echo $this->statsFormViewFactory->createNewest()->render();
 
         define('TABLE_RENDERED', 1);
 

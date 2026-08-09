@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Collection;
 
+use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -46,6 +47,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private LoggerInterface $logger,
         private CollectionRepositoryInterface $collectionRepository,
         private BrowseFactoryInterface $browseFactory,
+        private GuiFactoryInterface $guiFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -56,12 +58,13 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $user = Core::get_global('user');
+        $globalUser = Core::get_global('user');
+        $user       = $globalUser instanceof User ? $globalUser : null;
         // A collection the user may not see reports as missing rather than forbidden, matching the API: telling
         // them access was denied would confirm that a private collection with that id exists.
         if (
             $collection === null
-            || !$collection->isVisible($user instanceof User ? $user : null)
+            || !$collection->isVisible($user)
         ) {
             $this->logger->warning(
                 'Requested a collection that does not exist',
@@ -70,15 +73,13 @@ final readonly class ShowAction implements ApplicationActionInterface
             echo T_('You have requested an object that does not exist');
         } else {
             // `get_items()` is the shape every other ordered browse is fed, so `show_objects()` needs no
-            // special case; the template decides how to lay the members out
-            $this->ui->show(
-                'show_collection.inc.php',
-                [
-                    'collection' => $collection,
-                    'object_ids' => $collection->get_items(),
-                    'browseFactory' => $this->browseFactory,
-                ]
-            );
+            // special case; the view decides how to lay the members out
+            echo $this->guiFactory->createCollectionViewAdapter(
+                $this->browseFactory,
+                $collection,
+                $user,
+                $collection->get_items()
+            )->render();
         }
 
         $this->ui->showQueryStats();

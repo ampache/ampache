@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -47,6 +48,7 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
     public const string REQUEST_KEY = 'update_user';
 
     public function __construct(
+        private PreferencesViewFactoryInterface $preferencesViewFactory,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
@@ -122,14 +124,11 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
 
         $user = $gatekeeper->getUser();
         if ($user instanceof User) {
-            $this->ui->show(
-                'show_preferences.inc.php',
-                [
-                    'fullname' => $user->fullname,
-                    'preferences' => $user->get_preferences($_REQUEST['tab']),
-                    'ui' => $this->ui
-                ]
-            );
+            echo $this->preferencesViewFactory->create(
+                $gatekeeper,
+                $user->fullname,
+                $user->get_preferences($_REQUEST['tab'])
+            )->render();
         }
 
         $this->ui->showQueryStats();

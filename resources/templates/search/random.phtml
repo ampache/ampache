@@ -1,0 +1,103 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// search/random.phtml -- rendered by Ampache\Gui\Search\RandomFormView
+
+use Ampache\Gui\Search\SearchRulesView;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Search\RandomFormView $this */
+
+$webPath     = $this->getWebPath();
+$currentType = $this->getCurrentType();
+if ($currentType === null) {
+    // an unknown type has nothing to pick from, so the song form is the fallback
+    header('Location: ' . $webPath . '/random.php?action=get_advanced&type=song');
+
+    return;
+}
+
+$count  = $this->getSelectedCount();
+$length = $this->getSelectedLength();
+$size   = $this->getSelectedSize();
+Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo $this->e($webPath); ?>/random.php?action=get_advanced&type=<?php echo $this->e($currentType); ?>">
+    <input type="hidden" name="random" value="1" />
+    <div class="category_options">
+        <?php foreach ($this->getCategories() as $category) { ?>
+        <a class="category <?php echo ($category['type'] === $currentType) ? 'current' : ''; ?>" href="<?php echo $this->e($webPath); ?>/random.php?action=advanced&type=<?php echo $this->e($category['type']); ?>">
+            <?php echo $this->e($category['label']); ?>
+        </a>
+        <?php } ?>
+    </div>
+    <table class="tabledata">
+        <tr id="search_item_count">
+            <td><?php echo T_('Item Count'); ?></td>
+            <td>
+                <select name="limit">
+                    <?php foreach ($this->getCounts() as $option) { ?>
+                    <option value="<?php echo $option['value']; ?>"<?php echo ($option['value'] === $count) ? ' selected="selected"' : ''; ?>><?php echo $this->e($option['label']); ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr id="search_length">
+            <td><?php echo T_('Length'); ?></td>
+            <td>
+                <select name="length">
+                    <?php foreach ($this->getLengths() as $option) { ?>
+                    <option value="<?php echo $option['value']; ?>"<?php echo ($option['value'] === $length) ? ' selected="selected"' : ''; ?>><?php echo $this->e($option['label']); ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr id="search_size_limit">
+            <td><?php echo T_('Size Limit'); ?></td>
+            <td>
+                <select name="size_limit">
+                    <?php foreach ($this->getSizes() as $option) { ?>
+                    <option value="<?php echo $option['value']; ?>"<?php echo ($option['value'] === $size) ? ' selected="selected"' : ''; ?>><?php echo $this->e($option['label']); ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <?php echo $this->raw((new SearchRulesView(null, $currentType, $webPath))->render()); ?>
+    <div class="formValidation">
+        <input type="submit" value="<?php echo $this->e(T_('Enqueue')); ?>" />
+    </div>
+</form>
+<?php Ui::show_box_bottom(); ?>
+<div id="browse">
+<?php if ($this->getObjectIds() !== []) {
+    $browse = $this->createBrowse();
+    $browse->set_type($this->getBrowseType());
+    $browse->save_objects($this->getObjectIds());
+    $browse->show_objects();
+    $browse->store();
+    echo $this->raw(Ajax::observe('window', 'load', Ajax::action('?action=refresh_rightbar', 'playlist_refresh_load')));
+} ?>
+</div>

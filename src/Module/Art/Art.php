@@ -273,6 +273,8 @@ class Art extends database_object
         }
 
         echo "<div class=\"item_art\">";
+        // $name is the object's plain-text title, so it is escaped here rather than at 40 call sites
+        $name = scrub_out($name);
         echo "<a href=\"" . $link . "\" title=\"" . $name . "\"";
         if ($prettyPhoto) {
             echo " rel=\"prettyPhoto\"";

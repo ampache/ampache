@@ -1,0 +1,147 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// edit/album.phtml -- rendered by Ampache\Gui\Edit\Renderer\AlbumEditFormRenderer
+
+use Ampache\Module\Api\Ajax;
+
+/** @var Ampache\Gui\Edit\Renderer\AlbumEditFormRenderer $this */
+
+$albumId     = $this->getAlbumId();
+$isAlbumDisk = $this->isAlbumDisk();
+$prefix      = ($isAlbumDisk) ? 'album_disk' : 'album';
+$mayManage   = $this->mayManage();
+$mayEditMbid = $this->mayEditMbid(); ?>
+<div>
+    <form method="post" id="edit_<?php echo $this->e($prefix); ?>_<?php echo $albumId; ?>" class="edit_dialog_content">
+        <table class="tabledata">
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
+                <td><input type="text" name="name" value="<?php echo $this->e($this->getName()); ?>" autofocus /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Album Artist'); ?></td>
+                <td>
+                    <?php if ($mayManage) {
+                        show_artist_select('album_artist', $this->getAlbumArtistId(), true, $albumId, true); ?>
+                    <div id="album_artist_select_album_<?php echo $albumId; ?>">
+                        <?php echo $this->raw(Ajax::observe('album_artist_select_' . $albumId, 'change', 'check_inline_song_edit("album_artist", ' . $albumId . ')')); ?>
+                    </div>
+                    <?php } else { ?>
+                    <input type="hidden" name="album_artist" value="<?php echo $this->getAlbumArtistId(); ?>" /><?php echo $this->e($this->getParentName()); ?>
+                    <?php } ?>
+                </td>
+            </tr>
+            <?php if ($this->showAdditionalArtists()) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Additional Artists'); ?></td>
+                <?php // Artist::get_display() escapes each name itself?>
+                <td><?php echo $this->raw($this->getAdditionalArtists()); ?></td>
+            </tr>
+            <?php } ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Year'); ?></td>
+                <td><input type="text" name="year" value="<?php echo $this->e($this->getYear()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
+                <td>
+                    <?php if ($mayEditMbid) { ?>
+                    <input type="text" name="mbid" value="<?php echo $this->e($this->getMbid()); ?>" />
+                    <?php } else { ?>
+                    <input type="hidden" name="mbid" value="<?php echo $this->e($this->getMbid()); ?>" /><?php echo $this->e($this->getMbid()); ?>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz Release Group ID'); ?></td>
+                <td>
+                    <?php if ($mayEditMbid) { ?>
+                    <input type="text" name="mbid_group" value="<?php echo $this->e($this->getMbidGroup()); ?>" />
+                    <?php } else { ?>
+                    <input type="hidden" name="mbid_group" value="<?php echo $this->e($this->getMbidGroup()); ?>" /><?php echo $this->e($this->getMbidGroup()); ?>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Release Type'); ?></td>
+                <td><input type="text" name="release_type" value="<?php echo $this->e($this->getReleaseType()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Release Status'); ?></td>
+                <td><input type="text" name="release_status" value="<?php echo $this->e($this->getReleaseStatus()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Release Comment'); ?></td>
+                <td><input type="text" name="version" value="<?php echo $this->e($this->getVersion()); ?>" /></td>
+            </tr>
+            <?php if ($this->showDisk()) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Disk'); ?></td>
+                <td><input type="text" name="disk" value="<?php echo $this->e($this->getDisk()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Disk Subtitle'); ?></td>
+                <td><input type="text" name="disksubtitle" value="<?php echo $this->e($this->getDiskSubtitle()); ?>" /></td>
+            </tr>
+            <?php } ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Catalog Number'); ?></td>
+                <td><input type="text" name="catalog_number" value="<?php echo $this->e($this->getCatalogNumber()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Barcode'); ?></td>
+                <td><input type="text" name="barcode" value="<?php echo $this->e($this->getBarcode()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Original Year'); ?></td>
+                <td><input type="text" name="original_year" value="<?php echo $this->e($this->getOriginalYear()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>
+                <?php // Tag::get_display() escapes the link text and title itself?>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo $this->raw($this->getGenres()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Moods'); ?></td>
+                <?php // Mood::get_display() escapes the names itself and adds no markup without a link?>
+                <td><input type="text" name="edit_moods" id="edit_moods" value="<?php echo $this->raw($this->getMoods()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"></td>
+                <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub songs'); ?></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"></td>
+                <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub songs'); ?></td>
+            </tr>
+        </table>
+        <input type="hidden" name="id" value="<?php echo $albumId; ?>" />
+        <?php if ($isAlbumDisk) { ?>
+        <input type="hidden" name="catalog" value="<?php echo $this->getCatalogId(); ?>" />
+        <?php } ?>
+        <input type="hidden" name="type" value="<?php echo $this->e($prefix); ?>_row" />
+    </form>
+</div>

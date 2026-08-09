@@ -35,6 +35,7 @@ use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\PlaylistFolder;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use ArrayIterator;
@@ -468,6 +469,36 @@ final class XmlOutput implements ApiOutputInterface
         string $objectType = '',
     ): string {
         return Api::object_array($xmlItems, $item, $objectType);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 8 $apiVersion
+     * @param list<array{object_id: int, object_type: string, sort_order: int}> $items
+     */
+    public function playlistFolderItems(
+        int $apiVersion,
+        ?PlaylistFolder $folder,
+        array $items,
+        User $user,
+        string $auth,
+    ): string {
+        return $this->xml8Data->playlist_folder_items($folder, $items, $user, $auth);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 8 $apiVersion
+     * @param list<PlaylistFolder> $folders
+     */
+    public function playlistFolders(
+        int $apiVersion,
+        array $folders,
+        User $user,
+    ): string {
+        return $this->xml8Data->playlist_folders($folders, $user);
     }
 
     /**

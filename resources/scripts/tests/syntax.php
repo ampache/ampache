@@ -40,7 +40,7 @@ $filter    = new RecursiveCallbackFilterIterator(
             return !in_array($current->getFilename(), $skipDirs, true);
         }
 
-        return strtolower($current->getExtension()) === 'php';
+        return in_array(strtolower($current->getExtension()), ['php', 'phtml'], true);
     }
 );
 

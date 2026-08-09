@@ -27,11 +27,11 @@ namespace Ampache\Module\Application\Login;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authentication\Oidc\OidcAuthenticationServiceInterface;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\UiInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -43,10 +43,10 @@ class OidcActionTest extends MockeryTestCase
 {
     private MockInterface|ConfigContainerInterface|null $configContainer;
     private MockInterface|LoggerInterface|null $logger;
+    private LoginFormViewFactoryInterface|MockInterface|null $loginFormViewFactory;
     private MockInterface|NetworkCheckerInterface|null $networkChecker;
     private MockInterface|OidcAuthenticationServiceInterface|null $oidcAuthenticationService;
     private ?OidcAction $subject;
-    private MockInterface|UiInterface|null $ui;
 
     public function testRunThrowsIfOidcIsNotEnabled(): void
     {
@@ -72,14 +72,14 @@ class OidcActionTest extends MockeryTestCase
         $this->logger                    = Mockery::mock(LoggerInterface::class);
         $this->networkChecker            = Mockery::mock(NetworkCheckerInterface::class);
         $this->oidcAuthenticationService = Mockery::mock(OidcAuthenticationServiceInterface::class);
-        $this->ui                        = Mockery::mock(UiInterface::class);
+        $this->loginFormViewFactory      = Mockery::mock(LoginFormViewFactoryInterface::class);
 
         $this->subject = new OidcAction(
             $this->configContainer,
             $this->logger,
             $this->networkChecker,
             $this->oidcAuthenticationService,
-            $this->ui
+            $this->loginFormViewFactory
         );
     }
 }

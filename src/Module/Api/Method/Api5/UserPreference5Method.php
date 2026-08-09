@@ -54,7 +54,7 @@ final class UserPreference5Method implements MethodInterface
      *
      * Get your user preference by name
      *
-     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * filter = (string) Preference name e.g ('notify_email', 'popular_threshold')
      *
      * @param array{
      *     filter?: string,

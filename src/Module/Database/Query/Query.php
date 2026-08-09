@@ -225,6 +225,8 @@ class Query
             case 'tag_hidden':
             case 'tag':
                 return TagQuery::FILTERS;
+            case 'mood':
+                return MoodQuery::FILTERS;
             case 'user':
                 return UserQuery::FILTERS;
             case 'video':
@@ -982,6 +984,9 @@ class Query
             case 'tag_hidden':
             case 'tag':
                 $this->queryType = new TagQuery();
+                break;
+            case 'mood':
+                $this->queryType = new MoodQuery();
                 break;
             case 'user':
                 $this->queryType = new UserQuery();

@@ -25,22 +25,20 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Rss;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Rss\RssFeedTypeFactoryInterface;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\UserRepositoryInterface;
-use PhpTal\PHPTAL;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,7 +51,6 @@ final readonly class ShowAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private ResponseFactoryInterface $responseFactory,
         private UserRepositoryInterface $userRepository,
-        private TalFactoryInterface $talFactory,
         private RssFeedTypeFactoryInterface $rssFeedTypeFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
     ) {}
@@ -79,7 +76,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $item = $this->libraryItemLoader->load(
                 LibraryItemEnum::from($queryParams['object_type'] ?? ''),
                 (int) ($queryParams['object_id'] ?? 0),
-                [Album::class, Artist::class, Podcast::class, Song::class]
+                [Album::class, AlbumDisk::class, Artist::class, Podcast::class, Song::class]
             );
 
             if ($item === null) {
@@ -98,12 +95,6 @@ final readonly class ShowAction implements ApplicationActionInterface
             };
         }
 
-        $tal = $this->talFactory->createPhpTal();
-        $tal->setOutputMode(PHPTAL::XML);
-        $tal->setEncoding(AmpConfig::get('site_charset', 'UTF-8'));
-
-        $handler->configureTemplate($tal);
-
         $response = $this->responseFactory->createResponse()
             ->withHeader('X-Robots-Tag', 'noindex')
             ->withHeader(
@@ -114,7 +105,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 )
             );
 
-        $response->getBody()->write($tal->execute());
+        $response->getBody()->write($handler->createView()->render());
 
         return $response;
     }

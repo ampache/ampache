@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Repository\TagRepositoryInterface;
 
@@ -39,6 +40,7 @@ use Ampache\Repository\TagRepositoryInterface;
  */
 class Tag extends database_object implements library_item, displayable_item, container_item, GarbageCollectibleInterface
 {
+    public const int NO_USER            = 0;
     protected const string DB_TABLENAME = 'tag';
 
     public int $album       = 0;
@@ -80,7 +82,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      * This is a wrapper function, it figures out what we need to add, be it a tag
      * and map, or just the mapping
      */
-    public static function add(string $type, int $object_id, string $value): int
+    public static function add(string $type, int $object_id, string $value, int $user_id = self::NO_USER): int
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return 0;
@@ -104,8 +106,8 @@ class Tag extends database_object implements library_item, displayable_item, con
         }
 
         // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
-        if (!self::tag_map_exists($type, $object_id, $tag_id)) {
-            return self::add_tag_map($type, $object_id, $tag_id);
+        if (!self::tag_map_exists($type, $object_id, $tag_id, $user_id)) {
+            return self::add_tag_map($type, $object_id, $tag_id, $user_id);
         }
 
         return 0;
@@ -197,7 +199,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      * This returns a csv formatted version of the tags that we are given
      * it also takes a type so that it knows how to return it, this is used
      * by the formatting functions of the different objects
-     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @param array<int, array{id: int, name: string, is_hidden: int, user?: int, count: int}> $tags
      */
     public static function get_display(array $tags, ?bool $link = false, ?string $filter_type = ''): string
     {
@@ -216,9 +218,14 @@ class Tag extends database_object implements library_item, displayable_item, con
                 $results .= '<a href="' . $web_path . '/browse.php?action=tag&show_tag=' . $value['id'] . (empty($filter_type) ? '' : '&type=' . $filter_type) . '" title="' . scrub_out($value['name']) . '">';
             }
 
-            $results .= $value['name'];
+            $results .= scrub_out($value['name']);
             if ($link) {
                 $results .= '</a>';
+            }
+
+            // only when emitting html; the plain form feeds edit inputs and the daap and upnp genre fields, where a span would land in the value
+            if ($link && (int) ($value['user'] ?? self::NO_USER) > self::NO_USER) {
+                $results .= '<span class="user-set" title="' . scrub_out(T_('User set')) . '">*</span>';
             }
 
             $results .= ', ';
@@ -287,7 +294,10 @@ class Tag extends database_object implements library_item, displayable_item, con
     /**
      * get_top_tags
      * This gets the top tags for the specified object using limit
-     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
+     *
+     * `user` is the owner of the map: 0 for a genre read out of the file tags, otherwise whoever set it by hand.
+     *
+     * @return array<int, array{id: int, name: string, is_hidden: int, user: int, count: int}>
      */
     public static function get_top_tags(string $type, int $object_id, ?int $limit = 10): array
     {
@@ -331,10 +341,22 @@ class Tag extends database_object implements library_item, displayable_item, con
      * Update the tags list based on a comma-separated list
      *  (ex. tag1,tag2,tag3,..)
      */
-    public static function update_tag_list(string $tags_comma, string $object_type, int $object_id, bool $overwrite): bool
-    {
+    public static function update_tag_list(
+        string $tags_comma,
+        string $object_type,
+        int $object_id,
+        bool $overwrite,
+        ?int $user_id = null,
+        bool $from_file_tags = false,
+    ): bool {
+        // a tag read belongs to nobody; anything else is attributed to the person acting, which is what makes it survive the next read
+        $user_id ??= ($from_file_tags)
+            ? self::NO_USER
+            : self::getCurrentUserId();
+
         if (!strlen($tags_comma) > 0) {
-            return self::remove_all_maps($object_type, $object_id);
+            // a file with no genre must not take away what somebody set by hand; clearing the field yourself does
+            return self::remove_all_maps($object_type, $object_id, ($from_file_tags) ? self::NO_USER : null);
         }
 
         debug_event(self::class, sprintf('update_tag_list %s {%d}', $object_type, $object_id), 5);
@@ -377,12 +399,22 @@ class Tag extends database_object implements library_item, displayable_item, con
                     }
                 }
 
+                // a hand-set genre is not in the file, so treat it as present and leave the removing to a manual edit
+                if (
+                    !$found
+                    && $from_file_tags
+                    && $ctv['user'] > self::NO_USER
+                ) {
+                    continue;
+                }
+
                 if (
                     !$found
                     && $overwrite
                 ) {
                     debug_event(self::class, 'update_tag_list ' . $object_type . ' delete {' . $ctag->name . '}', 5);
-                    $ctag->remove_map($object_type, $object_id);
+                    // an edit removes the genre whoever set it, so a manager is not locked out by a user's choice
+                    $ctag->remove_map($object_type, $object_id, ($from_file_tags) ? self::NO_USER : null);
                     $change = true;
                 }
             }
@@ -392,7 +424,7 @@ class Tag extends database_object implements library_item, displayable_item, con
         foreach ($editedTags as $tag_name) {
             if ($tag_name != '') {
                 debug_event(self::class, 'update_tag_list ' . $object_type . ' add {' . $tag_name . '}', 5);
-                self::add($object_type, $object_id, $tag_name);
+                self::add($object_type, $object_id, $tag_name, $user_id);
                 $change = true;
             }
         }
@@ -421,7 +453,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      * add_tag_map
      * This adds a specific tag to the map for specified object
      */
-    private static function add_tag_map(string $type, int|string $object_id, int|string $tag_id): int
+    private static function add_tag_map(string $type, int|string $object_id, int|string $tag_id, int $user_id = self::NO_USER): int
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             debug_event(self::class, $type . " is not a library item.", 3);
@@ -448,13 +480,13 @@ class Tag extends database_object implements library_item, displayable_item, con
         $countType = TagCountTypeEnum::tryFrom($type);
         $insert_id = 0;
         foreach ($merges as $tag) {
-            $insert_id = $tagRepository->addMap((int) $tag['id'], $type, $item_id, 0);
+            $insert_id = $tagRepository->addMap((int) $tag['id'], $type, $item_id, $user_id);
             parent::add_to_cache(
                 'tag_map_' . $type,
                 $insert_id,
                 [
                     'tag_id' => $tag_id,
-                    'user' => 0,
+                    'user' => $user_id,
                     'object_type' => $type,
                     'object_id' => $item_id
                 ]
@@ -466,6 +498,18 @@ class Tag extends database_object implements library_item, displayable_item, con
         }
 
         return $insert_id;
+    }
+
+    /**
+     * The user a manual genre change is attributed to, or nobody when there is no session (a cli scan, a cron)
+     */
+    private static function getCurrentUserId(): int
+    {
+        $user = Core::get_global('user');
+
+        return ($user instanceof User && $user->id > 0)
+            ? $user->id
+            : self::NO_USER;
     }
 
     /**
@@ -482,14 +526,14 @@ class Tag extends database_object implements library_item, displayable_item, con
      * remove_all_maps
      * Clear all the tags from an object when there isn't anything there
      */
-    private static function remove_all_maps(string $object_type, int $object_id): bool
+    private static function remove_all_maps(string $object_type, int $object_id, ?int $user_id = null): bool
     {
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             return false;
         }
 
         $tagRepository = self::getTagRepository();
-        $tagRepository->removeAllMaps($object_type, $object_id);
+        $tagRepository->removeAllMaps($object_type, $object_id, $user_id);
 
         // only the four counted types have a column to put back in step; the rest never had one to begin with
         $countType = TagCountTypeEnum::tryFrom($object_type);
@@ -504,7 +548,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      * tag_map_exists
      * This looks to see if the current mapping of the current object exists
      */
-    private static function tag_map_exists(string $type, int $object_id, int $tag_id): bool
+    private static function tag_map_exists(string $type, int $object_id, int $tag_id, int $user_id = self::NO_USER): bool
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             debug_event(self::class, 'Requested type is not a library item.', 3);
@@ -512,7 +556,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             return false;
         }
 
-        return self::getTagRepository()->mapExists($type, $object_id, $tag_id, 0);
+        return self::getTagRepository()->mapExists($type, $object_id, $tag_id, $user_id);
     }
 
     /**
@@ -717,14 +761,14 @@ class Tag extends database_object implements library_item, displayable_item, con
      * remove_map
      * This will only remove tag maps for the current user
      */
-    public function remove_map(string $type, int $object_id): bool
+    public function remove_map(string $type, int $object_id, ?int $user_id = null): bool
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return false;
         }
 
         $tagRepository = self::getTagRepository();
-        $tagRepository->removeMap($this->id, $type, $object_id, 0);
+        $tagRepository->removeMap($this->id, $type, $object_id, $user_id);
 
         $countType = TagCountTypeEnum::tryFrom($type);
         if ($countType instanceof TagCountTypeEnum) {

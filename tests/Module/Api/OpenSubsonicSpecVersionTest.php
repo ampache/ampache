@@ -61,8 +61,12 @@ class OpenSubsonicSpecVersionTest extends TestCase
     /**
      * The upstream build the implementation was last audited against — keep in step with the compliance date
      * recorded in docs/API-subsonic.md.
+     *
+     * Do not hand-edit this to make a failing build pass: it exists so a refreshed spec forces a re-audit. Once the
+     * implementation has actually been checked against the new build, `composer spec:refresh` rewrites this and the
+     * compliance date together.
      */
-    private const string SPEC_SHA256 = 'cb54c03c33835d132c555863e9771e30dfaa2930312853ca27dfece2ed46bfb6';
+    private const string SPEC_SHA256 = '67c7d915b69868a873ac6ab7cc3d0cf180e6200d9eccc0711ee8fd3c3724714c';
 
     /**
      * @return array<string, mixed>
@@ -102,8 +106,9 @@ class OpenSubsonicSpecVersionTest extends TestCase
         self::assertSame(
             self::SPEC_SHA256,
             hash('sha256', $spec),
-            'docs/openapi-opensubsonic.json changed. Re-audit the implementation against the new build, then update '
-            . 'SPEC_SHA256 here and the compliance date in docs/API-subsonic.md.'
+            'docs/openapi-opensubsonic.json changed. Re-audit the implementation against the new build, then record '
+            . 'it with `composer spec:refresh`, which rewrites SPEC_SHA256 here and the compliance date in '
+            . 'docs/API-subsonic.md. See resources/scripts/tests/spec_refresh.php.'
         );
     }
 

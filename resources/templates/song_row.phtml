@@ -1,0 +1,153 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// song_row.phtml -- rendered by Ampache\Gui\Song\SongRowView
+
+/** @var Ampache\Gui\Song\SongRowView $this */
+
+$song   = $this->getSong();
+$config = $this->getConfig();
+$songId = $song->getId(); ?>
+    <td class="cel_play">
+        <span class="cel_play_content">
+<?php if ($this->isShowTrack()) { ?>
+            <b><?php echo $this->e($song->getTrackNumber()); ?></b>
+<?php } ?>
+        </span>
+        <div class="cel_play_hover">
+<?php if ($config->isDirectplayEnabled()) {
+    echo $this->raw($song->getDirectplayButton());
+
+    if ($song->canAutoplayNext()) {
+        echo $this->raw($song->getAutoplayNextButton());
+    }
+
+    if ($song->canAppendNext()) {
+        echo $this->raw($song->getAppendNextButton());
+    }
+} ?>
+        </div>
+    </td>
+<?php if ($this->isTableView()) { ?>
+    <td class="cel_song"><?php echo $this->raw($song->getSongLink()); ?></td>
+<?php } else { ?>
+    <td class="mash_song"><?php echo $this->raw($song->getSongLink()); ?></td>
+<?php } ?>
+    <td class="cel_add">
+        <span class="cel_item_add">
+            <?php echo $this->raw($song->getTemporaryPlaylistButton()); ?>
+<?php if ($song->canEditPlaylist()) { ?>
+                <a id="add_to_playlist_<?php echo $songId; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $songId; ?>')"><?php echo $this->raw($song->getAddToPlaylistIcon()); ?></a>
+<?php   if ($config->isDirectplayEnabled()) {
+    echo $this->raw($song->getCustomPlayActions());
+}
+            } ?>
+        </span>
+    </td>
+<?php if ($this->isTableView()) {
+    if (!$this->isHideArtist()) { ?>
+        <td class="cel_artist"><?php echo $this->raw($song->getArtistLink()); ?></td>
+<?php   }
+    if (!$this->isHideAlbum()) {
+        if ($this->isAlbumGroup()) { ?>
+        <td class="cel_album"><?php echo $this->raw($song->getAlbumLink()); ?></td>
+<?php       } else { ?>
+        <td class="cel_album"><?php echo $this->raw($song->getAlbumDiskLink()); ?></td>
+<?php       }
+    }
+} else { ?>
+        <td class="mash_artist"><?php echo $this->raw($song->getArtistLink()); ?></td>
+<?php   if (!$this->isHideAlbum()) {
+    if ($this->isAlbumGroup()) { ?>
+        <td class="mash_album"><?php echo $this->raw($song->getAlbumLink()); ?></td>
+<?php       } else { ?>
+        <td class="mash_album"><?php echo $this->raw($song->getAlbumDiskLink()); ?></td>
+<?php       }
+}
+}
+if (!$this->isHideYear()) { ?>
+    <td class="cel_year"><?php echo $this->e($song->getYear()); ?></td>
+<?php }
+if ($this->isTableView()) {
+    if (!$this->isHideGenre()) { ?>
+        <td class="cel_tags"><?php echo $this->raw($song->getGenre()); ?></td>
+<?php   } ?>
+        <td class="cel_time"><?php echo $this->e($song->getPlayDuration()); ?></td>
+<?php   if ($this->isShowLicense()) { ?>
+        <td class="cel_license"><?php echo $this->raw($song->getLicenseLink()); ?></td>
+<?php   }
+    if ($config->isShowPlayedTimesEnabled()) { ?>
+        <td class="cel_counter"><?php echo $this->e($song->getNumberPlayed()); ?></td>
+<?php   }
+    if ($config->isShowSkippedTimesEnabled()) { ?>
+        <td class="cel_counter"><?php echo $this->e($song->getNumberSkipped()); ?></td>
+<?php   }
+} else {
+    if (!$this->isHideGenre()) { ?>
+        <td class="mash_tags"><?php echo $this->raw($song->getGenre()); ?></td>
+<?php   } ?>
+        <td class="mash_time"><?php echo $this->e($song->getPlayDuration()); ?></td>
+<?php   if ($this->isShowLicense()) { ?>
+        <td class="mash_license"><?php echo $this->raw($song->getLicenseLink()); ?></td>
+<?php   }
+    if ($config->isShowPlayedTimesEnabled()) { ?>
+        <td class="mash_counter"><?php echo $this->e($song->getNumberPlayed()); ?></td>
+<?php   }
+    if ($config->isShowSkippedTimesEnabled()) { ?>
+        <td class="mash_counter"><?php echo $this->e($song->getNumberSkipped()); ?></td>
+<?php   }
+}
+if ($this->isUsingRatings()) { ?>
+        <td class="cel_ratings">
+            <div class="rating">
+                <span class="cel_rating" id="rating_<?php echo $songId; ?>_song"><?php echo $this->raw($song->getRating()); ?></span>
+                <span class="cel_userflag" id="userflag_<?php echo $songId; ?>_song"><?php echo $this->raw($song->getUserFlags()); ?></span>
+            </div>
+        </td>
+<?php } ?>
+    <td class="cel_action">
+<?php if ($song->canPostShout()) { ?>
+        <a href="<?php echo $this->e($song->getPostShoutUrl()); ?>"><?php echo $this->raw($song->getPostShoutIcon()); ?></a>
+<?php }
+if ($song->canShare()) {
+    echo $this->raw($song->getShareUi());
+}
+
+if ($song->canDownload()) { ?>
+        <a class="nohtml" rel="nofollow" href="<?php echo $this->e($song->getDownloadUrl()); ?>"><?php echo $this->raw($song->getDownloadIcon()); ?></a>
+<?php }
+if ($song->isEditable()) { ?>
+        <a id="edit_song_<?php echo $songId; ?>" onclick="showEditDialog('song_row', '<?php echo $songId; ?>', 'edit_song_<?php echo $songId; ?>', '<?php echo $this->e($song->getEditButtonTitle()); ?>', 'song_', '<?php echo $this->e($this->getArgumentParam()); ?>')"><?php echo $this->raw($song->getEditIcon()); ?></a>
+<?php }
+if ($song->canToggleState()) { ?>
+        <span id="button_flip_state_<?php echo $songId; ?>"><?php echo $this->raw($song->getToggleStateButton()); ?></span>
+<?php }
+if ($song->canBeDeleted()) { ?>
+        <a id="delete_song_<?php echo $songId; ?>" href="<?php echo $this->e($song->getDeletionUrl()); ?>"><?php echo $this->raw($song->getDeletionIcon()); ?></a>
+<?php } ?>
+    </td>
+<?php if (!$this->isHideDrag() && $song->canBeReordered()) { ?>
+        <td class="cel_drag"><?php echo $this->raw($song->getReorderIcon()); ?></td>
+<?php } ?>

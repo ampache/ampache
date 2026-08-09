@@ -193,6 +193,15 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | GET    | `playlists/stats`                                    | `?action=stats&type=playlist`                                                    |                    |
 | GET    | `playlists`                                          | `?action=playlists`                                                              |                    |
 | PUT    | `playlists`                                          | `?action=playlist_create`                                                        |                    |
+| GET    | `playlist-folders/{playlist_folder_id}/items`        | `?action=playlist_folder_items&filter={playlist_folder_id}`                      |                    |
+| PUT    | `playlist-folders/{playlist_folder_id}/items`        | `?action=playlist_folder_add&filter={playlist_folder_id}`                        |                    |
+| DELETE | `playlist-folders/{playlist_folder_id}/items`        | `?action=playlist_folder_remove&filter={playlist_folder_id}`                     |                    |
+| GET    | `playlist-folders/{playlist_folder_id}`              | `?action=playlist_folder&filter={playlist_folder_id}`                            |                    |
+| PATCH  | `playlist-folders/{playlist_folder_id}`              | `?action=playlist_folder_edit&filter={playlist_folder_id}`                       |                    |
+| DELETE | `playlist-folders/{playlist_folder_id}`              | `?action=playlist_folder_delete&filter={playlist_folder_id}`                     |                    |
+| GET    | `playlist-folders{path}`                             | `?action=playlist_folder&filter={path}`                                          |                    |
+| GET    | `playlist-folders`                                   | `?action=playlist_folders`                                                       |                    |
+| PUT    | `playlist-folders`                                   | `?action=playlist_folder_create`                                                 |                    |
 | GET    | `podcast-episodes/{episode_id}/bookmark`             | `?action=bookmark&filter={episode_id}&type=podcast_episode`                      | `get_bookmark`     |
 | PATCH  | `podcast-episodes/{episode_id}/bookmark`             | `?action=bookmark_edit&filter={episode_id}&type=podcast_episode`                 |                    |
 | DELETE | `podcast-episodes/{episode_id}/bookmark`             | `?action=bookmark_delete&filter={episode_id}&type=podcast_episode`               |                    |

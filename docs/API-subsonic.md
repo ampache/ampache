@@ -38,7 +38,7 @@ Ampache Subsonic support is being extended to support these changes
 
 ### Spec compliance
 
-**Audited against the OpenSubsonic specification on 2026-07-27.**
+**Audited against the OpenSubsonic specification on 2026-08-07.**
 
 The spec is a moving target — upstream rebuilds it continuously and states the schema and prose are still being
 reconciled — so the audit is pinned to one build rather than to "latest". `docs/openapi-opensubsonic.json` is that
@@ -47,13 +47,18 @@ build, copied verbatim from `https://opensubsonic.netlify.app/docs/openapi/opena
 CI and prompts a re-audit instead of drifting silently.
 
 To check for upstream changes, re-download that file and run `composer qa`. If the checksum test fails, re-audit,
-then update the checksum in that test and the date above.
+then run `composer spec:refresh` to record it — that rewrites the checksum in the test and the date above together.
+The full procedure is in `resources/scripts/api-docs/README.md`.
 
 At the audit date Ampache implements all 87 documented endpoints. Known gaps, all optional response fields with no
-column in the Ampache schema: `bpm`, `moods`, `works`, `movements`, `groupings`, `bitDepth`, `explicitStatus`,
+column in the Ampache schema: `works`, `movements`, `groupings`, `bitDepth`, `explicitStatus`,
 `isCompilation`, `disambiguation`, `fallbackGain`, `subRole`, `shortcut`. Nothing is awaiting a schema change any
-more: `played` (`800029`), `positionMs`/`playbackRate`/`state` on `nowPlaying` (`800032`) and `recordLabels`
-(`800034`) each got the column they needed, and `lastFmUrl` is threaded through the cached last.fm results.
+more: `played` (`800029`), `positionMs`/`playbackRate`/`state` on `nowPlaying` (`800032`), `recordLabels`
+(`800034`), `bpm` (`800046`) and `moods` (`800047`) each got the column they needed, and `lastFmUrl` is threaded
+through the cached last.fm results.
+
+`moods` is filled from the file tags on a scan, so it is present on a `Child` and an `AlbumID3` only once a catalog
+has been scanned and only for files carrying a mood tag. An album's moods are derived from its songs.
 
 `played` is the one worth spelling out: database version `800029` added a maintained `last_played` column to every
 table carrying a play counter, written on the same statement that increments it. Songs, albums, videos and podcast

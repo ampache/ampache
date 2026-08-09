@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// broadcast_row.phtml -- rendered by Ampache\Gui\Broadcast\BroadcastRowView
+
+use Ampache\Module\Api\Ajax;
+
+/** @var Ampache\Gui\Broadcast\BroadcastRowView $this */
+
+$broadcast = $this->getBroadcast(); ?>
+<td class="cel_play">
+    <span class="cel_play_content">&nbsp;</span>
+    <div class="cel_play_hover">
+    <?php if ($this->isDirectPlayEnabled()) {
+        echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=broadcast&object_id=' . $broadcast->id, 'play_circle', T_('Play'), 'play_broadcast_' . $broadcast->id));
+    } ?>
+    </div>
+</td>
+<td class="cel_name"><?php echo $this->raw($broadcast->get_f_link()); ?></td>
+<td class="cel_genre"><?php echo $this->raw($broadcast->get_f_tags()); ?></td>
+<td class="cel_started"><?php echo $broadcast->started ? T_('Yes') : T_('No'); ?></td>
+<td class="cel_listeners"><?php echo $this->e($broadcast->listeners); ?></td>
+<td class="cel_action"><?php $broadcast->show_action_buttons(); ?></td>

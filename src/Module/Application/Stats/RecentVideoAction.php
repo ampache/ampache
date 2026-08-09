@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\StatsFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -45,6 +46,7 @@ final readonly class RecentVideoAction implements ApplicationActionInterface
         private BrowseFactoryInterface $browseFactory,
         private ConfigContainerInterface $configContainer,
         private VideoRepositoryInterface $videoRepository,
+        private StatsFormViewFactoryInterface $statsFormViewFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -52,13 +54,7 @@ final readonly class RecentVideoAction implements ApplicationActionInterface
         $by_user = ((int) filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_form_recent.inc.php',
-            [
-                'by_user' => $by_user,
-                'videoRepository' => $this->videoRepository
-            ]
-        );
+        echo $this->statsFormViewFactory->createRecent($by_user)->render();
 
         define('TABLE_RENDERED', 1);
 

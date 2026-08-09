@@ -260,28 +260,6 @@ class Dba
     }
 
     /**
-     * @param class-string<object> $class
-     */
-    public static function fetch_object(?PDOStatement $resource, string $class = 'stdClass', bool $finish = true): ?object
-    {
-        if (!$resource instanceof PDOStatement) {
-            return null;
-        }
-
-        $result = $resource->fetchObject($class);
-
-        if (!$result) {
-            if ($finish) {
-                self::finish($resource);
-            }
-
-            return null;
-        }
-
-        return $result;
-    }
-
-    /**
      * fetch_row
      *
      * This emulates the mysql_fetch_row
@@ -306,41 +284,6 @@ class Dba
         }
 
         return $result;
-    }
-
-    /**
-     * Returns the value from a single column
-     *
-     * Returns just the first column of a db-query result
-     * (or null, if the query fails). Useful, e.g. for count-results
-     *
-     * @param list<scalar> $parameter
-     */
-    public static function fetch_single_column(
-        string $query,
-        array $parameter = [],
-        bool $finish = true,
-    ): ?string {
-        $resource = self::query(
-            $query,
-            $parameter
-        );
-
-        if (!$resource instanceof PDOStatement) {
-            return null;
-        }
-
-        $result = $resource->fetch(PDO::FETCH_COLUMN);
-
-        if ($result === false) {
-            if ($finish) {
-                self::finish($resource);
-            }
-
-            return null;
-        }
-
-        return (string) $result;
     }
 
     /**

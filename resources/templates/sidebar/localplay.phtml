@@ -1,0 +1,80 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// sidebar/localplay.phtml -- rendered by Ampache\Gui\Sidebar\LocalplaySidebarView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Sidebar\LocalplaySidebarView $this */
+
+$webPath  = $this->getWebPath();
+$expander = T_('Expand/Collapse'); ?>
+<ul class="sb2" id="sb_localplay">
+    <?php if ($this->isEnabled()) {
+        $current = $this->getCurrentInstance();
+        if ($this->mayUse()) {
+            if ($this->showBrowseFilter()) { ?>
+    <li>
+        <?php Ajax::start_container('browse_filters');
+                Ajax::end_container(); ?>
+    </li>
+            <?php } ?>
+    <li>
+        <h4 class="header">
+            <span class="sidebar-header-title"><?php echo T_('Localplay'); ?></span>
+            <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'localplay_info', 'header-img ' . $this->getState('localplay_info'))); ?>
+        </h4>
+        <ul class="sb3" id="sb_localplay_info"<?php echo ($this->isCollapsed('localplay_info')) ? ' style="display: none;"' : ''; ?>>
+            <?php if ($this->mayManage()) { ?>
+            <li id="sb_localplay_info_add_instance"><a href="<?php echo $this->e($webPath); ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
+            <li id="sb_localplay_info_show_instances"><a href="<?php echo $this->e($webPath); ?>/localplay.php?action=show_instances"><?php echo T_('Show Instances'); ?></a></li>
+            <?php } ?>
+            <li id="sb_localplay_info_show"><a href="<?php echo $this->e($webPath); ?>/localplay.php?action=show_playlist"><?php echo T_('Show Playlist'); ?></a></li>
+        </ul>
+    </li>
+        <?php } ?>
+    <li>
+        <h4 class="header">
+            <span class="sidebar-header-title"><?php echo T_('Active Instance'); ?></span>
+            <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'localplay_instance', 'header-img ' . $this->getState('localplay_instance'))); ?>
+        </h4>
+        <ul class="sb3" id="sb_localplay_instance"<?php echo ($this->isCollapsed('localplay_instance')) ? ' style="display: none;"' : ''; ?>>
+            <li id="sb_localplay_instance_none"<?php echo ($current === 0) ? ' class="active_instance"' : ''; ?>><?php echo $this->raw(Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'), 'localplay_instance_none')); ?></li>
+            <?php foreach ($this->getInstances() as $uid => $name) { ?>
+            <li id="sb_localplay_instance_<?php echo $this->e($uid); ?>"<?php echo ((int) $uid === $current) ? ' class="active_instance"' : ''; ?>><?php echo $this->raw(Ajax::text('?page=localplay&action=set_instance&instance=' . $uid, scrub_out($name), 'localplay_instance_' . $uid)); ?></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } else { ?>
+    <li>
+        <h4 class="header">
+            <span class="sidebar-header-title"><?php echo T_('Localplay Disabled'); ?></span>
+            <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'localplay_disabled', 'header-img ' . $this->getState('localplay_disabled'))); ?>
+        </h4>
+    </li>
+    <li><?php echo $this->e($this->getDisabledReason()); ?></li>
+    <?php } ?>
+</ul>

@@ -797,6 +797,42 @@ CREATE TABLE IF NOT EXISTS `metadata_field` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mood`
+--
+
+DROP TABLE IF EXISTS `mood`;
+CREATE TABLE IF NOT EXISTS `mood` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `artist` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `album` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `song` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `video` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mood_map`
+--
+
+DROP TABLE IF EXISTS `mood_map`;
+CREATE TABLE IF NOT EXISTS `mood_map` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mood_id` int(11) UNSIGNED NOT NULL,
+  `object_id` int(11) UNSIGNED NOT NULL,
+  `object_type` enum('album','album_disk','artist','podcast','podcast_episode','song','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `user` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_mood_map` (`object_id`,`object_type`,`user`,`mood_id`),
+  KEY `mood_id_index` (`mood_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `now_playing`
 --
 
@@ -1291,6 +1327,7 @@ CREATE TABLE IF NOT EXISTS `song_data` (
   `r128_track_gain` smallint(5) DEFAULT NULL,
   `r128_album_gain` smallint(5) DEFAULT NULL,
   `disksubtitle` varchar(255) DEFAULT NULL,
+  `bpm` decimal(6,2) DEFAULT NULL,
   UNIQUE KEY `song_id` (`song_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

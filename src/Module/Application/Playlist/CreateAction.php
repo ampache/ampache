@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\CreatePlaylistFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -72,7 +73,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         }
 
         if (AmpError::occurred()) {
-            $this->ui->show('show_add_playlist.inc.php');
+            echo $this->createFormView()->render();
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
@@ -89,7 +90,7 @@ final readonly class CreateAction implements ApplicationActionInterface
 
         if ($playlistId === null) {
             AmpError::add('name', T_('That name already exists'));
-            $this->ui->show('show_add_playlist.inc.php');
+            echo $this->createFormView()->render();
         } else {
             $this->ui->showConfirmation(
                 T_('Playlist created'),
@@ -102,5 +103,14 @@ final readonly class CreateAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
+    }
+
+    private function createFormView(): CreatePlaylistFormView
+    {
+        return new CreatePlaylistFormView(
+            $this->configContainer->getWebPath(),
+            $this->requestParser->getFromRequest('name'),
+            $this->requestParser->getFromRequest('type') ?: 'private'
+        );
     }
 }

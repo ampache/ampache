@@ -475,12 +475,12 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
      *
      * @return array<string, mixed>
      */
-    public function getUserPreferenceRow(string $name, int $userId, bool $systemOnly): array
+    public function getUserPreferenceRow(string $name, int $userId, bool $excludeSystem): array
     {
         $row = $this->connection->fetchRow(
             sprintf(
                 "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`category`, `preference`.`subcategory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` = ? AND `user_preference`.`user` = ? AND `preference`.`category` != 'internal' %s ORDER BY `preference`.`subcategory`, `preference`.`description`",
-                ($systemOnly) ? "AND `preference`.`category` = 'system'" : ''
+                ($excludeSystem) ? "AND `preference`.`category` != 'system'" : ''
             ),
             [$name, $userId]
         );

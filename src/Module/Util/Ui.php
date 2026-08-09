@@ -27,10 +27,24 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\ConfirmationView;
+use Ampache\Gui\Form\ConfirmationWithReturnView;
+use Ampache\Gui\Form\ContinueView;
+use Ampache\Gui\Partial\BoxBottomView;
+use Ampache\Gui\Partial\BoxTopView;
+use Ampache\Gui\Partial\FooterView;
+use Ampache\Gui\Partial\HeaderView;
+use Ampache\Gui\Partial\RightbarView;
+use Ampache\Gui\Preferences\PreferenceBoxView;
+use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
+use Ampache\Gui\System\QueryStatsView;
+use Ampache\Gui\System\StandaloneErrorTypeEnum;
+use Ampache\Gui\System\StandaloneErrorView;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
@@ -46,13 +60,11 @@ use Ampache\Plugin\AmpacheLastfm;
 use Ampache\Plugin\Ampachelibrefm;
 use Ampache\Plugin\PluginDisplayOnFooterInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
-use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
-use Ampache\Repository\VideoRepositoryInterface;
 
 /**
  * A collection of methods related to the user interface
@@ -85,12 +97,11 @@ class Ui implements UiInterface
         private readonly AjaxUriRetrieverInterface $ajaxUriRetriever,
         private readonly CollectionRepositoryInterface $collectionRepository,
         private readonly EnvironmentInterface $environment,
-        private readonly FolderRepositoryInterface $folderRepository,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
         private readonly PlaylistLoaderInterface $playlistLoader,
         private readonly PrivateMessageRepositoryInterface $privateMessageRepository,
-        private readonly VideoRepositoryInterface $videoRepository,
         private readonly ZipHandlerInterface $zipHandler,
+        private readonly SidebarViewFactoryInterface $sidebarViewFactory,
     ) {}
 
     /**
@@ -200,6 +211,18 @@ class Ui implements UiInterface
         }
 
         return self::$_template_cache[$cacheKey] = __DIR__ . '/../../../public/templates/' . $template;
+    }
+
+    /**
+     * A cache-busting token for a theme asset: its mtime, falling back to the app version.
+     *
+     * The `public/` base lives here with the other path literals, so the structure transform sees it.
+     */
+    public static function find_template_version(string $template): string
+    {
+        $realpath = __DIR__ . '/../../../public' . self::find_template($template, true);
+
+        return (is_file($realpath)) ? (string) filemtime($realpath) : (string) AmpConfig::get('version');
     }
 
     /**
@@ -462,7 +485,9 @@ class Ui implements UiInterface
         }
 
         $rsstoken = '';
-        if ($user !== null) {
+        if ($user !== null && AmpConfig::get('use_auth')) {
+            // On an open instance (use_auth false) every visitor shares the same default user,
+            // so a token adds nothing and would leak into publicly served pages
             $rsstoken = "&rsstoken=" . $user->getRssToken();
         }
 
@@ -589,8 +614,12 @@ class Ui implements UiInterface
      * This function takes a boolean value and then prints out a friendly text
      * message.
      */
-    public static function printBool(?bool $value = false): string
+    public static function printBool(?bool $value = false, bool $current = true): string
     {
+        if (!$current) {
+            return '<span class="item_inactive">' . ($value ? T_('On') : T_('Off')) . '</span>';
+        }
+
         return $value ? '<span class="item_on">' . T_('On') . '</span>' : '<span class="item_off">' . T_('Off') . '</span>';
     }
 
@@ -601,7 +630,7 @@ class Ui implements UiInterface
      */
     public static function show_box_bottom(): void
     {
-        require self::find_template('show_box_bottom.inc.php');
+        echo (new BoxBottomView())->render();
     }
 
     /**
@@ -611,7 +640,7 @@ class Ui implements UiInterface
      */
     public static function show_box_top(string $title = '', string $class = ''): void
     {
-        require self::find_template('show_box_top.inc.php');
+        echo (new BoxTopView($title, $class))->render();
     }
 
     public static function show_custom_style(): void
@@ -650,7 +679,7 @@ class Ui implements UiInterface
             }
         }
 
-        require_once self::find_template('footer.inc.php');
+        echo (new FooterView())->render();
         if (Core::get_request('profiling') !== '') {
             Dba::show_profile();
         }
@@ -875,6 +904,26 @@ class Ui implements UiInterface
     /**
      * Displays the default error page
      */
+    /**
+     * The three standalone error pages carry their own chrome, so each needs the logo and title the
+     * normal header would otherwise have supplied.
+     */
+    private static function createStandaloneErrorView(
+        StandaloneErrorTypeEnum $type,
+        string $detail = '',
+    ): StandaloneErrorView {
+        $logoUrl = (string) AmpConfig::get('custom_login_logo', '');
+
+        return new StandaloneErrorView(
+            $type,
+            AmpConfig::get_web_path(),
+            ($logoUrl === '') ? self::get_logo_url('dark') : $logoUrl,
+            (string) AmpConfig::get('site_title'),
+            (bool) AmpConfig::get('demo_mode'),
+            $detail
+        );
+    }
+
     public function accessDenied(string $error = 'Access Denied'): void
     {
         // Clear any buffered crap
@@ -887,7 +936,7 @@ class Ui implements UiInterface
         if (!headers_sent()) {
             header('HTTP/1.1 403 ' . $error);
         }
-        require_once self::find_template('show_denied.inc.php');
+        echo self::createStandaloneErrorView(StandaloneErrorTypeEnum::ACCESS_DENIED)->render();
     }
 
     /**
@@ -1041,6 +1090,7 @@ class Ui implements UiInterface
             case 'show_folder':
             case 'show_license':
             case 'show_lyrics':
+            case 'show_mood':
             case 'show_original_year':
             case 'show_played_times':
             case 'show_playlist_media_parent':
@@ -1559,7 +1609,7 @@ class Ui implements UiInterface
         // Clear any buffered crap
         ob_end_clean();
         header("HTTP/1.1 403 Permission Denied");
-        require_once self::find_template('show_denied_permission.inc.php');
+        echo self::createStandaloneErrorView(StandaloneErrorTypeEnum::PERMISSION_DENIED, $fileName)->render();
     }
 
     /**
@@ -1610,16 +1660,14 @@ class Ui implements UiInterface
         $webPath = $this->configContainer->getWebPath();
         $path    = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 
-        $this->show(
-            'show_confirmation.inc.php',
-            [
-                'title' => $title,
-                'text' => $text,
-                'path' => $path,
-                'form_name' => $form_name,
-                'cancel' => $cancel
-            ]
-        );
+        echo (new ConfirmationView(
+            $webPath,
+            $title,
+            $text,
+            $path,
+            (string) $form_name,
+            ($cancel) ? $webPath . '/' . return_referer() : null
+        ))->render();
     }
 
     /**
@@ -1637,16 +1685,14 @@ class Ui implements UiInterface
         $return  = (substr_count($return_url, $webPath) !== 0) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
         $cancel  = (substr_count($cancel_url, $webPath) !== 0) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
 
-        $this->show(
-            'show_confirmation_with_return.inc.php',
-            [
-                'title' => $title,
-                'text' => $text,
-                'form_name' => $form_name,
-                'return' => $return,
-                'cancel' => $cancel,
-            ]
-        );
+        echo (new ConfirmationWithReturnView(
+            $webPath,
+            $title,
+            $text,
+            $return,
+            (string) $form_name,
+            $cancel
+        ))->render();
     }
 
     /**
@@ -1662,14 +1708,12 @@ class Ui implements UiInterface
         // callers pass both absolute urls and bare page paths; only prefix the relative ones
         $path = str_starts_with($next_url, $webPath) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 
-        $this->show(
-            'show_continue.inc.php',
-            [
-                'title' => $title,
-                'text' => $text,
-                'path' => $path
-            ]
-        );
+        echo (new ContinueView(
+            $webPath,
+            $title,
+            $text,
+            $path
+        ))->render();
     }
 
     public function showErrorPage(): void
@@ -1683,7 +1727,7 @@ class Ui implements UiInterface
             header('HTTP/1.1 500 Internal Server Error');
         }
 
-        require_once self::find_template('show_error.inc.php');
+        echo self::createStandaloneErrorView(StandaloneErrorTypeEnum::ERROR)->render();
     }
 
     public function showFooter(): void
@@ -1711,18 +1755,29 @@ class Ui implements UiInterface
             exit;
         }
 
-        // header.inc.php and everything it requires render in this scope, so the services they use are named here
-        $ajaxUriRetriever         = $this->ajaxUriRetriever;
-        $collectionRepository     = $this->collectionRepository;
-        $environment              = $this->environment;
-        $folderRepository         = $this->folderRepository;
-        $libraryItemLoader        = $this->libraryItemLoader;
-        $playlistLoader           = $this->playlistLoader;
-        $privateMessageRepository = $this->privateMessageRepository;
-        $videoRepository          = $this->videoRepository;
-        $zipHandler               = $this->zipHandler;
+        $isAdmin = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
+        if (!array_key_exists('state', $_SESSION) || !array_key_exists('sidebar_tab', $_SESSION['state'])) {
+            $_SESSION['state']['sidebar_tab'] = 'home';
+        }
 
-        require_once self::find_template('header.inc.php');
+        echo (new HeaderView(
+            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/admin'),
+            $this->environment,
+            $this->ajaxUriRetriever,
+            $this->collectionRepository,
+            $this->libraryItemLoader,
+            $this->playlistLoader,
+            $this->privateMessageRepository,
+            $this->zipHandler,
+            $this->sidebarViewFactory,
+            ($user instanceof User) ? $user : null,
+            (string) $_SESSION['state']['sidebar_tab'],
+            $isAdmin,
+            $isAdmin || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+            Upload::can_upload($user),
+            User::is_registered() && ($user?->getId() ?? 0) > 0
+        ))->render();
     }
 
     public function showObjectNotFound(): void
@@ -1740,13 +1795,7 @@ class Ui implements UiInterface
      */
     public function showPreferenceBox(array $preferences): void
     {
-        $this->show(
-            'show_preference_box.inc.php',
-            [
-                'preferences' => $preferences,
-                'ui' => $this
-            ]
-        );
+        echo (new PreferenceBoxView($preferences, $this))->render();
     }
 
     /**
@@ -1754,19 +1803,26 @@ class Ui implements UiInterface
      */
     public function showQueryStats(): void
     {
-        require self::find_template('show_query_stats.inc.php');
+        if (!AmpConfig::get('show_footer_statistics')) {
+            return;
+        }
+
+        echo (new QueryStatsView(
+            Dba::$stats['query'],
+            database_object::$cache_hit,
+            (float) AmpConfig::get('load_time_begin'),
+            memory_get_peak_usage(true)
+        ))->render();
     }
 
     public function showRightbar(): string
     {
-        return self::ajax_include(
-            'rightbar.inc.php',
-            [
-                'collectionRepository' => $this->collectionRepository,
-                'libraryItemLoader' => $this->libraryItemLoader,
-                'playlistLoader' => $this->playlistLoader,
-                'zipHandler' => $this->zipHandler,
-            ]
-        );
+        return (new RightbarView(
+            $this->collectionRepository,
+            $this->libraryItemLoader,
+            $this->playlistLoader,
+            $this->zipHandler,
+            AmpConfig::get_web_path()
+        ))->render();
     }
 }

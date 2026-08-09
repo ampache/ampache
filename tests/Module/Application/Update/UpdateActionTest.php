@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Update;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
@@ -89,7 +88,6 @@ class UpdateActionTest extends MockeryTestCase
         $this->updater         = $this->mock(UpdaterInterface::class);
 
         $this->subject = new UpdateAction(
-            $this->mock(TalFactoryInterface::class),
             $this->mock(GuiFactoryInterface::class),
             $this->responseFactory,
             $this->configContainer,

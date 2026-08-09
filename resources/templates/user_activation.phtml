@@ -1,0 +1,62 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// user_activation.phtml -- rendered by Ampache\Gui\Register\UserActivationView
+
+use Ampache\Gui\Asset\StylesheetsView;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Register\UserActivationView $this */
+
+$t_ampache = T_('Ampache'); ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->e($this->getHtmlLanguage()); ?>" lang="<?php echo $this->e($this->getHtmlLanguage()); ?>">
+    <head>
+        <!-- Propelled by Ampache | ampache.org -->
+        <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $this->e($this->getCharset()); ?>" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><?php echo $this->e($this->getTitle()); ?></title>
+        <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render()); ?>
+    </head>
+    <body id="registerPage">
+        <div id="maincontainer">
+            <div id="header">
+                <a href="<?php echo $this->e($this->getWebPath()); ?>"><h1 id="logo"><img src="<?php echo $this->e(Ui::get_logo_url()); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>"></h1></a>
+                <span><?php echo T_('Registration Validation'); ?>.</span>
+            </div>
+            <script src="<?php echo $this->e($this->getWebPath()); ?>/lib/components/jquery/jquery.min.js"></script>
+            <div>
+<?php if ($this->isActivated()) { ?>
+<h3><?php echo T_('User Activated'); ?></h3>
+<p>
+    <?php echo T_('This User ID is activated and can be used') . ' <a href="' . $this->e($this->getLoginUrl()) . '">' . T_('Login') . '</a>'; ?>
+</p>
+<?php } else { ?>
+<h3><?php echo T_('Validation Failed'); ?></h3>
+<p><?php echo T_("The validation key used isn't correct"); ?></p>
+<?php } ?>
+            </div>
+        </div>
+<?php Ui::show_footer(); ?>

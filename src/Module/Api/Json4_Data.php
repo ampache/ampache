@@ -1226,7 +1226,6 @@ class Json4_Data
         $this->count = $this->count ?: count($objects);
         $JSON        = $this->tags_array($objects);
 
-
         return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
@@ -1256,7 +1255,11 @@ class Json4_Data
         $TAGS = [];
 
         foreach ($objects as $tag_id) {
-            $tag    = new Tag((int) $tag_id);
+            $tag = new Tag((int) $tag_id);
+            if ($tag->isNew()) {
+                continue;
+            }
+
             $TAGS[] = [
                 "id" => (string) $tag_id,
                 "name" => $tag->name,
@@ -1384,7 +1387,11 @@ class Json4_Data
         $JSON       = [];
         $user_array = [];
         foreach ($objects as $user_id) {
-            $user         = new User((int) $user_id);
+            $user = new User((int) $user_id);
+            if ($user->isNew()) {
+                continue;
+            }
+
             $user_array[] = [
                 "id" => (string) $user_id,
                 "username" => $user->username

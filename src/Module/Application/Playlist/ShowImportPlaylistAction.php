@@ -25,8 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Playlist;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\ImportPlaylistFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,12 +39,20 @@ final readonly class ShowImportPlaylistAction implements ApplicationActionInterf
 {
     public const string REQUEST_KEY = 'show_import_playlist';
 
-    public function __construct(private UiInterface $ui) {}
+    public function __construct(
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        $this->ui->show('show_import_playlist.inc.php');
+        echo (new ImportPlaylistFormView(
+            $this->configContainer->getWebPath(),
+            $this->requestParser->getFromRequest('filename'),
+            (string) AmpConfig::get('catalog_playlist_pattern')
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

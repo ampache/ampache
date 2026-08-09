@@ -43,6 +43,33 @@ class ShoutRendererTest extends TestCase
     private ShoutObjectLoaderInterface&MockObject $shoutObjectLoader;
     private ShoutRenderer $subject;
 
+    /**
+     * A shout is free text from any user, so its markup must not reach the page that displays it.
+     */
+    public function testRenderEscapesTheShoutTextButKeepsLineBreaks(): void
+    {
+        $shout = $this->createMock(Shoutbox::class);
+        $song  = $this->createMock(Song::class);
+
+        $shout->method('getObjectId')->willReturn(42);
+        $shout->method('getObjectType')->willReturn(LibraryItemEnum::SONG);
+        $shout->method('getText')->willReturn("<script>alert(1)</script> & more\nsecond line");
+        $shout->method('getDate')->willReturn(new DateTimeImmutable('2026-01-01'));
+        $shout->method('getUser')->willReturn(null);
+
+        $this->shoutObjectLoader->method('loadByShout')->willReturn($song);
+        $this->configContainer->method('getWebPath')->willReturn('https://example.com');
+        $this->privilegeChecker->method('check')->willReturn(true);
+        $song->method('get_f_link')->willReturn('Some Song');
+
+        $result = $this->subject->render($shout);
+
+        static::assertStringNotContainsString('<script>', $result);
+        static::assertStringContainsString('&lt;script&gt;', $result);
+        static::assertStringContainsString('second line', $result);
+        static::assertStringContainsString('<br />', $result);
+    }
+
     public function testRenderIncludesShoutTextAndPostLinkWhenAllowed(): void
     {
         $shout = $this->createMock(Shoutbox::class);

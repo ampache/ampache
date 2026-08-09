@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -48,7 +47,6 @@ final class ShowEditPlaylistAction extends AbstractEditAction
     private GuiFactoryInterface $guiFactory;
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
-    private TalFactoryInterface $talFactory;
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
@@ -58,13 +56,11 @@ final class ShowEditPlaylistAction extends AbstractEditAction
         LoggerInterface $logger,
         ShareRepositoryInterface $shareRepository,
         BrowseFactoryInterface $browseFactory,
-        TalFactoryInterface $talFactory,
         GuiFactoryInterface $guiFactory,
     ) {
         parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository, $browseFactory);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
-        $this->talFactory      = $talFactory;
         $this->guiFactory      = $guiFactory;
     }
 
@@ -82,21 +78,14 @@ final class ShowEditPlaylistAction extends AbstractEditAction
          * uses just one for internal checks. So we have to retrieve the object_ids here again
          * @todo FIXME Replace by some smart solution
          */
-        $result = $this->talFactory
-            ->createTalView()
-            ->setTemplate('playlist/new_dialog.xhtml')
-            ->setContext(
-                'ADAPTER',
-                $this->guiFactory->createNewPlaylistDialogAdapter(
-                    $gatekeeper,
-                    $object_type,
-                    $request->getQueryParams()['id'],
-                    // a multi-select spanning types sends every group; the access check above still runs
-                    // against `object_type`, which carries the first of them
-                    (string) ($request->getQueryParams()['groups'] ?? '')
-                )
-            )
-            ->render();
+        $result = $this->guiFactory->createNewPlaylistDialogAdapter(
+            $gatekeeper,
+            $object_type,
+            $request->getQueryParams()['id'],
+            // a multi-select spanning types sends every group; the access check above still runs
+            // against `object_type`, which carries the first of them
+            (string) ($request->getQueryParams()['groups'] ?? '')
+        )->render();
 
         return $this->responseFactory->createResponse()
             ->withBody(
