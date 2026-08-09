@@ -1151,6 +1151,11 @@ class Song extends database_object implements
         return $value;
     }
 
+    private static function _is_codec_name(string $codec): bool
+    {
+        return preg_match('/^[A-Za-z0-9_+-]+$/', $codec) === 1;
+    }
+
     /**
      * Downgrades the required access level to USER when the current user uploaded the song
      *
@@ -1169,6 +1174,11 @@ class Song extends database_object implements
         return ($ownerId !== false && $ownerId == Core::get_global('user')?->id)
             ? AccessLevelEnum::USER
             : $level;
+    }
+
+    private static function _scrub_custom_play_arg(string $value): string
+    {
+        return (string) preg_replace('/[;|&$`\\\\"\'<>(){}*?!#~\x00-\x1F]/u', '', $value);
     }
 
     /**
@@ -2139,17 +2149,26 @@ class Song extends database_object implements
     {
         $transcoder = [];
         $actions    = self::get_custom_play_actions();
-        if ($action_index <= count($actions)) {
+        if ($action_index >= 1 && $action_index <= count($actions)) {
             $action = $actions[$action_index - 1];
             if (!$codec) {
                 $codec = $this->type;
             }
 
-            $run = str_replace("%f", $this->file ?? '%f', (string) $action['run']);
+            if (!self::_is_codec_name($codec)) {
+                $codec = $this->type;
+                if (!self::_is_codec_name($codec)) {
+                    debug_event(self::class, 'Custom play action skipped: {' . $this->id . '} has no usable format', 2);
+
+                    return $transcoder;
+                }
+            }
+
+            $run = str_replace("%f", self::_scrub_custom_play_arg($this->file ?? '%f'), (string) $action['run']);
             $run = str_replace("%c", $codec, $run);
-            $run = str_replace("%a", (empty($this->get_parent_fullname())) ? '%a' : $this->get_parent_fullname(), $run);
-            $run = str_replace("%A", (empty($this->get_album_fullname())) ? '%A' : $this->get_album_fullname(), $run);
-            $run = str_replace("%t", $this->get_fullname() ?? '%t', $run);
+            $run = str_replace("%a", (empty($this->get_parent_fullname())) ? '%a' : self::_scrub_custom_play_arg($this->get_parent_fullname()), $run);
+            $run = str_replace("%A", (empty($this->get_album_fullname())) ? '%A' : self::_scrub_custom_play_arg($this->get_album_fullname()), $run);
+            $run = str_replace("%t", self::_scrub_custom_play_arg($this->get_fullname() ?? '%t'), $run);
 
             debug_event(self::class, "Running custom play action: " . $run, 3);
 

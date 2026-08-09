@@ -26,9 +26,27 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\MockeryTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use ReflectionMethod;
 
 class SongTest extends MockeryTestCase
 {
+    /**
+     * @return list<array{string, string}>
+     */
+    public static function customPlayArgProvider(): array
+    {
+        return [
+            ['/music/Björk - Jóga [2019].flac', '/music/Björk - Jóga [2019].flac'],
+            ['ogg;id;', 'oggid'],
+            ['Grapevine"; id; #', 'Grapevine id '],
+            ['/music/`id`.mp3', '/music/id.mp3'],
+            ['/music/$(id).mp3', '/music/id.mp3'],
+            ["Grapevine\nid", 'Grapevineid'],
+            ['back\\slash', 'backslash'],
+        ];
+    }
+
     public function testCompareSongInformationIgnoresWhitespaceOnlyStringChanges(): void
     {
         $song          = new Song();
@@ -81,5 +99,33 @@ class SongTest extends MockeryTestCase
 
         $this->assertTrue($result['change']);
         $this->assertSame(['title' => 'OLD: Grapevine --> I Heard It Through the Grapevine'], $result['element']);
+    }
+
+    public function testIsCodecNameRejectsAnythingButABareWord(): void
+    {
+        $method = new ReflectionMethod(Song::class, '_is_codec_name');
+
+        $this->assertTrue($method->invoke(null, 'ogg'));
+        $this->assertTrue($method->invoke(null, 'pcm_s16le'));
+        $this->assertFalse($method->invoke(null, 'ogg;id;'));
+        $this->assertFalse($method->invoke(null, 'ogg id'));
+        $this->assertFalse($method->invoke(null, ''));
+    }
+
+    public function testRunCustomPlayActionIgnoresAnIndexOutsideTheActionList(): void
+    {
+        $song = new Song();
+
+        $this->assertSame([], $song->run_custom_play_action(-1));
+        $this->assertSame([], $song->run_custom_play_action(0));
+        $this->assertSame([], $song->run_custom_play_action(1));
+    }
+
+    #[DataProvider('customPlayArgProvider')]
+    public function testScrubCustomPlayArgDropsShellMetacharacters(string $value, string $expected): void
+    {
+        $method = new ReflectionMethod(Song::class, '_scrub_custom_play_arg');
+
+        $this->assertSame($expected, $method->invoke(null, $value));
     }
 }
