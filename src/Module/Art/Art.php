@@ -595,6 +595,12 @@ class Art extends database_object
 
         // Check to see if it's a URL
         if (array_key_exists('url', $data) && filter_var($data['url'], FILTER_VALIDATE_URL)) {
+            if (!self::_is_safe_remote_url((string) $data['url'])) {
+                debug_event(self::class, 'Refusing to fetch art from unsafe URL ' . $data['url'], 2);
+
+                return '';
+            }
+
             debug_event(self::class, 'CHECKING URL ' . $data['url'], 2);
             $options = [];
             try {
@@ -957,6 +963,45 @@ class Art extends database_object
             AmpConfig::get('resize_images')
             && ((extension_loaded('gd') || extension_loaded('gd2')) && function_exists('gd_info'))
         );
+    }
+
+    /**
+     * Rejects URLs that don't point at a public host, to stop server-side requests
+     * (e.g. a stored FindArt `cover` url) from being used to reach internal/loopback
+     * services or cloud metadata endpoints.
+     */
+    private static function _is_safe_remote_url(string $url): bool
+    {
+        $parts = parse_url($url);
+        if (
+            $parts === false
+            || empty($parts['host'])
+            || !in_array(strtolower($parts['scheme'] ?? ''), ['http', 'https'], true)
+        ) {
+            return false;
+        }
+
+        $host = $parts['host'];
+        if (filter_var($host, FILTER_VALIDATE_IP)) {
+            $ips = [$host];
+        } else {
+            $ips = array_merge(
+                gethostbynamel($host) ?: [],
+                array_column((array) dns_get_record($host, DNS_AAAA), 'ipv6')
+            );
+        }
+
+        if ($ips === []) {
+            return false;
+        }
+
+        foreach ($ips as $ip) {
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
