@@ -94,7 +94,7 @@ final readonly class TagAction implements ApplicationActionInterface
         if ($request_type === 'tag_hidden') {
             echo (new HiddenGenreCloudView(
                 $this->createGenreFormView('tag_hidden'),
-                new GenreOrderView(AmpConfig::get_web_path(), 'tag_hidden', $countOrder),
+                new GenreOrderView(AmpConfig::get_web_path('/client'), 'tag_hidden', $countOrder),
                 $this->ajaxUriRetriever->getAjaxUri(),
                 $browse->getId(),
                 $object_ids,
@@ -106,7 +106,7 @@ final readonly class TagAction implements ApplicationActionInterface
             $showGenre = $this->requestParser->getFromRequest('show_tag');
             echo (new GenreCloudView(
                 $this->createGenreFormView($browse_type),
-                new GenreOrderView(AmpConfig::get_web_path(), $browse_type, $countOrder),
+                new GenreOrderView(AmpConfig::get_web_path('/client'), $browse_type, $countOrder),
                 $this->ajaxUriRetriever->getAjaxUri(),
                 $browse->getId(),
                 $object_ids,
@@ -132,7 +132,7 @@ final readonly class TagAction implements ApplicationActionInterface
     private function createGenreFormView(string $currentType): GenreFormView
     {
         return new GenreFormView(
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $currentType,
             (bool) AmpConfig::get('album_group'),
             (bool) AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0,

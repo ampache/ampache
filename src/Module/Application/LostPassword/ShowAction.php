@@ -63,7 +63,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $logoUrl           = (string) AmpConfig::get('custom_login_logo');
 
         echo (new LostPasswordFormView(
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             str_replace('_', '-', $language),
             is_rtl($language) ? 'rtl' : 'ltr',
             (string) AmpConfig::get('site_charset', 'UTF-8'),

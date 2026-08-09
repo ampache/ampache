@@ -916,7 +916,7 @@ class Ui implements UiInterface
 
         return new StandaloneErrorView(
             $type,
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             ($logoUrl === '') ? self::get_logo_url('dark') : $logoUrl,
             (string) AmpConfig::get('site_title'),
             (bool) AmpConfig::get('demo_mode'),
@@ -1761,7 +1761,7 @@ class Ui implements UiInterface
         }
 
         echo (new HeaderView(
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             AmpConfig::get_web_path('/admin'),
             $this->environment,
             $this->ajaxUriRetriever,
@@ -1822,7 +1822,7 @@ class Ui implements UiInterface
             $this->libraryItemLoader,
             $this->playlistLoader,
             $this->zipHandler,
-            AmpConfig::get_web_path()
+            AmpConfig::get_web_path('/client')
         ))->render();
     }
 }

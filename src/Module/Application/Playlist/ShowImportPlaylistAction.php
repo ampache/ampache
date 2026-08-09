@@ -49,7 +49,7 @@ final readonly class ShowImportPlaylistAction implements ApplicationActionInterf
     {
         $this->ui->showHeader();
         echo (new ImportPlaylistFormView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->requestParser->getFromRequest('filename'),
             (string) AmpConfig::get('catalog_playlist_pattern')
         ))->render();

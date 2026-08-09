@@ -51,7 +51,7 @@ final readonly class PreferencesViewFactory implements PreferencesViewFactoryInt
 
         return new PreferencesView(
             $this->ui,
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             (string) $fullname,
             $preferences,
             $this->requestParser->getFromRequest('tab'),

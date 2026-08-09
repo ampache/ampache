@@ -83,7 +83,7 @@ final class SmartPlaylistListRenderer extends AbstractBrowseListRenderer
 
     public function getCreateUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/search.php?type=song';
+        return $this->configContainer->getWebPath('/client') . '/search.php?type=song';
     }
 
     /**
@@ -115,7 +115,7 @@ final class SmartPlaylistListRenderer extends AbstractBrowseListRenderer
     public function renderRow(Search $search): string
     {
         return (new SearchRowView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $search,
             (bool) $this->configContainer->get('directplay'),
             Stream_Playlist::check_autoplay_next(),

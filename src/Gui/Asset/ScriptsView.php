@@ -73,7 +73,7 @@ final class ScriptsView extends AbstractView
      */
     public function getEntrypointUrl(): ?string
     {
-        $manifest = __DIR__ . '/../../../public/dist/.vite/manifest.json';
+        $manifest = __DIR__ . '/../../../public/client/dist/.vite/manifest.json';
         if (!file_exists($manifest)) {
             return null;
         }
@@ -102,14 +102,14 @@ final class ScriptsView extends AbstractView
         return $libraries;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }
 
     public function hasCustomScript(): bool
     {
-        return file_exists(__DIR__ . '/../../../public/lib/javascript/custom.js');
+        return file_exists(__DIR__ . '/../../../public/client/lib/javascript/custom.js');
     }
 
     public function isDevServer(): bool

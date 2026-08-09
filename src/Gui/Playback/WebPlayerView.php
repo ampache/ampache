@@ -168,7 +168,7 @@ final class WebPlayerView extends AbstractView
         return (string) AmpConfig::get('site_title', '');
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

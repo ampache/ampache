@@ -63,7 +63,7 @@ final class ShowArtDlgAction extends AbstractArtAction
             $object_id,
             (string) $object_type,
             $burl,
-            AmpConfig::get_web_path()
+            AmpConfig::get_web_path('/client')
         ))->render();
 
         $this->ui->showQueryStats();

@@ -73,7 +73,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $playlist->get_items(),
                 $this->zipHandler,
                 $this->browseFactory,
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                 $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
             ))->render();

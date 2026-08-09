@@ -78,7 +78,7 @@ final class BroadcastListRenderer extends AbstractBrowseListRenderer
     public function getStartedFilters(): array
     {
         $started = $this->getBrowse()->get_filter('started');
-        $base    = $this->configContainer->getWebPath() . '/browse.php?action=broadcast';
+        $base    = $this->configContainer->getWebPath('/client') . '/browse.php?action=broadcast';
 
         return [
             ['url' => $base, 'label' => T_('All'), 'current' => $started === null],

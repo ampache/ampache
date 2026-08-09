@@ -127,7 +127,7 @@ final class CollectionItemRowView extends AbstractView
         return ($this->objectType === 'tag') ? 'genre' : $this->objectType;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

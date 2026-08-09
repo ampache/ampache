@@ -80,7 +80,7 @@ final class SearchRulesView extends AbstractView
         return ($out) ?: '<script>SearchRow.add();</script>';
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

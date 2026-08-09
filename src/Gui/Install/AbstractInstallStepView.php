@@ -48,7 +48,7 @@ abstract class AbstractInstallStepView extends AbstractView
         return $this->documentLanguage;
     }
 
-    final public function getWebPath(): string
+    final public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

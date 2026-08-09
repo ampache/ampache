@@ -44,7 +44,7 @@ final readonly class StatsFormViewFactory implements StatsFormViewFactoryInterfa
     public function createBrowse(): BrowseFormView
     {
         return new BrowseFormView(
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $this->getFilter(),
             (bool) AmpConfig::get('show_artist'),
             (bool) AmpConfig::get('show_album_artist'),
@@ -94,7 +94,7 @@ final readonly class StatsFormViewFactory implements StatsFormViewFactoryInterfa
     private function commonArguments(bool $byUser): array
     {
         return [
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $this->getFilter(),
             $byUser,
             (bool) AmpConfig::get('show_artist'),

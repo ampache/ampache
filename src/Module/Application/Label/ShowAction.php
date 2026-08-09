@@ -105,7 +105,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             }
 
             echo (new LabelView(
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $label,
                 $browse,
                 $label->get_artists(),
@@ -124,7 +124,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         // if you didn't set a label_id or name, show the add label form
         if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             echo (new AddLabelFormView(
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 $this->requestParser->getFromRequest('name'),
                 $this->requestParser->getFromRequest('mbid'),
                 $this->requestParser->getFromRequest('category'),

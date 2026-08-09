@@ -72,7 +72,7 @@ final class LabelListRenderer extends AbstractBrowseListRenderer
 
     public function getCreateUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/labels.php?action=show_add_label';
+        return $this->configContainer->getWebPath('/client') . '/labels.php?action=show_add_label';
     }
 
     /**
@@ -104,7 +104,7 @@ final class LabelListRenderer extends AbstractBrowseListRenderer
             ->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 
         return (new LabelRowView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $label,
             $this->getCoverClass(),
             !$this->configContainer->get('use_auth') || $mayInteract,

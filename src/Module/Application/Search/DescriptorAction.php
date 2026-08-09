@@ -38,7 +38,7 @@ final class DescriptorAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $webPath = AmpConfig::get_web_path();
+        $webPath = AmpConfig::get_web_path('/client');
         $charset = (string) AmpConfig::get('site_charset', 'UTF-8');
 
         header(sprintf('Content-type: application/opensearchdescription+xml; charset=%s; filename=opensearch.xml', $charset));

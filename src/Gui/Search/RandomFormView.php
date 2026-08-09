@@ -164,7 +164,7 @@ final class RandomFormView extends AbstractView
         return $sizes;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

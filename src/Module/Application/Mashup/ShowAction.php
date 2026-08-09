@@ -65,7 +65,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $gatekeeper->getUser() ?? new User(-1),
             $this->browseFactory,
             $this->videoRepository,
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
         ))->render();
         $this->ui->showQueryStats();

@@ -63,7 +63,7 @@ final readonly class ManageAction implements ApplicationActionInterface
         $democratic->set_parent();
 
         // Show the create page
-        echo (new DemocraticFormView($democratic, $this->configContainer->getWebPath()))->render();
+        echo (new DemocraticFormView($democratic, $this->configContainer->getWebPath('/client')))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

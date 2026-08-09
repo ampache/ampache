@@ -62,7 +62,7 @@ final readonly class ShowImportPodcastsAction implements ApplicationActionInterf
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Import Podcasts'), 'box box_add_podcast');
         echo (new ImportPodcastsFormView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             0
         ))->render();
         $this->ui->showBoxBottom();

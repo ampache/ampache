@@ -91,7 +91,7 @@ final readonly class MoodAction implements ApplicationActionInterface
 
         $showMood = $this->requestParser->getFromRequest('show_mood');
         echo (new MoodCloudView(
-            new MoodOrderView(AmpConfig::get_web_path(), $browse_type, $countOrder),
+            new MoodOrderView(AmpConfig::get_web_path('/client'), $browse_type, $countOrder),
             $browse->getId(),
             $moods,
             ($showMood !== '') ? (int) $showMood : null

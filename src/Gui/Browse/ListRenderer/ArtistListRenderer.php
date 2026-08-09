@@ -152,7 +152,7 @@ final class ArtistListRenderer extends AbstractBrowseListRenderer
 
         return (new ArtistRowView(
             $artist,
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->getCoverClass(),
             $this->getArtistClass(),
             $this->getTimeClass(),

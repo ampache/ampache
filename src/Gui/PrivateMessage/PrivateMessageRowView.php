@@ -44,7 +44,7 @@ final class PrivateMessageRowView extends AbstractView
         return $this->message;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

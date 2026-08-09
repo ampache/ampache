@@ -99,7 +99,7 @@ final class CollectionRowView extends AbstractView
         return (string) $this->collection->type;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

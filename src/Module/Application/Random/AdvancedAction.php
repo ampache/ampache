@@ -52,7 +52,7 @@ final readonly class AdvancedAction implements ApplicationActionInterface
             [],
             $this->browseFactory,
             $this->videoRepository,
-            AmpConfig::get_web_path()
+            AmpConfig::get_web_path('/client')
         ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

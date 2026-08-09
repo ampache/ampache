@@ -101,7 +101,7 @@ final class UserListRenderer extends AbstractBrowseListRenderer
         $viewer = Core::get_global('user');
 
         return (new UserRowView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->configContainer->getWebPath('/admin'),
             $user,
             ($viewer instanceof User) ? $viewer : null,

@@ -143,7 +143,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                     $isZipable,
                     true,
                     $message,
-                    $this->configContainer->getWebPath(),
+                    $this->configContainer->getWebPath('/client'),
                     (int) $this->configContainer->get('share_expire')
                 ))->render();
             }

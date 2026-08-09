@@ -91,7 +91,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
                 $this->userActivityRenderer,
                 $this->userFollowStateRenderer,
                 $this->libraryItemLoader,
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)

@@ -77,7 +77,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         echo (new PrivateMessageView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $pvmsg
         ))->render();
 

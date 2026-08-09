@@ -127,7 +127,7 @@ final class PodcastEpisodeListRenderer extends AbstractBrowseListRenderer
 
         return (new PodcastEpisodeRowView(
             $episode,
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->getCellClass('cel_cover', 'grid_cover'),
             $this->getCellClass('cel_time', 'grid_time'),
             $this->getCellClass('cel_counter', 'grid_counter'),

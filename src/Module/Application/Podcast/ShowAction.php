@@ -88,7 +88,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $mayManage = $mayDelete || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 
             echo (new PodcastView(
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $podcast,
                 $browse,
                 $podcast->getEpisodeIds(),

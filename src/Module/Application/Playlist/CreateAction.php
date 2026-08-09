@@ -108,7 +108,7 @@ final readonly class CreateAction implements ApplicationActionInterface
     private function createFormView(): CreatePlaylistFormView
     {
         return new CreatePlaylistFormView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->requestParser->getFromRequest('name'),
             $this->requestParser->getFromRequest('type') ?: 'private'
         );

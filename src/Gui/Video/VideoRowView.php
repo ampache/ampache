@@ -121,7 +121,7 @@ final class VideoRowView extends AbstractView
         return $this->video;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

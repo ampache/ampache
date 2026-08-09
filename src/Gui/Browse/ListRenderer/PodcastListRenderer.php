@@ -87,12 +87,12 @@ final class PodcastListRenderer extends AbstractBrowseListRenderer
 
     public function getExportUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/podcast.php?action=export_podcasts';
+        return $this->configContainer->getWebPath('/client') . '/podcast.php?action=export_podcasts';
     }
 
     public function getImportUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/podcast.php?action=show_import_podcasts';
+        return $this->configContainer->getWebPath('/client') . '/podcast.php?action=show_import_podcasts';
     }
 
     /**
@@ -113,7 +113,7 @@ final class PodcastListRenderer extends AbstractBrowseListRenderer
 
     public function getSubscribeUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/podcast.php?action=show_create';
+        return $this->configContainer->getWebPath('/client') . '/podcast.php?action=show_create';
     }
 
     public function mayManage(): bool
@@ -128,7 +128,7 @@ final class PodcastListRenderer extends AbstractBrowseListRenderer
 
         return (new PodcastRowView(
             $podcast,
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->getCellClass('cel_cover', 'grid_cover'),
             $this->getCellClass('cel_counter', 'grid_counter'),
             $this->areRatingsShown(),

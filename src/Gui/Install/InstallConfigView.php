@@ -79,7 +79,7 @@ final class InstallConfigView extends AbstractInstallStepView
 
     public function getRecheckUrl(): string
     {
-        return $this->getWebPath() . '/install.php?' . http_build_query([
+        return $this->getWebPath('/client') . '/install.php?' . http_build_query([
             'action' => 'show_create_config',
             'htmllang' => $this->getDocumentLanguage(),
             'charset' => $this->getCharset(),

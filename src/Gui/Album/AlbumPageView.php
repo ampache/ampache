@@ -223,7 +223,7 @@ final class AlbumPageView extends AbstractView
         return $this->currentUser;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

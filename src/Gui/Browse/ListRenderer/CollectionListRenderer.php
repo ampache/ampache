@@ -98,7 +98,7 @@ final class CollectionListRenderer extends AbstractBrowseListRenderer
 
     public function getCreateUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/collection.php?action=show_create';
+        return $this->configContainer->getWebPath('/client') . '/collection.php?action=show_create';
     }
 
     public function mayCreate(): bool
@@ -110,7 +110,7 @@ final class CollectionListRenderer extends AbstractBrowseListRenderer
     public function renderRow(Collection $collection): string
     {
         return (new CollectionRowView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $collection,
             $this->getCoverClass(),
             (bool) $this->configContainer->get('directplay'),

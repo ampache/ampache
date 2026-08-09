@@ -86,7 +86,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             ($user instanceof User) ? $user : null,
             $this->statsFormViewFactory->createBrowse()->render(),
             $this->videoRepository,
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
         ))->render();
 

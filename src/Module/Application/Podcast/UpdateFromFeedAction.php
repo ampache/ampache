@@ -67,7 +67,7 @@ final readonly class UpdateFromFeedAction implements ApplicationActionInterface
         }
 
         $podcastId = (int) ($request->getQueryParams()['podcast_id'] ?? 0);
-        $webPath   = $this->configContainer->getWebPath();
+        $webPath   = $this->configContainer->getWebPath('/client');
 
         $this->ui->showHeader();
 

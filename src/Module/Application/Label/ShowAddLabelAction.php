@@ -60,7 +60,7 @@ final readonly class ShowAddLabelAction implements ApplicationActionInterface
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) {
             echo (new AddLabelFormView(
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 $this->requestParser->getFromRequest('name'),
                 $this->requestParser->getFromRequest('mbid'),
                 $this->requestParser->getFromRequest('category'),

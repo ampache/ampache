@@ -56,7 +56,7 @@ final class StylesheetsView extends AbstractView
 
     public function getBaseUrl(): string
     {
-        return $this->webPath . '/templates/base.css?v=' . $this->getBust(__DIR__ . '/../../../public/templates/base.css');
+        return $this->webPath . '/templates/base.css?v=' . $this->getBust(__DIR__ . '/../../../public/client/templates/base.css');
     }
 
     public function getColourUrl(): string
@@ -135,7 +135,7 @@ final class StylesheetsView extends AbstractView
 
     public function hasCustomStylesheet(): bool
     {
-        return file_exists(__DIR__ . '/../../../public/templates/custom.css');
+        return file_exists(__DIR__ . '/../../../public/client/templates/custom.css');
     }
 
     public function showRtl(): bool

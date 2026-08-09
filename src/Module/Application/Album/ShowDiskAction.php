@@ -78,7 +78,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
                 $albumDisk,
                 $this->browseFactory,
                 $gatekeeper->getUser(),
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $this->editabilityChecker->check($gatekeeper, $albumDisk),
                 $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('album_disk'),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),

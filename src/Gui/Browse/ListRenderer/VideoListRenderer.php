@@ -120,7 +120,7 @@ final class VideoListRenderer extends AbstractBrowseListRenderer
 
         return (new VideoRowView(
             $video,
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->getCellClass('cel_cover', 'grid_cover'),
             $this->getCellClass('cel_counter', 'grid_counter'),
             $this->getCellClass('cel_tags', 'grid_tags'),

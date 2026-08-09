@@ -205,7 +205,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                     $results['similar_artist'] = (new RecommendedArtistsView(
                         $this->gatekeeperFactory->createGuiGatekeeper(),
-                        AmpConfig::get_web_path(),
+                        AmpConfig::get_web_path('/client'),
                         $object_ids,
                         $missing_objects,
                         0,
@@ -250,7 +250,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $songs   = Recommendation::get_songs_like($media_id, 3);
                     ob_start();
                     echo (new NowPlayingSimilarView(
-                        AmpConfig::get_web_path(),
+                        AmpConfig::get_web_path('/client'),
                         $artists,
                         $songs,
                         (bool) AmpConfig::get('wanted')
@@ -634,7 +634,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             $user,
             $userId,
             $userOnly,
-            AmpConfig::get_web_path()
+            AmpConfig::get_web_path('/client')
         );
     }
 

@@ -43,7 +43,7 @@ final readonly class SingleItemUpdater implements SingleItemUpdaterInterface
 
         if ($objectId != $returnId) {
             $objectId  = (int) $returnId;
-            $targetUrl = sprintf('%s/%ss.php?action=show&%s=%d', $this->configContainer->getWebPath(), $type, $type, $objectId);
+            $targetUrl = sprintf('%s/%ss.php?action=show&%s=%d', $this->configContainer->getWebPath('/client'), $type, $type, $objectId);
         }
 
         // Behaviour kept from the template this replaced, where `!AmpConfig::get('art_order') == 'db'` parses

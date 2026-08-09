@@ -113,7 +113,7 @@ final class UserRowView extends AbstractView
         return (string) $this->user->username;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

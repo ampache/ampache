@@ -134,7 +134,7 @@ final class AdminSidebarView extends AbstractSidebarView
         return $items;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

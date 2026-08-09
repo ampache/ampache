@@ -99,7 +99,7 @@ final readonly class ShowPlaylistAction implements ApplicationActionInterface
         return new DemocraticPageView(
             $democratic,
             $browse,
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             (int) $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT),
             isset($_GET['reloadpage']),
             time()

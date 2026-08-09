@@ -55,7 +55,7 @@ final readonly class SidebarViewFactory implements SidebarViewFactoryInterface
         $user = Core::get_global('user');
 
         return new SidebarView(
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             AmpConfig::get_web_path('/admin'),
             (AmpConfig::get('album_group')) ? 'album' : 'album_disk',
             $this->videoRepository,

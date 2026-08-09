@@ -73,14 +73,14 @@ final class PrivateMessageListRenderer extends AbstractBrowseListRenderer
         return $messages;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
-        return $this->configContainer->getWebPath();
+        return $this->configContainer->getWebPath('/client');
     }
 
     public function renderRow(PrivateMsg $message): string
     {
-        return (new PrivateMessageRowView($this->getWebPath(), $message))->render();
+        return (new PrivateMessageRowView($this->getWebPath('/client'), $message))->render();
     }
 
     #[Override]

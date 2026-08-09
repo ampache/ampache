@@ -70,7 +70,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $object_ids,
                 $this->zipHandler,
                 $this->browseFactory,
-                AmpConfig::get_web_path()
+                AmpConfig::get_web_path('/client')
             ))->render();
         }
 

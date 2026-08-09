@@ -92,7 +92,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         $this->ui->showHeader();
         if (AmpError::occurred()) {
             echo (new AddPodcastFormView(
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 ($data['feed'] ?? ''),
                 (int) ($data['catalog'] ?? 0)
             ))->render();

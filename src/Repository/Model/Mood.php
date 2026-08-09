@@ -189,7 +189,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
             return '';
         }
 
-        $web_path = AmpConfig::get_web_path();
+        $web_path = AmpConfig::get_web_path('/client');
         $results  = '';
 
         foreach ($moods as $value) {

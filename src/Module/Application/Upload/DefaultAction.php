@@ -98,7 +98,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         $this->ui->showHeader();
         if ($this->configContainer->get(ConfigurationKeyEnum::UPLOAD_CATALOG) > 0) {
             echo (new UploadView(
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $ajaxfs,
                 (int) $upload_max
             ))->render();

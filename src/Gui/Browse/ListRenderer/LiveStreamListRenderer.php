@@ -81,7 +81,7 @@ final class LiveStreamListRenderer extends AbstractBrowseListRenderer
 
     public function getCreateUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/radio.php?action=show_create';
+        return $this->configContainer->getWebPath('/client') . '/radio.php?action=show_create';
     }
 
     /**

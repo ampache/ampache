@@ -56,7 +56,7 @@ final readonly class ShowVideoAction implements ApplicationActionInterface
         $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 
         echo (new VideoView(
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $video,
             ($video->file) ? $video->get_subtitles() : [],
             (string) ($_SESSION['iframe']['subtitle'] ?? ''),

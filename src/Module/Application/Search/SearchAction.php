@@ -84,14 +84,14 @@ final readonly class SearchAction implements ApplicationActionInterface
                 null,
                 $searchType,
                 $this->videoRepository,
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ))->render();
             echo (new SearchOptionsView(
                 $browse,
                 $searchType,
                 $this->zipHandler,
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
             ))->render();
             $results = Search::run($_REQUEST);
@@ -100,7 +100,7 @@ final readonly class SearchAction implements ApplicationActionInterface
             $browse->store();
         } else {
             $wartists = $this->missingArtistFinder->find($this->requestParser->getFromRequest('rule_1_input'));
-            echo (new MissingArtistsView(AmpConfig::get_web_path(), $wartists))->render();
+            echo (new MissingArtistsView(AmpConfig::get_web_path('/client'), $wartists))->render();
 
             printf(
                 '<a href="http://musicbrainz.org/search?query=%s&type=artist&method=indexed" target="_blank">%s</a><br />',

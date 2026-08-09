@@ -90,7 +90,7 @@ final readonly class ShowAddShoutAction implements ApplicationActionInterface
             $data,
             iterator_to_array($shouts),
             $this->shoutRenderer,
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ))->render();

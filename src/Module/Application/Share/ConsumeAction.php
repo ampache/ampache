@@ -121,7 +121,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
             return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
         } elseif ($action === 'stream') {
             echo (new ShareView(
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $this->ajaxUriRetriever,
                 $share
             ))->render();

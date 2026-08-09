@@ -59,7 +59,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         echo (new CreateLiveStreamFormView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->requestParser->getFromRequest('name'),
             $this->requestParser->getFromRequest('site_url'),
             $this->requestParser->getFromRequest('url'),

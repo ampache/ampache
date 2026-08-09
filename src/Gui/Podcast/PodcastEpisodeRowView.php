@@ -118,7 +118,7 @@ final class PodcastEpisodeRowView extends AbstractView
         return $this->episode;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

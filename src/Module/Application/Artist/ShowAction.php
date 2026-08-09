@@ -103,7 +103,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $objectType,
                 $this->browseFactory,
                 $gatekeeper->getUser(),
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 canEditArtist($artist, $gatekeeper->getUserId()),
                 $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('artist'),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),

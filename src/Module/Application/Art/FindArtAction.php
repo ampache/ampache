@@ -166,7 +166,7 @@ final class FindArtAction extends AbstractArtAction
             // Store the results for further use
             $_SESSION['form']['images'] = $images;
             echo (new ArtSelectionView(
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $object_id,
                 $object_type,
                 $burl,
@@ -179,7 +179,7 @@ final class FindArtAction extends AbstractArtAction
             $object_id,
             $object_type,
             $burl,
-            AmpConfig::get_web_path()
+            AmpConfig::get_web_path('/client')
         ))->render();
 
         $this->ui->showQueryStats();

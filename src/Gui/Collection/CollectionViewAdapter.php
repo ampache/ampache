@@ -127,7 +127,7 @@ final class CollectionViewAdapter extends AbstractView implements CollectionView
     {
         return sprintf(
             '%s/collection.php?action=%s&collection=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             DeleteCollectionAction::REQUEST_KEY,
             $this->getId()
         );
@@ -238,7 +238,7 @@ final class CollectionViewAdapter extends AbstractView implements CollectionView
     {
         return sprintf(
             '%s/collection.php?action=%s&collection=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             SetTrackNumbersAction::REQUEST_KEY,
             $this->getId()
         );

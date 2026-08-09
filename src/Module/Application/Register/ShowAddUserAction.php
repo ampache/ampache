@@ -64,7 +64,7 @@ final readonly class ShowAddUserAction implements ApplicationActionInterface
         }
 
         echo (new RegistrationView(
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $this->registrationAgreementRenderer
         ))->render();
 

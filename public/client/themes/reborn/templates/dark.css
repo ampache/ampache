@@ -549,6 +549,10 @@ span.fatalerror {
     color: #fff;
 }
 
+.item_inactive {
+    color: #fff;
+}
+
 .multiselect-actions {
     background-color: #262626;
     color: #ccc;

@@ -51,7 +51,7 @@ final class ShowEmbeddedAction implements ApplicationActionInterface
         header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 
         echo (new WebPlayerPageView(
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $this->ajaxUriRetriever,
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
         ))->render();

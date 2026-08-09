@@ -40,7 +40,7 @@ final readonly class LoginFormViewFactory implements LoginFormViewFactoryInterfa
     #[Override]
     public function create(): ?LoginFormView
     {
-        $webPath      = AmpConfig::get_web_path();
+        $webPath      = AmpConfig::get_web_path('/client');
         $authMethods  = AmpConfig::get('auth_methods', []);
         $oidcEnabled  = is_array($authMethods) && in_array('oidc', $authMethods, true);
         $mailEnabled  = Mailer::is_mail_enabled();

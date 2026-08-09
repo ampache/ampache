@@ -62,7 +62,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         // the util_iframe for stream/democratic and the rightbar for localplay. Don't force a type
         // here or the switcher can't stick.
         echo (new MiniPlayerView(
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $this->environment,
             $this->ajaxUriRetriever,
             $this->collectionRepository,

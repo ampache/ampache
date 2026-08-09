@@ -61,7 +61,7 @@ final readonly class ShowLyricsAction implements ApplicationActionInterface
         $lyrics = $song->get_lyrics();
 
         echo (new LyricsView(
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $song,
             $lyrics
         ))->render();

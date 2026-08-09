@@ -73,7 +73,7 @@ final class GenreFormView extends AbstractView
         return $categories;
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

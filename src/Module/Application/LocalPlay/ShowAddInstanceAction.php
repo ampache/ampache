@@ -68,7 +68,7 @@ final class ShowAddInstanceAction extends AbstractLocalPlayAction
         $localplay = new LocalPlay($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_CONTROLLER));
         $fields    = $localplay->get_instance_fields();
         echo (new LocalplayAddInstanceView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $fields
         ))->render();
 

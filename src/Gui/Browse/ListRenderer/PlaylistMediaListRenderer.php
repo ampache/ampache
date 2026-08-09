@@ -224,7 +224,7 @@ final class PlaylistMediaListRenderer extends AbstractBrowseListRenderer
         $playlist = $this->getSupplementalObject('playlist');
 
         return (new PlaylistMediaRowView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $row['item'],
             $row['type'],
             $row['trackId'],

@@ -44,7 +44,7 @@ final class UserActivationView extends AbstractRegisterPageView
 
     public function getLoginUrl(): string
     {
-        return $this->getWebPath() . '/login.php';
+        return $this->getWebPath('/client') . '/login.php';
     }
 
     public function isActivated(): bool

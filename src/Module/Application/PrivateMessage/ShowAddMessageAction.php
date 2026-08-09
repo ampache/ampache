@@ -85,7 +85,7 @@ final readonly class ShowAddMessageAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         echo (new AddPrivateMessageFormView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->requestParser->getFromRequest('to_user'),
             $this->requestParser->getFromRequest('subject'),
             $this->requestParser->getFromRequest('message')

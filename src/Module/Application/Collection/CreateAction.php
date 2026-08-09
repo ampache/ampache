@@ -122,7 +122,7 @@ final readonly class CreateAction implements ApplicationActionInterface
     private function createFormView(): CreateCollectionFormView
     {
         return new CreateCollectionFormView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->requestParser->getFromRequest('name'),
             $this->requestParser->getFromRequest('type') ?: 'private',
             $this->requestParser->getFromRequest('object_type')

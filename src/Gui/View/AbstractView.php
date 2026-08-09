@@ -88,7 +88,7 @@ abstract class AbstractView implements TemplateInterface
         if (AmpConfig::get('allow_php_themes')) {
             $themePath = (string) AmpConfig::get('theme_path', '/themes/reborn');
             $themeFile = realpath(
-                sprintf('%s/../../../public/%s/templates/%s', __DIR__, $themePath, $template)
+                sprintf('%s/../../../public/client/%s/templates/%s', __DIR__, $themePath, $template)
             );
 
             if ($themeFile !== false && is_file($themeFile)) {

@@ -111,7 +111,7 @@ final class ShareView extends AbstractView
         return (string) AmpConfig::get('site_title', 'Ampache');
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

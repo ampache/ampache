@@ -219,7 +219,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 /** @var Artist $libitem */
                 $results = (new ArtistRowView(
                     $libitem,
-                    AmpConfig::get_web_path(),
+                    AmpConfig::get_web_path('/client'),
                     'cel_cover',
                     'cel_artist',
                     'cel_time',
@@ -241,7 +241,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 /** @var Podcast $libitem */
                 $results = (new PodcastRowView(
                     $libitem,
-                    AmpConfig::get_web_path(),
+                    AmpConfig::get_web_path('/client'),
                     'cel_cover',
                     'cel_counter',
                     $show_ratings,
@@ -256,7 +256,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 /** @var Podcast_Episode $libitem */
                 $results = (new PodcastEpisodeRowView(
                     $libitem,
-                    AmpConfig::get_web_path(),
+                    AmpConfig::get_web_path('/client'),
                     'cel_cover',
                     'cel_time',
                     'cel_counter',
@@ -277,7 +277,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 /** @var Video $libitem */
                 $results = (new VideoRowView(
                     $libitem,
-                    AmpConfig::get_web_path(),
+                    AmpConfig::get_web_path('/client'),
                     'cel_cover',
                     'cel_counter',
                     'cel_tags',
@@ -319,7 +319,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
             case 'label_row':
                 /** @var Label $libitem */
                 $results = (new LabelRowView(
-                    AmpConfig::get_web_path(),
+                    AmpConfig::get_web_path('/client'),
                     $libitem,
                     'cel_cover',
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
@@ -331,7 +331,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
             case 'search_row':
                 /** @var Search $libitem */
                 $results = (new SearchRowView(
-                    AmpConfig::get_web_path(),
+                    AmpConfig::get_web_path('/client'),
                     $libitem,
                     (bool) AmpConfig::get('directplay'),
                     Stream_Playlist::check_autoplay_next(),

@@ -173,7 +173,7 @@ final class WebPlayerHeadersView extends AbstractView
         return $this->toJs(T_("Your browser doesn't support this feature."));
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

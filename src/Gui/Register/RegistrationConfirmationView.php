@@ -60,10 +60,10 @@ final class RegistrationConfirmationView extends AbstractRegisterPageView
         }
 
         return (new ConfirmationView(
-            $this->getWebPath(),
+            $this->getWebPath('/client'),
             T_('Your account has been created'),
             $text,
-            $this->getWebPath() . '/login.php',
+            $this->getWebPath('/client') . '/login.php',
             'confirmation',
             null
         ))->render();

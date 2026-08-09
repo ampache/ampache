@@ -57,7 +57,7 @@ abstract class AbstractFormView extends AbstractView
         return Core::form_register($formName);
     }
 
-    final public function getWebPath(): string
+    final public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

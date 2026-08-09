@@ -47,7 +47,7 @@ final readonly class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
         echo (new CookieDisclaimerView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             (string) AmpConfig::get('session_name', 'ampache')
         ))->render();
         $this->ui->showFooter();

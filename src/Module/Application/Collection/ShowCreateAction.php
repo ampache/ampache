@@ -63,7 +63,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         echo (new CreateCollectionFormView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->requestParser->getFromRequest('name'),
             $this->requestParser->getFromRequest('type') ?: 'private',
             $this->requestParser->getFromRequest('object_type')

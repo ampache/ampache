@@ -64,7 +64,7 @@ final readonly class ManagePlaylistsAction implements ApplicationActionInterface
         $playlists = Democratic::get_playlists();
 
         echo (new ManageDemocraticView(
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $playlists
         ))->render();
 

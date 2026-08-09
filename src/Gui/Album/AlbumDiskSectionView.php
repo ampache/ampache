@@ -89,7 +89,7 @@ final class AlbumDiskSectionView extends AbstractView
         return $link . '<span class="discnb disc' . $this->disk->disk . '">: ' . scrub_out($this->disk->disksubtitle) . '</span>';
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

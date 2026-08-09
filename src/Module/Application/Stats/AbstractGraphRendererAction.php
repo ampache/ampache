@@ -135,7 +135,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
 
         echo (new GraphsView(
             $this->graph,
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $gtypes,
             $user_id,
             $object_type,

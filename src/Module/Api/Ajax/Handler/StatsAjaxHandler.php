@@ -125,7 +125,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     $user,
                     $user_id,
                     $user_only,
-                    AmpConfig::get_web_path()
+                    AmpConfig::get_web_path('/client')
                 ))->render();
 
                 $results['recently_played'] = ob_get_clean();
@@ -155,7 +155,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     $user,
                     $user_id,
                     $user_only,
-                    AmpConfig::get_web_path()
+                    AmpConfig::get_web_path('/client')
                 ))->render();
                 $results['recently_skipped'] = ob_get_clean();
                 break;
@@ -176,7 +176,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     $user,
                     $user_id,
                     $user_only,
-                    AmpConfig::get_web_path()
+                    AmpConfig::get_web_path('/client')
                 ))->render();
                 $results['recently_skipped'] = ob_get_clean();
                 break;

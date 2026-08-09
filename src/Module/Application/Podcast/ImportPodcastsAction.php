@@ -97,7 +97,7 @@ final readonly class ImportPodcastsAction implements ApplicationActionInterface
         $this->ui->showHeader();
         if (AmpError::occurred()) {
             echo (new ImportPodcastsFormView(
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 (int) ($data['catalog'] ?? 0)
             ))->render();
         } else {

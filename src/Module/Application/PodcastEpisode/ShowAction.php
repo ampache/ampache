@@ -81,7 +81,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 
             echo (new PodcastEpisodeView(
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $episode,
                 (bool) AmpConfig::get('directplay'),
                 Stream_Playlist::check_autoplay_next(),

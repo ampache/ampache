@@ -137,7 +137,7 @@ final class UploadView extends AbstractView
         return $this->toJs($this->webPath . '/upload.php');
     }
 
-    public function getWebPath(): string
+    public function getWebPath('/client'): string
     {
         return $this->webPath;
     }

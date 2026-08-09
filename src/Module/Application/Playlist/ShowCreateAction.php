@@ -58,7 +58,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         echo (new CreatePlaylistFormView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->requestParser->getFromRequest('name'),
             $this->requestParser->getFromRequest('type') ?: 'private'
         ))->render();

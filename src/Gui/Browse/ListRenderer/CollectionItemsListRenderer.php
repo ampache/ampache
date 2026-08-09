@@ -205,7 +205,7 @@ final class CollectionItemsListRenderer extends AbstractBrowseListRenderer
     public function renderRow(array $row): string
     {
         return (new CollectionItemRowView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $row['item'],
             $row['type'],
             $this->getCollectionId(),

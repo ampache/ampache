@@ -153,7 +153,7 @@ final class SongListRenderer extends AbstractBrowseListRenderer
 
         // a selection cannot stream as one file, so the batch zip is the only sane download
         if ($this->mayBatchDownload()) {
-            $actions[] = ['action' => 'link', 'url' => $this->configContainer->getWebPath() . '/batch.php?action={type}&id={ids}', 'icon' => 'folder_zip', 'text' => T_('Download')];
+            $actions[] = ['action' => 'link', 'url' => $this->configContainer->getWebPath('/client') . '/batch.php?action={type}&id={ids}', 'icon' => 'folder_zip', 'text' => T_('Download')];
         }
 
         return $actions;

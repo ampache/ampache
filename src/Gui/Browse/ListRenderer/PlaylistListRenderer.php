@@ -85,7 +85,7 @@ final class PlaylistListRenderer extends AbstractBrowseListRenderer
 
     public function getCreateUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/playlist.php?action=show_create';
+        return $this->configContainer->getWebPath('/client') . '/playlist.php?action=show_create';
     }
 
     /**
