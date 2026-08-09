@@ -228,7 +228,7 @@ abstract class Catalog extends database_object
                         $cache_list[] = (string) $file;
                     }
                     $song_files = [];
-                    $song_ids   = array_values(array_unique(array_map(static fn ($file) => (int) pathinfo($file, PATHINFO_FILENAME), $cache_list)));
+                    $song_ids   = array_values(array_unique(array_map(static fn($file) => (int) pathinfo($file, PATHINFO_FILENAME), $cache_list)));
                     foreach (array_chunk($song_ids, 500) as $chunk) {
                         $idlist     = implode(',', $chunk);
                         $db_results = Dba::read("SELECT `id`, `file` FROM `song` WHERE `id` IN (" . $idlist . ");");
