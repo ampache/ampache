@@ -51,6 +51,7 @@ interface RssItemInterface
      *   title: string,
      *   guid: string,
      *   link: string,
+     *   description: string,
      *   length: string,
      *   author: ?string,
      *   pubDate: ?string,

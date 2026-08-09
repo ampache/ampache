@@ -39,7 +39,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>', "\n"; ?>
         <itunes:image href="<?php echo $this->e($item->getImageUrl()); ?>"/>
 <?php }
 if ($item->hasSummary()) { ?>
-        <description><?php echo $this->e($item->getSummary()); ?></description>
+        <description><![CDATA[<?php echo nl2br(str_replace(']]>', ']]]]><![CDATA[>', $item->getSummary())); ?>]]></description>
         <itunes:summary><?php echo $this->e($item->getSummary()); ?></itunes:summary>
 <?php } ?>
         <language><?php echo $this->e($item->getLanguage()); ?></language>
@@ -56,6 +56,9 @@ foreach ($item->getMedias() as $media) { ?>
             <title><?php echo $this->e($media['title']); ?></title>
 <?php   if (!empty($media['link'])) { ?>
             <link><?php echo $this->e($media['link']); ?></link>
+<?php   }
+    if (!empty($media['description'])) { ?>
+            <description><?php echo $this->e($media['description']); ?></description>
 <?php   }
     if (!empty($media['author'])) { ?>
             <itunes:author><?php echo $this->e($media['author']); ?></itunes:author>
