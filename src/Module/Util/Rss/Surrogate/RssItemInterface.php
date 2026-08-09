@@ -80,6 +80,11 @@ interface RssItemInterface
     public function getPodcastGuid(): string;
 
     /**
+     * RSS channel language (RFC 5646), from the installation locale
+     */
+    public function getLanguage(): string;
+
+    /**
      * Returns the items summary/description text
      */
     public function getSummary(): string;

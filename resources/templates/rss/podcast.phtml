@@ -42,6 +42,7 @@ if ($item->hasSummary()) { ?>
         <description><?php echo $this->e($item->getSummary()); ?></description>
         <itunes:summary><?php echo $this->e($item->getSummary()); ?></itunes:summary>
 <?php } ?>
+        <language><?php echo $this->e($item->getLanguage()); ?></language>
         <generator>ampache</generator>
         <podcast:guid><?php echo $this->e($item->getPodcastGuid()); ?></podcast:guid>
         <itunes:category text="<?php echo $this->e($item->getCategory()); ?>"/>

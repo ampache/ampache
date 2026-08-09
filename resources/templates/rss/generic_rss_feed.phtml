@@ -34,6 +34,7 @@ echo '<?xml version="1.0"?>', "\n"; ?>
         <link><?php echo $this->e($this->getLink()); ?></link>
         <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rss+xml" href="<?php echo $this->e($this->getRssLink()); ?>"/>
         <description><?php echo $this->e($this->getTitle()); ?></description>
+        <language><?php echo $this->e($this->getLanguage()); ?></language>
 <?php if ($this->getPubDate() !== null) { ?>
         <pubDate><?php echo $this->e($this->getPubDate()); ?></pubDate>
 <?php }
@@ -61,6 +62,9 @@ foreach ($this->getItems() as $item) { ?>
 <?php   }
     if (!empty($item['pubDate'])) { ?>
             <pubDate><?php echo $this->e($item['pubDate']); ?></pubDate>
+<?php   }
+    if (!empty($item['image'])) { ?>
+            <itunes:image href="<?php echo $this->e($item['image']); ?>"/>
 <?php   }
     if (!empty($item['duration'])) { ?>
             <itunes:duration><?php echo $this->e($item['duration']); ?></itunes:duration>

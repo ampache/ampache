@@ -46,7 +46,13 @@ final class GenericRssFeedView extends AbstractView
         private readonly Traversable $items,
         private readonly ?string $medium = null,
         private readonly array $remoteItems = [],
+        private readonly string $language = 'en-US',
     ) {}
+
+    public function getLanguage(): string
+    {
+        return $this->language;
+    }
 
     public function getMedium(): ?string
     {

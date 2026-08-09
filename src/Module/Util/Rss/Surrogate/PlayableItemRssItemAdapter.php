@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Surrogate;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Util\Rss\EnclosureResolver;
 use Ampache\Module\Util\Rss\PodcastGuid;
@@ -176,6 +177,14 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     public function getPodcastGuid(): string
     {
         return PodcastGuid::fromFeedUrl((string) preg_replace('/&?rsstoken=[^&]*/', '', $this->getRssLink()));
+    }
+
+    /**
+     * RSS channel language (RFC 5646), from the installation locale
+     */
+    public function getLanguage(): string
+    {
+        return str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US'));
     }
 
     /**
