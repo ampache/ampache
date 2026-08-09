@@ -74,7 +74,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         if ($type === RssFeedTypeEnum::LIBRARY_ITEM) {
             $item = $this->libraryItemLoader->load(
-                LibraryItemEnum::from($queryParams['object_type'] ?? ''),
+                LibraryItemEnum::tryFrom($queryParams['object_type'] ?? '') ?? LibraryItemEnum::SONG,
                 (int) ($queryParams['object_id'] ?? 0),
                 [Album::class, AlbumDisk::class, Artist::class, Podcast::class, Song::class]
             );

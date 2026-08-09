@@ -54,7 +54,7 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
                 'link' => $artist->get_link(),
                 'description' => (string) $artist->summary,
                 'comments' => '',
-                'pubDate' => '',
+                'pubDate' => ($artist->addition_time !== null && $artist->addition_time > 0) ? date('r', $artist->addition_time) : '',
                 'guid' => ($artist->mbid !== null)
                     ? 'https://musicbrainz.org/artist/' . $artist->mbid
                     : 'artist-' . $artist->id,

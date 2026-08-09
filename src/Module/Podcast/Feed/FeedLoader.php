@@ -88,6 +88,15 @@ final readonly class FeedLoader implements FeedLoaderInterface
             $artUrl = (string) $xml->channel->image->url;
         }
 
+        // plenty of feeds ship `itunes:image` instead of the RSS one; by uri, because the prefix is arbitrary
+        if ($artUrl === null || $artUrl === '') {
+            $itunes = $xml->channel->children(FeedNamespaceEnum::ITUNES->value);
+            $href   = trim((string) ($itunes->image->attributes()['href'] ?? ''));
+            if ($href !== '') {
+                $artUrl = $href;
+            }
+        }
+
         return [
             'title' => FeedText::cleanLine((string) $xml->channel->title),
             'website' => trim((string) $xml->channel->link),

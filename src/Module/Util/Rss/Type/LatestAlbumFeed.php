@@ -25,11 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Type;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Rss\PodcastGuid;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\User;
 use Generator;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
@@ -62,6 +65,39 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
                 'image' => (string) Art::url($album->id, 'album', null, 2),
             ];
         }
+    }
+
+    #[Override]
+    protected function getMedium(): ?string
+    {
+        return 'playlist';
+    }
+
+    /**
+     * Point Podcasting 2.0 apps at each album's own library_item feed
+     *
+     * @return list<array{feedUrl: string, feedGuid: string}>
+     */
+    #[Override]
+    protected function getRemoteItems(): array
+    {
+        $queryParams = $this->request->getQueryParams();
+        $count       = (int) ($queryParams['count'] ?? 10);
+        $offset      = (int) ($queryParams['offset'] ?? 0);
+        $ids         = Stats::get_newest('album', $count, $offset, 0, $this->user);
+
+        $items = [];
+        foreach ($ids as $albumid) {
+            $canonical = AmpConfig::get_web_path() . '/rss.php?type=library_item&object_type=album&object_id=' . $albumid;
+            $items[]   = [
+                'feedUrl' => ($this->user !== null && AmpConfig::get('use_auth'))
+                    ? $canonical . '&rsstoken=' . $this->user->getRssToken()
+                    : $canonical,
+                'feedGuid' => PodcastGuid::fromFeedUrl($canonical),
+            ];
+        }
+
+        return $items;
     }
 
     protected function getTitle(): string
