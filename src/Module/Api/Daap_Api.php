@@ -296,7 +296,9 @@ class Daap_Api
         $output = '';
         // Database list
         if (count($input) == 0) {
-            self::_check_session('daap.serverdatabases');
+            if (!self::_check_session('daap.serverdatabases')) {
+                return false;
+            }
 
             $output = self::_tlv('dmap.status', 200);
             $output .= self::_tlv('dmap.updatetype', 0);
@@ -316,13 +318,17 @@ class Daap_Api
         } elseif (count($input) == 2) {
             if ($input[1] == 'items') {
                 // Songs list
-                self::_check_session('daap.databasesongs');
+                if (!self::_check_session('daap.databasesongs')) {
+                    return false;
+                }
 
                 $output = self::_catalog_songs();
                 $output = self::_tlv('daap.databasesongs', $output);
             } elseif ($input[1] == 'containers') {
                 // Playlist list
-                self::_check_session('daap.databaseplaylists');
+                if (!self::_check_session('daap.databaseplaylists')) {
+                    return false;
+                }
 
                 $output = self::_tlv('dmap.status', 200);
                 $output .= self::_tlv('dmap.updatetype', 0);
@@ -348,6 +354,10 @@ class Daap_Api
         } elseif (count($input) == 3) {
             // Stream
             if ($input[1] == 'items') {
+                if (!self::_check_session('daap.databasesongs')) {
+                    return false;
+                }
+
                 $finfo = explode('.', (string) $input[2]);
                 if (count($finfo) == 2) {
                     $object_id = (int) ($finfo[0]);
@@ -375,7 +385,9 @@ class Daap_Api
             if ($input[1] == 'containers' && $input[3] == 'items') {
                 $object_id = (int) ($input[2]);
 
-                self::_check_session('daap.playlistsongs');
+                if (!self::_check_session('daap.playlistsongs')) {
+                    return false;
+                }
 
                 if ($object_id == Daap_Api::BASE_LIBRARY) {
                     $output = self::_catalog_songs();
@@ -467,7 +479,9 @@ class Daap_Api
      */
     public static function login(array $input): void
     {
-        self::_check_auth('dmap.loginresponse');
+        if (!self::_check_auth('dmap.loginresponse')) {
+            return;
+        }
 
         // Create a new daap session
         $sql = "INSERT INTO `daap_session` (`creationdate`) VALUES (?)";
@@ -487,7 +501,9 @@ class Daap_Api
      */
     public static function logout(array $input): void
     {
-        self::_check_auth();
+        if (!self::_check_auth()) {
+            return;
+        }
 
         $sql = "DELETE FROM `daap_session` WHERE `id` = ?;";
         Dba::write($sql, [$input['session-id']]);
@@ -566,7 +582,9 @@ class Daap_Api
      */
     public static function update(array $input): void
     {
-        self::_check_session('dmap.updateresponse');
+        if (!self::_check_session('dmap.updateresponse')) {
+            return;
+        }
 
         $output = self::_tlv('dmap.serverrevision', Catalog::getLastUpdate());
         $output .= self::_tlv('dmap.status', 200);
@@ -614,14 +632,14 @@ class Daap_Api
 
     /**
      */
-    private static function _check_auth(string $code = ''): void
+    private static function _check_auth(string $code = ''): bool
     {
         $authenticated = false;
         $pass          = AmpConfig::get('daap_pass');
         // DAAP password specified, need to authenticate the client
         if (!empty($pass)) {
             $headers = apache_request_headers();
-            $auth    = $headers['Authorization'];
+            $auth    = $headers['Authorization'] ?? '';
             if (str_starts_with(strtolower((string) $auth), 'basic')) {
                 $decauth  = base64_decode(substr($auth, 6));
                 $userpass = explode(':', (string) $decauth);
@@ -641,28 +659,43 @@ class Daap_Api
                 self::createApiError($code, 403);
             }
         }
+
+        return $authenticated;
     }
 
     /**
+     * Requires both a valid daap_pass (when configured) and an active, non-expired
+     * daap_session row, rejecting the request instead of just logging on failure.
      */
-    private static function _check_session(string $code): void
+    private static function _check_session(string $code): bool
     {
         // Purge expired sessions
         $sql = "DELETE FROM `daap_session` WHERE `creationdate` < ?";
         Dba::write($sql, [time() - 1800]);
 
-        self::_check_auth($code);
-
-        if (!isset($_GET['session-id'])) {
-            debug_event(self::class, 'Missing session id.', 2);
-        } else {
-            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?;";
-            $db_results = Dba::read($sql, [Core::get_get('session-id')]);
-
-            if (Dba::num_rows($db_results) == 0) {
-                debug_event(self::class, 'Unknown session id `' . Core::get_get('session-id') . '`.', 4);
-            }
+        if (!self::_check_auth($code)) {
+            return false;
         }
+
+        $session_id = Core::get_get('session-id');
+        if (!isset($_GET['session-id']) || $session_id === '') {
+            debug_event(self::class, 'Missing session id.', 2);
+            self::createApiError($code, 403);
+
+            return false;
+        }
+
+        $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, [$session_id]);
+
+        if (Dba::num_rows($db_results) == 0) {
+            debug_event(self::class, 'Unknown session id `' . $session_id . '`.', 4);
+            self::createApiError($code, 403);
+
+            return false;
+        }
+
+        return true;
     }
 
     private static function _get_type_id($type): int
