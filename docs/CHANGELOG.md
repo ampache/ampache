@@ -163,6 +163,10 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Until now the title, website, description, language, copyright, generator and art were only read when the podcast was created; a sync added episodes and nothing else, so a podcast that renamed itself or replaced its art kept the details it was first created with
   * Values the channel does not supply are left alone rather than blanked, and the art is only replaced when the channel advertises one
   * Requires content manager access, and asks for confirmation first because it overwrites details you may have edited by hand
+* A podcast `Sync` shows a `Started` notification
+  * The sync fetches the feed and downloads episodes, which can run for minutes, and the request renders nothing back. With no acknowledgement the click looked like it had done nothing, so people pressed it again
+  * The notification appears as the request goes out, on the `Sync` button of the podcast page and of a podcast row, and on the episode `Sync` that downloads a single episode
+  * `Ajax::button()` and `Ajax::button_with_text()` take an optional `notice` for this, so any other long running ajax action can say the same
 * A `PHP Modules` table on `Admin -> Server Config -> Ampache Debug` listing every php extension Ampache requires or suggests, whether this server has it, and what an optional one is needed for
 * Webserver rules that keep private files out of the web root
   * Optional hardening; nothing in Ampache needs these rules, so an install without them keeps working exactly as before

@@ -95,7 +95,7 @@ if ($this->canAddToPlaylist()) { ?>
         <?php }
     if ($this->canEdit()) { ?>
     <span id="button_sync_<?php echo $itemId; ?>">
-        <?php echo $this->raw(Ajax::button('?page=podcast&action=syncPodcastEpisode&podcast_episode_id=' . $itemId, 'sync', T_('Sync'), 'sync_podcast_episode_' . $itemId)); ?>
+        <?php echo $this->raw(Ajax::button('?page=podcast&action=syncPodcastEpisode&podcast_episode_id=' . $itemId, 'sync', T_('Sync'), 'sync_podcast_episode_' . $itemId, notice: T_('Started'))); ?>
     </span>
     <a id="edit_podcast_episode_<?php echo $itemId; ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $itemId; ?>', 'edit_podcast_episode_<?php echo $itemId; ?>', '<?php echo $this->raw(addslashes(T_('Podcast Episode Edit'))); ?>', 'podcast_episode_', '<?php echo '&browse_id=' . $this->getBrowseId(); ?>')">
         <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>

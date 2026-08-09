@@ -118,12 +118,12 @@ if ($this->areRatingsShown()) { ?>
                 <?php echo T_('Edit Podcast'); ?>
             </a>
         </li>
-        <li><?php echo $this->raw(Ajax::button_with_text('?page=podcast&action=syncPodcast&podcast_id=' . $podcastId, 'sync', T_('Sync'), 'sync_podcast_' . $podcastId)); ?></li>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=podcast&action=syncPodcast&podcast_id=' . $podcastId, 'sync', T_('Sync'), 'sync_podcast_' . $podcastId, notice: T_('Started'))); ?></li>
         <?php if ($updateFromFeedUrl !== null) { ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $this->e($updateFromFeedUrl); ?>');" data-confirm="<?php echo $this->e(T_('Are you sure? This will overwrite Podcast details using the feed')); ?>">
-                <?php echo $this->raw(Ui::get_material_symbol('cloud_sync', T_('Update details from the feed'))); ?>
-                <?php echo T_('Update details from the feed'); ?>
+            <a href="javascript:NavigateTo('<?php echo $this->e($updateFromFeedUrl); ?>');" data-confirm="<?php echo $this->e(T_('Are you sure? This will overwrite Podcast details using the RSS feed')); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('cloud_sync', T_('Update details from RSS feed'))); ?>
+                <?php echo T_('Update details from RSS feed'); ?>
             </a>
         </li>
     <?php }

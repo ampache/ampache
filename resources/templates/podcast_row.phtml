@@ -85,7 +85,7 @@ if ($this->isShowRatings()) { ?>
         <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
     </a>
     <span id="button_sync_<?php echo $itemId; ?>">
-        <?php echo $this->raw(Ajax::button('?page=podcast&action=syncPodcast&podcast_id=' . $itemId, 'sync', T_('Sync'), 'sync_podcast_' . $itemId)); ?>
+        <?php echo $this->raw(Ajax::button('?page=podcast&action=syncPodcast&podcast_id=' . $itemId, 'sync', T_('Sync'), 'sync_podcast_' . $itemId, notice: T_('Started'))); ?>
     </span>
 <?php }
 if ($this->canDelete()) { ?>

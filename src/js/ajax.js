@@ -40,6 +40,7 @@ $(document).on("click", "a[data-ajax='1']", function (event) {
     var url = $link.attr("data-ajax-url");
     var post = $link.attr("data-ajax-post");
     var confirmText = $link.attr("data-ajax-confirm");
+    var notice = $link.attr("data-ajax-notice");
     var source = this.id || "";
 
     // Keep the historical order: update_action() runs before confirm().
@@ -47,6 +48,11 @@ $(document).on("click", "a[data-ajax='1']", function (event) {
     window.update_action();
 
     function run() {
+        // A long action (a podcast sync, say) renders nothing back and can run for minutes, so
+        // without this the click looks like it did nothing at all.
+        if (notice) {
+            displayNotification(notice, 5000);
+        }
         if (post) {
             ajaxPost(url, post, source);
         } else {

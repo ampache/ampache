@@ -483,6 +483,15 @@ class PodcastEpisodeRepositoryTest extends TestCase
         }
     }
 
+    public function testUpdateDescriptionWritesTheDescription(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `podcast_episode` SET `description` = ? WHERE `id` = ?', ['some-description', 666]);
+
+        $this->subject->updateDescription(666, 'some-description');
+    }
+
     public function testUpdateFromTagsFallsBackToVbrForAnUnknownMode(): void
     {
         $this->connection->expects(static::once())
