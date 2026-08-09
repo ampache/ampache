@@ -1,0 +1,50 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// partial/multiselect_actions.phtml -- rendered by Ampache\Gui\Partial\MultiselectActionsView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Partial\MultiselectActionsView $this */
+
+$actions = $this->getActions();
+if ($actions === []) {
+    return;
+} ?>
+<div class="multiselect-actions multiselect-empty" data-multiselect-bar>
+    <span class="multiselect-summary">
+        <?php printf(T_('%s selected'), '<span data-multiselect-count>0</span>'); ?>
+    </span>
+    <?php foreach ($actions as $action) { ?>
+    <a href="javascript:void(0);" aria-disabled="true"
+       data-multiselect-action="<?php echo $this->e($action['action']); ?>"
+       data-multiselect-url="<?php echo $this->e($action['url']); ?>"
+       <?php if (!empty($action['confirm'])) { ?>data-multiselect-confirm="<?php echo $this->e($action['confirm']); ?>"<?php } ?>
+    >
+        <?php echo $this->raw(Ui::get_material_symbol($action['icon'], $action['text'])); ?>
+        <span class="multiselect-label"><?php echo $this->e($action['text']); ?></span>
+    </a>
+    <?php } ?>
+</div>

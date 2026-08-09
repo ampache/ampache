@@ -586,7 +586,7 @@ final readonly class SongRepository implements SongRepositoryInterface
     public function getDataRow(int $songId): array
     {
         $row = $this->connection->fetchRow(
-            'SELECT `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `disksubtitle` FROM `song_data` WHERE `song_id` = ?',
+            'SELECT `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `disksubtitle`, `bpm` FROM `song_data` WHERE `song_id` = ?',
             [$songId]
         );
 
@@ -609,7 +609,7 @@ final readonly class SongRepository implements SongRepositoryInterface
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT `song_id`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `disksubtitle` FROM `song_data` WHERE `song_id` IN (%s)',
+                'SELECT `song_id`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `disksubtitle`, `bpm` FROM `song_data` WHERE `song_id` IN (%s)',
                 implode(',', array_map(intval(...), $songIds))
             )
         );
@@ -870,6 +870,25 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * Reads the playback columns of the extended row, the one partial read the callers ask for
+     *
+     * These are the scalars a player or an api response needs, leaving the comment, lyrics and waveform behind.
+     *
+     * @return array<string, mixed>
+     */
+    public function getPartialDataRow(int $songId): array
+    {
+        $row = $this->connection->fetchRow(
+            'SELECT `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `bpm` FROM `song_data` WHERE `song_id` = ?',
+            [$songId]
+        );
+
+        return ($row === false)
+            ? []
+            : $row;
+    }
+
+    /**
      * Gets the songs from the artist in a random order
      *
      * @return int[]
@@ -907,23 +926,6 @@ final readonly class SongRepository implements SongRepositoryInterface
         shuffle($results);
 
         return $results;
-    }
-
-    /**
-     * Reads the replaygain columns of the extended row, the one partial read the callers ask for
-     *
-     * @return array<string, mixed>
-     */
-    public function getReplaygainRow(int $songId): array
-    {
-        $row = $this->connection->fetchRow(
-            'SELECT `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain` FROM `song_data` WHERE `song_id` = ?',
-            [$songId]
-        );
-
-        return ($row === false)
-            ? []
-            : $row;
     }
 
     /**
@@ -1081,7 +1083,7 @@ final readonly class SongRepository implements SongRepositoryInterface
     public function insertData(array $values): void
     {
         $this->connection->query(
-            'INSERT INTO `song_data` (`song_id`, `disksubtitle`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO `song_data` (`song_id`, `disksubtitle`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `bpm`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             $values
         );
     }
@@ -1284,7 +1286,7 @@ final readonly class SongRepository implements SongRepositoryInterface
         );
 
         $this->connection->query(
-            'UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?',
+            'UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ?, `bpm` = ? WHERE `song_id` = ?',
             $dataValues
         );
     }

@@ -25,11 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Override;
@@ -37,6 +39,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowAddAdvancedActionTest extends MockeryTestCase
 {
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private RequestParserInterface|MockInterface|null $requestParser;
     private ?ShowAddAdvancedAction $subject;
     private MockInterface|UiInterface|null $ui;
 
@@ -44,13 +48,6 @@ class ShowAddAdvancedActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $action = 'some-action';
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['action' => $action]);
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -61,22 +58,21 @@ class ShowAddAdvancedActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_add_access.inc.php',
-                [
-                    'action' => $action,
-                    'add_type' => 'show_add_advanced'
-                ]
-            )
-            ->once();
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 
-        $this->subject->run($request, $gatekeeper);
+        ob_start();
+
+        try {
+            $this->subject->run($request, $gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNotSame('', $output);
     }
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void
@@ -97,10 +93,19 @@ class ShowAddAdvancedActionTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->ui = $this->mock(UiInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->requestParser   = $this->mock(RequestParserInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+
+        $this->configContainer->shouldReceive('getWebPath')->andReturn('some-web-path');
+
+        $this->requestParser->shouldReceive('getFromRequest')->andReturn('');
+
 
         $this->subject = new ShowAddAdvancedAction(
-            $this->ui
+            $this->ui,
+            $this->configContainer,
+            $this->requestParser
         );
     }
 }

@@ -27,8 +27,6 @@ namespace Ampache\Module\Application\Song;
 
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Song\SongViewAdapterInterface;
-use Ampache\Gui\TalFactoryInterface;
-use Ampache\Gui\TalViewInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
@@ -117,7 +115,6 @@ class ShowSongActionTest extends MockeryTestCase
         $song            = $this->mock(Song::class);
         $user            = $this->mock(User::class);
         $songViewAdapter = $this->mock(SongViewAdapterInterface::class);
-        $talView         = $this->mock(TalViewInterface::class);
 
         $song_id = 666;
         $title   = 'some-song-title';
@@ -178,16 +175,7 @@ class ShowSongActionTest extends MockeryTestCase
             ->once()
             ->andReturn($songViewAdapter);
 
-        $this->talFactory->shouldReceive('createTalView->setTemplate')
-            ->with('song.xhtml')
-            ->once()
-            ->andReturn($talView);
-
-        $talView->shouldReceive('setContext')
-            ->with('SONG', $songViewAdapter)
-            ->once()
-            ->andReturnSelf();
-        $talView->shouldReceive('render')
+        $songViewAdapter->shouldReceive('render')
             ->withNoArgs()
             ->once()
             ->andReturn($content);
@@ -208,14 +196,12 @@ class ShowSongActionTest extends MockeryTestCase
         $this->ui           = $this->mock(UiInterface::class);
         $this->modelFactory = $this->mock(ModelFactoryInterface::class);
         $this->guiFactory   = $this->mock(GuiFactoryInterface::class);
-        $this->talFactory   = $this->mock(TalFactoryInterface::class);
         $this->logger       = $this->mock(LoggerInterface::class);
 
         $this->subject = new ShowSongAction(
             $this->ui,
             $this->modelFactory,
             $this->guiFactory,
-            $this->talFactory,
             $this->logger
         );
     }

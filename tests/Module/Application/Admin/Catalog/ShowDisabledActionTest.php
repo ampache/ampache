@@ -32,8 +32,10 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\SongRepositoryInterface;
 use ArrayIterator;
+use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,7 +51,15 @@ class ShowDisabledActionTest extends TestCase
 
     public function testRunRendersDisabledSongs(): void
     {
-        $songs = new ArrayIterator(['some-data']);
+        $song = $this->createMock(Song::class);
+        $song->method('getId')->willReturn(666);
+        $song->method('get_fullname')->willReturn('Rock & Roll');
+        $song->method('get_album_fullname')->willReturn('some-album');
+        $song->method('get_parent_fullname')->willReturn('some-artist');
+        $song->method('getFile')->willReturn('/some/file.mp3');
+        $song->method('getAdditionTime')->willReturn(new DateTimeImmutable('@1700000000'));
+
+        $songs = new ArrayIterator([$song]);
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
@@ -66,19 +76,22 @@ class ShowDisabledActionTest extends TestCase
             ->willReturn($songs);
 
         $this->ui->expects(static::once())
-            ->method('show')
-            ->with(
-                'show_disabled_songs.inc.php',
-                ['songs' => $songs]
-            );
-        $this->ui->expects(static::once())
             ->method('showHeader');
         $this->ui->expects(static::once())
             ->method('showFooter');
         $this->ui->expects(static::once())
             ->method('showQueryStats');
 
-        $this->subject->run($this->request, $this->gatekeeper);
+        ob_start();
+
+        try {
+            $this->subject->run($this->request, $this->gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        static::assertStringContainsString('value="enable_disabled"', $output);
+        static::assertStringContainsString('Rock &amp; Roll', $output);
     }
 
     public function testRunShowsEmptyContentOnDemoMode(): void

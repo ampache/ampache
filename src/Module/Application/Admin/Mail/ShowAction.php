@@ -25,11 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Mail;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\MailUsersFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,7 +41,11 @@ final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    public function __construct(private UiInterface $ui) {}
+    public function __construct(
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -47,7 +54,10 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show('show_mail_users.inc.php');
+        echo (new MailUsersFormView(
+            $this->configContainer->getWebPath('/admin'),
+            $this->requestParser->getFromRequest('subject')
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

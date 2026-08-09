@@ -27,11 +27,13 @@ namespace Ampache\Module\Application\Radio;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\CreateLiveStreamFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,6 +45,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
+        private RequestParserInterface $requestParser,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -55,7 +58,14 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show('show_add_live_stream.inc.php');
+        echo (new CreateLiveStreamFormView(
+            $this->configContainer->getWebPath(),
+            $this->requestParser->getFromRequest('name'),
+            $this->requestParser->getFromRequest('site_url'),
+            $this->requestParser->getFromRequest('url'),
+            $this->requestParser->getFromRequest('codec'),
+            (int) $this->requestParser->getFromRequest('catalog')
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

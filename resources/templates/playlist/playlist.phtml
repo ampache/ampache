@@ -1,0 +1,136 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// playlist/playlist.phtml -- rendered by Ampache\Gui\Playlist\PlaylistPageView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Api\RefreshReordered\RefreshPlaylistMediasAction;
+use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Playlist\PlaylistPageView $this */
+
+$playlistId = $this->getPlaylistId();
+$webPath    = $this->getWebPath();
+Ui::show_box_top('<div id="playlist_row_' . $playlistId . '">' . $this->getFullname() . '</div>', 'info-box'); ?>
+<div class="item_right_info">
+    <?php echo $this->raw($this->getArt()); ?>
+</div>
+<?php if ($this->showRatings()) { ?>
+<span id="rating_<?php echo $playlistId; ?>_playlist"><?php echo $this->raw(Rating::show($playlistId, 'playlist')); ?></span>
+<span id="userflag_<?php echo $playlistId; ?>_playlist"><?php echo $this->raw(Userflag::show($playlistId, 'playlist')); ?></span>
+<?php } ?>
+<div id="information_actions">
+    <ul>
+        <?php if ($this->mayReorder()) { ?>
+        <li>
+            <a onclick="submitNewItemsOrder('<?php echo $playlistId; ?>', 'reorder_playlist_table', 'track_', '<?php echo $this->e($webPath); ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlistId; ?>', '<?php echo $this->e(RefreshPlaylistMediasAction::REQUEST_KEY); ?>')">
+                <?php echo $this->raw(Ui::get_material_symbol('save', T_('Save Track Order'))); ?>&nbsp;<?php echo T_('Save Track Order'); ?>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:NavigateTo('<?php echo $this->e($webPath); ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlistId; ?>');" data-confirm="<?php echo $this->e(T_('Are you sure? This will replace the current track order')); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('sort_by_alpha', T_('Sort Tracks by Artist, Album, Song'))); ?>
+                <?php echo T_('Sort Tracks by Artist, Album, Song'); ?>
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo $this->e($webPath); ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlistId; ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('tab_close', T_('Remove Duplicates'))); ?>
+                <?php echo T_('Remove Duplicates'); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <?php if ($this->mayBatchDownload()) { ?>
+        <li>
+            <a class="nohtml" href="<?php echo $this->e($webPath); ?>/batch.php?action=playlist&id=<?php echo $playlistId; ?>" rel="nofollow">
+                <?php echo $this->raw(Ui::get_material_symbol('folder_zip', T_('Batch download'))); ?>
+                <?php echo T_('Batch download'); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <?php if ($this->showShare()) { ?>
+        <li>
+            <a onclick="showShareDialog(event, 'playlist', '<?php echo $playlistId; ?>');">
+                <?php echo $this->raw(Ui::get_material_symbol('share', T_('Share playlist'))); ?>&nbsp;<?php echo T_('Share playlist'); ?>
+            </a>
+        </li>
+        <?php } ?>
+        <li>
+            <a class="nohtml" href="<?php echo $this->e($webPath); ?>/stream.php?action=stream_item&object_type=playlist&object_id=<?php echo $playlistId; ?>&name=<?php echo $this->e($this->getDownloadName()); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('download', T_('Download Playlist'))); ?>
+                <?php echo T_('Download Playlist'); ?>
+            </a>
+        </li>
+        <?php if ($this->isDirectPlay()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId, 'play_circle', T_('Play All'), 'directplay_full_' . $playlistId)); ?></li>
+        <?php } ?>
+        <?php if ($this->isAutoplayNext()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId . '&playnext=true', 'menu_open', T_('Play All Next'), 'nextplay_playlist_' . $playlistId)); ?></li>
+        <?php } ?>
+        <?php if ($this->isAutoplayAppend()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_playlist_' . $playlistId)); ?></li>
+        <?php } ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=random&action=send_playlist&random_type=playlist&random_id=' . $playlistId, 'autorenew', T_('Random Play'), 'play_random_' . $playlistId)); ?></li>
+        <li><?php echo $this->raw(Ajax::button_with_text('?action=basket&type=playlist&id=' . $playlistId, 'new_window', T_('Add All to Temporary Playlist'), 'play_playlist')); ?></li>
+        <li><?php echo $this->raw(Ajax::button_with_text('?action=basket&type=playlist_random&id=' . $playlistId, 'shuffle', T_('Random All to Temporary Playlist'), 'play_playlist_random')); ?></li>
+        <?php if ($this->mayEdit()) {
+            $searchId = $this->getSearchId();
+            if ($searchId > 0) { ?>
+        <li>
+            <a href="<?php echo $this->e($webPath); ?>/playlist.php?action=refresh_playlist&type=playlist&user_id=<?php echo $this->e($this->getOwnerId()); ?>&playlist_id=<?php echo $playlistId; ?>&search_id=<?php echo $this->e($searchId); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('sync_alt')); ?>
+                <?php echo T_('Refresh from Smartlist'); ?>
+            </a>
+        </li>
+            <?php } ?>
+        <li>
+            <a id="edit_playlist_<?php echo $playlistId; ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlistId; ?>', 'edit_playlist_<?php echo $playlistId; ?>', '<?php echo addslashes(T_('Playlist Edit')); ?>', '')">
+                <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+                <?php echo T_('Edit'); ?>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:NavigateTo('<?php echo $this->e($webPath); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlistId; ?>');" data-confirm="<?php echo $this->e(T_('Do you really want to delete this Playlist?')); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('close')); ?>
+                <?php echo T_('Delete'); ?>
+            </a>
+        </li>
+        <?php } ?>
+    </ul>
+</div>
+<?php Ui::show_box_bottom(); ?>
+<div id="reordered_list_<?php echo $playlistId; ?>">
+<?php $browse = $this->createBrowse();
+$browse->set_type('playlist_media');
+$browse->set_use_filters(false);
+$browse->add_supplemental_object('playlist', $this->getPlaylist());
+$browse->set_static_content(true);
+$browse->duration = Search::get_total_duration($this->getObjectIds());
+$browse->show_objects($this->getObjectIds(), true);
+$browse->store(); ?>
+</div>

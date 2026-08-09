@@ -1,0 +1,284 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// install/install_config.phtml -- rendered by Ampache\Gui\Install\InstallConfigView
+
+use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
+
+/** @var Ampache\Gui\Install\InstallConfigView $this */
+?>
+<?php echo $this->raw($this->renderHeader()); ?>    <div class="alert alert-dark" style="margin-top: 70px">
+        <h1><?php echo $this->e(T_('Install Progress')); ?></h1>
+        <div class="progress">
+            <div class="progress-bar progress-bar-warning"
+                 role="progressbar"
+                 aria-valuenow="60"
+                 aria-valuemin="0"
+                 aria-valuemax="100"
+                 style="width: 66%">
+                66%
+            </div>
+        </div>
+        <p><?php echo $this->e(T_('Step 1 - Create the Ampache database')); ?></p>
+        <p><strong><?php echo $this->e(T_('Step 2 - Create configuration files (ampache.cfg.php ...)')); ?></strong></p>
+        <dl>
+            <dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s.'), realpath(__DIR__ . '/../../config')); ?></dd>
+        </dl>
+        <ul class="list-unstyled">
+            <li><?php echo $this->e(T_('Step 3 - Set up the initial account')); ?></li>
+        </ul>
+    </div>
+<?php echo $this->raw(AmpError::display('general')); ?>
+    <form method="post" action="<?php echo $this->e($this->getWebPath()) . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" autocomplete="off">
+        <h2 id="forms"><?php echo $this->e(T_('Generate Configuration File')); ?></h2>
+        <legend><?php echo $this->e(T_('Various')); ?></legend>
+        <div class="row mb-3">
+            <label for="web_path" class="col-sm-2 form-label"><?php echo $this->e(T_('Web Path')); ?></label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="web_path" name="web_path" size="32" value="<?php echo $this->e($this->getWebPathGuess()); ?>">
+            </div>
+        </div>
+        <br />
+        <legend><?php echo $this->e(T_('Database Connection')); ?></legend>
+        <?php echo AmpError::display('config'); ?>
+        <div class="row mb-3">
+            <label for="local_db" class="col-sm-2 form-label"><?php echo $this->e(T_('Database Name')); ?></label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="local_db" name="local_db" size="32" value="<?php echo scrub_out((string) ($_REQUEST['local_db'] ?? '')); ?>">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="local_host" class="col-sm-2 form-label"><?php echo $this->e(T_('MySQL Hostname')); ?></label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="local_host" name="local_host" size="32" value="<?php echo scrub_out((string) ($_REQUEST['local_host'] ?? '')); ?>">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="local_port" class="col-sm-2 form-label"><?php echo $this->e(T_('MySQL Port (optional)')); ?></label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="local_port" name="local_port" size="32" value="<?php echo scrub_out((string) ($_REQUEST['local_port'] ?? '')); ?>"/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="local_username" class="col-sm-2 form-label"><?php echo $this->e(T_('MySQL Username')); ?></label>
+            <div class="col-sm-10">
+                   <input type="text" class="form-control" id="local_username" name="local_username" size="32" value="<?php echo $this->e($this->getLocalUsername()); ?>"/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="local_pass" class="col-sm-2 form-label"><?php echo $this->e(T_('MySQL Password')); ?></label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="local_pass" name="local_pass" size="32" value="<?php echo $this->e($this->getLocalPassword()); ?>" placeholder="<?php echo T_("Password") . ' (' . T_("required") . ')'; ?>">
+            </div>
+        </div>
+
+        <input type="hidden" name="htmllang" value="<?php echo $this->e($this->getDocumentLanguage()); ?>" />
+        <input type="hidden" name="charset" value="<?php echo $this->e($this->getCharset()); ?>" />
+
+        <p>&nbsp;</p>
+        <legend><?php echo $this->e(T_('Installation Type')); ?></legend>
+        <div><?php echo $this->e(T_('Optimize Ampache for your use case. The installer will enable/disable features automatically.')); ?></div>
+        <br />
+        <div class="row mb-3">
+            <div class="radio">
+                <label><input type="radio" name="usecase" value="default" <?php if (!$this->hasUsecase() || $_REQUEST['usecase'] == 'default') {
+                    echo 'checked';
+                } ?>><?php echo $this->e(T_('Default')); ?> &mdash; <?php echo $this->e(T_('Ampache is configured for personal use with the best features.')); ?></label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="usecase" value="minimalist" <?php if ($this->hasUsecase() && $_REQUEST['usecase'] == 'minimalist') {
+                    echo 'checked';
+                } ?>><?php echo $this->e(T_('Minimalist')); ?> &mdash; <?php echo $this->e(T_('Only essential features are enabled to simply stream your music from the Web Interface.')); ?></label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="usecase" value="community" <?php if ($this->hasUsecase() && $_REQUEST['usecase'] == 'community') {
+                    echo 'checked';
+                } ?>><?php echo $this->e(T_('Community')); ?> &mdash; <?php echo $this->e(T_('Recommended settings when using Ampache as a frontend for a music community.')); ?></label>
+            </div>
+        </div>
+
+        <p>&nbsp;</p>
+        <legend><?php echo $this->e(T_('Allow Transcoding')); ?></legend>
+        <div>
+            <?php echo $this->e(T_('Transcoding allows you to convert music from one encoding to another. Ampache supports on the fly transcoding of any file type based on user, player, IP address or available bandwidth. In order to transcode, Ampache takes advantage of existing binary applications such as ffmpeg. In order for transcoding to work you must first install the supporting applications and ensure that they are executable by the web server.')); ?>
+            <br />
+            <?php echo $this->e(T_('This section applies the default transcoding configuration according to the application you want to use. You may need to customize settings once setup has ended.')); ?> <a href="https://ampache.org/docs/configuration/transcoding/" target="_blank"><?php echo $this->e(T_('See wiki page')); ?></a>
+        </div>
+        <br />
+        <div class="row mb-3">
+            <label for="transcode_template" class="col-sm-2 form-label"><?php echo $this->e(T_('Template Configuration')); ?></label>
+            <div class="col-sm-10">
+                <select class="form-control" id="transcode_template" name="transcode_template">
+                    <option value=""><?php echo $this->e(T_('None')); ?></option>
+                    <?php
+                $modes = $this->getTranscodeModes();
+foreach ($modes as $mode) { ?>
+                        <option value="<?php echo $this->e($mode); ?>" <?php if (Core::get_request('transcode_template') == $mode) {
+                            echo 'selected';
+                        } ?>><?php echo $this->e($mode); ?></option>
+                    <?php } ?>
+                </select>
+                <?php
+                if (count($modes) == 0) { ?>
+                    <label><?php echo $this->e(T_('No default transcoding application found. You may need to install a popular application (FFmpeg, avconv ...) or customize transcoding settings manually after installation.')); ?></label>
+                <?php } ?>
+            </div>
+        </div>
+        <br /><br />
+        <p>&nbsp;</p>
+        <legend><?php echo $this->e(T_('Players')); ?></legend>
+        <div><?php echo $this->e(T_('Ampache is more than only a web interface. Several backends are implemented to ensure you can stream your media to any player.')); ?></div>
+        <div><?php echo $this->e(T_('Select each backend to enable. Depending on the backend, you may need to perform additional configuration.')); ?> <a href="https://ampache.org/api/" target="_blank"><?php echo $this->e(T_('See wiki page')); ?></a></div>
+        <br />
+
+        <div class="form-check form-check-inline disabled">
+            <label class="form-check-label"><input type="checkbox" value="1" checked disabled>Web Interface</label>
+        </div>
+        <div class="form-check form-check-inline disabled">
+            <label><input type="checkbox" value="1" checked disabled>Ampache API</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <label><input type="checkbox" name="backends[]" value="subsonic" <?php if (!$this->hasBackends() || in_array('subsonic', $_REQUEST['backends'])) {
+                echo 'checked';
+            } ?>>Subsonic</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <label><input type="checkbox" name="backends[]" value="upnp" <?php if ($this->hasBackends() && in_array('upnp', $_REQUEST['backends'])) {
+                echo 'checked';
+            } ?>>UPnP</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <label><input type="checkbox" name="backends[]" value="daap" <?php if ($this->hasBackends() && in_array('daap', $_REQUEST['backends'])) {
+                echo 'checked';
+            } ?>>DAAP (iTunes)</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <label><input type="checkbox" name="backends[]" value="webdav" <?php if ($this->hasBackends() && in_array('webdav', $_REQUEST['backends'])) {
+                echo 'checked';
+            } ?>>WebDAV</label>
+        </div>
+        <br /><br />
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <?php echo $this->e(T_('File Insight')); ?>
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <?php if ($this->isApache()) { ?>
+                            <div class="row">
+                                <div class="col-sm-4 form-label">
+                                    <?php echo $this->e(T_('rest/.htaccess action')); ?>
+                                </div>
+                                <div class="col-sm-8">
+                                    <button type="submit" class="btn btn-warning" name="download_htaccess_rest"><?php echo $this->e(T_('Download')); ?></button>
+                                    <button type="submit" class="btn btn-warning" name="write_htaccess_rest" <?php if (!check_htaccess_rest_writable()) {
+                                        echo "disabled ";
+                                    } ?>>
+                                        <?php echo $this->e(T_('Write')); ?>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 form-label"><?php echo $this->e(T_('rest/.htaccess exists?')); ?></div>
+                                <div class="col-sm-8"><?php echo $this->raw(debug_result($this->isRestHtaccessPresent())); ?></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 form-label"><?php echo $this->e(T_('rest/.htaccess configured?')); ?></div>
+                                <div class="col-sm-8"><?php echo $this->raw(debug_result($this->checkRestRewrite())); ?></div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-4 form-label">
+                                    <?php echo $this->e(T_('play/.htaccess action')); ?>
+                                </div>
+                                <div class="col-sm-8">
+                                    <button type="submit" class="btn btn-warning" name="download_htaccess_play"><?php echo $this->e(T_('Download')); ?></button>
+                                    <button type="submit" class="btn btn-warning" name="write_htaccess_play" <?php if (!check_htaccess_play_writable()) {
+                                        echo "disabled ";
+                                    } ?>>
+                                        <?php echo $this->e(T_('Write')); ?>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 form-label"><?php echo $this->e(T_('play/.htaccess exists?')); ?></div>
+                                <div class="col-sm-8"><?php echo $this->raw(debug_result($this->isPlayHtaccessPresent())); ?></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 form-label"><?php echo $this->e(T_('play/.htaccess configured?')); ?></div>
+                                <div class="col-sm-8"><?php echo $this->raw(debug_result($this->checkPlayRewrite())); ?></div>
+                            </div>
+                        <?php } ?>
+
+                        &nbsp;
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <?php echo $this->e(T_('config/ampache.cfg.php action')); ?>
+                            </div>
+                            <div class="col-sm-8">
+                                <button type="submit" class="btn btn-warning" name="download"><?php echo $this->e(T_('Download')); ?></button>
+                                <button type="submit" class="btn btn-warning" name="write" <?php if (!check_config_writable()) {
+                                    echo T_('Disabled');
+                                } ?>>
+                                    <?php echo $this->e(T_('Write')); ?>
+            					</button>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4 form-label"><?php echo $this->e(T_('config/ampache.cfg.php exists?')); ?></div>
+							<div class="col-sm-8"><?php echo $this->raw(debug_result($this->isConfigPresent())); ?></div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4 form-label"><?php echo $this->e(T_('config/ampache.cfg.php configured?')); ?></div>
+							<div class="col-sm-8"><?php echo $this->raw(debug_result($this->isConfigConfigured())); ?></div>
+						</div>
+						&nbsp;
+						<div class="row">
+							<div class="col-sm-4"></div>
+							
+							<div class="col-sm-8">
+								<a href="<?php echo $this->e($this->getRecheckUrl()); ?>">[<?php echo $this->e(T_('Recheck Config')); ?>]</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-4">
+				<button type="submit" class="btn btn-warning" name="skip_config"><?php echo $this->e(T_('Skip')); ?></button>
+			</div>
+			<div class="col-sm-8">
+				<button type="submit" class="btn btn-warning" name="create_all"><?php echo $this->e(T_('Create Config')); ?></button>
+			</div>
+		</div>
+    </form>
+    <br /><br />
+<?php echo $this->raw($this->renderFooter()); ?>

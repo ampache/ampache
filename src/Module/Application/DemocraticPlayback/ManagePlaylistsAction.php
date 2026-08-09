@@ -25,15 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\DemocraticPlayback;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Democratic\ManageDemocraticView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Democratic;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -62,7 +63,10 @@ final readonly class ManagePlaylistsAction implements ApplicationActionInterface
         // Get all of the non-user playlists
         $playlists = Democratic::get_playlists();
 
-        require_once Ui::find_template('show_manage_democratic.inc.php');
+        echo (new ManageDemocraticView(
+            AmpConfig::get_web_path(),
+            $playlists
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

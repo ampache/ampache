@@ -29,15 +29,17 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
 use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\VideoRepositoryInterface;
+use Override;
 
-final readonly class StatsViewAdapter implements StatsViewAdapterInterface
+final class StatsViewAdapter extends AbstractView implements StatsViewAdapterInterface
 {
     public function __construct(
-        private ConfigContainerInterface $configContainer,
-        private GuiFactoryInterface $guiFactory,
-        private VideoRepositoryInterface $videoRepository,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly GuiFactoryInterface $guiFactory,
+        private readonly VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function displayAlbum(): bool
@@ -80,5 +82,11 @@ final readonly class StatsViewAdapter implements StatsViewAdapterInterface
     public function getCatalogStats(): CatalogStatsInterface
     {
         return $this->guiFactory->createCatalogStats(Catalog::get_stats());
+    }
+
+    #[Override]
+    protected function templateFile(): string
+    {
+        return $this->findTemplate('stats.phtml');
     }
 }

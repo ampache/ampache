@@ -44,6 +44,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
      *     comments: ?string,
      *     pubDate: string,
      *     guid: string,
+     *     isPermaLink: string,
      *     image?: string
      * }>
      */

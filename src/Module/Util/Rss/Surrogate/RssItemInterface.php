@@ -30,9 +30,19 @@ use Traversable;
 interface RssItemInterface
 {
     /**
+     * Returns the itunes category of the item
+     */
+    public function getCategory(): string;
+
+    /**
      * Returns the items image-url
      */
     public function getImageUrl(): string;
+
+    /**
+     * Returns a link to the item
+     */
+    public function getLink(): string;
 
     /**
      * Returns all media-items which are associated with the item
@@ -54,6 +64,11 @@ interface RssItemInterface
      * Returns the name of the owner
      */
     public function getOwnerName(): string;
+
+    /**
+     * Returns a link to the feed url
+     */
+    public function getRssLink(): string;
 
     /**
      * Returns the items summary/description text

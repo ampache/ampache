@@ -1,0 +1,81 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// art/get_art.phtml -- rendered by Ampache\Gui\Art\GetArtView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Art\GetArtView $this */
+
+Ui::show_box_top($this->e($this->getTitle()), 'box box_get_albumart'); ?>
+<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo $this->e($this->getFormAction()); ?>" style="display:inline;">
+    <table class="gatherart">
+        <?php foreach ($this->getFields() as $field) { ?>
+        <tr>
+            <td><?php echo $this->e($field['label']); ?>&nbsp;</td>
+            <td>
+                <input type="text" id="option_<?php echo $this->e($field['key']); ?>" name="option_<?php echo $this->e($field['key']); ?>" value="<?php echo $this->e($field['value']); ?>"<?php echo ($field['required']) ? ' required' : ''; ?> />
+            </td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td><?php echo T_('Direct URL to Image'); ?></td>
+            <td><input type="url" id="cover" name="cover" value="" /></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Local Image'); ?> (&lt; <?php echo $this->e(Ui::format_bytes($this->getMaxUploadSize())); ?>)</td>
+            <td><input type="file" id="file" name="file" value="" /></td>
+        </tr>
+        <?php if ($this->showSpotifyFilters()) { ?>
+        <tr>
+            <th class="center" colspan="2"><?php echo T_('Spotify Album Filters'); ?></th>
+        </tr>
+        <tr>
+            <td><label id="gatherYear" for="yearFilter"><?php echo T_('Year'); ?> </label></td>
+            <td>
+                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?" value="<?php echo $this->e($this->getYear()); ?>">
+                <label><?php echo T_("(e.g. '2001', '2001-2005')"); ?></label>
+            </td>
+        </tr>
+        <tr>
+            <td><label id="gatherLimit" for="searchLimit"><?php echo T_('Limit'); ?></label></td>
+            <td><input type="number" id="searchLimit" name="search_limit" required min="1" max="50" value="<?php echo $this->e($this->getSearchLimit()); ?>"></td>
+        </tr>
+        <?php } elseif ($this->showArtistLimit()) { ?>
+        <tr>
+            <td><?php echo T_('Search Limit'); ?></td>
+            <td><input type="number" id="searchLimit" name="search_limit" required min="1" max="50" value="<?php echo $this->e($this->getSearchLimit()); ?>"></td>
+        </tr>
+        <?php } ?>
+    </table>
+    <div class="formValidation">
+        <input type="hidden" id="action" name="action" value="find_art" />
+        <input type="hidden" name="object_type" value="<?php echo $this->e($this->getObjectType()); ?>" />
+        <input type="hidden" name="object_id" value="<?php echo $this->e($this->getObjectId()); ?>" />
+        <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $this->e($this->getMaxUploadSize()); ?>" />
+        <input type="button" value="<?php echo $this->e(T_('Cancel')); ?>" onClick="NavigateTo('<?php echo $this->e($this->getReturnUrl()); ?>');" />
+        <input type="submit" value="<?php echo $this->e(T_('Get Art')); ?>" onClick="$('#action').val('find_art');" />
+    </div>
+</form>

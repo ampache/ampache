@@ -27,13 +27,13 @@ namespace Ampache\Module\Application\DemocraticPlayback;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Playback\DemocraticFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Democratic;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -63,7 +63,7 @@ final readonly class ManageAction implements ApplicationActionInterface
         $democratic->set_parent();
 
         // Show the create page
-        require_once Ui::find_template('show_edit_democratic.inc.php');
+        echo (new DemocraticFormView($democratic, $this->configContainer->getWebPath()))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

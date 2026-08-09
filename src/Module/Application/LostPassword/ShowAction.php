@@ -25,13 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\LostPassword;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\LostPasswordFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
-use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,7 +44,6 @@ final readonly class ShowAction implements ApplicationActionInterface
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
-        private UiInterface $ui,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -55,7 +57,20 @@ final readonly class ShowAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->show('show_lostpassword_form.inc.php');
+        $_SESSION['login'] = true;
+        $language          = (string) AmpConfig::get('lang', 'en_US');
+        $userAgent         = Core::get_server('HTTP_USER_AGENT');
+        $logoUrl           = (string) AmpConfig::get('custom_login_logo');
+
+        echo (new LostPasswordFormView(
+            AmpConfig::get_web_path(),
+            str_replace('_', '-', $language),
+            is_rtl($language) ? 'rtl' : 'ltr',
+            (string) AmpConfig::get('site_charset', 'UTF-8'),
+            (string) AmpConfig::get('site_title'),
+            ($logoUrl !== '') ? $logoUrl : Ui::get_logo_url(),
+            str_contains($userAgent, 'Mobile') && (str_contains($userAgent, 'Android') || str_contains($userAgent, 'iPhone') || str_contains($userAgent, 'iPad'))
+        ))->render();
 
         return null;
     }

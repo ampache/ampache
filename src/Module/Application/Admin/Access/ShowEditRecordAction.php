@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\EditAccessFormView;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListItem;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -43,6 +45,7 @@ final readonly class ShowEditRecordAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -54,15 +57,13 @@ final readonly class ShowEditRecordAction implements ApplicationActionInterface
         $accessId = (int) ($request->getQueryParams()['access_id'] ?? 0);
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_edit_access.inc.php',
-            [
-                'access' => new AccessListItem(
-                    $this->modelFactory,
-                    $this->modelFactory->createAccess($accessId)
-                )
-            ]
-        );
+        echo (new EditAccessFormView(
+            $this->configContainer->getWebPath('/admin'),
+            new AccessListItem(
+                $this->modelFactory,
+                $this->modelFactory->createAccess($accessId)
+            )
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

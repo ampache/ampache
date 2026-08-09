@@ -34,6 +34,7 @@
             },
             "disk": 1,
             "disksubtitle": null,
+            "bpm": null,
             "track": 2,
             "filename": "/media/music\/Digital Island Fantasy Akita\/(2013) 3rd Street Promenade\/1-02 - \u06de.flac",
             "genre": [],
@@ -105,6 +106,7 @@
             },
             "disk": 1,
             "disksubtitle": null,
+            "bpm": null,
             "track": 8,
             "filename": "/media/music\/Lebanon Hanover\/(2012) The World Is Getting Colder [[none]]\/1-08 - _.mp3",
             "genre": [

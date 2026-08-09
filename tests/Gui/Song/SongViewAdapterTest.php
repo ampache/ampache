@@ -27,6 +27,7 @@ namespace Ampache\Gui\Song;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Song\DeleteAction;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -41,6 +42,7 @@ use Override;
 
 class SongViewAdapterTest extends MockeryTestCase
 {
+    private ConfigViewAdapterInterface|MockInterface|null $config;
     private ConfigContainerInterface|MockInterface|null $configContainer;
     private MockInterface|GuiGatekeeperInterface|null $gatekeeper;
     private ModelFactoryInterface|MockInterface|null $modelFactory;
@@ -557,12 +559,14 @@ class SongViewAdapterTest extends MockeryTestCase
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->config          = $this->mock(ConfigViewAdapterInterface::class);
         $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
         $this->song            = $this->mock(Song::class);
 
         $this->subject = new SongViewAdapter(
             $this->configContainer,
             $this->modelFactory,
+            $this->config,
             $this->gatekeeper,
             $this->song
         );

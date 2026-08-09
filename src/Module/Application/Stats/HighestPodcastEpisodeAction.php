@@ -27,12 +27,12 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\StatsFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,7 +44,7 @@ final readonly class HighestPodcastEpisodeAction implements ApplicationActionInt
         private UiInterface $ui,
         private BrowseFactoryInterface $browseFactory,
         private ConfigContainerInterface $configContainer,
-        private VideoRepositoryInterface $videoRepository,
+        private StatsFormViewFactoryInterface $statsFormViewFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -52,13 +52,7 @@ final readonly class HighestPodcastEpisodeAction implements ApplicationActionInt
         $by_user = ((int) filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_form_highest.inc.php',
-            [
-                'by_user' => $by_user,
-                'videoRepository' => $this->videoRepository
-            ]
-        );
+        echo $this->statsFormViewFactory->createHighest($by_user)->render();
         $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);

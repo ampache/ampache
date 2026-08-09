@@ -220,6 +220,11 @@ final class SongSearch implements SearchInterface
                 case 'no_license':
                     $where[] = "`song`.`license` IS NULL";
                     break;
+                case 'bpm':
+                    $join['song_data'] = true;
+                    $where[]           = sprintf('`song_data`.`bpm` %s ?', $operator_sql);
+                    $parameters[]      = $input;
+                    break;
                 case 'comment':
                     $join['song_data'] = true;
                     if (!$input || $input == '%%' || $input == '%') {

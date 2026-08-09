@@ -1,0 +1,227 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// share/share.phtml -- rendered by Ampache\Gui\Share\ShareView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Share\ShareView $this */
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><?php echo $this->e($this->getShareTitle() . ' - ' . $this->getSiteTitle()); ?></title>
+<?php if (!$this->isEmbed()) { ?>
+<meta property="og:type" content="music.song" />
+<meta property="og:title" content="<?php echo $this->e($this->getShareTitle()); ?>" />
+<meta property="og:image" content="<?php echo $this->e($this->getArtUrl()); ?>" />
+<meta property="og:description" content="<?php echo $this->e($this->getSharedByText()); ?>" />
+<meta property="og:url" content="<?php echo $this->e($this->getPublicUrl()); ?>" />
+<meta property="og:site_name" content="<?php echo $this->e($this->getSiteTitle()); ?>" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="<?php echo $this->e($this->getShareTitle()); ?>" />
+<meta name="twitter:description" content="<?php echo $this->e($this->getSharedByText()); ?>" />
+<meta name="twitter:image" content="<?php echo $this->e($this->getArtUrl()); ?>" />
+<?php }
+// Load the player CSS/JS into the head; the player itself is rendered as a fragment below.
+echo $this->raw($this->renderPlayerHeaders()); ?>
+<style>
+    body {
+        margin: 0;
+        background-color: #191919;
+        color: #ccc;
+        font-family: 'Verdana', Arial, sans-serif;
+    }
+
+    .share-hero {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 24px 20px;
+    }
+
+    .share-hero img {
+        width: 180px;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 8px;
+        flex-shrink: 0;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .share-hero .share-meta {
+        min-width: 0;
+    }
+
+    .share-hero .share-meta h1 {
+        margin: 0 0 8px;
+        font-size: 1.5em;
+        color: #fff;
+        word-break: break-word;
+    }
+
+    .share-hero .share-meta .share-sub {
+        font-size: 1em;
+        color: #999;
+        margin-bottom: 4px;
+    }
+
+    .share-hero .share-meta .share-sub a {
+        color: #999;
+        text-decoration: none;
+    }
+
+    .jp-area {
+        width: 480px;
+        min-width: 0;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0 20px 8px;
+        box-sizing: border-box;
+    }
+
+    .jp-area.jp-area-embed {
+        padding: 0;
+    }
+
+    .jp-audio {
+        width: 100%;
+    }
+
+    .jp-playlist {
+        height: auto;
+        max-height: 40vh;
+    }
+
+    div.jp-interface,
+    .jp-type-playlist {
+        background-color: #191919;
+    }
+
+    div.jp-title,
+    div.jp-playlist {
+        color: #ccc;
+        background-color: #202020;
+        border-top: 1px solid #191919;
+    }
+
+    div.jp-playlist li {
+        border-bottom: 1px solid #121212;
+    }
+
+    .jp-type-playlist .jp-playlist a {
+        color: #fff;
+    }
+
+    .jp-type-playlist .jp-playlist a:hover,
+    .jp-type-playlist .jp-playlist a:active,
+    .jp-type-playlist .jp-playlist a:focus,
+    .jp-type-playlist .jp-playlist a.jp-playlist-current {
+        color: #ff9d00;
+    }
+
+    .jp-current-time,
+    .jp-duration {
+        color: #999;
+    }
+
+    .jp-audio .jp-type-playlist .jp-interface {
+        height: 98px;
+    }
+
+    .jp-audio .jp-type-playlist .jp-progress {
+        top: 58px;
+        left: 20px;
+        right: 20px;
+        height: 6px;
+        background-color: #3a3a3a;
+        border-radius: 5px;
+    }
+
+    .jp-time-row {
+        position: absolute;
+        top: 70px;
+        left: 20px;
+        right: 20px;
+    }
+
+    .share-footer {
+        text-align: center;
+        padding: 20px;
+        font-size: 0.95em;
+    }
+
+    .share-footer a {
+        color: #ccc;
+        text-decoration: none;
+        margin: 0 8px;
+    }
+
+    @media (max-width: 768px) {
+        .jp-title,
+        .jp-playlist {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .share-hero {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+</head>
+<body>
+<?php if (!$this->isEmbed()) { ?>
+<div class="share-hero">
+    <img src="<?php echo $this->e($this->getArtUrl()); ?>" alt="<?php echo $this->e($this->getShareTitle()); ?>">
+    <div class="share-meta">
+        <h1><?php echo $this->e($this->getShareTitle()); ?></h1>
+        <?php if ($this->hasObjectUrl()) { ?>
+            <div class="share-sub"><?php echo $this->raw($this->getObjectUrl()); ?></div>
+        <?php } ?>
+        <div class="share-sub"><?php echo $this->e($this->getSharedByText()); ?></div>
+    </div>
+</div>
+<?php }
+// Render the compact player as a document fragment (head/body are managed here).
+echo $this->raw($this->renderPlayer());
+
+if (!$this->isEmbed()) { ?>
+<div class="share-footer">
+    <a href="<?php echo $this->e($this->getPublicUrl()); ?>"><?php echo $this->e($this->getSharedByText()); ?></a>
+    <?php if ($this->allowsDownload()) { ?>
+        <a href="<?php echo $this->e($this->getDownloadUrl()); ?>" rel="nofollow"><?php echo $this->raw(Ui::get_material_symbol('download', T_('Download'))) . ' ' . $this->e(T_('Download')); ?></a>
+    <?php } ?>
+</div>
+<?php } ?>
+<?php echo $this->raw(Ui::material_symbol_sprite()); ?>
+</body>
+</html>

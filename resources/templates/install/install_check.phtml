@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// install/install_check.phtml -- rendered by Ampache\Gui\Install\InstallCheckView
+
+/** @var Ampache\Gui\Install\InstallCheckView $this */
+?>
+<?php echo $this->raw($this->renderHeader()); ?>
+        <div class="page-header requirements">
+            <h1><?php echo $this->e(T_('Requirements')); ?></h1>
+        </div>
+        <div class="alert alert-dark">
+            <p style="padding: 10px;">
+                <?php echo $this->e(T_('This page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following prerequisites:')); ?>
+            </p>
+            <ul>
+                <li><?php echo $this->e(T_('A MySQL server with a username and password that can create/modify databases')); ?></li>
+                <li><?php /* HINT: %1 and %2 refer to Ampache configuration files */ echo $this->e(sprintf(T_('Your webserver has read access to the files "%1$s" and "%2$s"'), $this->getSqlPath(), $this->getConfigDistPath())); ?></li>
+            </ul>
+            <p>
+                <?php echo $this->e(sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), $this->getConfigPath())); ?>
+            </p>
+        </div>
+<table class="table">
+    <tr>
+        <th><?php echo $this->e(T_('Check')); ?></th>
+        <th><?php echo $this->e(T_('Status')); ?></th>
+        <th><?php echo $this->e(T_('Description')); ?></th>
+    </tr>
+    <?php echo $this->raw($this->renderChecks()); ?>
+    <tr>
+        <td><?php echo $this->e(T_('"ampache.cfg.php.dist" is readable')); ?></td>
+        <td><?php echo $this->raw(debug_result($this->isConfigDistReadable())); ?></td>
+        <td><?php echo $this->e(T_('This tests whether the configuration template can be read.')); ?></td>
+    </tr>
+    <tr>
+        <td><?php echo $this->e(T_('"ampache.sql" is readable')); ?></td>
+        <td><?php echo $this->raw(debug_result($this->isSqlReadable())); ?></td>
+        <td><?php echo $this->e(T_('This tests whether the file needed to initialize the database structure is available.')); ?></td>
+    </tr>
+    <tr>
+        <td><?php echo $this->e(T_('"ampache.cfg.php" is writable')); ?></td>
+        <td><?php echo $this->raw(debug_result($this->isConfigWritable())); ?></td>
+        <td><?php echo $this->e(T_('This tests whether PHP can write to config. This is not strictly necessary, but will help streamline the installation process.')); ?></td>
+    </tr>
+</table>
+<form role="form" method="post" action="<?php echo $this->e($this->getWebPath()) . "/install.php?action=init"; ?>" enctype="multipart/form-data" >
+    <input type="hidden" name="htmllang" value="<?php echo $this->e($this->getDocumentLanguage()); ?>"/>
+    <button type="submit" class="btn btn-warning"><?php echo $this->e(T_('Continue')); ?></button>
+</form>
+<?php echo $this->raw($this->renderFooter()); ?>

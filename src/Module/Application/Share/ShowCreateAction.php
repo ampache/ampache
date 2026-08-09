@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Share\AddShareView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -36,6 +37,7 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
@@ -79,18 +81,17 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
                 [Song::class, Album::class, AlbumDisk::class, Playlist::class, Video::class]
             );
 
-            if ($object !== null) {
-                $this->ui->show(
-                    'show_add_share.inc.php',
-                    [
-                        'has_failed' => false,
-                        'message' => '',
-                        'object' => $object,
-                        'object_type' => $object_type,
-                        'token' => $this->passwordGenerator->generate_token(),
-                        'isZipable' => $this->zipHandler->isZipable($object_type->value)
-                    ]
-                );
+            if ($object instanceof displayable_item) {
+                echo (new AddShareView(
+                    $object,
+                    $object_type,
+                    $this->passwordGenerator->generate_token(),
+                    $this->zipHandler->isZipable($object_type->value),
+                    false,
+                    '',
+                    $this->configContainer->getWebPath(),
+                    (int) $this->configContainer->get('share_expire')
+                ))->render();
             }
         }
 

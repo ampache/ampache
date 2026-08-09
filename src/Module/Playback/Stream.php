@@ -678,8 +678,9 @@ class Stream
             debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
 
-        // fall back to resampling if no default
-        if (!$target) {
+        // Resampling re-encodes to the source's own codec, so it is only possible when that codec has encoder
+        // arguments. Without them the caller would advertise a transcode nothing can perform.
+        if (!$target && AmpConfig::get('encode_args_' . $source)) {
             $target = $source;
         }
 

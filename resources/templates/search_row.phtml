@@ -1,0 +1,88 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// search_row.phtml -- rendered by Ampache\Gui\Search\SearchRowView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Search\SearchRowView $this */
+
+$search   = $this->getSearch();
+$searchId = $search->id; ?>
+<td class="cel_play">
+    <span class="cel_play_content">&nbsp;</span>
+    <div class="cel_play_hover">
+    <?php if ($this->isDirectPlayEnabled()) {
+        echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $searchId, 'play_circle', T_('Play'), 'play_playlist_' . $searchId));
+        if ($this->isAutoplayNextEnabled()) {
+            echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $searchId . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_playlist_' . $searchId));
+        }
+
+        if ($this->isAutoplayAppendEnabled()) {
+            echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $searchId . '&append=true', 'low_priority', T_('Play last'), 'addplay_playlist_' . $searchId));
+        }
+    } ?>
+    </div>
+</td>
+<td class="cel_playlist"><?php echo $this->raw($search->get_f_link()); ?></td>
+<td class="cel_add_list">
+    <span class="cel_item_add">
+        <?php echo $this->raw(Ajax::button('?page=random&action=send_playlist&random_type=search&random_id=' . $searchId, 'autorenew', T_('Random Play'), 'play_random_' . $searchId)); ?>
+        <?php echo $this->raw(Ajax::button('?action=basket&type=search&id=' . $searchId, 'new_window', T_('Add to Temporary Playlist'), 'add_playlist_' . $searchId)); ?>
+        <a id="add_to_playlist_<?php echo $this->e($searchId); ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $this->e($searchId); ?>')">
+            <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label())); ?>
+        </a>
+    </span>
+</td>
+<td class="cel_last_update"><?php echo $this->e($search->get_f_last_update()); ?></td>
+<td class="cel_type"><?php echo $this->e($search->get_f_type()); ?></td>
+<td class="cel_random"><?php echo $search->random ? T_('Yes') : T_('No'); ?></td>
+<td class="cel_limit"><?php echo $this->e($this->getLimitLabel()); ?></td>
+<?php if ($this->areRatingsShown()) { ?>
+<td class="cel_ratings">
+    <div class="rating">
+        <span class="cel_rating" id="rating_<?php echo $this->e($searchId); ?>_search"><?php echo $this->raw(Rating::show($searchId, 'search')); ?></span>
+        <span class="cel_userflag" id="userflag_<?php echo $this->e($searchId); ?>_search"><?php echo $this->raw(Userflag::show($searchId, 'search')); ?></span>
+    </div>
+</td>
+<?php } ?>
+<td class="cel_owner"><?php echo $this->e($search->username); ?></td>
+<td class="cel_action">
+<?php if ($this->mayBatchDownload()) { ?>
+    <a class="nohtml" href="<?php echo $this->e($this->getBatchDownloadUrl()); ?>" rel="nofollow">
+        <?php echo $this->raw(Ui::get_material_symbol('folder_zip', T_('Batch download'))); ?>
+    </a>
+<?php }
+
+if ($this->mayEdit()) { ?>
+    <a id="edit_playlist_<?php echo $this->e($searchId); ?>" onclick="showEditDialog('search_row', '<?php echo $this->e($searchId); ?>', 'edit_playlist_<?php echo $this->e($searchId); ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', 'smartplaylist_row_')">
+        <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+    </a>
+    <?php echo $this->raw(Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $searchId, 'close', T_('Delete'), 'delete_playlist_' . $searchId, '', '', T_('Are you sure?')));
+} ?>
+</td>

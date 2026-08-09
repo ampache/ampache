@@ -27,6 +27,8 @@ namespace Ampache\Gui\Song;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\System\ConfigViewAdapterInterface;
+use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Application\Song\DeleteAction;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -38,18 +40,21 @@ use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\Waveform;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Override;
 
-final readonly class SongViewAdapter implements SongViewAdapterInterface
+final class SongViewAdapter extends AbstractView implements SongViewAdapterInterface
 {
     public function __construct(
-        private ConfigContainerInterface $configContainer,
-        private ModelFactoryInterface $modelFactory,
-        private GuiGatekeeperInterface $gatekeeper,
-        private Song $song,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly ConfigViewAdapterInterface $config,
+        private readonly GuiGatekeeperInterface $gatekeeper,
+        private readonly Song $song,
     ) {}
 
     public function canAppendNext(): bool
@@ -180,6 +185,11 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         );
 
         return (string) $rating->get_average_rating();
+    }
+
+    public function getConfig(): ConfigViewAdapterInterface
+    {
+        return $this->config;
     }
 
     public function getCustomPlayActions(): string
@@ -402,6 +412,10 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Barcode')]        = scrub_out($this->song->get_album_barcode($this->song->album));
         $songprops[T_('Bitrate')]        = scrub_out((int) ($this->song->bitrate / 1024) . "-" . strtoupper((string) $this->song->mode));
         $songprops[T_('Channels')]       = $this->song->channels;
+        if ($this->song->bpm !== null) {
+            $songprops[T_('BPM')] = $this->song->bpm;
+        }
+
         $songprops[T_('Song MBID')]      = scrub_out($this->song->mbid);
         $songprops[T_('Album MBID')]     = scrub_out($this->song->get_album_mbid());
         $songprops[T_('Artist MBID')]    = scrub_out($this->song->get_artist_mbid());
@@ -558,6 +572,11 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         return $this->song->year;
     }
 
+    public function hasWaveform(): bool
+    {
+        return Waveform::is_available($this->song, 'song');
+    }
+
     public function isEditable(): bool
     {
         return (
@@ -570,5 +589,11 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
                 && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
             )
         );
+    }
+
+    #[Override]
+    protected function templateFile(): string
+    {
+        return $this->findTemplate('song.phtml');
     }
 }

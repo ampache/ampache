@@ -25,7 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Artist\ArtistPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
@@ -45,6 +51,7 @@ final readonly class ShowSongsAction implements ApplicationActionInterface
         private SongRepositoryInterface $songRepository,
         private ZipHandlerInterface $zipHandler,
         private BrowseFactoryInterface $browseFactory,
+        private FunctionCheckerInterface $functionChecker,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -54,18 +61,18 @@ final readonly class ShowSongsAction implements ApplicationActionInterface
         $artist = $this->modelFactory->createArtist($artistId);
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_artist.inc.php',
-            [
-                'artist' => $artist,
-                'object_type' => 'song',
-                'object_ids' => $this->songRepository->getByArtist($artistId),
-                'multi_object_ids' => [],
-                'gatekeeper' => $gatekeeper,
-                'zipHandler' => $this->zipHandler,
-                'browseFactory' => $this->browseFactory
-            ]
-        );
+        echo (new ArtistPageView(
+            $artist,
+            ['' => $this->songRepository->getByArtist($artistId)],
+            'song',
+            $this->browseFactory,
+            $gatekeeper->getUser(),
+            AmpConfig::get_web_path(),
+            canEditArtist($artist, $gatekeeper->getUserId()),
+            $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('artist'),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

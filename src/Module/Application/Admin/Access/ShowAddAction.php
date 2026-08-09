@@ -25,11 +25,15 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\AddAccessFormView;
+use Ampache\Module\Application\Admin\Access\Lib\AccessListTypeEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,7 +42,11 @@ final readonly class ShowAddAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_add';
 
-    public function __construct(private UiInterface $ui) {}
+    public function __construct(
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -47,10 +55,20 @@ final readonly class ShowAddAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_add_access.inc.php',
-            ['add_type' => $request->getQueryParams()['add_type'] ?? '']
-        );
+        $addType = (string) ($request->getQueryParams()['add_type'] ?? '');
+        // "add current host" seeds both address fields with the caller's own address
+        $currentIp = ($addType === AccessListTypeEnum::ADD_TYPE_CURRENT)
+            ? (string) filter_var($_SERVER['REMOTE_ADDR'] ?? '', FILTER_VALIDATE_IP)
+            : '';
+
+        echo (new AddAccessFormView(
+            $this->configContainer->getWebPath('/admin'),
+            $addType,
+            $this->requestParser->getFromRequest('name'),
+            $currentIp ?: $this->requestParser->getFromRequest('start'),
+            $currentIp ?: $this->requestParser->getFromRequest('end'),
+            $currentIp
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

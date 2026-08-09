@@ -27,12 +27,12 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\StatsFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,7 +44,7 @@ final readonly class NewestAlbumDiskAction implements ApplicationActionInterface
         private UiInterface $ui,
         private BrowseFactoryInterface $browseFactory,
         private ConfigContainerInterface $configContainer,
-        private VideoRepositoryInterface $videoRepository,
+        private StatsFormViewFactoryInterface $statsFormViewFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -52,10 +52,7 @@ final readonly class NewestAlbumDiskAction implements ApplicationActionInterface
         $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_form_newest.inc.php',
-            ['videoRepository' => $this->videoRepository]
-        );
+        echo $this->statsFormViewFactory->createNewest()->render();
 
         define('TABLE_RENDERED', 1);
 

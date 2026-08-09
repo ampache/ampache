@@ -77,6 +77,10 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * New `album_disk` action returning a single album disk, and `album_disk_songs` returning the songs on one disk
   * `album_disk` accepted by `index`, `list`, `browse`, `stats` and `get_art`. `rate` and `flag` already accepted it
   * Album disks are the browsing unit whenever the per-user `album_group` preference is off, so a client can now reach the same objects the web interface shows. `albums` and `album` are unchanged and never vary with that preference
+* `song` (API8 only)
+  * Song responses carry `bpm`, the tagged beats per minute, read on scan into the new `song_data`.`bpm` column
+  * The value keeps the fraction a detection tool wrote (`133.4`), so it is a float rather than an int
+  * New `bpm` rule for `advanced_search`, numeric, song only
 * REST
   * Multi-word resources and actions may be spelled with a dash anywhere in a path (`album-disks/{id}/songs`); the dashed form is folded onto the canonical snake_case action by a single rule rather than a per-name alias list
   * New `albums/{album_id}/disks`, `album-disks/{album_disk_id}`, `album-disks/{album_disk_id}/songs`, plus `art`/`flag`/`rate`/`search`/`stats` on `album-disks`

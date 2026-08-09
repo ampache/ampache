@@ -1,0 +1,61 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// catalog_row.phtml -- rendered by Ampache\Gui\Catalog\CatalogRowView
+
+use Ampache\Module\Api\Ajax;
+
+/** @var Ampache\Gui\Catalog\CatalogRowView $this */
+
+$catalog = $this->getCatalog();
+$flip    = $this->getFlipState(); ?>
+<td class="cel_catalog"><?php echo $this->raw($catalog->get_f_link()); ?></td>
+<td class="cel_info"><?php echo $this->e($catalog->get_f_info()); ?></td>
+<td class="cel_lastverify"><?php echo $this->e($catalog->get_f_update()); ?></td>
+<td class="cel_lastadd"><?php echo $this->e($catalog->get_f_add()); ?></td>
+<td class="cel_lastclean"><?php echo $this->e($catalog->get_f_clean()); ?></td>
+<td class="cel_action cel_action_text">
+<?php if (!$this->isReady()) { ?>
+    <a href="<?php echo $this->e($this->getMakeReadyUrl()); ?>"><b><?php echo T_('Make it ready ..'); ?></b></a><br />
+<?php } ?>
+<form name="catalog_action_<?php echo $this->e($catalog->id); ?>" method="post" action="<?php echo $this->e($this->getActionUrl()); ?>">
+    <label>
+        <select name="action">
+        <?php foreach ($this->getActions() as $value => $label) { ?>
+            <option value="<?php echo $this->e($value); ?>"><?php echo $this->e($label); ?></option>
+        <?php } ?>
+        </select>
+    </label>
+    <div class="formValidation">
+        <input class="button" type="submit" value="<?php echo T_('Go'); ?>" />
+        <input type="hidden" name="catalogs[]" value="<?php echo $this->e($catalog->id); ?>" />
+    </div>
+    <?php if ($this->mayDisable()) { ?>
+    <span id="<?php echo $this->e($flip['id']); ?>">
+        <?php echo $this->raw(Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $flip['symbol'], $flip['label'], 'flip_state_' . $catalog->id)); ?>
+    </span>
+    <?php } ?>
+</form>
+</td>

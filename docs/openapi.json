@@ -509,6 +509,10 @@
             "type": "string",
             "nullable": true
           },
+          "bpm": {
+            "type": "number",
+            "nullable": true
+          },
           "track": {
             "type": "integer"
           },
@@ -668,6 +672,7 @@
           "album",
           "disk",
           "disksubtitle",
+          "bpm",
           "track",
           "filename",
           "genre",
@@ -2092,6 +2097,10 @@
             "type": "integer",
             "nullable": true
           },
+          "bpm": {
+            "type": "number",
+            "nullable": true
+          },
           "catalog": {
             "type": "integer",
             "nullable": true
@@ -2308,6 +2317,7 @@
           "audio_codec",
           "barcode",
           "bitrate",
+          "bpm",
           "catalog",
           "catalog_number",
           "channels",
@@ -94210,6 +94220,7 @@
                       },
                       "disk": 1,
                       "disksubtitle": null,
+                      "bpm": 128.0,
                       "track": 1,
                       "filename": "/mnt/files-music/ampache-test/music/Warfare 3.0/Creeping Lawler 2/01 - Creeping Lawler 2.mp3",
                       "genre": [],
@@ -95730,6 +95741,7 @@
                       "audio_codec": "mp3",
                       "barcode": "",
                       "bitrate": 177349,
+                      "bpm": 128.0,
                       "catalog": null,
                       "catalog_number": "",
                       "channels": 2,

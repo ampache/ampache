@@ -25,9 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\System;
 
+use Ampache\Gui\View\TemplateInterface;
 use Traversable;
 
-interface UpdateViewAdapterInterface
+interface UpdateViewAdapterInterface extends TemplateInterface
 {
     public function getCharset(): string;
 

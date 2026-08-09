@@ -1872,6 +1872,11 @@ class OpenSubsonic_Xml_Data
             $xsong->addAttribute('bookmarkPosition', (string) $bookmark_position);
         }
 
+        $bpm = $this->openSubsonicFields->songBpm($song);
+        if ($bpm !== null) {
+            $xsong->addAttribute('bpm', (string) $bpm);
+        }
+
         // replayGain is required on a Child even when Ampache holds no gain tags, so the element is always added.
         $xreplaygain = $this->_addChildToResultXml($xsong, 'replayGain');
         foreach ($this->openSubsonicFields->songReplayGain($song) as $key => $value) {

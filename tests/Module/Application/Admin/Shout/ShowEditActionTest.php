@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Shout;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -32,6 +33,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
@@ -42,6 +44,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowEditActionTest extends TestCase
 {
+    private ConfigContainerInterface&MockObject $configContainer;
     private GuiGatekeeperInterface&MockObject $gatekeeper;
     private ServerRequestInterface&MockObject $request;
     private ShoutObjectLoaderInterface&MockObject $shoutObjectLoader;
@@ -57,6 +60,36 @@ class ShowEditActionTest extends TestCase
             ->method('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(false);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    public function testRunErrorsIfShoutObjectCannotBeDisplayed(): void
+    {
+        $shoutId = 666;
+
+        $shout = $this->createMock(Shoutbox::class);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->willReturn(true);
+
+        $this->request->expects(static::once())
+            ->method('getQueryParams')
+            ->willReturn(['shout_id' => (string) $shoutId]);
+
+        $this->shoutRepository->expects(static::once())
+            ->method('findById')
+            ->with($shoutId)
+            ->willReturn($shout);
+
+        $this->shoutObjectLoader->expects(static::once())
+            ->method('loadByShout')
+            ->with($shout)
+            ->willReturn($this->createMock(library_item::class));
+
+        static::expectException(ObjectNotFoundException::class);
 
         $this->subject->run($this->request, $this->gatekeeper);
     }
@@ -91,7 +124,7 @@ class ShowEditActionTest extends TestCase
         $shoutId = 666;
 
         $shout       = $this->createMock(Shoutbox::class);
-        $libraryItem = $this->createMock(library_item::class);
+        $libraryItem = $this->createMockForIntersectionOfInterfaces([library_item::class, displayable_item::class]);
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
@@ -138,7 +171,7 @@ class ShowEditActionTest extends TestCase
         $shoutId = 666;
 
         $shout       = $this->createMock(Shoutbox::class);
-        $libraryItem = $this->createMock(library_item::class);
+        $libraryItem = $this->createMockForIntersectionOfInterfaces([library_item::class, displayable_item::class]);
         $user        = $this->createMock(User::class);
 
         $this->gatekeeper->expects(static::once())
@@ -166,22 +199,25 @@ class ShowEditActionTest extends TestCase
 
         $this->ui->expects(static::once())
             ->method('showHeader');
-        $this->ui->expects(static::once())
-            ->method('show')
-            ->with(
-                'show_edit_shout.inc.php',
-                [
-                    'shout' => $shout,
-                    'object' => $libraryItem,
-                    'client' => $user,
-                ]
-            );
+        $shout->method('getId')->willReturn($shoutId);
+        $shout->method('getText')->willReturn('some-text');
+        $libraryItem->method('get_f_link')->willReturn('some-object-link');
+        $user->method('get_f_link')->willReturn('some-user-link');
         $this->ui->expects(static::once())
             ->method('showQueryStats');
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        $this->subject->run($this->request, $this->gatekeeper);
+        ob_start();
+
+        try {
+            $this->subject->run($this->request, $this->gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        static::assertStringContainsString('some-text', $output);
+        static::assertStringContainsString('some-object-link', $output);
     }
 
     protected function setUp(): void
@@ -189,11 +225,13 @@ class ShowEditActionTest extends TestCase
         $this->ui                = $this->createMock(UiInterface::class);
         $this->shoutObjectLoader = $this->createMock(ShoutObjectLoaderInterface::class);
         $this->shoutRepository   = $this->createMock(ShoutRepositoryInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new ShowEditAction(
             $this->ui,
             $this->shoutObjectLoader,
             $this->shoutRepository,
+            $this->configContainer,
         );
 
         $this->request    = $this->createMock(ServerRequestInterface::class);

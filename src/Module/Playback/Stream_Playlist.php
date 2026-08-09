@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Playback;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Playback\WebPlayerFrameView;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -34,7 +35,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -635,7 +635,7 @@ class Stream_Playlist
      */
     public function create_web_player(): void
     {
-        require Ui::find_template('create_web_player_embedded.inc.php');
+        echo (new WebPlayerFrameView(AmpConfig::get_web_path(), $this))->render();
     }
 
     public function create_xspf(): void

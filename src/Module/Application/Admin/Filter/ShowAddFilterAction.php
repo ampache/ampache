@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Filter;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\AddCatalogFilterFormView;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -51,10 +53,11 @@ final class ShowAddFilterAction extends AbstractFilterAction
         $filter_name = scrub_in(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES));
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_add_filter.inc.php',
-            ['filter_name' => $filter_name]
-        );
+        echo (new AddCatalogFilterFormView(
+            $this->configContainer->getWebPath('/admin'),
+            $filter_name,
+            (bool) AmpConfig::get('catalog_filter')
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

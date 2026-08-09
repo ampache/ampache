@@ -24,6 +24,7 @@ declare(strict_types=1);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\NowPlaying\NowPlayingView;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -914,10 +915,7 @@ function show_now_playing(): void
 {
     Stream::garbage_collection();
 
-    $web_path = AmpConfig::get_web_path();
-
-    $results = Stream::get_now_playing();
-    require_once Ui::find_template('show_now_playing.inc.php');
+    echo (new NowPlayingView(Stream::get_now_playing(), AmpConfig::get_web_path()))->render();
 }
 
 /**

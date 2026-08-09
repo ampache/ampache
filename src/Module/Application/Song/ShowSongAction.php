@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Song;
 
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
@@ -45,7 +44,6 @@ final readonly class ShowSongAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private GuiFactoryInterface $guiFactory,
-        private TalFactoryInterface $talFactory,
         private LoggerInterface $logger,
     ) {}
 
@@ -71,11 +69,7 @@ final readonly class ShowSongAction implements ApplicationActionInterface
                 'box box_song_details'
             );
 
-            echo $this->talFactory
-                ->createTalView()
-                ->setTemplate('song.xhtml')
-                ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $song))
-                ->render();
+            echo $this->guiFactory->createSongViewAdapter($gatekeeper, $song)->render();
 
             $this->ui->showBoxBottom();
         }

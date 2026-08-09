@@ -25,15 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\User\UserPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserFollowerRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -74,19 +80,22 @@ final readonly class ShowUserAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->show(
-                'show_user.inc.php',
-                [
-                    'client' => $client,
-                    'activities' => $this->userActivityRepository->getActivities($userId),
-                    'followers' => $this->userFollowerRepository->getFollowers($client),
-                    'following' => $this->userFollowerRepository->getFollowing($client),
-                    'userFollowStateRenderer' => $this->userFollowStateRenderer,
-                    'userActivityRenderer' => $this->userActivityRenderer,
-                    'libraryItemLoader' => $this->libraryItemLoader,
-                    'browseFactory' => $this->browseFactory,
-                ]
-            );
+            $viewer = Core::get_global('user');
+            echo (new UserPageView(
+                $client,
+                ($viewer instanceof User) ? $viewer : null,
+                $this->userFollowerRepository->getFollowing($client),
+                $this->userFollowerRepository->getFollowers($client),
+                $this->userActivityRepository->getActivities($userId),
+                $this->browseFactory,
+                $this->userActivityRenderer,
+                $this->userFollowStateRenderer,
+                $this->libraryItemLoader,
+                AmpConfig::get_web_path(),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ))->render();
             show_table_render(false, true);
         }
 

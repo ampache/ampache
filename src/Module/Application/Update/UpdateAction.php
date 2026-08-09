@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Update;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -51,7 +50,6 @@ final readonly class UpdateAction implements ApplicationActionInterface
     public const string REQUEST_KEY = 'update';
 
     public function __construct(
-        private TalFactoryInterface $talFactory,
         private GuiFactoryInterface $guiFactory,
         private ResponseFactoryInterface $responseFactory,
         private ConfigContainerInterface $configContainer,
@@ -115,13 +113,7 @@ final readonly class UpdateAction implements ApplicationActionInterface
             }
         }
 
-        $result = $this->talFactory->createTalView()
-            ->setTemplate('update.xhtml')
-            ->setContext(
-                'UPDATE',
-                $this->guiFactory->createUpdateViewAdapter()
-            )
-            ->render();
+        $result = $this->guiFactory->createUpdateViewAdapter()->render();
 
         return $this->responseFactory
             ->createResponse()

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\PrivateMessage;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\AddPrivateMessageFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -89,7 +90,12 @@ final readonly class AddMessageAction implements ApplicationActionInterface
         }
 
         if (AmpError::occurred()) {
-            $this->ui->show('show_add_pvmsg.inc.php');
+            echo (new AddPrivateMessageFormView(
+                $this->configContainer->getWebPath(),
+                $this->requestParser->getFromRequest('to_user'),
+                $this->requestParser->getFromRequest('subject'),
+                $this->requestParser->getFromRequest('message')
+            ))->render();
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
@@ -113,7 +119,12 @@ final readonly class AddMessageAction implements ApplicationActionInterface
                 )
             );
         } catch (PrivateMessageCreationException|Exception) {
-            $this->ui->show('show_add_pvmsg.inc.php');
+            echo (new AddPrivateMessageFormView(
+                $this->configContainer->getWebPath(),
+                $this->requestParser->getFromRequest('to_user'),
+                $this->requestParser->getFromRequest('subject'),
+                $this->requestParser->getFromRequest('message')
+            ))->render();
         }
 
         $this->ui->showQueryStats();
