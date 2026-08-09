@@ -34,8 +34,6 @@ namespace Ampache\Module\Util\OAuth;
  */
 class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod
 {
-    /**
-     */
     public function build_signature(OAuthRequest $request, OAuthConsumer $consumer, OAuthToken $token): string
     {
         $base_string          = $request->get_signature_base_string();

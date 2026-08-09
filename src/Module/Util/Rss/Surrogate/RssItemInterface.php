@@ -40,6 +40,11 @@ interface RssItemInterface
     public function getImageUrl(): string;
 
     /**
+     * RSS channel language (RFC 5646), from the installation locale
+     */
+    public function getLanguage(): string;
+
+    /**
      * Returns a link to the item
      */
     public function getLink(): string;
@@ -51,6 +56,7 @@ interface RssItemInterface
      *   title: string,
      *   guid: string,
      *   link: string,
+     *   description: string,
      *   length: string,
      *   author: ?string,
      *   pubDate: ?string,
@@ -68,6 +74,11 @@ interface RssItemInterface
      * Returns the name of the owner
      */
     public function getOwnerName(): string;
+
+    /**
+     * podcast:guid of this feed (UUIDv5 of its canonical token-less url)
+     */
+    public function getPodcastGuid(): string;
 
     /**
      * Returns a link to the feed url

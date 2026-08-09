@@ -28,14 +28,25 @@ declare(strict_types=1);
 /** @var Ampache\Module\Util\Rss\View\GenericRssFeedView $this */
 
 echo '<?xml version="1.0"?>', "\n"; ?>
-<rss version="2.0">
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://podcastindex.org/namespace/1.0" version="2.0">
     <channel>
         <title><?php echo $this->e($this->getTitle()); ?></title>
         <link><?php echo $this->e($this->getLink()); ?></link>
         <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rss+xml" href="<?php echo $this->e($this->getRssLink()); ?>"/>
         <description><?php echo $this->e($this->getTitle()); ?></description>
+        <language><?php echo $this->e($this->getLanguage()); ?></language>
+        <itunes:category text="Music"/>
 <?php if ($this->getPubDate() !== null) { ?>
         <pubDate><?php echo $this->e($this->getPubDate()); ?></pubDate>
+<?php }
+if ($this->getMedium() !== null) { ?>
+        <podcast:medium><?php echo $this->e($this->getMedium()); ?></podcast:medium>
+<?php }
+foreach ($this->getRemoteItems() as $remote) { ?>
+        <podcast:remoteItem feedGuid="<?php echo $this->e($remote['feedGuid']); ?>" feedUrl="<?php echo $this->e($remote['feedUrl']); ?>"/>
+<?php }
+if ($this->getImage() !== null) { ?>
+        <itunes:image href="<?php echo $this->e($this->getImage()); ?>"/>
 <?php }
 if ($this->getImage() !== null && $this->getImage() !== '') { ?>
         <image>
@@ -55,6 +66,21 @@ foreach ($this->getItems() as $item) { ?>
 <?php   }
     if (!empty($item['pubDate'])) { ?>
             <pubDate><?php echo $this->e($item['pubDate']); ?></pubDate>
+<?php   }
+    if (!empty($item['image'])) { ?>
+            <itunes:image href="<?php echo $this->e($item['image']); ?>"/>
+<?php   }
+    if (!empty($item['duration'])) { ?>
+            <itunes:duration><?php echo $this->e($item['duration']); ?></itunes:duration>
+<?php   }
+    if (!empty($item['season'])) { ?>
+            <podcast:season<?php echo (!empty($item['season_name'])) ? ' name="' . $this->e($item['season_name']) . '"' : ''; ?>><?php echo $this->e($item['season']); ?></podcast:season>
+<?php   }
+    if (!empty($item['episode'])) { ?>
+            <podcast:episode><?php echo $this->e($item['episode']); ?></podcast:episode>
+<?php   }
+    if (!empty($item['url'])) { ?>
+            <enclosure type="<?php echo $this->e($item['type']); ?>" length="<?php echo $this->e($item['size']); ?>" url="<?php echo $this->e($item['url']); ?>"/>
 <?php   } ?>
         </item>
 <?php } ?>

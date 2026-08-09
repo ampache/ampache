@@ -40,10 +40,13 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
         return new GenericRssFeedView(
             AmpConfig::get('site_title') . ' - ' . $this->getTitle(),
             AmpConfig::get_web_path(),
-            AmpConfig::get_web_path() . ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING'],
+            AmpConfig::get_web_path() . '/rss.php?' . ($_SERVER['QUERY_STRING'] ?? ''),
             ($this->getPubDate()) ? date('r', (int) $this->getPubDate()) : null,
             $this->getImage(),
-            $this->getItems()
+            $this->getItems(),
+            $this->getMedium(),
+            $this->getRemoteItems(),
+            str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US'))
         );
     }
 
@@ -64,10 +67,25 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
      *     pubDate: string,
      *     guid: string,
      *     isPermaLink: string,
-     *     image?: string
+     *     image?: string,
+     *     duration?: string,
+     *     season?: ?string,
+     *     season_name?: ?string,
+     *     episode?: ?string,
+     *     type?: ?string,
+     *     size?: ?string,
+     *     url?: ?string
      * }>
      */
     abstract protected function getItems(): Traversable;
+
+    /**
+     * podcast:medium channel value (e.g. 'playlist'), null to omit
+     */
+    protected function getMedium(): ?string
+    {
+        return null;
+    }
 
     /**
      * this is the pub date we should use for the Now Playing information,
@@ -76,6 +94,16 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
     protected function getPubDate(): ?int
     {
         return null;
+    }
+
+    /**
+     * podcast:remoteItem channel entries
+     *
+     * @return list<array{feedUrl: string, feedGuid: string}>
+     */
+    protected function getRemoteItems(): array
+    {
+        return [];
     }
 
     abstract protected function getTitle(): string;

@@ -595,6 +595,12 @@ class Art extends database_object
 
         // Check to see if it's a URL
         if (array_key_exists('url', $data) && filter_var($data['url'], FILTER_VALIDATE_URL)) {
+            if (!self::_is_valid_url((string) $data['url'])) {
+                debug_event(self::class, 'Refusing to fetch art from unsafe URL ' . $data['url'], 2);
+
+                return '';
+            }
+
             debug_event(self::class, 'CHECKING URL ' . $data['url'], 2);
             $options = [];
             try {
@@ -960,6 +966,43 @@ class Art extends database_object
     }
 
     /**
+     * Reject URLs that don't point at a public host.
+     */
+    private static function _is_valid_url(string $url): bool
+    {
+        $parts = parse_url($url);
+        if (
+            $parts === false
+            || empty($parts['host'])
+            || !in_array(strtolower($parts['scheme'] ?? ''), ['http', 'https'], true)
+        ) {
+            return false;
+        }
+
+        $host = $parts['host'];
+        if (filter_var($host, FILTER_VALIDATE_IP)) {
+            $ips = [$host];
+        } else {
+            $ips = array_merge(
+                gethostbynamel($host) ?: [],
+                array_column((array) dns_get_record($host, DNS_AAAA), 'ipv6')
+            );
+        }
+
+        if ($ips === []) {
+            return false;
+        }
+
+        foreach ($ips as $ip) {
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * _read_from_dir
      */
     private static function _read_from_dir(string $sizetext, string $type, int $uid, string $kind, string $mime): ?string
@@ -1083,13 +1126,13 @@ class Art extends database_object
      */
     public function generate_thumb(string $image, array $size, string $mime): array
     {
-        $test_size = $this->test_size($image);
+        $test_size = $this->_test_size($image);
         if ($test_size !== true) {
             debug_event(self::class, 'Not inserting thumbnail, failed check: ' . $test_size, 1);
 
             return [];
         }
-        if (!$this->test_image($image)) {
+        if (!$this->_test_image($image)) {
             debug_event(self::class, 'Not trying to generate thumbnail, invalid data passed', 1);
 
             return [];
@@ -1259,13 +1302,13 @@ class Art extends database_object
             // A playlist can stand in a mosaic of its own covers rather than the blank placeholder.
             // Keep it once it is built: it becomes the playlist's art, so it is served from the image
             // table from here on instead of being stitched together again on every render.
-            $mosaic = $this->get_playlist_mosaic();
+            $mosaic = $this->_get_playlist_mosaic();
             if ($mosaic !== null) {
                 $this->insert($mosaic, 'image/png');
                 $this->raw      = $mosaic;
                 $this->raw_mime = 'image/png';
             } else {
-                $this->raw      = $this->get_blankalbum($size);
+                $this->raw      = $this->_get_blankalbum($size);
                 $this->raw_mime = 'image/png';
                 $this->fallback = true;
             }
@@ -1462,7 +1505,7 @@ class Art extends database_object
             return false;
         }
 
-        $test_size = $this->test_size($source);
+        $test_size = $this->_test_size($source);
         if ($test_size !== true) {
             debug_event(self::class, 'Not inserting image for ' . $this->object_type . ' ' . $this->object_id . ', failed check: ' . $test_size, 1);
 
@@ -1470,7 +1513,7 @@ class Art extends database_object
         }
 
         // Check to make sure we like this image
-        if (!$this->test_image($source)) {
+        if (!$this->_test_image($source)) {
             debug_event(self::class, 'Not inserting image for ' . $this->object_type . ' ' . $this->object_id . ', invalid data passed', 1);
 
             return false;
@@ -1543,7 +1586,7 @@ class Art extends database_object
                 } else {
                     switch (count($apics)) {
                         case 1:
-                            $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
+                            $idx = $this->_check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][] = $new_pic;
                                 $ndata['attached_picture'][] = [
@@ -1555,7 +1598,7 @@ class Art extends database_object
                             }
                             break;
                         case 2:
-                            $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
+                            $idx = $this->_check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][0] = $new_pic;
                             } else {
@@ -1639,14 +1682,14 @@ class Art extends database_object
      */
     public function save_thumb(string $source, string $mime, array $size): bool
     {
-        $test_size = $this->test_size($source);
+        $test_size = $this->_test_size($source);
         if ($test_size !== true) {
             debug_event(self::class, 'Not inserting thumbnail, failed check: ' . $test_size, 1);
 
             return false;
         }
         // Quick sanity check
-        if (!$this->test_image($source)) {
+        if (!$this->_test_image($source)) {
             debug_event(self::class, 'Not inserting thumbnail, invalid data passed', 1);
 
             return false;
@@ -1741,7 +1784,7 @@ class Art extends database_object
      * @param array<string, array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}>> $ndata
      * @param array{data: string, description: null|string, mime: null|string, picturetypeid: int} $new_pic
      */
-    private function check_for_duplicate(array $apics, array &$ndata, array $new_pic, string $apic_typeid): ?int
+    private function _check_for_duplicate(array $apics, array &$ndata, array $new_pic, string $apic_typeid): ?int
     {
         $idx = null;
         $cnt = count($apics);
@@ -1762,7 +1805,7 @@ class Art extends database_object
         return $idx;
     }
 
-    private function get_blankalbum(?string $size = null): string
+    private function _get_blankalbum(?string $size = null): string
     {
         $defaultimg = ($this->object_type === 'folder') ? 'folder' : 'blankalbum';
         switch ($size) {
@@ -1817,7 +1860,7 @@ class Art extends database_object
      * The tiles are picked with a seed taken from the playlist contents, so this returns the same
      * image every time until the playlist itself changes.
      */
-    private function get_playlist_mosaic(): ?string
+    private function _get_playlist_mosaic(): ?string
     {
         if (
             !in_array($this->object_type, ['playlist', 'search', 'collection'], true)
@@ -1835,31 +1878,11 @@ class Art extends database_object
     }
 
     /**
-     * @deprecated Inject dependency
-     */
-    private function getArtCleanup(): ArtCleanupInterface
-    {
-        global $dic;
-
-        return $dic->get(ArtCleanupInterface::class);
-    }
-
-    /**
-     * @deprecated Inject dependency
-     */
-    private function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
-    }
-
-    /**
      * test_image
      * Runs some sanity checks on the putative image
      * @throws RuntimeException
      */
-    private function test_image(string $source): bool
+    private function _test_image(string $source): bool
     {
         // Check to make sure PHP:GD exists. Don't test things you can't change
         if (!function_exists('imagecreatefromstring')) {
@@ -1884,7 +1907,7 @@ class Art extends database_object
      * Runs some sanity checks on the putative image
      * @throws RuntimeException
      */
-    private function test_size(string $source): bool|string
+    private function _test_size(string $source): bool|string
     {
         $source_size = strlen($source);
         if ($source_size < 10) {
@@ -1903,5 +1926,25 @@ class Art extends database_object
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private function getArtCleanup(): ArtCleanupInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtCleanupInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }
