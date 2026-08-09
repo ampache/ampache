@@ -38,7 +38,7 @@ final readonly class InitializationHandlerConfig implements InitializationHandle
 
     private const string CONFIG_VERSION = '95';
 
-    private const string STRUCTURE = 'public';
+    private const string STRUCTURE = 'client';
 
     private const string VERSION = '8.0.0'; // AMPACHE_VERSION
 
