@@ -129,7 +129,7 @@ if ($this->areRatingsShown()) { ?>
     <?php }
         }
 
-        if ($this->mayDelete()) { ?>
+if ($this->mayDelete()) { ?>
         <li>
             <a id="delete_podcast_<?php echo $this->e($podcastId); ?>" href="<?php echo $this->e($this->getDeleteUrl()); ?>">
                 <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>

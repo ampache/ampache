@@ -27,8 +27,8 @@ namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
-use Ampache\Module\Util\Rss\PodcastGuid;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Rss\PodcastGuid;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\User;
 use Generator;
@@ -67,11 +67,6 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
         }
     }
 
-    protected function getTitle(): string
-    {
-        return T_('Newest Albums');
-    }
-
     #[Override]
     protected function getMedium(): ?string
     {
@@ -103,5 +98,10 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
         }
 
         return $items;
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Newest Albums');
     }
 }

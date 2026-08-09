@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Module\Art\Art;
-use Ampache\Module\Util\Rss\EnclosureResolver;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Rss\EnclosureResolver;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Generator;

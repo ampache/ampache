@@ -49,24 +49,6 @@ final class GenericRssFeedView extends AbstractView
         private readonly string $language = 'en-US',
     ) {}
 
-    public function getLanguage(): string
-    {
-        return $this->language;
-    }
-
-    public function getMedium(): ?string
-    {
-        return $this->medium;
-    }
-
-    /**
-     * @return list<array{feedUrl: string, feedGuid: string}>
-     */
-    public function getRemoteItems(): array
-    {
-        return $this->remoteItems;
-    }
-
     public function getImage(): ?string
     {
         return $this->image;
@@ -80,14 +62,32 @@ final class GenericRssFeedView extends AbstractView
         return $this->items;
     }
 
+    public function getLanguage(): string
+    {
+        return $this->language;
+    }
+
     public function getLink(): string
     {
         return $this->link;
     }
 
+    public function getMedium(): ?string
+    {
+        return $this->medium;
+    }
+
     public function getPubDate(): ?string
     {
         return $this->pubDate;
+    }
+
+    /**
+     * @return list<array{feedUrl: string, feedGuid: string}>
+     */
+    public function getRemoteItems(): array
+    {
+        return $this->remoteItems;
     }
 
     public function getRssLink(): string

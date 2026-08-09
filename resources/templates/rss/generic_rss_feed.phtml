@@ -44,6 +44,9 @@ if ($this->getMedium() !== null) { ?>
 foreach ($this->getRemoteItems() as $remote) { ?>
         <podcast:remoteItem feedGuid="<?php echo $this->e($remote['feedGuid']); ?>" feedUrl="<?php echo $this->e($remote['feedUrl']); ?>"/>
 <?php }
+if ($this->getImage() !== null) { ?>
+        <itunes:image href="<?php echo $this->e($this->getImage()); ?>"/>
+<?php }
 if ($this->getImage() !== null && $this->getImage() !== '') { ?>
         <image>
             <url><?php echo $this->e($this->getImage()); ?></url>

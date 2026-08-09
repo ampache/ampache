@@ -68,6 +68,14 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
+     * RSS channel language (RFC 5646), from the installation locale
+     */
+    public function getLanguage(): string
+    {
+        return str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US'));
+    }
+
+    /**
      * Returns a link to the item
      */
     public function getLink(): string
@@ -147,7 +155,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
 
             if ($media->mime) {
                 [$stream_params, $data['type'], $data['size']] = EnclosureResolver::target($media);
-                $data['url'] = EnclosureResolver::url($media, $this->user, $stream_params);
+                $data['url']                                   = EnclosureResolver::url($media, $this->user, $stream_params);
             }
 
             yield $data;
@@ -167,14 +175,6 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * Returns a link to the feed url
-     */
-    public function getRssLink(): string
-    {
-        return ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING'];
-    }
-
-    /**
      * podcast:guid of this feed (UUIDv5 of its canonical token-less url)
      */
     public function getPodcastGuid(): string
@@ -183,11 +183,11 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * RSS channel language (RFC 5646), from the installation locale
+     * Returns a link to the feed url
      */
-    public function getLanguage(): string
+    public function getRssLink(): string
     {
-        return str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US'));
+        return AmpConfig::get_web_path() . '/rss.php?' . ($_SERVER['QUERY_STRING'] ?? '');
     }
 
     /**
@@ -229,5 +229,4 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     {
         return $this->playable->get_description() !== '';
     }
-
 }
