@@ -27,6 +27,7 @@ namespace Ampache\Module\Util\Rss\Surrogate;
 
 use Ampache\Module\Art\Art;
 use Ampache\Module\Util\Rss\EnclosureResolver;
+use Ampache\Module\Util\Rss\PodcastGuid;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -167,6 +168,14 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     public function getRssLink(): string
     {
         return ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING'];
+    }
+
+    /**
+     * podcast:guid of this feed (UUIDv5 of its canonical token-less url)
+     */
+    public function getPodcastGuid(): string
+    {
+        return PodcastGuid::fromFeedUrl((string) preg_replace('/&?rsstoken=[^&]*/', '', $this->getRssLink()));
     }
 
     /**

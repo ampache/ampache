@@ -75,6 +75,11 @@ interface RssItemInterface
     public function getRssLink(): string;
 
     /**
+     * podcast:guid of this feed (UUIDv5 of its canonical token-less url)
+     */
+    public function getPodcastGuid(): string;
+
+    /**
      * Returns the items summary/description text
      */
     public function getSummary(): string;

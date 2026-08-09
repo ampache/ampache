@@ -44,7 +44,22 @@ final class GenericRssFeedView extends AbstractView
         private readonly ?string $pubDate,
         private readonly ?string $image,
         private readonly Traversable $items,
+        private readonly ?string $medium = null,
+        private readonly array $remoteItems = [],
     ) {}
+
+    public function getMedium(): ?string
+    {
+        return $this->medium;
+    }
+
+    /**
+     * @return list<array{feedUrl: string, feedGuid: string}>
+     */
+    public function getRemoteItems(): array
+    {
+        return $this->remoteItems;
+    }
 
     public function getImage(): ?string
     {

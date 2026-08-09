@@ -37,6 +37,12 @@ echo '<?xml version="1.0"?>', "\n"; ?>
 <?php if ($this->getPubDate() !== null) { ?>
         <pubDate><?php echo $this->e($this->getPubDate()); ?></pubDate>
 <?php }
+if ($this->getMedium() !== null) { ?>
+        <podcast:medium><?php echo $this->e($this->getMedium()); ?></podcast:medium>
+<?php }
+foreach ($this->getRemoteItems() as $remote) { ?>
+        <podcast:remoteItem feedGuid="<?php echo $this->e($remote['feedGuid']); ?>" feedUrl="<?php echo $this->e($remote['feedUrl']); ?>"/>
+<?php }
 if ($this->getImage() !== null && $this->getImage() !== '') { ?>
         <image>
             <url><?php echo $this->e($this->getImage()); ?></url>

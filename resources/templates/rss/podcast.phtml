@@ -43,6 +43,7 @@ if ($item->hasSummary()) { ?>
         <itunes:summary><?php echo $this->e($item->getSummary()); ?></itunes:summary>
 <?php } ?>
         <generator>ampache</generator>
+        <podcast:guid><?php echo $this->e($item->getPodcastGuid()); ?></podcast:guid>
         <itunes:category text="<?php echo $this->e($item->getCategory()); ?>"/>
 <?php if ($item->hasOwner()) { ?>
         <itunes:owner>

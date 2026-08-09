@@ -43,8 +43,28 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
             AmpConfig::get_web_path() . ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING'],
             ($this->getPubDate()) ? date('r', (int) $this->getPubDate()) : null,
             $this->getImage(),
-            $this->getItems()
+            $this->getItems(),
+            $this->getMedium(),
+            $this->getRemoteItems()
         );
+    }
+
+    /**
+     * podcast:medium channel value (e.g. 'playlist'), null to omit
+     */
+    protected function getMedium(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * podcast:remoteItem channel entries
+     *
+     * @return list<array{feedUrl: string, feedGuid: string}>
+     */
+    protected function getRemoteItems(): array
+    {
+        return [];
     }
 
     /**
