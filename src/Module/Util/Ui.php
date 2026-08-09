@@ -1090,6 +1090,7 @@ class Ui implements UiInterface
             case 'show_folder':
             case 'show_license':
             case 'show_lyrics':
+            case 'show_mood':
             case 'show_original_year':
             case 'show_played_times':
             case 'show_playlist_media_parent':

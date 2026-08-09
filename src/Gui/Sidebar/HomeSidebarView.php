@@ -28,6 +28,7 @@ namespace Ampache\Gui\Sidebar;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\MoodRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Override;
 
@@ -43,6 +44,7 @@ final class HomeSidebarView extends AbstractSidebarView
         private readonly string $albumType,
         private readonly VideoRepositoryInterface $videoRepository,
         private readonly FolderRepositoryInterface $folderRepository,
+        private readonly MoodRepositoryInterface $moodRepository,
         private readonly bool $mayUse,
         private readonly bool $mayManage,
         private readonly bool $allowUpload,
@@ -92,6 +94,11 @@ final class HomeSidebarView extends AbstractSidebarView
         }
 
         $items[] = ['id' => 'sb_home_browse_tags', 'url' => '/browse.php?action=tag&type=' . $this->albumType, 'label' => T_('Genres')];
+
+        // nothing fills `mood` until a catalog has been scanned, so an install with none is not offered the link
+        if (AmpConfig::get('show_mood') && $this->moodRepository->getMoods(null, 1, 'name') !== []) {
+            $items[] = ['id' => 'sb_home_browse_mood', 'url' => '/browse.php?action=mood&type=' . $this->albumType, 'label' => T_('Moods')];
+        }
 
         if ($this->allowUpload) {
             $items[] = ['id' => 'sb_home_browse_upload', 'url' => '/stats.php?action=upload', 'label' => T_('Uploads')];

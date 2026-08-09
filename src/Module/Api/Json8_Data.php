@@ -207,6 +207,28 @@ final class Json8_Data
     }
 
     /**
+     * _mood_array
+     *
+     * The moods of an object, in the same id/name shape the genres use.
+     *
+     * @param list<array{id: int, name: string, user: int, count: int}> $moods
+     *
+     * @return list<array{id: string, name: string}>
+     */
+    private static function _mood_array(array $moods): array
+    {
+        $JSON = [];
+        foreach ($moods as $mood) {
+            $JSON[] = [
+                'id' => (string) $mood['id'],
+                'name' => $mood['name'],
+            ];
+        }
+
+        return $JSON;
+    }
+
+    /**
      * The scalar fields of a collection, shared by the list and the single-collection responses.
      *
      * @return array{
@@ -498,6 +520,7 @@ final class Json8_Data
      *         track: int,
      *         filename: string|null,
      *         genre: array<int, array{id: string, name: string}>,
+     *         mood: array<int, array{id: string, name: string}>,
      *         playlisttrack: int,
      *         time: int,
      *         year: int,
@@ -721,6 +744,7 @@ final class Json8_Data
      *             track: int,
      *             filename: string|null,
      *             genre: array<int, array{id: string, name: string}>,
+     *             mood: array<int, array{id: string, name: string}>,
      *             playlisttrack: int,
      *             time: int,
      *             year: int,
@@ -806,6 +830,7 @@ final class Json8_Data
      *         track: int,
      *         filename: string|null,
      *         genre: array<int, array{id: string, name: string}>,
+     *         mood: array<int, array{id: string, name: string}>,
      *         playlisttrack: int,
      *         time: int,
      *         year: int,
@@ -3209,6 +3234,7 @@ final class Json8_Data
      *     track: int,
      *     filename: string|null,
      *     genre: array<int, array{id: string, name: string}>,
+     *     mood: array<int, array{id: string, name: string}>,
      *     playlisttrack: int,
      *     time: int,
      *     year: int,
@@ -3329,6 +3355,7 @@ final class Json8_Data
             $objArray['track']                 = (int) $song->track;
             $objArray['filename']              = $song->file;
             $objArray['genre']                 = self::_genre_array($song->get_tags());
+            $objArray['mood']                  = self::_mood_array($song->get_moods());
             $objArray['playlisttrack']         = $playlist_track;
             $objArray['time']                  = $song->time;
             $objArray['year']                  = $song->year;

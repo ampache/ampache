@@ -33,6 +33,7 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Mood;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -211,6 +212,28 @@ final class OpenSubsonic_Fields
         }
 
         return $titles;
+    }
+
+    /**
+     * albumMoods
+     *
+     * The moods of an album, which Ampache derives from the moods of its songs when a catalog is scanned.
+     *
+     * https://opensubsonic.netlify.app/docs/responses/albumid3/
+     *
+     * @return string[]
+     */
+    public function albumMoods(Album $album): array
+    {
+        $names = [];
+        foreach (Mood::get_top_moods('album', $album->getId(), 0) as $mood) {
+            $name = trim($mood['name']);
+            if ($name !== '') {
+                $names[] = $name;
+            }
+        }
+
+        return $names;
     }
 
     /**
@@ -414,6 +437,28 @@ final class OpenSubsonic_Fields
     public function songIsrc(Song $song): array
     {
         return Song::get_song_map_array($song->id, 'isrc');
+    }
+
+    /**
+     * songMoods
+     *
+     * The moods of a song. The spec asks for names only, so the ids and the owner are dropped.
+     *
+     * https://opensubsonic.netlify.app/docs/responses/child/
+     *
+     * @return string[]
+     */
+    public function songMoods(Song $song): array
+    {
+        $names = [];
+        foreach ($song->get_moods() as $mood) {
+            $name = trim($mood['name']);
+            if ($name !== '') {
+                $names[] = $name;
+            }
+        }
+
+        return $names;
     }
 
     /**

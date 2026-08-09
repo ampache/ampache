@@ -33,6 +33,7 @@ use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\MoodRepositoryInterface;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
@@ -66,6 +67,7 @@ class CatalogGarbageCollectorTest extends TestCase
     private LabelGarbageCollectorInterface&MockObject $labelGarbageCollector;
     private LabelRepositoryInterface&MockObject $labelRepository;
     private MetadataManagerInterface&MockObject $metadataManager;
+    private MoodRepositoryInterface&MockObject $moodRepository;
     private PlaylistFolderRepositoryInterface&MockObject $playlistFolderRepository;
     private PlaylistRepositoryInterface&MockObject $playlistRepository;
     private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
@@ -100,6 +102,8 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->playlistFolderRepository->expects(static::once())->method('collectGarbage');
         $this->searchRepository->expects(static::once())->method('collectGarbage');
         $this->labelGarbageCollector->expects(static::once())->method('collect');
+        $this->moodRepository->expects(static::once())->method('collectGarbage');
+        $this->tagRepository->expects(static::once())->method('collectGarbage');
 
         $this->subject->collect();
     }
@@ -128,11 +132,13 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->podcastRepository        = $this->createMock(PodcastRepositoryInterface::class);
         $this->catalogCounter           = $this->createMock(CatalogCounterInterface::class);
         $this->configContainer          = $this->createMock(ConfigContainerInterface::class);
+        $this->moodRepository           = $this->createMock(MoodRepositoryInterface::class);
         $this->tagRepository            = $this->createMock(TagRepositoryInterface::class);
         $this->dic                      = $this->createMock(ContainerInterface::class);
 
         // debug_event() pulls the logger off the same container, so this cannot be a single-service stub
         $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            MoodRepositoryInterface::class => $this->moodRepository,
             TagRepositoryInterface::class => $this->tagRepository,
             UserRepositoryInterface::class => $this->userRepository,
             RatingRepositoryInterface::class => $this->createMock(RatingRepositoryInterface::class),

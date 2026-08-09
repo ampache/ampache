@@ -24,6 +24,7 @@ e.g. `cond=starts_with,a;catalog,2`
 | `genre`           | genre id       | Only videos tagged with this genre.                                                                                                  |
 | `id`              | array          | Only these video ids. It takes a list, which `cond` cannot send, so `cond=id,1` builds an empty list and the browse returns nothing. |
 | `like`            | string         | The video title contains this value.                                                                                                 |
+| `mood`            | mood id        | Only videos tagged with this mood.                                                                                                   |
 | `no_genre`        | none           | Only videos with no genre at all. Needs no value, and clears any `genre` filter.                                                     |
 | `no_tag`          | none           | Alias of `no_genre`.                                                                                                                 |
 | `not_like`        | string         | The video title does not contain this value.                                                                                         |

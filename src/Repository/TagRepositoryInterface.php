@@ -129,7 +129,9 @@ interface TagRepositoryInterface
     /**
      * Reads the highest-weighted tags applied to a single object
      *
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * `user` is the owner of the map: 0 when the genre came from the file tags, otherwise whoever set it by hand.
+     *
+     * @return list<array{id: int, name: string, is_hidden: int, user: int, count: int}>
      */
     public function getTopTags(string $objectType, int $objectId, int $limit): array;
 
@@ -166,12 +168,12 @@ interface TagRepositoryInterface
     /**
      * Drops every tag map on an object
      */
-    public function removeAllMaps(string $objectType, int $objectId): void;
+    public function removeAllMaps(string $objectType, int $objectId, ?int $userId = null): void;
 
     /**
      * Drops one tag map from an object
      */
-    public function removeMap(int $tagId, string $objectType, int $objectId, int $userId): void;
+    public function removeMap(int $tagId, string $objectType, int $objectId, ?int $userId = null): void;
 
     /**
      * Drops every map a tag holds, leaving the tag row itself in place

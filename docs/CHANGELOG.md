@@ -158,6 +158,19 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Add to playlist
   * The action is on the artist, smartlist, podcast, podcast episode, radio station and video pages, which only offered the temporary playlist before
   * Podcast rows carry it as well, so a whole podcast can be added from a browse the way an album already could
+* Moods
+  * Database 800047
+    * New `mood` and `mood_map` tables, the same shape a genre has in `tag` and `tag_map`. OpenSubsonic asks for a list of moods on a Child and an AlbumID3 and Ampache had nowhere to keep one
+    * New `show_mood` preference to show/hide the `Moods` link in the main sidebar
+  * A mood is read out of the file tags on a scan: id3v2 `TMOO`, and the `MOOD` comment of vorbis and APE. Several in the one frame are split on your `additional_genre_delimiters`, so `Melancholy;Dreamy` becomes two
+  * Album and artist moods are derived from the songs, never from a file of their own. Drop a mood from every song of an album and it leaves the album too
+  * New browse page at `browse.php?action=mood`, a cloud whose buttons filter the songs, albums, artists or videos carrying that mood
+  * The sidebar link appears once something has been scanned; a library with no moods is not offered a link to an empty page
+  * The song page lists them, and the song, album and artist edit dialogs carry a `Moods` field next to `Genres`
+  * New `Mood` search rule on songs, albums and artists
+  * Moods you set by hand are written back into the file tags when `write_tags` is on, so the file and the database converge instead of fighting. Albums and artists have no file, so theirs stay derived
+  * `mood` on the song object of the Ampache API (json and xml), and `moods` on the OpenSubsonic `Child` and `AlbumID3`
+  * **NOTE** the tables are empty until a catalog is scanned
 * Podcast details can be refreshed from the feed
   * New `Update details from the feed` action on the podcast page, next to `Sync`, in the same spirit as the artist's `Update details from MusicBrainz`
   * Until now the title, website, description, language, copyright, generator and art were only read when the podcast was created; a sync added episodes and nothing else, so a podcast that renamed itself or replaced its art kept the details it was first created with
@@ -181,6 +194,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Changed (8.0.0)
 
+* A genre you set by hand survives an update from tags
+  * `tag_map` has always had a `user` column but nothing ever filled it, so every genre was stored as owned by nobody and a re-read of the file tags cleared whatever was not in the file. Setting a genre in the interface only lasted until the next scan
+  * A genre added through the interface or the api is now attributed to the person who added it, and an update from tags treats it as if it were in the file rather than deleting it
+  * Removing one by hand still removes it whoever set it, so a manager is not locked out by a user's choice. Only the tag read is restricted
+  * User set genres are marked with a `*` carrying a `User set` tooltip, on the pages that render genres as links. The plain text form the edit fields, daap and upnp use is unchanged
+  * Moods work the same way, and the two share the marker
 * Podcast feed text is stored as plain text
   * Feeds routinely put markup in their titles and descriptions, and some escape that markup a second time on the way into the xml. Both used to be stored as-is, so the podcast and episode pages showed `&lt;p&gt;` and `<br />` as words
   * Paragraphs and lists are kept as line breaks, the remaining tags are dropped and the entities are decoded; the podcast and episode pages render those breaks

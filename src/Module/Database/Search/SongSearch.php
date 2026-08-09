@@ -118,6 +118,15 @@ final class SongSearch implements SearchInterface
 
                     $parameters[] = $input;
                     break;
+                case 'mood':
+                    $where[] = match ($operator_sql) {
+                        '!=', 'NOT' => "`song`.`id` NOT IN (SELECT `mood_map`.`object_id` FROM `mood_map` LEFT JOIN `mood` ON `mood_map`.`mood_id` = `mood`.`id` AND `mood`.`name` = ? WHERE `mood_map`.`object_type`='song' AND `mood`.`id` IS NOT NULL)",
+                        'NOT LIKE' => "`song`.`id` NOT IN (SELECT `mood_map`.`object_id` FROM `mood_map` LEFT JOIN `mood` ON `mood_map`.`mood_id` = `mood`.`id` AND `mood`.`name` LIKE ? WHERE `mood_map`.`object_type`='song' AND `mood`.`id` IS NOT NULL)",
+                        'NOT SOUNDS LIKE' => "`song`.`id` NOT IN (SELECT `mood_map`.`object_id` FROM `mood_map` LEFT JOIN `mood` ON `mood_map`.`mood_id` = `mood`.`id` AND `mood`.`name` SOUNDS LIKE ? WHERE `mood_map`.`object_type`='song' AND `mood`.`id` IS NOT NULL)",
+                        default => sprintf("`song`.`id` IN (SELECT `mood_map`.`object_id` FROM `mood_map` LEFT JOIN `mood` ON `mood_map`.`mood_id` = `mood`.`id` AND `mood`.`name` %s ? WHERE `mood_map`.`object_type`='song' AND `mood`.`id` IS NOT NULL)", $operator_sql),
+                    };
+                    $parameters[] = $input;
+                    break;
                 case 'genre':
                     $where[] = match ($operator_sql) {
                         '!=', 'NOT' => "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` = ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)",

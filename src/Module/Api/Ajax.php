@@ -197,9 +197,7 @@ class Ajax
         } else {
             $source_txt = "$(" . $source_txt . ").on('" . $method . "', ";
         }
-        // Announce a long running action as the request goes out. json_encode writes the js string
-        // literal, because this is translated text that may carry a quote, a unicode character or a
-        // sequence that would otherwise close the surrounding <script>.
+        // json_encode writes the js string literal, because translated text may carry a quote or a sequence that would close the <script>
         $notify = (empty($notice))
             ? ''
             : 'window.displayNotification(' . json_encode($notice, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_THROW_ON_ERROR) . ', 5000); ';

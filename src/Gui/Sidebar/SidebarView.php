@@ -27,6 +27,7 @@ namespace Ampache\Gui\Sidebar;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\FolderRepositoryInterface;
+use Ampache\Repository\MoodRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Override;
 
@@ -44,6 +45,7 @@ final class SidebarView extends AbstractSidebarView
         private readonly string $albumType,
         private readonly VideoRepositoryInterface $videoRepository,
         private readonly FolderRepositoryInterface $folderRepository,
+        private readonly MoodRepositoryInterface $moodRepository,
         private readonly string $activeTab,
         private readonly string $sessionId,
         private readonly bool $isRegistered,
@@ -151,6 +153,7 @@ final class SidebarView extends AbstractSidebarView
             $this->albumType,
             $this->videoRepository,
             $this->folderRepository,
+            $this->moodRepository,
             $this->mayUse,
             $this->mayManage,
             $this->allowUpload

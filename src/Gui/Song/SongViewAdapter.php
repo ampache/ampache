@@ -310,6 +310,11 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         return '';
     }
 
+    public function getMoods(): string
+    {
+        return $this->song->get_f_moods();
+    }
+
     public function getNumberPlayed(): int
     {
         return $this->song->total_count;
@@ -363,6 +368,10 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
         $songprops[T_('Composer')]      = scrub_out($this->song->composer);
         $songprops[T_('Genres')]        = $this->song->get_f_tags();
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_MOOD) && $this->song->get_f_moods() !== '') {
+            $songprops[T_('Moods')] = $this->song->get_f_moods();
+        }
+
         $songprops[T_('Track')]         = $this->song->track;
         $songprops[T_('Disk')]          = $this->song->disk;
         $songprops[T_('Disk Subtitle')] = $this->song->disksubtitle ?? '';

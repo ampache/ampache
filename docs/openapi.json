@@ -526,6 +526,25 @@
               "$ref": "#/components/schemas/GenreReference"
             }
           },
+          "mood": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": true
+            }
+          },
           "playlisttrack": {
             "type": "integer"
           },
@@ -676,6 +695,7 @@
           "track",
           "filename",
           "genre",
+          "mood",
           "playlisttrack",
           "time",
           "year",
@@ -94224,6 +94244,7 @@
                       "track": 1,
                       "filename": "/mnt/files-music/ampache-test/music/Warfare 3.0/Creeping Lawler 2/01 - Creeping Lawler 2.mp3",
                       "genre": [],
+                      "mood": [],
                       "playlisttrack": 1,
                       "time": 296,
                       "year": 0,

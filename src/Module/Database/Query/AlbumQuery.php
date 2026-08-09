@@ -52,6 +52,7 @@ final class AlbumQuery implements QueryInterface
         'regex_not_match',
         'song_artist',
         'starts_with',
+        'mood',
         'tag',
         'unplayed',
         'update_gt',
@@ -150,6 +151,16 @@ final class AlbumQuery implements QueryInterface
                 $filter_sql = " (`album`.`id` NOT IN (SELECT `object_id` FROM `tag_map` WHERE `object_type`='album')) AND ";
                 break;
             case 'genre':
+            case 'mood':
+                $query->set_join('LEFT', '`mood_map`', '`mood_map`.`object_id`', '`album`.`id`', 100);
+                $filter_sql = " `mood_map`.`object_type`='album' AND (";
+
+                foreach ($value as $mood_id) {
+                    $filter_sql .= "`mood_map`.`mood_id`='" . Dba::escape($mood_id) . "' AND ";
+                }
+
+                $filter_sql = rtrim($filter_sql, 'AND ') . ") AND ";
+                break;
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
                 $filter_sql = " `tag_map`.`object_type`='album' AND (";

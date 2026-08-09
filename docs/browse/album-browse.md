@@ -30,6 +30,7 @@ e.g. `cond=starts_with,a;catalog,2`
 | `genre`           | genre id       | Only albums tagged with this genre.                                                                                                  |
 | `id`              | array          | Only these album ids. It takes a list, which `cond` cannot send, so `cond=id,1` builds an empty list and the browse returns nothing. |
 | `like`            | string         | The album name contains this value.                                                                                                  |
+| `mood`            | mood id        | Only albums tagged with this mood.                                                                                                   |
 | `no_genre`        | none           | Only albums with no genre at all. Needs no value, and clears any `genre` filter.                                                     |
 | `no_tag`          | none           | Alias of `no_genre`.                                                                                                                 |
 | `not_like`        | string         | The album name does not contain this value.                                                                                          |

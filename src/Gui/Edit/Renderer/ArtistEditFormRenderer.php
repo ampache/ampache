@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\Mood;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Override;
@@ -62,6 +63,11 @@ final class ArtistEditFormRenderer extends AbstractEditFormRenderer
     public function getMbid(): string
     {
         return (string) $this->getItem()->mbid;
+    }
+
+    public function getMoods(): string
+    {
+        return Mood::get_display(Mood::get_top_moods('artist', $this->getArtistId(), 0));
     }
 
     public function getName(): string

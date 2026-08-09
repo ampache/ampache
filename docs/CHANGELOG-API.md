@@ -81,6 +81,12 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * Song responses carry `bpm`, the tagged beats per minute, read on scan into the new `song_data`.`bpm` column
   * The value keeps the fraction a detection tool wrote (`133.4`), so it is a float rather than an int
   * New `bpm` rule for `advanced_search`, numeric, song only
+* `mood` (API8 only)
+  * Song responses carry `mood`, a list of `{id, name}` objects shaped exactly like `genre`, read on scan from the file tags into the new `mood` and `mood_map` tables
+  * The list is empty until a catalog has been scanned, and stays empty for files carrying no mood tag
+  * New `mood` rule for `advanced_search`, text, on song, album and artist
+  * New `mood` browse filter on the song, album, artist and video browses, taking a mood id
+  * Album and artist moods are derived from their songs, so they answer *which moods are on this album* rather than naming a tag of their own
 * REST
   * Multi-word resources and actions may be spelled with a dash anywhere in a path (`album-disks/{id}/songs`); the dashed form is folded onto the canonical snake_case action by a single rule rather than a per-name alias list
   * New `albums/{album_id}/disks`, `album-disks/{album_disk_id}`, `album-disks/{album_disk_id}/songs`, plus `art`/`flag`/`rate`/`search`/`stats` on `album-disks`

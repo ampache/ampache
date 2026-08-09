@@ -28,16 +28,14 @@ namespace Ampache\Module\Podcast\Feed;
 /**
  * Turns the markup feeds put into their text fields back into plain text
  *
- * Feeds are inconsistent about this: some send plain text, some send html, and some send html
- * that was escaped a second time on the way into the xml. All three have to end up as text,
- * with the layout of the markup kept as line breaks.
+ * Some send plain text, some html, and some html escaped a second time on the way into the xml. All three end up as text.
  */
 final class FeedText
 {
     /** An escaped tag such as "&lt;p&gt;", meaning the markup was encoded a second time */
     private const string ESCAPED_TAG = '#&lt;\s*/?\s*[a-z][a-z0-9]*(?:\s[^&]*)?/?\s*&gt;#i';
 
-    /** Tags that only start a new line. The openers cover feeds that never close their paragraphs */
+    /** Tags that only start a new line; the openers cover feeds that never close their paragraphs */
     private const string LINE_TAGS = '#<\s*(?:br\b[^>]*|p\b[^>]*|div\b[^>]*|/\s*li|/\s*tr)\s*/?\s*>#i';
 
     /** Tags that end a block, so the next text starts a new paragraph */
@@ -52,8 +50,7 @@ final class FeedText
             return '';
         }
 
-        // Only undo the extra encoding when there really is an encoded tag in there, so a
-        // description legitimately writing "&lt;" as text keeps what it wrote.
+        // only when there really is an encoded tag, so a description writing "&lt;" as text keeps what it wrote
         if (preg_match(self::ESCAPED_TAG, $value) === 1) {
             $value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }

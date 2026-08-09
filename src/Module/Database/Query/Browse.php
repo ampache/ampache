@@ -81,6 +81,7 @@ class Browse extends Query
         'license_hidden',
         'license',
         'live_stream',
+        'mood',
         'playlist_localplay',
         'playlist_media',
         'playlist_search',
@@ -122,6 +123,7 @@ class Browse extends Query
         'collection_items',
         'democratic',
         'genre',
+        'mood',
         'playlist_localplay',
         'playlist_media',
     ];

@@ -2052,6 +2052,11 @@ class OpenSubsonic_Json_Data
             $json['releaseTypes'] = $release_types;
         }
 
+        $album_moods = $this->openSubsonicFields->albumMoods($album);
+        if ($album_moods !== []) {
+            $json['moods'] = $album_moods;
+        }
+
         $disc_titles = $this->openSubsonicFields->albumDiscTitles($album);
         if ($disc_titles !== []) {
             $json['discTitles'] = $disc_titles;
@@ -2940,6 +2945,11 @@ class OpenSubsonic_Json_Data
         $bpm = $this->openSubsonicFields->songBpm($song);
         if ($bpm !== null) {
             $json['bpm'] = $bpm;
+        }
+
+        $moods = $this->openSubsonicFields->songMoods($song);
+        if ($moods !== []) {
+            $json['moods'] = $moods;
         }
 
         // Unlike every other optional field here, replayGain must always be present on a Child, as an object even when empty.

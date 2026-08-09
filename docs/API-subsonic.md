@@ -51,11 +51,14 @@ then run `composer spec:refresh` to record it — that rewrites the checksum in 
 The full procedure is in `resources/scripts/api-docs/README.md`.
 
 At the audit date Ampache implements all 87 documented endpoints. Known gaps, all optional response fields with no
-column in the Ampache schema: `moods`, `works`, `movements`, `groupings`, `bitDepth`, `explicitStatus`,
+column in the Ampache schema: `works`, `movements`, `groupings`, `bitDepth`, `explicitStatus`,
 `isCompilation`, `disambiguation`, `fallbackGain`, `subRole`, `shortcut`. Nothing is awaiting a schema change any
 more: `played` (`800029`), `positionMs`/`playbackRate`/`state` on `nowPlaying` (`800032`), `recordLabels`
-(`800034`) and `bpm` (`800046`) each got the column they needed, and `lastFmUrl` is threaded through the cached
-last.fm results.
+(`800034`), `bpm` (`800046`) and `moods` (`800047`) each got the column they needed, and `lastFmUrl` is threaded
+through the cached last.fm results.
+
+`moods` is filled from the file tags on a scan, so it is present on a `Child` and an `AlbumID3` only once a catalog
+has been scanned and only for files carrying a mood tag. An album's moods are derived from its songs.
 
 `played` is the one worth spelling out: database version `800029` added a maintained `last_played` column to every
 table carrying a play counter, written on the same statement that increments it. Songs, albums, videos and podcast

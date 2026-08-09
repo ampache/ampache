@@ -129,6 +129,10 @@ class Song extends database_object implements
     public ?string $mbid     = null;
     public ?string $mime     = null;
     public ?string $mode     = null;
+
+    /** @var null|list<array{id: int, name: string, user: int, count: int}> $moods */
+    public ?array $moods = null;
+
     public bool $played;
     public ?int $r128_album_gain = null;
     public ?int $r128_track_gain = null;
@@ -613,6 +617,7 @@ class Song extends database_object implements
         $year             = $filtered_results['year'];
         $comment          = $filtered_results['comment'];
         $tags             = $filtered_results['genre']; // multiple genre support makes this an array
+        $moods            = $filtered_results['mood'] ?? []; // a file can carry more than one mood too
         $lyrics           = $filtered_results['lyrics'];
         $user_upload      = $filtered_results['user_upload'];
         $composer         = $filtered_results['composer'];
@@ -812,6 +817,22 @@ class Song extends database_object implements
             }
         }
 
+        // the moods reach the album and artists the way genres do, with no owner, so a later re-read of the tags can replace them
+        if (is_array($moods)) {
+            foreach ($moods as $mood) {
+                $mood = trim((string) $mood);
+                if ($mood !== '') {
+                    Mood::add('song', $song_id, $mood);
+                    Mood::add('album', $album_id, $mood);
+                    foreach (array_unique($artists) as $found_artist_id) {
+                        if ($found_artist_id > 0) {
+                            Mood::add('artist', $found_artist_id, $mood);
+                        }
+                    }
+                }
+            }
+        }
+
         self::getSongRepository()->insertData([$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain, $bpm]);
 
         return $song_id;
@@ -829,6 +850,7 @@ class Song extends database_object implements
         self::getShareRepository()->migrate('album', $old_album, $new_album);
         self::getShoutRepository()->migrate('album', $old_album, $new_album);
         Tag::migrate('album', $old_album, $new_album);
+        Mood::migrate('album', $old_album, $new_album);
         Userflag::migrate('album', $old_album, $new_album);
         Rating::migrate('album', $old_album, $new_album);
         Art::duplicate('album', $old_album, $new_album);
@@ -850,6 +872,7 @@ class Song extends database_object implements
             self::getShareRepository()->migrate('artist', $old_artist, $new_artist);
             self::getShoutRepository()->migrate('artist', $old_artist, $new_artist);
             Tag::migrate('artist', $old_artist, $new_artist);
+            Mood::migrate('artist', $old_artist, $new_artist);
             Userflag::migrate('artist', $old_artist, $new_artist);
             Rating::migrate('artist', $old_artist, $new_artist);
             Art::duplicate('artist', $old_artist, $new_artist);
@@ -1650,6 +1673,14 @@ class Song extends database_object implements
     }
 
     /**
+     * The moods of this song as links, with the ones a user set marked
+     */
+    public function get_f_moods(): string
+    {
+        return Mood::get_display($this->get_moods(), true, 'song');
+    }
+
+    /**
      * Return a formatted link to the parent object (if appliccable)
      */
     public function get_f_parent_link(): ?string
@@ -1821,6 +1852,20 @@ class Song extends database_object implements
         }
 
         return $medias;
+    }
+
+    /**
+     * The moods mapped onto this song, whoever set them
+     *
+     * @return list<array{id: int, name: string, user: int, count: int}>
+     */
+    public function get_moods(): array
+    {
+        if ($this->moods === null) {
+            $this->moods = Mood::get_top_moods('song', $this->id, 0);
+        }
+
+        return $this->moods;
     }
 
     /**
@@ -2382,6 +2427,10 @@ class Song extends database_object implements
                 case 'edit_tags':
                     Tag::update_tag_list((string) $value, 'song', $this->id, true);
                     $this->tags = Tag::get_top_tags('song', $this->id);
+                    break;
+                case 'edit_moods':
+                    // no from_file_tags, so these belong to whoever is editing and outlive the next scan
+                    Mood::update_mood_list((string) $value, 'song', $this->id, true);
                     break;
                 case 'metadata':
                     $this->updateMetadata($value);

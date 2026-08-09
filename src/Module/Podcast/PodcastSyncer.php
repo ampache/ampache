@@ -212,8 +212,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
     /**
      * Stores the provided xml element as a podcast-episode
      *
-     * An item we already hold is not added again; its description is refreshed from the feed instead,
-     * so a feed correcting or expanding its notes reaches the episodes you subscribed to long ago.
+     * An item we already hold is not added again; its description is refreshed from the feed instead.
      */
     private function add_episode(
         Podcast $podcast,

@@ -34,6 +34,7 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\MoodRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Override;
 
@@ -45,6 +46,7 @@ final readonly class SidebarViewFactory implements SidebarViewFactoryInterface
     public function __construct(
         private VideoRepositoryInterface $videoRepository,
         private FolderRepositoryInterface $folderRepository,
+        private MoodRepositoryInterface $moodRepository,
     ) {}
 
     #[Override]
@@ -58,6 +60,7 @@ final readonly class SidebarViewFactory implements SidebarViewFactoryInterface
             (AmpConfig::get('album_group')) ? 'album' : 'album_disk',
             $this->videoRepository,
             $this->folderRepository,
+            $this->moodRepository,
             $activeTab,
             (string) Session::get(),
             User::is_registered(),

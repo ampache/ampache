@@ -48,8 +48,7 @@ $(document).on("click", "a[data-ajax='1']", function (event) {
     window.update_action();
 
     function run() {
-        // A long action (a podcast sync, say) renders nothing back and can run for minutes, so
-        // without this the click looks like it did nothing at all.
+        // a long action renders nothing back, so without this the click looks like it did nothing
         if (notice) {
             displayNotification(notice, 5000);
         }

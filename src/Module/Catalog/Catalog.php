@@ -81,6 +81,7 @@ use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Metadata;
+use Ampache\Repository\Model\Mood;
 use Ampache\Repository\Model\ObjectNameTypeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
@@ -89,6 +90,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\MoodRepositoryInterface;
 use Ampache\Repository\ObjectNameRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
@@ -387,6 +389,7 @@ abstract class Catalog extends database_object
             self::getShareRepository()->migrate('artist', $maxId, $minId);
             self::getShoutRepository()->migrate('artist', $maxId, $minId);
             Tag::migrate('artist', $maxId, $minId);
+            Mood::migrate('artist', $maxId, $minId);
             Userflag::migrate('artist', $maxId, $minId);
             Label::migrate('artist', $maxId, $minId);
             Rating::migrate('artist', $maxId, $minId);
@@ -731,6 +734,12 @@ abstract class Catalog extends database_object
             $results['genre'] = [];
         } elseif (!is_array($results['genre'])) {
             $results['genre'] = [$results['genre']];
+        }
+
+        if (empty($results['mood'])) {
+            $results['mood'] = [];
+        } elseif (!is_array($results['mood'])) {
+            $results['mood'] = [$results['mood']];
         }
 
         $results['user_upload'] = $results['user_upload'] ?? null;
@@ -1345,6 +1354,16 @@ abstract class Catalog extends database_object
                 $sql = ($system)
                     ? ' `share`.`object_id` IN (SELECT `share`.`object_id` FROM `share` LEFT JOIN `catalog_map` ON `share`.`object_type` = `catalog_map`.`object_type` AND `share`.`object_id` = `catalog_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `share`.`object_id`, `share`.`object_type`) '
                     : sprintf(' `share`.`object_id` IN (SELECT `share`.`object_id` FROM `share` LEFT JOIN `catalog_map` ON `share`.`object_type` = `catalog_map`.`object_type` AND `share`.`object_id` = `catalog_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `share`.`object_id`, `share`.`object_type`) ', $user_id);
+                break;
+            case 'mood':
+                $sql = ($system)
+                    ? ' `mood`.`id` IN (SELECT `mood_id` FROM `mood_map` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `mood_map`.`object_type` AND `catalog_map`.`object_id` = `mood_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `mood_map`.`mood_id`) '
+                    : sprintf(' `mood`.`id` IN (SELECT `mood_id` FROM `mood_map` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `mood_map`.`object_type` AND `catalog_map`.`object_id` = `mood_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `mood_map`.`mood_id`) ', $user_id);
+                break;
+            case 'mood_map':
+                $sql = ($system)
+                    ? ' `mood_map`.`mood_id` IN (SELECT `mood_id` FROM `mood_map` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `mood_map`.`object_type` AND `catalog_map`.`object_id` = `mood_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `mood_map`.`mood_id`) '
+                    : sprintf(' `mood_map`.`mood_id` IN (SELECT `mood_id` FROM `mood_map` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `mood_map`.`object_type` AND `catalog_map`.`object_id` = `mood_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `mood_map`.`mood_id`) ', $user_id);
                 break;
             case 'tag':
                 $sql = ($system)
@@ -2292,7 +2311,7 @@ abstract class Catalog extends database_object
         if ($libitem instanceof Artist) {
             $artists[] = $libitem->id;
             $tags      = self::getSongTags('artist', $libitem->id);
-            Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
+            Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true, from_file_tags: true);
             // update incorrect counts for album_disk
             if ($libitem->album_count > 0 && $libitem->album_disk_count == 0) {
                 $maps = true;
@@ -2357,7 +2376,7 @@ abstract class Catalog extends database_object
             Video::update_video($video->id, $new_video);
 
             if ($video_tags != $new_video_tags) {
-                Tag::update_tag_list(implode(',', $new_video_tags), 'video', $video->id, true);
+                Tag::update_tag_list(implode(',', $new_video_tags), 'video', $video->id, true, from_file_tags: true);
             }
 
             Video::update_video_counts($video->id);
@@ -2914,8 +2933,17 @@ abstract class Catalog extends database_object
                 $tag_comma = ($new_tag_array === [])
                     ? ''
                     : implode(',', $new_tag_array);
-                Tag::update_tag_list($tag_comma, 'song', $song->id, true);
+                Tag::update_tag_list($tag_comma, 'song', $song->id, true, from_file_tags: true);
             }
+
+            // moods ride along with the genres; anything a user set by hand survives this
+            Mood::update_mood_list(
+                implode(',', $filtered_results['mood'] ?? []),
+                'song',
+                $song->id,
+                true,
+                from_file_tags: true
+            );
 
             if ($song->license !== $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
@@ -2982,7 +3010,13 @@ abstract class Catalog extends database_object
     {
         $tags = self::getSongTags('album', $album_id);
 
-        return Tag::update_tag_list(implode(',', $tags), 'album', $album_id, true);
+        $change = Tag::update_tag_list(implode(',', $tags), 'album', $album_id, true, from_file_tags: true);
+
+        // an album has no file of its own, so its moods are whatever its songs carry; dropping one from every song takes it off the album
+        $moods = self::getMoodRepository()->getSongMoodNamesByAlbum($album_id);
+        Mood::update_mood_list(implode(',', $moods), 'album', $album_id, true, from_file_tags: true);
+
+        return $change;
     }
 
     /**
@@ -2993,7 +3027,11 @@ abstract class Catalog extends database_object
         $artists = array_unique(array_merge(Song::get_parent_array($album_id, 'album'), Song::get_parent_array($song_id)));
         foreach ($artists as $artist_id) {
             $tags = self::getSongTags('artist', $artist_id);
-            Tag::update_tag_list(implode(',', $tags), 'artist', $artist_id, true);
+            Tag::update_tag_list(implode(',', $tags), 'artist', $artist_id, true, from_file_tags: true);
+
+            // same as the album: derived from the songs mapped onto the artist, never from a file
+            $moods = self::getMoodRepository()->getSongMoodNamesByArtist($artist_id);
+            Mood::update_mood_list(implode(',', $moods), 'artist', $artist_id, true, from_file_tags: true);
         }
     }
 
@@ -3043,6 +3081,7 @@ abstract class Catalog extends database_object
             'mb_trackid' => null,
             'mime' => null,
             'mode' => null,
+            'mood' => null,
             'original_name' => null,
             'original_year' => null,
             'originalyear' => null,
@@ -3304,6 +3343,16 @@ abstract class Catalog extends database_object
     /**
      * @deprecated inject dependency
      */
+    private static function getMoodRepository(): MoodRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MoodRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
     private static function getObjectNameRepository(): ObjectNameRepositoryInterface
     {
         global $dic;
@@ -3395,6 +3444,7 @@ abstract class Catalog extends database_object
             self::getShareRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::getShoutRepository()->migrate($object_type, $old_object_id, $new_object_id);
             Tag::migrate($object_type, $old_object_id, $new_object_id);
+            Mood::migrate($object_type, $old_object_id, $new_object_id);
             Userflag::migrate($object_type, $old_object_id, $new_object_id);
             Rating::migrate($object_type, $old_object_id, $new_object_id);
             Art::duplicate($object_type, $old_object_id, $new_object_id);

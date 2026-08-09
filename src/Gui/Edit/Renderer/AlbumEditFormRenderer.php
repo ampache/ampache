@@ -33,6 +33,7 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Mood;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Override;
@@ -126,6 +127,11 @@ final class AlbumEditFormRenderer extends AbstractEditFormRenderer
     public function getMbidGroup(): string
     {
         return (string) $this->getItem()->mbid_group;
+    }
+
+    public function getMoods(): string
+    {
+        return Mood::get_display(Mood::get_top_moods('album', $this->getAlbumId(), 0));
     }
 
     public function getName(): string

@@ -30,6 +30,7 @@ e.g. `cond=starts_with,a;catalog,2`
 | `id`              | array          | Only these song ids. It takes a list, which `cond` cannot send, so `cond=id,1` builds an empty list and the browse returns nothing. |
 | `license`         | license id     | Only songs released under this license.                                                                                             |
 | `like`            | string         | The song title contains this value.                                                                                                 |
+| `mood`            | mood id        | Only songs tagged with this mood.                                                                                                   |
 | `no_genre`        | none           | Only songs with no genre at all. Needs no value, and clears any `genre` filter.                                                     |
 | `no_tag`          | none           | Alias of `no_genre`.                                                                                                                |
 | `not_like`        | string         | The song title does not contain this value.                                                                                         |

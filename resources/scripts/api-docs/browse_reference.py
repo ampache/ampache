@@ -312,6 +312,7 @@ FILTERS: dict[str, tuple[str, str]] = {
         "artist id",
         "Only {items} with a song credited to this artist. Send `0` for {items} with no such song.",
     ),
+    "mood": ("mood id", "Only {items} tagged with this mood."),
     "starts_with": ("string", "{Match} starts with this value."),
     "tag": ("genre id", "Alias of `genre`."),
     "top50": (

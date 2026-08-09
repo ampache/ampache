@@ -42,6 +42,7 @@ use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\Mood;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
@@ -114,6 +115,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         $this->playlistFolderRepository->collectGarbage();
         $this->shoutRepository->collectGarbage();
         Tag::garbage_collection();
+        Mood::garbage_collection();
         Catalog::clear_catalog_cache();
         User::garbage_collection();
         $this->folderRepository->collectGarbage();

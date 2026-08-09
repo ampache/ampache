@@ -447,6 +447,7 @@ return [
     UpdateInstanceAction::class => autowire(UpdateInstanceAction::class),
     EditInstanceAction::class => autowire(EditInstanceAction::class),
     ShowInstancesAction::class => autowire(ShowInstancesAction::class),
+    Browse\MoodAction::class => autowire(Browse\MoodAction::class),
     TagAction::class => autowire(TagAction::class),
     FileAction::class => autowire(FileAction::class),
     AlbumAction::class => autowire(AlbumAction::class),

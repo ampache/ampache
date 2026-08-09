@@ -48,6 +48,7 @@ final class VideoQuery implements QueryInterface
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'mood',
         'tag',
         'update_gt',
         'update_lt',
@@ -132,6 +133,16 @@ final class VideoQuery implements QueryInterface
                 $filter_sql = " (`video`.`id` NOT IN (SELECT `object_id` FROM `tag_map` WHERE `object_type`='video')) AND ";
                 break;
             case 'genre':
+            case 'mood':
+                $query->set_join('LEFT', '`mood_map`', '`mood_map`.`object_id`', '`video`.`id`', 100);
+                $filter_sql = " `mood_map`.`object_type`='video' AND (";
+
+                foreach ($value as $mood_id) {
+                    $filter_sql .= "`mood_map`.`mood_id`='" . Dba::escape($mood_id) . "' AND ";
+                }
+
+                $filter_sql = rtrim($filter_sql, 'AND ') . ") AND ";
+                break;
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`video`.`id`', 100);
                 $filter_sql = " `tag_map`.`object_type`='video' AND (";

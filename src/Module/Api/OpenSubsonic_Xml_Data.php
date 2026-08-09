@@ -258,6 +258,10 @@ class OpenSubsonic_Xml_Data
             $this->_addChildToResultXml($xalbum, 'releaseTypes', $release_type);
         }
 
+        foreach ($this->openSubsonicFields->albumMoods($album) as $mood) {
+            $this->_addChildToResultXml($xalbum, 'moods', $mood);
+        }
+
         foreach ($this->openSubsonicFields->albumDiscTitles($album) as $disc_title) {
             $xdisc = $this->_addChildToResultXml($xalbum, 'discTitles');
             $xdisc->addAttribute('disc', (string) $disc_title['disc']);
@@ -1875,6 +1879,10 @@ class OpenSubsonic_Xml_Data
         $bpm = $this->openSubsonicFields->songBpm($song);
         if ($bpm !== null) {
             $xsong->addAttribute('bpm', (string) $bpm);
+        }
+
+        foreach ($this->openSubsonicFields->songMoods($song) as $mood) {
+            $this->_addChildToResultXml($xsong, 'moods', $mood);
         }
 
         // replayGain is required on a Child even when Ampache holds no gain tags, so the element is always added.

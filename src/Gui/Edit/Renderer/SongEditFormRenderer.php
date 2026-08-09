@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Mood;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
@@ -122,6 +123,11 @@ final class SongEditFormRenderer extends AbstractEditFormRenderer
         }
 
         return $fields;
+    }
+
+    public function getMoods(): string
+    {
+        return Mood::get_display(Mood::get_top_moods('song', $this->getSongId(), 0));
     }
 
     public function getOwnerId(): int
