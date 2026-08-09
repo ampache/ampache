@@ -327,7 +327,7 @@ a.jp-next:hover {
 /* The seeking class is added/removed inside jPlayer */
 
 .jp-seeking-bg {
-    /* Animated diagonal stripes (barber-pole), pure CSS — replaces seeking.gif.
+    /* Animated diagonal stripes (barber-pole) drawn in css rather than a loaded image.
        Crisp at any DPI, no bitmap. Theme blue tones from the old gif. */
     background-image: repeating-linear-gradient(
         -45deg,
