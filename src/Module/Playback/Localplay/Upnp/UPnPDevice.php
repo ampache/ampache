@@ -123,8 +123,6 @@ class UPnPDevice
         return implode("\r\n", $tmp);
     }
 
-    /**
-     */
     private function parseDescriptionUrl(string $descriptionUrl): void
     {
         debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);

@@ -49,6 +49,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\Useractivity;
@@ -205,7 +206,13 @@ abstract class Catalog extends database_object
                         $catalog->cache_catalog_proc();
                     }
 
-                    $catalog_dirs = new RecursiveDirectoryIterator($cache_path);
+                    // only walk this catalog's own cache directory
+                    $catalog_cache_dir = rtrim(trim($cache_path), '/') . '/' . $catalogid;
+                    if (!is_dir($catalog_cache_dir)) {
+                        continue;
+                    }
+
+                    $catalog_dirs = new RecursiveDirectoryIterator($catalog_cache_dir);
                     $dir_files    = new RecursiveIteratorIterator($catalog_dirs);
                     $cache_files  = new RegexIterator($dir_files, sprintf('/\.%s/i', $cache_target));
                     debug_event(self::class, 'cache_catalogs: cleaning old files', 5);
@@ -217,15 +224,29 @@ abstract class Catalog extends database_object
                     $remote_catalog = ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic);
                     $remote_cache   = (bool) AmpConfig::get('cache_remote', false);
 
+                    // fetch all song paths in one query
+                    $cache_list = [];
                     foreach ($cache_files as $file) {
+                        $cache_list[] = (string) $file;
+                    }
+                    $song_files = [];
+                    $song_ids   = array_values(array_unique(array_map(static fn($file) => (int) pathinfo($file, PATHINFO_FILENAME), $cache_list)));
+                    foreach (array_chunk($song_ids, 500) as $chunk) {
+                        $idlist     = implode(',', $chunk);
+                        $db_results = Dba::read("SELECT `id`, `file` FROM `song` WHERE `id` IN (" . $idlist . ");");
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $song_files[(int) $row['id']] = (string) $row['file'];
+                        }
+                    }
+
+                    foreach ($cache_list as $file) {
                         $pathinfo  = pathinfo((string) $file);
                         $song_id   = (int) $pathinfo['filename'];
-                        $song      = new Song($song_id);
-                        $song_path = ($song->isNew() === false && $song->file)
-                            ? pathinfo($song->file)
-                            : ['extension' => ''];
-                        $extension = $song_path['extension'] ?? '';
-                        if ($song->isNew() || $extension === '') {
+                        $song_file = $song_files[$song_id] ?? '';
+                        $extension = ($song_file !== '')
+                            ? (pathinfo($song_file, PATHINFO_EXTENSION) ?: '')
+                            : '';
+                        if ($song_file === '' || $extension === '') {
                             unlink($file);
                             debug_event(self::class, 'cache_catalogs: removed (not in database) {' . $file . '}', 4);
                             $interactor?->info(
@@ -261,9 +282,9 @@ abstract class Catalog extends database_object
                             && !(AmpConfig::get('cache_' . $extension, false))
                         ) {
                             unlink($file);
-                            debug_event(self::class, 'cache_catalogs: removed (cache_' . $extension . ' ' . $song->file . ') {' . $file . '}', 4);
+                            debug_event(self::class, 'cache_catalogs: removed (cache_' . $extension . ' ' . $song_file . ') {' . $file . '}', 4);
                             $interactor?->info(
-                                sprintf('cache_catalogs: removed (cache_%s %s) {%s}', $extension, $song->file, $file),
+                                sprintf('cache_catalogs: removed (cache_%s %s) {%s}', $extension, $song_file, $file),
                                 true
                             );
                         }

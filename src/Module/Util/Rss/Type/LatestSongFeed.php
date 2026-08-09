@@ -27,6 +27,7 @@ namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Module\Art\Art;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Rss\EnclosureResolver;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Generator;
@@ -49,12 +50,20 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
         foreach ($ids as $songid) {
             $song = new Song($songid);
 
+            $url  = null;
+            $mime = null;
+            $size = null;
+            if ($song->mime) {
+                [$stream_params, $mime, $size] = EnclosureResolver::target($song);
+                $url                           = EnclosureResolver::url($song, $this->user, $stream_params);
+            }
+
             yield [
                 'title' => (string) $song->get_fullname(),
                 'link' => $song->get_link(),
                 'description' => $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_parent_fullname(),
                 'comments' => '',
-                'pubDate' => '',
+                'pubDate' => ($song->addition_time > 0) ? date('r', $song->addition_time) : '',
                 'guid' => ($song->mbid !== null)
                     ? 'https://musicbrainz.org/recording/' . $song->mbid
                     : 'song-' . $song->id,
@@ -62,6 +71,13 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
                     ? 'true'
                     : 'false',
                 'image' => (string) Art::url($song->id, 'song', null, 2),
+                'duration' => (string) $song->get_f_time(),
+                'season' => ($song->album > 0) ? (string) $song->album : null,
+                'season_name' => ($song->album > 0) ? $song->get_album_fullname() : null,
+                'episode' => (($song->track ?? 0) > 0) ? (string) $song->track : null,
+                'type' => $mime,
+                'size' => $size,
+                'url' => $url,
             ];
         }
     }

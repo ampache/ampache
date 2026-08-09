@@ -113,7 +113,6 @@ class ShowEditRecordActionTest extends MockeryTestCase
 
         $this->configContainer->shouldReceive('getWebPath')->andReturn('some-web-path');
 
-
         $this->subject = new ShowEditRecordAction(
             $this->ui,
             $this->modelFactory,

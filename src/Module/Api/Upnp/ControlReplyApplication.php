@@ -126,7 +126,7 @@ final class ControlReplyApplication implements ApiApplicationInterface
                 debug_event('control-reply', 'Searchcriteria: ' . $upnpRequest['searchcriteria'], 5);
                 debug_event('control-reply', 'Search filter : ' . $filter, 5);
                 $responseType         = 'u:SearchResponse';
-                [$totMatches, $items] = Upnp_Api::_callSearch($upnpRequest['searchcriteria'], $filter, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
+                [$totMatches, $items] = Upnp_Api::callSearch($upnpRequest['searchcriteria'], $filter, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                 break;
             case 'browse':
                 $responseType = 'u:BrowseResponse';
@@ -145,9 +145,9 @@ final class ControlReplyApplication implements ApiApplicationInterface
                     } else {
                         $filter = '*'; // Some devices don't seem to specify a sensible filter (may remove)
                         //$items[] = [];
-                        $items[]              = $this->upnpApi->_musicMetadata('');
-                        $items[]              = Upnp_Api::_videoMetadata('');
-                        [$totMatches, $items] = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
+                        $items[]              = $this->upnpApi->musicMetadata('');
+                        $items[]              = Upnp_Api::videoMetadata('');
+                        [$totMatches, $items] = Upnp_Api::slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                         debug_event('control-reply', 'Root items returning' . $items[0] . $items[1], 5);
                         //debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
                         //debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
@@ -172,14 +172,14 @@ final class ControlReplyApplication implements ApiApplicationInterface
                             switch ($reqObjectURL['host'] ?? '') {
                                 case 'music':
                                     if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                                        $items = $this->upnpApi->_musicMetadata($reqObjectURL['path'] ?? '');
+                                        $items = $this->upnpApi->musicMetadata($reqObjectURL['path'] ?? '');
                                         //debug_event('control-reply', 'Metadata count '. (string) $totMatches . ' '. (string) count($items), 5);
                                         //debug_event('control-reply', 'Export items ' . var_export($items,true), 5);
                                         $totMatches = 1;
                                         $numRet     = 1;
                                     } else {
                                         debug_event('control-reply', 'Listrequest ', 5);
-                                        [$totMatches, $items] = $this->upnpApi->_musicChilds(
+                                        [$totMatches, $items] = $this->upnpApi->musicChilds(
                                             $reqObjectURL['path'] ?? '',
                                             $reqObjectURL['query'] ?? '',
                                             $upnpRequest['startingindex'],
@@ -192,10 +192,10 @@ final class ControlReplyApplication implements ApiApplicationInterface
                                     break;
                                 case 'video':
                                     if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                                        $items      = Upnp_Api::_videoMetadata($reqObjectURL['path'] ?? '');
+                                        $items      = Upnp_Api::videoMetadata($reqObjectURL['path'] ?? '');
                                         $totMatches = 1;
                                     } else {
-                                        [$totMatches, $items] = Upnp_Api::_videoChilds(
+                                        [$totMatches, $items] = Upnp_Api::videoChilds(
                                             $reqObjectURL['path'] ?? '',
                                             $reqObjectURL['query'] ?? '',
                                             $upnpRequest['startingindex'],
