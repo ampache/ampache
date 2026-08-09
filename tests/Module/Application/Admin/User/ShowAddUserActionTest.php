@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -40,6 +41,7 @@ class ShowAddUserActionTest extends TestCase
     private ConfigContainerInterface&MockObject $configContainer;
     private GuiGatekeeperInterface&MockObject $gatekeeper;
     private ServerRequestInterface&MockObject $request;
+    private RequestParserInterface&MockObject $requestParser;
     private ShowAddUserAction $subject;
     private UiInterface&MockObject $ui;
 
@@ -58,16 +60,20 @@ class ShowAddUserActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showHeader');
         $this->ui->expects(static::once())
-            ->method('show')
-            ->with('show_add_user.inc.php');
-        $this->ui->expects(static::once())
             ->method('showQueryStats');
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        self::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
-        );
+        ob_start();
+
+        try {
+            $result = $this->subject->run($this->request, $this->gatekeeper);
+        } finally {
+            $output = (string) ob_get_clean();
+        }
+
+        self::assertNull($result);
+        self::assertNotSame('', $output);
     }
 
     public function testRunReturnsNullInDemoMode(): void
@@ -90,6 +96,7 @@ class ShowAddUserActionTest extends TestCase
     protected function setUp(): void
     {
         $this->ui              = $this->createMock(UiInterface::class);
+        $this->requestParser   = $this->createMock(RequestParserInterface::class);
         $this->configContainer = $this->createMock(ConfigContainerInterface::class);
 
         $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
@@ -98,6 +105,7 @@ class ShowAddUserActionTest extends TestCase
         $this->subject = new ShowAddUserAction(
             $this->ui,
             $this->configContainer,
+            $this->requestParser
         );
     }
 }

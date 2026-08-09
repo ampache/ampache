@@ -2039,6 +2039,7 @@ span.fatalerror {
    Content (Track view)
    -------------------------- */
 .media_details {
+    margin-bottom: 20px;
     margin-top: 20px;
 }
 
@@ -2558,11 +2559,11 @@ a.option-list:hover {
 
     /* Detail lists (song/podcast pages): the 200px label column + 250px dd indent overflow a phone -- compact them. */
     dl.media_details dt {
-        width: 90px;
+        width: 140px;
     }
 
     dl.media_details dd {
-        margin-left: 100px;
+        margin-left: 150px;
     }
 
     /* Waveform image (song/podcast detail): squash to the available width instead of overflowing the page. */

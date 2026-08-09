@@ -39,6 +39,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Override;
@@ -71,12 +72,12 @@ class ApiOutputFactoryTest extends MockeryTestCase
             json4Data: new Json4_Data(...$this->legacyRepositories()),
             json5Data: new Json5_Data(...$this->repositories()),
             json6Data: new Json6_Data(...$this->repositories()),
-            json8Data: new Json8_Data(...$this->repositories()),
+            json8Data: new Json8_Data(...$this->version8Repositories()),
             xml3Data: new Xml3_Data(...$this->version3Repositories()),
             xml4Data: new Xml4_Data(...$this->legacyRepositories()),
             xml5Data: new Xml5_Data(...$this->repositories()),
             xml6Data: new Xml6_Data(...$this->repositories()),
-            xml8Data: new Xml8_Data(...$this->repositories()),
+            xml8Data: new Xml8_Data(...$this->version8Repositories()),
         );
     }
 
@@ -128,6 +129,24 @@ class ApiOutputFactoryTest extends MockeryTestCase
     {
         return [
             $this->mock(AlbumRepositoryInterface::class),
+            $this->mock(SongRepositoryInterface::class),
+        ];
+    }
+
+    /**
+     * The version 8 builders take the playlist folder repository the earlier ones have no use for
+     *
+     * @return array<int, mixed>
+     */
+    private function version8Repositories(): array
+    {
+        return [
+            $this->mock(AlbumRepositoryInterface::class),
+            $this->mock(BookmarkRepositoryInterface::class),
+            $this->mock(LabelRepositoryInterface::class),
+            $this->mock(LicenseRepositoryInterface::class),
+            $this->mock(PlaylistFolderRepositoryInterface::class),
+            $this->mock(PodcastRepositoryInterface::class),
             $this->mock(SongRepositoryInterface::class),
         ];
     }

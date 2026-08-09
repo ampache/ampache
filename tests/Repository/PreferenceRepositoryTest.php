@@ -71,6 +71,39 @@ class PreferenceRepositoryTest extends TestCase
         static::assertSame([], $this->subject->getAllPreferences(true));
     }
 
+    public function testGetUserPreferenceRowDropsTheSystemRowsForARealUser(): void
+    {
+        $sql = '';
+        $this->connection->expects(static::once())
+            ->method('fetchRow')
+            ->willReturnCallback(function (string $query, array $params) use (&$sql): array {
+                $sql = $query;
+
+                return [];
+            });
+
+        $this->subject->getUserPreferenceRow('some-pref', 666, true);
+
+        static::assertStringContainsString("AND `preference`.`category` != 'system'", $sql);
+    }
+
+    public function testGetUserPreferenceRowKeepsEveryCategoryForTheSystemUser(): void
+    {
+        $sql = '';
+        $this->connection->expects(static::once())
+            ->method('fetchRow')
+            ->willReturnCallback(function (string $query, array $params) use (&$sql): array {
+                $sql = $query;
+
+                return [];
+            });
+
+        $this->subject->getUserPreferenceRow('some-pref', -1, false);
+
+        static::assertStringNotContainsString('`preference`.`category` =', $sql);
+        static::assertStringNotContainsString("!= 'system'", $sql);
+    }
+
     public function testRepairLanguagePreferencesFallsBackToEnglish(): void
     {
         $this->connection->method('fetchOne')->willReturn(false);

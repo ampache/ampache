@@ -1,0 +1,732 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// playback/web_player.phtml -- rendered by Ampache\Gui\Playback\WebPlayerView
+
+use Ampache\Gui\Partial\VisualizerView;
+use Ampache\Module\Playback\WebPlayer;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Broadcast;
+
+/** @var Ampache\Gui\Playback\WebPlayerView $this */
+
+if ($this->needsHeaders()) {
+    echo $this->raw($this->renderHeaders());
+}
+
+$labels = $this->getLabels(); ?>
+<script>
+    // The web player identifier. We currently use current date milliseconds as unique identifier.
+    var jpuqid = (new Date()).getMilliseconds();
+    var jplaylist = null;
+    var timeoffset = 0;
+    var last_int_position = 0
+    var currentjpitem = null;
+    var currentAudioElement = undefined;
+
+    // Random/democratic streams only carry a placeholder in the client playlist, so the real internal song
+    // has to be asked for. It can only change when the track does, so it is resolved once per track and held
+    // until the next one starts rather than polled on a timer.
+    var nowPlayingObjectId = null;
+    var nowPlayingSeenId = null;
+    var nowPlayingPending = false;
+    var nowPlayingActive = false;
+    var nowPlayingRetry = null;
+    var nowPlayingAttempts = 0;
+    var nowPlayingMaxAttempts = 8;
+    var nowPlayingRetryMs = 2000;
+
+    function pollNowPlaying()
+    {
+        if (typeof jsAjaxUrl === 'undefined') {
+            return;
+        }
+        nowPlayingActive = true;
+        nowPlayingAttempts++;
+        $.getJSON(jsAjaxUrl + '?page=player&action=now_playing', function (data) {
+            if (window.jpDebug && window.console && window.console.log) {
+                window.console.log('now_playing attempt ' + nowPlayingAttempts + ', holding ' + nowPlayingObjectId, data);
+            }
+            if (!data || !data.found || !data.object_id || data.object_id === nowPlayingObjectId) {
+                if (data && data.object_id) {
+                    nowPlayingSeenId = data.object_id;
+                }
+                scheduleNowPlayingRetry();
+
+                return;
+            }
+
+            nowPlayingPending = false;
+            nowPlayingActive = false;
+            nowPlayingObjectId = data.object_id;
+            $('.playing_title').html(data.title);
+            $('.playing_artist').html(data.artist);
+            if (data.art) {
+                $('.playing_art').attr('src', data.art).show();
+            } else {
+                clearNowPlayingArt();
+            }
+            if (data.actions) {
+                $('.playing_actions').html(data.actions);
+                ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + data.object_type + '&object_id=' + data.object_id);
+            }
+        }).fail(scheduleNowPlayingRetry);
+    }
+
+    function clearNowPlayingArt()
+    {
+        $('.playing_art').removeAttr('src').hide();
+    }
+
+    // jPlayer builds the playlist markup by concatenation, so a value the item doesn't carry lands in the dom as
+    // the text "undefined" and reads back as a non-empty string that the browser then fetches as a relative url.
+    function jpItemAttr(item, name)
+    {
+        var value = (item) ? item.attr(name) : '';
+
+        return (value === undefined || value === 'undefined' || value === 'null' || value === 'NaN') ? '' : value;
+    }
+
+    function scheduleNowPlayingRetry()
+    {
+        cancelNowPlayingRetry();
+        if (nowPlayingAttempts >= nowPlayingMaxAttempts) {
+            nowPlayingPending = false;
+            // The row kept being rejected because it belongs to the track that just finished, so retiring it as the
+            // baseline stops the next track from accepting it and settling permanently one song behind.
+            if (nowPlayingSeenId !== null) {
+                nowPlayingObjectId = nowPlayingSeenId;
+            }
+
+            return;
+        }
+        nowPlayingActive = true;
+        nowPlayingRetry = setTimeout(pollNowPlaying, nowPlayingRetryMs);
+    }
+
+    function cancelNowPlayingRetry()
+    {
+        nowPlayingActive = false;
+        if (nowPlayingRetry !== null) {
+            clearTimeout(nowPlayingRetry);
+            nowPlayingRetry = null;
+        }
+    }
+
+    // Which item is playing can change after the player is built: appending a random stream to an album keeps
+    // the player the album was loaded into, so the playlist the page was rendered with says nothing about what
+    // is playing now. The placeholder is recognised per track instead.
+    function isPlaceholderTrack()
+    {
+        if (jplaylist === null || !jplaylist.playlist) {
+            return false;
+        }
+        var item = jplaylist.playlist[jplaylist.current];
+
+        return !!item && (item['media_type'] === 'random' || item['media_type'] === 'democratic');
+    }
+
+    // The placeholder item never changes, so the previous song has to be dropped the moment a new stream is
+    // requested or a slow or failed lookup leaves its title and cover sitting over the track that replaced it.
+    function nowPlayingTrackChanged()
+    {
+        var placeholder = isPlaceholderTrack();
+        cancelNowPlayingRetry();
+        nowPlayingSeenId = null;
+        nowPlayingPending = placeholder;
+        nowPlayingAttempts = 0;
+        clearNowPlayingArt();
+        <?php if (!$this->isVideo() && !$this->isShare()) { ?>
+        $('#jquery_jplayer_1').css('visibility', placeholder ? 'hidden' : '');
+        <?php } ?>
+    }
+
+    // now_playing is only written once the stream request reaches the server, well after `play` fires, so the first
+    // read of a track is expected to be stale and the retries are what actually resolve it.
+    function refreshNowPlaying()
+    {
+        if (!nowPlayingPending || nowPlayingActive) {
+            return;
+        }
+        nowPlayingAttempts = 0;
+        pollNowPlaying();
+    }
+
+    $(document).ready(function(){
+        if (!isNaN(Cookies.get('jp_volume'))) {
+            var jp_volume = Cookies.get('jp_volume');
+        } else {
+            var jp_volume = <?php echo $this->getJpVolume(); ?>;
+        }
+
+        var replaygainPersist = Cookies.get('replaygain');
+
+        <?php if (!$this->isShare()) { ?>
+        // Compact mode: default to collapsed on small screens, expanded on desktop.
+        // A saved cookie (set by the toggle buttons) overrides the breakpoint default.
+        var isSmallScreen = (window.innerWidth <= 768);
+        var playlistCollapsed = Cookies.get('jp_playlist_collapsed');
+        if (playlistCollapsed === undefined) {
+            playlistCollapsed = isSmallScreen ? 'true' : 'false';
+        }
+        if (playlistCollapsed === 'true') {
+            $('#jp_container_1').addClass('jp-playlist-collapsed');
+        }
+        if (Cookies.get('jp_playlist_expanded') === 'true') {
+            $('#jp_container_1').addClass('jp-playlist-expanded');
+        }
+        if (typeof updatePlaylistControls === 'function') {
+            updatePlaylistControls();
+        }
+        var nowPlayingHidden = Cookies.get('jp_nowplaying_hidden');
+        if (nowPlayingHidden === undefined) {
+            nowPlayingHidden = isSmallScreen ? 'true' : 'false';
+        }
+        if (nowPlayingHidden === 'true') {
+            $('body').addClass('jp-nowplaying-hidden');
+        }
+        <?php } ?>
+
+        jplaylist = new jPlayerPlaylist({
+            jPlayer: "#jquery_jplayer_1",
+            cssSelectorAncestor: "#jp_container_1"
+        }, [], {
+            playlistOptions: {
+                autoPlay: <?php echo ($this->autoplays()) ? 'true' : 'false'; ?>,
+                removePlayed: <?php echo ($this->removesPlayed()) ? 'true' : 'false'; ?>, // remove tracks before the current playlist item
+                removeCount: <?php echo $this->getRemoveCount(); ?>, // shift the index back to keep x items BEFORE the current index
+                loopBack: false, // repeat a finished playlist from the start
+                shuffleOnLoop: false,
+                enableRemoveControls: <?php echo ($this->isShare()) ? 'false' : 'true'; ?>,
+                displayTime: 'slow',
+                addTime: 'fast',
+                removeTime: 'fast',
+                shuffleTime: 'slow'
+            },
+            preload: '<?php echo ($this->isShare()) ? 'none' : 'auto'; ?>',
+            loop: <?php echo ($this->loops()) ? 'true' : 'false'; ?>, // this is the jplayer loop status
+            audioFullScreen: true,
+            smoothPlayBar: true,
+            toggleDuration: true,
+            keyEnabled: true,
+            solution: "html",
+            nativeSupport: true,
+            oggSupport: false,
+            supplied: "mp3, flac, m4a, oga, ogg, wav, m3u, m3u8, m4v, m3u8v, m3uv, ogv, webmv, flv, rtmpv",
+            volume: jp_volume,
+            <?php if (!$this->isShare()) { ?>
+            size: {
+                <?php if ($this->isVideo()) {
+                    if ($this->isIframed()) { ?>
+                width: "640px",
+                <?php } else { ?>
+                width: "192px",
+                height: "108px",
+                <?php } ?>
+                cssClass: "jp-video-360p"
+                <?php
+                } else {
+                    if ($this->isRandom()) { ?>
+                    visibility: "hidden",
+                <?php } elseif ($this->isIframed()) { ?>
+                width: "80px",
+                height: "80px",
+                <?php } else { ?>
+                width: "200px",
+                height: "auto",
+                <?php }
+                } ?>
+            }
+            <?php } ?>
+        });
+
+        // Allow control from the OS via e.g. MPRIS D-Bus interface on Linux
+        if ("mediaSession" in navigator) {
+            navigator.mediaSession.setActionHandler("nexttrack", () => { jplaylist.next(); });
+            navigator.mediaSession.setActionHandler("previoustrack", () => { jplaylist.previous(); });
+        }
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
+            refreshNowPlaying();
+            // Splice the shared audio graph (EQ + ReplayGain) in as soon as playback starts so the equalizer is active.
+            if (typeof ensureAudioGraph === 'function' && ensureAudioGraph() && audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            if (replaygainPersist === 'true' && replaygainEnabled === false && typeof ToggleReplayGain === 'function') {
+                ToggleReplayGain();
+            }
+            var current = jplaylist.current,
+                playlist = jplaylist.playlist;
+            var pos = $(".jp-playlist-current").position().top + $(".jp-playlist").scrollTop();
+            $(".jp-playlist").scrollTop(pos);
+            <?php if ($this->showPauseTabs()) { ?>
+            localStorage.setItem('ampache-current-webplayer', jpuqid);
+            <?php } ?>
+
+            var currenti = $(".jp-playlist li").eq(current);
+            $.each(playlist, function (index, obj) {
+                if (index == current) {
+                    if (currentjpitem != currenti) {
+                        var previousartist = 0;
+                        if (currentjpitem != null) {
+                            previousartist = currentjpitem.attr("data-artist_id");
+                        }
+                        currentjpitem = currenti;
+                        <?php if ($this->isIframed()) { ?>
+                        if (previousartist != currentjpitem.attr("data-artist_id")) {
+                            NotifyOfNewArtist();
+                        }
+                        <?php } ?>
+                        <?php if ($this->showBrowserNotify()) { ?>
+                        NotifyOfNewSong(obj.title, obj.artist, jpItemAttr(currentjpitem, "data-poster"));
+                        <?php } ?>
+                        if ("mediaSession" in navigator) {
+                            // Random/democratic placeholders carry no poster, and an empty artwork list beats a bad src
+                            var mediaPoster = jpItemAttr(currentjpitem, "data-poster");
+                            var mediaArtwork = (mediaPoster === '')
+                                ? []
+                                : [
+                                    {
+                                        src: mediaPoster,
+                                        sizes: "96x96",
+                                        type: "image/png"
+                                    },
+                                    {
+                                        // Not the right size, but 256x256 is necessary for
+                                        // Android device to display the artwork
+                                        src: mediaPoster,
+                                        sizes: "256x256",
+                                        type: "image/png"
+                                    }
+                                ];
+                            // Allow the browser to expose what's playing the the OS via e.g. MPRIS on Linux
+                            navigator.mediaSession.metadata = new MediaMetadata({
+                                title: obj.title,
+                                artist: obj.artist,
+                                artwork: mediaArtwork,
+                                album: jpItemAttr(currentjpitem, "data-album_name"),
+                            });
+                            navigator.mediaSession.playbackState = "playing";
+                        }
+                        if (typeof ApplyReplayGain === 'function') {
+                            ApplyReplayGain();
+                        }
+                    }
+                    if (brkey != '') {
+                        sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
+                    }
+                    if (playlist[index]['media_type'] === "song") {
+                        var currenttype = 'song'
+                        var currentobject = 'song_id'
+                        var actiontype = 'song'
+                    } else if (playlist[index]['media_type'] === "video") {
+                        var currenttype = 'video'
+                        var currentobject = 'video_id'
+                        var actiontype = 'song'
+                    } else if (playlist[index]['media_type'] === "live_stream") {
+                        var currenttype = 'radio'
+                        var currentobject = 'radio'
+                        var actiontype = 'live_stream'
+                    } else if (playlist[index]['media_type'] === "song_preview") {
+                        var currenttype = 'song_preview'
+                        var currentobject = 'song_preview'
+                    } else if (playlist[index]['media_type'] === "podcast_episode") {
+                        var currenttype = 'podcast_episode'
+                        var currentobject = 'podcast_episode'
+                        var actiontype = 'podcast_episode'
+                    } else if (playlist[index]['media_type'] === "democratic") {
+                        var currenttype = 'democratic'
+                        var currentobject = 'democratic'
+                    } else if (playlist[index]['media_type'] === "random") {
+                        var currenttype = 'random'
+                        var currentobject = 'random'
+                    } else {
+                        var currenttype = 'song'
+                        var currentobject = 'song_id'
+                    }
+
+                    obj.title = obj.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    obj.artist = obj.artist.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+                    <?php if (
+                        !$this->isVideo()
+                        && !$this->isShare()
+                    ) {
+                        if ($this->isIframed()) {
+                            if ($this->isSociable()) {
+                                echo "if (currenttype === 'song') { ajaxPut(jsAjaxUrl + '?page=' + currenttype + '&action=shouts&object_type=' + currenttype + '&object_id=' + currentjpitem.attr('data-media_id'), 'shouts_data'); }";
+                            }
+                            // random/democratic placeholders have no type or id of their own, so the buttons are left for the resolved song
+                            echo "if (typeof actiontype !== 'undefined') { ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + actiontype + '&object_id=' + currentjpitem.attr('data-media_id')); }";
+                            echo "var titleobj = (typeof actiontype !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/' + currenttype + '.php?action=show_' + currenttype + '&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>' : obj.title;";
+                            echo "var artistobj = (currentjpitem.attr('data-artist_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/artists.php?action=show&artist=' + currentjpitem.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
+                            echo "var lyricsobj = (typeof actiontype !== 'undefined' && currenttype === 'song') ? '<a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/' + currenttype + '.php?action=show_lyrics&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\">" . $this->raw($this->jsText(T_('Show Lyrics'))) . "</a>' : '';";
+                            echo "var actionsobj = (currentjpitem.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/albums.php?action=show&album=' + currentjpitem.attr('data-album_id') + '\');\" title=\"" . $this->raw($this->jsText($labels['showalbum'])) . "\">" . Ui::get_material_symbol('album', $labels['showalbum']) . "</a> |' : '';";
+                            echo "actionsobj += (currentjpitem.attr('data-albumdisk_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/albums.php?action=show_disk&album_disk=' + currentjpitem.attr('data-albumdisk_id') + '\');\" title=\"" . $this->raw($this->jsText($labels['showalbum'])) . "\">" . Ui::get_material_symbol('album', $labels['showalbum']) . "</a> |' : '';";
+                            if ($this->mayPostShout()) {
+                                echo "actionsobj += (typeof actiontype !== 'undefined') ? ' <a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/shout.php?action=show_add_shout&type=' + currenttype + '&id=' + currentjpitem.attr('data-media_id') + '\');\">" . Ui::get_material_symbol('comment', T_('Post Shout')) . "</a> |' : '';";
+                            }
+                            echo "actionsobj += '<div id=\'action_buttons\'></div>';";
+                        } else {
+                            echo "var titleobj = obj.title;";
+                            echo "var artistobj = obj.artist;";
+                        } ?>
+                    $('.playing_title').html(titleobj);
+                    $('.playing_artist').html(artistobj);
+                    <?php // random/democratic still play regular songs, so the per-song actions (album, shout, rating) apply
+                    if ($this->isIframed()) { ?>
+                    $('.playing_actions').html(actionsobj);
+                    <?php if ($this->showLyrics()) { ?>
+                    $('.playing_lyrics').html(lyricsobj);
+                    <?php }
+                    }
+                    }
+if ($this->showSongPageTitle()) {
+    echo "var mediaTitle = obj.title;\n";
+    echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
+    echo "document.title = mediaTitle + ' | " . $this->raw($this->jsText($this->getSiteTitle())) . "';";
+} ?>
+                }
+            });
+
+            if (brkey != '') {
+                sendBroadcastMessage('PLAYER_PLAY', 1);
+            }
+        });
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function (event) {
+            if (brkey != '') {
+                sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
+            }
+        });
+
+        function jpKnownDuration() {
+            if (typeof jplaylist === 'undefined' || !jplaylist.playlist) {
+                return 0;
+            }
+            var item = jplaylist.playlist[jplaylist.current];
+            var known = (item && item.duration) ? parseFloat(item.duration) : 0;
+            return (isFinite(known) && known > 0) ? known : 0;
+        }
+
+        function jpFormatDuration(seconds) {
+            var jp = $("#jquery_jplayer_1").data('jPlayer');
+            if (jp && typeof jp._convertTime === 'function') {
+                return jp._convertTime(seconds);
+            }
+            var s = Math.round(seconds), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+            return (h > 0 ? h + ':' + (m < 10 ? '0' : '') : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+        }
+
+        function correctPlayerTimeline(event) {
+            var known = jpKnownDuration();
+            if (known <= 0) {
+                return;
+            }
+            var status = event.jPlayer.status, mediaDuration = status.duration;
+            // Leave a correctly-reported native duration alone (keeps the buffer indicator for direct streams).
+            if (isFinite(mediaDuration) && mediaDuration > 0 && Math.abs(mediaDuration - known) <= 1.5) {
+                return;
+            }
+            var percent = Math.max(0, Math.min(100, ((status.currentTime || 0) / known) * 100));
+            var container = $("#jp_container_1");
+            container.find('.jp-seek-bar').css('width', '100%');
+            container.find('.jp-play-bar').stop(true, true).css('width', percent + '%');
+            container.find('.jp-duration').text(jpFormatDuration(known));
+        }
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, correctPlayerTimeline);
+        $("#jquery_jplayer_1").bind($.jPlayer.event.progress, correctPlayerTimeline);
+        $("#jquery_jplayer_1").bind($.jPlayer.event.durationchange, correctPlayerTimeline);
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.loadstart, nowPlayingTrackChanged);
+        $("#jquery_jplayer_1").bind($.jPlayer.event.loadeddata, refreshNowPlaying);
+        $("#jquery_jplayer_1").bind($.jPlayer.event.playing, refreshNowPlaying);
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.ended, function () {
+            if (
+                !jplaylist.loop
+                && isPlaceholderTrack()
+                && jplaylist.current === jplaylist.playlist.length - 1
+            ) {
+                jplaylist.play(jplaylist.current);
+            }
+        });
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
+            cancelNowPlayingRetry();
+            if (brkey != '') {
+                sendBroadcastMessage('PLAYER_PLAY', 0);
+            }
+            if ("mediaSession" in navigator) {
+                navigator.mediaSession.playbackState = "paused";
+            }
+        });
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
+            Cookies.set('jp_volume', event.jPlayer.options.volume, {<?php echo $this->raw($this->getCookieOptions()); ?>});
+        });
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.resize, function (event) {
+            if (event.jPlayer.options.fullScreen) {
+                $(".player_actions").hide();
+                $(".jp-playlist").hide();
+            } else {
+                $(".player_actions").show();
+                $(".jp-playlist").show();
+            }
+        });
+
+        $('#jp_container_1' + ' ul:last').sortable({
+            update: function () {
+                jplaylist.scan();
+            }
+        });
+
+        mediaSource = null;
+        analyserNode = null;
+        replaygainNode = null;
+        replaygainEnabled = false;
+        <?php echo $this->raw(WebPlayer::add_media_js($this->getPlaylist())); ?>
+    });
+</script>
+<?php if ($this->showShareVideoStyle()) { ?>
+    <style>
+        div.jp-jplayer
+        {
+            bottom: 0 !important;
+            top: 100px !important;
+        }
+    </style>
+<?php }
+if (!$this->isPlayerFragment()) { ?>
+</head>
+<body>
+<?php }
+if (!$this->isVideo()) {
+    if (!$this->isShare()) { ?>
+    <div class="playing_info">
+        <img class="playing_art" alt="" style="display: none;">
+        <div class="playing_artist"></div>
+        <div class="playing_title"></div>
+        <div class="playing_album"></div>
+        <div class="playing_features">
+            <div class="playing_lyrics"></div>
+            <div class="playing_actions"></div>
+        </div>
+    </div>
+    <?php }
+    } ?>
+<div id="shouts_data"></div>
+<div class="jp-area<?php echo $this->e($this->getAreaClass()); ?>">
+    <div id="jp_container_1" class="<?php echo $this->e($this->getContainerClass()); ?>">
+        <div class="jp-type-playlist">
+            <div id="jquery_jplayer_1" class="jp-jplayer <?php echo $this->e($this->getPlayerClass()); ?>" style="<?php echo $this->e($this->getShareStyle()); ?>"></div>
+            <div class="jp-gui">
+                <?php if ($this->isVideo()) { ?>
+                    <div class="jp-video-play">
+                        <a href="javascript:;" class="jp-video-play-icon" tabindex="1" title="<?php echo $this->e($labels['play']); ?>"><?php echo $this->e($labels['play']); ?></a>
+                    </div>
+                <?php } ?>
+                <div class="jp-interface">
+                    <?php if ($this->isVideo()) { ?>
+                        <div class="jp-progress">
+                            <div class="jp-seek-bar">
+                                <div class="jp-play-bar"></div>
+                            </div>
+                        </div>
+                        <div class="jp-time-row">
+                            <div class="jp-current-time"></div>
+                            <div class="jp-duration"></div>
+                        </div>
+                        <div class="jp-title"></div>
+                        <div class="jp-controls-holder">
+                            <ul class="jp-controls">
+                                <li><a href="javascript:;" class="jp-previous" tabindex="1" title="<?php echo $this->e($labels['prev']); ?>"><?php echo $this->e($labels['prev']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-play" tabindex="1" title="<?php echo $this->e($labels['play']); ?>"><?php echo $this->e($labels['play']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-pause" tabindex="1" title="<?php echo $this->e($labels['pause']); ?>"><?php echo $this->e($labels['pause']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-next" tabindex="1" title="<?php echo $this->e($labels['next']); ?>"><?php echo $this->e($labels['next']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-stop" tabindex="1" title="<?php echo $this->e($labels['stop']); ?>"><?php echo $this->e($labels['stop']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-mute" tabindex="1" title="<?php echo $this->e($labels['mute']); ?>"><?php echo $this->e($labels['mute']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="<?php echo $this->e($labels['unmute']); ?>"><?php echo $this->e($labels['unmute']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="<?php echo $this->e($labels['maxvol']); ?>"><?php echo $this->e($labels['maxvol']); ?></a></li>
+                            </ul>
+                            <div class="jp-volume-bar">
+                                <div class="jp-volume-bar-value"></div>
+                            </div>
+
+                            <ul class="jp-toggles">
+                                <li><a href="javascript:;" class="jp-full-screen" tabindex="1" title="<?php echo $this->e($labels['fullscreen']); ?>"><?php echo $this->e($labels['fullscreen']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-restore-screen" tabindex="1" title="<?php echo $this->e($labels['restscreen']); ?>"><?php echo $this->e($labels['restscreen']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="<?php echo $this->e($labels['shuffleon']); ?>"><?php echo $this->e($labels['shuffleon']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="<?php echo $this->e($labels['shuffleoff']); ?>"><?php echo $this->e($labels['shuffleoff']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="<?php echo $this->e($labels['repeaton']); ?>"><?php echo $this->e($labels['repeaton']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="<?php echo $this->e($labels['repeatoff']); ?>"><?php echo $this->e($labels['repeatoff']); ?></a></li>
+                            </ul>
+                        </div>
+                    <?php } else { ?>
+                        <div class="jp-controls-holder">
+                            <ul class="jp-controls">
+                                <li><a href="javascript:;" class="jp-previous" tabindex="1" title="<?php echo $this->e($labels['prev']); ?>"><?php echo $this->e($labels['prev']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-play" tabindex="1" title="<?php echo $this->e($labels['play']); ?>"><?php echo $this->e($labels['play']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-pause" tabindex="1" title="<?php echo $this->e($labels['pause']); ?>"><?php echo $this->e($labels['pause']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-next" tabindex="1" title="<?php echo $this->e($labels['next']); ?>"><?php echo $this->e($labels['next']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-stop" tabindex="1" title="<?php echo $this->e($labels['stop']); ?>"><?php echo $this->e($labels['stop']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-mute" tabindex="1" title="<?php echo $this->e($labels['mute']); ?>"><?php echo $this->e($labels['mute']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="<?php echo $this->e($labels['unmute']); ?>"><?php echo $this->e($labels['unmute']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="<?php echo $this->e($labels['maxvol']); ?>"><?php echo $this->e($labels['maxvol']); ?></a></li>
+                            </ul>
+                            <div id="jquery_jplayer_1_volume_bar" class="jp-volume-bar">
+                                <div id="jquery_jplayer_1_volume_bar_value" class="jp-volume-bar-value"></div>
+                            </div>
+                            <ul class="jp-toggles">
+                                <li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="<?php echo $this->e($labels['shuffleon']); ?>"><?php echo $this->e($labels['shuffleon']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="<?php echo $this->e($labels['shuffleoff']); ?>"><?php echo $this->e($labels['shuffleoff']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="<?php echo $this->e($labels['repeaton']); ?>"><?php echo $this->e($labels['repeaton']); ?></a></li>
+                                <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="<?php echo $this->e($labels['repeatoff']); ?>"><?php echo $this->e($labels['repeatoff']); ?></a></li>
+                            </ul>
+                        </div>
+                        <div class="jp-progress">
+                            <div class="jp-seek-bar">
+                                <div class="jp-play-bar"></div>
+                            </div>
+                        </div>
+                        <div class="jp-time-row">
+                            <div class="jp-current-time"></div>
+                            <div class="jp-duration"></div>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+            <?php if (!$this->isShare()) { ?>
+                <div class="player_actions">
+                    <?php if ($this->isIframed()) { ?>
+                        <?php // playlist-editing buttons make no sense when random/democratic drives the playlist;
+                                  // show them dimmed and inert there so the action layout matches the regular player
+                        ?>
+                            <div class="action_button">
+                        <?php if ($this->mayUse()) {
+                            if ($this->isPlaylistEditable()) { ?>
+                                <a href="javascript:SaveToExistingPlaylist(event);">
+                                    <?php echo Ui::get_material_symbol('playlist_add', T_('Add All to playlist')); ?>
+                                </a>
+                            <?php } else { ?>
+                                <span style="opacity: 0.25;"><?php echo Ui::get_material_symbol('playlist_add', T_('Add All to playlist')); ?></span>
+                            <?php }
+                            } ?>
+                            </div>
+                        <div id="playlistloopbtn" class="action_button">
+                            <?php if ($this->isPlaylistEditable()) { ?>
+                            <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_material_symbol('laps', T_('Loop Playlist')); ?></a>
+                            <?php } else { ?>
+                            <span style="opacity: 0.25;"><?php echo Ui::get_material_symbol('laps', T_('Loop Playlist')); ?></span>
+                            <?php } ?>
+                        </div>
+                        <div id="expandplaylistbtn" class="action_button">
+                            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_material_symbol('expand_all', T_('Expand/Collapse playlist')); ?></a>
+                        </div>
+                        <div id="playlistshowbtn" class="action_button">
+                            <a href="javascript:TogglePlaylistShow();"><?php echo Ui::get_material_symbol('playlist_play', T_('Show/Hide Playlist')); ?></a>
+                        </div>
+                        <?php if (!$this->isVideo()) { ?>
+                        <div class="action_button">
+                            <a href="javascript:ShowVisualizer();"><?php echo Ui::get_material_symbol('bubble_chart', T_('Visualizer')); ?></a>
+                        </div>
+                        <?php } ?>
+                        <?php if ($this->canSlideshow()) { ?>
+                            <div id="slideshow" class="slideshow action_button">
+                                <a href="javascript:SwapSlideshow();"><?php echo Ui::get_material_symbol('slideshow', T_('Slideshow')); ?></a>
+                            </div>
+                        <?php } ?>
+                        <?php
+                        $isBroadcasting = false;
+                        if ($this->showBroadcast()) { ?>
+                            <div id="broadcast" class="broadcast action_button">
+                                <?php if ($this->broadcastsByDefault()) {
+                                    $isBroadcasting = true;
+                                    $broadcasts     = Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0);
+                                    if (count($broadcasts) < 1) {
+                                        $broadcast_id = Broadcast::create(T_('My Broadcast'));
+                                    } else {
+                                        $broadcast_id = $broadcasts[0];
+                                    }
+
+                                    $broadcast = new Broadcast((int) $broadcast_id);
+                                    $key       = Core::generate_random_key();
+                                    $broadcast->update_state(1, $key);
+                                    echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
+                                } else {
+                                    echo Broadcast::get_broadcast_link();
+                                } ?>
+                            </div>
+                        <?php } ?>
+                        <?php if (!$this->isVideo()) { ?>
+                        <div id="nowplayingbtn" class="action_button">
+                            <a href="javascript:ToggleNowPlaying();"><?php echo Ui::get_material_symbol('info', T_('Show Now Playing')); ?></a>
+                        </div>
+                        <?php } ?>
+                        <?php // ReplayGain and the Equalizer tap the <audio> element, so they do not apply to video
+                        if (!$this->isVideo()) { ?>
+                            <div id="replaygainbtn" class="action_button">
+                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_material_symbol('graphic_eq', T_('ReplayGain')); ?></a>
+                            </div>
+                            <div id="equalizerbtn" class="action_button">
+                                <a href="javascript:ShowEqualizer();"><?php echo Ui::get_material_symbol('equalizer', T_('Equalizer')); ?></a>
+                            </div>
+                            <div id="vizfullbtn" class="action_button" style="visibility: hidden">
+                                <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_material_symbol('fullscreen', T_('Visualizer full-screen')); ?></a>
+                            </div>
+                        <?php } ?>
+                        <?php if ($this->showBroadcast()) { ?>
+                            <div id="broadcast_listeners_wrap" class="action_button">
+                                <?php if ($isBroadcasting) {
+                                    echo Broadcast::get_listeners_html();
+                                } ?>
+                            </div>
+                        <?php } ?>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+            <div class="jp-playlist">
+                <ul>
+                    <li></li>
+                </ul>
+            </div>
+            <div class="jp-no-solution">
+                <span><?php echo $this->e(T_('Unsupported')); ?></span>
+                <?php echo $this->e(T_('This media is not supported by the player. Is your browser up to date?')); ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php if (!$this->isIframed() && !$this->isShare()) {
+    echo (new VisualizerView())->render();
+} ?>
+<?php if (!$this->isShare()) { ?>
+<?php echo $this->raw(Ui::material_symbol_sprite()); ?>
+</body>
+    </html>
+<?php } ?>

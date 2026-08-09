@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Playlist;
 
-interface NewPlaylistDialogAdapterInterface
+use Ampache\Gui\View\TemplateInterface;
+
+interface NewPlaylistDialogAdapterInterface extends TemplateInterface
 {
     public function getAjaxUri(): string;
 

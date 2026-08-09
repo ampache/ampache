@@ -1,0 +1,61 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse.phtml -- rendered by Ampache\Gui\Form\BrowseFormView
+
+/** @var Ampache\Gui\Form\BrowseFormView $this */
+?>
+
+<h3 class="box-title"><?php echo T_('Browse Ampache...'); ?></h3>
+
+<div class="category_options">
+    <?php if ($this->isFolderEnabled()) { ?>
+        <a class="category <?php echo ($this->getFilter() == 'show') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/folders.php?action=show&folder=-1"><?php echo T_('Folders'); ?></a>
+    <?php } ?>
+    <a class="category <?php echo ($this->getFilter() == 'song') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=song"><?php echo T_('Songs'); ?></a>
+    <a class="category <?php echo ($this->getFilter() == 'album_disk' || $this->getFilter() == 'album') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=<?php echo $this->e($this->getAlbumString()); ?>"><?php echo T_('Albums'); ?></a>
+    <?php if ($this->isShowArtist() || $this->getFilter() == 'artist') { ?>
+        <a class="category <?php echo ($this->getFilter() == 'artist') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=artist"><?php echo T_('Artists'); ?></a>
+    <?php } ?>
+    <?php if ($this->isShowAlbumArtist() || !$this->isShowArtist() || $this->getFilter() == 'album_artist') { ?>
+        <a class="category <?php echo ($this->getFilter() == 'album_artist') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=album_artist"><?php echo T_('Album Artists'); ?></a>
+    <?php } ?>
+    <?php if ($this->isLabelEnabled()) { ?>
+        <a class="category <?php echo ($this->getFilter() == 'label') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=label"><?php echo T_('Labels'); ?></a>
+    <?php }
+    if ($this->isBroadcastEnabled()) { ?>
+        <a class="category <?php echo ($this->getFilter() == 'broadcast') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=broadcast"><?php echo T_('Broadcasts'); ?></a>
+    <?php }
+    if ($this->isLiveStreamEnabled()) { ?>
+        <a class="category <?php echo ($this->getFilter() == 'live_stream') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations'); ?></a>
+    <?php }
+    if ($this->isPodcastEnabled()) { ?>
+        <a class="category <?php echo ($this->getFilter() == 'podcast') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=podcast"><?php echo T_('Podcasts'); ?></a>
+        <a class="category <?php echo ($this->getFilter() == 'podcast_episode') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
+    <?php }
+    if ($this->isVideoEnabled()) { ?>
+        <a class="category <?php echo ($this->getFilter() == 'video') ? 'current' : ''; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/browse.php?action=video"><?php echo T_('Videos'); ?></a>
+    <?php } ?>
+</div>

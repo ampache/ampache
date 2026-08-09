@@ -549,7 +549,11 @@ class Subsonic_Json_Data
     {
         $json = ['internetRadioStation' => []];
         foreach ($radios as $radio_id) {
-            $radio                          = new Live_Stream($radio_id);
+            $radio = new Live_Stream($radio_id);
+            if ($radio->isNew()) {
+                continue;
+            }
+
             $json['internetRadioStation'][] = $this->_getInternetRadioStation($radio);
         }
 
@@ -1043,7 +1047,11 @@ class Subsonic_Json_Data
     {
         $json = ['song' => []];
         foreach ($songs as $song_id) {
-            $song           = new Song($song_id);
+            $song = new Song($song_id);
+            if ($song->isNew()) {
+                continue;
+            }
+
             $json['song'][] = $this->_getChildSong($song);
         }
 
@@ -1151,7 +1159,11 @@ class Subsonic_Json_Data
         if (!empty($artists)) {
             $json['artist'] = [];
             foreach ($artists as $artist_id) {
-                $artist           = new Artist($artist_id);
+                $artist = new Artist($artist_id);
+                if ($artist->isNew()) {
+                    continue;
+                }
+
                 $json['artist'][] = $this->_getArtist($artist);
             }
         }
@@ -1247,6 +1259,10 @@ class Subsonic_Json_Data
         $json = ['share' => []];
         foreach ($shares as $share_id) {
             $share = new Share($share_id);
+            if ($share->isNew()) {
+                continue;
+            }
+
             // Don't add share with max counter already reached
             if ($share->max_counter === 0 || $share->counter < $share->max_counter) {
                 $user = new User($share->user);
@@ -1281,7 +1297,11 @@ class Subsonic_Json_Data
         $json = ['song' => []];
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
-                $song           = new Song($similar_song['id']);
+                $song = new Song($similar_song['id']);
+                if ($song->isNew()) {
+                    continue;
+                }
+
                 $json['song'][] = $this->_getChildSong($song);
             }
         }
@@ -1310,7 +1330,11 @@ class Subsonic_Json_Data
         $json = ['song' => []];
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
-                $song           = new Song($similar_song['id']);
+                $song = new Song($similar_song['id']);
+                if ($song->isNew()) {
+                    continue;
+                }
+
                 $json['song'][] = $this->_getChildSong($song);
             }
         }
@@ -1388,7 +1412,11 @@ class Subsonic_Json_Data
         ];
 
         foreach ($artists as $artist_id) {
-            $artist           = new Artist($artist_id);
+            $artist = new Artist($artist_id);
+            if ($artist->isNew()) {
+                continue;
+            }
+
             $json['artist'][] = $this->_getArtist($artist);
         }
         if (empty($json['artist'])) {
@@ -1407,7 +1435,11 @@ class Subsonic_Json_Data
         }
 
         foreach ($songs as $song_id) {
-            $song           = new Song($song_id);
+            $song = new Song($song_id);
+            if ($song->isNew()) {
+                continue;
+            }
+
             $json['song'][] = $this->_getChildSong($song);
         }
         if (empty($json['song'])) {
@@ -1439,7 +1471,11 @@ class Subsonic_Json_Data
         ];
 
         foreach ($artists as $artist_id) {
-            $artist           = new Artist($artist_id);
+            $artist = new Artist($artist_id);
+            if ($artist->isNew()) {
+                continue;
+            }
+
             $json['artist'][] = $this->_getArtistID3($artist);
         }
         if (empty($json['artist'])) {
@@ -1447,7 +1483,11 @@ class Subsonic_Json_Data
         }
 
         foreach ($albums as $album_id) {
-            $album           = new Album($album_id);
+            $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
+
             $json['album'][] = $this->_getAlbumID3($album);
         }
         if (empty($json['album'])) {
@@ -1455,7 +1495,11 @@ class Subsonic_Json_Data
         }
 
         foreach ($songs as $song_id) {
-            $song           = new Song($song_id);
+            $song = new Song($song_id);
+            if ($song->isNew()) {
+                continue;
+            }
+
             $json['song'][] = $this->_getChildSong($song);
         }
         if (empty($json['song'])) {
@@ -1495,7 +1539,11 @@ class Subsonic_Json_Data
     {
         $json = ['song' => []];
         foreach ($songs as $song_id) {
-            $song           = new Song($song_id);
+            $song = new Song($song_id);
+            if ($song->isNew()) {
+                continue;
+            }
+
             $json['song'][] = $this->_getChildSong($song);
         }
 
@@ -1777,7 +1825,11 @@ class Subsonic_Json_Data
             $allalbums = $this->albumRepository->getAlbumByArtist($artist->id);
             $albumJson = [];
             foreach ($allalbums as $album_id) {
-                $album       = new Album($album_id);
+                $album = new Album($album_id);
+                if ($album->isNew()) {
+                    continue;
+                }
+
                 $albumJson[] = $this->_getAlbumID3($album);
             }
             if (!empty($albumJson)) {
@@ -1930,6 +1982,10 @@ class Subsonic_Json_Data
         foreach ($similars as $similar) {
             if (($similar['id'] !== null)) {
                 $sim_artist = new Artist($similar['id']);
+                if ($sim_artist->isNew()) {
+                    continue;
+                }
+
                 switch ($elementName) {
                     case 'artistInfo':
                         $json['similarArtist'][] = $this->_getArtist($sim_artist);
@@ -2532,7 +2588,11 @@ class Subsonic_Json_Data
         $media_ids     = $this->albumRepository->getSongs($album_id);
         $json['child'] = [];
         foreach ($media_ids as $song_id) {
-            $song            = new Song($song_id);
+            $song = new Song($song_id);
+            if ($song->isNew()) {
+                continue;
+            }
+
             $json['child'][] = $this->_getChildSong($song);
         }
 
@@ -2909,7 +2969,11 @@ class Subsonic_Json_Data
 
             $json['episode'] = [];
             foreach ($episodes as $episode_id) {
-                $episode           = new Podcast_Episode($episode_id);
+                $episode = new Podcast_Episode($episode_id);
+                if ($episode->isNew()) {
+                    continue;
+                }
+
                 $json['episode'][] = $this->_getPodcastEpisode($episode);
             }
         }

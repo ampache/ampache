@@ -25,13 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Modules;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Admin\PluginTableView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Plugin\Plugin;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -54,7 +55,10 @@ final readonly class ShowPluginsAction implements ApplicationActionInterface
 
         $this->ui->showBoxTop(T_('Manage Plugins'), 'box box_localplay_plugins');
 
-        require_once Ui::find_template('show_plugins.inc.php');
+        echo (new PluginTableView(
+            AmpConfig::get_web_path('/admin'),
+            $plugins
+        ))->render();
 
         $this->ui->showBoxBottom();
 

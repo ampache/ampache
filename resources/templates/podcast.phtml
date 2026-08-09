@@ -1,0 +1,158 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// podcast.phtml -- rendered by Ampache\Gui\Podcast\PodcastView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Podcast\PodcastView $this */
+
+$podcast           = $this->getPodcast();
+$podcastId         = $podcast->getId();
+$websiteUrl        = $this->getWebsiteUrl();
+$updateFromFeedUrl = $this->getUpdateFromFeedUrl();
+
+Ui::show_box_top($this->e($this->getName()), 'info-box'); ?>
+<div class="item_right_info">
+    <?php Art::display('podcast', $podcastId, $this->getName(), $this->getArtSize(), null, true, false); ?>
+</div>
+<?php if ($podcast->get_description() !== '') { ?>
+<div id="item_summary">
+    <?php // the getter escapes, so the line breaks the feed supplied are all that is turned into markup here
+    echo $this->raw(nl2br($podcast->get_description())); ?>
+</div>
+<?php }
+
+if ($this->areRatingsShown()) { ?>
+    <span id="rating_<?php echo $this->e($podcastId); ?>_podcast">
+        <?php echo $this->raw(Rating::show($podcastId, 'podcast')); ?>
+    </span>
+    <span id="userflag_<?php echo $this->e($podcastId); ?>_podcast">
+        <?php echo $this->raw(Userflag::show($podcastId, 'podcast')); ?>
+    </span>
+<?php } ?>
+<div id="information_actions">
+    <h3><?php echo T_('Actions'); ?></h3>
+    <ul>
+        <?php if ($this->isDirectPlayEnabled()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcastId, 'play_circle', T_('Play All'), 'directplay_full_' . $podcastId)); ?></li>
+        <?php }
+
+        if ($this->isAutoplayNextEnabled()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcastId . '&playnext=true', 'menu_open', T_('Play All Next'), 'addnext_podcast_' . $podcastId)); ?></li>
+        <?php }
+
+        if ($this->isAutoplayAppendEnabled()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcastId . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_podcast_' . $podcastId)); ?></li>
+        <?php }
+
+        if ($this->mayInteract()) { ?>
+        <li><?php echo $this->raw(Ajax::button_with_text('?action=basket&type=podcast&id=' . $podcastId, 'new_window', T_('Add All to Temporary Playlist'), 'add_podcast_' . $podcastId)); ?></li>
+        <li>
+            <a id="add_to_playlist_podcast_<?php echo $this->e($podcastId); ?>" onclick="showPlaylistDialog(event, 'podcast', '<?php echo $this->e($podcastId); ?>')">
+                <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label())); ?>
+                <?php echo $this->e(Ui::get_add_to_list_label()); ?>
+            </a>
+        </li>
+        <?php }
+
+        if ($this->mayManage()) {
+            if ($this->isStatisticalGraphsEnabled()) { ?>
+        <li>
+            <a href="<?php echo $this->e($this->getGraphUrl()); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('bar_chart', T_('Graphs'))); ?>
+                <?php echo T_('Graphs'); ?>
+            </a>
+        </li>
+    <?php }
+
+            if ($this->isRssEnabled()) { ?>
+        <li>
+            <?php echo $this->raw(Ui::getRssLink(
+                RssFeedTypeEnum::LIBRARY_ITEM,
+                $this->getCurrentUser(),
+                T_('RSS Feed'),
+                ['object_type' => 'podcast', 'object_id' => (string) $podcastId]
+            )); ?>
+        </li>
+    <?php }
+
+            if ($websiteUrl !== null) { ?>
+        <li>
+            <a href="<?php echo $this->e($websiteUrl); ?>" target="_blank" rel="noopener">
+                <?php echo $this->raw(Ui::get_material_symbol('link', T_('Website'))); ?>
+                <?php echo T_('Website'); ?>
+            </a>
+        </li>
+    <?php } ?>
+        <li>
+            <a id="edit_podcast_<?php echo $this->e($podcastId); ?>" onclick="showEditDialog('podcast_row', '<?php echo $this->e($podcastId); ?>', 'edit_podcast_<?php echo $this->e($podcastId); ?>', '<?php echo addslashes(T_('Podcast Edit')); ?>', '')">
+                <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+                <?php echo T_('Edit Podcast'); ?>
+            </a>
+        </li>
+        <li><?php echo $this->raw(Ajax::button_with_text('?page=podcast&action=syncPodcast&podcast_id=' . $podcastId, 'sync', T_('Sync'), 'sync_podcast_' . $podcastId, notice: T_('Started'))); ?></li>
+        <?php if ($updateFromFeedUrl !== null) { ?>
+        <li>
+            <a href="javascript:NavigateTo('<?php echo $this->e($updateFromFeedUrl); ?>');" data-confirm="<?php echo $this->e(T_('Are you sure? This will overwrite Podcast details using the RSS feed')); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('cloud_sync', T_('Update details from RSS feed'))); ?>
+                <?php echo T_('Update details from RSS feed'); ?>
+            </a>
+        </li>
+    <?php }
+        }
+
+if ($this->mayDelete()) { ?>
+        <li>
+            <a id="delete_podcast_<?php echo $this->e($podcastId); ?>" href="<?php echo $this->e($this->getDeleteUrl()); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
+                <?php echo T_('Delete'); ?>
+            </a>
+        </li>
+        <?php } ?>
+    </ul>
+</div>
+<?php Ui::show_box_bottom(); ?>
+<div class="tabs_wrapper">
+    <div id="tabs_container">
+        <ul id="tabs">
+            <li class="tab_active"><a href="#episodes"><?php echo T_('Episodes'); ?></a></li>
+            <!-- Needed to avoid the 'only one' bug -->
+            <li></li>
+        </ul>
+    </div>
+    <div id="tabs_content">
+        <div id="episodes" class="tab_content" style="display: block;">
+<?php $browse = $this->getBrowse();
+$browse->show_objects($this->getEpisodeIds(), true);
+$browse->store(); ?>
+        </div>
+    </div>
+</div>

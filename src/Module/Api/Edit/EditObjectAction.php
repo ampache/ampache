@@ -36,6 +36,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\Mood;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Tag;
@@ -50,8 +51,8 @@ final class EditObjectAction extends AbstractEditAction
 {
     public const string REQUEST_KEY = 'edit_object';
 
+    protected LoggerInterface $logger;
     private LabelRepositoryInterface $labelRepository;
-    private LoggerInterface $logger;
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
 
@@ -105,6 +106,9 @@ final class EditObjectAction extends AbstractEditAction
             unset($data['user'], $data['artist'], $data['artist_name'], $data['album'], $data['album_name']);
             if (isset($data['edit_tags'])) {
                 $data['edit_tags'] = Tag::clean_to_existing($data['edit_tags']);
+            }
+            if (isset($data['edit_moods'])) {
+                $data['edit_moods'] = Mood::clean_to_existing((string) $data['edit_moods']);
             }
             if (isset($data['edit_labels'])) {
                 $data['edit_labels'] = $this->clean_to_existing($data['edit_labels']);

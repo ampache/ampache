@@ -1,0 +1,103 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// partial/rightbar.phtml -- rendered by Ampache\Gui\Partial\RightbarView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Partial\RightbarView $this */
+
+$items = $this->getItems(); ?>
+<ul id="rb_action">
+    <li><?php echo $this->raw(Ajax::button('?page=stream&action=basket', 'play_circle', T_('Play'), 'rightbar_play')); ?></li>
+    <?php if ($this->mayAdd()) { ?>
+    <li id="pl_add">
+        <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label(true))); ?>
+        <ul id="pl_action_additems" class="submenu">
+            <li><?php echo $this->raw(Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist')); ?></li>
+            <?php foreach ($this->getPlaylists() as $playlist) { ?>
+            <li><?php echo $this->raw(Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, scrub_out($playlist->get_fullname()), 'rb_append_playlist_' . $playlist->id)); ?></li>
+            <?php } ?>
+            <?php $collections = $this->getCollections();
+        if ($collections !== []) { ?>
+            <li><?php echo $this->raw(Ajax::text('?page=collection&action=append_item', T_('Add to New Collection'), 'rb_create_collection')); ?></li>
+                <?php foreach ($collections as $collection) { ?>
+            <li><?php echo $this->raw(Ajax::text('?page=collection&action=append_item&collection_id=' . $collection->getId(), scrub_out($collection->get_fullname()), 'rb_append_collection_' . $collection->getId())); ?></li>
+                <?php } ?>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+    <?php if ($this->mayBatchDownload()) { ?>
+    <li>
+        <a class="nohtml" href="<?php echo $this->e($this->getBatchUrl()); ?>">
+            <?php echo $this->raw(Ui::get_material_symbol('folder_zip', T_('Batch download'))); ?>
+        </a>
+    </li>
+    <?php } ?>
+    <li><?php echo $this->raw(Ajax::button('?action=basket&type=clear_all', 'close', T_('Clear Playlist'), 'rb_clear_playlist')); ?></li>
+    <li id="rb_add">
+        <?php echo $this->raw(Ui::get_material_symbol('add_circle', T_('Add dynamic items'))); ?>
+        <ul id="rb_action_additems" class="submenu">
+            <li><?php echo $this->raw(Ajax::text('?page=random&action=song', T_('Random song'), 'rb_add_random_song')); ?></li>
+            <li><?php echo $this->raw(Ajax::text('?page=random&action=artist', T_('Random artist'), 'rb_add_random_artist')); ?></li>
+            <li><?php echo $this->raw(Ajax::text('?page=random&action=album', T_('Random album'), 'rb_add_random_album')); ?></li>
+            <li><?php echo $this->raw(Ajax::text('?page=random&action=playlist', T_('Random playlist'), 'rb_add_random_playlist')); ?></li>
+        </ul>
+    </li>
+    <li id="rb_reload"><?php echo $this->raw(Ajax::button('?action=basket_refresh', 'refresh', T_('Refresh'), 'rb_refresh')); ?></li>
+</ul>
+<?php if ($this->showLocalplay()) {
+    echo $this->raw($this->getLocalplayControl());
+} ?>
+<ul id="rb_current_playlist" class="striped-rows">
+    <?php foreach ($items as $item) { ?>
+    <li>
+        <?php echo $this->raw($item['link']);
+        echo $this->raw(Ajax::button('?action=current_playlist&type=delete&id=' . $item['trackId'], 'close', T_('Delete'), 'rightbar_delete_' . $item['trackId'], '', 'delitem')); ?>
+    </li>
+    <?php } ?>
+    <?php if ($items === []) { ?>
+    <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
+    <?php } ?>
+    <?php if ($this->getTruncatedCount() > 0) { ?>
+    <li><?php echo $this->e($this->getTruncatedCount()) . ' ' . T_('More'); ?>...</li>
+    <?php } ?>
+</ul>
+<?php
+// forcing the reload happens last, so anything queued above is already on the page
+if ($items !== []) {
+    Stream::run_playlist_method();
+} ?>
+<script>
+    $(document).ready(function() {
+        // necessary evils for time being
+        jsAmpConfigPlayType = "<?php echo $this->e($this->getPlayType()); ?>";
+        jsBasketCount = <?php echo $this->getBasketCount(); ?>;
+        RightbarInit();
+    });
+</script>

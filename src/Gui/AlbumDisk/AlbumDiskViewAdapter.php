@@ -148,7 +148,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
     {
         $albumId = $this->albumDisk->getAlbumId();
         $name    = ($this->albumDisk->get_parent_fullname() !== "")
-            ? '[' . $this->albumDisk->get_parent_fullname() . '] ' . scrub_out($this->albumDisk->get_fullname())
+            ? '[' . scrub_out($this->albumDisk->get_parent_fullname()) . '] ' . scrub_out($this->albumDisk->get_fullname())
             : scrub_out($this->albumDisk->get_fullname());
 
         $size = ($this->browse->is_grid_view())

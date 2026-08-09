@@ -25,12 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Gui;
 
+use Ampache\Gui\Album\AlbumRowView;
 use Ampache\Gui\Album\AlbumViewAdapterInterface;
+use Ampache\Gui\AlbumDisk\AlbumDiskRowView;
 use Ampache\Gui\AlbumDisk\AlbumDiskViewAdapterInterface;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
+use Ampache\Gui\Collection\CollectionViewAdapterInterface;
+use Ampache\Gui\Folder\FolderRowView;
 use Ampache\Gui\Folder\FolderViewAdapterInterface;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapterInterface;
+use Ampache\Gui\Playlist\PlaylistRowView;
 use Ampache\Gui\Playlist\PlaylistViewAdapterInterface;
+use Ampache\Gui\Song\SongRowView;
 use Ampache\Gui\Song\SongViewAdapterInterface;
 use Ampache\Gui\Stats\CatalogStatsInterface;
 use Ampache\Gui\Stats\StatsViewAdapterInterface;
@@ -39,21 +45,55 @@ use Ampache\Gui\System\UpdateViewAdapterInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
 interface GuiFactoryInterface
 {
+    public function createAlbumDiskRowView(
+        GuiGatekeeperInterface $gatekeeper,
+        Browse $browse,
+        AlbumDisk $albumDisk,
+        bool $usingRatings,
+        bool $isHideGenre,
+        bool $isShowPlayedTimes,
+        bool $isShowPlaylistAdd,
+        string $classCover,
+        string $classAlbum,
+        string $classArtist,
+        string $classTags,
+        string $classCounter,
+    ): AlbumDiskRowView;
+
     public function createAlbumDiskViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Browse $browse,
         AlbumDisk $albumDisk,
     ): AlbumDiskViewAdapterInterface;
+
+    public function createAlbumRowView(
+        GuiGatekeeperInterface $gatekeeper,
+        Browse $browse,
+        Album $album,
+        bool $usingRatings,
+        bool $isHideGenre,
+        bool $isShowPlayedTimes,
+        bool $isShowPlaylistAdd,
+        string $classCover,
+        string $classAlbum,
+        string $classArtist,
+        string $classTags,
+        string $classCounter,
+    ): AlbumRowView;
 
     public function createAlbumViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
@@ -70,7 +110,31 @@ interface GuiFactoryInterface
      */
     public function createCatalogStats(array $stats): CatalogStatsInterface;
 
+    /**
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int, time: int}> $objectIds
+     */
+    public function createCollectionViewAdapter(
+        BrowseFactoryInterface $browseFactory,
+        Collection $collection,
+        ?User $user,
+        array $objectIds,
+    ): CollectionViewAdapterInterface;
+
     public function createConfigViewAdapter(): ConfigViewAdapterInterface;
+
+    public function createFolderRowView(
+        GuiGatekeeperInterface $gatekeeper,
+        Folder $folder,
+        Podcast_Episode|Video|Song|Folder $object,
+        string $object_type,
+        bool $usingRatings,
+        bool $isShowPlayedTimes,
+        bool $isShowPlaylistAdd,
+        bool $isShowListAdd,
+        string $classCover,
+        string $classFolder,
+        string $classCounter,
+    ): FolderRowView;
 
     public function createFolderViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
@@ -86,10 +150,35 @@ interface GuiFactoryInterface
         string $object_groups = '',
     ): NewPlaylistDialogAdapterInterface;
 
+    public function createPlaylistRowView(
+        GuiGatekeeperInterface $gatekeeper,
+        Playlist $playlist,
+        bool $usingRatings,
+        bool $isShowArt,
+        bool $isShowPlaylistAdd,
+        string $classCover,
+    ): PlaylistRowView;
+
     public function createPlaylistViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Playlist $playlist,
     ): PlaylistViewAdapterInterface;
+
+    public function createSongRowView(
+        GuiGatekeeperInterface $gatekeeper,
+        Song $song,
+        string $argumentParam,
+        bool $usingRatings,
+        bool $isTableView,
+        bool $isAlbumGroup,
+        bool $isShowTrack,
+        bool $isShowLicense,
+        bool $isHideGenre,
+        bool $isHideArtist,
+        bool $isHideAlbum,
+        bool $isHideYear,
+        bool $isHideDrag,
+    ): SongRowView;
 
     public function createSongViewAdapter(
         GuiGatekeeperInterface $gatekeeper,

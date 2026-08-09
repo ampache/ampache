@@ -24,11 +24,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast\Exchange;
 
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Generator;
-use PhpTal\PHPTAL;
 
 /**
  * Exports the podcasts in opml format
@@ -38,7 +36,6 @@ use PhpTal\PHPTAL;
 final readonly class PodcastOpmlExporter implements PodcastExporterInterface
 {
     public function __construct(
-        private TalFactoryInterface $talFactory,
         private PodcastRepositoryInterface $podcastRepository,
     ) {}
 
@@ -47,14 +44,13 @@ final readonly class PodcastOpmlExporter implements PodcastExporterInterface
      */
     public function export(): string
     {
-        $talPage = $this->talFactory->createPhpTal();
-        $talPage->setTemplate((string) realpath(__DIR__ . '/../../../../resources/templates/podcast/export.opml'));
-        $talPage->setOutputMode(PHPTAL::XML);
-        $talPage->set('TITLE', T_('Ampache podcast subscriptions'));
-        $talPage->set('CREATION_DATE', date(DATE_RFC822));
-        $talPage->set('PODCASTS', $this->retrievePodcasts());
+        $view = new PodcastOpmlView(
+            T_('Ampache podcast subscriptions'),
+            date(DATE_RFC822),
+            $this->retrievePodcasts()
+        );
 
-        return $talPage->execute();
+        return $view->render();
     }
 
     /**

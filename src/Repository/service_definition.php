@@ -37,6 +37,7 @@ return [
     AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
     BroadcastRepositoryInterface::class => autowire(BroadcastRepository::class),
     PlaylistRepositoryInterface::class => autowire(PlaylistRepository::class),
+    PlaylistFolderRepositoryInterface::class => autowire(PlaylistFolderRepository::class),
     SearchRepositoryInterface::class => autowire(SearchRepository::class),
     SongRepositoryInterface::class => autowire(SongRepository::class),
     LabelRepositoryInterface::class => autowire(LabelRepository::class),
@@ -76,6 +77,7 @@ return [
     PodcastEpisodeRepositoryInterface::class => autowire(PodcastEpisodeRepository::class),
     ImageRepositoryInterface::class => autowire(ImageRepository::class),
     AlbumDiskRepositoryInterface::class => autowire(AlbumDiskRepository::class),
+    MoodRepositoryInterface::class => autowire(MoodRepository::class),
     TagRepositoryInterface::class => autowire(TagRepository::class),
     LibraryItemLoaderInterface::class => autowire(LibraryItemLoader::class),
 ];

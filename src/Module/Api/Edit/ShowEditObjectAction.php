@@ -26,11 +26,13 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Edit\EditFormContext;
+use Ampache\Gui\Edit\EditFormRendererLocatorInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
-use Ampache\Module\Util\UiInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -47,10 +49,10 @@ final class ShowEditObjectAction extends AbstractEditAction
 {
     public const string REQUEST_KEY = 'show_edit_object';
 
+    private EditFormRendererLocatorInterface $editFormRendererLocator;
     private MetadataManagerInterface $metadataManager;
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
-    private UiInterface $ui;
     private UserRepositoryInterface $userRepository;
     private ZipHandlerInterface $zipHandler;
 
@@ -62,18 +64,18 @@ final class ShowEditObjectAction extends AbstractEditAction
         LoggerInterface $logger,
         ShareRepositoryInterface $shareRepository,
         BrowseFactoryInterface $browseFactory,
-        UiInterface $ui,
         UserRepositoryInterface $userRepository,
         MetadataManagerInterface $metadataManager,
         ZipHandlerInterface $zipHandler,
+        EditFormRendererLocatorInterface $editFormRendererLocator,
     ) {
         parent::__construct($configContainer, $libraryItemLoader, $logger, $shareRepository, $browseFactory);
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
-        $this->ui              = $ui;
-        $this->userRepository  = $userRepository;
-        $this->metadataManager = $metadataManager;
-        $this->zipHandler      = $zipHandler;
+        $this->editFormRendererLocator = $editFormRendererLocator;
+        $this->responseFactory         = $responseFactory;
+        $this->streamFactory           = $streamFactory;
+        $this->userRepository          = $userRepository;
+        $this->metadataManager         = $metadataManager;
+        $this->zipHandler              = $zipHandler;
     }
 
     protected function handle(
@@ -84,23 +86,23 @@ final class ShowEditObjectAction extends AbstractEditAction
         int $object_id,
         ?Browse $browse = null,
     ): ResponseInterface {
-        ob_start();
         $users     = $this->userRepository->getValidArray();
         $users[-1] = T_('System');
 
-        $this->ui->show(
-            'show_edit_' . $object_type . '.inc.php',
-            [
-                'libitem' => $libitem,
-                'users' => $users,
-                'metadataManager' => $this->metadataManager,
-                'zipHandler' => $this->zipHandler
-            ]
-        );
+        // every form renders through its own view; a type with no renderer has no dialog to show
+        $renderer = $this->editFormRendererLocator->find($object_type);
+        if ($renderer === null) {
+            $this->logger->warning(
+                'show_edit_object: no renderer for type {' . $object_type . '}',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
 
-        $results = ob_get_contents();
-
-        ob_end_clean();
+            $results = '';
+        } else {
+            $results = $renderer->renderForm(
+                new EditFormContext($object_type, $libitem, $users, $this->metadataManager, $this->zipHandler)
+            );
+        }
 
         return $this->responseFactory->createResponse()
             ->withBody(

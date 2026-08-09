@@ -1,0 +1,152 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// register/registration.phtml -- rendered by Ampache\Gui\Register\RegistrationView
+
+use Ampache\Gui\Asset\StylesheetsView;
+use Ampache\Module\System\AmpError;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Register\RegistrationView $this */
+
+$_SESSION['login'] = true;
+
+$values = $this->getFieldValues(); ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->e($this->getDocumentLanguage()); ?>" lang="<?php echo $this->e($this->getDocumentLanguage()); ?>">
+
+<head>
+    <!-- Propelled by Ampache | ampache.org -->
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $this->e($this->getSiteCharset()); ?>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $this->e($this->getTitle()); ?></title>
+    <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render()); ?>
+</head>
+
+<body id="registerPage">
+    <script src="<?php echo $this->e($this->getWebPath()); ?>/lib/components/jquery/jquery.min.js"></script>
+
+    <div id="maincontainer">
+        <div id="header">
+            <a href="<?php echo $this->e($this->getWebPath()); ?>">
+                <h1 id="logo"><img src="<?php echo $this->e($this->getLogoUrl()); ?>" title="<?php echo $this->e(T_('Ampache')); ?>" alt="<?php echo $this->e(T_('Ampache')); ?>"></h1>
+            </a>
+        </div>
+        <div id="content">
+            <div id="registerbox">
+                <h2><?php echo $this->e(T_('Registration')); ?></h2>
+                <form name="update_user" method="post" action="<?php echo $this->e($this->getWebPath()); ?>/register.php" enctype="multipart/form-data">
+                    <?php if ($this->showAgreement()) { ?>
+                        <h3><?php echo $this->e(T_('User Agreement')); ?></h3>
+                        <div class="registrationAgreement">
+                            <div class="agreementContent">
+                                <?php echo $this->raw($this->renderAgreement()); ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    <div class="registerInformation">
+                        <p><span class="require">* </span><?php echo $this->e(T_('Required fields')); ?></p>
+                    </div>
+                    <div class="registerfield require">
+                        <label for="username"><?php echo $this->e(T_('Username')); ?>:</label>
+                        <input id="username" type="text" name="username" maxlength="128" value="<?php echo $this->e($values['username']); ?>" />
+                        <?php echo $this->raw(AmpError::display('username'));
+echo $this->raw(AmpError::display('duplicate_user')); ?>
+                    </div>
+                    <?php if ($this->isDisplayed('fullname')) { ?>
+                        <div class="registerfield <?php echo ($this->isMandatory('fullname')) ? 'require' : ''; ?>">
+                            <label for="fullname"><?php echo $this->e(T_('Full Name')); ?>:</label>
+                            <input id="fullname" type="text" name="fullname" maxlength="255" value="<?php echo $this->e($values['fullname']); ?>" />
+                            <?php echo $this->raw(AmpError::display('fullname')); ?>
+                        </div>
+                    <?php } ?>
+
+                    <div class="registerfield require">
+                        <label for="email"><?php echo $this->e(T_('E-mail')); ?>:</label>
+                        <input id="email" type="text" name="email" maxlength="128" value="<?php echo $this->e($values['email']); ?>" />
+                        <?php echo $this->raw(AmpError::display('email')); ?>
+                    </div>
+                    <?php if ($this->isDisplayed('website')) { ?>
+                        <div class="registerfield <?php echo ($this->isMandatory('website')) ? 'require' : ''; ?>">
+                            <label for="website"><?php echo $this->e(T_('Website')); ?>:</label>
+                            <input id="website" type="text" name="website" maxlength="255" value="<?php echo $this->e($values['website']); ?>" />
+                            <?php echo $this->raw(AmpError::display('website')); ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($this->isDisplayed('state')) { ?>
+                        <div class="registerfield <?php echo ($this->isMandatory('state')) ? 'require' : ''; ?>">
+                            <label for="state"><?php echo $this->e(T_('State')); ?>:</label>
+                            <input id="state" type="text" name="state" maxlength="64" value="<?php echo $this->e($values['state']); ?>" />
+                            <?php echo $this->raw(AmpError::display('state')); ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($this->isDisplayed('city')) { ?>
+                        <div class="registerfield <?php echo ($this->isMandatory('city')) ? 'require' : ''; ?>">
+                            <label for="city"><?php echo $this->e(T_('City')); ?>:</label>
+                            <input id="city" type="text" name="city" maxlength="64" value="<?php echo $this->e($values['city']); ?>" />
+                            <?php echo $this->raw(AmpError::display('city')); ?>
+                        </div>
+                    <?php } ?>
+
+                    <div class="registerfield require">
+                        <label for="password_1"><?php echo $this->e(T_('Password')); ?>:</label>
+                        <input id="password_1" type="password" name="password_1" maxlength="64" />
+                        <?php echo $this->raw(AmpError::display('password')); ?>
+                    </div>
+
+                    <div class="registerfield require">
+                        <label for="password_2"><?php echo $this->e(T_('Confirm Password')); ?>:</label>
+                        <input id="password_2" type="password" name="password_2" maxlength="64" />
+                    </div>
+
+                    <?php if ($this->showCaptcha()) { ?>
+                    <div class="registerfield require">
+                        <label for="captcha_user"><?php echo $this->e(T_('Captcha is required')); ?>:</label>
+                        <input id="captcha_user" type="text" name="captcha_user" maxlength="20" />
+                        <?php echo $this->raw(AmpError::display('captcha_user')); ?>
+                    </div>
+                    <div class="registerfield center">
+                        <img src="<?php echo $this->e($this->getCaptchaImage()); ?>" alt="captcha"/>
+                    </div>
+                    <?php } ?>
+
+                    <div class="submit-registration">
+                        <?php if ($this->showAgreement()) { ?>
+                            <div id="agreementCheckbox">
+                                <label for="accept_agreement"><?php echo $this->e(T_('I Accept')); ?><span class="alert-danger"> *</span></label>
+                                <input id="accept_agreement" type="checkbox" name="accept_agreement" />
+                            </div>
+                        <?php } ?>
+                        <div id="submit-registration-button">
+                            <input type="hidden" name="action" value="add_user" />
+                            <input id="submit_registration" type="submit" name="submit_registration" value="<?php echo $this->e(T_('Register')); ?>" />
+                        </div>
+                        <?php echo $this->raw(AmpError::display('user_agreement')); ?>
+                    </div>
+                </form>
+            </div>
+
+            <?php Ui::show_footer(); ?>

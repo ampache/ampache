@@ -25,6 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\CookieDisclaimer;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\CookieDisclaimerView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -35,12 +38,18 @@ final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    public function __construct(private UiInterface $ui) {}
+    public function __construct(
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        $this->ui->show('cookie_disclaimer.inc.php');
+        echo (new CookieDisclaimerView(
+            $this->configContainer->getWebPath(),
+            (string) AmpConfig::get('session_name', 'ampache')
+        ))->render();
         $this->ui->showFooter();
 
         return null;

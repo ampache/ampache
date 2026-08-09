@@ -1,0 +1,96 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/democratic.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\DemocraticListRenderer
+
+use Ampache\Gui\Browse\ListHeaderView;
+use Ampache\Module\Api\Ajax;
+
+/** @var Ampache\Gui\Browse\ListRenderer\DemocraticListRenderer $this */
+
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$democratic     = $this->getDemocratic();
+$isAdmin        = $this->isAdmin();
+$grouped        = $this->isAlbumGrouped();
+if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
+} ?>
+<table class="tabledata striped-rows">
+    <colgroup>
+        <?php foreach ($columns as $column) { ?>
+        <col id="col_<?php echo $this->e(substr($column['class'], 4)); ?>" />
+        <?php } ?>
+    </colgroup>
+    <?php if ($this->isPlayingFromBasePlaylist()) { ?>
+    <tbody>
+        <tr>
+            <td colspan="<?php echo count($columns); ?>"><?php echo T_('Playing from base playlist'); ?></td>
+        </tr>
+    </tbody>
+    <?php } else { ?>
+    <thead>
+        <tr class="th-top">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <?php } ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->getVotes() as $item) {
+            $media = $this->getMedia($item);
+            if ($media === null) {
+                continue;
+            } ?>
+        <tr>
+            <td class="cel_action"><?php
+                echo $this->raw(($democratic->has_vote($item['object_id'], $item['object_type']->value))
+                    ? Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['track_id'] . '&browse_id=' . $browse->getId(), 'close', T_('Remove Vote'), 'delete_vote_' . $item['track_id'])
+                    : Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&browse_id=' . $browse->getId() . '&type=' . $item['object_type']->value, 'tick', T_('Add Vote'), 'add_vote_' . $item['track_id'])); ?></td>
+            <td class="cel_votes"><?php echo $this->e($democratic->get_vote($item['track_id'])); ?></td>
+            <td class="cel_title"><?php echo $this->raw($media->get_f_link()); ?></td>
+            <td class="cel_album"><?php echo $this->raw(($grouped) ? $media->get_f_album_link() : $media->get_f_album_disk_link()); ?></td>
+            <td class="cel_artist"><?php echo $this->raw($media->get_f_parent_link() ?? ""); ?></td>
+            <td class="cel_time"><?php echo $this->e($media->get_f_time()); ?></td>
+            <?php if ($isAdmin) { ?>
+            <td class="cel_admin"><?php echo $this->raw(Ajax::button('?page=democratic&action=delete&row_id=' . $item['track_id'], 'close', T_('Delete'), 'delete_row_' . $item['track_id'])); ?></td>
+            <?php } ?>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <?php } ?>
+        </tr>
+    </tfoot>
+    <?php } ?>
+</table>
+<?php show_table_render(); ?>
+<?php if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
+} ?>

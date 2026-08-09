@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Art;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Art\GetArtView;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -56,15 +58,13 @@ final class ShowArtDlgAction extends AbstractArtAction
 
         $this->ui->showHeader();
 
-        $this->ui->show(
-            'show_get_art.inc.php',
-            [
-                'item' => $item,
-                'object_id' => $object_id,
-                'object_type' => $object_type,
-                'burl' => $burl
-            ]
-        );
+        echo (new GetArtView(
+            $item,
+            $object_id,
+            (string) $object_type,
+            $burl,
+            AmpConfig::get_web_path()
+        ))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -61,7 +61,7 @@ final class PreferenceEdit5Method implements MethodInterface
      *
      * Edit a preference value and apply to all users if allowed
      *
-     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * filter = (string) Preference name e.g ('notify_email', 'popular_threshold')
      * value = (string|integer) Preference value
      * all = (boolean) apply to all users //optional
      *

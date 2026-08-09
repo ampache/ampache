@@ -79,7 +79,6 @@
         "rmccue/requests": "^2.0",
         "rsd/seafile-php-sdk": "^2",
         "sabre/dav": "^4",
-        "scn/phptal": "^4",
         "shrikeh/teapot": "^2.3",
         "slim/slim": "^4.12"
     },
@@ -131,16 +130,19 @@
         "stan-baseline": "vendor/bin/phpstan --generate-baseline",
         "tests": "vendor/bin/phpunit -c phpunit.xml",
         "spec": "vendor/bin/phpunit --filter SpecConformanceTest",
+        "spec:refresh": "@php resources/scripts/tests/spec_refresh.php",
         "syntax": "@php resources/scripts/tests/syntax.php",
         "cs:fix": "vendor/bin/php-cs-fixer fix",
         "cs:check": "vendor/bin/php-cs-fixer fix --dry-run -vv",
         "api:docs": [
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_openapi_schemas.py",
-            "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_api_methods_md.py"
+            "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_api_methods_md.py",
+            "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_browse_docs.py"
         ],
         "api:docs:check": [
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_openapi_schemas.py --check",
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_api_methods_md.py --check",
+            "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_browse_docs.py --check",
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/check_openapi_examples.py --strict",
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/lint_openapi.py"
         ],
@@ -157,6 +159,7 @@
         "stan-baseline": "Regenerate phpstan baseline",
         "tests": "Executes the unit tests",
         "spec": "Validates the captured Ampache REST, Subsonic and OpenSubsonic responses against the published specifications",
+        "spec:refresh": "Re-pins the audited OpenSubsonic spec hash and stamps the compliance date, after a re-audit",
         "syntax": "Performs php syntax checks",
         "cs:fix": "Performs code-style corrections on the whole codebase",
         "cs:check": "Performs a code-style dry-run on the whole codebase",

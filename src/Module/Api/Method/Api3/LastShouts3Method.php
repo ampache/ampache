@@ -86,7 +86,6 @@ final class LastShouts3Method implements MethodInterface
         }
         debug_event(self::class, 'Sociable feature is not enabled.', 3);
 
-
         return $response;
     }
 }

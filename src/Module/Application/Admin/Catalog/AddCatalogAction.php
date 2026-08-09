@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\AddCatalogFormView;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
@@ -146,7 +148,13 @@ final class AddCatalogAction extends AbstractCatalogAction
             $catalog_id = Catalog::create($data);
 
             if ($catalog_id === 0) {
-                $this->ui->show('show_add_catalog.inc.php');
+                echo (new AddCatalogFormView(
+                    $this->configContainer->getWebPath('/admin'),
+                    $this->requestParser->getFromRequest('name'),
+                    (bool) AmpConfig::get('allow_video'),
+                    (bool) AmpConfig::get('catalog_filter'),
+                    (bool) AmpConfig::get('podcast')
+                ))->render();
 
                 return null;
             }
@@ -169,7 +177,13 @@ final class AddCatalogAction extends AbstractCatalogAction
                 false
             );
         } else {
-            $this->ui->show('show_add_catalog.inc.php');
+            echo (new AddCatalogFormView(
+                $this->configContainer->getWebPath('/admin'),
+                $this->requestParser->getFromRequest('name'),
+                (bool) AmpConfig::get('allow_video'),
+                (bool) AmpConfig::get('catalog_filter'),
+                (bool) AmpConfig::get('podcast')
+            ))->render();
         }
 
         return null;

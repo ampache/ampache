@@ -33,6 +33,7 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Mood;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -214,6 +215,28 @@ final class OpenSubsonic_Fields
     }
 
     /**
+     * albumMoods
+     *
+     * The moods of an album, which Ampache derives from the moods of its songs when a catalog is scanned.
+     *
+     * https://opensubsonic.netlify.app/docs/responses/albumid3/
+     *
+     * @return string[]
+     */
+    public function albumMoods(Album $album): array
+    {
+        $names = [];
+        foreach (Mood::get_top_moods('album', $album->getId(), 0) as $mood) {
+            $name = trim($mood['name']);
+            if ($name !== '') {
+                $names[] = $name;
+            }
+        }
+
+        return $names;
+    }
+
+    /**
      * albumRecordLabels
      *
      * The record labels of an album. `name` is required by the spec, so a blank one is left out.
@@ -357,6 +380,24 @@ final class OpenSubsonic_Fields
     }
 
     /**
+     * songBpm
+     *
+     * The tagged beats per minute. Ampache keeps the fraction a detection tool wrote, but the spec types the field
+     * as an integer, so it is rounded on the way out.
+     *
+     * https://opensubsonic.netlify.app/docs/responses/child/
+     */
+    public function songBpm(Song $song): ?int
+    {
+        // bpm lives in song_data, which a Song does not load on construction
+        $song->fill_ext_info(Song::PARTIAL_FILTER);
+
+        return ($song->bpm === null)
+            ? null
+            : (int) round($song->bpm);
+    }
+
+    /**
      * songContributors
      *
      * The contributor artists of a song. Ampache models artist relationships as artist/album-artist/composer rather
@@ -399,6 +440,28 @@ final class OpenSubsonic_Fields
     }
 
     /**
+     * songMoods
+     *
+     * The moods of a song. The spec asks for names only, so the ids and the owner are dropped.
+     *
+     * https://opensubsonic.netlify.app/docs/responses/child/
+     *
+     * @return string[]
+     */
+    public function songMoods(Song $song): array
+    {
+        $names = [];
+        foreach ($song->get_moods() as $mood) {
+            $name = trim($mood['name']);
+            if ($name !== '') {
+                $names[] = $name;
+            }
+        }
+
+        return $names;
+    }
+
+    /**
      * songReplayGain
      *
      * The replay gain block of a song. `baseGain` carries the R128 track gain, which ffmpeg stores in Q7.8 fixed
@@ -417,7 +480,7 @@ final class OpenSubsonic_Fields
     public function songReplayGain(Song $song): array
     {
         // the gain columns live in song_data, which a Song does not load on construction
-        $song->fill_ext_info('replaygain_track_gain, replaygain_track_peak, replaygain_album_gain, replaygain_album_peak, r128_track_gain, r128_album_gain');
+        $song->fill_ext_info(Song::PARTIAL_FILTER);
 
         $gain = [];
         if ($song->replaygain_track_gain !== null) {

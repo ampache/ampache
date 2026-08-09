@@ -27,6 +27,8 @@ namespace Ampache\Module\Catalog;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Catalog\CatalogProgressTypeEnum;
+use Ampache\Gui\Catalog\CatalogProgressView;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Metadata\MetadataManagerInterface;
@@ -531,7 +533,7 @@ class Catalog_local extends Catalog
         $this->videos_to_gather = [];
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            require Ui::find_template('show_adds_catalog.inc.php');
+            echo (new CatalogProgressView(CatalogProgressTypeEnum::ADD, $this->getId(), $this->name))->render();
             flush();
         }
 
@@ -590,7 +592,7 @@ class Catalog_local extends Catalog
                 debug_event(self::class, 'gather_art after adding', 4);
                 $catalog_id = $this->getId();
                 if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-                    require Ui::find_template('show_gather_art.inc.php');
+                    echo (new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id))->render();
                     flush();
                 }
 

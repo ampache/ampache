@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Export;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Admin\CatalogExportView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -55,16 +57,14 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_export.inc.php',
+        echo (new CatalogExportView(
+            AmpConfig::get_web_path('/admin'),
+            $this->catalogLoader->getCatalogs(),
             [
-                'catalogs' => $this->catalogLoader->getCatalogs(),
-                'exportTypes' => [
-                    CatalogExportTypeEnum::CSV->value => T_('CSV'),
-                    CatalogExportTypeEnum::ITUNES->value => T_('iTunes'),
-                ],
+                CatalogExportTypeEnum::CSV->value => T_('CSV'),
+                CatalogExportTypeEnum::ITUNES->value => T_('iTunes'),
             ]
-        );
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

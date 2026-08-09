@@ -33,7 +33,7 @@ final readonly class MissingArtistFinder implements MissingArtistFinderInterface
     public function __construct(private MusicBrainz $musicBrainz) {}
 
     /**
-     * @return array<array<string, string>>
+     * @return list<array{mbid: string, name: string}>
      */
     public function find(string $artistName): array
     {
@@ -47,12 +47,14 @@ final readonly class MissingArtistFinder implements MissingArtistFinderInterface
                 return [];
             }
 
-            return array_map(
-                static fn($result): array => [
-                    'mbid' => $result->id,
-                    'name' => $result->name,
-                ],
-                (array) $this->musicBrainz->search($filter)
+            return array_values(
+                array_map(
+                    static fn($result): array => [
+                        'mbid' => (string) $result->id,
+                        'name' => (string) $result->name,
+                    ],
+                    (array) $this->musicBrainz->search($filter)
+                )
             );
         } catch (Exception) {
             return [];

@@ -25,18 +25,20 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Image;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Art\BigArtView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -121,7 +123,12 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             switch ($_GET['type']) {
                 case 'popup':
                     $typeManaged = true;
-                    require_once Ui::find_template('show_big_art.inc.php');
+                    echo (new BigArtView(
+                        (string) Art::url((int) Core::get_get('id'), 'album'),
+                        str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US')),
+                        (string) AmpConfig::get('site_charset', 'UTF-8'),
+                        (string) AmpConfig::get('site_title')
+                    ))->render();
                     break;
                 case 'session':
                     Session::check();

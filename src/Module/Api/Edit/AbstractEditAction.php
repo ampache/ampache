@@ -46,10 +46,10 @@ use Psr\Log\LoggerInterface;
 
 abstract class AbstractEditAction implements ApplicationActionInterface
 {
+    protected LoggerInterface $logger;
     private BrowseFactoryInterface $browseFactory;
     private ConfigContainerInterface $configContainer;
     private LibraryItemLoaderInterface $libraryItemLoader;
-    private LoggerInterface $logger;
     private ShareRepositoryInterface $shareRepository;
 
     public function __construct(

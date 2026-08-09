@@ -46,7 +46,7 @@ final class FolderQuery implements QueryInterface
     ];
 
     protected string $base = "SELECT %%SELECT%% FROM (
-            SELECT CONCAT(`object_type`, '-', `object_id`) AS `id`, `object_id` AS `int_id`, `name`, `folder_id`, `object_type`, IF(`object_type`='folder', 1, 0) AS `is_folder`, `path_name` FROM `folder_map`
+            SELECT CONCAT(`object_type`, '-', `object_id`) AS `id`, `object_id` AS `int_id`, `name`, `folder_id`, `object_type`, IF(`object_type`='folder', 1, 0) AS `is_folder`, `path_name`, `catalog` FROM `folder_map`
         ) AS `folder` ";
     protected string $select = "`folder`.`id`";
 

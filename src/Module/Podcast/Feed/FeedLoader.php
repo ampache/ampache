@@ -89,12 +89,12 @@ final readonly class FeedLoader implements FeedLoaderInterface
         }
 
         return [
-            'title' => html_entity_decode((string) $xml->channel->title),
-            'website' => (string) $xml->channel->link,
-            'description' => html_entity_decode((string) $xml->channel->description),
-            'language' => (string) $xml->channel->language,
-            'copyright' => html_entity_decode((string) $xml->channel->copyright),
-            'generator' => html_entity_decode((string) $xml->channel->generator),
+            'title' => FeedText::cleanLine((string) $xml->channel->title),
+            'website' => trim((string) $xml->channel->link),
+            'description' => FeedText::clean((string) $xml->channel->description),
+            'language' => trim((string) $xml->channel->language),
+            'copyright' => FeedText::cleanLine((string) $xml->channel->copyright),
+            'generator' => FeedText::cleanLine((string) $xml->channel->generator),
             'episodes' => $xml->channel->item,
             'artUrl' => $artUrl,
             'lastBuildDate' => $lastBuildDate,

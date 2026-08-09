@@ -1,0 +1,85 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// genre_row.phtml -- rendered by Ampache\Gui\Genre\GenreRowView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Genre\GenreRowView $this */
+
+$genre = $this->getGenre(); ?>
+<td class="cel_play">
+    <span class="cel_play_content">&nbsp;</span>
+    <div class="cel_play_hover">
+    <?php
+    // A genre queues the songs it holds, so it plays wherever a smartlist does
+    if ($this->isDirectPlayEnabled()) {
+        echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=tag&object_id=' . $genre->id, 'play_circle', T_('Play'), 'play_genre_' . $genre->id));
+        if ($this->isAutoplayNextEnabled()) {
+            echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=tag&object_id=' . $genre->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_genre_' . $genre->id));
+        }
+
+        if ($this->isAutoplayAppendEnabled()) {
+            echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=tag&object_id=' . $genre->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_genre_' . $genre->id));
+        }
+    } ?>
+    </div>
+</td>
+<td class="cel_cover">
+    <?php Art::display('tag', $genre->id, $this->getName(), ['width' => 100, 'height' => 100], $genre->get_link()); ?>
+</td>
+<td class="cel_genre"><?php echo $this->raw($genre->get_f_link()); ?></td>
+<td class="cel_add_list">
+    <span class="cel_item_add">
+        <?php echo $this->raw(Ajax::button('?action=basket&type=tag&id=' . $genre->id, 'new_window', T_('Add to Temporary Playlist'), 'add_genre_' . $genre->id));
+if ($this->mayAddToPlaylist()) { ?>
+        <a id="add_to_playlist_<?php echo $this->e($genre->id); ?>" onclick="showPlaylistDialog(event, 'tag', '<?php echo $this->e($genre->id); ?>')">
+            <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label())); ?>
+        </a>
+        <?php } ?>
+    </span>
+</td>
+<td class="cel_songs"><?php echo $this->e($genre->song); ?></td>
+<td class="cel_albums"><?php echo $this->e($genre->album); ?></td>
+<td class="cel_artists"><?php echo $this->e($genre->artist); ?></td>
+<?php if ($this->isVideoColumnShown()) { ?>
+<td class="cel_videos"><?php echo $this->e($genre->video); ?></td>
+<?php }
+
+if ($this->mayEdit()) { ?>
+<td class="cel_action">
+    <?php // `tag_row` refreshes as the cloud's plain span, so this reloads the page instead of the row?>
+    <a class="tag_edit" id="edit_tag_<?php echo $this->e($genre->id); ?>" onclick="showEditDialog('tag_row', '<?php echo $this->e($genre->id); ?>', 'edit_tag_<?php echo $this->e($genre->id); ?>', '<?php echo addslashes(T_('Edit')); ?>', '')">
+        <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+    </a>
+    <a class="tag_delete" href="<?php echo $this->e($this->getAjaxUri()); ?>?page=tag&action=delete&tag_id=<?php echo $this->e($genre->id); ?>" data-confirm="<?php echo T_('Do you really want to delete this Tag?'); ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
+    </a>
+</td>
+<?php } else { ?>
+<td class="cel_action"></td>
+<?php } ?>

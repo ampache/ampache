@@ -60,7 +60,7 @@ final class PreferenceEditMethod implements MethodInterface
      *
      * Edit a preference value and apply to all users if allowed
      *
-     * filter  = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * filter  = (string) Preference name e.g ('notify_email', 'popular_threshold')
      * value   = (string|integer) Preference value
      * all     = (integer) 0,1 if true apply to all users //optional
      * default = (integer) 0,1 if true set as system default (New and public users) //optional
@@ -124,7 +124,7 @@ final class PreferenceEditMethod implements MethodInterface
             );
         }
 
-        if (!Preference::update($prefName, $user->getId(), $input['value'], $all)) {
+        if (!Preference::update($prefName, $userId, $input['value'], $all, $default)) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,

@@ -1,0 +1,109 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// podcast_episode_row.phtml -- rendered by Ampache\Gui\Podcast\PodcastEpisodeRowView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Podcast\PodcastEpisodeRowView $this */
+
+$libitem = $this->getEpisode();
+$itemId  = $libitem->getId(); ?>
+<td class="cel_play">
+    <span class="cel_play_content">&nbsp;</span>
+    <div class="cel_play_hover">
+<?php if ($this->canPlay()) {
+    echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $itemId, 'play_circle', T_('Play'), 'play_podcast_episode_' . $itemId));
+
+    if (Stream_Playlist::check_autoplay_next()) {
+        echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $itemId . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_podcast_episode_' . $itemId));
+    }
+
+    if (Stream_Playlist::check_autoplay_append()) {
+        echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $itemId . '&append=true', 'low_priority', T_('Play last'), 'addplay_podcast_episode_' . $itemId));
+    }
+} ?>
+    </div>
+</td>
+<?php if ($this->isMashup()) { ?>
+    <td class="<?php echo $this->e($this->getClassCover()); ?>">
+        <?php Art::display('podcast_episode', $itemId, (string) $libitem->get_fullname(), $this->getArtSize(), $this->getWebPath() . '/podcast_episode.php?action=show&podcast_episode=' . $itemId); ?>
+    </td>
+<?php } ?>
+<td class="cel_title"><?php echo $this->raw($libitem->get_f_link()); ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+<?php echo $this->raw(Ajax::button('?action=basket&type=podcast_episode&id=' . $itemId, 'new_window', T_('Add to Temporary Playlist'), 'add_podcast_episode_' . $itemId));
+if ($this->canAddToPlaylist()) { ?>
+        <a id="add_to_playlist_podcast_episode_<?php echo $itemId; ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $itemId; ?>')">
+            <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label())); ?>
+        </a>
+    <?php } ?>
+    </span>
+</td>
+<?php if (!$this->isTableView()) { ?>
+<td class="cel_podcast"><?php echo $this->raw($libitem->getPodcastLink()); ?></td>
+<?php } ?>
+<td class="<?php echo $this->e($this->getClassTime()); ?>"><?php echo $this->e($libitem->get_f_time()); ?></td>
+<?php if ($this->isShowPlayedTimes()) { ?>
+    <td class="<?php echo $this->e($this->getClassCounter()); ?> optional"><?php echo $this->e($libitem->total_count); ?></td>
+    <?php } ?>
+<td class="cel_pubdate optional"><?php echo $this->e($libitem->getPubDate()->format(DATE_ATOM)); ?></td>
+<td class="cel_state optional"><?php echo $this->e($libitem->getState()->toDescription()); ?></td>
+<?php if ($this->isShowRatings()) { ?>
+        <td class="cel_ratings">
+            <div class="rating">
+                <span class="cel_rating" id="rating_<?php echo $itemId; ?>_podcast_episode">
+                    <?php echo $this->raw(Rating::show($itemId, 'podcast_episode')); ?>
+                </span>
+                <span class="cel_userflag" id="userflag_<?php echo $itemId; ?>_podcast_episode">
+                    <?php echo $this->raw(Userflag::show($itemId, 'podcast_episode')); ?>
+                </span>
+            </div>
+        </td>
+    <?php } ?>
+<td class="cel_action">
+    <?php if ($this->canDownload()) { ?>
+            <a class="nohtml" rel="nofollow" href="<?php echo $this->e($this->getWebPath()); ?>/stream.php?action=download&podcast_episode_id=<?php echo $itemId; ?>"><?php echo $this->raw(Ui::get_material_symbol('download', T_('Download'))); ?></a>
+        <?php }
+    if ($this->canEdit()) { ?>
+    <span id="button_sync_<?php echo $itemId; ?>">
+        <?php echo $this->raw(Ajax::button('?page=podcast&action=syncPodcastEpisode&podcast_episode_id=' . $itemId, 'sync', T_('Sync'), 'sync_podcast_episode_' . $itemId, notice: T_('Started'))); ?>
+    </span>
+    <a id="edit_podcast_episode_<?php echo $itemId; ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $itemId; ?>', 'edit_podcast_episode_<?php echo $itemId; ?>', '<?php echo $this->raw(addslashes(T_('Podcast Episode Edit'))); ?>', 'podcast_episode_', '<?php echo '&browse_id=' . $this->getBrowseId(); ?>')">
+        <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+    </a>
+<?php }
+    if ($this->canDelete()) { ?>
+    <a id="delete_podcast_episode_<?php echo $itemId; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $itemId; ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
+    </a>
+    <?php } ?>
+</td>

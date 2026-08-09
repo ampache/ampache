@@ -25,13 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Mashup;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Browse\MashupView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -55,15 +60,14 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_mashup.inc.php',
-            [
-                'object_type' => $object_type,
-                'user' => $gatekeeper->getUser(),
-                'videoRepository' => $this->videoRepository,
-                'browseFactory' => $this->browseFactory
-            ]
-        );
+        echo (new MashupView(
+            $object_type,
+            $gatekeeper->getUser() ?? new User(-1),
+            $this->browseFactory,
+            $this->videoRepository,
+            AmpConfig::get_web_path(),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

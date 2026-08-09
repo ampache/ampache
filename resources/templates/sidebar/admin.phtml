@@ -1,0 +1,77 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// sidebar/admin.phtml -- rendered by Ampache\Gui\Sidebar\AdminSidebarView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Sidebar\AdminSidebarView $this */
+
+$adminPath = $this->getAdminPath();
+$expander  = T_('Expand/Collapse');
+$sections  = [
+    ['key' => 'admin_catalogs', 'title' => T_('Catalogs'), 'items' => $this->getCatalogItems()],
+];
+if ($this->isAdmin()) {
+    $sections[] = ['key' => 'admin_users', 'title' => T_('User Tools'), 'items' => $this->getUserItems()];
+    $sections[] = ['key' => 'admin_access', 'title' => T_('Access Control'), 'items' => $this->getAccessItems()];
+    $sections[] = ['key' => 'admin_modules', 'title' => T_('Modules'), 'items' => $this->getModuleItems()];
+} ?>
+<ul class="sb2" id="sb_admin">
+    <?php if ($this->showBrowseFilter()) { ?>
+    <li>
+        <?php Ajax::start_container('browse_filters');
+        Ajax::end_container(); ?>
+    </li>
+    <?php } ?>
+    <?php foreach ($sections as $section) { ?>
+    <li>
+        <h4 class="header">
+            <span class="sidebar-header-title"><?php echo $this->e($section['title']); ?></span>
+            <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, $section['key'], 'header-img ' . $this->getState($section['key']))); ?>
+        </h4>
+        <ul class="sb3" id="sb_<?php echo $this->e($section['key']); ?>"<?php echo ($this->isCollapsed($section['key'])) ? ' style="display: none;"' : ''; ?>>
+            <?php foreach ($section['items'] as $item) { ?>
+            <li id="<?php echo $this->e($item['id']); ?>"><a href="<?php echo $this->e($adminPath . $item['url']); ?>"><?php echo $this->e($item['label']); ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+    <?php if ($this->isAdmin()) { ?>
+    <li>
+        <h4 class="header">
+            <span class="sidebar-header-title"><?php echo T_('Server Config'); ?></span>
+            <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'admin_server', 'header-img ' . $this->getState('admin_server'))); ?>
+        </h4>
+        <ul class="sb3" id="sb_admin_server"<?php echo ($this->isCollapsed('admin_server')) ? ' style="display: none;"' : ''; ?>>
+            <li id="sb_admin_ot_Debug"><a href="<?php echo $this->e($adminPath); ?>/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
+            <?php foreach ($this->getServerCategories() as $category) { ?>
+            <li id="sb_admin_server_<?php echo $this->e(ucfirst($category['tab'])); ?>"><a href="<?php echo $this->e($this->getWebPath()); ?>/preferences.php?action=admin&tab=<?php echo $this->e($category['tab']); ?>"><?php echo $this->e($category['label']); ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+</ul>

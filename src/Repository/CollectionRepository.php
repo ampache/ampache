@@ -91,17 +91,6 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
         }
     }
 
-    public function countByUser(?User $user): int
-    {
-        // Same visibility scope as getByUser(), so the link appears exactly when a browse would list something
-        $userId = ($user?->getId()) ?? -1;
-
-        return (int) $this->connection->fetchOne(
-            "SELECT COUNT(*) FROM `collection` WHERE (`user` = ? OR `type` = 'public' OR FIND_IN_SET(?, `collaborate`) > 0);",
-            [$userId, $userId]
-        );
-    }
-
     public function create(
         string $name,
         User $user,

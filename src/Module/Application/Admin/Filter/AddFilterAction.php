@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Filter;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\AddCatalogFilterFormView;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
@@ -73,10 +75,11 @@ final class AddFilterAction extends AbstractFilterAction
 
         // If we've got an error then show add form!
         if (AmpError::occurred()) {
-            $this->ui->show(
-                'show_add_filter.inc.php',
-                ['filter_name' => $filter_name]
-            );
+            echo (new AddCatalogFilterFormView(
+                $this->configContainer->getWebPath('/admin'),
+                $filter_name,
+                (bool) AmpConfig::get('catalog_filter')
+            ))->render();
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

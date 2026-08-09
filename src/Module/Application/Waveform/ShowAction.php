@@ -50,10 +50,10 @@ final readonly class ShowAction implements ApplicationActionInterface
         private Waveform $waveform,
     ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WAVEFORM) === false) {
-            return null;
+            return $this->responseFactory->createResponse(404);
         }
 
         // Prevent user from aborting script
@@ -77,7 +77,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $waveform = $this->waveform->get($object, $object_type);
 
         if (!$waveform) {
-            return null;
+            return $this->responseFactory->createResponse(404);
         }
 
         return $this->responseFactory

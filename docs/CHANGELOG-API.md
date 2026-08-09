@@ -34,6 +34,18 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * `collection_remove` accepts a `track` position as well as an `id`/`object_type` pair, because a position is the only unambiguous address once duplicates are possible. A position removes exactly one member; an object removes every member pointing at it. Either way the remaining positions close up, so they stay dense and 1-based. `collection_remove` still does not error on a non-member
   * Both name the member's type `object_type` rather than `type`, because the REST path already spends `type` on the resource name and the two would collide in the same query string
   * REST paths `collections`, `collections/{collection_id}` and `collections/{collection_id}/items`
+* `playlist_folder` (API8 only)
+  * New actions `playlist_folders`, `playlist_folder`, `playlist_folder_items`, `playlist_folder_create`, `playlist_folder_edit`, `playlist_folder_delete`, `playlist_folder_add` and `playlist_folder_remove`. A playlist folder organises playlists, smartlists and collections into a tree of arbitrary depth
+  * The tree is **private to each user**, and where a list sits belongs to the pair of you and that list rather than to the list itself. So you may file another user's public playlist into your own folder without changing anything for them, and two users can file the same playlist in different places
+  * A list is in exactly one of your folders at a time: filing one that is already filed moves it rather than copying it
+  * **The root is implicit and holds every list you can see that has not been filed elsewhere.** Nothing is stored when a playlist is created, so it appears at your root immediately, and it reappears there when it is taken out of a folder. Address the root as `0` or `/`
+  * `playlist_folders` returns the whole tree as one flat list; rebuild the hierarchy from each folder's `parent`, where `0` is the root. A folder belonging to another user reports *not found* rather than *access denied*, so a stranger cannot probe for one
+  * `filter` takes either a folder id or a name path, so REST paths `playlist-folders/{playlist_folder_id}` and `playlist-folders/Rock/Live` both reach the same folder. A folder name may not contain a `/` for that reason, and must be unique among its siblings — the comparison is case-insensitive, so `Rock` and `rock` collide
+  * `sort_order` is client-assigned and shared by a parent's folders and its filed lists, so the two interleave in one ordering space; ties are broken by name. Positions are left exactly as sent rather than renumbered, so gaps are preserved
+  * `playlist_folder_edit` refuses a move into the folder's own subtree, which would otherwise detach the branch
+  * `playlist_folder_delete` refuses a folder that still holds a child folder or a filed list; the lists themselves are never deleted with it, so a folder is emptied by moving its contents out first
+  * `playlist_folder_items` returns the members as one flat list under `contents`, each entry carrying its `sort_order` and its `object_type` (`playlist`, `smartlist` or `collection`) with that type's own object nested under a property of the same name
+  * REST paths `playlist-folders`, `playlist-folders/{playlist_folder_id}`, `playlist-folders{path}` and `playlist-folders/{playlist_folder_id}/items`
 * `sonic_match` (API8 only)
   * New action (`SonicMatch8Method`) returning songs that sound like the song in `filter`, each carrying a `similarity` score. Similarity comes from analysing the audio, which needs a sonic-analysis plugin, so with none enabled the request is refused (`4703`) rather than answered with an empty list. The score shares the OpenSubsonic `sonicMatch` scale — 0.0-1.0 where 1.0 is the same recording, and -1 when the backend gives no comparable score — so a client reads the same number from either API. REST path `songs/{song_id}/sonic-match`
 * `random` (API8 only)
@@ -65,6 +77,16 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * New `album_disk` action returning a single album disk, and `album_disk_songs` returning the songs on one disk
   * `album_disk` accepted by `index`, `list`, `browse`, `stats` and `get_art`. `rate` and `flag` already accepted it
   * Album disks are the browsing unit whenever the per-user `album_group` preference is off, so a client can now reach the same objects the web interface shows. `albums` and `album` are unchanged and never vary with that preference
+* `song` (API8 only)
+  * Song responses carry `bpm`, the tagged beats per minute, read on scan into the new `song_data`.`bpm` column
+  * The value keeps the fraction a detection tool wrote (`133.4`), so it is a float rather than an int
+  * New `bpm` rule for `advanced_search`, numeric, song only
+* `mood` (API8 only)
+  * Song responses carry `mood`, a list of `{id, name}` objects shaped exactly like `genre`, read on scan from the file tags into the new `mood` and `mood_map` tables
+  * The list is empty until a catalog has been scanned, and stays empty for files carrying no mood tag
+  * New `mood` rule for `advanced_search`, text, on song, album and artist
+  * New `mood` browse filter on the song, album, artist and video browses, taking a mood id
+  * Album and artist moods are derived from their songs, so they answer *which moods are on this album* rather than naming a tag of their own
 * REST
   * Multi-word resources and actions may be spelled with a dash anywhere in a path (`album-disks/{id}/songs`); the dashed form is folded onto the canonical snake_case action by a single rule rather than a per-name alias list
   * New `albums/{album_id}/disks`, `album-disks/{album_disk_id}`, `album-disks/{album_disk_id}/songs`, plus `art`/`flag`/`rate`/`search`/`stats` on `album-disks`
@@ -76,7 +98,7 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 ### Changed (800000)
 
 * ALL
-  * Passing secrets in the query string is deprecated for privacy (query values leak into server/proxy logs and browser history): the `password` on `register`/`user_create`/`user_edit`/`catalog_add` and the `handshake` `auth` key should be sent in a request body (or, for `auth`, the `Authorization: Bearer` header) — query-string support for these will be removed in **API9**
+  * Passing secrets in the query string is deprecated for privacy (query values leak into server/proxy logs and browser history): the `password` on `register`/`user_create`/`user_edit`/`catalog_add` and the `handshake` `auth` key should be sent in a request body (or, for `auth`, the `Authorization: Bearer` header) — the query string keeps working for them, it is simply no longer the recommended way
   * Version rollover logic reworked for the new 5-version lineup: requests pinned to a disabled API6 now roll forward to API8 (version 7 is explicitly rejected as unsupported)
   * API8 JSON/XML output now sets real HTTP status codes for errors and empty results (`404` for empty, `Api::getHttpCode()`-mapped codes for errors) — API3–6 always returned HTTP 200 with the error embedded in the response body
   * API8 uses updated action names for a few methods present under legacy naming in API3/4: `index`/`list` (not `get_indexes`), `playlist_add` (not `playlist_add_song`), `user_edit` (not `user_update`)
@@ -105,6 +127,27 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 * API5, API6
   * advanced_search: `type=album_disk` returned album disk ids rendered as songs, so a client read a disk id as a song id. Neither version has an album disk formatter, so both now return an empty result instead. `search` is affected too, being an alias. API8 returns the album disks. **NOTE** the same fix landed in Ampache7, which serves these versions as well
   * API3 and API4 are unchanged: neither validates the search `type` at all, so every unsupported type there already falls through to the song output
+* API8
+  * `Json8_Data`/`Xml8_Data` skip an object that no longer exists rather than returning it as an entry of empty fields, and a missing object no longer ends the list it appeared in. **NOTE** the same fix landed in Ampache7 for API3-6, which it serves as well
+* `preference_edit` (API6 and API8)
+  * preference_edit: `default=1` now writes the server default — the system user's value, and the value a new account is seeded from — instead of the calling user's own value, and reports that value back. Existing accounts are still only changed by `all=1`. **NOTE** the same fix landed in Ampache7, which serves API6 as well
+
+## API 6.9.2 Build 4
+
+This version is being released for Ampache7 **only**
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+**NOTE** API8 has been removed from the codebase for Ampache 7.
+
+### Fixed (692004)
+
+* ALL
+  * An object that no longer exists is left out of the response instead of being returned as an entry of empty fields under its id. Affects genres, radio stations, and the album, song, artist and playlist entries in `index`, `indexes` and `search_group`
+  * A missing object no longer ends the list it appeared in, so the objects after it are returned rather than silently dropped
+* `preference_edit` (API6)
+  * preference_edit: `default=1` now writes the server default — the system user's value, and the value a new account is seeded from — instead of the calling user's own value, and reports that value back. Existing accounts are still only changed by `all=1`. **NOTE** the same fix landed in Ampache8, which serves API6 as well
 
 ## API 6.9.2 Build 3
 
@@ -868,7 +911,7 @@ Inconsistency with the return of object arrays and single items have been fixed 
 ### Changed (630000)
 
 * API6
-  * playlist_add_song: depreciated and will be removed in **API7** (Use playlist_add)
+  * playlist_add_song: depreciated (Use playlist_add); removed in **API8**
   * share_create: add more valid types ('playlist', 'podcast', 'podcast_episode', 'video')
   * user: make username optional
 
@@ -1075,7 +1118,7 @@ Stream token's will let you design permalinked streams and allow users to stream
 ### Changed (600000)
 
 * Api6
-  * Renamed `user_update` to `user_edit` (user_update still works and will be removed in **API7**)
+  * Renamed `user_update` to `user_edit` (user_update still works in API6 and older; removed in **API8**)
 * Api5
   * Add backwards compatible `user_edit` method to point to `user_update`
 * ALL
@@ -1088,7 +1131,7 @@ Stream token's will let you design permalinked streams and allow users to stream
   * For data responses id is the only attribute and everything else is an element
   * Name was not set as an attribute OR an element so now it's always an element
   * Return original XML output (that may be malformed) when loadxml fails.
-* Api6::get_indexes: This method is depreciated and will be removed in Ampache **API7** (Use list instead)
+* Api6::get_indexes: This method is depreciated (Use list instead); removed in **API8**
 
 ### Removed (600000)
 
@@ -1654,9 +1697,9 @@ API 5.0.0-release will be the first Ampache release to match the release string.
 * API Build number is depreciated (the last 3 digits of the api version)
   * API 5.0.0 will be released with a string version ("5.0.0-release")
   * All future 4.x.x API versions will follow the main Ampache version. (420000, 421000, 422000)
-* total_count in the XML API is depreciated and will be removed in API 5.0.0.
+* total_count in the XML API is depreciated, but it keeps working.
   * XML can count objects the same was as a JSON array [https://www.php.net/manual/en/simplexmlelement.count.php]
-* Genre in songs is depreciated and will be removed in API 5.0.0.
+* Genre in songs is depreciated, but it keeps working.
   * Use tag instead of genre, tag provides a genre ID as well as the name.
 
 ### Fixed (420000)

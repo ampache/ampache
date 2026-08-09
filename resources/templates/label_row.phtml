@@ -1,0 +1,62 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// label_row.phtml -- rendered by Ampache\Gui\Label\LabelRowView
+
+use Ampache\Module\Art\Art;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Label\LabelRowView $this */
+
+$label = $this->getLabel(); ?>
+<td class="<?php echo $this->e($this->getCoverCellClass()); ?>">
+    <?php Art::display('label', $label->id, $this->getName(), ['width' => 100, 'height' => 100], $this->getLabelUrl()); ?>
+</td>
+<td class="cel_label"><?php echo $this->raw($label->get_f_link()); ?></td>
+<td class="cel_category"><?php echo $this->e($label->category); ?></td>
+<td class="cel_artists"><?php echo $this->e($label->get_artist_count()); ?></td>
+<td class="cel_country"><?php echo $this->e($label->country); ?></td>
+<td class="cel_active"><?php echo $label->active ? T_('Active') : T_('Inactive'); ?></td>
+<td class="cel_action">
+<?php if ($this->mayInteract()) {
+    if ($this->mayAddToPlaylist()) { ?>
+    <a id="add_to_playlist_<?php echo $this->e($label->id); ?>" onclick="showPlaylistDialog(event, 'label', '<?php echo $this->e($label->id); ?>')">
+        <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label())); ?>
+    </a>
+    <?php }
+
+    if ($this->isSociable()) { ?>
+    <a href="<?php echo $this->e($this->getWebPath()); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $this->e($label->id); ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('comment', T_('Post Shout'))); ?>
+    </a>
+    <?php }
+
+    if ($this->mayDelete()) { ?>
+    <a id="delete_label_<?php echo $this->e($label->id); ?>" href="<?php echo $this->e($this->getWebPath()); ?>/labels.php?action=delete&label_id=<?php echo $this->e($label->id); ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
+    </a>
+    <?php }
+    } ?>
+</td>

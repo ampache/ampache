@@ -1,0 +1,53 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// edit_license.phtml -- rendered by Ampache\Gui\Form\EditLicenseFormView
+
+/** @var Ampache\Gui\Form\EditLicenseFormView $this */
+?>
+<form method="post" enctype="multipart/form-data" action="<?php echo $this->e($this->getWebPath()); ?>/license.php?action=edit">
+<input type="hidden" name="license_id" value="<?php echo $this->getLicense()->getId(); ?>" />
+<table class="tabledata">
+<tr>
+    <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
+    <td><input type="text" name="name" value="<?php echo $this->e($this->getLicense()->getName()); ?>" autofocus /></td>
+</tr>
+<tr>
+    <td><?php echo T_('Description:'); ?></td>
+    <td><textarea rows="5" cols="70" maxlength="250" name="description"><?php echo $this->e($this->getLicense()->getDescription()); ?></textarea></td>
+</tr>
+<tr>
+    <td class="edit_dialog_content_header"><?php echo T_('External Link'); ?></td>
+    <td><input type="text" name="external_link" maxlength="250" value="<?php echo $this->e($this->getLicense()->getExternalLink()); ?>" /></td>
+</tr>
+    <tr>
+        <td class="edit_dialog_content_header"><?php echo T_('Order'); ?></td>
+        <td><input type="number" name="order" min="0" maxlength="4" value="<?php echo $this->getLicense()->getOrder(); ?>" /></td>
+    </tr>
+<tr>
+    <td><input type="submit" value="<?php echo T_('Confirm'); ?>" /></td>
+</tr>
+</table>
+</form>

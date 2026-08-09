@@ -165,9 +165,11 @@ interface PreferenceRepositoryInterface
     /**
      * Reads one preference as a user sees it, with the row the display needs
      *
+     * Pass true for a real user, whose own row never applies to a system-category preference
+     *
      * @return array<string, mixed>
      */
-    public function getUserPreferenceRow(string $name, int $userId, bool $systemOnly): array;
+    public function getUserPreferenceRow(string $name, int $userId, bool $excludeSystem): array;
 
     /**
      * Reads a user's stored values, keyed by whichever column this schema carries

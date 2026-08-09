@@ -25,14 +25,15 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Register;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Register\RegistrationView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
 use Ampache\Module\Util\Mailer;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,7 +44,6 @@ final readonly class ShowAddUserAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private RegistrationAgreementRendererInterface $registrationAgreementRenderer,
-        private UiInterface $ui,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -63,10 +63,10 @@ final readonly class ShowAddUserAction implements ApplicationActionInterface
             throw new AccessDeniedException('Error `mail_enable` failed. Enable `user_no_email_confirm` to disable mail requirements');
         }
 
-        $this->ui->show(
-            'show_user_registration.inc.php',
-            ['registrationAgreementRenderer' => $this->registrationAgreementRenderer]
-        );
+        echo (new RegistrationView(
+            AmpConfig::get_web_path(),
+            $this->registrationAgreementRenderer
+        ))->render();
 
         return null;
     }

@@ -1,0 +1,219 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// admin/user_edit.phtml -- rendered by Ampache\Gui\Admin\UserEditView
+
+use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Admin\UserEditView $this */
+
+$userId    = $this->getUserId();
+$adminPath = $this->getAdminPath();
+$access    = $this->getAccessLevel();
+$isAdmin   = $this->isAdmin();
+$apikey    = $this->getApikey();
+Ui::show_box_top(T_('Editing Existing User'));
+echo $this->raw(AmpError::display('general')); ?>
+<form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo $this->e($this->getFormAction()); ?>">
+    <table class="tabledata">
+        <tr>
+            <th colspan="2"><?php echo T_('User Properties'); ?></th>
+        </tr>
+        <tr>
+            <td><?php echo T_('Username'); ?></td>
+            <td><input type="text" name="username" maxlength="128" value="<?php echo $this->e($this->getUsername()); ?>" autocomplete="off" autofocus />
+                <?php echo $this->raw(AmpError::display('username')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Full Name'); ?></td>
+            <td><input type="text" name="fullname" maxlength="255" value="<?php echo $this->e($this->getFullname()); ?>" />
+                <input type="checkbox" name="fullname_public" value="1" <?php echo ($this->isFullnamePublic()) ? 'checked' : ''; ?> /> <?php echo T_('Public'); ?>
+                <?php echo $this->raw(AmpError::display('fullname')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('E-mail'); ?></td>
+            <td><input type="text" name="email" maxlength="128" value="<?php echo $this->e($this->getEmail()); ?>" />
+                <?php echo $this->raw(AmpError::display('email')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Website'); ?></td>
+            <td><input type="text" name="website" maxlength="255" value="<?php echo $this->e($this->getWebsite()); ?>" />
+                <?php echo $this->raw(AmpError::display('website')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('State'); ?></td>
+            <td><input type="text" name="state" maxlength="64" value="<?php echo $this->e($this->getState()); ?>" autocomplete="off" />
+                <?php echo $this->raw(AmpError::display('state')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('City'); ?></td>
+            <td><input type="text" name="city" maxlength="64" value="<?php echo $this->e($this->getCity()); ?>" autocomplete="off" />
+                <?php echo $this->raw(AmpError::display('city')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Password'); ?></td>
+            <td><input type="password" name="password_1" maxlength="64" value="" autocomplete="new-password" />
+                <?php echo $this->raw(AmpError::display('password')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Confirm Password'); ?></td>
+            <td><input type="password" name="password_2" maxlength="64" value="" autocomplete="new-password" /></td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo T_('Subsonic Password'); ?>
+                <?php if ($this->hasSubsonicSecret()) { ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_delete_subsonic_secret&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?></a>
+                <?php } ?>
+            </td>
+            <td><input type="password" name="subsonic_password_1" maxlength="64" value="" autocomplete="new-password" />
+                <?php echo $this->raw(AmpError::display('subsonic_password')); ?>
+                <span><?php echo ($this->hasSubsonicSecret()) ? T_('Currently set') : T_('Not set'); ?></span>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Confirm Password'); ?></td>
+            <td><input type="password" name="subsonic_password_2" maxlength="64" value="" autocomplete="new-password" /></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('User Access Level'); ?></td>
+            <td>
+                <select name="access">
+                    <?php foreach ($this->getAccessLevels() as $value => $label) { ?>
+                    <option value="<?php echo $value; ?>"<?php echo ($value === $access) ? ' selected="selected"' : ''; ?>><?php echo $this->e($label); ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <?php if ($this->showCatalogFilter()) { ?>
+        <tr>
+            <td><?php echo T_('Catalog Filter'); ?></td>
+            <td>
+                <select name="catalog_filter_group">
+                    <?php foreach ($this->getCatalogFilters() as $filter) { ?>
+                    <option value="<?php echo $this->e($filter['id']); ?>"<?php echo ($filter['id'] === $this->getCatalogFilterGroup()) ? ' selected="selected"' : ''; ?>><?php echo $this->e($filter['name']); ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo $this->e(Ui::format_bytes($this->getMaxUploadSize())); ?>)</td>
+            <td><input type="file" id="avatar" name="avatar" value="" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <?php echo $this->raw($this->getAvatar()); ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_delete_avatar&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?></a>
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $this->e($this->getMaxUploadSize()); ?>" />
+            </td>
+        </tr>
+        <tr>
+            <th colspan="2"><?php echo T_('Other Options'); ?></th>
+        </tr>
+        <tr>
+            <td>
+                <?php echo T_('API key'); ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_generate_apikey&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('cycle', T_('Generate new API key'))); ?></a>&nbsp;
+                <?php if ($apikey !== '') { ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_delete_apikey&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <span>
+                    <?php if ($apikey !== '') { ?>
+                    <br />
+                    <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;"><div id="apikey_qrcode"></div></div>
+                    <br />
+                    <?php // the key is json encoded rather than pasted into the literal, so a quote cannot end it?>
+                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: <?php echo $this->raw((string) json_encode($apikey, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP)); ?>, background: '#ffffff', foreground: '#000000'});</script>
+                    <?php echo $this->e($apikey);
+                    } ?>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo T_('Stream Token'); ?>
+                <?php if ($isAdmin) { ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_generate_streamtoken&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('cycle', T_('Generate new Stream token'))); ?></a>&nbsp;
+                <?php if ($this->getStreamToken() !== '') { ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_delete_streamtoken&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?></a>
+                <?php }
+                } ?>
+            </td>
+            <td><span><?php echo $this->e($this->getStreamToken()); ?></span></td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo T_('RSS Token'); ?>
+                <?php if ($isAdmin) { ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_generate_rsstoken&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('cycle', T_('Generate new RSS token'))); ?></a>
+                <?php if ($this->getRssToken() !== '') { ?>
+                <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_delete_rsstoken&user_id=<?php echo $userId; ?>"><?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?></a>
+                <?php }
+                } ?>
+            </td>
+            <td><span><?php echo $this->e($this->getRssToken()); ?></span></td>
+        </tr>
+        <?php if ($this->showPresets()) { ?>
+        <tr>
+            <td><?php echo T_('Config Preset'); ?>&nbsp;<span class="information">(<?php echo T_('This affects all non-admin accounts'); ?>)</span></td>
+            <td>
+                <select name="preset">
+                    <?php foreach ($this->getPresets() as $value => $label) { ?>
+                    <option value="<?php echo $this->e($value); ?>"><?php echo $this->e($label); ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Prevent Preset Override'); ?></td>
+            <td><input type="checkbox" checked="checked" value="1" name="prevent_override" /></td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td><?php echo T_('Clear Stats'); ?></td>
+            <td><input type="checkbox" value="1" name="reset_stats" /></td>
+        </tr>
+    </table>
+    <div class="formValidation">
+        <input type="hidden" name="action" value="update_user" />
+        <input type="submit" value="<?php echo $this->e(T_('Update User')); ?>" />
+        <?php echo $this->raw(Core::form_register('edit_user')); ?>
+        <input type="hidden" name="user_id" value="<?php echo $userId; ?>" />
+    </div>
+</form>
+<?php Ui::show_box_bottom(); ?>

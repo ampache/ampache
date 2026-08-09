@@ -366,29 +366,6 @@ final readonly class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * This returns users list related to a website.
-     *
-     * @return int[]
-     *
-     * @todo rework. the query limits the results to 1, so it doesn't need to return an array
-     */
-    public function findByWebsite(string $website): array
-    {
-        $website   = rtrim($website, "/");
-        $dbResults = $this->connection->query(
-            'SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1',
-            [$website]
-        );
-
-        $users = [];
-        while ($userId = $dbResults->fetchColumn()) {
-            $users[] = (int) $userId;
-        }
-
-        return $users;
-    }
-
-    /**
      * Clears the validation key of everyone who has since managed to log in
      */
     public function garbageCollectUnvalidated(): void

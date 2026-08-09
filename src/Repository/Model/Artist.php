@@ -834,6 +834,7 @@ class Artist extends database_object implements
      *     overwrite_childs?: string,
      *     add_to_childs?: string,
      *     edit_tags?: string,
+     *     edit_moods?: string,
      *     edit_labels?: string
      * } $data
      */
@@ -924,6 +925,11 @@ class Artist extends database_object implements
                 $add_to_childs,
                 true
             );
+        }
+
+        if (isset($data['edit_moods'])) {
+            // no from_file_tags, so these belong to whoever is editing and outlive the next scan
+            Mood::update_mood_list((string) $data['edit_moods'], 'artist', $this->id, true);
         }
 
         if (AmpConfig::get('label') && isset($data['edit_labels'])) {

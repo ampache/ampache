@@ -55,6 +55,7 @@ final class VaInfo implements VaInfoInterface
         'audio_codec' => null,
         'barcode' => null,
         'bitrate' => null,
+        'bpm' => null,
         'catalog_number' => null,
         'channels' => null,
         'comment' => null,
@@ -72,6 +73,7 @@ final class VaInfo implements VaInfoInterface
         'language' => null,
         'license' => null,
         'lyrics' => null,
+        'mood' => null,
         'mb_albumartistid' => null,
         'mb_albumartistid_array' => null,
         'mb_albumid_group' => null,
@@ -246,6 +248,7 @@ final class VaInfo implements VaInfoInterface
      *     'audio_codec': ?string,
      *     'barcode': ?string,
      *     'bitrate': ?int,
+     *     'bpm': ?float,
      *     'catalog_number': ?string,
      *     'channels': ?string,
      *     'comment': ?string,
@@ -263,6 +266,7 @@ final class VaInfo implements VaInfoInterface
      *     'language': ?string,
      *     'license': ?string,
      *     'lyrics': ?string,
+     *     'mood': ?string[],
      *     'mb_albumartistid': ?string,
      *     'mb_albumartistid_array': ?string[],
      *     'mb_albumid_group': ?string,
@@ -320,6 +324,9 @@ final class VaInfo implements VaInfoInterface
             $info['time']     = (!$info['time'] && array_key_exists('time', $tags)) ? (int) $tags['time'] : $info['time'];
             $info['channels'] = (!$info['channels'] && array_key_exists('channels', $tags)) ? $tags['channels'] : $info['channels'];
 
+            // getID3 normalises id3v2 TBPM, quicktime tmpo and the vorbis/APE comment to the same key, so one line covers every format
+            $info['bpm'] = (!$info['bpm'] && array_key_exists('bpm', $tags)) ? (float) $tags['bpm'] : $info['bpm'];
+
             // This because video title are almost always bad...
             $info['original_name'] = (!$info['original_name'] && array_key_exists('original_name', $tags)) ? stripslashes(trim((string) $tags['original_name'])) : $info['original_name'];
             $info['title']         = (!$info['title'] && array_key_exists('title', $tags)) ? stripslashes(trim((string) $tags['title'])) : $info['title'];
@@ -343,6 +350,11 @@ final class VaInfo implements VaInfoInterface
             $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && is_array($tags['genre']) && $tags['genre'] !== [])
                 ? $tags['genre']
                 : $info['genre'];
+
+            // mood is split into an array by the per-format cleanup, the same as genre
+            $info['mood'] = (!$info['mood'] && array_key_exists('mood', $tags) && is_array($tags['mood']) && $tags['mood'] !== [])
+                ? $tags['mood']
+                : $info['mood'];
 
             $info['isrc'] = (!$info['isrc'] && array_key_exists('isrc', $tags) && !empty($tags['isrc']))
                 ? $tags['isrc']
@@ -1004,6 +1016,9 @@ final class VaInfo implements VaInfoInterface
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
+                case 'mood':
+                    $parsed['mood'] = $this->parseMoods($data);
+                    break;
                 case 'partofset':
                     $elements             = explode('/', (string) $data[0]);
                     $parsed['disk']       = $elements[0];
@@ -1142,6 +1157,9 @@ final class VaInfo implements VaInfoInterface
                     // Pass the array through
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
+                case 'mood':
+                    $parsed['mood'] = $this->parseMoods($data);
+                    break;
                 case 'discsubtitle':
                     $parsed['disksubtitle'] = $data[0];
                     break;
@@ -1244,6 +1262,9 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
+                    break;
+                case 'mood':
+                    $parsed['mood'] = $this->parseMoods($data);
                     break;
                 case 'discsubtitle':
                 case 'setsubtitle':
@@ -1502,6 +1523,9 @@ final class VaInfo implements VaInfoInterface
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
+                case 'mood':
+                    $parsed['mood'] = $this->parseMoods($data);
+                    break;
                 case 'creation_date':
                     $parsed['creation_date'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen((string) $data['0']) > 4) {
@@ -1639,6 +1663,9 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
+                    break;
+                case 'mood':
+                    $parsed['mood'] = $this->parseMoods($data);
                     break;
                 case 'tracknumber':
                 case 'track_number':
@@ -2142,6 +2169,33 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $result;
+    }
+
+    /**
+     * parseMoods
+     *
+     * Split the mood tag the way genres are split: several in one frame joined by `additional_delimiters`, or by a null byte
+     *
+     * @param array<array-key, mixed>|string $data
+     *
+     * @return string[]
+     * @throws Exception
+     */
+    private function parseMoods(array|string $data): array
+    {
+        $result = [];
+        foreach ((is_array($data) ? $data : [$data]) as $row) {
+            if (is_string($row) && $row !== '') {
+                foreach ($this->splitSlashedlist(str_replace("\x00", ';', $row)) as $mood) {
+                    $mood = trim($mood);
+                    if ($mood !== '') {
+                        $result[] = $mood;
+                    }
+                }
+            }
+        }
+
+        return array_values(array_unique($result));
     }
 
     private function trimAscii(string $string): string

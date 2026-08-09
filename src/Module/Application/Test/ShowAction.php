@@ -27,6 +27,8 @@ namespace Ampache\Module\Application\Test;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Install\TestErrorPageView;
+use Ampache\Gui\Install\TestPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Preference;
@@ -86,15 +88,12 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         if (!class_exists(Translations::class)) {
-            require_once __DIR__ . '/../../../../templates/test_error_page.inc.php';
+            echo (new TestErrorPageView())->render();
             throw new Exception('load_gettext()');
         }
 
         load_gettext();
-        // show_test_table.inc.php renders into this scope from show_test.inc.php
-        $environment = $this->environment;
-
-        require_once __DIR__ . '/../../../../templates/show_test.inc.php';
+        echo (new TestPageView($this->environment, __DIR__ . '/../../../../config/ampache.cfg.php'))->render();
 
         return null;
     }

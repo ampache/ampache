@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Random;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Gui\Search\RandomFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -46,14 +48,12 @@ final readonly class AdvancedAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        $this->ui->show(
-            'show_random.inc.php',
-            [
-                'videoRepository' => $this->videoRepository,
-                'object_ids' => [],
-                'browseFactory' => $this->browseFactory
-            ]
-        );
+        echo (new RandomFormView(
+            [],
+            $this->browseFactory,
+            $this->videoRepository,
+            AmpConfig::get_web_path()
+        ))->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

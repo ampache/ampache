@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\AddAccessFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -37,7 +38,6 @@ use Ampache\Module\Authorization\Exception\InvalidIpRangeException;
 use Ampache\Module\Authorization\Exception\InvalidStartIpException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
@@ -109,13 +109,14 @@ final readonly class AddHostAction implements ApplicationActionInterface
                 )
             );
         } else {
-            $this->ui->show(
-                'show_add_access.inc.php',
-                [
-                    'action' => 'show_add_' . Core::get_post('type'),
-                    'add_type' => 'add_host'
-                ]
-            );
+            echo (new AddAccessFormView(
+                $this->configContainer->getWebPath('/admin'),
+                'add_host',
+                $this->requestParser->getFromRequest('name'),
+                $this->requestParser->getFromRequest('start'),
+                $this->requestParser->getFromRequest('end'),
+                ''
+            ))->render();
         }
 
         $this->ui->showQueryStats();

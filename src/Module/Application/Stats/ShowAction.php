@@ -28,7 +28,6 @@ namespace Ampache\Module\Application\Stats;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -46,7 +45,6 @@ final readonly class ShowAction extends AbstractGraphRendererAction
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private GuiFactoryInterface $guiFactory,
-        private TalFactoryInterface $talFactory,
         LibraryItemLoaderInterface $libraryItemLoader,
         Graph $graph,
     ) {
@@ -68,11 +66,7 @@ final readonly class ShowAction extends AbstractGraphRendererAction
         if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             $this->ui->showBoxTop(T_('Statistics'), 'box box_stats');
 
-            echo $this->talFactory
-                ->createTalView()
-                ->setTemplate('stats.xhtml')
-                ->setContext('STATS', $this->guiFactory->createStatsViewAdapter())
-                ->render();
+            echo $this->guiFactory->createStatsViewAdapter()->render();
 
             $this->ui->showBoxBottom();
 

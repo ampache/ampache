@@ -490,6 +490,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
      *         data: int
      *     },
      *     genre: string,
+     *     mood: string,
      *     original_year: int|null,
      *     text: list<array{
      *         data: string,
@@ -546,6 +547,14 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         }
 
         $meta['genre'] = implode(', ', $meta['genre']);
+
+        // getID3 writes this to id3v2 TMOO and the vorbis/APE MOOD comment; a hand-set mood goes out with the rest
+        $moods = [];
+        foreach ($song->get_moods() as $mood) {
+            $moods[] = $mood['name'];
+        }
+
+        $meta['mood'] = implode(', ', $moods);
 
         $album                 = new Album($song->album);
         $meta['original_year'] = $album->original_year; //TORY
@@ -634,6 +643,14 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         }
 
         $meta['genre'] = implode(', ', $meta['genre']);
+
+        // getID3 writes this to id3v2 TMOO and the vorbis/APE MOOD comment; a hand-set mood goes out with the rest
+        $moods = [];
+        foreach ($song->get_moods() as $mood) {
+            $moods[] = $mood['name'];
+        }
+
+        $meta['mood'] = implode(', ', $moods);
 
         $album = new Album($song->album);
 

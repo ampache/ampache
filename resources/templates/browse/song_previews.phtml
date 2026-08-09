@@ -1,0 +1,53 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/song_previews.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\SongPreviewListRenderer
+
+/** @var Ampache\Gui\Browse\ListRenderer\SongPreviewListRenderer $this */
+
+// show_objects() closes the box itself, so this does not emit its own box bottom
+$columns  = $this->getColumns();
+$previews = $this->getPreviews(); ?>
+<table class="tabledata striped-rows">
+    <thead>
+        <tr class="th-top">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <?php } ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($previews as $preview) { ?>
+        <tr id="song_preview_<?php echo $this->e($preview->id); ?>">
+            <?php echo $this->raw($this->renderRow($preview)); ?>
+        </tr>
+        <?php } ?>
+        <?php if ($previews === []) { ?>
+        <tr>
+            <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>

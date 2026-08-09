@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Upload;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Upload\UploadView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -95,13 +97,11 @@ final readonly class DefaultAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         if ($this->configContainer->get(ConfigurationKeyEnum::UPLOAD_CATALOG) > 0) {
-            $this->ui->show(
-                'show_add_upload.inc.php',
-                [
-                    'upload_max' => $upload_max,
-                    'ajaxfs' => $ajaxfs
-                ]
-            );
+            echo (new UploadView(
+                AmpConfig::get_web_path(),
+                $ajaxfs,
+                (int) $upload_max
+            ))->render();
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '<br>' . '<a href="https://ampache.org/docs/help/upload-catalogs" target="_blank">' . T_('Help') . " " . Ui::get_material_symbol('open_in_new', T_('Link')) . "</a>";

@@ -1,0 +1,64 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// collection_row.phtml -- rendered by Ampache\Gui\Collection\CollectionRowView
+
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Collection\CollectionRowView $this */
+
+$collectionId = $this->getCollectionId(); ?>
+<td class="cel_play">
+    <?php if ($this->showDirectPlay()) {
+        echo $this->raw(Ajax::button('?page=stream&action=directplay&object_type=collection&object_id=' . $collectionId, 'play_circle', T_('Play'), 'play_collection_' . $collectionId));
+    } ?>
+</td>
+<td class="<?php echo $this->e($this->getCoverClass()); ?>"><?php echo $this->raw($this->getArt()); ?></td>
+<td class="cel_collection"><a href="<?php echo $this->e($this->getLink()); ?>"><?php echo $this->e($this->getFullname()); ?></a></td>
+<td class="cel_medias"><?php echo $this->e($this->getItemCount()); ?></td>
+<td class="cel_type"><?php echo $this->e($this->getType()); ?></td>
+<td class="cel_object_type"><?php echo $this->e($this->getObjectType()); ?></td>
+<?php if ($this->showRatings()) { ?>
+<td class="cel_ratings">
+    <div id="rating_<?php echo $collectionId; ?>_collection"><?php echo $this->raw(Rating::show($collectionId, 'collection')); ?></div>
+    <div id="userflag_<?php echo $collectionId; ?>_collection"><?php echo $this->raw(Userflag::show($collectionId, 'collection')); ?></div>
+</td>
+<?php } ?>
+<td class="cel_owner"><?php echo $this->e($this->getOwner()); ?></td>
+<td class="cel_action">
+    <?php if ($this->mayCollaborate()) { ?>
+    <a id="edit_collection_<?php echo $collectionId; ?>" onclick="showEditDialog('collection_row', '<?php echo $collectionId; ?>', 'edit_collection_<?php echo $collectionId; ?>', '<?php echo addslashes(T_('Collection Edit')); ?>', '')">
+        <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+    </a>
+    <?php } ?>
+    <?php if ($this->mayDelete()) { ?>
+    <a href="<?php echo $this->e($this->getWebPath()); ?>/collection.php?action=delete_collection&amp;collection=<?php echo $collectionId; ?>" data-confirm="<?php echo T_('Do you really want to delete this Collection?'); ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
+    </a>
+    <?php } ?>
+</td>

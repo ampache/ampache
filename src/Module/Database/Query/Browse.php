@@ -26,38 +26,24 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
+use Ampache\Gui\Browse\ListRenderer\BrowseListContext;
+use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
-use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\CollectionRepositoryInterface;
-use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Video;
-use Ampache\Repository\PodcastRepositoryInterface;
-use Ampache\Repository\ShoutRepositoryInterface;
-use Ampache\Repository\VideoRepositoryInterface;
-use Ampache\Repository\WantedRepositoryInterface;
 
 /**
  * Browse Class
@@ -95,6 +81,7 @@ class Browse extends Query
         'license_hidden',
         'license',
         'live_stream',
+        'mood',
         'playlist_localplay',
         'playlist_media',
         'playlist_search',
@@ -136,69 +123,16 @@ class Browse extends Query
         'collection_items',
         'democratic',
         'genre',
+        'mood',
         'playlist_localplay',
         'playlist_media',
-    ];
-    /**
-     * The template each browse type renders through. A type with no entry here renders nothing, so every type in
-     * BROWSE_TYPES needs one; the matching box title lives in _getBoxTitle().
-     *
-     * @var array<string, string>
-     */
-    private const array TEMPLATE_MAP = [
-        'album' => 'show_albums.inc.php',
-        'album_disk' => 'show_album_disks.inc.php',
-        'artist' => 'show_artists.inc.php',
-        'broadcast' => 'show_broadcasts.inc.php',
-        'catalog' => 'show_catalogs.inc.php',
-        'collection' => 'show_collections.inc.php',
-        'collection_items' => 'show_collection_items.inc.php',
-        'democratic' => 'show_democratic_playlist.inc.php',
-        'folder' => 'show_folders.inc.php',
-        'follower' => 'show_users.inc.php',
-        'genre' => 'show_genres.inc.php',
-        'label' => 'show_labels.inc.php',
-        'license' => 'show_manage_license.inc.php',
-        'license_hidden' => 'show_manage_license_hidden.inc.php',
-        'live_stream' => 'show_live_streams.inc.php',
-        'playlist' => 'show_playlists.inc.php',
-        'playlist_localplay' => 'show_localplay_playlist.inc.php',
-        'playlist_media' => 'show_playlist_medias.inc.php',
-        'playlist_search' => 'show_searches.inc.php',
-        'podcast' => 'show_podcasts.inc.php',
-        'podcast_episode' => 'show_podcast_episodes.inc.php',
-        'pvmsg' => 'show_pvmsgs.inc.php',
-        'share' => 'show_shared_objects.inc.php',
-        'shoutbox' => 'show_manage_shoutbox.inc.php',
-        'smartplaylist' => 'show_searches.inc.php',
-        'song' => 'show_songs.inc.php',
-        'song_preview' => 'show_song_previews.inc.php',
-        'tag' => 'show_tagcloud.inc.php',
-        'tag_hidden' => 'show_tagcloud_hidden.inc.php',
-        'user' => 'show_users.inc.php',
-        'video' => 'show_videos.inc.php',
-        'wanted' => 'show_wanted_albums.inc.php',
     ];
 
     public ?int $duration = null;
 
     public function __construct(
         private readonly AjaxUriRetrieverInterface $ajaxUriRetriever,
-        private readonly CollectionRepositoryInterface $collectionRepository,
-        private readonly GatekeeperFactoryInterface $gatekeeperFactory,
-        private readonly GuiFactoryInterface $guiFactory,
-        private readonly LabelRepositoryInterface $labelRepository,
-        private readonly LibraryItemLoaderInterface $libraryItemLoader,
-        private readonly LicenseRepositoryInterface $licenseRepository,
-        private readonly PodcastRepositoryInterface $podcastRepository,
-        private readonly ShoutObjectLoaderInterface $shoutObjectLoader,
-        private readonly ShoutRepositoryInterface $shoutRepository,
-        private readonly TalFactoryInterface $talFactory,
-        private readonly UiInterface $ui,
-        private readonly UserFollowStateRendererInterface $userFollowStateRenderer,
-        private readonly VideoRepositoryInterface $videoRepository,
-        private readonly WantedRepositoryInterface $wantedRepository,
-        private readonly ZipHandlerInterface $zipHandler,
+        private readonly BrowseListRendererLocatorInterface $browseListRendererLocator,
         ?int $browse_id = 0,
         ?bool $cached = true,
     ) {
@@ -658,8 +592,12 @@ class Browse extends Query
             $browse->set_grid_view(false);
         }
 
-        $box_req   = $this->_getTemplate($type);
+        // every browse type renders through its own renderer, which brings the services it needs with it
+        $renderer  = $this->browseListRendererLocator->find($type);
         $box_title = $this->_getBoxTitle($type, $match);
+        if ($renderer === null) {
+            debug_event(self::class, 'show_objects: no renderer for browse type {' . $type . '}', 1);
+        }
 
         // an album list may be titled and grouped by whatever asked for it
         $group_release = false;
@@ -668,41 +606,31 @@ class Browse extends Query
             $group_release = (bool) ($argument['group_disks'] ?? false);
         }
 
-        // the shoutbox template lists the records themselves rather than their ids
-        $shouts = ($type === 'shoutbox')
-            ? $this->_getShouts($object_ids)
-            : [];
-
         Ajax::start_container($this->get_content_div(), 'browse_content');
-        if ($this->is_show_header() && $box_req !== '' && $box_title !== '') {
+        $hasBody = $renderer !== null;
+        if ($this->is_show_header() && $hasBody && $box_title !== '') {
             $this->set_title($box_title);
             Ui::show_box_top($box_title, $class);
         }
 
-        if ($box_req !== '') {
-            // the browse template and its row templates render in this scope, so the services they use are named here
-            $ajaxUriRetriever        = $this->ajaxUriRetriever;
-            $collectionRepository    = $this->collectionRepository;
-            $gatekeeper              = $this->gatekeeperFactory->createGuiGatekeeper();
-            $guiFactory              = $this->guiFactory;
-            $labelRepository         = $this->labelRepository;
-            $libraryItemLoader       = $this->libraryItemLoader;
-            $licenseRepository       = $this->licenseRepository;
-            $podcastRepository       = $this->podcastRepository;
-            $shoutObjectLoader       = $this->shoutObjectLoader;
-            $shoutRepository         = $this->shoutRepository;
-            $talFactory              = $this->talFactory;
-            $ui                      = $this->ui;
-            $userFollowStateRenderer = $this->userFollowStateRenderer;
-            $videoRepository         = $this->videoRepository;
-            $wantedRepository        = $this->wantedRepository;
-            $zipHandler              = $this->zipHandler;
-
-            require $box_req;
+        if ($renderer !== null) {
+            echo $renderer->renderList(
+                new BrowseListContext(
+                    $this,
+                    $object_ids,
+                    $hide_columns,
+                    $argument_param,
+                    $limit_threshold,
+                    $browse_cached,
+                    $group_release,
+                    $argument,
+                    $extra_objects
+                )
+            );
         }
 
         if ($this->is_show_header()) {
-            if ($box_req !== '') {
+            if ($hasBody) {
                 Ui::show_box_bottom();
             }
 
@@ -844,45 +772,6 @@ class Browse extends Query
         }
 
         return '';
-    }
-
-    /**
-     * The shoutbox template lists the records themselves, so the ids are resolved before it renders.
-     *
-     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
-     * @return list<Shoutbox>
-     */
-    private function _getShouts(array $object_ids): array
-    {
-        $shouts = [];
-        foreach ($object_ids as $shoutId) {
-            if ($shoutId instanceof Song_Preview) {
-                continue;
-            }
-
-            $shout = (is_array($shoutId) && isset($shoutId['object_id']))
-                ? $this->shoutRepository->findById((int) $shoutId['object_id'])
-                : $this->shoutRepository->findById((int) $shoutId);
-            if ($shout !== null) {
-                $shouts[] = $shout;
-            }
-        }
-
-        return $shouts;
-    }
-
-    /**
-     * The template this type renders through, or an empty string when the type has none.
-     */
-    private function _getTemplate(string $type): string
-    {
-        if (!array_key_exists($type, self::TEMPLATE_MAP)) {
-            debug_event(self::class, 'show_objects: no template for browse type {' . $type . '}', 1);
-
-            return '';
-        }
-
-        return Ui::find_template(self::TEMPLATE_MAP[$type]);
     }
 
     /**

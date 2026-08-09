@@ -25,13 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Register;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Register\UserActivationView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,7 +43,6 @@ final readonly class ValidateAction implements ApplicationActionInterface
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
-        private UiInterface $ui,
         private UserRepositoryInterface $userRepository,
     ) {}
 
@@ -66,10 +66,13 @@ final readonly class ValidateAction implements ApplicationActionInterface
             $validationResult = false;
         }
 
-        $this->ui->show(
-            'show_user_activate.inc.php',
-            ['validationResult' => $validationResult]
-        );
+        echo (new UserActivationView(
+            AmpConfig::get_web_path(),
+            str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US')),
+            (string) AmpConfig::get('site_charset', 'UTF-8'),
+            (string) AmpConfig::get('site_title'),
+            $validationResult
+        ))->render();
 
         return null;
     }

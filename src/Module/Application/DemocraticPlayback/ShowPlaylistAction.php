@@ -27,13 +27,14 @@ namespace Ampache\Module\Application\DemocraticPlayback;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Playback\DemocraticPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Democratic;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Song;
 use Psr\Http\Message\ResponseInterface;
@@ -60,7 +61,7 @@ final readonly class ShowPlaylistAction implements ApplicationActionInterface
         $this->ui->showHeader();
         $democratic = Democratic::get_current_playlist();
         if ($democratic->isNew()) {
-            require_once Ui::find_template('show_democratic.inc.php');
+            echo $this->createPageView($democratic, null)->render();
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();
@@ -72,7 +73,7 @@ final readonly class ShowPlaylistAction implements ApplicationActionInterface
 
         $browse = $this->browseFactory->create((int) $this->requestParser->getFromRequest('browse_id'));
 
-        require_once Ui::find_template('show_democratic.inc.php');
+        echo $this->createPageView($democratic, $browse)->render();
 
         $objects = $democratic->get_items();
         Song::build_cache($democratic->object_ids);
@@ -88,5 +89,20 @@ final readonly class ShowPlaylistAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
+    }
+
+    /**
+     * A playlist that does not exist yet has no browse to clear, so the page is told rather than guessing.
+     */
+    private function createPageView(Democratic $democratic, ?Browse $browse): DemocraticPageView
+    {
+        return new DemocraticPageView(
+            $democratic,
+            $browse,
+            $this->configContainer->getWebPath(),
+            (int) $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT),
+            isset($_GET['reloadpage']),
+            time()
+        );
     }
 }

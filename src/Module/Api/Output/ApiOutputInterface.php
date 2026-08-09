@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\PlaylistFolder;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 
@@ -342,6 +343,30 @@ interface ApiOutputInterface
         array $xmlItems,
         string $item,
         string $objectType = '',
+    ): string;
+
+    /**
+     * The lists filed in one playlist folder, or at the root when the folder is null. API8 only.
+     *
+     * @param list<array{object_id: int, object_type: string, sort_order: int}> $items
+     */
+    public function playlistFolderItems(
+        int $apiVersion,
+        ?PlaylistFolder $folder,
+        array $items,
+        User $user,
+        string $auth,
+    ): string;
+
+    /**
+     * A flat list of playlist folders. API8 only.
+     *
+     * @param list<PlaylistFolder> $folders
+     */
+    public function playlistFolders(
+        int $apiVersion,
+        array $folders,
+        User $user,
     ): string;
 
     /**
