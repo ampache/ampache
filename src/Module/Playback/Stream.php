@@ -157,8 +157,8 @@ class Stream
     {
         // All bitrate values (transcode_bitrate, max_bit_rate, min_bit_rate) are stored and
         // handled in bits per second (bps). max_bit_rate/min_bit_rate are per-user preferences.
-        $max_bitrate   = (int) AmpConfig::get('max_bit_rate', 0);
-        $min_bitrate   = (int) AmpConfig::get('min_bit_rate', 8000);
+        $max_bitrate   = AmpConfig::get_int('max_bit_rate', 0);
+        $min_bitrate   = AmpConfig::get_int('min_bit_rate', 8000);
         $user_bit_rate = self::get_player_bitrate($player);
 
         // If the user's crazy, that's no skin off our back
@@ -398,7 +398,7 @@ class Stream
             $source_rate = self::validate_bitrate((int) $media->bitrate);
             if ($source_rate <= 0) {
                 // a source under 1 kbps rounds away to nothing, and a zero target here reaches the encoder as `-b:a 0`
-                $source_rate = (int) AmpConfig::get('min_bit_rate', 8000);
+                $source_rate = AmpConfig::get_int('min_bit_rate', 8000);
                 debug_event(self::class, 'Source bitrate ' . $media->bitrate . ' is below 1 kbps, using the minimum ' . $source_rate, 4);
             }
 
@@ -516,7 +516,7 @@ class Stream
             }
         }
 
-        return (int) AmpConfig::get('transcode_bitrate', 128000);
+        return AmpConfig::get_int('transcode_bitrate', 128000);
     }
 
     /**

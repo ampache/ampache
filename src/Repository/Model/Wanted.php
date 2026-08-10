@@ -94,10 +94,7 @@ class Wanted extends database_object
     {
         $lookupMbid = (string) ($artist->mbid ?? $mbid);
         $includes   = ['release-groups'];
-        $types      = AmpConfig::get('wanted_types', []);
-        if (is_string($types)) {
-            $types = explode(',', $types);
-        }
+        $types      = AmpConfig::get_array('wanted_types');
 
         if (!$types) {
             $types = [];
@@ -150,7 +147,7 @@ class Wanted extends database_object
         }
         $user = Core::get_global('user');
         foreach ($martist->{'release-groups'} as $group) {
-            if (is_array($types) && in_array(strtolower((string) $group->{'primary-type'}), $types)) {
+            if (in_array(strtolower((string) $group->{'primary-type'}), $types, true)) {
                 $add     = true;
                 $g_count = count($group->{'secondary-types'});
 

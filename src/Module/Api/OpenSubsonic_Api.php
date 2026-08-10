@@ -1517,7 +1517,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $count             = $input['count'] ?? 20;
+        $count             = (int) ($input['count'] ?? 20);
         $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
 
         $info     = Recommendation::get_artist_info($artist->getId());
@@ -1555,7 +1555,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $count             = $input['count'] ?? 20;
+        $count             = (int) ($input['count'] ?? 20);
         $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
 
         $info     = Recommendation::get_artist_info($artist->getId());
@@ -2124,7 +2124,7 @@ class OpenSubsonic_Api
     public function getnewestpodcasts(array $input, User $user): void
     {
         unset($user);
-        $count = $input['count'] ?? AmpConfig::get('podcast_new_download');
+        $count = (int) ($input['count'] ?? AmpConfig::get('podcast_new_download'));
         if (!AmpConfig::get('podcast')) {
             $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
@@ -2562,7 +2562,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $count = $input['count'] ?? 50;
+        $count = (int) ($input['count'] ?? 50);
         $songs = [];
         $type  = self::getAmpacheType($sub_id);
         if ($type === 'artist') {
@@ -3723,13 +3723,14 @@ class OpenSubsonic_Api
             return;
         }
 
-        $type = self::getAmpacheType($sub_id);
-        $robj = (!empty($type))
+        $type  = self::getAmpacheType($sub_id);
+        $stars = (is_numeric($rating)) ? (int) $rating : -1;
+        $robj  = (!empty($type))
             ? new Rating(self::getAmpacheId($sub_id), $type)
             : null;
 
-        if ($robj != null && ($rating >= 0 && $rating <= 5)) {
-            $robj->set_rating($rating, $user->id);
+        if ($robj != null && $stars >= 0 && $stars <= 5) {
+            $robj->set_rating($stars, $user->id);
 
             $this->_responseOutput($input, __FUNCTION__);
         } else {

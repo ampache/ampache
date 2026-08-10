@@ -60,8 +60,8 @@ final readonly class OidcAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $authMethods = $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS);
-        if (!is_array($authMethods) || !in_array(OidcAuthenticationService::AUTH_TYPE, $authMethods, true)) {
+        $authMethods = $this->configContainer->getArray(ConfigurationKeyEnum::AUTH_METHODS);
+        if (!in_array(OidcAuthenticationService::AUTH_TYPE, $authMethods, true)) {
             throw new AccessDeniedException('Access denied: OpenID Connect authentication is not enabled');
         }
 

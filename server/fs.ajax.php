@@ -47,7 +47,7 @@ if (!$current_user instanceof User) {
     return false;
 }
 
-$catalog_id = (int) AmpConfig::get('upload_catalog', 0);
+$catalog_id = AmpConfig::get_int('upload_catalog', 0);
 $catalog    = Catalog::create_from_id($catalog_id);
 
 $rootdir = ($catalog instanceof Catalog_local)

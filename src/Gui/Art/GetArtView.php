@@ -88,7 +88,7 @@ final class GetArtView extends AbstractView
 
     public function getMaxUploadSize(): int
     {
-        return (int) AmpConfig::get('max_upload_size');
+        return AmpConfig::get_int('max_upload_size');
     }
 
     public function getObjectId(): int
@@ -145,8 +145,6 @@ final class GetArtView extends AbstractView
 
     private function isSpotifyEnabled(): bool
     {
-        $order = AmpConfig::get('art_order');
-
-        return is_array($order) && in_array('spotify', $order, true);
+        return in_array('spotify', AmpConfig::get_array('art_order'), true);
     }
 }

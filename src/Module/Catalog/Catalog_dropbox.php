@@ -394,7 +394,7 @@ class Catalog_dropbox extends Catalog
     public function gather_art(?array $songs = null, ?array $videos = null, ?Interactor $interactor = null): bool
     {
         // Make sure they've actually got methods
-        $art_order = AmpConfig::get('art_order');
+        $art_order = AmpConfig::get_array('art_order');
         if (count($art_order) === 0) {
             $interactor?->info(
                 'art_order not set, Catalog::gather_art aborting',

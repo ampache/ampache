@@ -97,7 +97,7 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
             (int) $share_id,
             true,
             $allow_download,
-            $this->configContainer->get(ConfigurationKeyEnum::SHARE_EXPIRE) ?? 7,
+            (int) ($this->configContainer->get(ConfigurationKeyEnum::SHARE_EXPIRE) ?? 7),
             $secret
         );
 

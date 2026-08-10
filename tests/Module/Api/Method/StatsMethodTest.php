@@ -93,7 +93,7 @@ class StatsMethodTest extends MockeryTestCase
 
         $result = 'error-result';
 
-        $this->configContainer->shouldReceive('get')
+        $this->configContainer->shouldReceive('getInt')
             ->with(ConfigurationKeyEnum::POPULAR_THRESHOLD)
             ->once()
             ->andReturn(10);
@@ -140,7 +140,7 @@ class StatsMethodTest extends MockeryTestCase
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
 
-        $this->configContainer->shouldReceive('get')
+        $this->configContainer->shouldReceive('getInt')
             ->with(ConfigurationKeyEnum::POPULAR_THRESHOLD)
             ->once()
             ->andReturn(10);

@@ -72,6 +72,37 @@ class AmpConfig
     }
 
     /**
+     * get_array
+     *
+     * A config value read as the list it is meant to be.
+     * @return list<string>
+     */
+    public static function get_array(string $name): array
+    {
+        return self::to_array(self::get($name));
+    }
+
+    /**
+     * get_bool
+     *
+     * A config value read as the flag it is meant to be.
+     */
+    public static function get_bool(string $name, bool $default = false): bool
+    {
+        return self::to_bool(self::get($name, $default), $default);
+    }
+
+    /**
+     * get_int
+     *
+     * A config value read as the number it is meant to be.
+     */
+    public static function get_int(string $name, int $default = 0): int
+    {
+        return self::to_int(self::get($name, $default), $default);
+    }
+
+    /**
      * get_rating_filter
      * Find out whether you are filtering ratings on your search
      * This function is used in mashup and random queries
@@ -157,5 +188,60 @@ class AmpConfig
         }
 
         $dic->get(ConfigContainerInterface::class)->updateConfig($array);
+    }
+
+    /**
+     * to_array
+     *
+     * @return list<string>
+     */
+    public static function to_array(mixed $value): array
+    {
+        if (!is_array($value)) {
+            $value = ($value === null || $value === '')
+                ? []
+                : explode(',', (string) $value);
+        }
+
+        return array_values(
+            array_filter(
+                array_map(static fn(mixed $item): string => trim((string) $item), $value),
+                static fn(string $item): bool => $item !== ''
+            )
+        );
+    }
+
+    /**
+     * to_bool
+     *
+     * The flag a config value stands for, for a caller holding the value already.
+     */
+    public static function to_bool(mixed $value, bool $default = false): bool
+    {
+        if (is_array($value)) {
+            return $value !== [];
+        }
+
+        if (is_bool($value) || is_int($value) || is_string($value) || $value === null) {
+            return make_bool($value);
+        }
+
+        return $default;
+    }
+
+    /**
+     * to_int
+     *
+     * The number a config value stands for, for a caller holding the value already.
+     */
+    public static function to_int(mixed $value, int $default = 0): int
+    {
+        if (is_bool($value)) {
+            return (int) $value;
+        }
+
+        return (is_numeric($value))
+            ? (int) $value
+            : $default;
     }
 }

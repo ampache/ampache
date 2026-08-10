@@ -37,6 +37,16 @@ interface ConfigContainerInterface
     public function get(string $configKey): mixed;
 
     /**
+     * @return list<string>
+     */
+    public function getArray(string $configKey): array;
+
+    /**
+     * Reads a config value as the flag it is meant to be, so `'0'` is false rather than a true string
+     */
+    public function getBool(string $configKey, bool $default = false): bool;
+
+    /**
      * Return the path to the composer binary
      */
     public function getComposerBinaryPath(): string;
@@ -50,6 +60,11 @@ interface ConfigContainerInterface
      * Returns the path to the ampache config file
      */
     public function getConfigFilePath(): string;
+
+    /**
+     * Reads a config value as the number it is meant to be, keeping the default when it is not one
+     */
+    public function getInt(string $configKey, int $default = 0): int;
 
     /**
      * Return the path to the npm binary
