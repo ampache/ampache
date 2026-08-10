@@ -185,15 +185,6 @@ class Stats
             case 'podcast_episode':
             case 'song':
             case 'video':
-                $sql = ($count_type == 'down')
-                    ? "UPDATE `$type` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = `total_skip` + 1 WHERE `id` = ?;"
-                    : "UPDATE `$type` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1 WHERE `id` = ?;";
-                Dba::write($sql, [$object_id]);
-                $sql = ($count_type == 'down')
-                    ? "UPDATE `folder` INNER JOIN `folder_map` ON  `folder_map`.`folder_id` =  `folder`.`id` SET  `folder`.`total_count` = CASE WHEN  `folder`.`total_count` > 0 THEN  `folder`.`total_count` - 1 ELSE  `folder`.`total_count` END,  `folder`.`total_skip` =  `folder`.`total_skip` + 1 WHERE  `folder_map`.`object_id` = ? AND  `folder_map`.`object_type` = ?;"
-                    : "UPDATE `folder` INNER JOIN `folder_map` ON  `folder_map`.`folder_id` =  `folder`.`id` SET  `folder`.`total_count` =  `folder`.`total_count` + 1,  `folder`.`total_skip` = CASE WHEN  `folder`.`total_skip` > 0 THEN  `folder`.`total_skip` - 1 ELSE 0 END WHERE  `folder_map`.`object_id` = ? AND  `folder_map`.`object_type` = ?;";
-                Dba::write($sql, [$object_id, $type]);
-                break;
             case 'album_disk':
             case 'album':
             case 'artist':
