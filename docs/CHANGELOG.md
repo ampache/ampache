@@ -132,7 +132,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Every browse filter and sort is now documented with what it actually does, what value it takes and which methods use it, instead of a copy of the raw name list. The pages are generated from the query classes by `composer api:docs`, and cover the `folder`, `playlist_search` and `smartplaylist` browses for the first time
   * The user browse takes `username`, `fullname` and `email` filters for one column at a time, beside the existing text filters that match all three at once
   * The share browse takes the text filters and sorts by the title of the shared object (`name`, with `title` as an alias), plus `object_type` and `user` filters. It accepted no filters at all before, and its `object` sort named a column that does not exist
-  * Sorts a browse listed but never answered to now work: `date`, `last_update`, `object_count`, `last_count`, `total_count`, `type` and `user` on folder, `total_skip` on podcast_episode and `userflag` on video. The folder ones read the folder's own columns rather than the media inside it, so a media row has no value for them and they keep folders above files
+  * Sorts a browse listed but never answered to now work: `total_skip` on podcast_episode and `userflag` on video
   * The video browse honours `DESC`. Every video sort was built without its direction, so the order never changed, and `user_flag_rating` built SQL that could not run
 * Search
   * User searches gain `Name`, `Full Name` and `E-mail` rules. `Name` matches the username, full name or email at once, the same three columns the user browse searches
