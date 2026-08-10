@@ -361,7 +361,7 @@ final class Stats
         ?User $user = null,
     ): array {
         if ($count === 0) {
-            $count = AmpConfig::get('popular_threshold', 10);
+            $count = (int) AmpConfig::get('popular_threshold', 10);
         }
 
         if ($count === -1) {
@@ -626,7 +626,7 @@ final class Stats
         int $catalog_id = 0,
     ): array {
         if ($count === 0) {
-            $count = AmpConfig::get('popular_threshold', 10);
+            $count = (int) AmpConfig::get('popular_threshold', 10);
         }
 
         if ($count === -1) {
@@ -744,7 +744,7 @@ final class Stats
      */
     public static function get_recently_played(?int $user_id, string $count_type = 'stream', ?string $object_type = null, bool $user_only = false): array
     {
-        $limit         = AmpConfig::get('popular_threshold', 10);
+        $limit         = (int) AmpConfig::get('popular_threshold', 10);
         $geolocation   = AmpConfig::get('geolocation', false);
         $access100     = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
         $object_string = (in_array($object_type, [null, '', '0'], true) || !in_array($object_type, ['album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video'], true))
@@ -841,7 +841,7 @@ final class Stats
         int $catalog_id = 0,
     ): array {
         if ($count === 0) {
-            $count = AmpConfig::get('popular_threshold', 10);
+            $count = (int) AmpConfig::get('popular_threshold', 10);
         }
 
         if ($count === -1) {

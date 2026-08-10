@@ -71,6 +71,26 @@ class PreferenceRepositoryTest extends TestCase
         static::assertSame([], $this->subject->getAllPreferences(true));
     }
 
+    public function testGetInitRowsSelectsTheDeclaredType(): void
+    {
+        $statements = [];
+        $this->connection->method('query')->willReturnCallback(
+            function (string $sql) use (&$statements): \PDOStatement {
+                $statements[] = $sql;
+
+                return $this->emptyResult();
+            }
+        );
+
+        $this->subject->getInitRows(42);
+
+        // the value column is a varchar, so the type is what tells init() a `10` is an int rather than a string
+        static::assertStringContainsString(
+            '`preference`.`type`',
+            $statements[count($statements) - 1]
+        );
+    }
+
     public function testGetUserPreferenceRowDropsTheSystemRowsForARealUser(): void
     {
         $sql = '';
