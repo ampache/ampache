@@ -37,6 +37,42 @@ class UserActivityRendererTest extends TestCase
     private ModelFactoryInterface&MockObject $modelFactory;
     private UserActivityRenderer $subject;
 
+    public function testShowRendersFollowActivityAgainstTheFollowedUser(): void
+    {
+        $useractivity                = $this->createMock(Useractivity::class);
+        $useractivity->id            = 1;
+        $useractivity->user          = 21;
+        $useractivity->action        = 'follow';
+        $useractivity->object_type   = 'user';
+        $useractivity->object_id     = 42;
+        $useractivity->activity_date = 1000000000;
+
+        $this->configContainer->method('get')
+            ->with('ratings')
+            ->willReturn(true);
+
+        $actor = $this->createMock(User::class);
+        $actor->method('get_f_link')
+            ->willReturn('<a>actor</a>');
+
+        $followed = $this->createMock(User::class);
+        $followed->method('isNew')
+            ->willReturn(false);
+        $followed->method('get_f_link')
+            ->willReturn('<a>followed</a>');
+
+        $this->modelFactory->method('createUser')
+            ->willReturnMap([[21, $actor], [42, $followed]]);
+
+        $this->libraryItemLoader->expects(static::never())
+            ->method('load');
+
+        $result = $this->subject->show($useractivity);
+
+        static::assertStringContainsString('<a>actor</a>', $result);
+        static::assertStringContainsString('<a>followed</a>', $result);
+    }
+
     public function testShowReturnsEmptyStringWhenActivityHasNoId(): void
     {
         $useractivity     = $this->createMock(Useractivity::class);
@@ -45,6 +81,28 @@ class UserActivityRendererTest extends TestCase
         $this->configContainer->method('get')
             ->with('ratings')
             ->willReturn(true);
+
+        static::assertSame('', $this->subject->show($useractivity));
+    }
+
+    public function testShowReturnsEmptyStringWhenFollowedUserIsGone(): void
+    {
+        $useractivity              = $this->createMock(Useractivity::class);
+        $useractivity->id          = 1;
+        $useractivity->user        = 21;
+        $useractivity->object_type = 'user';
+        $useractivity->object_id   = 42;
+
+        $this->configContainer->method('get')
+            ->with('ratings')
+            ->willReturn(true);
+
+        $followed = $this->createMock(User::class);
+        $followed->method('isNew')
+            ->willReturn(true);
+
+        $this->modelFactory->method('createUser')
+            ->willReturnMap([[21, $this->createMock(User::class)], [42, $followed]]);
 
         static::assertSame('', $this->subject->show($useractivity));
     }
