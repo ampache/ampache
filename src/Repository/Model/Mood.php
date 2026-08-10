@@ -91,7 +91,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
      */
     public static function add(string $type, int $object_id, string $value, int $user_id = self::NO_USER): int
     {
-        if (!self::is_mappable($type)) {
+        if (!self::_is_mappable($type)) {
             return 0;
         }
 
@@ -103,7 +103,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
         $mood_id = self::mood_exists($value);
         if ($mood_id === 0) {
             debug_event(self::class, 'Adding new mood {' . $value . '}', 5);
-            $mood_id = (int) self::add_mood($value);
+            $mood_id = (int) self::_add_mood($value);
         }
 
         if ($mood_id === 0) {
@@ -112,8 +112,8 @@ class Mood extends database_object implements GarbageCollectibleInterface
             return 0;
         }
 
-        if (!self::mood_map_exists($type, $object_id, $mood_id, $user_id)) {
-            return self::add_mood_map($type, $object_id, $mood_id, $user_id);
+        if (!self::_mood_map_exists($type, $object_id, $mood_id, $user_id)) {
+            return self::_add_mood_map($type, $object_id, $mood_id, $user_id);
         }
 
         return 0;
@@ -150,7 +150,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
     public static function clean_to_existing(string $moods_comma): string
     {
         $existing = [];
-        foreach (self::clean_list($moods_comma) as $mood) {
+        foreach (self::_clean_list($moods_comma) as $mood) {
             if (self::mood_exists($mood) > 0) {
                 $existing[] = $mood;
             }
@@ -221,7 +221,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
      */
     public static function get_object_moods(string $type, ?int $object_id = null): array
     {
-        if (!self::is_mappable($type)) {
+        if (!self::_is_mappable($type)) {
             return [];
         }
 
@@ -238,7 +238,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
      */
     public static function get_top_moods(string $type, int $object_id, ?int $limit = 10): array
     {
-        if (!self::is_mappable($type)) {
+        if (!self::_is_mappable($type)) {
             return [];
         }
 
@@ -287,20 +287,20 @@ class Mood extends database_object implements GarbageCollectibleInterface
         ?int $user_id = null,
         bool $from_file_tags = false,
     ): bool {
-        if (!self::is_mappable($object_type)) {
+        if (!self::_is_mappable($object_type)) {
             return false;
         }
 
         $user_id ??= ($from_file_tags)
             ? self::NO_USER
-            : self::getCurrentUserId();
+            : self::_getCurrentUserId();
 
         if ($moods_comma === '') {
             // a file with no mood must not take away what somebody set by hand; clearing the field yourself does
-            return self::remove_all_maps($object_type, $object_id, ($from_file_tags) ? self::NO_USER : null);
+            return self::_remove_all_maps($object_type, $object_id, ($from_file_tags) ? self::NO_USER : null);
         }
 
-        $editedMoods = self::clean_list($moods_comma);
+        $editedMoods = self::_clean_list($moods_comma);
 
         $change        = false;
         $current_moods = self::get_top_moods($object_type, $object_id, 0);
@@ -351,7 +351,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
      * add_mood
      * Creates the mood row itself
      */
-    private static function add_mood(string $value): ?int
+    private static function _add_mood(string $value): ?int
     {
         if ($value === '') {
             return null;
@@ -368,9 +368,9 @@ class Mood extends database_object implements GarbageCollectibleInterface
      * add_mood_map
      * Maps an existing mood onto an object
      */
-    private static function add_mood_map(string $type, int $object_id, int $mood_id, int $user_id = self::NO_USER): int
+    private static function _add_mood_map(string $type, int $object_id, int $mood_id, int $user_id = self::NO_USER): int
     {
-        if (!self::is_mappable($type) || $mood_id < 1 || $object_id < 1) {
+        if (!self::_is_mappable($type) || $mood_id < 1 || $object_id < 1) {
             return 0;
         }
 
@@ -391,7 +391,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
      *
      * @return list<string>
      */
-    private static function clean_list(string $moods_comma): array
+    private static function _clean_list(string $moods_comma): array
     {
         $parts = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $moods_comma) ?: [];
 
@@ -409,7 +409,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
     /**
      * The user a manual mood change is attributed to, or nobody when there is no session (a cli scan, a cron)
      */
-    private static function getCurrentUserId(): int
+    private static function _getCurrentUserId(): int
     {
         $user = Core::get_global('user');
 
@@ -419,19 +419,9 @@ class Mood extends database_object implements GarbageCollectibleInterface
     }
 
     /**
-     * @deprecated Inject by constructor
-     */
-    private static function getMoodRepository(): MoodRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(MoodRepositoryInterface::class);
-    }
-
-    /**
      * Whether `mood_map` will take this object type at all
      */
-    private static function is_mappable(string $type): bool
+    private static function _is_mappable(string $type): bool
     {
         if (in_array($type, self::OBJECT_TYPES, true)) {
             return true;
@@ -446,9 +436,9 @@ class Mood extends database_object implements GarbageCollectibleInterface
      * mood_map_exists
      * Whether this object already carries this mood for this owner
      */
-    private static function mood_map_exists(string $type, int $object_id, int $mood_id, int $user_id = self::NO_USER): bool
+    private static function _mood_map_exists(string $type, int $object_id, int $mood_id, int $user_id = self::NO_USER): bool
     {
-        if (!self::is_mappable($type)) {
+        if (!self::_is_mappable($type)) {
             return false;
         }
 
@@ -459,9 +449,9 @@ class Mood extends database_object implements GarbageCollectibleInterface
      * remove_all_maps
      * Drops every mood from an object. A null user removes them whoever set them.
      */
-    private static function remove_all_maps(string $object_type, int $object_id, ?int $user_id = null): bool
+    private static function _remove_all_maps(string $object_type, int $object_id, ?int $user_id = null): bool
     {
-        if (!self::is_mappable($object_type)) {
+        if (!self::_is_mappable($object_type)) {
             return false;
         }
 
@@ -474,6 +464,16 @@ class Mood extends database_object implements GarbageCollectibleInterface
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getMoodRepository(): MoodRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MoodRepositoryInterface::class);
     }
 
     public function get_fullname(): ?string
@@ -497,7 +497,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
      */
     public function remove_map(string $type, int $object_id, ?int $user_id = null): bool
     {
-        if (!self::is_mappable($type)) {
+        if (!self::_is_mappable($type)) {
             return false;
         }
 

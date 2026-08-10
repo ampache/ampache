@@ -101,7 +101,7 @@ final class ApiHandler implements ApiHandlerInterface
      * This is the single rule that lets every REST path use dashes (`album-disks/{id}/songs`) without
      * each name needing its own alias in the maps above.
      */
-    private static function dashesToUnderscores(string $value): string
+    private static function _dashesToUnderscores(string $value): string
     {
         return str_replace('-', '_', $value);
     }
@@ -683,7 +683,7 @@ final class ApiHandler implements ApiHandlerInterface
         // REST paths spell multi-word names with a dash (`podcast-episodes`, `now-playing`,
         // `album-disks`); RPC actions are snake_case. Converting first means only genuine renames
         // need an entry below -- a new dashed path never needs an alias adding here.
-        $action = self::dashesToUnderscores($action);
+        $action = self::_dashesToUnderscores($action);
 
         $action = match ($action) {
             'albums_songs' => 'album_songs',
@@ -827,7 +827,7 @@ final class ApiHandler implements ApiHandlerInterface
     {
         // see normalizeAction(): the dashed REST spelling is folded first, so only the plural forms
         // need an entry here
-        return match (self::dashesToUnderscores($type)) {
+        return match (self::_dashesToUnderscores($type)) {
             'album_artists' => 'album_artist',
             'album_disks' => 'album_disk',
             'albums' => 'album',
@@ -849,7 +849,7 @@ final class ApiHandler implements ApiHandlerInterface
             'songs' => 'song',
             'users' => 'user',
             'videos' => 'video',
-            default => self::dashesToUnderscores($type),
+            default => self::_dashesToUnderscores($type),
         };
     }
 

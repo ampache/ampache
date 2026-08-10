@@ -134,7 +134,7 @@ final class Stats
         // next run. VALUES() is deprecated on MySQL 8 but its replacement isn't in MariaDB (as in Playlist::update_map)
         $dbh            = Dba::dbh();
         $in_transaction = ($dbh !== null && $dbh->beginTransaction());
-        $archive        = Dba::write("INSERT INTO `object_count_archive` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` FROM `object_count` WHERE " . $where . " AND `object_type` NOT IN (" . self::derivedTypeList() . ");", $params);
+        $archive        = Dba::write("INSERT INTO `object_count_archive` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` FROM `object_count` WHERE " . $where . " AND `object_type` NOT IN (" . self::_derivedTypeList() . ");", $params);
         $insert         = ($archive !== null)
             ? Dba::write("INSERT INTO `object_count_summary` (`object_type`, `object_id`, `user`, `count_type`, `count`, `date_from`, `date_to`) SELECT `object_type`, `object_id`, `user`, `count_type`, COUNT(*), MIN(`date`), MAX(`date`) FROM `object_count` WHERE " . $where . " GROUP BY `object_type`, `object_id`, `user`, `count_type` ON DUPLICATE KEY UPDATE `count` = `object_count_summary`.`count` + VALUES(`count`), `date_from` = LEAST(`object_count_summary`.`date_from`, VALUES(`date_from`)), `date_to` = GREATEST(`object_count_summary`.`date_to`, VALUES(`date_to`));", $params)
             : null;
@@ -179,7 +179,7 @@ final class Stats
                     : "UPDATE `$type` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1" . $played . " WHERE `id` = ?;";
                 Dba::write($sql, [$object_id]);
                 // update the folder the object lives in AND every ancestor folder
-                $folder_ids = self::getFolderTree($type, $object_id);
+                $folder_ids = self::_getFolderTree($type, $object_id);
                 if ($folder_ids !== []) {
                     $idlist = implode(', ', $folder_ids);
                     $sql    = ($takesAPlayBack)
@@ -760,7 +760,7 @@ final class Stats
 
         if ((int) $user_id > 0 || !$access100) {
             // resolving the sharers first keeps the filter on `object_count`, so a row is discarded before the joins are paid for rather than after
-            $shared  = self::getSharedHistoryUsers();
+            $shared  = self::_getSharedHistoryUsers();
             $allowed = ($user_only)
                 ? array_values(array_intersect($shared, [(int) $user_id]))
                 : array_values(array_unique(array_merge($shared, [(int) $user_id])));
@@ -1117,7 +1117,7 @@ final class Stats
         // INSERT IGNORE throughout: the unique key makes a repeated restore a no-op instead of a duplicate
         $restore = Dba::write("INSERT IGNORE INTO `object_count` " . $columns . " SELECT `object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` FROM `object_count_archive`;");
         $derived = 0;
-        foreach (self::derivedSelects() as $select) {
+        foreach (self::_derivedSelects() as $select) {
             $result = ($restore !== null)
                 ? Dba::write("INSERT IGNORE INTO `object_count` " . $columns . " " . $select . ";")
                 : null;
@@ -1131,7 +1131,7 @@ final class Stats
 
         // subtract the restored detail from the summary, then drop any row that is fully accounted for
         $subtract = ($restore !== null)
-            ? Dba::write("UPDATE `object_count_summary` AS `summary` INNER JOIN (SELECT `object_type`, `object_id`, `user`, `count_type`, COUNT(*) AS `restored` FROM `object_count_archive` GROUP BY `object_type`, `object_id`, `user`, `count_type` UNION ALL " . self::derivedAggregateSelect() . ") AS `restored` ON `restored`.`object_type` = `summary`.`object_type` AND `restored`.`object_id` = `summary`.`object_id` AND `restored`.`user` = `summary`.`user` AND `restored`.`count_type` = `summary`.`count_type` SET `summary`.`count` = GREATEST(0, CAST(`summary`.`count` AS SIGNED) - CAST(`restored`.`restored` AS SIGNED));")
+            ? Dba::write("UPDATE `object_count_summary` AS `summary` INNER JOIN (SELECT `object_type`, `object_id`, `user`, `count_type`, COUNT(*) AS `restored` FROM `object_count_archive` GROUP BY `object_type`, `object_id`, `user`, `count_type` UNION ALL " . self::_derivedAggregateSelect() . ") AS `restored` ON `restored`.`object_type` = `summary`.`object_type` AND `restored`.`object_id` = `summary`.`object_id` AND `restored`.`user` = `summary`.`user` AND `restored`.`count_type` = `summary`.`count_type` SET `summary`.`count` = GREATEST(0, CAST(`summary`.`count` AS SIGNED) - CAST(`restored`.`restored` AS SIGNED));")
             : null;
         $cleanup = ($subtract !== null)
             ? Dba::write("DELETE FROM `object_count_summary` WHERE `count` <= 0;")
@@ -1236,10 +1236,10 @@ final class Stats
      * Per-type aggregate shaped for the summary subtraction. Deliberately archive-based, not object_count-based:
      * the summary must only lose what consolidation put into it, never the extra rows the repair pass creates.
      */
-    private static function derivedAggregateSelect(): string
+    private static function _derivedAggregateSelect(): string
     {
         $selects = [];
-        foreach (self::derivedSources('object_count_archive', 'archive') as $type => $source) {
+        foreach (self::_derivedSources('object_count_archive', 'archive') as $type => $source) {
             $selects[] = "SELECT '" . $type . "', `derived`.`derived_id`, `derived`.`user`, `derived`.`count_type`, COUNT(*) FROM (" . $source . ") AS `derived` GROUP BY `derived`.`derived_id`, `derived`.`user`, `derived`.`count_type`";
         }
 
@@ -1253,10 +1253,10 @@ final class Stats
      * because a unique index treats NULLs as distinct. Column order matches the insert list in Stats::restore().
      * @return string[]
      */
-    private static function derivedSelects(): array
+    private static function _derivedSelects(): array
     {
         $selects = [];
-        foreach (self::derivedSources('object_count', 'media') as $type => $source) {
+        foreach (self::_derivedSources('object_count', 'media') as $type => $source) {
             $selects[] = "SELECT '" . $type . "', `derived`.`derived_id`, `derived`.`count_type`, `derived`.`date`, `derived`.`user`, `derived`.`agent`, `derived`.`geo_latitude`, `derived`.`geo_longitude`, `derived`.`geo_name` FROM (" . $source . ") AS `derived` WHERE NOT EXISTS (SELECT 1 FROM `object_count` AS `existing` WHERE `existing`.`object_type` = '" . $type . "' AND `existing`.`object_id` = `derived`.`derived_id` AND `existing`.`date` = `derived`.`date` AND `existing`.`user` = `derived`.`user` AND `existing`.`agent` <=> `derived`.`agent` AND `existing`.`count_type` = `derived`.`count_type`)";
         }
 
@@ -1269,7 +1269,7 @@ final class Stats
      * can share a second, so the original insert collapsed them too.
      * @return array<string, string>
      */
-    private static function derivedSources(string $table, string $alias): array
+    private static function _derivedSources(string $table, string $alias): array
     {
         // the fan-out writes 'stream' rows for the parents. Stats::skip_last_play then DELETES the album/artist/podcast
         // rows when a play is skipped, so those three must be rebuilt from 'stream' media only or a restore resurrects
@@ -1295,7 +1295,7 @@ final class Stats
     /**
      * DERIVED_TYPES as a quoted SQL list
      */
-    private static function derivedTypeList(): string
+    private static function _derivedTypeList(): string
     {
         return "'" . implode("', '", self::DERIVED_TYPES) . "'";
     }
@@ -1306,7 +1306,7 @@ final class Stats
      *
      * @return list<int>
      */
-    private static function getFolderTree(string $type, int $object_id): array
+    private static function _getFolderTree(string $type, int $object_id): array
     {
         $sql        = "SELECT DISTINCT `folder`.`id`, `folder`.`path` FROM `folder_map` INNER JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_id` = ? AND `folder_map`.`object_type` = ?;";
         $db_results = Dba::read($sql, [$object_id, $type]);
@@ -1329,7 +1329,7 @@ final class Stats
      *
      * @return list<int>
      */
-    private static function getSharedHistoryUsers(): array
+    private static function _getSharedHistoryUsers(): array
     {
         $results    = [];
         $db_results = Dba::read("SELECT `user` FROM `user_preference` WHERE `name` = 'allow_personal_info_recent' AND `value` = '1';");

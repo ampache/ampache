@@ -682,7 +682,7 @@ abstract class Catalog extends database_object
         $results['disk']         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $results['disksubtitle'] = $results['disksubtitle'] ?: null;
         $results['isrc']         = (isset($results['isrc']) && is_string($results['isrc'])) ? [$results['isrc']] : $results['isrc'] ?? [];
-        $results['title']        = self::check_length(self::check_title($results['title'], $results['file']));
+        $results['title']        = self::_check_length(self::_check_title($results['title'], $results['file']));
         $results['bitrate']      = (!empty($results['bitrate'])) ? (int) $results['bitrate'] : 0;
         $results['rate']         = (!empty($results['rate'])) ? (int) $results['rate'] : 0;
         if (!in_array($results['mode'], ['vbr', 'cbr', 'abr'])) {
@@ -699,9 +699,9 @@ abstract class Catalog extends database_object
             $results['time'] = $song->time ?? 0;
         }
 
-        $results['track']    = self::check_track((string) $results['track']);
+        $results['track']    = self::_check_track((string) $results['track']);
         $results['mbid']     = (!empty($results['mb_trackid'])) ? $results['mb_trackid'] : null;
-        $results['composer'] = (!empty($results['composer'])) ? self::check_length($results['composer']) : null;
+        $results['composer'] = (!empty($results['composer'])) ? self::_check_length($results['composer']) : null;
         //$results['mime'] = $results['mime']; // UPDATE ONLY (Generated from the filename)
 
         // info for the song_data table. used in Song::update_song
@@ -736,10 +736,10 @@ abstract class Catalog extends database_object
         }
 
         $results['label'] = (isset($results['publisher']))
-            ? self::check_length($results['publisher'], 128)
+            ? self::_check_length($results['publisher'], 128)
             : null;
 
-        $results['language']              = (!empty($results['language'])) ? self::check_length($results['language'], 128) : null;
+        $results['language']              = (!empty($results['language'])) ? self::_check_length($results['language'], 128) : null;
         $results['replaygain_track_gain'] = (is_null($results['replaygain_track_gain'])) ? null : (float) $results['replaygain_track_gain'];
         $results['replaygain_track_peak'] = (is_null($results['replaygain_track_peak'])) ? null : (float) $results['replaygain_track_peak'];
         $results['replaygain_album_gain'] = (is_null($results['replaygain_album_gain'])) ? null : (float) $results['replaygain_album_gain'];
@@ -765,15 +765,15 @@ abstract class Catalog extends database_object
 
         $results['user_upload'] = $results['user_upload'] ?? null;
         $results['artist_mbid'] = $results['mb_artistid'] ?? null;
-        $results['artist']      = self::check_length($results['artist']);
+        $results['artist']      = self::_check_length($results['artist']);
         if (empty($results['artists']) && !empty($results['artist'])) {
             $results['artists'] = [$results['artist']];
         }
 
-        $results['album']            = self::check_length($results['album']);
+        $results['album']            = self::_check_length($results['album']);
         $results['album_mbid']       = $results['mb_albumid'] ?? null;
         $results['album_mbid_group'] = $results['mb_albumid_group'] ?? null;
-        $results['release_type']     = self::check_length($results['release_type'], 32);
+        $results['release_type']     = self::_check_length($results['release_type'], 32);
         if (empty($results['album'])) {
             $results['album_id'] = ($song?->album > 0)
                 ? $song->album
@@ -781,7 +781,7 @@ abstract class Catalog extends database_object
         }
 
         $results['albumartist'] = ($results['albumartist'])
-            ? self::check_length($results['albumartist'])
+            ? self::_check_length($results['albumartist'])
             : null;
         $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
         if (empty($results['albumartist'])) {
@@ -795,9 +795,9 @@ abstract class Catalog extends database_object
         }
 
         $results['original_year']  = (!empty($results['original_year'])) ? (int) $results['original_year'] : null;
-        $results['barcode']        = self::check_length($results['barcode'], 64);
-        $results['catalog_number'] = self::check_length($results['catalog_number'], 64);
-        $results['version']        = self::check_length($results['version'], 64);
+        $results['barcode']        = self::_check_length($results['barcode'], 64);
+        $results['catalog_number'] = self::_check_length($results['catalog_number'], 64);
+        $results['version']        = self::_check_length($results['version'], 64);
 
         $results['artists_array']          = $results['artists'] ?? [];
         $results['mb_artistid_array']      = $results['mb_artistid_array'] ?? [];
@@ -1267,9 +1267,9 @@ abstract class Catalog extends database_object
      */
     public static function get_stats(?int $catalog_id = 0): array
     {
-        $counts         = ($catalog_id) ? self::count_catalog($catalog_id) : self::get_server_counts(0);
+        $counts         = ($catalog_id) ? self::_count_catalog($catalog_id) : self::get_server_counts(0);
         $counts         = array_merge(self::getUserRepository()->getStatistics(), $counts);
-        $counts['tags'] = ($catalog_id) ? 0 : self::count_tags();
+        $counts['tags'] = ($catalog_id) ? 0 : self::_count_tags();
 
         $counts['formatted_size'] = Ui::format_bytes((int) $counts['size'], 2, 2);
 
@@ -2177,7 +2177,7 @@ abstract class Catalog extends database_object
         return match (true) {
             $media instanceof Song => self::update_song_from_tags($results, $media),
             $media instanceof Video => self::update_video_from_tags($results, $media),
-            $media instanceof Podcast_Episode => self::update_podcast_episode_from_tags($results, $media),
+            $media instanceof Podcast_Episode => self::_update_podcast_episode_from_tags($results, $media),
         };
     }
 
@@ -2607,7 +2607,7 @@ abstract class Catalog extends database_object
         $release_status   = $filtered_results['release_status'];
         $albumartist      = (empty($filtered_results['albumartist']))
             ? $song->get_album_artist_fullname()
-            : self::check_length($filtered_results['albumartist']);
+            : self::_check_length($filtered_results['albumartist']);
         $albumartist ??= null;
 
         $original_year  = $filtered_results['original_year'];
@@ -2934,16 +2934,16 @@ abstract class Catalog extends database_object
 
             // If you've migrated from an existing artist you need to migrate their data
             if (($song->artist > 0 && $new_song->artist) && $song->artist != $new_song->artist) {
-                self::migrate('artist', $song->artist, $new_song->artist, $song->id, $song->catalog);
+                self::_migrate('artist', $song->artist, $new_song->artist, $song->id, $song->catalog);
             }
 
             // albums changes also require album_disk changes
             if (($song->album > 0 && $new_song->album) && $song->album != $new_song->album) {
-                self::migrate('album', $song->album, $new_song->album, $song->id, $song->catalog);
+                self::_migrate('album', $song->album, $new_song->album, $song->id, $song->catalog);
                 $song->album = $new_song->album;
             }
             if (($song->album_disk > 0 && $new_song->album_disk) && $song->album_disk != $new_song->album_disk) {
-                self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id, $song->catalog);
+                self::_migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id, $song->catalog);
             }
 
             if (
@@ -3057,6 +3057,82 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * check_length
+     * Check to make sure the string fits into the database
+     * max_length is the maximum number of characters that the (varchar) column can hold
+     */
+    private static function _check_length(?string $string = null, int $max_length = 255): string
+    {
+        $string = (string) $string;
+        if (false !== $encoding = mb_detect_encoding($string, null, true)) {
+            $string = trim(mb_substr($string, 0, $max_length, $encoding));
+        } else {
+            $string = trim(substr($string, 0, $max_length));
+        }
+
+        return $string;
+    }
+
+    /**
+     * check_title
+     * this checks to make sure something is
+     * set on the title, if it isn't it looks at the
+     * filename and tries to set the title based on that
+     */
+    private static function _check_title(string $title, string $file = ''): string
+    {
+        if (strlen(trim($title)) < 1) {
+            $title = $file;
+        }
+
+        return $title;
+    }
+
+    /**
+     * check_track
+     * Check to make sure the track number fits into the database: max 32767, min -32767
+     */
+    private static function _check_track(string $track): int
+    {
+        $retval = ((int) $track > 32767 || (int) $track < -32767) ? (int) substr($track, -4, 4) : (int) $track;
+        if ((int) $track !== $retval) {
+            debug_event(self::class, "check_track: '{" . $track . "}' out of range. Changed into '{" . $retval . "}'", 4);
+        }
+
+        return $retval;
+    }
+
+    /**
+     * count_catalog
+     *
+     * This returns the current number of songs, videos, podcast_episodes in this catalog.
+     * @return array{items: int, time: int, size: int}
+     */
+    private static function _count_catalog(int $catalog_id): array
+    {
+        $catalog = self::create_from_id($catalog_id);
+        if (!$catalog instanceof Catalog) {
+            return [
+                'items' => 0,
+                'time' => 0,
+                'size' => 0,
+            ];
+        }
+
+        return self::getCatalogCounter()->countCatalog($catalog_id, $catalog->gather_types);
+    }
+
+    /**
+     * count_tags
+     *
+     * This returns the current number of unique tags in the database.
+     */
+    private static function _count_tags(): int
+    {
+        return self::getCatalogCounter()->countTags();
+    }
+
+    /**
      * Get rid of all tags found in the libraryItem
      * @param array<string, scalar|scalar[]> $metadata
      * @return array<string, scalar|scalar[]>
@@ -3149,6 +3225,53 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * Migrate an object associate images to a new object
+     */
+    private static function _migrate(string $object_type, int $old_object_id, int $new_object_id, int $song_id, int $catalog_id): bool
+    {
+        if ($old_object_id != $new_object_id) {
+            debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
+
+            Stats::migrate($object_type, $old_object_id, $new_object_id, $song_id);
+            Useractivity::migrate($object_type, $old_object_id, $new_object_id);
+            Recommendation::migrate($object_type, $old_object_id);
+            self::getShareRepository()->migrate($object_type, $old_object_id, $new_object_id);
+            self::getShoutRepository()->migrate($object_type, $old_object_id, $new_object_id);
+            Tag::migrate($object_type, $old_object_id, $new_object_id);
+            Mood::migrate($object_type, $old_object_id, $new_object_id);
+            Userflag::migrate($object_type, $old_object_id, $new_object_id);
+            Rating::migrate($object_type, $old_object_id, $new_object_id);
+            Art::duplicate($object_type, $old_object_id, $new_object_id);
+            Playlist::migrate($object_type, $old_object_id, $new_object_id);
+            Label::migrate($object_type, $old_object_id, $new_object_id);
+            if ($object_type === 'artist') {
+                self::getWantedRepository()->migrateArtist($old_object_id, $new_object_id);
+                Artist::update_artist_count($new_object_id);
+                Artist::update_artist_count($old_object_id);
+                self::update_map($catalog_id, 'artist', $new_object_id);
+                self::garbage_collect_mapping(['artist']);
+            }
+
+            if ($object_type === 'album') {
+                self::clean_empty_albums(false);
+                Album::update_album_count($new_object_id);
+                Album::update_album_count($old_object_id);
+                self::update_map($catalog_id, 'album', $new_object_id);
+                self::update_map($catalog_id, 'album_disk', $new_object_id);
+                self::garbage_collect_mapping(['album', 'album_disk']);
+            }
+
+            self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
+            self::getBookmarkRepository()->migrate($object_type, $old_object_id, $new_object_id);
+            self::migrate_map($object_type, $old_object_id, $new_object_id);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * _update_item
      * This is a private function that should only be called from within the catalog class.
      * It takes a field, value, catalog id and level. first and foremost it checks the level
@@ -3166,79 +3289,28 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * check_length
-     * Check to make sure the string fits into the database
-     * max_length is the maximum number of characters that the (varchar) column can hold
+     * @param array<string, mixed> $results
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>,
+     * }
      */
-    private static function check_length(?string $string = null, int $max_length = 255): string
+    private static function _update_podcast_episode_from_tags(array $results, Podcast_Episode $podcast_episode): array
     {
-        $string = (string) $string;
-        if (false !== $encoding = mb_detect_encoding($string, null, true)) {
-            $string = trim(mb_substr($string, 0, $max_length, $encoding));
-        } else {
-            $string = trim(substr($string, 0, $max_length));
-        }
+        self::getPodcastEpisodeRepository()->updateFromTags(
+            $podcast_episode->id,
+            (string) $podcast_episode->file,
+            $results,
+            time()
+        );
 
-        return $string;
-    }
+        $array            = [];
+        $array['change']  = true;
+        $array['element'] = [];
 
-    /**
-     * check_title
-     * this checks to make sure something is
-     * set on the title, if it isn't it looks at the
-     * filename and tries to set the title based on that
-     */
-    private static function check_title(string $title, string $file = ''): string
-    {
-        if (strlen(trim($title)) < 1) {
-            $title = $file;
-        }
+        $array['element']['podcast_episode'] = '';
 
-        return $title;
-    }
-
-    /**
-     * check_track
-     * Check to make sure the track number fits into the database: max 32767, min -32767
-     */
-    private static function check_track(string $track): int
-    {
-        $retval = ((int) $track > 32767 || (int) $track < -32767) ? (int) substr($track, -4, 4) : (int) $track;
-        if ((int) $track !== $retval) {
-            debug_event(self::class, "check_track: '{" . $track . "}' out of range. Changed into '{" . $retval . "}'", 4);
-        }
-
-        return $retval;
-    }
-
-    /**
-     * count_catalog
-     *
-     * This returns the current number of songs, videos, podcast_episodes in this catalog.
-     * @return array{items: int, time: int, size: int}
-     */
-    private static function count_catalog(int $catalog_id): array
-    {
-        $catalog = self::create_from_id($catalog_id);
-        if (!$catalog instanceof Catalog) {
-            return [
-                'items' => 0,
-                'time' => 0,
-                'size' => 0,
-            ];
-        }
-
-        return self::getCatalogCounter()->countCatalog($catalog_id, $catalog->gather_types);
-    }
-
-    /**
-     * count_tags
-     *
-     * This returns the current number of unique tags in the database.
-     */
-    private static function count_tags(): int
-    {
-        return self::getCatalogCounter()->countTags();
+        return $array;
     }
 
     /**
@@ -3449,78 +3521,6 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(WantedRepositoryInterface::class);
-    }
-
-    /**
-     * Migrate an object associate images to a new object
-     */
-    private static function migrate(string $object_type, int $old_object_id, int $new_object_id, int $song_id, int $catalog_id): bool
-    {
-        if ($old_object_id != $new_object_id) {
-            debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
-
-            Stats::migrate($object_type, $old_object_id, $new_object_id, $song_id);
-            Useractivity::migrate($object_type, $old_object_id, $new_object_id);
-            Recommendation::migrate($object_type, $old_object_id);
-            self::getShareRepository()->migrate($object_type, $old_object_id, $new_object_id);
-            self::getShoutRepository()->migrate($object_type, $old_object_id, $new_object_id);
-            Tag::migrate($object_type, $old_object_id, $new_object_id);
-            Mood::migrate($object_type, $old_object_id, $new_object_id);
-            Userflag::migrate($object_type, $old_object_id, $new_object_id);
-            Rating::migrate($object_type, $old_object_id, $new_object_id);
-            Art::duplicate($object_type, $old_object_id, $new_object_id);
-            Playlist::migrate($object_type, $old_object_id, $new_object_id);
-            Label::migrate($object_type, $old_object_id, $new_object_id);
-            if ($object_type === 'artist') {
-                self::getWantedRepository()->migrateArtist($old_object_id, $new_object_id);
-                Artist::update_artist_count($new_object_id);
-                Artist::update_artist_count($old_object_id);
-                self::update_map($catalog_id, 'artist', $new_object_id);
-                self::garbage_collect_mapping(['artist']);
-            }
-
-            if ($object_type === 'album') {
-                self::clean_empty_albums(false);
-                Album::update_album_count($new_object_id);
-                Album::update_album_count($old_object_id);
-                self::update_map($catalog_id, 'album', $new_object_id);
-                self::update_map($catalog_id, 'album_disk', $new_object_id);
-                self::garbage_collect_mapping(['album', 'album_disk']);
-            }
-
-            self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
-            self::getBookmarkRepository()->migrate($object_type, $old_object_id, $new_object_id);
-            self::migrate_map($object_type, $old_object_id, $new_object_id);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param array<string, mixed> $results
-     * @return array{
-     *     change: bool,
-     *     element: array<string, string>,
-     * }
-     */
-    private static function update_podcast_episode_from_tags(array $results, Podcast_Episode $podcast_episode): array
-    {
-        self::getPodcastEpisodeRepository()->updateFromTags(
-            $podcast_episode->id,
-            (string) $podcast_episode->file,
-            $results,
-            time()
-        );
-
-        $array            = [];
-        $array['change']  = true;
-        $array['element'] = [];
-
-        $array['element']['podcast_episode'] = '';
-
-        return $array;
     }
 
     /**

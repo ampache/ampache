@@ -50,12 +50,12 @@ final class PlayHistorySubquery
      */
     public static function count(string $type, array $countTypes, ?int $userId): string
     {
-        $oc = "SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = '" . $type . "' AND " . self::countTypeSql('object_count', $countTypes) . self::userSql('object_count', $userId) . " GROUP BY `object_id`, `object_type`, `user`";
+        $oc = "SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = '" . $type . "' AND " . self::_countTypeSql('object_count', $countTypes) . self::_userSql('object_count', $userId) . " GROUP BY `object_id`, `object_type`, `user`";
         if (!self::usesSummary()) {
             return '(' . $oc . ')';
         }
 
-        $summary = "SELECT `object_id`, `object_type`, `user`, `count` AS `total` FROM `object_count_summary` WHERE `object_count_summary`.`object_type` = '" . $type . "' AND " . self::countTypeSql('object_count_summary', $countTypes) . self::userSql('object_count_summary', $userId);
+        $summary = "SELECT `object_id`, `object_type`, `user`, `count` AS `total` FROM `object_count_summary` WHERE `object_count_summary`.`object_type` = '" . $type . "' AND " . self::_countTypeSql('object_count_summary', $countTypes) . self::_userSql('object_count_summary', $userId);
 
         return "(SELECT `object_id`, `object_type`, `user`, SUM(`total`) AS `total` FROM (" . $oc . " UNION ALL " . $summary . ") AS `combined` GROUP BY `object_id`, `object_type`, `user`)";
     }
@@ -67,12 +67,12 @@ final class PlayHistorySubquery
      */
     public static function exists(string $type, array $countTypes, ?int $userId): string
     {
-        $oc = "SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '" . $type . "' AND " . self::countTypeSql('object_count', $countTypes) . self::userSql('object_count', $userId) . " GROUP BY `object_id`, `object_type`, `user`";
+        $oc = "SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '" . $type . "' AND " . self::_countTypeSql('object_count', $countTypes) . self::_userSql('object_count', $userId) . " GROUP BY `object_id`, `object_type`, `user`";
         if (!self::usesSummary()) {
             return '(' . $oc . ')';
         }
 
-        $summary = "SELECT `object_id`, `object_type`, `user` FROM `object_count_summary` WHERE `object_count_summary`.`object_type` = '" . $type . "' AND " . self::countTypeSql('object_count_summary', $countTypes) . self::userSql('object_count_summary', $userId);
+        $summary = "SELECT `object_id`, `object_type`, `user` FROM `object_count_summary` WHERE `object_count_summary`.`object_type` = '" . $type . "' AND " . self::_countTypeSql('object_count_summary', $countTypes) . self::_userSql('object_count_summary', $userId);
 
         return "(SELECT `object_id`, `object_type`, `user` FROM (" . $oc . " UNION ALL " . $summary . ") AS `combined` GROUP BY `object_id`, `object_type`, `user`)";
     }
@@ -104,12 +104,12 @@ final class PlayHistorySubquery
      */
     public static function lastDate(string $type, array $countTypes, ?int $userId): string
     {
-        $oc = "SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '" . $type . "' AND " . self::countTypeSql('object_count', $countTypes) . self::userSql('object_count', $userId) . " GROUP BY `object_id`, `object_type`, `user`";
+        $oc = "SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '" . $type . "' AND " . self::_countTypeSql('object_count', $countTypes) . self::_userSql('object_count', $userId) . " GROUP BY `object_id`, `object_type`, `user`";
         if (!self::usesSummary()) {
             return '(' . $oc . ')';
         }
 
-        $summary = "SELECT `object_id`, `object_type`, `user`, MAX(`date_to`) AS `date` FROM `object_count_summary` WHERE `object_count_summary`.`object_type` = '" . $type . "' AND " . self::countTypeSql('object_count_summary', $countTypes) . self::userSql('object_count_summary', $userId) . " GROUP BY `object_id`, `object_type`, `user`";
+        $summary = "SELECT `object_id`, `object_type`, `user`, MAX(`date_to`) AS `date` FROM `object_count_summary` WHERE `object_count_summary`.`object_type` = '" . $type . "' AND " . self::_countTypeSql('object_count_summary', $countTypes) . self::_userSql('object_count_summary', $userId) . " GROUP BY `object_id`, `object_type`, `user`";
 
         return "(SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM (" . $oc . " UNION ALL " . $summary . ") AS `combined` GROUP BY `object_id`, `object_type`, `user`)";
     }
@@ -126,14 +126,14 @@ final class PlayHistorySubquery
     /**
      * @param list<string> $countTypes
      */
-    private static function countTypeSql(string $table, array $countTypes): string
+    private static function _countTypeSql(string $table, array $countTypes): string
     {
         return (count($countTypes) === 1)
             ? "`" . $table . "`.`count_type` = '" . $countTypes[0] . "'"
             : "`" . $table . "`.`count_type` IN ('" . implode("', '", $countTypes) . "')";
     }
 
-    private static function userSql(string $table, ?int $userId): string
+    private static function _userSql(string $table, ?int $userId): string
     {
         return ($userId === null)
             ? ''

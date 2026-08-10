@@ -71,8 +71,8 @@ class OAuthRequest implements Stringable
         $parameters = $parameters ?: [];
         $defaults   = [
             "oauth_version" => OAuthRequest::$version,
-            "oauth_nonce" => OAuthRequest::generate_nonce(),
-            "oauth_timestamp" => OAuthRequest::generate_timestamp(),
+            "oauth_nonce" => OAuthRequest::_generate_nonce(),
+            "oauth_timestamp" => OAuthRequest::_generate_timestamp(),
             "oauth_consumer_key" => $consumer->key,
         ];
         if ($token instanceof OAuthToken) {
@@ -126,7 +126,7 @@ class OAuthRequest implements Stringable
     /**
      * util function: current nonce
      */
-    private static function generate_nonce(): string
+    private static function _generate_nonce(): string
     {
         $mtime = microtime();
         $rand  = bin2hex(random_bytes(20));
@@ -137,7 +137,7 @@ class OAuthRequest implements Stringable
     /**
      * util function: current timestamp
      */
-    private static function generate_timestamp(): int
+    private static function _generate_timestamp(): int
     {
         return time();
     }
