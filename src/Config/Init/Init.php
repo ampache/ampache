@@ -58,20 +58,20 @@ final readonly class Init
                 $initializationHandler->init();
             }
         } catch (ConfigFileNotFoundException $error) {
-            $redirectionUrl = '/client/install.php';
+            $redirectionUrl = 'client/install.php';
         } catch (ConfigFileNotParsableException $error) {
-            $redirectionUrl = '/client/test.php?action=config';
+            $redirectionUrl = 'client/test.php?action=config';
         } catch (EnvironmentNotSuitableException|GetTextNotAvailableException $error) {
-            $redirectionUrl = '/client/test.php';
+            $redirectionUrl = 'client/test.php';
         } catch (DatabaseOutdatedException $error) {
-            $redirectionUrl = '/client/update.php';
+            $redirectionUrl = 'client/update.php';
         } catch (RequireAuthException $error) {
-            $redirectionUrl = '/client/login.php';
+            $redirectionUrl = 'client/login.php';
         } catch (Throwable $error) {
             // startup failed in a way nothing above expected, so the debug page is the only place that can explain it
             debug_event(self::class, 'Initialization failed: ' . $error->getMessage(), 1);
 
-            $redirectionUrl = '/client/test.php';
+            $redirectionUrl = 'client/test.php';
         }
 
         // returning from a finally block would discard an exception no catch above matched, so this stays outside one
@@ -110,7 +110,7 @@ final readonly class Init
         // Hand the requested page to the login form so it can send you back there afterwards.
         // Without this a pasted or bookmarked deep link always lands on index.php after logging in.
         if (
-            $destination === 'login.php'
+            $destination === 'client/login.php'
             && Core::get_server('REQUEST_METHOD') === 'GET'
             && !empty($_SERVER['REQUEST_URI'])
             && isset($_SERVER['HTTP_HOST'])
