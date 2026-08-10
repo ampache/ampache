@@ -90,7 +90,7 @@ if (!$readOnly) { ?>
                     <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;"><div id="apikey_qrcode"></div></div>
                     <br />
                     <?php // the key is json encoded rather than pasted into the literal, so a quote cannot end it?>
-                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: <?php echo $this->raw((string) json_encode($apikey, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP)); ?>, background: '#ffffff', foreground: '#000000'});</script>
+                    <script>$(function () { $('#apikey_qrcode').qrcode({width: 128, height: 128, text: <?php echo $this->raw((string) json_encode($apikey, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP)); ?>, background: '#ffffff', foreground: '#000000'}); });</script>
                     <?php echo $this->e($apikey);
                     } ?>
                 </span>

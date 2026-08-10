@@ -71,13 +71,16 @@ foreach ($this->getGraphs() as $graph) { ?>
     <input type="hidden" name="rendered_zoom" value="<?php echo $this->e($this->getZoom()); ?>" />
 </form>
 <script>
-    $('#start_date').datetimepicker({
-        format: 'Y-m-d H:i',
-        theme: 'dark'
-    });
-    $('#end_date').datetimepicker({
-        format: 'Y-m-d H:i',
-        theme: 'dark'
+    // the picker is a deferred script, so it only exists once the document has been parsed
+    $(function () {
+        $('#start_date').datetimepicker({
+            format: 'Y-m-d H:i',
+            theme: 'dark'
+        });
+        $('#end_date').datetimepicker({
+            format: 'Y-m-d H:i',
+            theme: 'dark'
+        });
     });
 </script>
 <?php Ui::show_box_bottom(); ?>
