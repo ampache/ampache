@@ -94,7 +94,7 @@ final class UserPageView extends AbstractView
 
     public function getAdminPath(): string
     {
-        return $this->webPath . '/admin';
+        return AmpConfig::get_web_path('/admin');
     }
 
     public function getAvatar(): string
