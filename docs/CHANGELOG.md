@@ -130,6 +130,10 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Add `addition_time` sort to album, album_disk and artist. (A disk has no time of its own, so it sorts on its album's)
   * Add `update_time` sort to podcast_episode. (The column has existed since `750001` but was never a sort)
   * Every browse filter and sort is now documented with what it actually does, what value it takes and which methods use it, instead of a copy of the raw name list. The pages are generated from the query classes by `composer api:docs`, and cover the `folder`, `playlist_search` and `smartplaylist` browses for the first time
+  * The user browse takes `username`, `fullname` and `email` filters for one column at a time, beside the existing text filters that match all three at once
+  * The share browse takes the text filters and sorts by the title of the shared object (`name`, with `title` as an alias), plus `object_type` and `user` filters. It accepted no filters at all before, and its `object` sort named a column that does not exist
+* Search
+  * User searches gain `Name`, `Full Name` and `E-mail` rules. `Name` matches the username, full name or email at once, the same three columns the user browse searches
 * CLI
   * New `admin:exportSchema` command regenerates `resources/sql/ampache.sql` from a clean install; it refuses to run against a database with pending updates
   * New user commands `admin:deleteUser`, `admin:enableUser` and `admin:disableUser`
