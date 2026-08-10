@@ -41,12 +41,14 @@ e.g. `sort=name,DESC`
 |--------------------|--------------------------------------------------------------------------------------------------------------------------|
 | `album`            | How many albums carry this genre.                                                                                        |
 | `artist`           | How many artists carry this genre.                                                                                       |
+| `genre`            | Alias of `id`.                                                                                                           |
 | `id`               | The genre id, which is the order they were first seen in.                                                                |
 | `name`             | Genre name.                                                                                                              |
 | `rand`             | Random order, applied per request. Paging through it repeats and skips genres, so ask for everything in one call.        |
 | `rating`           | Your own rating, then when you set it. Genres you have not rated group together.                                         |
 | `song`             | How many songs carry this genre.                                                                                         |
 | `tag`              | Alias of `id`.                                                                                                           |
+| `title`            | Alias of `name`.                                                                                                         |
 | `user_flag`        | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
 | `user_flag_rating` | When you added it to your favourites, then your rating.                                                                  |
 | `userflag`         | Alias of `user_flag`.                                                                                                    |

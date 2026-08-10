@@ -332,6 +332,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* Sorting the combined playlist and smartlist list by `last_count` answered with an error instead of a list. The union it reads never carried the column it sorts on, though both tables have it
+* The followers list is the accounts doing the following. It was built from the ids of the follow records, which line up with real accounts only by coincidence, so it could name people who follow nobody
+* Sorts a browse implemented but never offered, so clicking the column or asking for the sort did nothing: `id` on broadcast, private message, share, shoutbox and wanted, `release_date` on video, `title` on genre and mood, and `genre` on genre. `from_user` on private messages and `username`, `last_seen` and `create_date` on followers are new, and the private message browse takes the `equal`/`exact_match` filters it already implemented
 * Sorting a browse by a column reached through a join emptied the list, when the column before it was sorted by a different join. Sorting an album list by Artist was the common way in
 * An album sorted by a column its artists or songs are reached through listed the same album once per artist or song it has
 * The current playlist on the Localplay page was drawn outside the Localplay Control box it belongs in, leaving the page with three unbalanced closing tags

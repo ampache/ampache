@@ -51,11 +51,13 @@ final class TagQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
+        'genre',
         'id',
         'name',
         'rand',
         'rating',
         'tag',
+        'title',
         'user_flag_rating',
         'user_flag',
         'userflag',
