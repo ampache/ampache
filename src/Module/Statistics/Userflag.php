@@ -146,7 +146,7 @@ class Userflag extends database_object
         int $catalog_id = 0,
     ): array {
         if ($count === 0) {
-            $count = AmpConfig::get('popular_threshold', 10);
+            $count = AmpConfig::get_int('popular_threshold', 10);
         }
 
         if ($count === -1) {

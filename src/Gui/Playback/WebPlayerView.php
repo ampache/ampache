@@ -140,7 +140,7 @@ final class WebPlayerView extends AbstractView
      */
     public function getRemoveCount(): int
     {
-        $count = (int) AmpConfig::get('webplayer_removeplayed', 0);
+        $count = AmpConfig::get_int('webplayer_removeplayed', 0);
 
         return ($count === 999) ? 0 : $count;
     }
@@ -257,7 +257,7 @@ final class WebPlayerView extends AbstractView
      */
     public function removesPlayed(): bool
     {
-        return (int) AmpConfig::get('webplayer_removeplayed', 0) > 0;
+        return AmpConfig::get_int('webplayer_removeplayed', 0) > 0;
     }
 
     public function renderHeaders(): string

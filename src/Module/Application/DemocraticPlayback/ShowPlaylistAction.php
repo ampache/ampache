@@ -100,7 +100,7 @@ final readonly class ShowPlaylistAction implements ApplicationActionInterface
             $democratic,
             $browse,
             $this->configContainer->getWebPath(),
-            (int) $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT),
+            $this->configContainer->getInt(ConfigurationKeyEnum::REFRESH_LIMIT),
             isset($_GET['reloadpage']),
             time()
         );

@@ -595,7 +595,7 @@ class Song extends database_object implements
         }
         //debug_event(self::class, "insert results: " . print_r($results, true), 4);
         $filtered_results = Catalog::filter_tag_results($results);
-        $catalog          = $filtered_results['catalog'];
+        $catalog          = (int) $filtered_results['catalog'];
         $file             = $filtered_results['file'];
         $title            = $filtered_results['title'];
         $artist           = $filtered_results['artist'];
@@ -612,10 +612,10 @@ class Song extends database_object implements
         $album_mbid_group = $filtered_results['mb_albumid_group'];
         $artist_mbid      = $filtered_results['mb_artistid'];
         $albumartist_mbid = $filtered_results['mb_albumartistid'];
-        $disk             = $filtered_results['disk'];
+        $disk             = (int) $filtered_results['disk'];
         $disksubtitle     = $filtered_results['disksubtitle'];
         $isrc             = $filtered_results['isrc'];
-        $year             = $filtered_results['year'];
+        $year             = (int) $filtered_results['year'];
         $comment          = $filtered_results['comment'];
         $tags             = $filtered_results['genre']; // multiple genre support makes this an array
         $moods            = $filtered_results['mood'] ?? []; // a file can carry more than one mood too

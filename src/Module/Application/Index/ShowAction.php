@@ -67,7 +67,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $_SESSION['catalog'] = 0;
 
-        $refreshLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT);
+        $refreshLimit = $this->configContainer->getInt(ConfigurationKeyEnum::REFRESH_LIMIT);
 
         /**
          * Check for the refresh mojo, if it's there then require the

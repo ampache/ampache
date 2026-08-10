@@ -213,7 +213,7 @@ class Catalog_remote extends Catalog
         }
 
         // These preferences are stored in bps; the cache isn't a player so it always takes the default rate
-        $max_bitrate   = (int) AmpConfig::get('max_bit_rate', 0);
+        $max_bitrate   = AmpConfig::get_int('max_bit_rate', 0);
         $user_bit_rate = Stream::get_player_bitrate();
 
         // If the user's crazy, that's no skin off our back

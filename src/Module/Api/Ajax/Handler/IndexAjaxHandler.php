@@ -84,7 +84,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
     {
         $results = [];
         $action  = $this->requestParser->getFromRequest('action');
-        $moment  = (int) AmpConfig::get('of_the_moment');
+        $moment  = AmpConfig::get_int('of_the_moment');
         // filter album and video of the Moment instead of a hardcoded value
         if (!$moment > 0) {
             $moment = 6;
@@ -94,7 +94,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'top_tracks':
                 $artist                = new Artist((int) $this->requestParser->getFromRequest('artist'));
-                $object_ids            = $this->songRepository->getTopSongsByArtist($artist, (int) AmpConfig::get('popular_threshold', 10));
+                $object_ids            = $this->songRepository->getTopSongsByArtist($artist, AmpConfig::get_int('popular_threshold', 10));
                 $results['top_tracks'] = $this->createSongListPanelView(
                     'top_tracks',
                     $object_ids,
@@ -214,7 +214,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         User::is_registered() && (bool) AmpConfig::get('ratings'),
                         (bool) AmpConfig::get('show_played_times'),
                         (bool) AmpConfig::get('directplay'),
-                        (int) AmpConfig::get('direct_play_limit', 500),
+                        AmpConfig::get_int('direct_play_limit', 500),
                         $mayInteract,
                         (bool) AmpConfig::get('sociable'),
                         false
@@ -236,7 +236,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 // randomize and slice
                 shuffle($object_ids);
-                $object_ids               = array_slice($object_ids, 0, (int) AmpConfig::get('popular_threshold', 10));
+                $object_ids               = array_slice($object_ids, 0, AmpConfig::get_int('popular_threshold', 10));
                 $results['similar_songs'] = $this->createSongListPanelView(
                     'similar_songs',
                     $object_ids,

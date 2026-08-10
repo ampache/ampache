@@ -116,12 +116,12 @@ final class RegistrationView extends AbstractView
      */
     public function isDisplayed(string $field): bool
     {
-        return in_array($field, (array) AmpConfig::get('registration_display_fields'), true);
+        return in_array($field, AmpConfig::get_array('registration_display_fields'), true);
     }
 
     public function isMandatory(string $field): bool
     {
-        return in_array($field, (array) AmpConfig::get('registration_mandatory_fields'), true);
+        return in_array($field, AmpConfig::get_array('registration_mandatory_fields'), true);
     }
 
     public function renderAgreement(): string

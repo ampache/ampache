@@ -62,7 +62,7 @@ class PodcastSyncerTest extends TestCase
         $episode          = $this->createMock(Podcast_Episode::class);
         $eligibleDeletion = new ArrayIterator([]);
 
-        $this->configContainer->method('get')
+        $this->configContainer->method('getInt')
             ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
             ->willReturn(5);
 
@@ -114,7 +114,7 @@ class PodcastSyncerTest extends TestCase
         $episodes = new SimpleXMLElement('<items></items>');
 
         $this->configContainer->expects(static::once())
-            ->method('get')
+            ->method('getInt')
             ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
             ->willReturn(-1);
 
@@ -141,7 +141,7 @@ class PodcastSyncerTest extends TestCase
         $episodes = new SimpleXMLElement('<items></items>');
 
         $this->configContainer->expects(static::once())
-            ->method('get')
+            ->method('getInt')
             ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
             ->willReturn(-1);
 
@@ -185,7 +185,7 @@ class PodcastSyncerTest extends TestCase
             ->with(30)
             ->willReturn($podcast);
 
-        $this->configContainer->method('get')
+        $this->configContainer->method('getInt')
             ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
             ->willReturn(2);
 
@@ -222,7 +222,7 @@ class PodcastSyncerTest extends TestCase
                 [20, $podcast],
             ]);
 
-        $this->configContainer->method('get')
+        $this->configContainer->method('getInt')
             ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
             ->willReturn(-1);
 
@@ -245,7 +245,7 @@ class PodcastSyncerTest extends TestCase
             ->with($feedUrl)
             ->willReturn('<rss><channel></channel></rss>');
 
-        $this->configContainer->method('get')
+        $this->configContainer->method('getInt')
             ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
             ->willReturn(-1);
 

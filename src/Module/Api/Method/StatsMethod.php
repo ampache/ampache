@@ -121,7 +121,7 @@ final class StatsMethod implements MethodInterface
         $offset = (int) ($input['offset'] ?? 0);
         $limit  = (int) ($input['limit'] ?? 0);
         if ($limit === 0) {
-            $limit = (int) $this->configContainer->get(ConfigurationKeyEnum::POPULAR_THRESHOLD);
+            $limit = $this->configContainer->getInt(ConfigurationKeyEnum::POPULAR_THRESHOLD);
         }
 
         // do you allow video?
@@ -203,7 +203,7 @@ final class StatsMethod implements MethodInterface
                 $limit   = 0;
                 break;
             case 'frequent':
-                $threshold = (int) $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+                $threshold = $this->configContainer->getInt(ConfigurationKeyEnum::STATS_THRESHOLD);
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 $offset    = 0;
                 $limit     = 0;

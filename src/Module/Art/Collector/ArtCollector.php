@@ -94,7 +94,7 @@ final readonly class ArtCollector implements ArtCollectorInterface
             return [];
         }
 
-        $artOrder = $this->configContainer->get('art_order');
+        $artOrder = $this->configContainer->getArray('art_order');
 
         /* If it's not set */
         if (empty($artOrder)) {
@@ -105,8 +105,6 @@ final readonly class ArtCollector implements ArtCollectorInterface
             );
 
             return [];
-        } elseif (!is_array($artOrder)) {
-            $artOrder = [$artOrder];
         }
 
         $this->logger->notice(

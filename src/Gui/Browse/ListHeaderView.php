@@ -162,7 +162,7 @@ final class ListHeaderView extends AbstractView
             return (int) $_REQUEST['browse_uid']++;
         }
 
-        $uid = (int) AmpConfig::get('list_header_uid');
+        $uid = AmpConfig::get_int('list_header_uid');
         AmpConfig::set('list_header_uid', ++$uid, true);
 
         return $uid;

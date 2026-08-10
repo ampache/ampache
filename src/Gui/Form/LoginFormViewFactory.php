@@ -41,8 +41,8 @@ final readonly class LoginFormViewFactory implements LoginFormViewFactoryInterfa
     public function create(): ?LoginFormView
     {
         $webPath      = AmpConfig::get_web_path();
-        $authMethods  = AmpConfig::get('auth_methods', []);
-        $oidcEnabled  = is_array($authMethods) && in_array('oidc', $authMethods, true);
+        $authMethods  = AmpConfig::get_array('auth_methods');
+        $oidcEnabled  = in_array('oidc', $authMethods, true);
         $mailEnabled  = Mailer::is_mail_enabled();
         $miniUrl      = $webPath . '/m/';
         $referrer     = $this->resolveReferrer($webPath);

@@ -116,7 +116,7 @@ final class Stats4Method implements MethodInterface
         }
 
         if ($limit < 1) {
-            $limit = (int) AmpConfig::get('popular_threshold', 10);
+            $limit = AmpConfig::get_int('popular_threshold', 10);
         }
 
         $results = [];
