@@ -59,6 +59,7 @@ final class FolderQuery implements QueryInterface
         'last_update',
         'name',
         'object_count',
+        'object_type',
         'rand',
         'rating',
         'title',
@@ -179,6 +180,27 @@ final class FolderQuery implements QueryInterface
             case 'object_type':
                 $sql = sprintf('`folder`.`%s`', $field);
                 break;
+            case 'type':
+                $sql = "`folder`.`object_type`";
+                break;
+            case 'date':
+                $sql = "`folder`.`is_folder` DESC, `folder_data`.`addition_time`";
+                $this->_join_folder($query);
+                break;
+            case 'last_update':
+                $sql = "`folder`.`is_folder` DESC, `folder_data`.`update_time`";
+                $this->_join_folder($query);
+                break;
+            case 'last_count':
+            case 'object_count':
+                $sql = "`folder`.`is_folder` DESC, `folder_data`.`object_count`";
+                $this->_join_folder($query);
+                break;
+            case 'total_count':
+            case 'user':
+                $sql = sprintf('`folder`.`is_folder` DESC, `folder_data`.`%s`', $field);
+                $this->_join_folder($query);
+                break;
             case 'rating':
                 $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`folder`.`int_id`", "`rating`.`object_type`", "'folder'", "`rating`.`user`", (string) $query->user_id, 100);
@@ -202,5 +224,15 @@ final class FolderQuery implements QueryInterface
         }
 
         return sprintf('%s %s,', $sql, $order);
+    }
+
+    /**
+     * _join_folder
+     *
+     * The folder row behind a browse row, so a sort reads the folder's own columns and a media row has none of them
+     */
+    private function _join_folder(Query $query): void
+    {
+        $query->set_join_and('LEFT', '`folder` `folder_data`', '`folder_data`.`id`', '`folder`.`int_id`', '`folder`.`object_type`', "'folder'", 100);
     }
 }

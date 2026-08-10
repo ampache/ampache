@@ -6,6 +6,8 @@ This page lists the filters and sorts the `folder` browse accepts. Refer to the 
 
 **NOTE** `int_id` is the plain numeric id of the object the row points at.
 
+**NOTE** The `date`, `last_update`, `object_count`, `last_count`, `total_count` and `user` sorts read the folder's own columns, never the media inside it, so a media row has no value for them and every one of them keeps folders above files.
+
 ## API methods using this browse
 
 `folders`
@@ -40,14 +42,20 @@ e.g. `sort=name,DESC`
 
 | Sort               | Description                                                                                                              |
 |--------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `date`             | Folders first, then when the folder was added to the catalog.                                                            |
 | `id`               | The `type-id` id string, which groups folders and files apart.                                                           |
 | `int_id`           | The numeric id of the object the row points at.                                                                          |
-| `name`             | Folders first, then name. This is the only sort that keeps folders above the files in them.                              |
+| `last_count`       | Alias of `object_count`.                                                                                                 |
+| `last_update`      | Folders first, then when the folder was last updated.                                                                    |
+| `name`             | Folders first, then name.                                                                                                |
+| `object_count`     | Folders first, then how many items the folder holds.                                                                     |
+| `object_type`      | The type of object the row points at, so folders group apart from the files in them.                                     |
 | `rand`             | Random order, applied per request. Paging through it repeats and skips folders, so ask for everything in one call.       |
 | `rating`           | Your own rating, then when you set it. Folders you have not rated group together.                                        |
 | `title`            | Alias of `name`.                                                                                                         |
+| `total_count`      | Folders first, then how many times the folder has been played.                                                           |
+| `type`             | Alias of `object_type`.                                                                                                  |
+| `user`             | Folders first, then the id of the user who owns the folder.                                                              |
 | `user_flag`        | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
 | `user_flag_rating` | When you added it to your favourites, then your rating.                                                                  |
 | `userflag`         | Alias of `user_flag`.                                                                                                    |
-
-**NOTE** These sorts are listed by the browse but have no implementation, so the rows come back in the default order: `date`, `last_count`, `last_update`, `object_count`, `total_count`, `type`, `user`
