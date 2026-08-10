@@ -71,12 +71,42 @@ final class UserSearch implements SearchInterface
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
+                case 'name':
+                case 'title':
+                    // 'name' searches the same three columns as the user browse; 'title' is what a generic search sends
+                    $negative = in_array($operator_sql, ['!=', 'NOT LIKE', 'NOT SOUNDS LIKE', 'NOT REGEXP'], true);
+                    $positive = match ($operator_sql) {
+                        '!=' => '=',
+                        'NOT LIKE' => 'LIKE',
+                        'NOT SOUNDS LIKE' => 'SOUNDS LIKE',
+                        'NOT REGEXP' => 'REGEXP',
+                        default => $operator_sql,
+                    };
+                    $columns = sprintf("`user`.`username` %s ? OR COALESCE(`user`.`fullname`, '') %s ? OR COALESCE(`user`.`email`, '') %s ?", $positive, $positive, $positive);
+
+                    $where[] = ($negative)
+                        ? sprintf('NOT (%s)', $columns)
+                        : sprintf('(%s)', $columns);
+
+                    $parameters = array_merge($parameters, [$input, $input, $input]);
+                    break;
                 case 'username':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
                         $where[] = "NOT (`user`.`username` SOUNDS LIKE ?)";
                     } else {
                         $where[] = sprintf('`user`.`username` %s ?', $operator_sql);
                     }
+
+                    $parameters[] = $input;
+                    break;
+                case 'fullname':
+                case 'email':
+                    // both columns are nullable, so a negative operator would drop a NULL row instead of matching it
+                    $column = sprintf("COALESCE(`user`.`%s`, '')", $rule[0]);
+
+                    $where[] = ($operator_sql === 'NOT SOUNDS LIKE')
+                        ? sprintf('NOT (%s SOUNDS LIKE ?)', $column)
+                        : sprintf('%s %s ?', $column, $operator_sql);
 
                     $parameters[] = $input;
                     break;
