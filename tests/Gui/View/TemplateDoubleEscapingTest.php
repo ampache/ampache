@@ -36,15 +36,16 @@ use SplFileInfo;
 use Throwable;
 
 /**
- * The other half of the escaping seam: a value escaped twice.
+ * The other half of the escaping seam: a value that must not be escaped, escaped anyway.
  *
- * Several model getters `scrub_out()` internally (`playlist_object::getFullname()`,
- * `PrivateMsg::getSubjectFormatted()`, `Podcast_Episode::getCategory()`), so a template that also calls
- * `e()` on one prints the entities instead of the text -- `Rock & Roll` renders as `Rock &amp;amp; Roll`.
- * `TemplateEscapingTest` cannot see this, because a wrapped value is exactly what it asks for.
+ * Two shapes reach the page the same way, as text where markup was meant. A value escaped twice, because
+ * several model getters `scrub_out()` internally (`playlist_object::getFullname()`,
+ * `PrivateMsg::getSubjectFormatted()`, `Podcast_Episode::getCategory()`), so `Rock & Roll` renders as
+ * `Rock &amp;amp; Roll`. And markup escaped once, so an icon prints its own `<svg>` tags.
+ * `TemplateEscapingTest` sees neither, because a wrapped value is exactly what it asks for.
  *
- * This resolves the receiver's declared type and follows the delegation, so a view getter that merely
- * returns a pre-escaping model getter is caught too.
+ * Both resolve the receiver's declared type and follow the delegation, so a view getter that merely
+ * returns a pre-escaping model getter, or builds an icon of its own, is caught too.
  */
 class TemplateDoubleEscapingTest extends TestCase
 {
@@ -54,6 +55,17 @@ class TemplateDoubleEscapingTest extends TestCase
      * A getter that deliberately pre-escapes belongs behind `raw()`, not behind a second escape.
      */
     private const array ALLOWED_DOUBLE_ESCAPE = [];
+
+    /** @var string[] Helpers whose return value is markup, so escaping it prints the tags */
+    private const array MARKUP_PRODUCERS = [
+        'Ajax::button(',
+        'Ajax::observe(',
+        'Ajax::text(',
+        'Art::display(',
+        'Ui::get_icon(',
+        'Ui::get_image(',
+        'Ui::get_material_symbol(',
+    ];
 
     /** @var array<string, bool> */
     private array $preEscapes = [];
@@ -93,6 +105,67 @@ class TemplateDoubleEscapingTest extends TestCase
             array_values(array_unique($violations)),
             'already escaped by the getter, so the template must use raw() or an unescaped getter'
         );
+    }
+
+    public function testNoTemplateEscapesMarkup(): void
+    {
+        $violations = [];
+        foreach ($this->getTemplates() as $template) {
+            $contents  = (string) file_get_contents((string) $template->getRealPath());
+            $viewClass = $this->getViewClass($contents);
+            $relative  = $this->getRelativePath($template);
+
+            foreach (['scrub_out(', '->e('] as $wrapper) {
+                foreach ($this->getWrappedArguments($contents, $wrapper) as $argument) {
+                    // the helper called inside the escape
+                    foreach (self::MARKUP_PRODUCERS as $producer) {
+                        if (str_contains($argument, $producer)) {
+                            $violations[] = $relative . ': ' . rtrim($producer, '(') . '()';
+                        }
+                    }
+
+                    // a getter of the view's own that builds markup
+                    if ($viewClass === null || !class_exists($viewClass)) {
+                        continue;
+                    }
+
+                    foreach ($this->getCalls($argument) as [$receiver, $method]) {
+                        if ($receiver === 'this' && $this->buildsMarkup($viewClass, $method)) {
+                            $violations[] = $relative . '::' . $viewClass . '::' . $method . '()';
+                        }
+                    }
+                }
+            }
+        }
+
+        static::assertSame(
+            [],
+            array_values(array_unique($violations)),
+            'markup escaped into text, so the template must use raw()'
+        );
+    }
+
+    /**
+     * Whether the method hands back markup rather than a value, so escaping it would print the tags.
+     *
+     * @param class-string $class
+     */
+    private function buildsMarkup(string $class, string $method): bool
+    {
+        foreach ($this->getReturnedExpressions($class, $method) as $expression) {
+            foreach (self::MARKUP_PRODUCERS as $producer) {
+                if (str_contains($expression, $producer)) {
+                    return true;
+                }
+            }
+
+            // a tag opened in a literal, which is how the smaller builders assemble their markup
+            if (preg_match('/[\'"]\s*<[a-z]/i', $expression) === 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
