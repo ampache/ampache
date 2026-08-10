@@ -31,6 +31,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Form\AccessListView $this */
 Ui::show_box_top(T_('Access Control'), 'box box_access_control');
+$adminPath  = $this->getAdminPath();
 $addcurrent = T_('Add Current Host');
 $addrpc     = T_('Add API / RPC Host');
 $addlocal   = T_('Add Local Network Definition');
@@ -78,8 +79,8 @@ $addlocal   = T_('Add Local Network Definition');
     <td><?php echo $access->getUserName(); ?></td>
     <td><?php echo $access->getTypeName(); ?></td>
     <td>
-        <a href="<?php echo $this->e($this->getWebPath()); ?>/access.php?action=show_edit_record&access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
-        <a href="<?php echo $this->e($this->getWebPath()); ?>/access.php?action=show_delete_record&access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+        <a href="<?php echo $this->e($adminPath); ?>/access.php?action=show_edit_record&access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
+        <a href="<?php echo $this->e($adminPath); ?>/access.php?action=show_delete_record&access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_material_symbol('delete', T_('Delete')); ?></a>
     </td>
 </tr>
     <?php } ?>

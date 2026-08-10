@@ -29,16 +29,17 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\License\LicenseRowView $this */
 
-$license = $this->getLicense(); ?>
+$adminPath = $this->getAdminPath();
+$license   = $this->getLicense(); ?>
 <tr id="license_<?php echo $this->e($license->getId()); ?>">
     <td class="cel_name"><?php echo $this->raw($license->getLinkFormatted()); ?></td>
     <td class="cel_description"><?php echo $this->e($license->getDescription()); ?></td>
     <td class="cel_order"><?php echo $this->e($license->getOrder()); ?></td>
     <td class="cel_action">
-        <a href="<?php echo $this->e($this->getAdminPath()); ?>/license.php?action=show_edit&license_id=<?php echo $this->e($license->getId()); ?>">
+        <a href="<?php echo $this->e($adminPath); ?>/license.php?action=show_edit&license_id=<?php echo $this->e($license->getId()); ?>">
             <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
         </a>
-        <a href="<?php echo $this->e($this->getAdminPath()); ?>/license.php?action=delete&license_id=<?php echo $this->e($license->getId()); ?>">
+        <a href="<?php echo $this->e($adminPath); ?>/license.php?action=delete&license_id=<?php echo $this->e($license->getId()); ?>">
             <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
         </a>
     </td>
