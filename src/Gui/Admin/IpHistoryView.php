@@ -38,7 +38,7 @@ use Traversable;
 final class IpHistoryView extends AbstractView
 {
     /**
-     * @param Traversable<array{date: DateTimeImmutable, ip: string, agent: string, action: string}> $history
+     * @param Traversable<array{date: DateTimeImmutable, ip: string, agent: string, action: null|string}> $history
      */
     public function __construct(
         private readonly string $adminPath,
