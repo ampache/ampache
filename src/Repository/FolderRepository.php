@@ -369,6 +369,30 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
+     * Maps a media file into the folder its path names, so the file shows up in a folder browse straight away
+     *
+     * The folder chain is created when it is missing, because a podcast writes its episodes into directories that no
+     * catalog scan has walked.
+     */
+    public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): void
+    {
+        $pathName = dirname($filePath);
+        if ($pathName === '' || $pathName === '.' || $pathName === DIRECTORY_SEPARATOR) {
+            return;
+        }
+
+        $folderId = $this->findOrCreateByPathName($pathName, $catalogId);
+        if ($folderId <= 0) {
+            return;
+        }
+
+        $this->connection->query(
+            "INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM `folder_map` WHERE `object_id` = ? AND `object_type` = ?);",
+            [$folderId, $objectId, $objectType, basename($filePath), $catalogId, $pathName, $objectId, $objectType]
+        );
+    }
+
+    /**
      * Moves every folder_map row of the given type from one object onto another
      */
     public function migrateObject(string $objectType, int $oldObjectId, int $newObjectId): void
@@ -466,6 +490,40 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
         $sql = "UPDATE `folder` SET `update_time` = ? WHERE `id` = ?;";
         $this->connection->query($sql, [$time, $folder_id]);
+    }
+
+    /**
+     * The id of the folder holding this path, created along with any missing parent when it does not exist yet
+     *
+     * Nothing above the catalog's own directory is ever created, so a stray path cannot walk up and map the filesystem.
+     */
+    private function findOrCreateByPathName(string $pathName, int $catalogId): int
+    {
+        $folderId = $this->lookupByPathName($pathName, $catalogId);
+        if ($folderId > 0) {
+            return $folderId;
+        }
+
+        $catalogPath = (string) $this->connection->fetchOne(
+            'SELECT `path` FROM `catalog_local` WHERE `catalog_id` = ?;',
+            [$catalogId]
+        );
+
+        if ($catalogPath === '' || !str_starts_with($pathName . DIRECTORY_SEPARATOR, rtrim($catalogPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)) {
+            return 0;
+        }
+
+        $parentId   = null;
+        $parentPath = dirname($pathName);
+        if ($pathName !== rtrim($catalogPath, DIRECTORY_SEPARATOR) && $parentPath !== $pathName) {
+            $parentId = $this->findOrCreateByPathName($parentPath, $catalogId) ?: null;
+        }
+
+        $folder = $this->create(basename($pathName), $catalogId, $pathName, $parentId);
+
+        return ($folder instanceof Folder)
+            ? $folder->getId()
+            : 0;
     }
 
     /**

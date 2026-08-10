@@ -28,6 +28,7 @@ namespace Ampache\Module\Podcast;
 use Ampache\Module\Podcast\Exception\PodcastFolderException;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -37,6 +38,7 @@ use Psr\Log\LoggerInterface;
 
 class PodcastEpisodeDownloaderTest extends TestCase
 {
+    private FolderRepositoryInterface&MockObject $folderRepository;
     private LoggerInterface&MockObject $logger;
     private PodcastFolderProviderInterface&MockObject $podcastFolderProvider;
     private PodcastRepositoryInterface&MockObject $podcastRepository;
@@ -112,12 +114,14 @@ class PodcastEpisodeDownloaderTest extends TestCase
         $this->webFetcher            = $this->createMock(WebFetcherInterface::class);
         $this->logger                = $this->createMock(LoggerInterface::class);
         $this->podcastRepository     = $this->createMock(PodcastRepositoryInterface::class);
+        $this->folderRepository      = $this->createMock(FolderRepositoryInterface::class);
 
         $this->subject = new PodcastEpisodeDownloader(
             $this->podcastFolderProvider,
             $this->webFetcher,
             $this->podcastRepository,
             $this->logger,
+            $this->folderRepository,
         );
     }
 }

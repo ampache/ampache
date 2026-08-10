@@ -168,14 +168,23 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
         }
 
         $name = scrub_out($this->object->get_fullname());
-        $size = ['width' => 100, 'height' => 100];
+        // a video carries a generated preview rather than cover art, and its frame is wide instead of square
+        $kind = ($object_type === $this->object_type)
+            ? $this->object->get_default_art_kind()
+            : 'default';
+        $size = ($kind === 'preview')
+            ? ['width' => 150, 'height' => 84]
+            : ['width' => 100, 'height' => 100];
 
         Art::display(
             $object_type,
             $object_id,
             $name,
             $size,
-            $this->configContainer->getWebPath() . '/' . $object_type . 's.php?action=show&' . ($object_type === 'song' ? 'song_id' : $object_type) . '=' . $object_id
+            $this->configContainer->getWebPath() . '/' . $object_type . 's.php?action=show&' . ($object_type === 'song' ? 'song_id' : $object_type) . '=' . $object_id,
+            true,
+            true,
+            $kind
         );
 
         return '';
