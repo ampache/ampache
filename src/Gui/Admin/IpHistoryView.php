@@ -48,7 +48,7 @@ final class IpHistoryView extends AbstractView
     ) {}
 
     /**
-     * @return Traversable<array{date: DateTimeImmutable, ip: string, agent: string, action: string}>
+     * @return Traversable<array{date: DateTimeImmutable, ip: string, agent: string, action: null|string}>
      */
     public function getHistory(): Traversable
     {
