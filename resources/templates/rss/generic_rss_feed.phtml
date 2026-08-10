@@ -79,7 +79,7 @@ foreach ($this->getItems() as $item) { ?>
     if (!empty($item['episode'])) { ?>
             <podcast:episode><?php echo $this->e($item['episode']); ?></podcast:episode>
 <?php   }
-    if (!empty($item['url'])) { ?>
+    if (!empty($item['url']) && isset($item['type'], $item['size'])) { ?>
             <enclosure type="<?php echo $this->e($item['type']); ?>" length="<?php echo $this->e($item['size']); ?>" url="<?php echo $this->e($item['url']); ?>"/>
 <?php   } ?>
         </item>

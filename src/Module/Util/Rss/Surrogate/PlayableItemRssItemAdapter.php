@@ -89,7 +89,9 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      * @return Generator<array{
      *     title: string,
      *     guid: string,
+     *     isPermaLink: string,
      *     link: string,
+     *     description: string,
      *     length: string,
      *     author: null|string,
      *     pubDate: null|string,
