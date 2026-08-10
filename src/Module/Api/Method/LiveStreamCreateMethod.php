@@ -108,7 +108,7 @@ final class LiveStreamCreateMethod implements MethodInterface
 
         $name      = (string) $input['name'];
         $url       = filter_var(urldecode((string) $input['url']), FILTER_VALIDATE_URL) ?: null;
-        $codec     = (string) preg_replace("/[^a-z]/", "", strtolower((string) $input['codec']));
+        $codec     = (string) preg_replace("/[^a-z0-9]/", "", strtolower((string) $input['codec']));
         $siteUrl   = (isset($input['site_url'])) ? filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL) : null;
         $catalogId = (int) filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
 
