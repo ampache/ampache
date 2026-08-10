@@ -36,6 +36,7 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Plugin\AmpacheDiscogs;
 use Ampache\Plugin\AmpacheMusicBrainz;
@@ -1135,15 +1136,17 @@ class Art extends database_object
      * ['url']      = URL *** OPTIONAL ***
      * ['file']     = FILENAME *** OPTIONAL ***
      * ['raw']      = Actual Image data, already captured
-     * @param array{
-     *     url?: string,
-     *     file?: string,
-     *     raw?: string,
-     *     title?: string,
-     *     db?: int,
-     *     song?: string,
-     * } $data
      */
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUrlValidator(): UrlValidatorInterface
+    {
+        global $dic;
+
+        return $dic->get(UrlValidatorInterface::class);
+    }
+
     public static function get_from_source(array $data, string $type): string
     {
         if (empty($data)) {
@@ -1170,6 +1173,12 @@ class Art extends database_object
 
         // Check to see if it's a URL
         if (array_key_exists('url', $data) && filter_var($data['url'], FILTER_VALIDATE_URL)) {
+            if (!self::getUrlValidator()->isPublicHttpUrl((string) $data['url'])) {
+                debug_event(self::class, 'Refusing to fetch art from unsafe URL ' . $data['url'], 2);
+
+                return '';
+            }
+
             debug_event(self::class, 'CHECKING URL ' . $data['url'], 2);
             $options = [];
             try {
