@@ -50,13 +50,10 @@ final readonly class UserActivityRenderer implements UserActivityRendererInterfa
             return '';
         }
 
-        $user    = $this->modelFactory->createUser($useractivity->user);
-        $libitem = $this->libraryItemLoader->load(
-            LibraryItemEnum::from($useractivity->object_type),
-            $useractivity->object_id
-        );
+        $user = $this->modelFactory->createUser($useractivity->user);
 
-        if (!$libitem instanceof displayable_item) {
+        $link = $this->getObjectLink($useractivity);
+        if ($link === null) {
             return '';
         }
 
@@ -70,9 +67,6 @@ final readonly class UserActivityRenderer implements UserActivityRendererInterfa
             'rating' => T_('rated'),
             default => T_('did something on'),
         };
-        $link = (in_array($libitem->get_f_parent_link(), [null, '', '0'], true))
-            ? $libitem->get_f_link()
-            : $libitem->get_f_link() . '&nbsp;-&nbsp;' . $libitem->get_f_parent_link();
 
         return sprintf(
             '<div>%s %s %s</div>',
@@ -80,5 +74,34 @@ final readonly class UserActivityRenderer implements UserActivityRendererInterfa
             $descr,
             $link
         );
+    }
+
+    /**
+     * Build the link to the object the activity was recorded against, or null when it can't be displayed.
+     */
+    private function getObjectLink(Useractivity $useractivity): ?string
+    {
+        // a follow records another user, which is not a library item and cannot go through the loader
+        if ($useractivity->object_type === 'user') {
+            $followed = $this->modelFactory->createUser($useractivity->object_id);
+
+            return ($followed->isNew())
+                ? null
+                : $followed->get_f_link();
+        }
+
+        $objectType = LibraryItemEnum::tryFrom($useractivity->object_type);
+        if ($objectType === null) {
+            return null;
+        }
+
+        $libitem = $this->libraryItemLoader->load($objectType, $useractivity->object_id);
+        if (!$libitem instanceof displayable_item) {
+            return null;
+        }
+
+        return (in_array($libitem->get_f_parent_link(), [null, '', '0'], true))
+            ? $libitem->get_f_link()
+            : $libitem->get_f_link() . '&nbsp;-&nbsp;' . $libitem->get_f_parent_link();
     }
 }
