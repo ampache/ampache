@@ -192,9 +192,10 @@ TYPES: dict[str, dict[str, object]] = {
         "query": "ShareQuery",
         "item": "share",
         "items": "shares",
-        "match": "nothing (this browse has no text filters)",
+        "match": "the title of the shared object",
         "notes": [
-            "The share browse accepts no filters at all, so `cond` is ignored by the `shares` method. Users only ever see their own shares unless they are an admin.",
+            "A share has no name of its own, so the text filters and the `name` sort reach through to the album, artist, playlist, podcast, episode, smartlist, song or video it points at.",
+            "Users only ever see their own shares unless they are an admin.",
         ],
     },
     "song": {
@@ -261,10 +262,12 @@ FILTERS: dict[str, tuple[str, str]] = {
     "catalog_enabled": ("none", "Only {items} in an enabled catalog. Needs no value."),
     "disabled": ("0 or 1", "Send `1` for disabled {items}, `0` for enabled ones."),
     "disk": ("integer", "Only {items} on this disk number."),
+    "email": ("string", "The email address contains this value."),
     "enabled": ("0 or 1", "Send `1` for enabled {items}, `0` for disabled ones."),
     "equal": ("string", "{Match} is exactly this value. Matching is case insensitive."),
     "exact_match": ("string", "Alias of `equal`."),
     "follow_user": ("user id", "Only follows made by this user."),
+    "fullname": ("string", "The full name contains this value."),
     "gather_type": ("string", "Only catalogs gathering this media type: `music`, `video` or `podcast`."),
     "gather_types": (
         "array",
@@ -284,6 +287,7 @@ FILTERS: dict[str, tuple[str, str]] = {
     "label": ("label id", "Only {items} signed to this label."),
     "license": ("license id", "Only {items} released under this license."),
     "like": ("string", "{Match} contains this value."),
+    "name": ("string", "Alias of `like`."),
     "no_genre": ("none", "Only {items} with no genre at all. Needs no value, and clears any `genre` filter."),
     "no_tag": ("none", "Alias of `no_genre`."),
     "not_like": ("string", "{Match} does not contain this value."),
@@ -335,6 +339,7 @@ FILTERS: dict[str, tuple[str, str]] = {
         "0 to 5",
         "Only {items} the current user rated this value. Send `0` for {items} they have not rated at all.",
     ),
+    "username": ("string", "The username contains this value."),
 }
 
 # type -> filter name -> (value column, description), replacing the generic text
@@ -412,6 +417,13 @@ FILTER_OVERRIDES: dict[str, dict[str, tuple[str, str]]] = {
             "Only these list ids, including `smart_` prefixed ones. It takes a list, which `cond` cannot send, so `cond=id,1` returns nothing.",
         ),
     },
+    "share": {
+        "object_type": (
+            "string",
+            "Only shares of this object type: `album`, `album_disk`, `artist`, `playlist`, `podcast`, `podcast_episode`, `search`, `song` or `video`.",
+        ),
+        "user": ("user id", "Only shares created by this user."),
+    },
     "song": {
         "artist": ("artist id", "Only songs this artist is credited on, through `artist_map`."),
         "genre": ("genre id", "Only songs tagged with this genre."),
@@ -421,6 +433,7 @@ FILTER_OVERRIDES: dict[str, dict[str, tuple[str, str]]] = {
     "user": {
         "equal": ("string", "The full name, username or email is exactly this value."),
         "like": ("string", "The full name, username or email contains this value."),
+        "name": ("string", "Alias of `like`, so it matches the full name, username or email."),
         "not_like": ("string", "The full name, username or email does not contain this value."),
         "starts_with": ("string", "The full name, username or email starts with this value."),
         "not_starts_with": ("string", "None of the full name, username or email starts with this value."),
@@ -617,6 +630,7 @@ SORT_OVERRIDES: dict[str, dict[str, str]] = {
         "time": "Episode running time in seconds.",
     },
     "share": {
+        "name": "The name or title of the shared object.",
         "user": "The id of the user who created the share.",
     },
     "song": {
