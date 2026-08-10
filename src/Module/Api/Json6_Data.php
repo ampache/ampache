@@ -806,7 +806,11 @@ class Json6_Data
 
         $JSON = [];
         foreach ($objects as $tag_id) {
-            $tag    = new Tag((int) $tag_id);
+            $tag = new Tag((int) $tag_id);
+            if ($tag->isNew()) {
+                continue;
+            }
+
             $merged = $tag->get_merged_tags();
             $merge  = [];
             foreach ($merged as $mergedTag) {

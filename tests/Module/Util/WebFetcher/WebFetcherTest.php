@@ -28,6 +28,7 @@ namespace Ampache\Module\Util\WebFetcher;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 use Curl\Curl;
@@ -44,6 +45,8 @@ class WebFetcherTest extends TestCase
 
     private UtilityFactoryInterface&MockObject $utilityFactory;
 
+    private MockObject $urlValidator;
+
     private LoggerInterface&MockObject $logger;
 
     private WebFetcher $subject;
@@ -54,10 +57,17 @@ class WebFetcherTest extends TestCase
         $this->utilityFactory = $this->createMock(UtilityFactoryInterface::class);
         $this->logger         = $this->createMock(LoggerInterface::class);
 
+        $this->urlValidator = $this->createMock(UrlValidatorInterface::class);
+
+        // the fetch tests are about the curl setup, so the url is allowed unless a test says otherwise
+        $this->urlValidator->method('isPublicHttpUrl')
+            ->willReturn(true);
+
         $this->subject = new WebFetcher(
             $this->config,
             $this->utilityFactory,
-            $this->logger
+            $this->logger,
+            $this->urlValidator
         );
     }
 
@@ -78,7 +88,11 @@ class WebFetcherTest extends TestCase
             ->willReturn($curl);
 
         $curl->expects(static::once())
-            ->method('setFollowLocation');
+            ->method('setProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        $curl->expects(static::once())
+            ->method('setRedirectProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
         $curl->expects(static::once())
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
@@ -136,7 +150,11 @@ class WebFetcherTest extends TestCase
             ->willReturn($curl);
 
         $curl->expects(static::once())
-            ->method('setFollowLocation');
+            ->method('setProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        $curl->expects(static::once())
+            ->method('setRedirectProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
         $curl->expects(static::once())
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
@@ -197,7 +215,11 @@ class WebFetcherTest extends TestCase
             ->willReturn($curl);
 
         $curl->expects(static::once())
-            ->method('setFollowLocation');
+            ->method('setProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        $curl->expects(static::once())
+            ->method('setRedirectProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
         $curl->expects(static::once())
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
@@ -231,7 +253,11 @@ class WebFetcherTest extends TestCase
             ->willReturn($curl);
 
         $curl->expects(static::once())
-            ->method('setFollowLocation');
+            ->method('setProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        $curl->expects(static::once())
+            ->method('setRedirectProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
         $curl->expects(static::once())
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
