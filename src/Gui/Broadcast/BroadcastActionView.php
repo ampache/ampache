@@ -25,52 +25,33 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Broadcast;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\AbstractView;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Broadcast;
-use Ampache\Repository\Model\User;
 use Override;
 
 /**
- * One row of the broadcasts browse.
+ * The web player's broadcast control, in either of its two states.
+ *
+ * A running broadcast offers the button that stops it; with none running the icon opens the dialog
+ * that starts one. Both the player template and the player ajax handler render it, which is why it
+ * is a view rather than markup built where it is used.
  */
-final class BroadcastRowView extends AbstractView
+final class BroadcastActionView extends AbstractView
 {
     public function __construct(
-        private readonly Broadcast $broadcast,
-        private readonly bool $directPlay,
+        private readonly ?int $broadcastId = null,
     ) {}
 
-    public function getBroadcast(): Broadcast
-    {
-        return $this->broadcast;
-    }
-
-    public function getDeleteUrl(): string
-    {
-        return AmpConfig::get_web_path() . '/broadcast.php?action=show_delete&id=' . $this->broadcast->getId();
-    }
-
-    public function isDirectPlayEnabled(): bool
-    {
-        return $this->directPlay;
-    }
-
     /**
-     * Only a manager is offered the edit and delete buttons.
+     * The running broadcast, or null when nothing is being broadcast.
      */
-    public function mayManage(): bool
+    public function getBroadcastId(): ?int
     {
-        return $this->broadcast->getId() !== 0
-            && Core::get_global('user') instanceof User
-            && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER);
+        return $this->broadcastId;
     }
 
     #[Override]
     protected function templateFile(): string
     {
-        return $this->findTemplate('broadcast_row.phtml');
+        return $this->findTemplate('broadcast_action.phtml');
     }
 }

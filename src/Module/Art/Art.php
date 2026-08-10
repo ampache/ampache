@@ -37,6 +37,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Plugin\AmpacheDiscogs;
 use Ampache\Plugin\AmpacheMusicBrainz;
@@ -595,7 +596,7 @@ class Art extends database_object
 
         // Check to see if it's a URL
         if (array_key_exists('url', $data) && filter_var($data['url'], FILTER_VALIDATE_URL)) {
-            if (!self::_is_valid_url((string) $data['url'])) {
+            if (!self::getUrlValidator()->isPublicHttpUrl((string) $data['url'])) {
                 debug_event(self::class, 'Refusing to fetch art from unsafe URL ' . $data['url'], 2);
 
                 return '';
@@ -966,43 +967,6 @@ class Art extends database_object
     }
 
     /**
-     * Reject URLs that don't point at a public host.
-     */
-    private static function _is_valid_url(string $url): bool
-    {
-        $parts = parse_url($url);
-        if (
-            $parts === false
-            || empty($parts['host'])
-            || !in_array(strtolower($parts['scheme'] ?? ''), ['http', 'https'], true)
-        ) {
-            return false;
-        }
-
-        $host = $parts['host'];
-        if (filter_var($host, FILTER_VALIDATE_IP)) {
-            $ips = [$host];
-        } else {
-            $ips = array_merge(
-                gethostbynamel($host) ?: [],
-                array_column((array) dns_get_record($host, DNS_AAAA), 'ipv6')
-            );
-        }
-
-        if ($ips === []) {
-            return false;
-        }
-
-        foreach ($ips as $ip) {
-            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * _read_from_dir
      */
     private static function _read_from_dir(string $sizetext, string $type, int $uid, string $kind, string $mime): ?string
@@ -1114,6 +1078,16 @@ class Art extends database_object
         global $dic;
 
         return $dic->get(ImageRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUrlValidator(): UrlValidatorInterface
+    {
+        global $dic;
+
+        return $dic->get(UrlValidatorInterface::class);
     }
 
     /**

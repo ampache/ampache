@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Broadcast\BroadcastActionView;
 use Ampache\Gui\Broadcast\BroadcastsDialogView;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Playback\Stream;
@@ -133,7 +134,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 if ($broadcast->isNew() === false) {
                     $key = Core::generate_random_key();
                     $broadcast->update_state(1, $key);
-                    $results['broadcast']                = Broadcast::get_unbroadcast_link((int) $broadcast_id) . "<script>startBroadcast('" . $key . "');</script>";
+                    $results['broadcast']                = (new BroadcastActionView((int) $broadcast_id))->render() . "<script>startBroadcast('" . $key . "');</script>";
                     $results['broadcast_listeners_wrap'] = Broadcast::get_listeners_html();
                 }
 
@@ -143,7 +144,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 $broadcast    = new Broadcast((int) $broadcast_id);
                 if ($broadcast->isNew() === false) {
                     $broadcast->update_state(0);
-                    $results['broadcast']                = Broadcast::get_broadcast_link() . '<script>stopBroadcast();</script>';
+                    $results['broadcast']                = (new BroadcastActionView())->render() . '<script>stopBroadcast();</script>';
                     $results['broadcast_listeners_wrap'] = '';
                 }
         } // switch on action;

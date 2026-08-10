@@ -28,6 +28,7 @@ namespace Ampache\Plugin;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Override;
@@ -62,8 +63,9 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly UrlValidatorInterface $urlValidator,
+    ) {
         $this->description = T_('Get lyrics from a public Lyrist instance');
     }
 
@@ -74,7 +76,14 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
      */
     public function get_lyrics(Song $song): ?array
     {
-        $uri     = rtrim((string) preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode((string) $song->title) . '/' . urlencode($song->get_parent_fullname());
+        $uri = rtrim((string) preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode((string) $song->title) . '/' . urlencode($song->get_parent_fullname());
+        // the instance is a per-user preference, and a public instance is what this plugin is for
+        if (!$this->urlValidator->isPublicHttpUrl($uri)) {
+            debug_event(self::class, 'Refusing to fetch lyrics from ' . $uri, 3);
+
+            return null;
+        }
+
         $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
             $json = json_decode($request->body);

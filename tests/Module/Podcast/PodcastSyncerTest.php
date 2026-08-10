@@ -27,6 +27,8 @@ namespace Ampache\Module\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
+use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Repository\CatalogMapRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
@@ -51,6 +53,7 @@ class PodcastSyncerTest extends TestCase
     private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
     private PodcastRepositoryInterface&MockObject $podcastRepository;
     private PodcastSyncer $subject;
+    private WebFetcherInterface&MockObject $webFetcher;
 
     public function testAddEpisodesDownloadsAndCleansUpEligibleEpisodes(): void
     {
@@ -231,9 +234,16 @@ class PodcastSyncerTest extends TestCase
 
     public function testSyncParsesFeedAndDelegatesToAddEpisodes(): void
     {
+        $feedUrl = 'https://feed.example/rss';
+
         $podcast = $this->createMock(Podcast::class);
-        $podcast->method('getFeedUrl')->willReturn('data://text/plain,<rss><channel></channel></rss>');
+        $podcast->method('getFeedUrl')->willReturn($feedUrl);
         $podcast->method('getLastSyncDate')->willReturn(new DateTimeImmutable());
+
+        $this->webFetcher->expects(static::once())
+            ->method('fetch')
+            ->with($feedUrl)
+            ->willReturn('<rss><channel></channel></rss>');
 
         $this->configContainer->method('get')
             ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
@@ -252,8 +262,28 @@ class PodcastSyncerTest extends TestCase
         $podcast = $this->createMock(Podcast::class);
         $podcast->method('getFeedUrl')->willReturn('');
 
+        $this->webFetcher->expects(static::never())
+            ->method('fetch');
         $this->configContainer->expects(static::never())
             ->method('get');
+
+        static::assertFalse($this->subject->sync($podcast));
+    }
+
+    public function testSyncReturnsFalseWhenTheFeedIsRefused(): void
+    {
+        $feedUrl = 'http://169.254.169.254/latest/meta-data/';
+
+        $podcast = $this->createMock(Podcast::class);
+        $podcast->method('getFeedUrl')->willReturn($feedUrl);
+
+        $this->webFetcher->expects(static::once())
+            ->method('fetch')
+            ->with($feedUrl)
+            ->willThrowException(new FetchFailedException('Refusing to fetch url'));
+
+        $podcast->expects(static::never())
+            ->method('save');
 
         static::assertFalse($this->subject->sync($podcast));
     }
@@ -267,6 +297,7 @@ class PodcastSyncerTest extends TestCase
         $this->podcastEpisodeRepository = $this->createMock(PodcastEpisodeRepositoryInterface::class);
         $this->configContainer          = $this->createMock(ConfigContainerInterface::class);
         $this->catalogMapRepository     = $this->createMock(CatalogMapRepositoryInterface::class);
+        $this->webFetcher               = $this->createMock(WebFetcherInterface::class);
 
         // Catalog::update_mapping() reaches the container, and debug_event() pulls the logger off the same one
         $dic = $this->createMock(ContainerInterface::class);
@@ -282,7 +313,8 @@ class PodcastSyncerTest extends TestCase
             $this->podcastEpisodeDownloader,
             $this->podcastDeleter,
             $this->podcastEpisodeRepository,
-            $this->configContainer
+            $this->configContainer,
+            $this->webFetcher
         );
     }
 }

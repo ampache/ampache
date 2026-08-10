@@ -41,6 +41,30 @@ use Psr\Log\LoggerInterface;
  */
 final readonly class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterface
 {
+    /** @var string Extension used when the feed names one that is not a media type */
+    private const string DEFAULT_EXTENSION = 'mp3';
+    /** @var string[] Extensions an episode file may be saved with */
+    private const array EXTENSIONS = [
+        'aac',
+        'flac',
+        'm4a',
+        'm4b',
+        'm4v',
+        'mka',
+        'mkv',
+        'mov',
+        'mp3',
+        'mp4',
+        'oga',
+        'ogg',
+        'ogv',
+        'opus',
+        'wav',
+        'webm',
+        'wma',
+        'wmv',
+    ];
+
     public function __construct(
         private PodcastFolderProviderInterface $podcastFolderProvider,
         private WebFetcherInterface $webFetcher,
@@ -94,6 +118,11 @@ final readonly class PodcastEpisodeDownloader implements PodcastEpisodeDownloade
             // match any characters (except ?) before the first occurrence of ?
             if (preg_match('/^[^?]+(?=\?)/', $extension, $matches)) {
                 $extension = $matches[0];
+            }
+
+            // the feed names the extension, so anything that is not a media type is stored as one the server will not run
+            if (!in_array(strtolower($extension), self::EXTENSIONS, true)) {
+                $extension = self::DEFAULT_EXTENSION;
             }
 
             $destinationFilePath = sprintf(
