@@ -56,9 +56,8 @@ e.g. `sort=name,DESC`
 | `time`             | Episode running time in seconds.                                                                                         |
 | `title`            | Alias of `name`.                                                                                                         |
 | `total_count`      | How many times it has been played.                                                                                       |
+| `total_skip`       | How many times it has been skipped.                                                                                      |
 | `update_time`      | When its tags were last updated.                                                                                         |
 | `user_flag`        | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
 | `user_flag_rating` | When you added it to your favourites, then your rating.                                                                  |
 | `userflag`         | Alias of `user_flag`.                                                                                                    |
-
-**NOTE** These sorts are listed by the browse but have no implementation, so the rows come back in the default order: `total_skip`

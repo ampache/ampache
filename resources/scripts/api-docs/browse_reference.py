@@ -78,6 +78,7 @@ TYPES: dict[str, dict[str, object]] = {
         "notes": [
             "**API8 only.** The rows come from `folder_map`, so a row is either a folder or a media file inside one and the `id` is a `type-id` string like `folder-12` or `song-2280`.",
             "`int_id` is the plain numeric id of the object the row points at.",
+            "The `date`, `last_update`, `object_count`, `last_count`, `total_count` and `user` sorts read the folder's own columns, never the media inside it, so a media row has no value for them and every one of them keeps folders above files.",
         ],
     },
     "follower": {
@@ -583,8 +584,16 @@ SORT_OVERRIDES: dict[str, dict[str, str]] = {
         "id": "The catalog id, which is the order they were created in.",
     },
     "folder": {
-        "name": "Folders first, then name. This is the only sort that keeps folders above the files in them.",
+        "name": "Folders first, then name.",
         "id": "The `type-id` id string, which groups folders and files apart.",
+        "date": "Folders first, then when the folder was added to the catalog.",
+        "last_update": "Folders first, then when the folder was last updated.",
+        "object_count": "Folders first, then how many items the folder holds.",
+        "last_count": "Alias of `object_count`.",
+        "total_count": "Folders first, then how many times the folder has been played.",
+        "user": "Folders first, then the id of the user who owns the folder.",
+        "type": "Alias of `object_type`.",
+        "object_type": "The type of object the row points at, so folders group apart from the files in them.",
     },
     "genre": {
         "name": "Genre name.",
@@ -630,7 +639,7 @@ SORT_OVERRIDES: dict[str, dict[str, str]] = {
         "time": "Episode running time in seconds.",
     },
     "share": {
-        "name": "The name or title of the shared object.",
+        "name": "The name or title of the shared object, then its type and id so shares of the same name keep a stable order.",
         "user": "The id of the user who created the share.",
     },
     "song": {

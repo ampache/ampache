@@ -492,7 +492,7 @@ class Ui implements UiInterface
         }
 
         $string = (
-            '<a class="nohtml" href="' . AmpConfig::get('web_path')
+            '<a class="nohtml" href="' . AmpConfig::get_web_path()
             . '/rss.php?type=' . $type->value
             . $rsstoken . $strparams . '" target="_blank">'
             . self::get_material_symbol(

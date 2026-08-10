@@ -222,6 +222,7 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'state':
             case 'time':
             case 'total_count':
+            case 'total_skip':
             case 'update_time':
                 $sql = sprintf('`podcast_episode`.`%s`', $field);
                 break;
