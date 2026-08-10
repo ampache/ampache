@@ -90,10 +90,10 @@ final readonly class Init
         $protocol = $this->environment->isSsl() ? 'https' : 'http';
 
         // Set up for redirection on important error cases. Prefer the configured web path:
-        // get_web_path() is derived from the running script, so an entry point in a subdirectory
+        // the global get_web_path() is derived from the running script, so an entry point in a subdirectory
         // (public/m/index.php) would send you to <web_path>/m/login.php. It's empty when the config
         // hasn't loaded yet, which is exactly the install.php case, so fall back to the script path.
-        $path = (string) AmpConfig::get('web_path', '');
+        $path = AmpConfig::get_web_path();
         if ($path === '') {
             $path = get_web_path();
             if (isset($_SERVER['HTTP_HOST'])) {
