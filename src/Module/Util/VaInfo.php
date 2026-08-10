@@ -466,7 +466,7 @@ final class VaInfo implements VaInfoInterface
 
         $order = [];
         foreach ($tagorderMap[$configKey] ?? [] as $source) {
-            //debug_event(self::class, "source: " . $source, true, 5);
+            //debug_event(self::class, "source: " . $source, 5);
             $order[] = strtolower((string) $source);
         }
 
@@ -1014,6 +1014,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['artists'] = $this->parseArtists($data);
                     break;
                 case 'genre':
+                    //case 'ab:genre':
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
@@ -1155,6 +1156,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['artists'] = $this->parseArtists($data);
                     break;
                 case 'genre':
+                    //case 'ab:genre':
                     // Pass the array through
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
@@ -1266,7 +1268,6 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
-                case 'ab:mood':
                     $parsed['mood'] = $this->parseMoods($data, $parsed['mood'] ?? []);
                     break;
                 case 'discsubtitle':
@@ -1375,6 +1376,9 @@ final class VaInfo implements VaInfoInterface
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
                         $parsed['artists'] = $this->parseArtists($id3v2['comments']['text'][$txxx['description']]);
+                        break;
+                    case 'ab:mood':
+                        $parsed['mood'] = $this->parseMoods($id3v2['comments']['text'][$txxx['description']], $parsed['mood'] ?? []);
                         break;
                     case 'albumartist':
                     case 'album artist':
@@ -2189,6 +2193,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function parseMoods(array|string $data, array $result = []): array
     {
+        //debug_event(self::class, "parseMoods: " . print_r($data, true), 5);
         foreach ((is_array($data) ? $data : [$data]) as $row) {
             if (is_string($row) && $row !== '') {
                 foreach ($this->splitSlashedlist(str_replace("\x00", ';', $row)) as $mood) {
