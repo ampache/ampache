@@ -187,7 +187,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getRssLink(): string
     {
-        return AmpConfig::get_web_path() . '/rss.php?' . ($_SERVER['QUERY_STRING'] ?? '');
+        return AmpConfig::get_web_path('/client') . '/rss.php?' . ($_SERVER['QUERY_STRING'] ?? '');
     }
 
     /**
