@@ -842,7 +842,8 @@ class Search extends playlist_object
         $ruleType = match ($name) {
             'anywhere', 'title', 'album', 'song', 'song_artist', 'album_artist', 'composer', 'comment', 'lyrics',
             'label', 'file', 'playlist_name', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'genre', 'album_genre',
-            'artist_genre', 'song_genre', 'podcast', 'podcast_episode', 'category', 'username', 'summary',
+            'artist_genre', 'song_genre', 'podcast', 'podcast_episode', 'category', 'name', 'username', 'fullname',
+            'email', 'summary',
             'placeformed', 'release_type', 'release_status', 'version', 'barcode', 'catalog_number', 'favorite',
             'favorite_album', 'favorite_artist' => 'text',
             'id', 'track', 'year', 'original_year', 'time', 'disk_count', 'song_count', 'album_count', 'artist_count',
@@ -2064,7 +2065,10 @@ class Search extends playlist_object
     {
         $rule_type = [];
 
+        $rule_type[] = $this->_get_rule_text('name', T_('Name'));
         $rule_type[] = $this->_get_rule_text('username', T_('Username'));
+        $rule_type[] = $this->_get_rule_text('fullname', T_('Full Name'));
+        $rule_type[] = $this->_get_rule_text('email', T_('E-mail'));
 
         return $rule_type;
     }

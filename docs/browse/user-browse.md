@@ -19,15 +19,19 @@ e.g. `cond=starts_with,a`
 | `access`          | integer | Only users with this access level: `5` guest, `25` user, `50` content manager, `75` catalog manager, `100` admin.                   |
 | `alpha_match`     | string  | Alias of `like`.                                                                                                                    |
 | `disabled`        | 0 or 1  | Send `1` for disabled accounts, `0` for active ones.                                                                                |
+| `email`           | string  | The email address contains this value.                                                                                              |
 | `equal`           | string  | The full name, username or email is exactly this value.                                                                             |
 | `exact_match`     | string  | Alias of `equal`.                                                                                                                   |
+| `fullname`        | string  | The full name contains this value.                                                                                                  |
 | `id`              | array   | Only these user ids. It takes a list, which `cond` cannot send, so `cond=id,1` builds an empty list and the browse returns nothing. |
 | `like`            | string  | The full name, username or email contains this value.                                                                               |
+| `name`            | string  | Alias of `like`, so it matches the full name, username or email.                                                                    |
 | `not_like`        | string  | The full name, username or email does not contain this value.                                                                       |
 | `not_starts_with` | string  | None of the full name, username or email starts with this value.                                                                    |
 | `regex_match`     | regex   | The full name, username or email matches this MySQL regular expression.                                                             |
 | `regex_not_match` | regex   | None of the full name, username or email matches this MySQL regular expression.                                                     |
 | `starts_with`     | string  | The full name, username or email starts with this value.                                                                            |
+| `username`        | string  | The username contains this value.                                                                                                   |
 
 ## Available browse sorts
 
