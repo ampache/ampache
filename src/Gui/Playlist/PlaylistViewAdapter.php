@@ -286,11 +286,6 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return Share::display_ui('playlist', $this->playlist->getId(), false);
     }
 
-    public function getType(): string
-    {
-        return $this->playlist->get_f_type();
-    }
-
     public function getUserFlags(): string
     {
         return Userflag::show($this->playlist->getId(), 'playlist');
@@ -304,5 +299,10 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
     public function isEditable(): bool
     {
         return $this->playlist->has_access();
+    }
+
+    public function isPrivate(): bool
+    {
+        return $this->playlist->isPrivate();
     }
 }
