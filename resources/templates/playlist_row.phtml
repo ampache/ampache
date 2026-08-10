@@ -62,6 +62,7 @@ $playlistId = $playlist->getId(); ?>
         </span>
     </td>
     <td class="cel_last_update"><?php echo $this->e($playlist->getLastUpdate()); ?></td>
+    <?php // a private list renders as the lock symbol, so the type is already markup?>
     <td class="cel_type"><?php echo $this->raw($playlist->getType()); ?></td>
     <td class="cel_medias"><?php echo $this->e($playlist->getMediaCount()); ?></td>
 <?php if ($this->isUsingRatings()) { ?>
