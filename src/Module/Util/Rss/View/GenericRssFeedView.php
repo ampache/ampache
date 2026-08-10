@@ -31,11 +31,30 @@ use Traversable;
 
 /**
  * Renders the plain RSS 2.0 channel every feed but the podcast one uses.
+ *
+ * @phpstan-type RssFeedItem array{
+ *     title: string,
+ *     link: string,
+ *     description: string,
+ *     comments: ?string,
+ *     pubDate: string,
+ *     guid: string,
+ *     isPermaLink: string,
+ *     image?: string,
+ *     duration?: string,
+ *     season?: ?string,
+ *     season_name?: ?string,
+ *     episode?: ?string,
+ *     type?: ?string,
+ *     size?: ?string,
+ *     url?: ?string
+ * }
  */
 final class GenericRssFeedView extends AbstractView
 {
     /**
-     * @param Traversable<array{title: string, link: string, description: string, comments: ?string, pubDate: string, guid: string, isPermaLink: string, image?: string}> $items
+     * @param Traversable<RssFeedItem> $items
+     * @param list<array{feedUrl: string, feedGuid: string}> $remoteItems
      */
     public function __construct(
         private readonly string $title,
@@ -55,7 +74,7 @@ final class GenericRssFeedView extends AbstractView
     }
 
     /**
-     * @return Traversable<array{title: string, link: string, description: string, comments: ?string, pubDate: string, guid: string, isPermaLink: string, image?: string}>
+     * @return Traversable<RssFeedItem>
      */
     public function getItems(): Traversable
     {

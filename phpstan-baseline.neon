@@ -157,36 +157,6 @@ parameters:
 			path: src/Module/Api/Method/MethodInterface.php
 
 		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_callSearch\(\) has parameter \$count with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_callSearch\(\) has parameter \$criteria with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_callSearch\(\) has parameter \$filter with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_callSearch\(\) has parameter \$start with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_callSearch\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_getFileTypes\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -200,12 +170,6 @@ parameters:
 
 		-
 			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_itemArtist\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_itemLiveStream\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -247,12 +211,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_itemSong\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_itemTag\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -260,42 +218,6 @@ parameters:
 
 		-
 			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_itemVideo\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_musicChilds\(\) has parameter \$count with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_musicChilds\(\) has parameter \$prmPath with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_musicChilds\(\) has parameter \$prmQuery with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_musicChilds\(\) has parameter \$start with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_musicChilds\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_musicMetadata\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -331,61 +253,31 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_slice\(\) has parameter \$count with no type specified\.$#'
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:callSearch\(\) has parameter \$count with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_slice\(\) has parameter \$items with no type specified\.$#'
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:callSearch\(\) has parameter \$criteria with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_slice\(\) has parameter \$start with no type specified\.$#'
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:callSearch\(\) has parameter \$filter with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_slice\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_videoChilds\(\) has parameter \$count with no type specified\.$#'
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:callSearch\(\) has parameter \$start with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_videoChilds\(\) has parameter \$prmPath with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_videoChilds\(\) has parameter \$prmQuery with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_videoChilds\(\) has parameter \$start with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_videoChilds\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_videoMetadata\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:callSearch\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -445,6 +337,54 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:itemLiveStream\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:itemSong\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:musicChilds\(\) has parameter \$count with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:musicChilds\(\) has parameter \$prmPath with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:musicChilds\(\) has parameter \$prmQuery with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:musicChilds\(\) has parameter \$start with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:musicChilds\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:musicMetadata\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
 			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:notify_request\(\) has parameter \$remote with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -483,6 +423,66 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:sendResponse\(\) has parameter \$delaytime with no type specified\.$#'
 			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:slice\(\) has parameter \$count with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:slice\(\) has parameter \$items with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:slice\(\) has parameter \$start with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:slice\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:videoChilds\(\) has parameter \$count with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:videoChilds\(\) has parameter \$prmPath with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:videoChilds\(\) has parameter \$prmQuery with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:videoChilds\(\) has parameter \$start with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:videoChilds\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:videoMetadata\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
 
