@@ -29,7 +29,8 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\User\UserRowView $this */
 
-$userId = $this->getUserId(); ?>
+$adminPath = $this->getAdminPath();
+$userId    = $this->getUserId(); ?>
 <td class="cel_username">
     <a href="<?php echo $this->e($this->getWebPath()); ?>/stats.php?action=show_user&user_id=<?php echo $userId; ?>">
         <?php echo $this->raw($this->getAvatar()); ?>
@@ -44,7 +45,7 @@ $userId = $this->getUserId(); ?>
 <?php } ?>
 <?php if ($this->showLastIp()) { ?>
 <td class="cel_lastip">
-    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=show_ip_history&user_id=<?php echo $userId; ?>">
+    <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_ip_history&user_id=<?php echo $userId; ?>">
         <?php echo $this->e($this->getIpHistory()); ?>
     </a>
 </td>
@@ -59,22 +60,22 @@ $userId = $this->getUserId(); ?>
     </a>
     <?php } ?>
     <?php if ($this->mayAdminister()) { ?>
-    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=show_edit&user_id=<?php echo $userId; ?>">
+    <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_edit&user_id=<?php echo $userId; ?>">
         <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
     </a>
-    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=show_preferences&user_id=<?php echo $userId; ?>">
+    <a href="<?php echo $this->e($adminPath); ?>/users.php?action=show_preferences&user_id=<?php echo $userId; ?>">
         <?php echo $this->raw(Ui::get_material_symbol('page_info', T_('Preferences'))); ?>
     </a>
     <?php if ($this->isDisabled()) { ?>
-    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=enable&user_id=<?php echo $userId; ?>">
+    <a href="<?php echo $this->e($adminPath); ?>/users.php?action=enable&user_id=<?php echo $userId; ?>">
         <?php echo $this->raw(Ui::get_material_symbol('person', T_('Enable'))); ?>
     </a>
     <?php } else { ?>
-    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=disable&user_id=<?php echo $userId; ?>">
+    <a href="<?php echo $this->e($adminPath); ?>/users.php?action=disable&user_id=<?php echo $userId; ?>">
         <?php echo $this->raw(Ui::get_material_symbol('person_off', T_('Disable'))); ?>
     </a>
     <?php } ?>
-    <a href="<?php echo $this->e($this->getAdminPath()); ?>/users.php?action=delete&user_id=<?php echo $userId; ?>">
+    <a href="<?php echo $this->e($adminPath); ?>/users.php?action=delete&user_id=<?php echo $userId; ?>">
         <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
     </a>
     <?php } ?>

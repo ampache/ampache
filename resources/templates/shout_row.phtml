@@ -29,7 +29,8 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Shout\ShoutRowView $this */
 
-$shout = $this->getShout(); ?>
+$adminPath = $this->getAdminPath();
+$shout     = $this->getShout(); ?>
 <tr id="flagged_<?php echo $this->e($shout->getId()); ?>">
     <td class="cel_object"><?php echo $this->raw($this->getObjectLink()); ?></td>
     <td class="cel_username"><?php echo $this->raw($this->getClient()->get_f_link()); ?></td>
@@ -37,10 +38,10 @@ $shout = $this->getShout(); ?>
     <td class="cel_comment"><?php echo $this->e($shout->getText()); ?></td>
     <td class="cel_date"><?php echo $this->e(get_datetime($shout->getDate())); ?></td>
     <td class="cel_action">
-        <a href="<?php echo $this->e($this->getAdminPath()); ?>/shout.php?action=show_edit&shout_id=<?php echo $this->e($shout->getId()); ?>">
+        <a href="<?php echo $this->e($adminPath); ?>/shout.php?action=show_edit&shout_id=<?php echo $this->e($shout->getId()); ?>">
             <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
         </a>
-        <a href="<?php echo $this->e($this->getAdminPath()); ?>/shout.php?action=delete&shout_id=<?php echo $this->e($shout->getId()); ?>">
+        <a href="<?php echo $this->e($adminPath); ?>/shout.php?action=delete&shout_id=<?php echo $this->e($shout->getId()); ?>">
             <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
         </a>
     </td>
