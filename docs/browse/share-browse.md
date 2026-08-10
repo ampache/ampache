@@ -43,6 +43,7 @@ e.g. `sort=name,DESC`
 | `counter`        | How many times the share has been used.                                                                      |
 | `creation_date`  | When it was created.                                                                                         |
 | `expire`         | How many days the share lasts.                                                                               |
+| `id`             | The share id, which is the order they were created in.                                                       |
 | `lastvisit_date` | When the share was last opened.                                                                              |
 | `max_counter`    | The share's maximum allowed uses.                                                                            |
 | `name`           | The name or title of the shared object, then its type and id so shares of the same name keep a stable order. |

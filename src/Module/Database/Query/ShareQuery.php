@@ -53,6 +53,7 @@ final class ShareQuery implements QueryInterface
         'counter',
         'creation_date',
         'expire',
+        'id',
         'lastvisit_date',
         'max_counter',
         'name',

@@ -131,6 +131,14 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 
 ### Fixed (800000)
 
+* `playlists`/`list`/`index`/`stats` (API4 and above)
+  * `sort=last_count` answered with an error instead of a list. The combined playlist and smartlist browse never carried the column it sorts on, though both tables have it
+* `followers` (API4 and above)
+  * The returned ids are the accounts doing the following. They were the ids of the follow records, which line up with real accounts only by coincidence, so `following` and `followers` disagreed about the same relationship
+* ALL
+  * Sorts a browse implemented but never offered, so asking for one did nothing: `id` on broadcast, private message, share, shoutbox and wanted, `release_date` on video, `title` on genre and mood, and `genre` on genre
+  * The private message browse sorts on `from_user` and takes the `equal`/`exact_match` filters it already implemented, and the follower browse sorts on `username`, `last_seen` and `create_date`
+  * `wanted` dropped its `username` sort, which named a column the table does not have
 * API5, API6
   * advanced_search: `type=album_disk` returned album disk ids rendered as songs, so a client read a disk id as a song id. Neither version has an album disk formatter, so both now return an empty result instead. `search` is affected too, being an alias. API8 returns the album disks. **NOTE** the same fix landed in Ampache7, which serves these versions as well
   * API3 and API4 are unchanged: neither validates the search `type` at all, so every unsupported type there already falls through to the song output

@@ -70,6 +70,7 @@ final class VideoQuery implements QueryInterface
         'name',
         'rand',
         'rating',
+        'release_date',
         'resolution',
         'title',
         'total_count',

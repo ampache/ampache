@@ -55,6 +55,7 @@ e.g. `sort=name,DESC`
 | `name`             | Video title.                                                                                                             |
 | `rand`             | Random order, applied per request. Paging through it repeats and skips videos, so ask for everything in one call.        |
 | `rating`           | Your own rating, then when you set it. Videos you have not rated group together.                                         |
+| `release_date`     | Video release date.                                                                                                      |
 | `resolution`       | Video width in pixels.                                                                                                   |
 | `title`            | Alias of `name`.                                                                                                         |
 | `total_count`      | How many times it has been played.                                                                                       |
