@@ -52,6 +52,7 @@ use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Plugin\PluginGetLyricsInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
@@ -835,6 +836,8 @@ class Song extends database_object implements
 
         self::getSongRepository()->insertData([$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain, $bpm]);
 
+        self::getFolderRepository()->mapObject('song', $song_id, (string) $file, (int) $catalog);
+
         return $song_id;
     }
 
@@ -1258,6 +1261,16 @@ class Song extends database_object implements
         }
 
         return self::getSongRepository()->setField($song_id, $column, $value);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getFolderRepository(): FolderRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(FolderRepositoryInterface::class);
     }
 
     /**

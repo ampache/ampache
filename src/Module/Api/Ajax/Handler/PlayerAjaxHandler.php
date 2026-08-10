@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Broadcast\BroadcastActionView;
+use Ampache\Gui\Broadcast\BroadcastListenersView;
 use Ampache\Gui\Broadcast\BroadcastsDialogView;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Playback\Stream;
@@ -135,7 +136,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                     $key = Core::generate_random_key();
                     $broadcast->update_state(1, $key);
                     $results['broadcast']                = (new BroadcastActionView((int) $broadcast_id))->render() . "<script>startBroadcast('" . $key . "');</script>";
-                    $results['broadcast_listeners_wrap'] = Broadcast::get_listeners_html();
+                    $results['broadcast_listeners_wrap'] = (new BroadcastListenersView())->render();
                 }
 
                 break;

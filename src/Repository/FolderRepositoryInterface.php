@@ -108,6 +108,11 @@ interface FolderRepositoryInterface
     public function lookupByPathName(string $folderPath, int $catalogId = 0): int;
 
     /**
+     * Maps a media file into the folder its path names, creating the folder chain when it is missing
+     */
+    public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): void;
+
+    /**
      * Moves every folder_map row of the given type from one object onto another
      */
     public function migrateObject(string $objectType, int $oldObjectId, int $newObjectId): void;

@@ -94,14 +94,14 @@ final class CollectionRowView extends AbstractView
         return (string) $this->collection->username;
     }
 
-    public function getType(): string
-    {
-        return (string) $this->collection->type;
-    }
-
     public function getWebPath(): string
     {
         return $this->webPath;
+    }
+
+    public function isPrivate(): bool
+    {
+        return $this->collection->isPrivate();
     }
 
     public function mayCollaborate(): bool

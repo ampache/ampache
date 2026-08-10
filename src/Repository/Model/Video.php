@@ -39,6 +39,7 @@ use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
@@ -308,6 +309,8 @@ class Video extends database_object implements
 
         Catalog::update_map((int) $data['catalog'], 'video', $video_id);
 
+        self::getFolderRepository()->mapObject('video', $video_id, (string) $data['file'], (int) $data['catalog']);
+
         if (is_array($tags)) {
             foreach ($tags as $tag) {
                 $tag = trim((string) $tag);
@@ -394,6 +397,16 @@ class Video extends database_object implements
         if ($video_id > 0) {
             self::getVideoRepository()->updateCounts($video_id);
         }
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getFolderRepository(): FolderRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(FolderRepositoryInterface::class);
     }
 
     /**

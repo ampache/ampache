@@ -75,6 +75,16 @@ class Art extends database_object
 
     protected const string DB_TABLENAME = 'image';
 
+    /** @var string The placeholder every type without one of its own falls back to */
+    private const string FALLBACK_IMAGE = 'blankalbum';
+
+    /** @var array<string, string> The placeholder image name for the types that ship one of their own */
+    private const array FALLBACK_IMAGES = [
+        'folder' => 'blankfolder',
+        'podcast' => 'blankpodcast',
+        'podcast_episode' => 'blankpodcast',
+    ];
+
     public int $height         = 0;
     public ?int $id            = 0;
     public string $kind        = 'default';
@@ -514,17 +524,15 @@ class Art extends database_object
      */
     public static function get_fallback_url(string $type, ?string $size = null): string
     {
-        // a custom blank album is already a url of its own, and folders keep their own placeholder
-        if ($type !== 'folder') {
+        $name = self::FALLBACK_IMAGES[$type] ?? self::FALLBACK_IMAGE;
+
+        // a custom blank album is already a url of its own, and a type with its own placeholder keeps it
+        if ($name === self::FALLBACK_IMAGE) {
             $custom = (string) AmpConfig::get('custom_blankalbum', '');
             if (str_starts_with($custom, 'http://') || str_starts_with($custom, 'https://')) {
                 return $custom;
             }
         }
-
-        $name = ($type === 'folder')
-            ? 'folder'
-            : 'blankalbum';
 
         return AmpConfig::get_web_path('/client') . '/images/' . $name . '_' . self::_fallback_size($size) . '.png';
     }
@@ -1781,7 +1789,7 @@ class Art extends database_object
 
     private function _get_blankalbum(?string $size = null): string
     {
-        $defaultimg = ($this->object_type === 'folder') ? 'folder' : 'blankalbum';
+        $defaultimg = self::FALLBACK_IMAGES[$this->object_type] ?? self::FALLBACK_IMAGE;
         switch ($size) {
             case '128x128':
                 $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_128x128.png';

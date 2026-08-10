@@ -31,6 +31,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -70,6 +71,7 @@ final readonly class PodcastEpisodeDownloader implements PodcastEpisodeDownloade
         private WebFetcherInterface $webFetcher,
         private PodcastRepositoryInterface $podcastRepository,
         private LoggerInterface $logger,
+        private FolderRepositoryInterface $folderRepository,
     ) {}
 
     /**
@@ -169,6 +171,9 @@ final readonly class PodcastEpisodeDownloader implements PodcastEpisodeDownloade
                 $episode->mime    = Song::type_to_mime($episode->type);
                 $episode->enabled = true;
                 Podcast_Episode::update_file($destinationFilePath, $episodeId);
+
+                // a podcast writes into a directory no catalog scan has walked, so the folder is created here if needed
+                $this->folderRepository->mapObject('podcast_episode', $episodeId, $destinationFilePath, $episode->getCatalogId());
             }
 
             Catalog::update_media_from_tags($episode);
