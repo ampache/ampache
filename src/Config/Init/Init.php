@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Config\Init;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\Init\Exception\ConfigFileNotFoundException;
 use Ampache\Config\Init\Exception\ConfigFileNotParsableException;
 use Ampache\Config\Init\Exception\DatabaseOutdatedException;
@@ -57,20 +58,20 @@ final readonly class Init
                 $initializationHandler->init();
             }
         } catch (ConfigFileNotFoundException $error) {
-            $redirectionUrl = 'install.php';
+            $redirectionUrl = '/client/install.php';
         } catch (ConfigFileNotParsableException $error) {
-            $redirectionUrl = 'test.php?action=config';
+            $redirectionUrl = '/client/test.php?action=config';
         } catch (EnvironmentNotSuitableException|GetTextNotAvailableException $error) {
-            $redirectionUrl = 'test.php';
+            $redirectionUrl = '/client/test.php';
         } catch (DatabaseOutdatedException $error) {
-            $redirectionUrl = 'update.php';
+            $redirectionUrl = '/client/update.php';
         } catch (RequireAuthException $error) {
-            $redirectionUrl = 'login.php';
+            $redirectionUrl = '/client/login.php';
         } catch (Throwable $error) {
             // startup failed in a way nothing above expected, so the debug page is the only place that can explain it
             debug_event(self::class, 'Initialization failed: ' . $error->getMessage(), 1);
 
-            $redirectionUrl = 'test.php';
+            $redirectionUrl = '/client/test.php';
         }
 
         // returning from a finally block would discard an exception no catch above matched, so this stays outside one

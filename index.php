@@ -20,7 +20,7 @@
         <div id="guts" class="container" role="main">
             <div class="jumbotron" style="margin-top: 70px">
                 <h1>Warning</h1>
-                <p>The root Ampache folder has changed to <a href="./public" target="_blank">./public</a></p>
+                <p>The root Ampache folder has changed to <a href="./client" target="_blank">./client</a></p>
             </div>
             <div class="alert alert-danger">
                 <p>You must update your DocumentRoot to the new path</p>
