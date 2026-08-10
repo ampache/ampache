@@ -26,10 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Plugin;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
+use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Repository\Model\User;
 use Override;
 
@@ -64,8 +65,9 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly WebFetcherInterface $webFetcher,
+    ) {
         $this->description = T_('RSS View');
     }
 
@@ -75,8 +77,16 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
      */
     public function display_home(): void
     {
-        $xmlstr = file_get_contents($this->feed_url, false, stream_context_create(Core::requests_options()));
-        $xml    = ($xmlstr)
+        // the feed url is a per-user preference, so it is fetched like any other url a user supplies
+        try {
+            $xmlstr = $this->webFetcher->fetch($this->feed_url);
+        } catch (FetchFailedException $error) {
+            debug_event(self::class, 'Cannot access feed ' . $this->feed_url . ': ' . $error->getMessage(), 3);
+
+            return;
+        }
+
+        $xml = ($xmlstr !== '')
             ? simplexml_load_string($xmlstr)
             : false;
         if ($xml && $xml->channel) {
