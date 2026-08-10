@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 // playback/web_player.phtml -- rendered by Ampache\Gui\Playback\WebPlayerView
 
+use Ampache\Gui\Broadcast\BroadcastActionView;
 use Ampache\Gui\Partial\VisualizerView;
 use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\System\Core;
@@ -677,9 +678,9 @@ if (!$this->isVideo()) {
                                     $broadcast = new Broadcast((int) $broadcast_id);
                                     $key       = Core::generate_random_key();
                                     $broadcast->update_state(1, $key);
-                                    echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
+                                    echo (new BroadcastActionView((int) $broadcast_id))->render() . '<script>startBroadcast(\'' . $key . '\');</script>';
                                 } else {
-                                    echo Broadcast::get_broadcast_link();
+                                    echo (new BroadcastActionView())->render();
                                 } ?>
                             </div>
                         <?php } ?>

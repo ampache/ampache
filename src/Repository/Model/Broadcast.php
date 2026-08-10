@@ -27,13 +27,10 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\Art;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\BroadcastRepositoryInterface;
 
 class Broadcast extends database_object implements library_item, displayable_item, container_item, ModelInterface
@@ -104,17 +101,6 @@ class Broadcast extends database_object implements library_item, displayable_ite
     }
 
     /**
-     * Get broadcast link.
-     */
-    public static function get_broadcast_link(): string
-    {
-        $link = "<div class=\"broadcast-action\">";
-        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_material_symbol('cell_tower', T_('Broadcast')) . "</a>";
-
-        return $link . "</div>";
-    }
-
-    /**
      * Get broadcasts from a user.
      * @return int[]
      */
@@ -126,22 +112,6 @@ class Broadcast extends database_object implements library_item, displayable_ite
     public static function get_listeners_html(): string
     {
         return "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
-    }
-
-    /**
-     * Get unbroadcast link.
-     */
-    public static function get_unbroadcast_link(int $broadcast_id): string
-    {
-        $link = "<div class=\"broadcast-action\">";
-        $link .= Ajax::button(
-            '?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id,
-            'cell_tower',
-            T_('Unbroadcast'),
-            'broadcast_action'
-        );
-
-        return $link . "</div>";
     }
 
     /**
@@ -350,17 +320,6 @@ class Broadcast extends database_object implements library_item, displayable_ite
 
         // memory_cache is on by default, so the row this object just wrote has to leave the request cache
         self::remove_from_cache('broadcast', $this->id);
-    }
-
-    /**
-     * Show action buttons.
-     */
-    public function show_action_buttons(): void
-    {
-        if ($this->id !== 0 && (Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER))) {
-            echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_material_symbol('edit', T_('Edit')) . "</a>";
-            echo " <a href=\"" . AmpConfig::get_web_path('/client') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_material_symbol('close', T_('Delete')) . "</a>";
-        }
     }
 
     /**

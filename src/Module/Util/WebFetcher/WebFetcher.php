@@ -28,8 +28,10 @@ namespace Ampache\Module\Util\WebFetcher;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
+use ArrayAccess;
 use Curl\Curl;
 use Psr\Log\LoggerInterface;
 
@@ -38,6 +40,8 @@ use Psr\Log\LoggerInterface;
  */
 final readonly class WebFetcher implements WebFetcherInterface
 {
+    /** @var int How many redirects a fetch will follow, each one checked before it is followed */
+    private const int MAX_REDIRECTS = 5;
     /** @var int Curl operation timeout in seconds */
     private const int TIMEOUT = 300;
 
@@ -45,6 +49,7 @@ final readonly class WebFetcher implements WebFetcherInterface
         private ConfigContainerInterface $config,
         private UtilityFactoryInterface $utilityFactory,
         private LoggerInterface $logger,
+        private UrlValidatorInterface $urlValidator,
     ) {}
 
     /**
@@ -54,23 +59,39 @@ final readonly class WebFetcher implements WebFetcherInterface
      */
     public function fetch(string $uri): string
     {
-        $curl = $this->setupCurl();
+        for ($hop = 0; $hop <= self::MAX_REDIRECTS; $hop++) {
+            $this->assertFetchable($uri);
 
-        $this->logger->debug(
-            sprintf('Fetching url: %s', $uri),
-            [LegacyLogger::CONTEXT_TYPE => self::class]
-        );
+            $curl = $this->setupCurl();
 
-        $curl->get($uri);
-        $curl->close();
-
-        if ($curl->error) {
-            throw new FetchFailedException(
-                sprintf('Error fetching url: %s', $uri)
+            $this->logger->debug(
+                sprintf('Fetching url: %s', $uri),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
+
+            $curl->get($uri);
+            $response = (string) $curl->rawResponse;
+            $error    = $curl->error;
+            $location = $this->getRedirect($curl, $uri);
+            $curl->close();
+
+            if ($location !== null) {
+                $uri = $location;
+                continue;
+            }
+
+            if ($error) {
+                throw new FetchFailedException(
+                    sprintf('Error fetching url: %s', $uri)
+                );
+            }
+
+            return $response;
         }
 
-        return (string) $curl->rawResponse;
+        throw new FetchFailedException(
+            sprintf('Too many redirects fetching url: %s', $uri)
+        );
     }
 
     /**
@@ -82,22 +103,98 @@ final readonly class WebFetcher implements WebFetcherInterface
         string $uri,
         string $destinationFilePath,
     ): void {
-        $curl = $this->setupCurl();
-        $curl->setReferer($uri);
+        for ($hop = 0; $hop <= self::MAX_REDIRECTS; $hop++) {
+            $this->assertFetchable($uri);
 
-        $result = $curl->download($uri, $destinationFilePath);
+            $curl = $this->setupCurl();
+            $curl->setReferer($uri);
 
-        $curl->close();
-        if ($result) {
+            $result       = $curl->download($uri, $destinationFilePath);
+            $errorMessage = (string) $curl->errorMessage;
+            $location     = $this->getRedirect($curl, $uri);
+            $curl->close();
+
+            if ($location !== null) {
+                // the redirect body landed in the destination, so it goes before the next hop is tried
+                @unlink($destinationFilePath);
+                $uri = $location;
+                continue;
+            }
+
+            if (!$result) {
+                throw new FetchFailedException(
+                    sprintf('Error downloading to file: %s. Reason: %s', $destinationFilePath, $errorMessage)
+                );
+            }
+
             $this->logger->debug(
                 sprintf('Download to file completed: %s', $destinationFilePath),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-        } else {
+
+            return;
+        }
+
+        @unlink($destinationFilePath);
+
+        throw new FetchFailedException(
+            sprintf('Too many redirects downloading url: %s', $uri)
+        );
+    }
+
+    /**
+     * Refuses a url the server must not request on someone else's behalf
+     *
+     * @throws FetchFailedException
+     */
+    private function assertFetchable(string $uri): void
+    {
+        if (!$this->urlValidator->isPublicHttpUrl($uri)) {
+            $this->logger->warning(
+                sprintf('Refusing to fetch url: %s', $uri),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
             throw new FetchFailedException(
-                sprintf('Error downloading to file: %s. Reason: %s', $destinationFilePath, $curl->errorMessage)
+                sprintf('Refusing to fetch url: %s', $uri)
             );
         }
+    }
+
+    /**
+     * The absolute url a redirect response points at, or null when the response is not a redirect
+     *
+     * Redirects are followed by hand because curl would follow them without asking whether the target may be reached.
+     */
+    private function getRedirect(Curl $curl, string $uri): ?string
+    {
+        $status = (int) $curl->httpStatusCode;
+        if ($status < 300 || $status > 399) {
+            return null;
+        }
+
+        $headers  = $curl->getResponseHeaders();
+        $location = (is_array($headers) || $headers instanceof ArrayAccess)
+            ? (string) ($headers['Location'] ?? '')
+            : '';
+
+        if ($location === '') {
+            return null;
+        }
+
+        // a relative Location is resolved against the url that answered with it
+        if (parse_url($location, PHP_URL_SCHEME) === null) {
+            $base     = parse_url($uri);
+            $location = sprintf(
+                '%s://%s%s%s',
+                $base['scheme'] ?? 'http',
+                $base['host'] ?? '',
+                isset($base['port']) ? ':' . $base['port'] : '',
+                str_starts_with($location, '/') ? $location : '/' . $location
+            );
+        }
+
+        return $location;
     }
 
     /**
@@ -111,7 +208,9 @@ final readonly class WebFetcher implements WebFetcherInterface
         $proxyPass = $this->config->get(ConfigurationKeyEnum::PROXY_PASS);
 
         $curl = $this->utilityFactory->createCurl();
-        $curl->setFollowLocation();
+        // php pins these to http/https already; setting them keeps that true whatever the runtime allows
+        $curl->setProtocols(CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        $curl->setRedirectProtocols(CURLPROTO_HTTP | CURLPROTO_HTTPS);
         $curl->setTimeout(self::TIMEOUT);
         $curl->setUserAgent(sprintf('Ampache/%s', $this->config->getVersion()));
 
