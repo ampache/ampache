@@ -59,7 +59,7 @@ use Ampache\Module\Util\Ui;
     <td class="cel_date"><?php echo $this->e(get_datetime($data['date'])); ?></td>
     <td class="cel_ipaddress"><?php echo $this->e($data['ip'] ?: T_('Invalid')); ?></td>
     <td class="col_agent"><?php echo $this->e($data['agent'] ?: T_('Unknown')); ?></td>
-    <td class="col_action"><?php echo $this->e(($data['action'] !== '') ? T_($data['action']) : T_('Unknown')); ?></td>
+    <td class="col_action"><?php echo $this->e(($data['action'] !== null && $data['action'] !== '') ? T_($data['action']) : T_('Unknown')); ?></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
