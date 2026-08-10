@@ -127,7 +127,7 @@ final class Upload8Method implements MethodInterface
             ];
         }
 
-        $catalog = Upload::check((int) AmpConfig::get('upload_catalog', 0));
+        $catalog = Upload::check(AmpConfig::get_int('upload_catalog', 0));
         if (!$catalog instanceof Catalog_local) {
             $response->getBody()->write(
                 $output->error($apiVersion, ErrorCodeEnum::BAD_REQUEST, 'Bad Request: upload_catalog', self::ACTION, 'system')

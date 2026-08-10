@@ -60,7 +60,7 @@ final class ShowAddUserAction extends AbstractUserAction
             $this->requestParser->getFromRequest('fullname'),
             $this->requestParser->getFromRequest('email'),
             $this->requestParser->getFromRequest('website'),
-            (int) AmpConfig::get('max_upload_size'),
+            AmpConfig::get_int('max_upload_size'),
             (bool) AmpConfig::get('catalog_filter')
         ))->render();
         $this->ui->showQueryStats();

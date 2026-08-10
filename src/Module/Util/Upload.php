@@ -204,7 +204,7 @@ class Upload
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
             // the setting arrives as a string, so it is cast before both the guard and the typed call below
-            $upload_catalog = (int) AmpConfig::get('upload_catalog', 0);
+            $upload_catalog = AmpConfig::get_int('upload_catalog', 0);
             if ($upload_catalog === 0) {
                 return null;
             }
@@ -356,7 +356,7 @@ class Upload
             AccessTypeEnum::INTERFACE,
             AccessLevelEnum::from((int) AmpConfig::get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL, AccessLevelEnum::USER->value))
         );
-        $catalog_id = (int) AmpConfig::get('upload_catalog', 0);
+        $catalog_id = AmpConfig::get_int('upload_catalog', 0);
         $catalog    = self::check($catalog_id);
         if ($catalog instanceof Catalog_local) {
             debug_event(self::class, 'Uploading to catalog ID ' . $catalog_id, 4);

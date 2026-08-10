@@ -129,9 +129,9 @@ class PodcastEpisodeRepositoryTest extends TestCase
     public function testGetEpisodeEligibleForDeletionReturnsNothingIfDisabled(): void
     {
         $this->configContainer->expects(static::once())
-            ->method('get')
+            ->method('getInt')
             ->with(ConfigurationKeyEnum::PODCAST_KEEP)
-            ->willReturn('');
+            ->willReturn(0);
 
         self::assertSame(
             [],
@@ -154,9 +154,9 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->willReturn($podcastId);
 
         $this->configContainer->expects(static::once())
-            ->method('get')
+            ->method('getInt')
             ->with(ConfigurationKeyEnum::PODCAST_KEEP)
-            ->willReturn((string) $keepLimit);
+            ->willReturn($keepLimit);
 
         $this->connection->expects(static::once())
             ->method('query')

@@ -1472,7 +1472,7 @@ final class VaInfo implements VaInfoInterface
                 // Rating made by an unknown user, adding it to super user (id=-1)
                 $rating_user = -1;
                 if ($this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
-                    $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
+                    $rating_user = $this->configContainer->getInt(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                 }
 
                 $parsed['rating'][$rating_user] = self::parse_rating((int) $popm['rating']);
@@ -1760,7 +1760,7 @@ final class VaInfo implements VaInfoInterface
 
                     $rating_user = -1;
                     if ($this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
-                        $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
+                        $rating_user = $this->configContainer->getInt(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                     }
 
                     $parsed['rating'][$rating_user] = floor(((int) $data[0]) * 5 / 100);

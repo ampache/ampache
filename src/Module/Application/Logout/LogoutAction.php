@@ -56,7 +56,7 @@ final readonly class LogoutAction implements ApplicationActionInterface
                 'expires' => -1,
                 'path' => (string) $this->configContainer->get('cookie_path'),
                 'domain' => (string) $this->configContainer->get('cookie_domain'),
-                'secure' => make_bool($this->configContainer->get('cookie_secure')),
+                'secure' => $this->configContainer->getBool('cookie_secure'),
                 'samesite' => 'Strict'
             ];
             $this->logger->debug(

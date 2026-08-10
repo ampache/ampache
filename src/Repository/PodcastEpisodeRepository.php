@@ -224,7 +224,7 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
      */
     public function getEpisodesEligibleForDeletion(Podcast $podcast): Generator
     {
-        $keepLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_KEEP);
+        $keepLimit = $this->configContainer->getInt(ConfigurationKeyEnum::PODCAST_KEEP);
 
         if ($keepLimit !== 0) {
             $result = $this->connection->query(

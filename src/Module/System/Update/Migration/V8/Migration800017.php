@@ -44,8 +44,8 @@ final class Migration800017 extends AbstractMigration
         $level = AccessLevelEnum::USER->value;
 
         // Previous config values were kilobits per second; store bps
-        $max = (int) AmpConfig::get('max_bit_rate', 0);
-        $min = (int) AmpConfig::get('min_bit_rate', 0);
+        $max = AmpConfig::get_int('max_bit_rate', 0);
+        $min = AmpConfig::get_int('min_bit_rate', 0);
 
         $this->updatePreferences('max_bit_rate', 'Maximum transcode bitrate for dynamic downsampling in bps (0 = disabled)', (string) ($max > 0 ? $max * 1000 : 0), $level, 'integer', 'streaming', 'transcoding');
         $this->updatePreferences('min_bit_rate', 'Minimum transcode bitrate for dynamic downsampling in bps', (string) ($min > 0 ? $min * 1000 : 8000), $level, 'integer', 'streaming', 'transcoding');
