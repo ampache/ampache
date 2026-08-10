@@ -32,14 +32,19 @@ final class FollowerQuery implements QueryInterface
         'user',
     ];
 
-    protected string $base   = "SELECT %%SELECT%% FROM `user_follower` ";
-    protected string $select = "`user_follower`.`id`";
+    protected string $base = "SELECT %%SELECT%% FROM `user_follower` ";
+
+    // a row is rendered and returned as the account doing the following, so the id has to be that user, not the follow
+    protected string $select = "`user_follower`.`follow_user`";
 
     /** @var string[] $sorts */
     protected array $sorts = [
+        'create_date',
         'follow_date',
         'follow_user',
+        'last_seen',
         'user',
+        'username',
     ];
 
     /**
@@ -95,10 +100,22 @@ final class FollowerQuery implements QueryInterface
      */
     public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
-        $sql = match ($field) {
-            'user', 'follow_user', 'follow_date' => sprintf('`user_follower`.`%s`', $field),
-            default => '',
-        };
+        switch ($field) {
+            case 'follow_date':
+            case 'follow_user':
+            case 'user':
+                $sql = sprintf('`user_follower`.`%s`', $field);
+                break;
+            case 'create_date':
+            case 'last_seen':
+            case 'username':
+                // a row is rendered as the account doing the following, so these sort that account, not the follow
+                $sql = sprintf('`user`.`%s`', $field);
+                $query->set_join('LEFT', '`user`', '`user`.`id`', '`user_follower`.`follow_user`', 100);
+                break;
+            default:
+                $sql = '';
+        }
 
         if ($sql === '') {
             return '';

@@ -25,10 +25,13 @@ e.g. `cond=user,1`
 
 Send a single sort in the `sort` parameter as `name,order`, where order is `ASC` or `DESC`.
 
-e.g. `sort=follow_date,DESC`
+e.g. `sort=create_date,DESC`
 
-| Sort          | Description                             |
-|---------------|-----------------------------------------|
-| `follow_date` | When the follow was made.               |
-| `follow_user` | The id of the user doing the following. |
-| `user`        | The id of the user who owns it.         |
+| Sort          | Description                                         |
+|---------------|-----------------------------------------------------|
+| `create_date` | When the account doing the following was created.   |
+| `follow_date` | When the follow was made.                           |
+| `follow_user` | The id of the account doing the following.          |
+| `last_seen`   | When the account doing the following was last seen. |
+| `user`        | The id of the account being followed.               |
+| `username`    | Username of the account doing the following.        |

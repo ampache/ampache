@@ -31,6 +31,8 @@ final class PvmsgQuery implements QueryInterface
 {
     public const array FILTERS = [
         'alpha_match',
+        'equal',
+        'exact_match',
         'like',
         'not_starts_with',
         'regex_match',
@@ -46,6 +48,8 @@ final class PvmsgQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = [
         'creation_date',
+        'from_user',
+        'id',
         'is_read',
         'subject',
         'to_user',
@@ -136,7 +140,7 @@ final class PvmsgQuery implements QueryInterface
     public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
         $sql = match ($field) {
-            'creation_date', 'id', 'is_read', 'subject', 'to_user' => sprintf('`user_pvmsg`.`%s`', $field),
+            'creation_date', 'from_user', 'id', 'is_read', 'subject', 'to_user' => sprintf('`user_pvmsg`.`%s`', $field),
             default => '',
         };
 

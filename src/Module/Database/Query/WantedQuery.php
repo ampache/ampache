@@ -37,6 +37,7 @@ final class WantedQuery implements QueryInterface
     protected array $sorts = [
         'accepted',
         'artist',
+        'id',
         'name',
         'rand',
         'title',
@@ -94,7 +95,7 @@ final class WantedQuery implements QueryInterface
     {
         $sql = match ($field) {
             'name', 'title' => "`wanted`.`name`",
-            'accepted', 'artist', 'id', 'user', 'username', 'year' => sprintf('`wanted`.`%s`', $field),
+            'accepted', 'artist', 'id', 'user', 'year' => sprintf('`wanted`.`%s`', $field),
             default => '',
         };
 
