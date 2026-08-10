@@ -67,6 +67,11 @@ final readonly class PlayAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'play';
 
+    /** The `action` values this handler serves beyond its own request key; anything unrecognised is treated as a stream. */
+    public const string ACTION_STREAM = 'stream';
+
+    public const string ACTION_DOWNLOAD = 'download';
+
     /** Read size for an unthrottled download; a throttled one uses its own per-slice size instead. */
     private const int DOWNLOAD_BUFFER_SIZE = 65536;
 
