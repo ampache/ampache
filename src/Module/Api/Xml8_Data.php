@@ -139,6 +139,27 @@ final class Xml8_Data
     }
 
     /**
+     * The opening tag and scalar fields of a collection, left unclosed so contents can be nested inside it.
+     */
+    private static function _collection_row(Collection $collection): string
+    {
+        return "<collection id=\"" . $collection->getId() . "\">
+"
+            . "	<name><![CDATA[" . $collection->get_fullname() . "]]></name>
+"
+            . "	<owner><![CDATA[" . $collection->username . "]]></owner>
+"
+            . "	<type>" . $collection->type . "</type>
+"
+            . "	<object_type>" . ($collection->object_type ?? '') . "</object_type>
+"
+            . "	<items>" . $collection->get_item_count() . "</items>
+"
+            . "	<has_art>" . ((int) $collection->has_art()) . "</has_art>
+";
+    }
+
+    /**
      * genre_string
      *
      * This returns the formatted 'genre' string for an xml document
@@ -187,27 +208,6 @@ final class Xml8_Data
     }
 
     /**
-     * The opening tag and scalar fields of a collection, left unclosed so contents can be nested inside it.
-     */
-    private static function collection_row(Collection $collection): string
-    {
-        return "<collection id=\"" . $collection->getId() . "\">
-"
-            . "	<name><![CDATA[" . $collection->get_fullname() . "]]></name>
-"
-            . "	<owner><![CDATA[" . $collection->username . "]]></owner>
-"
-            . "	<type>" . $collection->type . "</type>
-"
-            . "	<object_type>" . ($collection->object_type ?? '') . "</object_type>
-"
-            . "	<items>" . $collection->get_item_count() . "</items>
-"
-            . "	<has_art>" . ((int) $collection->has_art()) . "</has_art>
-";
-    }
-
-    /**
      * Where this user has filed a list, or nothing at all when they never have.
      *
      * The elements are absent rather than zero for an unfiled list, because the root is the absence of a
@@ -215,7 +215,7 @@ final class Xml8_Data
      *
      * @param array<string, array{folder: int, sort_order: int}> $placements
      */
-    private static function placement_row(array $placements, string $objectType, int $objectId): string
+    private static function _placement_row(array $placements, string $objectType, int $objectId): string
     {
         $placement = $placements[sprintf('%s-%d', $objectType, $objectId)] ?? null;
         if ($placement === null) {
@@ -525,7 +525,7 @@ final class Xml8_Data
         $ordered     = Api::filter_objects($ordered, $this->count, $this->offset, $this->limit);
 
         // `contents` rather than `items`, which the collection row already uses for the member count
-        $string = self::collection_row($collection) . "	<contents>
+        $string = self::_collection_row($collection) . "	<contents>
 ";
 
         $rendered = [];
@@ -575,7 +575,7 @@ final class Xml8_Data
                 continue;
             }
 
-            $string .= self::collection_row($collection) . self::placement_row($placements, 'collection', $collection->getId()) . "</collection>
+            $string .= self::_collection_row($collection) . self::_placement_row($placements, 'collection', $collection->getId()) . "</collection>
 ";
         }
 
@@ -1442,7 +1442,7 @@ final class Xml8_Data
             $has_collaborate = $has_access ?: $playlist->has_collaborate($user);
 
             // Build this element
-            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_username . "]]></owner>\n\t<user id=\"" . $playlist_user . "\">\n\t\t<username><![CDATA[" . $playlist_username . "]]></username>\n\t</user>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . (($has_access) ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . (($has_collaborate) ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<md5>" . $md5 . "</md5>\n\t<last_update>" . $last_update . "</last_update>\n\t<time>" . ($duration ?: $last_duration) . "</time>\n" . self::placement_row($placements, $object_type, (int) $playlist->id) . "</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_username . "]]></owner>\n\t<user id=\"" . $playlist_user . "\">\n\t\t<username><![CDATA[" . $playlist_username . "]]></username>\n\t</user>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . (($has_access) ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . (($has_collaborate) ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<md5>" . $md5 . "</md5>\n\t<last_update>" . $last_update . "</last_update>\n\t<time>" . ($duration ?: $last_duration) . "</time>\n" . self::_placement_row($placements, $object_type, (int) $playlist->id) . "</playlist>\n";
         }
 
         return Api::output_xml($string, $full_xml);

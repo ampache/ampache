@@ -39,10 +39,10 @@ final class PodcastGuid
     {
         $name = rtrim((string) preg_replace('#^[a-z][a-z0-9+.-]*://#i', '', $feedUrl), '/');
 
-        return self::uuidV5(self::PODCAST_NAMESPACE, $name);
+        return self::_uuidV5(self::PODCAST_NAMESPACE, $name);
     }
 
-    private static function uuidV5(string $namespace, string $name): string
+    private static function _uuidV5(string $namespace, string $name): string
     {
         $nsBinary = '';
         $nsHex    = str_replace('-', '', $namespace);

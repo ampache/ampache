@@ -755,6 +755,29 @@ class Ui implements UiInterface
     }
 
     /**
+     * Displays the default error page
+     */
+    /**
+     * The three standalone error pages carry their own chrome, so each needs the logo and title the
+     * normal header would otherwise have supplied.
+     */
+    private static function _createStandaloneErrorView(
+        StandaloneErrorTypeEnum $type,
+        string $detail = '',
+    ): StandaloneErrorView {
+        $logoUrl = (string) AmpConfig::get('custom_login_logo', '');
+
+        return new StandaloneErrorView(
+            $type,
+            AmpConfig::get_web_path(),
+            ($logoUrl === '') ? self::get_logo_url('dark') : $logoUrl,
+            (string) AmpConfig::get('site_title'),
+            (bool) AmpConfig::get('demo_mode'),
+            $detail
+        );
+    }
+
+    /**
      * _find_icon
      *
      * Does the finding icon thing. match svg first over png
@@ -901,29 +924,6 @@ class Ui implements UiInterface
         return self::$_symbol_cache[$symbol_key];
     }
 
-    /**
-     * Displays the default error page
-     */
-    /**
-     * The three standalone error pages carry their own chrome, so each needs the logo and title the
-     * normal header would otherwise have supplied.
-     */
-    private static function createStandaloneErrorView(
-        StandaloneErrorTypeEnum $type,
-        string $detail = '',
-    ): StandaloneErrorView {
-        $logoUrl = (string) AmpConfig::get('custom_login_logo', '');
-
-        return new StandaloneErrorView(
-            $type,
-            AmpConfig::get_web_path(),
-            ($logoUrl === '') ? self::get_logo_url('dark') : $logoUrl,
-            (string) AmpConfig::get('site_title'),
-            (bool) AmpConfig::get('demo_mode'),
-            $detail
-        );
-    }
-
     public function accessDenied(string $error = 'Access Denied'): void
     {
         // Clear any buffered crap
@@ -936,7 +936,7 @@ class Ui implements UiInterface
         if (!headers_sent()) {
             header('HTTP/1.1 403 ' . $error);
         }
-        echo self::createStandaloneErrorView(StandaloneErrorTypeEnum::ACCESS_DENIED)->render();
+        echo self::_createStandaloneErrorView(StandaloneErrorTypeEnum::ACCESS_DENIED)->render();
     }
 
     /**
@@ -1609,7 +1609,7 @@ class Ui implements UiInterface
         // Clear any buffered crap
         ob_end_clean();
         header("HTTP/1.1 403 Permission Denied");
-        echo self::createStandaloneErrorView(StandaloneErrorTypeEnum::PERMISSION_DENIED, $fileName)->render();
+        echo self::_createStandaloneErrorView(StandaloneErrorTypeEnum::PERMISSION_DENIED, $fileName)->render();
     }
 
     /**
@@ -1727,7 +1727,7 @@ class Ui implements UiInterface
             header('HTTP/1.1 500 Internal Server Error');
         }
 
-        echo self::createStandaloneErrorView(StandaloneErrorTypeEnum::ERROR)->render();
+        echo self::_createStandaloneErrorView(StandaloneErrorTypeEnum::ERROR)->render();
     }
 
     public function showFooter(): void

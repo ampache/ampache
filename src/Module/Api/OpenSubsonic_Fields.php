@@ -108,8 +108,8 @@ final class OpenSubsonic_Fields
             }
 
             $synced = true;
-            $start  = self::lrcTimeToMilliseconds($matches[1], $matches[2], $matches[3]);
-            $cues   = self::parseEnhancedCues($matches[4]);
+            $start  = self::_lrcTimeToMilliseconds($matches[1], $matches[2], $matches[3]);
+            $cues   = self::_parseEnhancedCues($matches[4]);
 
             // The cue offsets are measured against the tag-free text, so that is what the line must carry.
             $value   = ($cues === []) ? trim($matches[4]) : $cues['value'];
@@ -133,7 +133,7 @@ final class OpenSubsonic_Fields
         ];
     }
 
-    private static function lrcTimeToMilliseconds(string $minutes, string $seconds, string $hundredths): int
+    private static function _lrcTimeToMilliseconds(string $minutes, string $seconds, string $hundredths): int
     {
         return ((int) $minutes * 60 * 1000) + ((int) $seconds * 1000) + ((int) $hundredths * 10);
     }
@@ -149,7 +149,7 @@ final class OpenSubsonic_Fields
      *
      * @return array{'value': string, 'cue': array<int, array{'start': int, 'byteStart': int, 'byteEnd': int}>}|array{}
      */
-    private static function parseEnhancedCues(string $line): array
+    private static function _parseEnhancedCues(string $line): array
     {
         $matches = [];
         if (!preg_match_all('/<(\d{2}):(\d{2})[.:](\d{2})>([^<]*)/', $line, $matches, PREG_SET_ORDER)) {
@@ -174,7 +174,7 @@ final class OpenSubsonic_Fields
             $value .= $trimmed;
 
             $cues[] = [
-                'start' => self::lrcTimeToMilliseconds($match[1], $match[2], $match[3]),
+                'start' => self::_lrcTimeToMilliseconds($match[1], $match[2], $match[3]),
                 'byteStart' => $byte_start,
                 'byteEnd' => strlen($value),
             ];
