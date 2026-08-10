@@ -47,6 +47,7 @@ return [
     Mailer::class => autowire(),
     MailerInterface::class => autowire(Mailer::class),
     BulkMailerInterface::class => autowire(BulkMailer::class),
+    UrlValidatorInterface::class => autowire(UrlValidator::class),
     UtilityFactoryInterface::class => autowire(UtilityFactory::class),
     WebFetcherInterface::class => autowire(WebFetcher::class),
     RssFeedTypeFactoryInterface::class => autowire(RssFeedTypeFactory::class),
