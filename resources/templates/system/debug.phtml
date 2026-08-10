@@ -30,30 +30,31 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\System\DebugView $this */
 
+$adminPath = $this->getAdminPath();
 Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
             <li>
-                <a class="nohtml" href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=generate_config"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Generate Configuration File'))) . ' ' . $this->e(T_('Generate Configuration File')); ?></a>
+                <a class="nohtml" href="<?php echo $this->e($adminPath); ?>/system.php?action=generate_config"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Generate Configuration File'))) . ' ' . $this->e(T_('Generate Configuration File')); ?></a>
             </li>
             <li>
-                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=write_config"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Write New Config'))) . ' ' . $this->e(T_('Write New Config')); ?></a>
+                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=write_config"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Write New Config'))) . ' ' . $this->e(T_('Write New Config')); ?></a>
             </li>
             <li>
-                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=reset_db_charset"><?php echo $this->raw(Ui::get_material_symbol('dns', T_('Set Database Charset'))) . ' ' . $this->e(T_('Set Database Charset')); ?></a>
+                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=reset_db_charset"><?php echo $this->raw(Ui::get_material_symbol('dns', T_('Set Database Charset'))) . ' ' . $this->e(T_('Set Database Charset')); ?></a>
             </li>
             <li>
-                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=clear_cache&type=song"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Songs Cache'))) . ' ' . $this->e(T_('Clear Songs Cache')); ?></a>
+                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=clear_cache&type=song"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Songs Cache'))) . ' ' . $this->e(T_('Clear Songs Cache')); ?></a>
             </li>
             <li>
-                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=clear_cache&type=artist"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Artists Cache'))) . ' ' . $this->e(T_('Clear Artists Cache')); ?></a>
+                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=clear_cache&type=artist"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Artists Cache'))) . ' ' . $this->e(T_('Clear Artists Cache')); ?></a>
             </li>
             <li>
-                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=clear_cache&type=album"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Albums Cache'))) . ' ' . $this->e(T_('Clear Albums Cache')); ?></a>
+                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=clear_cache&type=album"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Albums Cache'))) . ' ' . $this->e(T_('Clear Albums Cache')); ?></a>
             </li>
 <?php if ($this->showPerpetualApiSession()) { ?>
             <li>
-                <a href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=clear_cache&type=perpetual_api_session"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Perpetual API Sessions'))) . ' ' . $this->e(T_('Clear Perpetual API Sessions')); ?></a>
+                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=clear_cache&type=perpetual_api_session"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Perpetual API Sessions'))) . ' ' . $this->e(T_('Clear Perpetual API Sessions')); ?></a>
             </li>
 <?php } ?>
         </ul>
@@ -67,7 +68,7 @@ echo ($this->hasNamedStructure()) ? ' (' . $this->e($this->getStructure()) . ')'
     <div><?php echo $this->e(T_('GitHub Branch')); ?>: <?php echo $this->e($this->getForcedGitBranch()); ?></div>
     <?php } ?>
     <div><?php echo $this->e(T_('Last Update')); ?>: <?php echo $this->e($this->getLastUpdateCheck()); ?></div>
-    <div><a class="nohtml" href="<?php echo $this->e($this->getAdminPath()); ?>/system.php?action=show_debug&autoupdate=force"><?php echo $this->e(T_('Force check')); ?>...</a></div>
+    <div><a class="nohtml" href="<?php echo $this->e($adminPath); ?>/system.php?action=show_debug&autoupdate=force"><?php echo $this->e(T_('Force check')); ?>...</a></div>
     <?php if ($this->showNewVersion()) {
         AutoUpdate::show_new_version();
     }

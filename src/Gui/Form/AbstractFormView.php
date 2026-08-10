@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Form;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -40,6 +41,14 @@ abstract class AbstractFormView extends AbstractView
     public function __construct(
         private readonly string $webPath,
     ) {}
+
+    /**
+     * admin sits beside the web root rather than inside it, so it cannot be derived from the ui path
+     */
+    final public function getAdminPath(): string
+    {
+        return AmpConfig::get_web_path('/admin');
+    }
 
     /**
      * The validation message for a field, already formatted as markup, or an empty string when it passed.

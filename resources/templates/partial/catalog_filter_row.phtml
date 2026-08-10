@@ -29,19 +29,20 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Partial\CatalogFilterRowView $this */
 
-$filterId = $this->getFilterId();
-$query    = 'filter_id=' . $filterId . '&filter_name=' . urlencode($this->getName()); ?>
+$adminPath = $this->getAdminPath();
+$filterId  = $this->getFilterId();
+$query     = 'filter_id=' . $filterId . '&filter_name=' . urlencode($this->getName()); ?>
 <td class="cel_name"><?php echo $this->e($this->getName()); ?></td>
 <td class="cel_num_users"><?php echo $this->e($this->getUserCount()); ?></td>
 <td class="cel_num_catalogs"><?php echo $this->e($this->getCatalogCount()); ?></td>
 <td class="cel_action">
     <?php if ($this->mayEdit()) { ?>
-    <a href="<?php echo $this->e($this->getAdminPath()); ?>/filter.php?action=show_edit&<?php echo $this->e($query); ?>">
+    <a href="<?php echo $this->e($adminPath); ?>/filter.php?action=show_edit&<?php echo $this->e($query); ?>">
         <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
     </a>
     <?php } ?>
     <?php if ($this->mayDelete()) { ?>
-    <a href="<?php echo $this->e($this->getAdminPath()); ?>/filter.php?action=delete&<?php echo $this->e($query); ?>">
+    <a href="<?php echo $this->e($adminPath); ?>/filter.php?action=delete&<?php echo $this->e($query); ?>">
         <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
     </a>
     <?php } ?>
