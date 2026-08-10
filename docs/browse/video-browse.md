@@ -62,5 +62,4 @@ e.g. `sort=name,DESC`
 | `update_time`      | When its tags were last updated.                                                                                         |
 | `user_flag`        | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
 | `user_flag_rating` | When you added it to your favourites, then your rating.                                                                  |
-
-**NOTE** These sorts are listed by the browse but have no implementation, so the rows come back in the default order: `userflag`
+| `userflag`         | Alias of `user_flag`.                                                                                                    |

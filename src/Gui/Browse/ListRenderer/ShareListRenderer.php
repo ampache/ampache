@@ -40,7 +40,7 @@ final class ShareListRenderer extends AbstractBrowseListRenderer
     public function getColumns(): array
     {
         return [
-            ['class' => 'cel_object essential', 'label' => T_('Object'), 'sort' => 'object'],
+            ['class' => 'cel_object essential', 'label' => T_('Object'), 'sort' => 'name'],
             ['class' => 'cel_object_type optional', 'label' => T_('Object Type'), 'sort' => 'object_type'],
             ['class' => 'cel_user optional', 'label' => T_('User'), 'sort' => 'user'],
             ['class' => 'cel_creation_date optional', 'label' => T_('Creation Date'), 'sort' => 'creation_date'],
