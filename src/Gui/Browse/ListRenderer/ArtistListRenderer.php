@@ -144,7 +144,7 @@ final class ArtistListRenderer extends AbstractBrowseListRenderer
         $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
         $mayUse     = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
         $anonymous  = !$this->configContainer->get('use_auth') || $mayUse;
-        $limit      = (int) $this->configContainer->get('direct_play_limit');
+        $limit      = $this->configContainer->getInt('direct_play_limit');
         $mayAdd     = $mayUse;
         if ($limit > 0 && !$this->getBrowse()->is_grid_view()) {
             $mayAdd = $artist->song_count <= $limit;

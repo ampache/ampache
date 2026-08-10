@@ -104,7 +104,7 @@ abstract class AbstractLastShoutsMethod implements MethodInterface
 
         $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = (int) $this->configContainer->get(ConfigurationKeyEnum::POPULAR_THRESHOLD);
+            $limit = $this->configContainer->getInt(ConfigurationKeyEnum::POPULAR_THRESHOLD);
         }
 
         $username = (!empty($filter))

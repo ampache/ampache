@@ -53,7 +53,7 @@ class OidcActionTest extends MockeryTestCase
         $request    = Mockery::mock(ServerRequestInterface::class);
         $gatekeeper = Mockery::mock(GuiGatekeeperInterface::class);
 
-        $this->configContainer->shouldReceive('get')
+        $this->configContainer->shouldReceive('getArray')
             ->with(ConfigurationKeyEnum::AUTH_METHODS)
             ->once()
             ->andReturn(['mysql', 'ldap']);

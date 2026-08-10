@@ -55,7 +55,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $access_level = AccessLevelEnum::tryFrom(
-            (int) $this->configContainer->get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL)
+            $this->configContainer->getInt(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL)
         ) ?? AccessLevelEnum::USER;
 
         if (

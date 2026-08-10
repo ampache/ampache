@@ -45,9 +45,9 @@ class IpHistoryRepositoryTest extends TestCase
         $threshold = 42;
 
         $this->configContainer->expects(static::once())
-            ->method('get')
+            ->method('getInt')
             ->with('user_ip_cardinality')
-            ->willReturn((string) $threshold);
+            ->willReturn($threshold);
 
         $this->connection->expects(static::once())
             ->method('query')
@@ -142,8 +142,8 @@ class IpHistoryRepositoryTest extends TestCase
             ->willReturn($userId);
 
         $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with('user_ip_cardinality')
+            ->method('getInt')
+            ->with('user_ip_cardinality', 42)
             ->willReturn(42);
 
         $statement = $this->createMock(\PDOStatement::class);

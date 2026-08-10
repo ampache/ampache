@@ -46,6 +46,8 @@ $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
         PlayAction::REQUEST_KEY => PlayAction::class,
+        PlayAction::ACTION_STREAM => PlayAction::class,
+        PlayAction::ACTION_DOWNLOAD => PlayAction::class,
         Play2RedirectAction::REQUEST_KEY => Play2RedirectAction::class,
     ],
     PlayAction::REQUEST_KEY

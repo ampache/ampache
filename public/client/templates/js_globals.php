@@ -37,13 +37,13 @@ $web_path = AmpConfig::get_web_path('/client');
     // Using the following workaround to set global variable available from any javascript script.
 
     // AmpConfig values
-    var jsAmpConfigCookieSecure = "<?php echo make_bool(AmpConfig::get('cookie_secure')); ?>";
-    var jsAmpConfigGeolocation = "<?php echo make_bool(AmpConfig::get('geolocation')); ?>";
-    var jsAmpConfigLibitemContextmenu = "<?php echo make_bool(AmpConfig::get('libitem_contextmenu')); ?>";
+    var jsAmpConfigCookieSecure = "<?php echo AmpConfig::get_bool('cookie_secure'); ?>";
+    var jsAmpConfigGeolocation = "<?php echo AmpConfig::get_bool('geolocation'); ?>";
+    var jsAmpConfigLibitemContextmenu = "<?php echo AmpConfig::get_bool('libitem_contextmenu'); ?>";
     var jsAmpConfigPlayType = "<?php echo AmpConfig::get('play_type'); ?>";
     var jsAmpConfigSlideshowTime = "<?php echo (int) (AmpConfig::get('slideshow_time', 0)); ?>";
-    var jsAmpConfigSidebarHideSwitcher = "<?php echo make_bool(AmpConfig::get('sidebar_hide_switcher', false)); ?>";
-    var jsAmpConfigSongPageTitle = "<?php echo make_bool(AmpConfig::get('song_page_title', '')); ?>";
+    var jsAmpConfigSidebarHideSwitcher = "<?php echo AmpConfig::get_bool('sidebar_hide_switcher'); ?>";
+    var jsAmpConfigSongPageTitle = "<?php echo AmpConfig::get_bool('song_page_title'); ?>";
 
     // Preferences
     var jsPrefExistsFlickrApiKey = "<?php echo Preference::exists('flickr_api_key'); ?>";

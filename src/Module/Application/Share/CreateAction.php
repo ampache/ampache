@@ -144,7 +144,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                     true,
                     $message,
                     $this->configContainer->getWebPath('/client'),
-                    (int) $this->configContainer->get('share_expire')
+                    $this->configContainer->getInt('share_expire')
                 ))->render();
             }
         }

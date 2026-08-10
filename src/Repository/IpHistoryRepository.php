@@ -57,7 +57,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
         try {
             $this->connection->query(
                 'DELETE FROM `ip_history` WHERE `date` < `date` - ?',
-                [86400 * (int) $this->configContainer->get('user_ip_cardinality')]
+                [86400 * $this->configContainer->getInt('user_ip_cardinality')]
             );
         } catch (DatabaseException) {
             $this->logger->debug(
@@ -106,7 +106,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
         $params    = [$user->getId()];
         if ($limited) {
             $where_sql = 'AND `date` >= ?';
-            $params[]  = (time() - (86400 * ($this->configContainer->get('user_ip_cardinality') ?? 42)));
+            $params[]  = (time() - (86400 * $this->configContainer->getInt('user_ip_cardinality', 42)));
         }
 
         $result = $this->connection->query(

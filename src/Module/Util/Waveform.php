@@ -313,8 +313,8 @@ class Waveform
         }
 
         $detail     = 5;
-        $width      = (int) AmpConfig::get('waveform_width', 400);
-        $height     = (int) AmpConfig::get('waveform_height', 32);
+        $width      = AmpConfig::get_int('waveform_width', 400);
+        $height     = AmpConfig::get_int('waveform_height', 32);
         $foreground = (string) AmpConfig::get('waveform_color', '#FF0000');
         $draw_flat  = (bool) AmpConfig::get('waveform_drawflat', true);
 

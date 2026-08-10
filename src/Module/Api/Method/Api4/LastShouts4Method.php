@@ -80,7 +80,7 @@ final class LastShouts4Method implements MethodInterface
         unset($user);
         $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = (int) AmpConfig::get('popular_threshold', 10);
+            $limit = AmpConfig::get_int('popular_threshold', 10);
         }
         if (!empty($input['username'])) {
             $username = $input['username'];

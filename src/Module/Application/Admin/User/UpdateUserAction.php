@@ -196,13 +196,13 @@ final class UpdateUserAction extends AbstractUserAction
         if (!$client->upload_avatar()) {
             $mindimension = sprintf(
                 '%dx%d',
-                (int) $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_MIN_WIDTH),
-                (int) $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_MIN_HEIGHT)
+                $this->configContainer->getInt(ConfigurationKeyEnum::ALBUM_ART_MIN_WIDTH),
+                $this->configContainer->getInt(ConfigurationKeyEnum::ALBUM_ART_MIN_HEIGHT)
             );
             $maxdimension = sprintf(
                 '%dx%d',
-                (int) $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_MAX_WIDTH),
-                (int) $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_MAX_HEIGHT)
+                $this->configContainer->getInt(ConfigurationKeyEnum::ALBUM_ART_MAX_WIDTH),
+                $this->configContainer->getInt(ConfigurationKeyEnum::ALBUM_ART_MAX_HEIGHT)
             );
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),

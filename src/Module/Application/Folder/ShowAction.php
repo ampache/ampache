@@ -104,7 +104,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $browse,
                 $this->statsFormViewFactory->createBrowse()->render(),
                 ($folder->getId() > 0) ? $folder->get_media_count() : 0,
-                (int) AmpConfig::get('direct_play_limit', 500),
+                AmpConfig::get_int('direct_play_limit', 500),
                 (bool) AmpConfig::get('directplay'),
                 $mayInteract,
                 Stream_Playlist::check_autoplay_next(),

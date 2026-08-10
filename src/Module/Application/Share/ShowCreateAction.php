@@ -90,7 +90,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
                     false,
                     '',
                     $this->configContainer->getWebPath('/client'),
-                    (int) $this->configContainer->get('share_expire')
+                    $this->configContainer->getInt('share_expire')
                 ))->render();
             }
         }

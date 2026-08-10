@@ -332,6 +332,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* A PHP deprecation is logged as `Deprecated` at the same level as a warning, instead of as an `Error` in every log. `E_DEPRECATED` had no case in the error handler so it fell through to the catch-all, and a dependency that has not caught up with the PHP floor filled the log on every request that used it
+* A preference reaches the rest of the server as the type it declares. Every value is stored in a varchar column, so `AmpConfig::get('popular_threshold')` handed back the string `10`; an integer preference is now an int and a boolean one a bool, which is what the code reading them already assumed
+* The API3 `stats` method with `type=flagged` answered with an error instead of a list, because the popular-threshold preference reached a count parameter as a string
+* Subsonic `getSimilarSongs`, `getSimilarSongs2`, `getArtistInfo`, `getArtistInfo2`, `getNewestPodcasts` and `getTopSongs` failed when `count` was sent as anything but a plain number, and `setRating` with a non-numeric rating silently removed the rating instead of refusing it
+* The admin `Enable Disabled` action and external share creation failed on their own inputs, which arrive as request strings rather than the numbers they are used as
+* A Subsonic catalog logged `Unable to insert song - %s` with the placeholder unfilled, because the file path was passed where the error's clobber flag goes
 * Sorting the combined playlist and smartlist list by `last_count` answered with an error instead of a list. The union it reads never carried the column it sorts on, though both tables have it
 * The followers list is the accounts doing the following. It was built from the ids of the follow records, which line up with real accounts only by coincidence, so it could name people who follow nobody
 * Sorts a browse implemented but never offered, so clicking the column or asking for the sort did nothing: `id` on broadcast, private message, share, shoutbox and wanted, `release_date` on video, `title` on genre and mood, and `genre` on genre. `from_user` on private messages and `username`, `last_seen` and `create_date` on followers are new, and the private message browse takes the `equal`/`exact_match` filters it already implemented

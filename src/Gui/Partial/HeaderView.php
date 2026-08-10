@@ -264,7 +264,7 @@ final class HeaderView extends AbstractView
 
     public function showConfigOutOfDate(): bool
     {
-        return (int) AmpConfig::get('int_config_version') > (int) AmpConfig::get('config_version');
+        return AmpConfig::get_int('int_config_version') > AmpConfig::get_int('config_version');
     }
 
     public function showHeaderLogin(): bool

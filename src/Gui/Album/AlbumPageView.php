@@ -283,7 +283,7 @@ final class AlbumPageView extends AbstractView
      */
     public function showAdd(): bool
     {
-        $limit = (int) AmpConfig::get('direct_play_limit');
+        $limit = AmpConfig::get_int('direct_play_limit');
 
         return $this->mayUse && ($limit <= 0 || $this->album->song_count <= $limit);
     }

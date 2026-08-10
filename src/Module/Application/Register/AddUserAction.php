@@ -118,7 +118,7 @@ final class AddUserAction implements ApplicationActionInterface
             AmpError::add('email', T_('Invalid e-mail address'));
         }
 
-        $mandatory_fields = (array) $this->configContainer->get(ConfigurationKeyEnum::REGISTRATION_MANDATORY_FIELDS);
+        $mandatory_fields = $this->configContainer->getArray(ConfigurationKeyEnum::REGISTRATION_MANDATORY_FIELDS);
         if (in_array('fullname', $mandatory_fields) && !$fullname) {
             AmpError::add('fullname', T_("Please fill in your full name (first name, last name)"));
         }

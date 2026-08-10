@@ -75,7 +75,7 @@ final class MashupView extends AbstractView
 
     public function getLimit(): int
     {
-        return (int) AmpConfig::get('popular_threshold');
+        return AmpConfig::get_int('popular_threshold');
     }
 
     public function getObjectType(): string
@@ -87,7 +87,7 @@ final class MashupView extends AbstractView
     {
         return '?page=index&action=dashboard_' . $section . '&limit=' . $this->getLimit()
             . '&object_type=' . $this->objectType
-            . '&threshold=' . (int) AmpConfig::get('stats_threshold');
+            . '&threshold=' . AmpConfig::get_int('stats_threshold');
     }
 
     /**
@@ -105,7 +105,7 @@ final class MashupView extends AbstractView
         }
 
         $limit     = $this->getLimit();
-        $threshold = (int) AmpConfig::get('stats_threshold');
+        $threshold = AmpConfig::get_int('stats_threshold');
         $held      = null;
         if ($this->user->getId() < 1) {
             $held     = Stats::get_top($this->objectType, 100, $threshold);

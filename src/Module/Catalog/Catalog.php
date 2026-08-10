@@ -3632,7 +3632,7 @@ abstract class Catalog extends database_object
     public function gather_art(?array $songs = null, ?array $videos = null, ?Interactor $interactor = null): bool
     {
         // Make sure they've actually got methods
-        $art_order       = AmpConfig::get('art_order');
+        $art_order       = AmpConfig::get_array('art_order');
         $gather_song_art = AmpConfig::get('gather_song_art', false);
         $db_art_first    = ($art_order[0] == 'db');
         if (count($art_order) === 0) {
@@ -4320,7 +4320,7 @@ abstract class Catalog extends database_object
 
         // only allow your primary external metadata source to update values
         $overwrites  = true;
-        $meta_order  = array_map('strtolower', self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
+        $meta_order  = array_map('strtolower', self::getConfigContainer()->getArray(ConfigurationKeyEnum::METADATA_ORDER));
         $plugin_list = Plugin::get_plugins(PluginTypeEnum::EXTERNAL_METADATA_RETRIEVER);
         $user        = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')
