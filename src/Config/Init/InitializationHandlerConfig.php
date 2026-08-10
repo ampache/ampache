@@ -38,7 +38,7 @@ final readonly class InitializationHandlerConfig implements InitializationHandle
 
     private const string CONFIG_VERSION = '95';
 
-    private const STRUCTURE = 'squashed'; // Project release is using either the public html folder or squashed structure
+    private const string STRUCTURE = 'public';
 
     private const string VERSION = '8.0.0'; // AMPACHE_VERSION
 
