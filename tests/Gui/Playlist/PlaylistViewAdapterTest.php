@@ -361,6 +361,16 @@ class PlaylistViewAdapterTest extends MockeryTestCase
         );
     }
 
+    public function testIsPrivateReturnsValue(): void
+    {
+        $this->playlist->shouldReceive('isPrivate')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue($this->subject->isPrivate());
+    }
+
     #[Override]
     protected function setUp(): void
     {

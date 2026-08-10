@@ -37,7 +37,6 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\PlaylistObjectRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
@@ -69,7 +68,6 @@ abstract class playlist_object extends database_object implements
     private ?string $f_last_update = null;
     private ?string $f_link        = null;
     private ?string $f_name        = null;
-    private ?string $f_type        = null;
     private ?bool $has_art         = null;
 
     /**
@@ -165,19 +163,6 @@ abstract class playlist_object extends database_object implements
     public function get_f_time(): string
     {
         return '';
-    }
-
-    /**
-     * Get item type (public / private).
-     */
-    public function get_f_type(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->f_type === null) {
-            $this->f_type = ($this->type == 'private') ? Ui::get_material_symbol('lock', T_('Private')) : '';
-        }
-
-        return $this->f_type;
     }
 
     /**
@@ -370,6 +355,14 @@ abstract class playlist_object extends database_object implements
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    /**
+     * Whether the list is visible only to its owner.
+     */
+    public function isPrivate(): bool
+    {
+        return $this->type === 'private';
     }
 
     /**

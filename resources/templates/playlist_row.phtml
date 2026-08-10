@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 // playlist_row.phtml -- rendered by Ampache\Gui\Playlist\PlaylistRowView
 
+use Ampache\Module\Util\Ui;
+
 /** @var Ampache\Gui\Playlist\PlaylistRowView $this */
 
 $playlist   = $this->getPlaylist();
@@ -62,8 +64,9 @@ $playlistId = $playlist->getId(); ?>
         </span>
     </td>
     <td class="cel_last_update"><?php echo $this->e($playlist->getLastUpdate()); ?></td>
-    <?php // a private list renders as the lock symbol, so the type is already markup?>
-    <td class="cel_type"><?php echo $this->raw($playlist->getType()); ?></td>
+    <td class="cel_type"><?php echo ($playlist->isPrivate())
+        ? $this->raw(Ui::get_material_symbol('lock', T_('Private')))
+        : ''; ?></td>
     <td class="cel_medias"><?php echo $this->e($playlist->getMediaCount()); ?></td>
 <?php if ($this->isUsingRatings()) { ?>
     <td class="cel_ratings">
