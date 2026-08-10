@@ -36,17 +36,17 @@ Send a single sort in the `sort` parameter as `name,order`, where order is `ASC`
 
 e.g. `sort=name,DESC`
 
-| Sort             | Description                               |
-|------------------|-------------------------------------------|
-| `allow_download` | Whether the share allows downloads.       |
-| `allow_stream`   | Whether the share allows streaming.       |
-| `counter`        | How many times the share has been used.   |
-| `creation_date`  | When it was created.                      |
-| `expire`         | How many days the share lasts.            |
-| `lastvisit_date` | When the share was last opened.           |
-| `max_counter`    | The share's maximum allowed uses.         |
-| `name`           | The name or title of the shared object.   |
-| `object`         | Shared object type, then object id.       |
-| `object_type`    | The type of object the row points at.     |
-| `title`          | Alias of `name`.                          |
-| `user`           | The id of the user who created the share. |
+| Sort             | Description                                                                                                  |
+|------------------|--------------------------------------------------------------------------------------------------------------|
+| `allow_download` | Whether the share allows downloads.                                                                          |
+| `allow_stream`   | Whether the share allows streaming.                                                                          |
+| `counter`        | How many times the share has been used.                                                                      |
+| `creation_date`  | When it was created.                                                                                         |
+| `expire`         | How many days the share lasts.                                                                               |
+| `lastvisit_date` | When the share was last opened.                                                                              |
+| `max_counter`    | The share's maximum allowed uses.                                                                            |
+| `name`           | The name or title of the shared object, then its type and id so shares of the same name keep a stable order. |
+| `object`         | Shared object type, then object id.                                                                          |
+| `object_type`    | The type of object the row points at.                                                                        |
+| `title`          | Alias of `name`.                                                                                             |
+| `user`           | The id of the user who created the share.                                                                    |
