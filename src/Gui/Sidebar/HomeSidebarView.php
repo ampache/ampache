@@ -285,7 +285,7 @@ final class HomeSidebarView extends AbstractSidebarView
 
     private function allowVideo(): bool
     {
-        return (bool) AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0;
+        return AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0;
     }
 
     private function getOrder(string $name, int $default): int

@@ -70,9 +70,9 @@ final class OpenSubsonic_Transcode
     {
         $media_type   = ($media instanceof Song) ? 'song' : 'podcast_episode';
         $source       = (string) $media->type;
-        $sourceStream = self::sourceStream($media);
+        $sourceStream = self::_sourceStream($media);
 
-        $reasons = self::directPlayReasons($media, $clientInfo);
+        $reasons = self::_directPlayReasons($media, $clientInfo);
 
         // A server set to always transcode overrides whatever the client says it can play.
         if (AmpConfig::get('transcode', 'default') === 'always') {
@@ -95,7 +95,7 @@ final class OpenSubsonic_Transcode
             return $decision;
         }
 
-        $target   = self::targetFormat($clientInfo);
+        $target   = self::_targetFormat($clientInfo);
         $settings = Stream::get_transcode_settings_for_media($source, $target, 'api', $media_type);
         if (!isset($settings['format'])) {
             $decision['errorReason'] = 'No transcode output is configured for ' . $source;
@@ -104,7 +104,7 @@ final class OpenSubsonic_Transcode
         }
 
         $format  = (string) $settings['format'];
-        $bitrate = self::targetBitrate($clientInfo, $format);
+        $bitrate = self::_targetBitrate($clientInfo, $format);
 
         $decision['canTranscode']    = true;
         $decision['transcodeStream'] = [
@@ -136,11 +136,11 @@ final class OpenSubsonic_Transcode
         }
 
         [$payload, $signature] = explode('.', $token, 2);
-        if (!hash_equals(self::sign($payload), self::base64UrlDecode($signature))) {
+        if (!hash_equals(self::_sign($payload), self::_base64UrlDecode($signature))) {
             return null;
         }
 
-        $settings = json_decode(self::base64UrlDecode($payload), true);
+        $settings = json_decode(self::_base64UrlDecode($payload), true);
         if (
             !is_array($settings)
             || ($settings['v'] ?? null) !== self::TOKEN_VERSION
@@ -166,18 +166,18 @@ final class OpenSubsonic_Transcode
      */
     public static function encodeParams(array $settings): string
     {
-        $payload   = self::base64UrlEncode((string) json_encode($settings + ['v' => self::TOKEN_VERSION]));
-        $signature = self::base64UrlEncode(self::sign($payload));
+        $payload   = self::_base64UrlEncode((string) json_encode($settings + ['v' => self::TOKEN_VERSION]));
+        $signature = self::_base64UrlEncode(self::_sign($payload));
 
         return $payload . '.' . $signature;
     }
 
-    private static function base64UrlDecode(string $value): string
+    private static function _base64UrlDecode(string $value): string
     {
         return (string) base64_decode(strtr($value, '-_', '+/'), true);
     }
 
-    private static function base64UrlEncode(string $value): string
+    private static function _base64UrlEncode(string $value): string
     {
         return rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
     }
@@ -192,7 +192,7 @@ final class OpenSubsonic_Transcode
      * @param array<string, mixed> $clientInfo
      * @return string[]
      */
-    private static function directPlayReasons(Song|Podcast_Episode $media, array $clientInfo): array
+    private static function _directPlayReasons(Song|Podcast_Episode $media, array $clientInfo): array
     {
         $reasons  = [];
         $source   = strtolower((string) $media->type);
@@ -206,13 +206,13 @@ final class OpenSubsonic_Transcode
                     continue;
                 }
 
-                if (!self::profileCarriesFormat($profile, $source)) {
+                if (!self::_profileCarriesFormat($profile, $source)) {
                     continue;
                 }
 
                 // The format is covered, so any remaining mismatch is a limit rather than an unsupported container.
                 $containerOk = true;
-                if (self::profileAllowsChannels($profile, $media)) {
+                if (self::_profileAllowsChannels($profile, $media)) {
                     $matched = true;
                     break;
                 }
@@ -241,7 +241,7 @@ final class OpenSubsonic_Transcode
      *
      * @param array<string, mixed> $profile
      */
-    private static function profileAllowsChannels(array $profile, Song|Podcast_Episode $media): bool
+    private static function _profileAllowsChannels(array $profile, Song|Podcast_Episode $media): bool
     {
         $maxChannels = (int) ($profile['maxAudioChannels'] ?? 0);
 
@@ -261,7 +261,7 @@ final class OpenSubsonic_Transcode
      *
      * @param array<string, mixed> $profile
      */
-    private static function profileCarriesFormat(array $profile, string $source): bool
+    private static function _profileCarriesFormat(array $profile, string $source): bool
     {
         foreach (['containers', 'audioCodecs'] as $key) {
             $values = (is_array($profile[$key] ?? null)) ? array_map('strtolower', $profile[$key]) : [];
@@ -273,7 +273,7 @@ final class OpenSubsonic_Transcode
         return true;
     }
 
-    private static function sign(string $payload): string
+    private static function _sign(string $payload): string
     {
         return hash_hmac('sha256', self::TOKEN_VERSION . ':' . $payload, (string) AmpConfig::get('secret_key'), true);
     }
@@ -287,7 +287,7 @@ final class OpenSubsonic_Transcode
      * https://opensubsonic.netlify.app/docs/responses/streamdetails/
      * @return array<string, mixed>
      */
-    private static function sourceStream(Song|Podcast_Episode $media): array
+    private static function _sourceStream(Song|Podcast_Episode $media): array
     {
         $stream = [
             'protocol' => 'http',
@@ -320,7 +320,7 @@ final class OpenSubsonic_Transcode
      *
      * @param array<string, mixed> $clientInfo
      */
-    private static function targetBitrate(array $clientInfo, string $format): int
+    private static function _targetBitrate(array $clientInfo, string $format): int
     {
         $allowed = Stream::get_allowed_bitrate('api');
 
@@ -344,7 +344,7 @@ final class OpenSubsonic_Transcode
      *
      * @param array<string, mixed> $clientInfo
      */
-    private static function targetFormat(array $clientInfo): ?string
+    private static function _targetFormat(array $clientInfo): ?string
     {
         $profiles = (is_array($clientInfo['transcodingProfiles'] ?? null)) ? $clientInfo['transcodingProfiles'] : [];
         foreach ($profiles as $profile) {

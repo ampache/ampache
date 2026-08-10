@@ -57,8 +57,8 @@ final readonly class SongPreviewResult
     {
         $scored = [];
         foreach ($results as $result) {
-            $artistScore = self::similarity($result->artist, $artist);
-            $titleScore  = self::similarity($result->title, $title);
+            $artistScore = self::_similarity($result->artist, $artist);
+            $titleScore  = self::_similarity($result->title, $title);
             if ($artistScore < self::MATCH_THRESHOLD || $titleScore < self::MATCH_THRESHOLD) {
                 continue;
             }
@@ -74,7 +74,7 @@ final readonly class SongPreviewResult
     /**
      * Lowercases, drops bracketed suffixes like "(Radio Edit)" and reduces the rest to words
      */
-    private static function normalise(string $value): string
+    private static function _normalise(string $value): string
     {
         $value = strtolower($value);
         $value = str_replace('&', ' and ', $value);
@@ -87,10 +87,10 @@ final readonly class SongPreviewResult
     /**
      * How alike two names are once the noise a provider adds is taken off, as a percentage
      */
-    private static function similarity(string $left, string $right): float
+    private static function _similarity(string $left, string $right): float
     {
-        $left  = self::normalise($left);
-        $right = self::normalise($right);
+        $left  = self::_normalise($left);
+        $right = self::_normalise($right);
         if ($left === '' || $right === '') {
             return 0.0;
         }
