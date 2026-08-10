@@ -77,7 +77,7 @@ final class LiveStreamCreate6Method
         }
         $name       = $input['name'];
         $url        = filter_var(urldecode($input['url']), FILTER_VALIDATE_URL) ?: null;
-        $codec      = (string) preg_replace("/[^a-z]/", "", strtolower($input['codec']));
+        $codec      = (string) preg_replace("/[^a-z0-9]/", "", strtolower($input['codec']));
         $site_url   = (isset($input['site_url'])) ? filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL) : null;
         $catalog_id = (int) filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
 

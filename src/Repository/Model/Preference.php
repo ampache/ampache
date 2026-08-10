@@ -406,18 +406,19 @@ class Preference extends database_object
             ? [$value, $name]
             : [$value, $pref_id];
 
-        if ($applytoall && $access100) {
-            $user_check = "";
-        } else {
-            $user_check = "AND `user` = ?";
-            $params[]   = $user_id;
-        }
-
+        // the default carries no user, so it is written before the user filter is bound
         if ($applytodefault && $access100) {
             $sql = ($ampacheSeven)
                 ? "UPDATE `preference` SET `value` = ? WHERE `name` = ?;"
                 : "UPDATE `preference` SET `value` = ? WHERE `preference` = ?;";
             Dba::write($sql, $params);
+        }
+
+        if ($applytoall && $access100) {
+            $user_check = "";
+        } else {
+            $user_check = "AND `user` = ?";
+            $params[]   = $user_id;
         }
 
         if (self::has_access($name)) {

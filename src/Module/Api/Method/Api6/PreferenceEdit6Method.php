@@ -97,7 +97,8 @@ final class PreferenceEdit6Method
             return false;
         }
         $value = $input['value'];
-        if (!Preference::update($pref_name, $user->id, $value, $all)) {
+        // `default` writes the system user's row and the shipped default a new user is seeded from
+        if (!Preference::update($pref_name, $user_id, $value, $all, $default)) {
             Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
 
             return false;

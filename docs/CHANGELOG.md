@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## Ampache 7.10.2
+
+### Fixed (7.10.2)
+
+* API authorization did not require the api key to identify the user; `Gatekeeper::getUser()` fell back to the `user` request parameter when the key did not match a user, so a request carrying an unknown key was still resolved to whoever the `user` parameter named
+* Subsonic
+  * `createPlaylist` sent with a `playlistId` rewrites that playlist, but unlike `updatePlaylist` it never checked who owned it, so any user could overwrite another user's playlist. The same owner check now applies, and an id that does not exist returns a not-found error instead of creating a list
+* Transcoding
+  * The `resolution` playback option was substituted into `%RESOLUTION%` and handed to a shell unchecked; only a literal `WIDTHxHEIGHT` is accepted now and anything else falls back to the default. `quality` is cast to an int before it is used in the bitrate calculation
+* Playlist, smartlist and genre names were written into the search and genre-row templates without escaping
+* Every play, skip and play-count rollback ran an update against `folder` and `folder_map`, which are Ampache8 tables, so counting a song, video or podcast episode logged an SQL error on tables that do not exist in Ampache7
+* Renaming a smart playlist from the web interface did nothing, because the edit action passed the POSTed id along as a string and `Search` takes an int (#4426)
+
 ## Ampache 7.10.1
 
 ### Fixed (7.10.1)

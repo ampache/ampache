@@ -44,6 +44,7 @@ return [
     SlideshowInterface::class => autowire(Slideshow::class),
     UiInterface::class => autowire(Ui::class),
     Mailer::class => autowire(),
+    UrlValidatorInterface::class => autowire(UrlValidator::class),
     UtilityFactoryInterface::class => autowire(UtilityFactory::class),
     WebFetcherInterface::class => autowire(WebFetcher::class),
     RssFeedTypeFactoryInterface::class => autowire(RssFeedTypeFactory::class),

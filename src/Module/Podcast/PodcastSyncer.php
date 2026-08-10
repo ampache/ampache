@@ -27,8 +27,9 @@ namespace Ampache\Module\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
+use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
@@ -50,7 +51,8 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
         private PodcastDeleterInterface $podcastDeleter,
         private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
+        private WebFetcherInterface $webFetcher
     ) {
     }
 
@@ -68,9 +70,10 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
 
         debug_event(self::class, 'Syncing feed ' . $feed . ' ...', 4);
 
-        $xmlstr = file_get_contents($feed, false, stream_context_create(Core::requests_options()));
-        if ($xmlstr === false) {
-            debug_event(self::class, 'Cannot access feed ' . $feed, 1);
+        try {
+            $xmlstr = $this->webFetcher->fetch($feed);
+        } catch (FetchFailedException $error) {
+            debug_event(self::class, 'Cannot access feed ' . $feed . ': ' . $error->getMessage(), 1);
 
             return false;
         }
