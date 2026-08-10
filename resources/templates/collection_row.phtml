@@ -41,7 +41,9 @@ $collectionId = $this->getCollectionId(); ?>
 <td class="<?php echo $this->e($this->getCoverClass()); ?>"><?php echo $this->raw($this->getArt()); ?></td>
 <td class="cel_collection"><a href="<?php echo $this->e($this->getLink()); ?>"><?php echo $this->e($this->getFullname()); ?></a></td>
 <td class="cel_medias"><?php echo $this->e($this->getItemCount()); ?></td>
-<td class="cel_type"><?php echo $this->e($this->getType()); ?></td>
+<td class="cel_type"><?php echo ($this->isPrivate())
+    ? $this->raw(Ui::get_material_symbol('lock', T_('Private')))
+    : ''; ?></td>
 <td class="cel_object_type"><?php echo $this->e($this->getObjectType()); ?></td>
 <?php if ($this->showRatings()) { ?>
 <td class="cel_ratings">
