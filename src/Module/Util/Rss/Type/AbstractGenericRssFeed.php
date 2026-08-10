@@ -32,6 +32,9 @@ use Generator;
 use Override;
 use Traversable;
 
+/**
+ * @phpstan-import-type RssFeedItem from GenericRssFeedView
+ */
 abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
 {
     #[Override]
@@ -59,23 +62,7 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
     }
 
     /**
-     * @return Generator<array{
-     *     title: string,
-     *     link: string,
-     *     description: string,
-     *     comments: ?string,
-     *     pubDate: string,
-     *     guid: string,
-     *     isPermaLink: string,
-     *     image?: string,
-     *     duration?: string,
-     *     season?: ?string,
-     *     season_name?: ?string,
-     *     episode?: ?string,
-     *     type?: ?string,
-     *     size?: ?string,
-     *     url?: ?string
-     * }>
+     * @return Generator<RssFeedItem>
      */
     abstract protected function getItems(): Traversable;
 

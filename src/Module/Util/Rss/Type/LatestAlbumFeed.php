@@ -68,7 +68,7 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
     }
 
     #[Override]
-    protected function getMedium(): ?string
+    protected function getMedium(): string
     {
         return 'playlist';
     }
