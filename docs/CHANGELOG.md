@@ -83,33 +83,33 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New `topSongsByArtistId` extension: `getTopSongs` accepts an artist `id` as well as a name
   * New `sonicSimilarity` extension serving `getSonicSimilarTracks` and `findSonicPath`, backed by a sonic-analysis plugin; the extension is only advertised while such a plugin is enabled, so a server without one reports it unsupported rather than substituting metadata similarity
   * New **AudioMuse** plugin providing that sonic analysis from an [AudioMuse-AI](https://github.com/NeptuneHub/AudioMuse-AI) server; set its URL in the plugin preferences
-  * `NowPlayingEntry` reports `positionMs`, `playbackRate` and `state` for a client that uses `reportPlayback`. The position is stored as reported rather than derived from elapsed time, which the spec requires and which is the only answer that survives a pause or a seek; ordinary playback reports none of them and the fields stay absent
-  * `AlbumInfo`, `ArtistInfo` and `ArtistInfo2` report `lastFmUrl`. last.fm always returned the url and Ampache discarded it; for artists it is cached with the summary, because an artist refreshed within six months never calls last.fm again
-  * `AlbumID3` reports `recordLabels`, from a new album-to-label association the scanner writes off the release's label tag. The label text already reached `song_data`, but reading it back per album meant a query over a free-text column for every album of every list response
-  * Songs, albums, videos and podcast episodes now report `played`, the moment they were last streamed. Ampache's own `played` column is a boolean and the date lived in the play-history tables, which cannot be queried once per song of every list response — so the date is now stored on the object and kept current when the play is recorded
+  * `NowPlayingEntry` reports `positionMs`, `playbackRate` and `state` for a client that uses `reportPlayback`; ordinary playback reports none of them and the fields stay absent
+  * `AlbumInfo`, `ArtistInfo` and `ArtistInfo2` report `lastFmUrl`, cached with the rest of the artist info
+  * `AlbumID3` reports `recordLabels`, from a new album-to-label association the scanner writes off the release's label tag
+  * Songs, albums, videos and podcast episodes report `played`, the moment they were last streamed
   * `getLyricsBySongId` supports `enhanced=true`, returning word-level `cueLine` timing when the stored lyrics carry Enhanced LRC timings
   * Songs report `bpm`. The spec types the field as an integer, so a tag carrying a fraction is rounded here; the native API keeps the value as tagged
-  * OpenSubsonic responses now carry the documented extra fields in **both** JSON and XML — the XML serializer previously emitted little more than plain Subsonic. Songs gain `artists`, `albumArtists`, `displayArtist`, `displayAlbumArtist`, `displayComposer`, `contributors`, `mediaType`, `samplingRate`, `channelCount`, `isrc`, `replayGain` and `bookmarkPosition`; albums gain `artists`, `displayArtist`, `sortName`, `releaseDate`, `originalReleaseDate`, `releaseTypes` and `discTitles`; artists gain `sortName` and `artistImageUrl`; playlists gain `allowedUser`; users gain `maxBitRate`; videos gain `originalWidth`/`originalHeight`
-  * Fixed the internet radio station response field, which was emitted as `homepageUrl` instead of the specified `homePageUrl`. This also affected the pure Subsonic API, where it did not match the 1.16.1 schema
-  * Fixed OpenSubsonic action routing: handler names in camelCase were compared against a lowercased action and never matched, so `reportPlayback`, `findSonicPath` and `getSonicSimilarTracks` were unreachable
-  * New per-user **Subsonic Password** set from the account page, the admin user edit page, or `bin/cli admin:updateUser <username> --subsonic <password>`, so Subsonic token auth works without pasting your API key into a music player
-  * It is stored encrypted with `secret_key` instead of hashed, because Subsonic token auth requires the server to recompute `md5(password + salt)`; changing `secret_key` invalidates every stored Subsonic Password
+  * OpenSubsonic responses carry the documented extra fields in **both** JSON and XML; the XML serializer emitted little more than plain Subsonic before. Songs gain `artists`, `albumArtists`, `displayArtist`, `displayAlbumArtist`, `displayComposer`, `contributors`, `mediaType`, `samplingRate`, `channelCount`, `isrc`, `replayGain` and `bookmarkPosition`; albums gain `artists`, `displayArtist`, `sortName`, `releaseDate`, `originalReleaseDate`, `releaseTypes` and `discTitles`; artists gain `sortName` and `artistImageUrl`; playlists gain `allowedUser`; users gain `maxBitRate`; videos gain `originalWidth`/`originalHeight`
+  * An internet radio station reports the specified `homePageUrl`, not `homepageUrl`; the pure Subsonic API was affected as well, where it did not match the 1.16.1 schema
+  * `reportPlayback`, `findSonicPath` and `getSonicSimilarTracks` are reachable; a camelCase handler name never matched the lowercased action it was routed from
+  * New per-user **Subsonic Password** set from the account page, the admin user edit page, or `bin/cli admin:updateUser <username> --subsonic <password>`, so token auth works without pasting your API key into a music player
+  * It is stored encrypted with `secret_key` rather than hashed, since token auth needs the server to recompute `md5(password + salt)`; changing `secret_key` invalidates every stored Subsonic Password
   * The API key keeps working as the Subsonic password for both token and plaintext auth, so existing clients do not need reconfiguring
 * Collections
   * A **collection** is a hand-curated list of objects of any type: the static counterpart to a search, and the non-media counterpart to a playlist. Albums, artists, folders, genres, labels, live streams, playlists, podcasts, episodes, songs and videos can all sit in the same list
   * A collection may be left mixed or pinned to a single `object_type`, in which case anything else is refused when it is added
   * A collection is **ordered**. Members keep the order they were curated into, new ones are appended to the end, and the API can move them a few at a time or all at once. Positions stay dense and 1-based, so they are renumbered after anything is added, removed or moved
-  * A collection may hold the same object twice. This follows the existing `unique_playlist` preference rather than a rule of its own, so it behaves the way that user's playlists already do — off by default, meaning duplicates are allowed
+  * A collection may hold the same object twice, following the existing `unique_playlist` preference rather than a rule of its own; it is off by default, so duplicates are allowed
   * Playing one expands its members, so an album contributes its songs and anything that cannot be streamed is skipped; duplicates reached by two different routes are played once
   * Collections have their own art, including the mosaic built from their members when no art is set
   * `public`/`private` visibility and a collaborator list, matching playlists: a collaborator curates the contents, only the owner or an admin can delete the list
-  * New `show_collection` preference to show/hide the "Collections" link in the sidebar, and with it the collection half of the add-to-list dialog. The link no longer waits for a collection to exist before it appears, so there is a way in from a fresh install
+  * New `show_collection` preference to show/hide the "Collections" link in the sidebar, and with it the collection half of the add-to-list dialog. The link no longer waits for a collection to exist before it appears
   * Collections in the web interface: a `collection.php` page listing the members, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker
   * A "Create Collection" button on the collections browse creates one, choosing its name, whether it is public or private, and whether it is pinned to a single item type or left mixed
   * The add-to-list dialog offers collections as well as playlists, under a "Playlists" and a "Collections" heading so the two kinds of destination are told apart. Only the halves that can take what you are adding are shown, and a collection pinned to another type is left out
   * Genres, labels and folders gained the add-to-list control they never had, since all three can be collected
   * A genre expands to its songs the way an album does, so it can be played, queued and added to a playlist as well as collected
-  * A folder is curated as itself, so a collection of folders stays a list of folders; adding one to a playlist instead adds the media below it, the way an album adds its songs. A folder that holds nothing playable still offers the control, since it can be collected even though it has nothing to play
+  * A folder is curated as itself, so a collection of folders stays a list of folders; adding one to a playlist instead adds the media below it, the way an album adds its songs. A folder with nothing playable in it still offers the control, since it can still be collected
   * The label reads "Add to playlist / collection" once collections are switched on, and "Add to list" where there is no room for it; a server with collections off still just says "Add to playlist"
   * The collection page renders a mixed collection as one ordered list through a new `collection_items` browse type, each row naming its own type. A collection pinned to a single type is handed to that type's own browse instead, so a collection of albums looks like any other album view
   * Members can be dragged into a new order and saved with `Save Track Order`, exactly like playlist tracks. Only a mixed collection offers this — a pinned one is shown through its own type's browse, which has no drag handle
@@ -117,9 +117,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Collections can be rated and flagged like any other library item
 * API
   * New collection methods `collections`, `collection`, `collection_items`, `collection_create`, `collection_edit`, `collection_delete`, `collection_add` and `collection_remove`, with REST paths under `collections/`
-  * New `sonic_match` method (REST `songs/{song_id}/sonic-match`) returning songs that sound like a given song, each with a `similarity` score. It shares the OpenSubsonic `sonicMatch` scale (0.0-1.0, 1.0 being the same recording) so a client sees the same number from either API, and needs a sonic-analysis plugin — with none enabled it refuses the request rather than returning an empty list
-  * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
-  * Album disks are available to API8 clients (`album_disks`, `album_disk`, `album_disk_songs`, plus `index`, `list`, `browse`, `stats` and `get_art` support). With the `album_group` preference disabled the web interface browses album disks, and until now the API had no way to reach them
+  * New `sonic_match` method (REST `songs/{song_id}/sonic-match`) returning songs that sound like a given song, each with a `similarity` score on the OpenSubsonic `sonicMatch` scale (0.0-1.0, 1.0 being the same recording). It needs a sonic-analysis plugin, and refuses the request with none enabled rather than returning an empty list
+  * v8 API responses are fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
+  * Album disks are available to API8 clients (`album_disks`, `album_disk`, `album_disk_songs`, plus `index`, `list`, `browse`, `stats` and `get_art`). They are what the web interface browses with the `album_group` preference disabled, and the API had no way to reach them
   * API8 song responses carry `bpm`
 * BPM
   * The `BPM` tag is read on scan and kept, instead of being discarded before the catalog saw it. `TBPM`, the quicktime `tmpo` atom and the vorbis/APE `BPM` comment all land in the same place
@@ -179,7 +179,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * **NOTE** the tables are empty until a catalog is scanned
 * Podcast details can be refreshed from the feed
   * New `Update details from the feed` action on the podcast page, next to `Sync`, in the same spirit as the artist's `Update details from MusicBrainz`
-  * Until now the title, website, description, language, copyright, generator and art were only read when the podcast was created; a sync added episodes and nothing else, so a podcast that renamed itself or replaced its art kept the details it was first created with
+  * The title, website, description, language, copyright, generator and art were only ever read when the podcast was created, so one that renamed itself or replaced its art kept its original details
   * Values the channel does not supply are left alone rather than blanked, and the art is only replaced when the channel advertises one
   * Requires content manager access, and asks for confirmation first because it overwrites details you may have edited by hand
 * A podcast `Sync` shows a `Started` notification
@@ -201,7 +201,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 ### Changed (8.0.0)
 
 * A genre you set by hand survives an update from tags
-  * `tag_map` has always had a `user` column but nothing ever filled it, so every genre was stored as owned by nobody and a re-read of the file tags cleared whatever was not in the file. Setting a genre in the interface only lasted until the next scan
+  * `tag_map` has always had a `user` column but nothing filled it, so a genre set in the interface lasted only until the next scan re-read the file tags
   * A genre added through the interface or the api is now attributed to the person who added it, and an update from tags treats it as if it were in the file rather than deleting it
   * Removing one by hand still removes it whoever set it, so a manager is not locked out by a user's choice. Only the tag read is restricted
   * User set genres are marked with a `*` carrying a `User set` tooltip, on the pages that render genres as links. The plain text form the edit fields, daap and upnp use is unchanged
@@ -215,7 +215,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The description is read by the same lookup that recognises the episode and only written when it actually differs, so a sync over an unchanged feed costs nothing extra
   * An item that supplies no description leaves the stored one alone, and nothing else about an existing episode is touched: its state, downloaded file, play counts and any edits you made to its other fields stay as they are
   * This is also what carries the plain-text conversion above to episodes already in the database
-  * A feed item with no guid no longer matches the first episode that has none. That lookup used to compare an empty guid against every episode without one, which silently skipped a genuinely new episode; now it would have overwritten the wrong description, so it is guarded
+  * A feed item with no guid no longer matches the first episode that has none, which silently skipped a genuinely new episode
 * The browse filter box matches a name in more than one way
   * A **Starts With** / **Contains** menu sits above the box; Contains matches anywhere in the name, so a browse no longer has to be abandoned for the search page to find something by a word in the middle of its title
   * Only one match applies at a time and the choice is remembered per browse, so emptying the box does not put it back to Starts With
@@ -268,12 +268,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The optional top menu (`topmenu`) carries the same entries as the light sidebar, adding `Albums`, `Smartlists`, `Radio` and `Log out` alongside the existing links; `Smartlists` follows `sidebar_hide_search` and `Radio` only appears when `live_stream` is on
 * `direct_play_limit`: any existing "unlimited" (`0`) value is reset to a default cap of `500` tracks
 * `playable_item` interface split into `displayable_item` and `container_item` as part of a large interface cleanup
-* The server counts (the totals in the API handshake and on the admin debug page) can no longer go stale because of an unrecognised table name. `Catalog::count_table()` takes a fixed list of countable tables instead of a free-text string, which silently counted zero and left the stored total untouched
-* Refreshing those totals no longer re-reads the whole `song`, `video` and `podcast_episode` tables. Each table's share of `items`, `time` and `size` is stored on its own, so adding or removing a song leaves the other two tables alone, and a deletion that already knows what it removed adjusts the totals without reading anything. One count went from four full table scans to one, and a song deletion to none
+* The server counts (the totals in the API handshake and on the admin debug page) no longer go stale from an unrecognised table name; `Catalog::count_table()` takes a fixed list of countable tables instead of a free-text string
+* Refreshing those totals no longer re-reads the whole `song`, `video` and `podcast_episode` tables. Each table's share of `items`, `time` and `size` is stored on its own, so one count went from four full table scans to one and a song deletion to none
 * A song browse reads the artists of every song on the page in one `artist_map` query instead of one per song; a 50 song page went from 143 queries to 95
-* The row count a browse shows above its pages is counted by the database instead of by reading every matching row into memory and counting those. Over a million rows that went from 1.42s to 0.08s, and the sort the count never needed is no longer built
-* The stored waveform is no longer read alongside a song's comment, lyrics and replaygain, so a browse stops pulling a blob per song that nothing on the page draws. Asking for a waveform explicitly now returns it, which it did not before, so a saved waveform is reused instead of being regenerated from the audio on every request
-* Internal namespaces reorganised: `Ampache\Application` is gone (its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`), and `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have all left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums. The api version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes. The per-type search rule builders followed the query engine out of `Ampache\Module\Playlist\Search` into `Ampache\Module\Database\Search`. `Query` and `Browse` swapped the parts each held that belonged to the other, so `Query::sql_sort_video()` now lives in `VideoQuery::get_sql_sort()` and `Query::set_is_simple()` is gone in favour of the `set_simple_browse()` every caller already used. Only relevant if you carry local patches
+* The row count a browse shows above its pages is counted by the database instead of by reading every matching row into memory. Over a million rows that went from 1.42s to 0.08s
+* The stored waveform is no longer read alongside a song's comment, lyrics and replaygain, so a browse stops pulling a blob per song that nothing on the page draws. Asking for one explicitly returns it, so a saved waveform is reused instead of being regenerated from the audio every time
+* Internal namespaces reorganised: `Ampache\Application` is gone (its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`), and `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have all left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums. The api version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes, and the per-type search rule builders followed the query engine into `Ampache\Module\Database\Search`. `Query` and `Browse` swapped the parts each held that belonged to the other, so `Query::sql_sort_video()` is now `VideoQuery::get_sql_sort()` and `Query::set_is_simple()` is gone in favour of `set_simple_browse()`. Only relevant if you carry local patches
 * API version 8 has been added to the list of API versions
 * Docker: build using `docker/Dockerfilephp85`
 * Theme
@@ -327,7 +327,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Database 800020
   * The `webplayer_html5` preference is removed; HTML5 is the only remaining web player
 * Database 800022
-  * The `ajax_load` preference is removed. It never controlled page loading (links have always been intercepted regardless of it) and no longer affects navigation at all; what it did was select the popup web player above and silently switch off play-next and append
+  * The `ajax_load` preference is removed. It never controlled page loading; what it did was select the popup web player above and silently switch off play-next and append
   * Rolling back to Ampache7 restores the preference, the same as any other removed one
 
 ### Fixed (8.0.0)
@@ -341,8 +341,8 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * A Subsonic catalog logged `Unable to insert song - %s` without the file path it was reporting
 * The admin `Enable Disabled` action and external share creation failed on their own inputs
 * Sorting the combined playlist and smartlist list by `last_count` answered with an error instead of a list. The union it reads never carried the column it sorts on, though both tables have it
-* The followers list is the accounts doing the following. It was built from the ids of the follow records, which line up with real accounts only by coincidence, so it could name people who follow nobody
-* Sorts a browse implemented but never offered, so clicking the column or asking for the sort did nothing: `id` on broadcast, private message, share, shoutbox and wanted, `release_date` on video, `title` on genre and mood, and `genre` on genre. `from_user` on private messages and `username`, `last_seen` and `create_date` on followers are new, and the private message browse takes the `equal`/`exact_match` filters it already implemented
+* The followers list is the accounts doing the following. It was built from the ids of the follow records, so it could name people who follow nobody
+* Sorts a browse implemented but never offered, so clicking the column did nothing: `id` on broadcast, private message, share, shoutbox and wanted, `release_date` on video, `title` on genre and mood, and `genre` on genre. `from_user` on private messages and `username`, `last_seen` and `create_date` on followers are new, and the private message browse takes the `equal`/`exact_match` filters it already implemented
 * Sorting a browse by a column reached through a join emptied the list, when the column before it was sorted by a different join. Sorting an album list by Artist was the common way in
 * An album sorted by a column its artists or songs are reached through listed the same album once per artist or song it has
 * The current playlist on the Localplay page was drawn outside the Localplay Control box it belongs in, leaving the page with three unbalanced closing tags
@@ -350,50 +350,50 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Rating and flag lists for genres, collections, podcasts and live streams failed with `catalog_filter` enabled
 * The newest list for a genre, a live stream or a collection came back empty
 * Retagging a song to drop one of its artists left that artist holding the plays it had gained from that song
-* The broadcast button took two clicks to show its menu on a scrolled page: its `href="#"` jumped the document to the top as the dialog opened, so the menu was placed where the button had been a moment earlier and landed below the fold. The popup dialogs no longer navigate, and the broadcast one is placed against the window so it tracks the button in the fixed player
+* The broadcast button took two clicks to show its menu on a scrolled page, and the menu opened below the fold. The popup dialogs no longer navigate, and the broadcast one is placed against the window so it tracks the button in the fixed player
 * The websocket server logged a dozen PHP 8.5 deprecation errors on every connection, drowning the broadcast log; `cboden/ratchet` moves to the `0.4.x` branch, which supports PHP 8.5, and `ratchet/rfc6455` to v0.4.1
-* A database connection dropped by the server (idle timeout, restart, killed thread) was kept and reused, so every following query failed with `MySQL server has gone away`; the handle is discarded and the retry reconnects. This broke long running processes worst of all: the websocket server could not register a broadcast or authorise a listener once its connection had timed out
+* A database connection dropped by the server (idle timeout, restart, killed thread) was kept and reused, so every following query failed with `MySQL server has gone away`. Long running processes suffered worst: the websocket server could not register a broadcast or authorise a listener once its connection had timed out
 * Turning on `album_art_store_disk` without setting `local_metadata_dir` hid every cover; the art was still written to the database but only ever read back from disk
 * Art stored for something that is not a library item, such as a wanted album, returned an empty image
 * Uploading a file with an album name always failed after the file had been copied into the catalog, leaving it on disk but absent from the library
 * Batch download was refused for every object type unless `allow_zip_types` named them; leaving it unset now allows all supported types, as `ampache.cfg.php.dist` documents
 * Settings that exist as both a config option and a preference read the config file value, ignoring the preference; `Allow Downloads` had no config option at all, so batch download stayed off however it was set
 * Deleting a catalog filter from a link that carried no filter name confirmed it with a blank name and logged a runtime error; the confirmation now reads `Catalog Filter`
-* A media file with no readable artist tag is imported under `Unknown (Orphaned)`, the same placeholder an untitled album already uses. The scan used to fail its insert and log a database error for that file on every run, so it could never be added
+* A media file with no readable artist tag is imported under `Unknown (Orphaned)`, the same placeholder an untitled album already uses; such a file could never be added before
 * A song preview is played straight from the provider's url instead of being proxied through Ampache, so no preview traffic passes through the server
-* Grid views (including the mashup dashboards) dropped the play and add buttons from any tile holding more items than `direct_play_limit`, which shifted the rest of that tile's controls out of place. A tile now always carries its full set; the limit still applies in the list views
+* Grid views (including the mashup dashboards) dropped the play and add buttons from any tile holding more items than `direct_play_limit`, shifting the rest of that tile's controls out of place. A tile always carries its full set; the limit still applies in the list views
 * Cleaning a remote, Subsonic, Dropbox or Seafile catalog removed songs without recording them in the deleted-song archive, so they could not be restored and left no trace; they are archived the same way a local catalog's are
 * Adding a second Beets (remote) catalog for a URL that already had one was allowed; the duplicate check looked in the wrong table for a column it does not have
 * Ampache Remote Catalogs
   * Cleaning a remote catalog deleted every song it could not confirm, so a server that was unreachable, or answering an expired session or a permission error, emptied the catalog; only a `Not Found` reply removes a song now
   * A clean that loses contact with the remote server stops and keeps the songs it has not reached yet, instead of working through the rest of the catalog
 * Moving a file between catalogs (`run:updateCatalogFile -m`, `run:updateCatalogFolder -m`)
-  * The album or podcast moved catalog as soon as the first of its files did, because the query deciding whether the rest had moved was missing its parameters
+  * The album or podcast moved catalog as soon as the first of its files did, rather than once the rest had followed
   * A moved podcast wrote its new catalog to the `album` table
   * The album's and podcast's `catalog_map` rows were rewritten under the media type instead of their own
 * Renaming a file into another catalog (`run:updateCatalogFile -r`) updated the mapping but not the stored path, leaving the row pointing at the old file
-* Importing a playlist that links to this server accepted every song id, existing or not; the check counted rows returned by a `COUNT(*)`, which is always one, so a dead link became a dangling playlist entry
+* Importing a playlist that links to this server accepted every song id, existing or not, so a dead link became a dangling playlist entry
 * Folder browsing and folder play counts, which have never worked
-  * The scanner stored a folder's bare directory name in `folder`.`path_name` instead of its path, so no song was ever mapped to a folder: `folder_map` held only folder rows, every folder was `playable = 0`, and no folder ever gained a play count
+  * The scanner stored a folder's bare directory name in `folder`.`path_name` instead of its path, so no song was ever mapped to a folder: every folder was `playable = 0` and none gained a play count
   * Reading a folder's modification time failed for the same reason, logging a `filemtime(): stat failed` runtime error per folder on every scan
-  * Folder play counts were rebuilt from the media mapped **directly** to a folder while a play increments every parent, so the two disagreed; the rebuild now sums the whole subtree, which is what a play records
+  * A folder's play count sums its whole subtree, which is what a play records; it was rebuilt from the media mapped **directly** to the folder while a play increments every parent
 * Play counts
   * Clearing statistics left every play count standing; only the `played` flag was reset, and that was tested against the count it had not cleared
   * Deleting a play from your history recorded a skip for it, so removing plays inflated skip counts
-  * `total_skip` on an episode or a video that was only ever skipped was wiped, because it was cleared against stream plays rather than skips
+  * `total_skip` on an episode or a video that was only ever skipped was wiped
   * A multi-disk album took one disc's skip total instead of the album's
   * Server totals (`album`, `album_disk`, `artist`, `catalog`, `label`, `license`, `tag`, `items`, `time`, `size`) were only correct for up to 30 minutes at a time; they are maintained as things are added and deleted, and repaired by garbage collection
-  * `Catalog::get_videos_count()` raised an unknown-column error for any catalog id, because the id was wrapped in backticks
+  * `Catalog::get_videos_count()` raised an unknown-column error for any catalog id
 * Adding a catalog stopped at the first WMA file carrying a boolean ASF tag (`IsVBR`), leaving the rest of the catalog unscanned
 * Unexpected errors from an API method were logged as a bare message with no file or line, leaving nothing to locate the cause by
 * Pages that stopped part way through and returned a blank or half-written page, because an uncaught error is logged and swallowed rather than shown
-  * The embedded web player (`web_player_embedded.php`) and the video page, when opened without a `playlist_id`; the player template was handed an undefined `$playlist` and now gets an empty one
-  * Generating a video preview image read `$time` before it was set, because a `Video` built from an id that is not in the database leaves its typed properties unset
-  * `random.php?action=get_advanced` with an empty `type`, which threw on `LibraryItemEnum::from('')`; an empty or unknown type falls back to `song`
-  * `albums.php?action=show_missing`, which trusted a MusicBrainz release-group lookup to carry `title`, `first-release-date` and `releases`; an unknown or incomplete response is now read defensively
-  * A missing artist page with no musicbrainz id, which passed `null` into `Ui::show_box_top()`
+  * The embedded web player (`web_player_embedded.php`) and the video page, when opened without a `playlist_id`; the player gets an empty playlist instead
+  * Generating a video preview image for a video id that is not in the database
+  * `random.php?action=get_advanced` with an empty `type`; an empty or unknown type falls back to `song`
+  * `albums.php?action=show_missing`, when a MusicBrainz release-group lookup answered without `title`, `first-release-date` or `releases`
+  * A missing artist page with no musicbrainz id
   * Selecting cover art once the session's candidate list had expired; the choice is checked and you are returned to the previous page instead
-  * `share.php?action=external_share` with no `plugin` named, which built a plugin from an empty name; the request is refused up front instead
+  * `share.php?action=external_share` with no `plugin` named; the request is refused up front instead
 * Unexpected errors that left you looking at a blank or half-written page
   * A page handler that throws now shows a generic error page linking to the debug page (`test.php`); ajax calls, media streams and API clients are left with their own payload
   * A startup failure that none of the init handlers expected redirects to `test.php` rather than ending the request silently
@@ -402,7 +402,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `update.php` redirects there as well, rather than rendering a page it has no version to fill in
   * `bin/cli admin:updateDatabase` reports it instead of ending in a `QueryFailedException` stack trace
 * Right click (`libitem_contextmenu`) actions on a browse row
-  * The menu worked out what it was acting on by cutting the row id at the first underscore, so it read `podcast_episode_5` as podcast #episode and a collection row as collection #row; rows now state their identity with `data-object-type` and `data-object-id`
+  * A row states its identity with `data-object-type` and `data-object-id`; the menu used to cut the row id at the first underscore, reading `podcast_episode_5` as podcast #episode
   * Album disk rows, in both the browse and "Albums of the Moment", were labelled as albums, so the menu (and the inline refresh after an edit) went after the album that happened to share that id
   * Favorite Lists on the home page labelled a smartlist as a playlist, so the menu played whichever playlist shared its id
   * Podcast and podcast episode rows had no menu at all
@@ -412,34 +412,34 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The delete action ran through a `javascript:` url; it is a plain link now, so the confirmation and the following navigation behave like every other delete
 * On a podcast page the "Add All to Temporary Playlist" and "Add to playlist" buttons shared their element ids with the episode row of the same number, so clicking one could fire the other's action
 * Repeated queries on every page
-  * The installed-plugin version lookup re-read the whole `update_info` table on each call, and the module list calls it once per plugin, so a single page ran it dozens of times; it is read once per request and only for the `Plugin_` keys
+  * The installed-plugin version lookup read the whole `update_info` table once per plugin; it is read once per request and only for the `Plugin_` keys
   * Editing a song rebuilt the entire `Song` object — a three table join — once per field changed, only to re-check who uploaded it; the uploader is read once per save
   * Every model's `build_cache()` ran its batch query and then discarded the rows whenever `memory_cache` was off, leaving the per-object queries to run anyway; it now returns before querying
 * `playlist_create` on API3 recorded the server playlist count before inserting the row, so the stored total was one short until the next playlist create or delete corrected it
 * Deleting a label left its `label_asso` rows behind, so a later label created with the freed id inherited that label's artists; the clean up now sweeps associations whose label is gone
-* Url shortener plugins (`bitly`, `yourls`) were never applied to share links, because `PluginTypeEnum::URL_SHORTENER` looked for a `shorten()` method and plugins implement `shortener()`
+* Url shortener plugins (`bitly`, `yourls`) were never applied to share links
 * Plugins
-  * The Discogs plugin never returned album or artist art. Art gathering sends the name of the thing it wants as `title`, and the plugin only searched when it was handed `albumartist` and `album`, or `artist`
-  * Asking Discogs for album art offered the artist's image instead, because the check that skips the artist lookup for an album request tested the values of the request rather than what was being gathered
-* The catalog files and catalog size graphs only drew the time buckets that gained a file, so a library added in a single scan was one point no matter how wide the date range was; they now carry the running total across every bucket in the range
+  * The Discogs plugin never returned album or artist art; it only searched when it was handed `albumartist` and `album`, or `artist`, and art gathering sends the name it wants as `title`
+  * Asking Discogs for album art offered the artist's image instead
+* The catalog files and catalog size graphs only drew the time buckets that gained a file, so a library added in a single scan was one point however wide the date range; they carry the running total across every bucket in the range
 * The running total those graphs start from ignored the catalog and object filters, so a graph for one catalog counted every earlier file on the server
 * `stats.php?action=graph` rendered graphs without checking `statistical_graphs` first, so it ignored the setting and was a fatal error whenever the charting library was absent
-* The catalog size graph was empty until a second time bucket existed, because the running total it adds to is `NULL` when nothing was added before the bucket and `NULL + SUM()` is `NULL`
-* The catalog size graph read zero for `object_type=album`; it joined `album`.`id` to `song`.`id` instead of `song`.`album`, and only counted buckets before the current one instead of including it
+* The catalog size graph was empty until a second time bucket existed
+* The catalog size graph read zero for `object_type=album`
 * Uploading art, an avatar, a playlist or a podcast import file stopped the web player, because a form carrying a file fell back to a full page load
 * The `Ignore` link on the update available notice stopped the web player; dismissing the notice only clears the stored version, so it no longer reloads the whole page to do it
 * The `Select` toggle on the admin Disabled Songs list called a `check_select()` function that was defined nowhere, so it silently did nothing
 * Updating the sources from the web interface reported success when it had not worked
-  * `composer install`, `npm install` and `npm run build` were run with their exit status discarded and only the last line of output kept, then the page redirected to the home page, so a failed dependency install left a pulled-but-unbuilt install with no error anywhere. The status is now checked, the output is logged in full and shown, and a failure keeps you on the update page
-  * `npm` failed outright whenever the web server user's home directory was not writable, because it could not create its cache directory; it is now pointed at a writable one
+  * `composer install`, `npm install` and `npm run build` ran with their exit status discarded, so a failed dependency install left a pulled-but-unbuilt install with no error anywhere. The status is checked, the output is logged in full and shown, and a failure keeps you on the update page
+  * `npm` failed outright whenever the web server user's home directory was not writable; its cache is pointed at a writable one
   * `npm install` now installs the dev packages explicitly — the `postinstall` and `build` scripts that produce every shipped asset live there, so a server with `NODE_ENV=production` built nothing
   * The update is refused up front, before the sources are pulled, when `exec()` is disabled or when the checkout, `node_modules` or `vendor` cannot be written by the web server user
   * Dependencies were installed with `--prefer-source`, which checks out every package as a git working tree; `--prefer-dist` is used instead
-  * A package that rewrites one of its own tracked files during install (`phpstan/extension-installer` and its `src/GeneratedConfig.php`) left that checkout dirty, and composer refuses to remove a modified source install, so a `composer_no_dev` update aborted while stripping the dev packages and left `vendor` incomplete. Dirty vendor checkouts are restored before the install runs
-  * A finished update never went anywhere: the commands flush their output as they run, so the redirect header could no longer be sent and was dropped. It now returns you to the page the update was started from instead of the home page
-* The `View` menu on a playlist's items did nothing until the page was reloaded, so `Pages`, `Infinite Scroll`, `Alphabet` and `Multi-Select` all looked broken. The `argument` flag comes back from the url as a string and `show_table_render()` only accepts a bool, so it threw a `TypeError` that aborted the response part way through rendering
+  * A dirty vendor checkout is restored before the install runs; composer refuses to remove a modified source install, so a `composer_no_dev` update aborted while stripping the dev packages and left `vendor` incomplete
+  * A finished update returns you to the page it was started from instead of the home page, where it used to land nowhere at all
+* The `View` menu on a playlist's items did nothing until the page was reloaded, so `Pages`, `Infinite Scroll`, `Alphabet` and `Multi-Select` all looked broken
 * Smartlist art was never gathered from the songs it matches; only a playlist took that path, so a smartlist fell through to the configured art providers and found nothing
-* With `album_art_store_disk` enabled, the art picker could not read any cover a playlist offered from one of its members: the file was looked for under the type being gathered for rather than the type the image row belongs to, so it read `metadata/playlist/<album_id>/` and found nothing
+* With `album_art_store_disk` enabled, the art picker could not read any cover a playlist offered from one of its members; the file was looked for under the type being gathered for rather than the type the image row belongs to
 * Database 800023
   * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
   * Where the same artwork was stored twice under both spellings the `image/jpg` row is left as it is, because `unique_image` includes `mime` and no art is deleted during an upgrade
@@ -449,7 +449,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * An active-instance preference pointing at a deleted instance falls back to an available one instead of failing to connect
   * The control panel updates the reported volume, playback state and track after every command, not just mute/repeat/random
   * Playlist items resolve the song from its stream url even when `stream_beautiful_url` is off, so they show the real title/artist/album instead of the raw play url
-  * An empty controller playlist was reported as a controller error, because no songs and no answer were treated the same way
+  * An empty controller playlist was reported as a controller error
   * The repeat and random toggles failed when their request arrived without a `value`
   * The add and edit instance forms turn browser autocompletion off, so a saved site login is no longer offered for a controller's host, port and password fields
 * A lyrics plugin that cannot reach its service no longer holds the page open until PHP gives up; `LrcLib` connect and request timeouts are capped, and a plugin that throws is logged and skipped so the next one is still tried
@@ -471,10 +471,10 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * A `musicFolderId` naming a catalog the user can't browse returned everything instead of nothing
   * `hls.m3u8` answered with an error; the endpoint is named with the suffix in the Subsonic specification, and only the suffixless `hls` was served
   * An object deleted since the id list was built is left out of the response instead of being returned as an entry with no name or content; `getGenres` and `getInternetRadioStations` were the most visible, along with the song results of `search2`/`search3`
-* User avatars requested through a `/play/art/{sid}/user/{id}/...` url were always denied when `public_images` is disabled, because the `user` rewrite rules dropped the `auth` parameter that the other art rules pass on
+* User avatars requested through a `/play/art/{sid}/user/{id}/...` url were always denied when `public_images` is disabled; the `user` rewrite rules dropped the `auth` parameter the other art rules pass on
 * Upload
-  * An artist created while uploading was never mapped to the upload catalog, so it was missing from an artist browse filtered to that catalog until the next catalog update; the artists of an uploaded song are now mapped as the song is added
-* Rating or favouriting a playlist, collection, folder, search or live stream logged an SQL error on every click, because only the media tables carry the `weight` column those writes adjust
+  * The artists of an uploaded song are mapped to the upload catalog as the song is added, so a new one is no longer missing from an artist browse filtered to that catalog until the next catalog update
+* Rating or favouriting a playlist, collection, folder, search or live stream logged an SQL error on every click
 * Search
   * The `does not sound like` operator returned nothing on the `Genre`, `Song Genre`, `Album Genre`, `Artist Genre`, `Playlist Name`, `Song Artist` and `Album Artist` rules
   * `Another User` rating rules (`has rated 5 stars` .. `has not rated`) returned nothing on album, album disk, artist, podcast and podcast episode searches, and on the song `Another User (Album)`/`Another User (Artist)` rules
@@ -489,7 +489,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * A transcode requested while no `transcode_cmd` is configured is logged as an error instead of at the most verbose debug level, where the reason nothing played was effectively invisible
 * Song duration
   * A file carrying an ID3v2.3 `TIME` frame was given that frame's recording time of day as its duration, so a 98 second track was imported as 2019 seconds
-  * Durations were estimated from the file size and bitrate instead of being read from the file, so anything stored after the audio (APE cover art, for example) counted as playing time; the estimate is kept for remote catalogs and for files with no readable duration
+  * Durations are read from the file rather than estimated from its size and bitrate, which counted anything stored after the audio (APE cover art, for example) as playing time. The estimate is kept for remote catalogs and files with no readable duration
 * Browse
   * Filtering a song list from the sidebar `Filters` box dropped the track numbers and the `#` sort column and brought back the columns the page had hidden, on the album, album disk, playlist, podcast and label pages
   * The `Limit` box and the song list's `Year` sort header lost the same columns
