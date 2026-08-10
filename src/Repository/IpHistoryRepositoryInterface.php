@@ -51,7 +51,7 @@ interface IpHistoryRepositoryInterface
     /**
      * This returns the ip_history for the provided user
      *
-     * @return Traversable<array{ip: string, date: DateTimeImmutable, agent: string, action: string}>
+     * @return Traversable<array{ip: string, date: DateTimeImmutable, agent: string, action: null|string}>
      */
     public function getHistory(
         User $user,
