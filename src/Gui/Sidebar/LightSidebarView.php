@@ -90,7 +90,7 @@ final class LightSidebarView extends AbstractSidebarView
         return $items;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

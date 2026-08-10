@@ -106,7 +106,7 @@ final class RegistrationView extends AbstractView
         return AmpConfig::get('site_title') . ' - ' . T_('Registration');
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

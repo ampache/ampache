@@ -126,7 +126,7 @@ final class PlaylistPageView extends AbstractView
         return $this->playlist->has_search((int) $this->playlist->user);
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

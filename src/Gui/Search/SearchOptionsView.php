@@ -60,7 +60,7 @@ final class SearchOptionsView extends AbstractView
         return $this->searchType;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

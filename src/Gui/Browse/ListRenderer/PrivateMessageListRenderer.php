@@ -73,7 +73,7 @@ final class PrivateMessageListRenderer extends AbstractBrowseListRenderer
         return $messages;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->configContainer->getWebPath('/client');
     }

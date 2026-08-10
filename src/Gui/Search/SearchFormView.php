@@ -132,7 +132,7 @@ final class SearchFormView extends AbstractView
         return (int) ($this->getData()['limit'] ?? 0);
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

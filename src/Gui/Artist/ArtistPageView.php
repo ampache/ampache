@@ -147,7 +147,7 @@ final class ArtistPageView extends AbstractView
         return $this->currentUser;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

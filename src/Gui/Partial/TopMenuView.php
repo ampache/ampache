@@ -89,7 +89,7 @@ final class TopMenuView extends AbstractView
         return $items;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

@@ -257,7 +257,7 @@ final class HomeSidebarView extends AbstractSidebarView
         return ($this->isSectionCollapsed($key)) ? 'collapsed' : 'expanded';
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

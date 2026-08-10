@@ -72,7 +72,7 @@ final class LocalplaySidebarView extends AbstractSidebarView
         return $this->getLocalplay()->get_instances();
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

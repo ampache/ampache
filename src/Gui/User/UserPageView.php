@@ -229,7 +229,7 @@ final class UserPageView extends AbstractView
         return (string) $this->client->username;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

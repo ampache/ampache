@@ -124,7 +124,7 @@ final class MiniPlayerView extends AbstractView
         return (is_rtl($this->getSiteLanguage())) ? 'rtl' : 'ltr';
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

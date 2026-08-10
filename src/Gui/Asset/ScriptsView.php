@@ -102,7 +102,7 @@ final class ScriptsView extends AbstractView
         return $libraries;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

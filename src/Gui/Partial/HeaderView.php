@@ -184,7 +184,7 @@ final class HeaderView extends AbstractView
         return $this->currentUser?->getId() ?? 0;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

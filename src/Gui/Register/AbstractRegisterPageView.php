@@ -57,7 +57,7 @@ abstract class AbstractRegisterPageView extends AbstractView
         return $this->siteTitle . ' - ' . T_('Registration');
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

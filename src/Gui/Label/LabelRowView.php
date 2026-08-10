@@ -64,7 +64,7 @@ final class LabelRowView extends AbstractView
         return (string) $this->label->get_fullname();
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

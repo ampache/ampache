@@ -141,7 +141,7 @@ final class PlaylistMediaRowView extends AbstractView
         return $this->trackId;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

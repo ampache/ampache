@@ -117,7 +117,7 @@ final class ArtistRowView extends AbstractView
         return $this->classTime;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

@@ -123,7 +123,7 @@ final class StandaloneErrorView extends AbstractView
             : T_('Ampache') . ' -- ' . T_('Debug Page');
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

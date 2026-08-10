@@ -55,7 +55,7 @@ final class InstallFooterView extends AbstractView
         return Ui::material_symbol_sprite();
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

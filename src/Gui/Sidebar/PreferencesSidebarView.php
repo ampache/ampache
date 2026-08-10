@@ -69,7 +69,7 @@ final class PreferencesSidebarView extends AbstractSidebarView
         return $categories;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }

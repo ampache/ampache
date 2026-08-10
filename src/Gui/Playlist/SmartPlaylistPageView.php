@@ -159,7 +159,7 @@ final class SmartPlaylistPageView extends AbstractView
         return (string) $this->playlist->type;
     }
 
-    public function getWebPath('/client'): string
+    public function getWebPath(): string
     {
         return $this->webPath;
     }
