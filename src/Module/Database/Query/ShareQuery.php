@@ -25,9 +25,22 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database\Query;
 
+use Ampache\Module\System\Dba;
+
 final class ShareQuery implements QueryInterface
 {
     public const array FILTERS = [
+        'alpha_match',
+        'equal',
+        'exact_match',
+        'like',
+        'not_like',
+        'not_starts_with',
+        'object_type',
+        'regex_match',
+        'regex_not_match',
+        'starts_with',
+        'user',
     ];
 
     protected string $base   = "SELECT %%SELECT%% FROM `share` ";
@@ -42,8 +55,10 @@ final class ShareQuery implements QueryInterface
         'expire',
         'lastvisit_date',
         'max_counter',
+        'name',
         'object_type',
         'object',
+        'title',
         'user',
     ];
 
@@ -85,7 +100,46 @@ final class ShareQuery implements QueryInterface
      */
     public function get_sql_filter(Query $query, string $filter, mixed $value): string
     {
-        return '';
+        $filter_sql = '';
+        switch ($filter) {
+            case 'equal':
+            case 'exact_match':
+                $filter_sql = sprintf(" %s = '%s' AND ", $this->_get_object_title($query), Dba::escape($value));
+                break;
+            case 'like':
+            case 'alpha_match':
+                $filter_sql = sprintf(" %s LIKE '%%%s%%' AND ", $this->_get_object_title($query), Dba::escape($value));
+                break;
+            case 'not_like':
+                $filter_sql = sprintf(" %s NOT LIKE '%%%s%%' AND ", $this->_get_object_title($query), Dba::escape($value));
+                break;
+            case 'starts_with':
+                $filter_sql = sprintf(" %s LIKE '%s%%' AND ", $this->_get_object_title($query), Dba::escape($value));
+                break;
+            case 'not_starts_with':
+                $filter_sql = sprintf(" %s NOT LIKE '%s%%' AND ", $this->_get_object_title($query), Dba::escape($value));
+                break;
+            case 'regex_match':
+                if (!empty($value)) {
+                    $filter_sql = sprintf(" %s REGEXP '%s' AND ", $this->_get_object_title($query), Dba::escape($value));
+                }
+
+                break;
+            case 'regex_not_match':
+                if (!empty($value)) {
+                    $filter_sql = sprintf(" %s NOT REGEXP '%s' AND ", $this->_get_object_title($query), Dba::escape($value));
+                }
+
+                break;
+            case 'object_type':
+                $filter_sql = sprintf(" `share`.`object_type` = '%s' AND ", Dba::escape($value));
+                break;
+            case 'user':
+                $filter_sql = ' `share`.`user` = ' . (int) $value . ' AND ';
+                break;
+        }
+
+        return $filter_sql;
     }
 
     /**
@@ -96,7 +150,8 @@ final class ShareQuery implements QueryInterface
     public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
         $sql = match ($field) {
-            'object' => "`share`.`object_type`, `share`.`object.id`",
+            'name', 'title' => $this->_get_object_title($query),
+            'object' => "`share`.`object_type`, `share`.`object_id`",
             'allow_download', 'allow_stream', 'counter', 'creation_date', 'expire', 'id', 'lastvisit_date', 'max_counter', 'object_type', 'user' => sprintf('`share`.`%s`', $field),
             default => '',
         };
@@ -106,5 +161,26 @@ final class ShareQuery implements QueryInterface
         }
 
         return sprintf('%s %s,', $sql, $order);
+    }
+
+    /**
+     * _get_object_title
+     *
+     * The title of the shared object, which lives in a different table for each of the nine types a share can point at
+     */
+    private function _get_object_title(Query $query): string
+    {
+        $query->set_join_and('LEFT', '`album`', '`album`.`id`', '`share`.`object_id`', '`share`.`object_type`', "'album'", 100);
+        $query->set_join_and('LEFT', '`album_disk`', '`album_disk`.`id`', '`share`.`object_id`', '`share`.`object_type`', "'album_disk'", 100);
+        $query->set_join('LEFT', '`album` `disk_album`', '`disk_album`.`id`', '`album_disk`.`album_id`', 100);
+        $query->set_join_and('LEFT', '`artist`', '`artist`.`id`', '`share`.`object_id`', '`share`.`object_type`', "'artist'", 100);
+        $query->set_join_and('LEFT', '`playlist`', '`playlist`.`id`', '`share`.`object_id`', '`share`.`object_type`', "'playlist'", 100);
+        $query->set_join_and('LEFT', '`podcast`', '`podcast`.`id`', '`share`.`object_id`', '`share`.`object_type`', "'podcast'", 100);
+        $query->set_join_and('LEFT', '`podcast_episode`', '`podcast_episode`.`id`', '`share`.`object_id`', '`share`.`object_type`', "'podcast_episode'", 100);
+        $query->set_join_and('LEFT', '`search`', '`search`.`id`', '`share`.`object_id`', '`share`.`object_type`', "'search'", 100);
+        $query->set_join_and('LEFT', '`song`', '`song`.`id`', '`share`.`object_id`', '`share`.`object_type`', "'song'", 100);
+        $query->set_join_and('LEFT', '`video`', '`video`.`id`', '`share`.`object_id`', '`share`.`object_type`', "'video'", 100);
+
+        return "COALESCE(`album`.`name`, `disk_album`.`name`, `artist`.`name`, `playlist`.`name`, `podcast`.`title`, `podcast_episode`.`title`, `search`.`name`, `song`.`title`, `video`.`title`, '')";
     }
 }

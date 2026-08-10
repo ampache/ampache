@@ -127,8 +127,8 @@ final class LiveStreamEditMethod implements MethodInterface
         }
 
         $codec = $item->codec;
-        if (isset($input['codec']) && preg_replace("/[^a-z]/", "", strtolower($input['codec']))) {
-            $codec = (string) preg_replace("/[^a-z]/", "", strtolower($input['codec']));
+        if (isset($input['codec']) && preg_replace("/[^a-z0-9]/", "", strtolower($input['codec']))) {
+            $codec = (string) preg_replace("/[^a-z0-9]/", "", strtolower($input['codec']));
         }
 
         $siteUrl = $item->site_url;

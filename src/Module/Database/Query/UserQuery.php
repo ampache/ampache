@@ -33,15 +33,19 @@ final class UserQuery implements QueryInterface
         'access',
         'alpha_match',
         'disabled',
+        'email',
         'equal',
         'exact_match',
+        'fullname',
         'id',
         'like',
+        'name',
         'not_like',
         'not_starts_with',
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'username',
     ];
 
     protected string $base   = "SELECT %%SELECT%% FROM `user` ";
@@ -118,10 +122,16 @@ final class UserQuery implements QueryInterface
                 break;
             case 'like':
             case 'alpha_match':
+            case 'name':
                 $filter_sql = " (`user`.`fullname` LIKE '%" . Dba::escape($value) . "%' OR `user`.`username` LIKE '%" . Dba::escape($value) . "%' OR `user`.`email` LIKE '%" . Dba::escape($value) . "%') AND ";
                 break;
             case 'not_like':
-                $filter_sql = " (`user`.`fullname` NOT LIKE '%" . Dba::escape($value) . "%' OR `user`.`username` LIKE '%" . Dba::escape($value) . "%' OR `user`.`email` NOT LIKE '%" . Dba::escape($value) . "%') AND ";
+                $filter_sql = " (`user`.`fullname` NOT LIKE '%" . Dba::escape($value) . "%' OR `user`.`username` NOT LIKE '%" . Dba::escape($value) . "%' OR `user`.`email` NOT LIKE '%" . Dba::escape($value) . "%') AND ";
+                break;
+            case 'email':
+            case 'fullname':
+            case 'username':
+                $filter_sql = sprintf(" `user`.`%s` LIKE '%%%s%%' AND ", $filter, Dba::escape($value));
                 break;
             case 'regex_match':
                 if (!empty($value)) {
