@@ -36,6 +36,7 @@ final class ShoutboxQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = [
         'date',
+        'id',
         'object_type',
         'sticky',
         'user',
