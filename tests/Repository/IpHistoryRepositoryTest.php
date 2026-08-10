@@ -130,83 +130,6 @@ class IpHistoryRepositoryTest extends TestCase
         );
     }
 
-    public function testGetRecipientForUserReturnsIp(): void
-    {
-        $user = $this->createMock(User::class);
-
-        $userId = 666;
-        $ip     = '1.2.3.4';
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
-                [
-                    $userId,
-                ]
-            )
-            ->willReturn(inet_pton($ip));
-
-        self::assertSame(
-            $ip,
-            $this->subject->getRecentIpForUser($user)
-        );
-    }
-
-    public function testGetRecipientForUserReturnsNullIfIpWasNotAvailable(): void
-    {
-        $user = $this->createMock(User::class);
-
-        $userId = 666;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
-                [
-                    $userId,
-                ]
-            )
-            ->willReturn(false);
-
-        self::assertNull(
-            $this->subject->getRecentIpForUser($user)
-        );
-    }
-
-    public function testGetRecipientForUserReturnsNullIfIpIsNull(): void
-    {
-        $user = $this->createMock(User::class);
-
-        $userId = 666;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
-                [
-                    $userId,
-                ]
-            )
-            ->willReturn(null);
-
-        self::assertNull(
-            $this->subject->getRecentIpForUser($user)
-        );
-    }
-
     public function testGetHistoryReturnsEmptyIpForNullIpRow(): void
     {
         $user = $this->createMock(User::class);
@@ -244,6 +167,83 @@ class IpHistoryRepositoryTest extends TestCase
 
         self::assertSame('', $result[0]['ip']);
         self::assertSame('legacy-agent', $result[0]['agent']);
+    }
+
+    public function testGetRecipientForUserReturnsIp(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $userId = 666;
+        $ip     = '1.2.3.4';
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
+                [
+                    $userId,
+                ]
+            )
+            ->willReturn(inet_pton($ip));
+
+        self::assertSame(
+            $ip,
+            $this->subject->getRecentIpForUser($user)
+        );
+    }
+
+    public function testGetRecipientForUserReturnsNullIfIpIsNull(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $userId = 666;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
+                [
+                    $userId,
+                ]
+            )
+            ->willReturn(null);
+
+        self::assertNull(
+            $this->subject->getRecentIpForUser($user)
+        );
+    }
+
+    public function testGetRecipientForUserReturnsNullIfIpWasNotAvailable(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $userId = 666;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
+                [
+                    $userId,
+                ]
+            )
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->getRecentIpForUser($user)
+        );
     }
 
     protected function setUp(): void
