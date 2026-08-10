@@ -85,8 +85,8 @@ final readonly class WrappedAction implements ApplicationActionInterface
         $endTime = strtotime(date($year . '-12-31')) ?: time();
 
         $this->ui->showHeader();
-        $threshold = (int) AmpConfig::get('stats_threshold', 7);
-        $limit     = (int) AmpConfig::get('popular_threshold', 10);
+        $threshold = AmpConfig::get_int('stats_threshold', 7);
+        $limit     = AmpConfig::get_int('popular_threshold', 10);
 
         // the Ratings box has always rendered as a plain list rather than a mashup, and stored its browse
         $sections = [

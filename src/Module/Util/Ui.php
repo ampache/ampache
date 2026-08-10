@@ -982,7 +982,7 @@ class Ui implements UiInterface
             case 'transcode_bitrate_webplayer':
             case 'transcode_bitrate_api':
                 // A player override left empty falls back to the default rate, shown here as the placeholder
-                echo '<input type="number" name="' . $name . '" value="' . (((int) $value > 0) ? (int) $value : '') . '" min="0" step="1000" placeholder="' . (int) AmpConfig::get('transcode_bitrate', 128000) . '" /> ' . T_('bps');
+                echo '<input type="number" name="' . $name . '" value="' . (((int) $value > 0) ? (int) $value : '') . '" min="0" step="1000" placeholder="' . AmpConfig::get_int('transcode_bitrate', 128000) . '" /> ' . T_('bps');
                 break;
             case 'transcode_bitrate':
                 echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1000" /> ' . T_('bps') . ' (' . T_('0 = use the source file rate') . ')';

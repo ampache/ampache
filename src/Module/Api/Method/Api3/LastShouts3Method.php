@@ -65,7 +65,7 @@ final class LastShouts3Method implements MethodInterface
     ): ResponseInterface {
         $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = (int) AmpConfig::get('popular_threshold', 10);
+            $limit = AmpConfig::get_int('popular_threshold', 10);
         }
         if (AmpConfig::get('sociable')) {
             if (!empty($input['username'])) {

@@ -139,7 +139,7 @@ class Rating extends database_object
     public static function get_highest(string $input_type, int $count = 0, int $offset = 0, ?int $user_id = null, bool $by_user = false, int $catalog_id = 0): array
     {
         if ($count === 0) {
-            $count = (int) AmpConfig::get('popular_threshold', 10);
+            $count = AmpConfig::get_int('popular_threshold', 10);
         }
 
         if ($count === -1) {
@@ -164,7 +164,7 @@ class Rating extends database_object
         int $before = 0,
     ): array {
         if ($count === 0) {
-            $count = (int) AmpConfig::get('popular_threshold', 10);
+            $count = AmpConfig::get_int('popular_threshold', 10);
         }
 
         if ($count === -1) {

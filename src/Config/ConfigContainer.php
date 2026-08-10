@@ -65,6 +65,11 @@ final class ConfigContainer implements ConfigContainerInterface
         return AmpConfig::get($configKey) ?? $this->configuration[$configKey] ?? null;
     }
 
+    public function getBool(string $configKey, bool $default = false): bool
+    {
+        return AmpConfig::to_bool($this->get($configKey) ?? $default, $default);
+    }
+
     public function getComposerBinaryPath(): string
     {
         return $this->configuration[ConfigurationKeyEnum::COMPOSER_BINARY_PATH] ?? 'composer';
@@ -80,6 +85,11 @@ final class ConfigContainer implements ConfigContainerInterface
     public function getConfigFilePath(): string
     {
         return __DIR__ . '/../../config/ampache.cfg.php';
+    }
+
+    public function getInt(string $configKey, int $default = 0): int
+    {
+        return AmpConfig::to_int($this->get($configKey) ?? $default, $default);
     }
 
     public function getNpmBinaryPath(): string

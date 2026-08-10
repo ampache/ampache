@@ -54,7 +54,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'song':
-                $songs = Random::get_default((int) AmpConfig::get('offset_limit', 50), $user);
+                $songs = Random::get_default(AmpConfig::get_int('offset_limit', 50), $user);
                 if ($songs === []) {
                     break;
                 }

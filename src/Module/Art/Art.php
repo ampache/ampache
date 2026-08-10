@@ -1898,7 +1898,7 @@ class Art extends database_object
             return 'invalid_image';
         }
 
-        $max_upload_size = (int) AmpConfig::get('max_upload_size', 0);
+        $max_upload_size = AmpConfig::get_int('max_upload_size', 0);
 
         // Check image size doesn't exceed the limit
         if ($max_upload_size > 0 && $source_size > $max_upload_size) {

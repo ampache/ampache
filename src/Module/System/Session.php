@@ -121,10 +121,10 @@ final readonly class Session implements SessionInterface
         }
 
         $cookie_params = [
-            'lifetime' => (int) AmpConfig::get('cookie_life'),
+            'lifetime' => AmpConfig::get_int('cookie_life'),
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
-            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'secure' => AmpConfig::get_bool('cookie_secure'),
             'samesite' => 'Lax',
         ];
 
@@ -264,18 +264,18 @@ final readonly class Session implements SessionInterface
     public static function create_cookie(): void
     {
         $cookie_params = [
-            'lifetime' => (int) AmpConfig::get('cookie_life'),
+            'lifetime' => AmpConfig::get_int('cookie_life'),
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
-            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'secure' => AmpConfig::get_bool('cookie_secure'),
             'samesite' => 'Lax',
         ];
         if (isset($_SESSION)) {
             $cookie_options = [
-                'expires' => (int) AmpConfig::get('cookie_life'),
+                'expires' => AmpConfig::get_int('cookie_life'),
                 'path' => (string) AmpConfig::get('cookie_path'),
                 'domain' => (string) AmpConfig::get('cookie_domain'),
-                'secure' => make_bool(AmpConfig::get('cookie_secure')),
+                'secure' => AmpConfig::get_bool('cookie_secure'),
                 'samesite' => 'Lax'
             ];
             setcookie((string) session_name(), (string) session_id(), $cookie_options);
@@ -300,10 +300,10 @@ final readonly class Session implements SessionInterface
     public static function create_preference_cookies(User $user): void
     {
         $cookie_options = [
-            'expires' => (int) AmpConfig::get('cookie_life'),
+            'expires' => AmpConfig::get_int('cookie_life'),
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
-            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'secure' => AmpConfig::get_bool('cookie_secure'),
             'samesite' => 'Strict',
         ];
 
@@ -357,7 +357,7 @@ final readonly class Session implements SessionInterface
             'expires' => $remember_length,
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
-            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'secure' => AmpConfig::get_bool('cookie_secure'),
             'samesite' => 'Strict',
         ];
 
@@ -382,10 +382,10 @@ final readonly class Session implements SessionInterface
     {
         $session_name   = AmpConfig::get('session_name', 'ampache');
         $cookie_options = [
-            'expires' => (int) AmpConfig::get('cookie_life'),
+            'expires' => AmpConfig::get_int('cookie_life'),
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
-            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'secure' => AmpConfig::get_bool('cookie_secure'),
             'samesite' => 'Strict',
         ];
 
@@ -429,7 +429,7 @@ final readonly class Session implements SessionInterface
             'expires' => -1,
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
-            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'secure' => AmpConfig::get_bool('cookie_secure'),
             'samesite' => 'Strict',
         ];
 

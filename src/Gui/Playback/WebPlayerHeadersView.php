@@ -125,7 +125,7 @@ final class WebPlayerHeadersView extends AbstractView
 
     public function getNotifyTimeout(): int
     {
-        return (int) AmpConfig::get('browser_notify_timeout');
+        return AmpConfig::get_int('browser_notify_timeout');
     }
 
     /**

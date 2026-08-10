@@ -159,7 +159,7 @@ final class AlbumListRenderer extends AbstractBrowseListRenderer
     {
         $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
         $mayAdd     = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
-        $limit      = (int) $this->configContainer->get('direct_play_limit');
+        $limit      = $this->configContainer->getInt('direct_play_limit');
         if ($limit > 0 && !$this->getBrowse()->is_grid_view()) {
             $mayAdd = $mayAdd && $album->song_count <= $limit;
         }

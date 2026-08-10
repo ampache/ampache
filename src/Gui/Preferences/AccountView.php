@@ -84,7 +84,7 @@ final class AccountView extends AbstractView
 
     public function getMaxUploadSize(): int
     {
-        return (int) AmpConfig::get('max_upload_size');
+        return AmpConfig::get_int('max_upload_size');
     }
 
     public function getRssToken(): string

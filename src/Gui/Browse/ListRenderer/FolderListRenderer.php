@@ -195,7 +195,7 @@ final class FolderListRenderer extends AbstractBrowseListRenderer
             return false;
         }
 
-        $limit = (int) $this->configContainer->get('direct_play_limit');
+        $limit = $this->configContainer->getInt('direct_play_limit');
         if (!$item instanceof Folder || $limit <= 0 || $this->getBrowse()->is_grid_view()) {
             return true;
         }

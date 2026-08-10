@@ -120,7 +120,7 @@ final readonly class UserActivityRepository implements UserActivityRepositoryInt
         int $since = 0,
     ): array {
         if ($limit < 1) {
-            $limit = (int) AmpConfig::get('popular_threshold', 10);
+            $limit = AmpConfig::get_int('popular_threshold', 10);
         }
 
         $params = [$user_id];
@@ -146,7 +146,7 @@ final readonly class UserActivityRepository implements UserActivityRepositoryInt
     public function getFriendsActivities(int $user_id, int $limit = 0, int $since = 0): array
     {
         if ($limit < 1) {
-            $limit = (int) AmpConfig::get('popular_threshold', 10);
+            $limit = AmpConfig::get_int('popular_threshold', 10);
         }
 
         $params = [$user_id];
