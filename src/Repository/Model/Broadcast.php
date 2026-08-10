@@ -109,11 +109,6 @@ class Broadcast extends database_object implements library_item, displayable_ite
         return self::getBroadcastRepository()->getIdsByUser($user_id);
     }
 
-    public static function get_listeners_html(): string
-    {
-        return "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
-    }
-
     /**
      * @deprecated inject dependency
      */

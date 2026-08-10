@@ -26,6 +26,7 @@ declare(strict_types=1);
 // playback/web_player.phtml -- rendered by Ampache\Gui\Playback\WebPlayerView
 
 use Ampache\Gui\Broadcast\BroadcastActionView;
+use Ampache\Gui\Broadcast\BroadcastListenersView;
 use Ampache\Gui\Partial\VisualizerView;
 use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\System\Core;
@@ -704,7 +705,7 @@ if (!$this->isVideo()) {
                         <?php if ($this->showBroadcast()) { ?>
                             <div id="broadcast_listeners_wrap" class="action_button">
                                 <?php if ($isBroadcasting) {
-                                    echo Broadcast::get_listeners_html();
+                                    echo (new BroadcastListenersView())->render();
                                 } ?>
                             </div>
                         <?php } ?>
