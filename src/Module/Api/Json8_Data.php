@@ -173,6 +173,32 @@ final class Json8_Data
     }
 
     /**
+     * The scalar fields of a collection, shared by the list and the single-collection responses.
+     *
+     * @return array{
+     *     id: string,
+     *     name: string,
+     *     owner: null|string,
+     *     type: null|string,
+     *     object_type: null|string,
+     *     items: int,
+     *     has_art: bool
+     * }
+     */
+    private static function _collection_row(Collection $collection): array
+    {
+        return [
+            'id' => (string) $collection->getId(),
+            'name' => (string) $collection->get_fullname(),
+            'owner' => $collection->username,
+            'type' => $collection->type,
+            'object_type' => $collection->object_type,
+            'items' => $collection->get_item_count(),
+            'has_art' => $collection->has_art(),
+        ];
+    }
+
+    /**
      * genre_array
      *
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
@@ -229,32 +255,6 @@ final class Json8_Data
     }
 
     /**
-     * The scalar fields of a collection, shared by the list and the single-collection responses.
-     *
-     * @return array{
-     *     id: string,
-     *     name: string,
-     *     owner: null|string,
-     *     type: null|string,
-     *     object_type: null|string,
-     *     items: int,
-     *     has_art: bool
-     * }
-     */
-    private static function collection_row(Collection $collection): array
-    {
-        return [
-            'id' => (string) $collection->getId(),
-            'name' => (string) $collection->get_fullname(),
-            'owner' => $collection->username,
-            'type' => $collection->type,
-            'object_type' => $collection->object_type,
-            'items' => $collection->get_item_count(),
-            'has_art' => $collection->has_art(),
-        ];
-    }
-
-    /**
      * Where this user has filed a list, or nothing at all when they never have.
      *
      * The keys are absent rather than zero for an unfiled list, because the root is the absence of a
@@ -263,7 +263,7 @@ final class Json8_Data
      * @param array<string, array{folder: int, sort_order: int}> $placements
      * @return array{playlist_folder_id?: string, playlist_folder_sort_order?: int}
      */
-    private static function placement_row(array $placements, string $objectType, int $objectId): array
+    private static function _placement_row(array $placements, string $objectType, int $objectId): array
     {
         $placement = $placements[sprintf('%s-%d', $objectType, $objectId)] ?? null;
         if ($placement === null) {
@@ -1195,7 +1195,7 @@ final class Json8_Data
         $ordered     = Api::filter_objects($ordered, $this->count, $this->offset, $this->limit);
 
         // `contents` rather than `items`, which the collection row already uses for the member count
-        $JSON = self::collection_row($collection) + [
+        $JSON = self::_collection_row($collection) + [
             'contents' => $this->collection_contents($ordered, $user, $auth),
         ];
 
@@ -1252,7 +1252,7 @@ final class Json8_Data
                 continue;
             }
 
-            $JSON[] = self::collection_row($collection) + self::placement_row($placements, 'collection', $collection->getId());
+            $JSON[] = self::_collection_row($collection) + self::_placement_row($placements, 'collection', $collection->getId());
         }
 
         return $JSON;
@@ -2520,7 +2520,7 @@ final class Json8_Data
                 "md5" => $md5,
                 "last_update" => $last_update,
                 "time" => $duration ?: $last_duration,
-            ] + self::placement_row($placements, $object_type, $playlist->id);
+            ] + self::_placement_row($placements, $object_type, $playlist->id);
         }
 
         return $JSON;

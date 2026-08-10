@@ -826,6 +826,67 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return string[]
+     */
+    private static function _getTokens(string $str): array
+    {
+        $tokens        = [];
+        $nospacetokens = [];
+        // put the string into lowercase
+        //    $str = strtolower($str);
+
+        // make sure ( or ) get picked up as separate tokens
+        $str = str_replace("(", " ( ", $str);
+        $str = str_replace(")", " ) ", $str);
+
+        // get the actual tokens
+        $actualtokens = explode(" ", $str);
+        $actualsize   = sizeof($actualtokens);
+
+        // trim spaces around tokens and discard those which have only spaces in them
+        $index = 0;
+        for ($i = 0; $i < $actualsize; $i++) {
+            $actualtokens[$i] = trim($actualtokens[$i]);
+            if ($actualtokens[$i] != "") {
+                $nospacetokens[$index++] = $actualtokens[$i];
+            }
+        }
+
+        // now put together tokens which are actually one token e.g. upper hutt
+        $onetoken    = "";
+        $index       = 0;
+        $nospacesize = sizeof($nospacetokens);
+        for ($i = 0; $i < $nospacesize; $i++) {
+            $token = $nospacetokens[$i];
+            switch ($token) {
+                case 'not':
+                case 'or':
+                case 'and':
+                case '(':
+                case ')':
+                    if ($onetoken != "") {
+                        $tokens[$index++] = $onetoken;
+                        $onetoken         = "";
+                    }
+                    $tokens[$index++] = (string) $token;
+                    break;
+                default:
+                    if ($onetoken == "") {
+                        $onetoken = (string) $token;
+                    } else {
+                        $onetoken = $onetoken . " " . $token;
+                    }
+                    break;
+            }
+        }
+        if ($onetoken != "") {
+            $tokens[$index] = $onetoken;
+        }
+
+        return $tokens;
+    }
+
     private static function _itemAlbum(Album $album, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -1042,7 +1103,7 @@ final class Upnp_Api
             ['@refID exists false', ''],
         ];
 
-        $tokens = self::gettokens($query);
+        $tokens = self::_getTokens($query);
         $size   = sizeof($tokens);
         // for ($i = 0; $i<sizeof($tokens); $i++) {
         //     echo $tokens[$i]."|";
@@ -1181,67 +1242,6 @@ final class Upnp_Api
         } else {
             debug_event(self::class, 'ERROR: PHP missing ext-sockets', 1);
         }
-    }
-
-    /**
-     * @return string[]
-     */
-    private static function gettokens(string $str): array
-    {
-        $tokens        = [];
-        $nospacetokens = [];
-        // put the string into lowercase
-        //    $str = strtolower($str);
-
-        // make sure ( or ) get picked up as separate tokens
-        $str = str_replace("(", " ( ", $str);
-        $str = str_replace(")", " ) ", $str);
-
-        // get the actual tokens
-        $actualtokens = explode(" ", $str);
-        $actualsize   = sizeof($actualtokens);
-
-        // trim spaces around tokens and discard those which have only spaces in them
-        $index = 0;
-        for ($i = 0; $i < $actualsize; $i++) {
-            $actualtokens[$i] = trim($actualtokens[$i]);
-            if ($actualtokens[$i] != "") {
-                $nospacetokens[$index++] = $actualtokens[$i];
-            }
-        }
-
-        // now put together tokens which are actually one token e.g. upper hutt
-        $onetoken    = "";
-        $index       = 0;
-        $nospacesize = sizeof($nospacetokens);
-        for ($i = 0; $i < $nospacesize; $i++) {
-            $token = $nospacetokens[$i];
-            switch ($token) {
-                case 'not':
-                case 'or':
-                case 'and':
-                case '(':
-                case ')':
-                    if ($onetoken != "") {
-                        $tokens[$index++] = $onetoken;
-                        $onetoken         = "";
-                    }
-                    $tokens[$index++] = (string) $token;
-                    break;
-                default:
-                    if ($onetoken == "") {
-                        $onetoken = (string) $token;
-                    } else {
-                        $onetoken = $onetoken . " " . $token;
-                    }
-                    break;
-            }
-        }
-        if ($onetoken != "") {
-            $tokens[$index] = $onetoken;
-        }
-
-        return $tokens;
     }
 
     public function musicChilds($prmPath, $prmQuery, $start, $count): array

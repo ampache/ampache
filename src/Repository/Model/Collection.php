@@ -108,7 +108,7 @@ class Collection extends playlist_object
      *
      * A disabled feature drops its members from the list instead of erroring; they return when it is re-enabled.
      */
-    private static function isEnabledType(string $objectType): bool
+    private static function _isEnabledType(string $objectType): bool
     {
         return match ($objectType) {
             'video' => (bool) AmpConfig::get('allow_video'),
@@ -221,7 +221,7 @@ class Collection extends playlist_object
         $items = [];
         foreach ($this->getCollectionRepository()->getItems($this->getId()) as $item) {
             $type = LibraryItemEnum::tryFrom(self::normalizeType($item['object_type']));
-            if ($type === null || !self::isEnabledType($item['object_type'])) {
+            if ($type === null || !self::_isEnabledType($item['object_type'])) {
                 continue;
             }
 
@@ -246,7 +246,7 @@ class Collection extends playlist_object
     {
         $grouped = [];
         foreach ($this->getCollectionRepository()->getItems($this->getId()) as $item) {
-            if (!self::isEnabledType($item['object_type'])) {
+            if (!self::_isEnabledType($item['object_type'])) {
                 continue;
             }
 
@@ -318,7 +318,7 @@ class Collection extends playlist_object
     {
         $items = [];
         foreach ($this->getCollectionRepository()->getItems($this->getId()) as $item) {
-            if (!self::isValidType($item['object_type']) || !self::isEnabledType($item['object_type'])) {
+            if (!self::isValidType($item['object_type']) || !self::_isEnabledType($item['object_type'])) {
                 continue;
             }
 
