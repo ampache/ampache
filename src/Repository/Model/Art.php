@@ -1129,15 +1129,6 @@ class Art extends database_object
     }
 
     /**
-     * get_from_source
-     * This gets an image for the album art from a source as
-     * defined in the passed array. Because we don't know where
-     * it's coming from we are a passed an array that can look like
-     * ['url']      = URL *** OPTIONAL ***
-     * ['file']     = FILENAME *** OPTIONAL ***
-     * ['raw']      = Actual Image data, already captured
-     */
-    /**
      * @deprecated inject dependency
      */
     private static function getUrlValidator(): UrlValidatorInterface
@@ -1147,6 +1138,23 @@ class Art extends database_object
         return $dic->get(UrlValidatorInterface::class);
     }
 
+    /**
+     * get_from_source
+     * This gets an image for the album art from a source as
+     * defined in the passed array. Because we don't know where
+     * it's coming from we are a passed an array that can look like
+     * ['url']      = URL *** OPTIONAL ***
+     * ['file']     = FILENAME *** OPTIONAL ***
+     * ['raw']      = Actual Image data, already captured
+     * @param array{
+     *     url?: string,
+     *     file?: string,
+     *     raw?: string,
+     *     title?: string,
+     *     db?: int,
+     *     song?: string,
+     * } $data
+     */
     public static function get_from_source(array $data, string $type): string
     {
         if (empty($data)) {
