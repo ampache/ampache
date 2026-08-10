@@ -1017,7 +1017,8 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
-                    $parsed['mood'] = $this->parseMoods($data);
+                case 'ab:mood':
+                    $parsed['mood'] = $this->parseMoods($data, $parsed['mood'] ?? []);
                     break;
                 case 'partofset':
                     $elements             = explode('/', (string) $data[0]);
@@ -1158,7 +1159,8 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
-                    $parsed['mood'] = $this->parseMoods($data);
+                case 'ab:mood':
+                    $parsed['mood'] = $this->parseMoods($data, $parsed['mood'] ?? []);
                     break;
                 case 'discsubtitle':
                     $parsed['disksubtitle'] = $data[0];
@@ -1264,7 +1266,8 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
-                    $parsed['mood'] = $this->parseMoods($data);
+                case 'ab:mood':
+                    $parsed['mood'] = $this->parseMoods($data, $parsed['mood'] ?? []);
                     break;
                 case 'discsubtitle':
                 case 'setsubtitle':
@@ -1524,7 +1527,8 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
-                    $parsed['mood'] = $this->parseMoods($data);
+                case 'ab:mood':
+                    $parsed['mood'] = $this->parseMoods($data, $parsed['mood'] ?? []);
                     break;
                 case 'creation_date':
                     $parsed['creation_date'] = strtotime(str_replace(" ", "", $data[0]));
@@ -1665,7 +1669,8 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
-                    $parsed['mood'] = $this->parseMoods($data);
+                case 'ab:mood':
+                    $parsed['mood'] = $this->parseMoods($data, $parsed['mood'] ?? []);
                     break;
                 case 'tracknumber':
                 case 'track_number':
@@ -2177,13 +2182,13 @@ final class VaInfo implements VaInfoInterface
      * Split the mood tag the way genres are split: several in one frame joined by `additional_delimiters`, or by a null byte
      *
      * @param array<array-key, mixed>|string $data
+     * @param string[] $result moods already parsed from another mood tag on the same file
      *
      * @return string[]
      * @throws Exception
      */
-    private function parseMoods(array|string $data): array
+    private function parseMoods(array|string $data, array $result = []): array
     {
-        $result = [];
         foreach ((is_array($data) ? $data : [$data]) as $row) {
             if (is_string($row) && $row !== '') {
                 foreach ($this->splitSlashedlist(str_replace("\x00", ';', $row)) as $mood) {
