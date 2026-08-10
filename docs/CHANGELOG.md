@@ -332,6 +332,8 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* Videos and podcast episodes never appeared in the folder browse. Only songs were mapped into `folder_map`, so a video catalog listed its folders and nothing inside them, and those folders counted as unplayable
+* A scan that found nothing to update skipped the folder mapping entirely, so a library that had never been mapped stayed empty however many times it was scanned. The mapping is reconciled at the end of every scan now, as the CLI already did
 * Sorting the combined playlist and smartlist list by `last_count` answered with an error instead of a list. The union it reads never carried the column it sorts on, though both tables have it
 * The followers list is the accounts doing the following. It was built from the ids of the follow records, which line up with real accounts only by coincidence, so it could name people who follow nobody
 * Sorts a browse implemented but never offered, so clicking the column or asking for the sort did nothing: `id` on broadcast, private message, share, shoutbox and wanted, `release_date` on video, `title` on genre and mood, and `genre` on genre. `from_user` on private messages and `username`, `last_seen` and `create_date` on followers are new, and the private message browse takes the `equal`/`exact_match` filters it already implemented

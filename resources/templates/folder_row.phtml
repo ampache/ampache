@@ -49,14 +49,16 @@ $folderId = $folder->getId(); ?>
     <td class="<?php echo $this->e($this->getClassFolder()); ?>"><?php echo $this->raw($folder->getFolderLink()); ?></td>
     <td class="cel_add">
         <span class="cel_item_add">
-<?php if ($this->isShowPlaylistAdd()) {
-    echo $this->raw($folder->getAddToTemporaryPlaylistButton());
-    echo $this->raw($folder->getRandomToTemporaryPlaylistButton());
-}
+<?php if ($folder->isPlayable()) {
+    if ($this->isShowPlaylistAdd()) {
+        echo $this->raw($folder->getAddToTemporaryPlaylistButton());
+        echo $this->raw($folder->getRandomToTemporaryPlaylistButton());
+    }
 
-if ($this->isShowListAdd()) { ?>
+    if ($this->isShowListAdd()) { ?>
             <a id="add_to_playlist_<?php echo $folderId; ?>" onclick="showPlaylistDialog(event, '<?php echo $this->e($folder->getObjectType()); ?>', '<?php echo $folderId; ?>')"><?php echo $this->raw($folder->getAddToPlaylistIcon()); ?></a>
-<?php } ?>
+<?php }
+    } ?>
         </span>
     </td>
     <td class="cel_songs optional"><?php echo $this->e($folder->getSongCount()); ?></td>
