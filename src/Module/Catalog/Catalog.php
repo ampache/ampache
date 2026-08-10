@@ -1892,6 +1892,10 @@ abstract class Catalog extends database_object
                 );
                 break;
             case 'garbage_collect':
+                if (!$catalogs) {
+                    $catalogs = self::get_catalogs();
+                }
+
                 debug_event(self::class, 'Run Garbage collection', 5);
                 self::getCatalogGarbageCollector()->collect();
                 $catalog_media_types = [];

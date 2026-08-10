@@ -574,13 +574,13 @@ function debug_event(string $type, string $message, int $level, string $username
 
 /**
  * @param int[]|null $catalogs
- * @param array<string, bool>|null $options
+ * @param array<string, mixed>|null $options
  */
 function catalog_worker(string $action, ?array $catalogs = null, ?array $options = null): void
 {
     $sse_url = AmpConfig::get_web_path() . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
     if ($options) {
-        $sse_url .= "&options=" . urlencode(json_encode($_POST) ?: '');
+        $sse_url .= "&options=" . urlencode(json_encode($options) ?: '');
     }
 
     echo '<script>';

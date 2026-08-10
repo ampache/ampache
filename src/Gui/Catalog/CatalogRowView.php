@@ -58,7 +58,6 @@ final class CatalogRowView extends AbstractView
                 'gather_media_art' => T_('Gather Art'),
                 'import_to_catalog' => T_('Import'),
                 'update_file_tags' => T_('Update File Tags'),
-                'garbage_collect' => T_('Garbage Collection'),
             ];
         }
 
