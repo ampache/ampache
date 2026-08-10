@@ -130,6 +130,45 @@ class IpHistoryRepositoryTest extends TestCase
         );
     }
 
+    public function testGetHistoryReturnsEmptyIpForNullIpRow(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $userId = 666;
+        $date   = time();
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with('user_ip_cardinality')
+            ->willReturn(42);
+
+        $statement = $this->createMock(\PDOStatement::class);
+        $statement->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(
+                [
+                    'ip' => null,
+                    'date' => $date,
+                    'agent' => 'legacy-agent',
+                    'action' => 'login',
+                ],
+                false
+            );
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willReturn($statement);
+
+        $result = iterator_to_array($this->subject->getHistory($user));
+
+        self::assertSame('', $result[0]['ip']);
+        self::assertSame('legacy-agent', $result[0]['agent']);
+    }
+
     public function testGetRecipientForUserReturnsIp(): void
     {
         $user = $this->createMock(User::class);
@@ -153,6 +192,31 @@ class IpHistoryRepositoryTest extends TestCase
 
         self::assertSame(
             $ip,
+            $this->subject->getRecentIpForUser($user)
+        );
+    }
+
+    public function testGetRecipientForUserReturnsNullIfIpIsNull(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $userId = 666;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
+                [
+                    $userId,
+                ]
+            )
+            ->willReturn(null);
+
+        self::assertNull(
             $this->subject->getRecentIpForUser($user)
         );
     }

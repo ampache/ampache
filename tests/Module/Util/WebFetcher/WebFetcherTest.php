@@ -28,6 +28,7 @@ namespace Ampache\Module\Util\WebFetcher;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 use Curl\Curl;
@@ -43,6 +44,7 @@ class WebFetcherTest extends TestCase
     private ConfigContainerInterface&MockObject $config;
     private LoggerInterface&MockObject $logger;
     private WebFetcher $subject;
+    private UrlValidatorInterface&MockObject $urlValidator;
     private UtilityFactoryInterface&MockObject $utilityFactory;
 
     public function testFetchFails(): void
@@ -62,7 +64,11 @@ class WebFetcherTest extends TestCase
             ->willReturn($curl);
 
         $curl->expects(static::once())
-            ->method('setFollowLocation');
+            ->method('setProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        $curl->expects(static::once())
+            ->method('setRedirectProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
         $curl->expects(static::once())
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
@@ -120,7 +126,11 @@ class WebFetcherTest extends TestCase
             ->willReturn($curl);
 
         $curl->expects(static::once())
-            ->method('setFollowLocation');
+            ->method('setProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        $curl->expects(static::once())
+            ->method('setRedirectProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
         $curl->expects(static::once())
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
@@ -161,6 +171,32 @@ class WebFetcherTest extends TestCase
         );
     }
 
+    public function testFetchRefusesUnsafeUrl(): void
+    {
+        $uri = 'http://169.254.169.254/latest/meta-data/';
+
+        $subject = new WebFetcher(
+            $this->config,
+            $this->utilityFactory,
+            $this->logger,
+            $validator = $this->createMock(UrlValidatorInterface::class)
+        );
+
+        $validator->expects(static::once())
+            ->method('isPublicHttpUrl')
+            ->with($uri)
+            ->willReturn(false);
+
+        // nothing may reach curl at all
+        $this->utilityFactory->expects(static::never())
+            ->method('createCurl');
+
+        static::expectException(FetchFailedException::class);
+        static::expectExceptionMessage(sprintf('Refusing to fetch url: %s', $uri));
+
+        $subject->fetch($uri);
+    }
+
     public function testFetchToFileDownloads(): void
     {
         $uri                 = 'some-uri';
@@ -178,7 +214,11 @@ class WebFetcherTest extends TestCase
             ->willReturn($curl);
 
         $curl->expects(static::once())
-            ->method('setFollowLocation');
+            ->method('setProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        $curl->expects(static::once())
+            ->method('setRedirectProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
         $curl->expects(static::once())
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
@@ -202,6 +242,31 @@ class WebFetcherTest extends TestCase
         $this->subject->fetchToFile($uri, $destinationFilePath);
     }
 
+    public function testFetchToFileRefusesUnsafeUrl(): void
+    {
+        $uri = 'http://127.0.0.1:8080/admin';
+
+        $subject = new WebFetcher(
+            $this->config,
+            $this->utilityFactory,
+            $this->logger,
+            $validator = $this->createMock(UrlValidatorInterface::class)
+        );
+
+        $validator->expects(static::once())
+            ->method('isPublicHttpUrl')
+            ->with($uri)
+            ->willReturn(false);
+
+        $this->utilityFactory->expects(static::never())
+            ->method('createCurl');
+
+        static::expectException(FetchFailedException::class);
+        static::expectExceptionMessage(sprintf('Refusing to fetch url: %s', $uri));
+
+        $subject->fetchToFile($uri, 'some-path');
+    }
+
     public function testFetchToFileThrowsIfFetchErrors(): void
     {
         $uri                 = 'some-uri';
@@ -222,7 +287,11 @@ class WebFetcherTest extends TestCase
             ->willReturn($curl);
 
         $curl->expects(static::once())
-            ->method('setFollowLocation');
+            ->method('setProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        $curl->expects(static::once())
+            ->method('setRedirectProtocols')
+            ->with(CURLPROTO_HTTP | CURLPROTO_HTTPS);
         $curl->expects(static::once())
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
@@ -239,16 +308,63 @@ class WebFetcherTest extends TestCase
         $this->subject->fetchToFile($uri, $destinationFilePath);
     }
 
+    public function testFetchValidatesEveryRedirectTarget(): void
+    {
+        $uri      = 'https://feed.example/rss';
+        $redirect = 'http://169.254.169.254/latest/meta-data/';
+        $version  = '1.2.3';
+
+        $curl = $this->createMock(Curl::class);
+
+        $subject = new WebFetcher(
+            $this->config,
+            $this->utilityFactory,
+            $this->logger,
+            $validator = $this->createMock(UrlValidatorInterface::class)
+        );
+
+        $this->utilityFactory->expects(static::once())
+            ->method('createCurl')
+            ->willReturn($curl);
+
+        $validator->expects(static::exactly(2))
+            ->method('isPublicHttpUrl')
+            ->with(...self::withConsecutive([$uri], [$redirect]))
+            ->willReturn(true, false);
+
+        $curl->expects(static::once())
+            ->method('get')
+            ->with($uri);
+        $curl->expects(static::once())
+            ->method('getResponseHeaders')
+            ->willReturn(['Location' => $redirect]);
+        $curl->httpStatusCode = 302;
+
+        $this->config->method('getVersion')
+            ->willReturn($version);
+
+        static::expectException(FetchFailedException::class);
+        static::expectExceptionMessage(sprintf('Refusing to fetch url: %s', $redirect));
+
+        $subject->fetch($uri);
+    }
+
     protected function setUp(): void
     {
         $this->config         = $this->createMock(ConfigContainerInterface::class);
         $this->utilityFactory = $this->createMock(UtilityFactoryInterface::class);
         $this->logger         = $this->createMock(LoggerInterface::class);
+        $this->urlValidator   = $this->createMock(UrlValidatorInterface::class);
+
+        // the fetch tests are about the curl setup, so the url is allowed unless a test says otherwise
+        $this->urlValidator->method('isPublicHttpUrl')
+            ->willReturn(true);
 
         $this->subject = new WebFetcher(
             $this->config,
             $this->utilityFactory,
-            $this->logger
+            $this->logger,
+            $this->urlValidator
         );
     }
 }

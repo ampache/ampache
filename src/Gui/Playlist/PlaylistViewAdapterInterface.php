@@ -87,11 +87,11 @@ interface PlaylistViewAdapterInterface
 
     public function getShareUi(): string;
 
-    public function getType(): string;
-
     public function getUserFlags(): string;
 
     public function getUsername(): string;
 
     public function isEditable(): bool;
+
+    public function isPrivate(): bool;
 }
