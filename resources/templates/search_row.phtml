@@ -60,7 +60,7 @@ $searchId = $search->id; ?>
     </span>
 </td>
 <td class="cel_last_update"><?php echo $this->e($search->get_f_last_update()); ?></td>
-<td class="cel_type"><?php echo $this->e($search->get_f_type()); ?></td>
+<td class="cel_type"><?php echo $this->raw($search->get_f_type()); ?></td>
 <td class="cel_random"><?php echo $search->random ? T_('Yes') : T_('No'); ?></td>
 <td class="cel_limit"><?php echo $this->e($this->getLimitLabel()); ?></td>
 <?php if ($this->areRatingsShown()) { ?>
