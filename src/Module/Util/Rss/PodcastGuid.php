@@ -44,11 +44,7 @@ final class PodcastGuid
 
     private static function _uuidV5(string $namespace, string $name): string
     {
-        $nsBinary = '';
-        $nsHex    = str_replace('-', '', $namespace);
-        for ($index = 0; $index < 32; $index += 2) {
-            $nsBinary .= chr((int) hexdec(substr($nsHex, $index, 2)));
-        }
+        $nsBinary = (string) hex2bin(str_replace('-', '', $namespace));
 
         $hash = sha1($nsBinary . $name);
 

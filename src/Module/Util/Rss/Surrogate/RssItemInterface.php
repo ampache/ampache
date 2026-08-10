@@ -55,6 +55,7 @@ interface RssItemInterface
      * @return Traversable<array{
      *   title: string,
      *   guid: string,
+     *   isPermaLink: string,
      *   link: string,
      *   description: string,
      *   length: string,
