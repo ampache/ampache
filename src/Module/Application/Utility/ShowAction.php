@@ -73,6 +73,11 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $target
             )->withStatus(RFC7231::FOUND);
         } else {
+            // an empty body makes the hidden iframe a quirks-mode document, so answer with the smallest valid one
+            $response->getBody()->write(
+                '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Ampache</title></head><body></body></html>'
+            );
+
             // Prevent the update query as it's pointless
             define('NO_SESSION_UPDATE', '1');
         }
