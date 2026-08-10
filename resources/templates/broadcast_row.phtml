@@ -26,6 +26,7 @@ declare(strict_types=1);
 // broadcast_row.phtml -- rendered by Ampache\Gui\Broadcast\BroadcastRowView
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Broadcast\BroadcastRowView $this */
 
@@ -42,4 +43,9 @@ $broadcast = $this->getBroadcast(); ?>
 <td class="cel_genre"><?php echo $this->raw($broadcast->get_f_tags()); ?></td>
 <td class="cel_started"><?php echo $broadcast->started ? T_('Yes') : T_('No'); ?></td>
 <td class="cel_listeners"><?php echo $this->e($broadcast->listeners); ?></td>
-<td class="cel_action"><?php $broadcast->show_action_buttons(); ?></td>
+<td class="cel_action">
+<?php if ($this->mayManage()) { ?>
+    <a id="edit_broadcast_<?php echo $this->e($broadcast->getId()); ?>" onclick="showEditDialog('broadcast_row', '<?php echo $this->e($broadcast->getId()); ?>', 'edit_broadcast_<?php echo $this->e($broadcast->getId()); ?>', '<?php echo addslashes(T_('Broadcast Edit')); ?>', 'broadcast_row_')"><?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?></a>
+    <a href="<?php echo $this->e($this->getDeleteUrl()); ?>"><?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?></a>
+<?php } ?>
+</td>
