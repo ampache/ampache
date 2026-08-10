@@ -106,6 +106,8 @@ class UPnPDevice
         curl_setopt($curl, CURLOPT_HEADER, true);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 
         $response = curl_exec($curl);
         //debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
@@ -134,6 +136,8 @@ class UPnPDevice
 
         curl_setopt($curl, CURLOPT_URL, $descriptionUrl);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
         $response = curl_exec($curl);
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
