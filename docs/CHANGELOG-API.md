@@ -16,6 +16,8 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
   * A missing object no longer ends the list it appeared in, so the objects after it are returned rather than silently dropped
 * `preference_edit` (API6)
   * preference_edit: `default=1` now writes the server default — the system user's value, and the value a new account is seeded from — instead of the calling user's own value, and reports that value back. Existing accounts are still only changed by `all=1`. **NOTE** the same fix landed in Ampache8, which serves API6 as well
+* `live_stream_create`/`live_stream_edit` (API6)
+  * live_stream_create, live_stream_edit: `codec` no longer has its digits stripped, so `mp3` is stored as `mp3` instead of `mp`. A radio station created or edited through the API before this keeps the truncated codec until it is set again. **NOTE** the same fix landed in Ampache8, which serves API6 as well
 
 ## API 6.9.2 Build 3
 
