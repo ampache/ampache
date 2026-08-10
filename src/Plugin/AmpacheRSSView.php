@@ -59,10 +59,19 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
     /**
      * Constructor
      */
-    public function __construct(
-        private readonly WebFetcherInterface $webFetcher
-    ) {
+    public function __construct()
+    {
         $this->description = T_('RSS View');
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getWebFetcher(): WebFetcherInterface
+    {
+        global $dic;
+
+        return $dic->get(WebFetcherInterface::class);
     }
 
     /**
@@ -121,7 +130,7 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
     {
         // the feed url is a per-user preference, so it is fetched like any other url a user supplies
         try {
-            $xmlstr = $this->webFetcher->fetch($this->feed_url);
+            $xmlstr = self::getWebFetcher()->fetch($this->feed_url);
         } catch (FetchFailedException $error) {
             debug_event(self::class, 'Cannot access feed ' . $this->feed_url . ': ' . $error->getMessage(), 3);
 

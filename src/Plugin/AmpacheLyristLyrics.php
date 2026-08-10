@@ -55,10 +55,19 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
     /**
      * Constructor
      */
-    public function __construct(
-        private readonly UrlValidatorInterface $urlValidator
-    ) {
+    public function __construct()
+    {
         $this->description = T_('Get lyrics from a public Lyrist instance');
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUrlValidator(): UrlValidatorInterface
+    {
+        global $dic;
+
+        return $dic->get(UrlValidatorInterface::class);
     }
 
     /**
@@ -118,7 +127,7 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
     {
         $uri = rtrim((string)preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode((string)$song->title) . '/' . urlencode($song->get_parent_fullname());
         // the instance is a per-user preference, and a public instance is what this plugin is for
-        if (!$this->urlValidator->isPublicHttpUrl($uri)) {
+        if (!self::getUrlValidator()->isPublicHttpUrl($uri)) {
             debug_event(self::class, 'Refusing to fetch lyrics from ' . $uri, 3);
 
             return null;
