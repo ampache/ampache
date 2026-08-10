@@ -441,8 +441,17 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     {
         // folder
         $this->connection->query("INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id`, `parent`, 'folder', `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
-        // song, podcast_episode, video
-        $this->connection->query("INSERT INTO folder_map (folder_id, object_id, object_type, name, catalog, path_name) SELECT f.id, s.id, 'song', SUBSTRING_INDEX(s.file, '/', -1), s.catalog, REGEXP_REPLACE(s.file, '/[^/]+$', '') FROM song s INNER JOIN folder f ON f.catalog = s.catalog AND f.path_name = REGEXP_REPLACE(s.file, '/[^/]+$', '') LEFT JOIN folder_map fm ON fm.object_id = s.id AND fm.object_type = 'song' WHERE fm.object_id IS NULL;");
+        // song, podcast_episode, video: a media table maps the same way, keyed on the directory its file sits in
+        foreach (['song', 'podcast_episode', 'video'] as $objectType) {
+            $this->connection->query(
+                sprintf(
+                    "INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `f`.`id`, `s`.`id`, '%s', SUBSTRING_INDEX(`s`.`file`, '/', -1), `s`.`catalog`, REGEXP_REPLACE(`s`.`file`, '/[^/]+$', '') FROM `%s` AS `s` INNER JOIN `folder` AS `f` ON `f`.`catalog` = `s`.`catalog` AND `f`.`path_name` = REGEXP_REPLACE(`s`.`file`, '/[^/]+$', '') LEFT JOIN `folder_map` AS `fm` ON `fm`.`object_id` = `s`.`id` AND `fm`.`object_type` = '%s' WHERE `fm`.`object_id` IS NULL;",
+                    $objectType,
+                    $objectType,
+                    $objectType
+                )
+            );
+        }
     }
 
     /**

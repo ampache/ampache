@@ -371,4 +371,15 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
             )
         );
     }
+
+    /**
+     * A folder holding nothing that can be played, so the row offers no way to queue or list it.
+     */
+    public function isPlayable(): bool
+    {
+        return (
+            !$this->object instanceof Folder
+            || $this->object->playable
+        );
+    }
 }

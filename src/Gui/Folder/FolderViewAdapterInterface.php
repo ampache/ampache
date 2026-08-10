@@ -100,4 +100,6 @@ interface FolderViewAdapterInterface
     public function getUserFlags(): string;
 
     public function isEditable(): bool;
+
+    public function isPlayable(): bool;
 }
