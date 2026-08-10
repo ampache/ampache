@@ -50,7 +50,7 @@ final class BroadcastRowView extends AbstractView
 
     public function getDeleteUrl(): string
     {
-        return AmpConfig::get_web_path() . '/broadcast.php?action=show_delete&id=' . $this->broadcast->getId();
+        return AmpConfig::get_web_path('/client') . '/broadcast.php?action=show_delete&id=' . $this->broadcast->getId();
     }
 
     public function isDirectPlayEnabled(): bool
