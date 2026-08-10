@@ -250,7 +250,8 @@ final class VideoQuery implements QueryInterface
                 $sql = "`video`.`time`";
                 break;
             case 'rating':
-                $sql = sprintf('`rating`.`rating` %s, `rating`.`id`', $order);
+                $sql   = sprintf('`rating`.`rating` %s, `rating`.`id`', $order);
+                $order = '';
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'release_date':
@@ -260,16 +261,22 @@ final class VideoQuery implements QueryInterface
                 $sql = "`video`.`resolution_x`";
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order `rating`.`rating` $order, `rating`.`date`";
+                $sql   = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
+                $order = '';
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string) $query->user_id, 100);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
         }
 
-        return $sql;
+        if ($sql === '') {
+            return '';
+        }
+
+        return sprintf('%s %s,', $sql, $order);
     }
 }
