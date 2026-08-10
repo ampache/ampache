@@ -88,7 +88,7 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
         unset($_POST['access']);
         $_POST['username'] = $user->username;
 
-        $mandatory_fields = (array) $this->configContainer->get(ConfigurationKeyEnum::REGISTRATION_MANDATORY_FIELDS);
+        $mandatory_fields = $this->configContainer->getArray(ConfigurationKeyEnum::REGISTRATION_MANDATORY_FIELDS);
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
             AmpError::add('fullname', T_("Please fill in your full name (first name, last name)"));
         }

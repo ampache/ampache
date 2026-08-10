@@ -49,7 +49,7 @@ class AuthenticationManagerTest extends MockeryTestCase
 
     public function testLoginFailsIfAuthenticatorNotAvailable(): void
     {
-        $this->configContainer->shouldReceive('get')
+        $this->configContainer->shouldReceive('getArray')
             ->with('auth_methods')
             ->once()
             ->andReturn(['roedlbroem']);
@@ -70,7 +70,7 @@ class AuthenticationManagerTest extends MockeryTestCase
             ->once()
             ->andReturn(['success' => false]);
 
-        $this->configContainer->shouldReceive('get')
+        $this->configContainer->shouldReceive('getArray')
             ->with('auth_methods')
             ->once()
             ->andReturn([$this->authenticatorName]);
@@ -92,7 +92,7 @@ class AuthenticationManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($result);
 
-        $this->configContainer->shouldReceive('get')
+        $this->configContainer->shouldReceive('getArray')
             ->with('auth_methods')
             ->once()
             ->andReturn([$this->authenticatorName]);
@@ -117,7 +117,7 @@ class AuthenticationManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($result);
 
-        $this->configContainer->shouldReceive('get')
+        $this->configContainer->shouldReceive('getArray')
             ->with('auth_methods')
             ->once()
             ->andReturn([$this->authenticatorName]);
@@ -132,7 +132,7 @@ class AuthenticationManagerTest extends MockeryTestCase
     {
         $method = 'roedlbroem';
 
-        $this->configContainer->shouldReceive('get')
+        $this->configContainer->shouldReceive('getArray')
             ->with('auth_methods')
             ->once()
             ->andReturn([$method]);
@@ -145,7 +145,7 @@ class AuthenticationManagerTest extends MockeryTestCase
 
     public function testPostAuthDoesNothingIfMethodNotAllowed(): void
     {
-        $this->configContainer->shouldReceive('get')
+        $this->configContainer->shouldReceive('getArray')
             ->with('auth_methods')
             ->once()
             ->andReturn([$this->authenticatorName]);
@@ -160,7 +160,7 @@ class AuthenticationManagerTest extends MockeryTestCase
     {
         $result = ['some' => 'result'];
 
-        $this->configContainer->shouldReceive('get')
+        $this->configContainer->shouldReceive('getArray')
             ->with('auth_methods')
             ->once()
             ->andReturn([$this->authenticatorName]);

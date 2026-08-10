@@ -486,7 +486,7 @@ final readonly class Session implements SessionInterface
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
                 if (AmpConfig::get('use_auth')) {
                     // Build a list of enabled authentication types
-                    $types         = AmpConfig::get('auth_methods');
+                    $types         = AmpConfig::get_array('auth_methods');
                     $enabled_types = implode("', '", $types);
                     $sql .= sprintf(" AND `type` IN('%s')", $enabled_types);
                 }

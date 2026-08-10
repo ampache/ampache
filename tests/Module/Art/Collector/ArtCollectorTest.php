@@ -49,9 +49,11 @@ class ArtCollectorTest extends TestCase
         $art    = $this->createMock(Art::class);
         $module = $this->createMock(CollectorModuleInterface::class);
 
+        $this->configContainer->method('getArray')
+            ->with('art_order')
+            ->willReturn(['db']);
         $this->configContainer->method('get')
             ->willReturnMap([
-                ['art_order', 'db'],
                 ['art_search_limit', 5],
             ]);
 

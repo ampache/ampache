@@ -58,7 +58,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
     ): array {
         $result = [];
 
-        foreach ($this->configContainer->get('auth_methods') as $method) {
+        foreach ($this->configContainer->getArray('auth_methods') as $method) {
             $authenticator = $this->authenticatorList[$method] ?? null;
 
             if ($authenticator === null) {
@@ -116,7 +116,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
     {
         $result = [];
 
-        if (in_array($method, $this->configContainer->get('auth_methods'))) {
+        if (in_array($method, $this->configContainer->getArray('auth_methods'), true)) {
             $authenticator = $this->authenticatorList[$method] ?? null;
 
             if ($authenticator !== null) {

@@ -116,7 +116,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
             if (
                 (isset($_POST['username']))
-                || (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) && (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))
+                || (in_array('http', $this->configContainer->getArray(ConfigurationKeyEnum::AUTH_METHODS), true) && (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))
             ) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {

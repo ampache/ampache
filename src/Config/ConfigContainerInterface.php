@@ -37,6 +37,11 @@ interface ConfigContainerInterface
     public function get(string $configKey): mixed;
 
     /**
+     * @return list<string>
+     */
+    public function getArray(string $configKey): array;
+
+    /**
      * Reads a config value as the flag it is meant to be, so `'0'` is false rather than a true string
      */
     public function getBool(string $configKey, bool $default = false): bool;
