@@ -1001,10 +1001,12 @@ class Preference extends database_object
 
         /* Get Global Preferences */
         $results = [];
+        $types   = [];
         foreach (self::getPreferenceRepository()->getInitRows($user_id) as $row) {
             $value          = $row['system_value'] ?? $row['value'];
             $name           = $row['name'];
             $results[$name] = $value;
+            $types[$name]   = (string) ($row['type'] ?? 'string');
         }
 
         /* Set the Theme mojo */
@@ -1060,6 +1062,14 @@ class Preference extends database_object
             ) {
                 unset($results[$name]);
             }
+        }
+
+        foreach ($results as $name => $value) {
+            $results[$name] = match ($types[$name] ?? 'string') {
+                'boolean' => make_bool($value),
+                'integer' => (int) $value,
+                default => $value,
+            };
         }
 
         AmpConfig::set_by_array($results, true);
