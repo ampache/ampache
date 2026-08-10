@@ -389,8 +389,8 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
     }
 
     /**
-     * Reads the name and value of every preference resolved for a user, the server value winning for
-     * the system ones
+     * Reads the name, declared type and value of every preference resolved for a user, the server value
+     * winning for the system ones
      *
      * @return list<array<string, mixed>>
      */
@@ -400,7 +400,7 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
         $column = ($this->hasCategoryColumn()) ? 'category' : 'catagory';
         $result = $this->connection->query(
             sprintf(
-                "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`%s`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`%s` !='system'",
+                "SELECT `preference`.`name`, `preference`.`type`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`%s`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`%s` !='system'",
                 $column,
                 $column
             ),

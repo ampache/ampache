@@ -690,7 +690,7 @@ class Catalog_subsonic extends Catalog
                                     if (!$song_id) {
                                         debug_event('subsonic.catalog', 'Insert failed for ' . $data['path'], 1);
                                         /* HINT: filename (file path) */
-                                        AmpError::add('general', T_('Unable to insert song - %s'), $data['path']);
+                                        AmpError::add('general', sprintf(T_('Unable to insert song - %s'), $data['path']));
                                         continue;
                                     }
 

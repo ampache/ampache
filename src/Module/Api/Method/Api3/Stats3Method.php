@@ -100,7 +100,7 @@ final class Stats3Method implements MethodInterface
             $results = Userflag::get_latest('album');
         } else {
             if (!$limit) {
-                $limit = AmpConfig::get('popular_threshold');
+                $limit = (int) AmpConfig::get('popular_threshold', 10);
             }
             $results = $this->albumRepository->getRandom($user->id, $limit);
         }
