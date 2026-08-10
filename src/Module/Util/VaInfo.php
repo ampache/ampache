@@ -459,9 +459,9 @@ final class VaInfo implements VaInfoInterface
     public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array
     {
         $tagorderMap = [
-            'metadata_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
-            'metadata_order_video' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
-            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER),
+            'metadata_order' => self::getConfigContainer()->getArray(ConfigurationKeyEnum::METADATA_ORDER),
+            'metadata_order_video' => self::getConfigContainer()->getArray(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
+            'getid3_tag_order' => self::getConfigContainer()->getArray(ConfigurationKeyEnum::GETID3_TAG_ORDER),
         ];
 
         $order = [];
@@ -2098,9 +2098,9 @@ final class VaInfo implements VaInfoInterface
     private function get_metadata_order(): array
     {
         $tagorderMap = [
-            'metadata_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
-            'metadata_order_video' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
-            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER),
+            'metadata_order' => self::getConfigContainer()->getArray(ConfigurationKeyEnum::METADATA_ORDER),
+            'metadata_order_video' => self::getConfigContainer()->getArray(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
+            'getid3_tag_order' => self::getConfigContainer()->getArray(ConfigurationKeyEnum::GETID3_TAG_ORDER),
         ];
 
         // convert to lower case to be sure it matches plugin names in Ampache\Plugin\PluginEnum

@@ -31,6 +31,28 @@ use PHPUnit\Framework\TestCase;
 class AmpConfigTest extends TestCase
 {
     /**
+     * @return list<array{0: mixed, 1: list<string>}>
+     */
+    public static function arrayDataProvider(): array
+    {
+        return [
+            // the config file supplies a comma separated string
+            ['db,tags,folder', ['db', 'tags', 'folder']],
+            ['db, tags , folder', ['db', 'tags', 'folder']],
+            ['db', ['db']],
+            [['db', 'tags'], ['db', 'tags']],
+            // nothing named is an empty list, not a list holding nothing
+            ['', []],
+            [null, []],
+            [[], []],
+            ['db,,tags', ['db', 'tags']],
+            [',', []],
+            // a list with gaps still comes back as a list, so a foreach over it is safe
+            [[1 => 'tags', 4 => 'db'], ['tags', 'db']],
+        ];
+    }
+
+    /**
      * @return list<array{0: mixed, 1: bool}>
      */
     public static function boolDataProvider(): array
@@ -74,6 +96,19 @@ class AmpConfigTest extends TestCase
             [[], 7],
             [null, 7],
         ];
+    }
+
+    #[DataProvider('arrayDataProvider')]
+    public function testGetArray(mixed $stored, array $expected): void
+    {
+        AmpConfig::set('probe_array', $stored, true);
+
+        self::assertSame($expected, AmpConfig::get_array('probe_array'), var_export($stored, true));
+    }
+
+    public function testGetArrayReturnsAnEmptyListWhenUnset(): void
+    {
+        self::assertSame([], AmpConfig::get_array('probe_missing_array'));
     }
 
     #[DataProvider('boolDataProvider')]

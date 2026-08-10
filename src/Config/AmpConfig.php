@@ -72,6 +72,17 @@ class AmpConfig
     }
 
     /**
+     * get_array
+     *
+     * A config value read as the list it is meant to be.
+     * @return list<string>
+     */
+    public static function get_array(string $name): array
+    {
+        return self::to_array(self::get($name));
+    }
+
+    /**
      * get_bool
      *
      * A config value read as the flag it is meant to be.
@@ -177,6 +188,27 @@ class AmpConfig
         }
 
         $dic->get(ConfigContainerInterface::class)->updateConfig($array);
+    }
+
+    /**
+     * to_array
+     *
+     * @return list<string>
+     */
+    public static function to_array(mixed $value): array
+    {
+        if (!is_array($value)) {
+            $value = ($value === null || $value === '')
+                ? []
+                : explode(',', (string) $value);
+        }
+
+        return array_values(
+            array_filter(
+                array_map(static fn(mixed $item): string => trim((string) $item), $value),
+                static fn(string $item): bool => $item !== ''
+            )
+        );
     }
 
     /**

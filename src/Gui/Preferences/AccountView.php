@@ -140,9 +140,7 @@ final class AccountView extends AbstractView
      */
     public function showField(string $field): bool
     {
-        $fields = AmpConfig::get('registration_display_fields');
-
-        return is_array($fields) && in_array($field, $fields, true);
+        return in_array($field, AmpConfig::get_array('registration_display_fields'), true);
     }
 
     #[Override]
