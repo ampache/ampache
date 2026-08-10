@@ -168,7 +168,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Database 800047
     * New `mood` and `mood_map` tables, the same shape a genre has in `tag` and `tag_map`. OpenSubsonic asks for a list of moods on a Child and an AlbumID3 and Ampache had nowhere to keep one
     * New `show_mood` preference to show/hide the `Moods` link in the main sidebar
-  * A mood is read out of the file tags on a scan: id3v2 `TMOO`, and the `MOOD` comment of vorbis and APE. Several in the one frame are split on your `additional_genre_delimiters`, so `Melancholy;Dreamy` becomes two
+  * A mood is read out of the file tags on a scan: id3v2 `TMOO`, the `MOOD` comment of vorbis and APE, and the `ab:mood` tag AcousticBrainz taggers write. A file carrying both keeps the moods of both. Several in the one frame are split on your `additional_genre_delimiters`, so `Melancholy;Dreamy` becomes two
   * Album and artist moods are derived from the songs, never from a file of their own. Drop a mood from every song of an album and it leaves the album too
   * New browse page at `browse.php?action=mood`, a cloud whose buttons filter the songs, albums, artists or videos carrying that mood
   * The sidebar link appears once something has been scanned; a library with no moods is not offered a link to an empty page
