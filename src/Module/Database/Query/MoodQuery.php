@@ -59,6 +59,7 @@ final class MoodQuery implements QueryInterface
         'name',
         'rand',
         'song',
+        'title',
         'video',
     ];
 

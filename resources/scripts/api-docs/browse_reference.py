@@ -519,6 +519,7 @@ SORTS: dict[str, str] = {
     "rand": "Random order, applied per request. Paging through it repeats and skips {items}, so ask for everything in one call.",
     "random": "Whether the smartlist returns its rows randomly.",
     "rating": "Your own rating, then when you set it. {Items} you have not rated group together.",
+    "release_date": "Video release date.",
     "release_status": "Album release status, e.g. `official` or `bootleg`.",
     "release_type": "Album release type, e.g. `album`, `ep` or `single`.",
     "rename_pattern": "The catalog's rename pattern.",
@@ -595,6 +596,14 @@ SORT_OVERRIDES: dict[str, dict[str, str]] = {
         "type": "Alias of `object_type`.",
         "object_type": "The type of object the row points at, so folders group apart from the files in them.",
     },
+    "follower": {
+        "username": "Username of the account doing the following.",
+        "last_seen": "When the account doing the following was last seen.",
+        "create_date": "When the account doing the following was created.",
+        "user": "The id of the account being followed.",
+        "follow_user": "The id of the account doing the following.",
+        "follow_date": "When the follow was made.",
+    },
     "genre": {
         "name": "Genre name.",
         "id": "The genre id, which is the order they were first seen in.",
@@ -603,6 +612,7 @@ SORT_OVERRIDES: dict[str, dict[str, str]] = {
         "song": "How many songs carry this genre.",
         "video": "How many videos carry this genre.",
         "tag": "Alias of `id`.",
+        "genre": "Alias of `id`.",
     },
     "label": {
         "name": "Label name.",

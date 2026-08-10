@@ -36,6 +36,7 @@ final class BroadcastQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
+        'id',
         'listeners',
         'name',
         'started',
