@@ -118,8 +118,12 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
         );
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $ip = ($row['ip'] !== null)
+                ? @inet_ntop($row['ip'])
+                : false;
+
             yield [
-                'ip' => (string) inet_ntop($row['ip']),
+                'ip' => ($ip !== false) ? $ip : '',
                 'date' => new DateTimeImmutable(sprintf('@%d', $row['date'])),
                 'agent' => $row['agent'],
                 'action' => $row['action'],
@@ -137,8 +141,10 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
             [$user->getId()]
         );
 
-        if ($result !== false) {
-            return (string) inet_ntop($result);
+        if ($result !== false && $result !== null) {
+            $ip = @inet_ntop($result);
+
+            return ($ip !== false) ? $ip : null;
         }
 
         return null;
