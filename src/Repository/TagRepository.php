@@ -115,7 +115,11 @@ final readonly class TagRepository implements TagRepositoryInterface
 
     public function create(string $name): int
     {
-        $this->connection->query('REPLACE INTO `tag` SET `name` = ?', [$name]);
+        // the name is unique, so a concurrent insert of it is kept rather than replaced; replacing renumbers the tag and strands its maps
+        $result = $this->connection->query('INSERT IGNORE INTO `tag` (`name`) VALUES (?)', [$name]);
+        if ($result->rowCount() === 0) {
+            return (int) $this->connection->fetchOne('SELECT `id` FROM `tag` WHERE `name` = ?', [$name]);
+        }
 
         // the id has to be taken before anything else runs a statement, or the counter's queries lose it
         $tagId = $this->connection->getLastInsertedId();
