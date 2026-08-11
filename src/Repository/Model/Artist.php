@@ -34,6 +34,7 @@ use Ampache\Module\Label\LabelListUpdaterInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\System\DbLock;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Plugin\AmpacheMusicBrainz;
@@ -210,23 +211,29 @@ class Artist extends database_object implements
         }
 
         $artistRepository = self::getArtistRepository();
-        if ($mbid !== null && $mbid !== '' && $mbid !== '0') {
-            // check for artists by mbid (there should only ever be one sent here); the name match below never
-            // supplies the id, it only back-fills the mbid onto rows that were stored without one
-            $artist_id = $artistRepository->findIdByMbid($mbid) ?? 0;
+        $lookup           = static function () use ($artistRepository, $name, $full_name, $mbid, $readonly): int {
+            if ($mbid !== null && $mbid !== '' && $mbid !== '0') {
+                // check for artists by mbid (there should only ever be one sent here); the name match below never
+                // supplies the id, it only back-fills the mbid onto rows that were stored without one
+                $artist_id = $artistRepository->findIdByMbid($mbid) ?? 0;
 
-            // still missing? Match on the name and update the mbid
-            if (!$readonly) {
-                foreach ($artistRepository->findIdsByNameWithoutMbid($name, $full_name) as $matched_id) {
-                    $artistRepository->setField($matched_id, ArtistFieldEnum::MBID, $mbid);
+                // still missing? Match on the name and update the mbid
+                if (!$readonly) {
+                    foreach ($artistRepository->findIdsByNameWithoutMbid($name, $full_name) as $matched_id) {
+                        $artistRepository->setField($matched_id, ArtistFieldEnum::MBID, $mbid);
+                    }
                 }
+            } else {
+                // look for artists with no mbid (if they exist) and then match on mbid artists last
+                $artist_id = $artistRepository->findIdByName($name, $full_name, false)
+                    ?? $artistRepository->findIdByName($name, $full_name, true)
+                    ?? 0;
             }
-        } else {
-            // look for artists with no mbid (if they exist) and then match on mbid artists last
-            $artist_id = $artistRepository->findIdByName($name, $full_name, false)
-                ?? $artistRepository->findIdByName($name, $full_name, true)
-                ?? 0;
-        }
+
+            return $artist_id;
+        };
+
+        $artist_id = $lookup();
 
         // cache and return the result
         if ($artist_id > 0) {
@@ -237,6 +244,20 @@ class Artist extends database_object implements
 
         if ($readonly) {
             return null;
+        }
+
+        // lock, then look again: a parallel request may just have created it
+        $lock = 'artist_check|' . ($prefix ?? '') . '|' . $name;
+        if (!DbLock::acquire($lock)) {
+            debug_event(self::class, 'check artist: could not lock {' . $name . '}, inserting unguarded', 3);
+        } else {
+            $artist_id = $lookup();
+            if ($artist_id > 0) {
+                DbLock::release($lock);
+                self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''] = $artist_id;
+
+                return $artist_id;
+            }
         }
 
         // prefer the name of the artist as provided by MusicBrainz
@@ -259,6 +280,7 @@ class Artist extends database_object implements
             : $mbid;
 
         $artist_id = $artistRepository->create($name, $prefix, $mbid, $user);
+        DbLock::release($lock);
         if ($artist_id === null) {
             return null;
         }

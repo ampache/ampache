@@ -35,6 +35,7 @@ use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\DbLock;
 use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -272,7 +273,22 @@ class Album extends database_object implements
             return 0;
         }
 
+        // lock, then look again: a parallel request may just have created it
+        $lock = 'album_check|' . ($prefix ?? '') . '|' . $name . '|' . $year . '|' . ($album_artist ?? '');
+        if (!DbLock::acquire($lock)) {
+            debug_event(self::class, 'check album: could not lock {' . $name . '}, inserting unguarded', 3);
+        } else {
+            $album_id = self::getAlbumRepository()->findByProperties($properties);
+            if ($album_id > 0) {
+                DbLock::release($lock);
+                self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
+
+                return $album_id;
+            }
+        }
+
         $album_id = self::getAlbumRepository()->create($properties, time());
+        DbLock::release($lock);
         if (!$album_id) {
             return 0;
         }
