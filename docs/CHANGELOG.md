@@ -2,10 +2,6 @@
 
 ## Ampache 8.0.0
 
-**NOTE** Work in progress
-
-**NOTE** AI Contribution standards are documented in `AGENTS.md` (repository structures, branch model, architecture and coding rules); read and follow it before submitting changes that are AI-assisted ones
-
 You can downgrade to Ampache7 if you try this out and have issues, using the cli (`bin/cli admin:updateDatabase -e`).
 
 **NOTE** The `/rest` rewrite rules changed a lot in this release. Use `php bin/installer htaccess -e` to update your htaccess files (or the Write buttons on the install/update page). The *rest/.htaccess configured?* check reports a file left over from an older release, so it will tell you when this is needed.
