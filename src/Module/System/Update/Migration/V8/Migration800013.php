@@ -27,13 +27,29 @@ namespace Ampache\Module\System\Update\Migration\V8;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Generator;
 
 /**
  * Add `object_count_summary` to store consolidated play history
  */
 final class Migration800013 extends AbstractMigration
 {
+    private const string SUMMARY_TABLE = "CREATE TABLE IF NOT EXISTS `object_count_summary` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') NOT NULL, `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0, `user` int(11) NOT NULL, `count_type` enum('download','stream','skip') NOT NULL, `count` int(11) UNSIGNED NOT NULL DEFAULT 0, `date_from` int(11) UNSIGNED NOT NULL DEFAULT 0, `date_to` int(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`), UNIQUE KEY `object_count_summary_UNIQUE_IDX` (`object_type`,`object_id`,`user`,`count_type`), KEY `object_count_summary_type_IDX` (`object_type`,`count_type`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s;";
+
     protected array $changelog = ['Add `object_count_summary` table to allow consolidating old play history'];
+
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 800013) {
+            yield 'object_count_summary' => sprintf(self::SUMMARY_TABLE, $engine, $charset, $collation);
+        }
+    }
 
     public function migrate(): void
     {
@@ -41,13 +57,6 @@ final class Migration800013 extends AbstractMigration
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $this->updateDatabase(
-            sprintf(
-                "CREATE TABLE IF NOT EXISTS `object_count_summary` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') NOT NULL, `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0, `user` int(11) NOT NULL, `count_type` enum('download','stream','skip') NOT NULL, `count` int(11) UNSIGNED NOT NULL DEFAULT 0, `date_from` int(11) UNSIGNED NOT NULL DEFAULT 0, `date_to` int(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`), UNIQUE KEY `object_count_summary_UNIQUE_IDX` (`object_type`,`object_id`,`user`,`count_type`), KEY `object_count_summary_type_IDX` (`object_type`,`count_type`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s;",
-                $engine,
-                $charset,
-                $collation
-            )
-        );
+        $this->updateDatabase(sprintf(self::SUMMARY_TABLE, $engine, $charset, $collation));
     }
 }

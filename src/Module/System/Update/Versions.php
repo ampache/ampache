@@ -743,6 +743,22 @@ final class Versions
     ];
 
     /**
+     * Yields every migration, which is what the missing-table check walks.
+     *
+     * A migration declares its tables behind a `$build > <its own version>` guard, so it only asks for a table
+     * once the database claims to have passed it. That guard is the filter; handing this the pending list
+     * instead would mean a migration is only ever consulted while its own guard is still false.
+     *
+     * @return Generator<int, class-string<MigrationInterface>>
+     */
+    public static function getAllMigrations(): Generator
+    {
+        foreach (self::$versions as $version => $migrationClass) {
+            yield $version => $migrationClass;
+        }
+    }
+
+    /**
      * Yields all migration having a more recent version than the given one
      *
      * @return Generator<int, class-string<MigrationInterface>>
