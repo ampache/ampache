@@ -1664,7 +1664,11 @@ class Subsonic_Xml_Data
      */
     private function _addMessage(SimpleXMLElement $xml, PrivateMsg $message): void
     {
-        $user      = new User($message->getSenderUserId());
+        $user = new User($message->getSenderUserId());
+        if ($user->isNew()) {
+            return;
+        }
+
         $xbookmark = $this->_addChildToResultXml($xml, 'chatMessage');
         if ($user->fullname_public) {
             $xbookmark->addAttribute('username', (string) $user->fullname);
