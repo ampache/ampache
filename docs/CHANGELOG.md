@@ -173,10 +173,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Database 800048
     * New `hide_moods` preference to hide the `Moods` column in browse table rows; it is on by default, so the column is opt-in
   * A mood is read out of the file tags on a scan: id3v2 `TMOO`, the `MOOD` comment of vorbis and APE, and the `ab:mood` tag AcousticBrainz taggers write. A file carrying both keeps the moods of both. Several in the one frame are split on your `additional_genre_delimiters`, so `Melancholy;Dreamy` becomes two
+  * A video carries its own moods, read from its file on a scan and editable in its dialog, the same as a song
   * Album and artist moods are derived from the songs, never from a file of their own. Drop a mood from every song of an album and it leaves the album too
   * New browse page at `browse.php?action=mood`, a cloud whose buttons filter the songs, albums, artists or videos carrying that mood
   * The sidebar link appears once something has been scanned; a library with no moods is not offered a link to an empty page
-  * The song page lists them, and the song, album and artist edit dialogs carry a `Moods` field next to `Genres`
+  * The song page lists them, and the song, album, artist and video edit dialogs carry a `Moods` field next to `Genres`
   * A `Moods` column on the song, album, album disk, artist and video browses, after `Genres`, whose values filter the browse the way a genre does
   * New `Mood` search rule on songs, albums and artists
   * Moods you set by hand are written back into the file tags when `write_tags` is on, so the file and the database converge instead of fighting. Albums and artists have no file, so theirs stay derived
@@ -211,6 +212,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Removing one by hand still removes it whoever set it, so a manager is not locked out by a user's choice. Only the tag read is restricted
   * User set genres are marked with a `*` carrying a `User set` tooltip, on the pages that render genres as links. The plain text form the edit fields, daap and upnp use is unchanged
   * Moods work the same way, and the two share the marker
+* The artist and album fields of an edit dialog become a search once the list is long
+  * Both were a select holding every artist or album you could see, built and sent in full every time a dialog opened; past 1000 of them the field is a search box that lists what matches as you type, and under that it is the same select as before
+  * Picking a suggestion files the item under it; typing a name that is not in the list creates it, which is what the `Add New` option always did
+  * Both lists now honour the catalog filter, so a user restricted to a filter group is no longer handed every artist and album in the database
+  * `SELECT_LIST_LIMIT` in `src/Config/functions.php` decides where the search takes over
 * Podcast feed text is stored as plain text
   * Feeds routinely put markup in their titles and descriptions, and some escape that markup a second time on the way into the xml. Both used to be stored as-is, so the podcast and episode pages showed `&lt;p&gt;` and `<br />` as words
   * Paragraphs and lists are kept as line breaks, the remaining tags are dropped and the entities are decoded; the podcast and episode pages render those breaks
@@ -361,6 +367,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The websocket server logged a dozen PHP 8.5 deprecation errors on every connection, drowning the broadcast log; `cboden/ratchet` moves to the `0.4.x` branch, which supports PHP 8.5, and `ratchet/rfc6455` to v0.4.1
 * A database connection dropped by the server (idle timeout, restart, killed thread) was kept and reused, so every following query failed with `MySQL server has gone away`. Long running processes suffered worst: the websocket server could not register a broadcast or authorise a listener once its connection had timed out
 * Turning on `album_art_store_disk` without setting `local_metadata_dir` hid every cover; the art was still written to the database but only ever read back from disk
+  * Thumbnails took the same route and were rebuilt from the original on every request instead, so a browse page resized every cover it showed, every time it was drawn
 * Art stored for something that is not a library item, such as a wanted album, returned an empty image
 * Uploading a file with an album name always failed after the file had been copied into the catalog, leaving it on disk but absent from the library
 * Batch download was refused for every object type unless `allow_zip_types` named them; leaving it unset now allows all supported types, as `ampache.cfg.php.dist` documents
@@ -395,6 +402,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * One unreadable file no longer stops a catalog add, verify or folder scan. Only a failure raised as an exception was skipped, so a file whose tags produced a type error ended the whole run instead of that file
 * A user who kept a preference row left behind by a much older version was never given the preferences added since. The repair pass finds users by how many preferences they hold, and the stale rows made up the difference; they are now cleared before the count is taken
 * Verifying a catalog larger than 10000 items with `catalog_verify_by_time` enabled checked the first 10000 over and over once everything was already up to date, leaving the rest of the catalog unverified. Each pass now takes the next page
+* Moving an album's files to another catalog left a second copy of every disk behind in the old one, which the disk browse listed alongside the real one. Garbage collection matched a disk on its album and disk number but not its catalog, so the leftover never qualified
+* Deleting an entry from the Recently Skipped list removed it from the history but left the skip counted, so the count kept climbing away from the list it was drawn from. Deleting a download still leaves every counter alone, as before
+* User avatars were served by the generic art handler on an install in a subdirectory, because the rewrite that routes them tested for `/image.php` at the web root. The `.htaccess` files are rewritten for your web path on write, but only the rules, not their conditions
 * Unexpected errors from an API method were logged as a bare message with no file or line, leaving nothing to locate the cause by
 * Pages that stopped part way through and returned a blank or half-written page, because an uncaught error is logged and swallowed rather than shown
   * The embedded web player (`web_player_embedded.php`) and the video page, when opened without a `playlist_id`; the player gets an empty playlist instead
