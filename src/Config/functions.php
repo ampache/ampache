@@ -29,10 +29,12 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 use Gettext\Loader\MoLoader;
@@ -613,9 +615,12 @@ function return_referer(): string
 }
 
 /**
- * show_album_select
- * This displays a select of every album that we've got in Ampache (which can be hella long).
- * It's used by the Edit page and takes a $name and an $album_id
+ * The most options an edit dialog will put in a parent select before it offers a name field instead.
+ */
+const SELECT_LIST_LIMIT = 1000;
+
+/**
+ * A select of the albums this user can see, or a name field when there are more of them than SELECT_LIST_LIMIT.
  */
 function show_album_select(string $name, int $album_id = 0, bool $allow_add = false, int $song_id = 0, bool $allow_none = false, ?int $user_id = null): void
 {
@@ -628,15 +633,43 @@ function show_album_select(string $name, int $album_id = 0, bool $allow_add = fa
         $key = "album_select_c" . ++$album_id_cnt;
     }
 
-    $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix` FROM `album`";
+    $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix` FROM `album` ";
     $params = [];
+    $where  = [];
     if ($user_id !== null) {
-        $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
+        $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` ";
+        $where[]  = "`album`.`album_artist` IS NOT NULL AND `artist`.`user` = ?";
         $params[] = $user_id;
     }
-    $sql .= "ORDER BY `album`.`name`";
+
+    // the list is a catalog browse like any other, so it shows what this user is allowed to see
+    $user = Core::get_global('user');
+    if (AmpConfig::get('catalog_filter') && $user instanceof User) {
+        $where[] = Catalog::get_user_filter('album', $user->getId());
+    }
+
+    if ($where !== []) {
+        $sql .= 'WHERE ' . implode(' AND ', $where) . ' ';
+    }
+
+    // `name` is indexed and the prefix is put back in php, so the sort is read from the index instead of built in a temp table
+    $sql .= 'ORDER BY `album`.`name` LIMIT ' . (SELECT_LIST_LIMIT + 1);
     $db_results = Dba::read($sql, $params);
-    $count      = Dba::num_rows($db_results);
+    $rows       = [];
+    while ($row = Dba::fetch_assoc($db_results)) {
+        $rows[] = $row;
+    }
+
+    $count = count($rows);
+
+    // past the limit the dropdown is unusable and costs more to build than the page it sits in, so it offers what you have and a name field
+    if ($count > SELECT_LIST_LIMIT) {
+        $rows = ($album_id > 0)
+            ? [['id' => $album_id, 'name' => (new Album($album_id))->get_fullname(), 'prefix' => '']]
+            : [];
+    }
+
+    $count = count($rows);
 
     // Added ID field so we can easily observe this element
     echo "<select name=\"$name\" id=\"$key\">\n";
@@ -645,7 +678,7 @@ function show_album_select(string $name, int $album_id = 0, bool $allow_add = fa
         echo "\t<option value=\"-2\"></option>\n";
     }
 
-    while ($row = Dba::fetch_assoc($db_results)) {
+    foreach ($rows as $row) {
         $selected   = '';
         $album_name = trim($row['prefix'] . " " . $row['name']);
         if ($row['id'] == $album_id) {
@@ -668,9 +701,7 @@ function show_album_select(string $name, int $album_id = 0, bool $allow_add = fa
 }
 
 /**
- * show_artist_select
- * This is the same as show_album_select except it's *gasp* for artists! How
- * inventive!
+ * A select of the artists this user can see, or a name field when there are more of them than SELECT_LIST_LIMIT.
  */
 function show_artist_select(string $name, int $artist_id = 0, bool $allow_add = false, int $song_id = 0, bool $allow_none = false, ?int $user_id = null): void
 {
@@ -682,15 +713,42 @@ function show_artist_select(string $name, int $artist_id = 0, bool $allow_add = 
         $key = $name . "_select_c" . ++$artist_id_cnt;
     }
 
-    $sql    = "SELECT `id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `name` FROM `artist` ";
+    $sql    = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix` FROM `artist` ";
     $params = [];
+    $where  = [];
     if ($user_id !== null) {
-        $sql .= "WHERE `user` = ? ";
+        $where[]  = '`user` = ?';
         $params[] = $user_id;
     }
-    $sql .= "ORDER BY `name`";
+
+    // the list is a catalog browse like any other, so it shows what this user is allowed to see
+    $user = Core::get_global('user');
+    if (AmpConfig::get('catalog_filter') && $user instanceof User) {
+        $where[] = Catalog::get_user_filter('artist', $user->getId());
+    }
+
+    if ($where !== []) {
+        $sql .= 'WHERE ' . implode(' AND ', $where) . ' ';
+    }
+
+    // `name` is indexed and the prefix is put back in php, so the sort is read from the index instead of built in a temp table
+    $sql .= 'ORDER BY `artist`.`name` LIMIT ' . (SELECT_LIST_LIMIT + 1);
     $db_results = Dba::read($sql, $params);
-    $count      = Dba::num_rows($db_results);
+    $rows       = [];
+    while ($row = Dba::fetch_assoc($db_results)) {
+        $rows[] = $row;
+    }
+
+    $count = count($rows);
+
+    // past the limit the dropdown is unusable and costs more to build than the page it sits in, so it offers what you have and a name field
+    if ($count > SELECT_LIST_LIMIT) {
+        $rows = ($artist_id > 0)
+            ? [['id' => $artist_id, 'name' => Artist::get_fullname_by_id($artist_id), 'prefix' => '']]
+            : [];
+    }
+
+    $count = count($rows);
 
     echo "<select name=\"$name\" id=\"$key\">\n";
 
@@ -698,12 +756,12 @@ function show_artist_select(string $name, int $artist_id = 0, bool $allow_add = 
         echo "\t<option value=\"-2\"></option>\n";
     }
 
-    while ($row = Dba::fetch_assoc($db_results)) {
+    foreach ($rows as $row) {
         $selected = ($row['id'] == $artist_id)
             ? "selected=\"selected\""
             : '';
 
-        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out(trim($row['prefix'] . ' ' . $row['name'])) . "</option>\n";
     }
 
     if ($allow_add) {
