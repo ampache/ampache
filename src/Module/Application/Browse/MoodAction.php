@@ -95,7 +95,7 @@ final readonly class MoodAction implements ApplicationActionInterface
         $showMood = $this->requestParser->getFromRequest('show_mood');
         echo (new MoodCloudView(
             new MoodFormView(
-                AmpConfig::get_web_path(),
+                AmpConfig::get_web_path('/client'),
                 $browse_type,
                 AmpConfig::get_bool('album_group'),
                 AmpConfig::get_bool('allow_video') && $this->videoRepository->getItemCount() > 0
