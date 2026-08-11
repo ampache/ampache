@@ -32,14 +32,17 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\Mood;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\MoodRepositoryInterface;
 
 final readonly class TagAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
         private LabelRepositoryInterface $labelRepository,
+        private MoodRepositoryInterface $moodRepository,
         private PrivilegeCheckerInterface $privilegeChecker,
     ) {}
 
@@ -67,6 +70,12 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
                     ? Label::get_display($this->labelRepository->getAll())
                     : '';
                 $results['labels'] = $labels;
+                break;
+            case 'get_moods':
+                $moods = (in_array($type, ['album_disk_row', 'album_row', 'artist_row', 'podcast_row', 'podcast_episode_row', 'song_row', 'video_row'], true))
+                    ? Mood::get_display($this->moodRepository->getMoods(null, 0, 'name'))
+                    : '';
+                $results['moods'] = $moods;
                 break;
             case 'delete':
                 if (!$this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {

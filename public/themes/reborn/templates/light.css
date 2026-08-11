@@ -506,11 +506,13 @@ span.fatalerror {
     color: #c60;
 }
 
-.box-content #tag_filter .tag_button {
+.box-content #tag_filter .tag_button,
+.box-content #mood_filter .tag_button {
     color: #fff;
 }
 
-.box-content #tag_filter .tag_button span:hover {
+.box-content #tag_filter .tag_button span:hover,
+.box-content #mood_filter .tag_button span:hover {
     background-color: #c85a00;
     background-image: linear-gradient(to top, #1473af, #027ecc);
 }

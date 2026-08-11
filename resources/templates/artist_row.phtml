@@ -76,6 +76,9 @@ $itemId  = $libitem->getId(); ?>
 if (!$this->isHideGenres()) { ?>
 <td class="<?php echo $this->e($this->getClassTags()); ?>"><?php echo $this->raw($libitem->get_f_tags()); ?></td>
 <?php }
+if (!$this->isHideMoods()) { ?>
+<td class="<?php echo $this->e($this->getClassMoods()); ?>"><?php echo $this->raw($libitem->get_f_moods()); ?></td>
+<?php }
 if ($this->isShowRatings()) { ?>
         <td class="cel_ratings">
             <div class="rating">

@@ -42,9 +42,11 @@ final class VideoRowView extends AbstractView
         private readonly string $classCover,
         private readonly string $classCounter,
         private readonly string $classTags,
+        private readonly string $classMoods,
         private readonly int $browseId,
         private readonly bool $gridView,
         private readonly bool $hideGenres,
+        private readonly bool $hideMoods,
         private readonly bool $showRatings,
         private readonly bool $showPlayedTimes,
         private readonly bool $directplayEnabled,
@@ -111,6 +113,11 @@ final class VideoRowView extends AbstractView
         return $this->classCover;
     }
 
+    public function getClassMoods(): string
+    {
+        return $this->classMoods;
+    }
+
     public function getClassTags(): string
     {
         return $this->classTags;
@@ -134,6 +141,11 @@ final class VideoRowView extends AbstractView
     public function isHideGenres(): bool
     {
         return $this->hideGenres;
+    }
+
+    public function isHideMoods(): bool
+    {
+        return $this->hideMoods;
     }
 
     public function isShowPlayedTimes(): bool

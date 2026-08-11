@@ -105,6 +105,10 @@ final class ArtistListRenderer extends AbstractBrowseListRenderer
             $columns[] = ['class' => $this->getTagsClass() . ' optional', 'label' => T_('Genres'), 'sort' => null, 'type' => false];
         }
 
+        if (!$this->hideMoods()) {
+            $columns[] = ['class' => $this->getMoodsClass() . ' optional', 'label' => T_('Moods'), 'sort' => null, 'type' => false];
+        }
+
         if ($this->showRatings()) {
             $columns[] = ['class' => 'cel_ratings optional', 'label' => T_('Rating'), 'sort' => 'rating', 'type' => true];
         }
@@ -124,6 +128,11 @@ final class ArtistListRenderer extends AbstractBrowseListRenderer
         return $this->getCellClass('cel_cover', 'grid_cover');
     }
 
+    public function getMoodsClass(): string
+    {
+        return $this->getCellClass('cel_moods', 'grid_moods');
+    }
+
     public function getTagsClass(): string
     {
         return $this->getCellClass('cel_tags', 'grid_tags');
@@ -137,6 +146,11 @@ final class ArtistListRenderer extends AbstractBrowseListRenderer
     public function hideGenres(): bool
     {
         return (bool) $this->configContainer->get('hide_genres');
+    }
+
+    public function hideMoods(): bool
+    {
+        return (bool) $this->configContainer->get('hide_moods');
     }
 
     public function renderRow(Artist $artist): string
@@ -158,9 +172,11 @@ final class ArtistListRenderer extends AbstractBrowseListRenderer
             $this->getTimeClass(),
             $this->getCounterClass(),
             $this->getTagsClass(),
+            $this->getMoodsClass(),
             $this->getBrowse()->getId(),
             $this->getBrowse()->is_grid_view(),
             $this->hideGenres(),
+            $this->hideMoods(),
             $this->showRatings(),
             $this->showPlayedTimes(),
             (bool) $this->configContainer->get('directplay') && $mayAdd,

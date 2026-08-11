@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Browse\BrowseContentView;
 use Ampache\Gui\Mood\MoodCloudView;
+use Ampache\Gui\Mood\MoodFormView;
 use Ampache\Gui\Mood\MoodOrderView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -38,6 +39,7 @@ use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\MoodRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -54,6 +56,7 @@ final readonly class MoodAction implements ApplicationActionInterface
         private BrowseFactoryInterface $browseFactory,
         private UiInterface $ui,
         private MoodRepositoryInterface $moodRepository,
+        private VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -91,6 +94,12 @@ final readonly class MoodAction implements ApplicationActionInterface
 
         $showMood = $this->requestParser->getFromRequest('show_mood');
         echo (new MoodCloudView(
+            new MoodFormView(
+                AmpConfig::get_web_path(),
+                $browse_type,
+                AmpConfig::get_bool('album_group'),
+                AmpConfig::get_bool('allow_video') && $this->videoRepository->getItemCount() > 0
+            ),
             new MoodOrderView(AmpConfig::get_web_path(), $browse_type, $countOrder),
             $browse->getId(),
             $moods,

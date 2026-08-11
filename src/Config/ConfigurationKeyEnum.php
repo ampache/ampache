@@ -124,6 +124,7 @@ final class ConfigurationKeyEnum
     public const string GETID3_DETECT_ID3V2_ENCODING          = 'getid3_detect_id3v2_encoding';
     public const string GETID3_TAG_ORDER                      = 'getid3_tag_order';
     public const string HIDE_GENRES                           = 'hide_genres';
+    public const string HIDE_MOODS                            = 'hide_moods';
     public const string HIDE_SINGLE_ARTIST                    = 'hide_single_artist';
     public const string HOME_MOMENT_ALBUMS                    = 'home_moment_albums';
     public const string HOME_MOMENT_VIDEOS                    = 'home_moment_videos';

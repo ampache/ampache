@@ -262,10 +262,17 @@ class Waveform
 
                                 fclose($filepointer);
                                 fclose($tfp);
+                                if (is_resource($transcoder['stderr'] ?? null)) {
+                                    fclose($transcoder['stderr']);
+                                }
 
-                                Stream::kill_process($transcoder);
+                                // proc_close returns ffmpeg's exit code; a
+                                // non-zero one means a truncated/unreliable wav
+                                $exit = is_resource($transcoder['process'] ?? null)
+                                    ? proc_close($transcoder['process'])
+                                    : 0;
 
-                                $waveform = $this->create_waveform($tmpfile);
+                                $waveform = ($exit === 0) ? $this->create_waveform($tmpfile) : null;
 
                                 if (unlink($tmpfile) === false) {
                                     throw new RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked');

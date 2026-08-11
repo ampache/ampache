@@ -96,6 +96,8 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function getLicenseLink(): string;
 
+    public function getMoods(): string;
+
     public function getNumberPlayed(): int;
 
     public function getNumberSkipped(): int;

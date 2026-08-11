@@ -100,6 +100,10 @@ final class AlbumListRenderer extends AbstractBrowseListRenderer
             $columns[] = ['class' => $this->getTagsClass() . ' optional', 'label' => T_('Genres'), 'sort' => null, 'key' => 'tags'];
         }
 
+        if (!$this->hideMoods()) {
+            $columns[] = ['class' => $this->getMoodsClass() . ' optional', 'label' => T_('Moods'), 'sort' => null, 'key' => 'moods'];
+        }
+
         if ($this->showRatings()) {
             $columns[] = ['class' => 'cel_ratings optional', 'label' => T_('Rating'), 'sort' => 'rating', 'key' => 'rating'];
         }
@@ -127,6 +131,11 @@ final class AlbumListRenderer extends AbstractBrowseListRenderer
         return $this->getContext()->groupRelease;
     }
 
+    public function getMoodsClass(): string
+    {
+        return $this->getCellClass('cel_moods', 'grid_moods');
+    }
+
     public function getObjectType(): string
     {
         return ($this->isAlbumDisk()) ? 'album_disk' : 'album';
@@ -150,6 +159,11 @@ final class AlbumListRenderer extends AbstractBrowseListRenderer
         return (bool) $this->configContainer->get('hide_genres');
     }
 
+    public function hideMoods(): bool
+    {
+        return (bool) $this->configContainer->get('hide_moods');
+    }
+
     public function isAlbumDisk(): bool
     {
         return $this->getBrowse()->get_type() === 'album_disk';
@@ -171,12 +185,14 @@ final class AlbumListRenderer extends AbstractBrowseListRenderer
                 $album,
                 $this->showRatings(),
                 $this->hideGenres(),
+                $this->hideMoods(),
                 $this->showPlayedTimes(),
                 $mayAdd,
                 $this->getCoverClass(),
                 $this->getAlbumClass(),
                 $this->getArtistClass(),
                 $this->getTagsClass(),
+                $this->getMoodsClass(),
                 $this->getCounterClass()
             )->render();
         }
@@ -187,12 +203,14 @@ final class AlbumListRenderer extends AbstractBrowseListRenderer
             $album,
             $this->showRatings(),
             $this->hideGenres(),
+            $this->hideMoods(),
             $this->showPlayedTimes(),
             $mayAdd,
             $this->getCoverClass(),
             $this->getAlbumClass(),
             $this->getArtistClass(),
             $this->getTagsClass(),
+            $this->getMoodsClass(),
             $this->getCounterClass()
         )->render();
     }

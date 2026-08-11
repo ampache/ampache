@@ -70,6 +70,9 @@ $albumId = $album->getId(); ?>
 if (!$this->isHideGenre()) { ?>
     <td class="<?php echo $this->e($this->getClassTags()); ?> optional"><?php echo $this->raw($album->getGenre()); ?></td>
 <?php }
+if (!$this->isHideMood()) { ?>
+    <td class="<?php echo $this->e($this->getClassMoods()); ?> optional"><?php echo $this->raw($album->getMoods()); ?></td>
+<?php }
 if ($this->isUsingRatings()) { ?>
     <td class="cel_ratings">
         <div class="rating">

@@ -282,8 +282,11 @@ $labels = $this->getLabels(); ?>
             }
             var current = jplaylist.current,
                 playlist = jplaylist.playlist;
-            var pos = $(".jp-playlist-current").position().top + $(".jp-playlist").scrollTop();
-            $(".jp-playlist").scrollTop(pos);
+            var currentItemPosition = $(".jp-playlist-current").position();
+            if (currentItemPosition) {
+                var pos = currentItemPosition.top + $(".jp-playlist").scrollTop();
+                $(".jp-playlist").scrollTop(pos);
+            }
             <?php if ($this->showPauseTabs()) { ?>
             localStorage.setItem('ampache-current-webplayer', jpuqid);
             <?php } ?>
