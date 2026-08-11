@@ -135,7 +135,6 @@ final class ArtistQuery implements QueryInterface
             case 'no_tag':
                 $filter_sql = " (`artist`.`id` NOT IN (SELECT `object_id` FROM `tag_map` WHERE `object_type`='artist')) AND ";
                 break;
-            case 'genre':
             case 'mood':
                 $query->set_join('LEFT', '`mood_map`', '`mood_map`.`object_id`', '`artist`.`id`', 100);
                 $filter_sql = " `mood_map`.`object_type`='artist' AND (";
@@ -146,6 +145,7 @@ final class ArtistQuery implements QueryInterface
 
                 $filter_sql = rtrim($filter_sql, 'AND ') . ") AND ";
                 break;
+            case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
                 $filter_sql = " `tag_map`.`object_type`='artist' AND (";
