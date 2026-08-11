@@ -1453,7 +1453,7 @@ class Catalog_local extends Catalog
                 true
             );
             debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . sprintf(' on chunk %d/%d', $count, $chunks), 5);
-            $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), $chunk_size, $verify_by_time, $last_update);
+            $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), $chunk_size, $verify_by_time, $last_update, ($last_update) ? 0 : ($count - 1) * $chunk_size);
             $chunk++;
             $count++;
             if ($media_type === 'song') {
@@ -1921,14 +1921,14 @@ class Catalog_local extends Catalog
      * This verifies a chunk of the catalog, done to save
      * memory
      */
-    private function _verify_chunk(string $tableName, int $chunk, int $chunk_size, bool $verify_by_time, bool $last_update): int
+    private function _verify_chunk(string $tableName, int $chunk, int $chunk_size, bool $verify_by_time, bool $last_update, int $offset = 0): int
     {
         $count      = $chunk * $chunk_size;
         $verifyRows = match ($tableName) {
-            'album' => self::getAlbumRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update, $this->last_update),
-            'video' => self::getVideoRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update),
-            'podcast_episode' => self::getPodcastEpisodeRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update),
-            default => self::getSongRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update),
+            'album' => self::getAlbumRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update, $this->last_update, $offset),
+            'video' => self::getVideoRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update, $offset),
+            'podcast_episode' => self::getPodcastEpisodeRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update, $offset),
+            default => self::getSongRepository()->getVerifyRowsByCatalog($this->getId(), $chunk_size, $last_update, $offset),
         };
 
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);

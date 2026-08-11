@@ -868,7 +868,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      *
      * @return list<array{id: int, file: string, min_update_time: int}>
      */
-    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $lastUpdate): array
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $lastUpdate, int $offset = 0): array
     {
         $params = [$catalogId];
         $sql    = 'SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? ';
@@ -878,7 +878,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         }
 
         $result = $this->connection->query(
-            $sql . 'GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT ' . $limit,
+            $sql . 'GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT ' . $limit . ' OFFSET ' . $offset,
             $params
         );
 
