@@ -28,13 +28,29 @@ namespace Ampache\Module\System\Update\Migration\V8;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Generator;
 
 /**
  * Add `object_count_archive` to keep the detail rows removed by stats consolidation
  */
 final class Migration800015 extends AbstractMigration
 {
+    private const string ARCHIVE_TABLE = "CREATE TABLE IF NOT EXISTS `object_count_archive` (`object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') NOT NULL, `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0, `date` int(11) UNSIGNED NOT NULL DEFAULT 0, `user` int(11) NOT NULL, `agent` varchar(255) DEFAULT NULL, `geo_latitude` decimal(10,6) DEFAULT NULL, `geo_longitude` decimal(10,6) DEFAULT NULL, `geo_name` varchar(255) DEFAULT NULL, `count_type` enum('download','stream','skip') NOT NULL, KEY `object_count_archive_IDX` (`object_type`,`object_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s;";
+
     protected array $changelog = ['Add `object_count_archive` table to retain consolidated play history detail'];
+
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 800015) {
+            yield 'object_count_archive' => sprintf(self::ARCHIVE_TABLE, $engine, $charset, $collation);
+        }
+    }
 
     public function migrate(): void
     {
@@ -44,14 +60,7 @@ final class Migration800015 extends AbstractMigration
 
         // no surrogate key and a single lookup index: the archive is cold storage, the index overhead is the
         // whole point of moving rows out of `object_count`
-        $this->updateDatabase(
-            sprintf(
-                "CREATE TABLE IF NOT EXISTS `object_count_archive` (`object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') NOT NULL, `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0, `date` int(11) UNSIGNED NOT NULL DEFAULT 0, `user` int(11) NOT NULL, `agent` varchar(255) DEFAULT NULL, `geo_latitude` decimal(10,6) DEFAULT NULL, `geo_longitude` decimal(10,6) DEFAULT NULL, `geo_name` varchar(255) DEFAULT NULL, `count_type` enum('download','stream','skip') NOT NULL, KEY `object_count_archive_IDX` (`object_type`,`object_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s;",
-                $engine,
-                $charset,
-                $collation
-            )
-        );
+        $this->updateDatabase(sprintf(self::ARCHIVE_TABLE, $engine, $charset, $collation));
 
         // compression is a bonus, not a requirement (it needs innodb_file_per_table)
         if ($engine === 'InnoDB') {
