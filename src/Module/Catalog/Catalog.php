@@ -2398,6 +2398,9 @@ abstract class Catalog extends database_object
 
         $new_video_tags = $results['genre'];
 
+        $video_moods     = array_column(Mood::get_object_moods('video', $video->id), 'name');
+        $new_video_moods = array_values(array_filter(array_map(trim(...), (array) ($results['mood'] ?? []))));
+
         $info = Video::compare_video_information($video, $new_video);
         if ($info['change']) {
             debug_event(self::class, $video->file . " : differences found, updating database", 5);
@@ -2412,6 +2415,15 @@ abstract class Catalog extends database_object
         } else {
             // always update the time when you update
             Video::update_utime($video->id);
+        }
+
+        if (
+            array_udiff($video_moods, $new_video_moods, strcasecmp(...)) !== []
+            || array_udiff($new_video_moods, $video_moods, strcasecmp(...)) !== []
+        ) {
+            if (Mood::update_mood_list(implode(',', $new_video_moods), 'video', $video->id, true, from_file_tags: true)) {
+                $info['change'] = true;
+            }
         }
 
         return $info;
