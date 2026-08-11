@@ -140,6 +140,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
             case 'song_row':
                 /** @var Song $libitem */
                 $hide_genres    = (bool) AmpConfig::get('hide_genres');
+                $hide_moods     = (bool) AmpConfig::get('hide_moods');
                 $is_group       = (bool) AmpConfig::get('album_group');
                 $show_license   = (bool) (AmpConfig::get('licensing') && AmpConfig::get('show_license'));
                 $hide           = Core::get_request('hide');
@@ -159,6 +160,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     (!empty($hide)),
                     $show_license,
                     $hide_genres,
+                    $hide_moods,
                     $hide_artist,
                     $hide_album,
                     $hide_year,
@@ -180,6 +182,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
             case 'album_row':
                 /** @var Album $libitem */
                 $hide_genres       = (bool) AmpConfig::get('hide_genres');
+                $hide_moods        = (bool) AmpConfig::get('hide_moods');
                 $show_played_times = (bool) AmpConfig::get('show_played_times');
                 $results           = $this->guiFactory->createAlbumRowView(
                     $gatekeeper,
@@ -187,18 +190,21 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     $libitem,
                     $show_ratings,
                     $hide_genres,
+                    $hide_moods,
                     $show_played_times,
                     true,
                     'cel_cover',
                     'cel_album',
                     'cel_artist',
                     'cel_tags',
+                    'cel_moods',
                     'cel_counter'
                 )->render();
                 break;
             case 'album_disk_row':
                 /** @var AlbumDisk $libitem */
                 $hide_genres       = (bool) AmpConfig::get('hide_genres');
+                $hide_moods        = (bool) AmpConfig::get('hide_moods');
                 $show_played_times = (bool) AmpConfig::get('show_played_times');
                 $results           = $this->guiFactory->createAlbumDiskRowView(
                     $gatekeeper,
@@ -206,12 +212,14 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     $libitem,
                     $show_ratings,
                     $hide_genres,
+                    $hide_moods,
                     $show_played_times,
                     true,
                     'cel_cover',
                     'cel_album',
                     'cel_artist',
                     'cel_tags',
+                    'cel_moods',
                     'cel_counter'
                 )->render();
                 break;
@@ -225,9 +233,11 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     'cel_time',
                     'cel_counter',
                     'cel_tags',
+                    'cel_moods',
                     $this->browse->getId(),
                     false,
                     (bool) AmpConfig::get('hide_genres'),
+                    (bool) AmpConfig::get('hide_moods'),
                     $show_ratings,
                     (bool) AmpConfig::get('show_played_times'),
                     (bool) AmpConfig::get('directplay'),
@@ -281,9 +291,11 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     'cel_cover',
                     'cel_counter',
                     'cel_tags',
+                    'cel_moods',
                     $this->browse->getId(),
                     false,
                     (bool) AmpConfig::get('hide_genres'),
+                    (bool) AmpConfig::get('hide_moods'),
                     $show_ratings,
                     (bool) AmpConfig::get('show_played_times'),
                     (bool) AmpConfig::get('directplay'),

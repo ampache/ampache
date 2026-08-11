@@ -102,6 +102,10 @@ final class SongListRenderer extends AbstractBrowseListRenderer
             $columns[] = ['class' => $this->getCellClass('cel_tags', 'grid_tags') . ' optional', 'label' => T_('Genres'), 'sort' => null, 'id' => null, 'footer' => true];
         }
 
+        if (!$this->hideMoods()) {
+            $columns[] = ['class' => $this->getCellClass('cel_moods', 'grid_moods') . ' optional', 'label' => T_('Moods'), 'sort' => null, 'id' => null, 'footer' => true];
+        }
+
         $columns[] = ['class' => $this->getCellClass('cel_time', 'grid_time') . ' optional', 'label' => T_('Time'), 'sort' => 'time', 'id' => 'song_sort_time' . $browseId, 'footer' => true];
 
         if ($this->showLicense()) {
@@ -201,6 +205,11 @@ final class SongListRenderer extends AbstractBrowseListRenderer
         return (bool) $this->configContainer->get('hide_genres');
     }
 
+    public function hideMoods(): bool
+    {
+        return (bool) $this->configContainer->get('hide_moods');
+    }
+
     public function isDirectPlay(): bool
     {
         return (bool) $this->configContainer->get('directplay');
@@ -239,6 +248,7 @@ final class SongListRenderer extends AbstractBrowseListRenderer
             $this->showTrack(),
             $this->showLicense(),
             $this->hideGenres(),
+            $this->hideMoods(),
             $this->isHidden('cel_artist'),
             $this->isHidden('cel_album'),
             $this->isHidden('cel_year'),

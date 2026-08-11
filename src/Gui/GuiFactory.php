@@ -102,12 +102,14 @@ final readonly class GuiFactory implements GuiFactoryInterface
         AlbumDisk $albumDisk,
         bool $usingRatings,
         bool $isHideGenre,
+        bool $isHideMood,
         bool $isShowPlayedTimes,
         bool $isShowPlaylistAdd,
         string $classCover,
         string $classAlbum,
         string $classArtist,
         string $classTags,
+        string $classMoods,
         string $classCounter,
     ): AlbumDiskRowView {
         return new AlbumDiskRowView(
@@ -115,12 +117,14 @@ final readonly class GuiFactory implements GuiFactoryInterface
             $this->createConfigViewAdapter(),
             $usingRatings,
             $isHideGenre,
+            $isHideMood,
             $isShowPlayedTimes,
             $isShowPlaylistAdd,
             $classCover,
             $classAlbum,
             $classArtist,
             $classTags,
+            $classMoods,
             $classCounter
         );
     }
@@ -147,12 +151,14 @@ final readonly class GuiFactory implements GuiFactoryInterface
         Album $album,
         bool $usingRatings,
         bool $isHideGenre,
+        bool $isHideMood,
         bool $isShowPlayedTimes,
         bool $isShowPlaylistAdd,
         string $classCover,
         string $classAlbum,
         string $classArtist,
         string $classTags,
+        string $classMoods,
         string $classCounter,
     ): AlbumRowView {
         return new AlbumRowView(
@@ -160,12 +166,14 @@ final readonly class GuiFactory implements GuiFactoryInterface
             $this->createConfigViewAdapter(),
             $usingRatings,
             $isHideGenre,
+            $isHideMood,
             $isShowPlayedTimes,
             $isShowPlaylistAdd,
             $classCover,
             $classAlbum,
             $classArtist,
             $classTags,
+            $classMoods,
             $classCounter
         );
     }
@@ -330,6 +338,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
         bool $isShowTrack,
         bool $isShowLicense,
         bool $isHideGenre,
+        bool $isHideMood,
         bool $isHideArtist,
         bool $isHideAlbum,
         bool $isHideYear,
@@ -345,6 +354,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
             $isShowTrack,
             $isShowLicense,
             $isHideGenre,
+            $isHideMood,
             $isHideArtist,
             $isHideAlbum,
             $isHideYear,

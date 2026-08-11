@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-08-10 07:02+1000\n"
+"POT-Creation-Date: 2026-08-11 12:55+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -361,10 +361,19 @@ msgstr ""
 msgid "Click to close window"
 msgstr ""
 
+msgid "Broadcast"
+msgstr ""
+
+msgid "Unbroadcast"
+msgstr ""
+
 msgid "Yes"
 msgstr ""
 
 msgid "No"
+msgstr ""
+
+msgid "Broadcast Edit"
 msgstr ""
 
 msgid "New broadcast"
@@ -538,6 +547,9 @@ msgstr ""
 msgid "This Collection is empty"
 msgstr ""
 
+msgid "Private"
+msgstr ""
+
 msgid "Collection Edit"
 msgstr ""
 
@@ -662,9 +674,6 @@ msgid "(no leading or ending '/')"
 msgstr ""
 
 msgid "Save Catalog Settings"
-msgstr ""
-
-msgid "Private"
 msgstr ""
 
 msgid "Object Type"
@@ -1220,6 +1229,9 @@ msgid "Scan All Folders"
 msgstr ""
 
 msgid "Update All"
+msgstr ""
+
+msgid "Garbage Collection"
 msgstr ""
 
 msgid "Add new files from:"
@@ -2615,9 +2627,6 @@ msgid "Scan Folders"
 msgstr ""
 
 msgid "Update File Tags"
-msgstr ""
-
-msgid "Garbage Collection"
 msgstr ""
 
 msgid "Save the current order of this collection?"
@@ -5970,15 +5979,6 @@ msgstr ""
 msgid "Artist MusicBrainzID"
 msgstr ""
 
-msgid "Broadcast"
-msgstr ""
-
-msgid "Unbroadcast"
-msgstr ""
-
-msgid "Broadcast Edit"
-msgstr ""
-
 msgid "Codec is required (e.g. MP3, OGG...)"
 msgstr ""
 
@@ -7046,6 +7046,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Hide the Genre column in browse table rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Mood column in browse table rows"
 msgstr ""
 
 #: Ampache preference description

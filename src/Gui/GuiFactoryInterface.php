@@ -65,12 +65,14 @@ interface GuiFactoryInterface
         AlbumDisk $albumDisk,
         bool $usingRatings,
         bool $isHideGenre,
+        bool $isHideMood,
         bool $isShowPlayedTimes,
         bool $isShowPlaylistAdd,
         string $classCover,
         string $classAlbum,
         string $classArtist,
         string $classTags,
+        string $classMoods,
         string $classCounter,
     ): AlbumDiskRowView;
 
@@ -86,12 +88,14 @@ interface GuiFactoryInterface
         Album $album,
         bool $usingRatings,
         bool $isHideGenre,
+        bool $isHideMood,
         bool $isShowPlayedTimes,
         bool $isShowPlaylistAdd,
         string $classCover,
         string $classAlbum,
         string $classArtist,
         string $classTags,
+        string $classMoods,
         string $classCounter,
     ): AlbumRowView;
 
@@ -174,6 +178,7 @@ interface GuiFactoryInterface
         bool $isShowTrack,
         bool $isShowLicense,
         bool $isHideGenre,
+        bool $isHideMood,
         bool $isHideArtist,
         bool $isHideAlbum,
         bool $isHideYear,
