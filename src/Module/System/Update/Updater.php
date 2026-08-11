@@ -60,7 +60,7 @@ final readonly class Updater implements UpdaterInterface
     public function checkTables(bool $migrate = false, int $build = 0): Generator
     {
         yield from $this->updateRunner->runTableCheck(
-            $this->getPendingUpdates(),
+            $this->getAllUpdates(),
             $migrate,
             $build
         );
@@ -150,5 +150,28 @@ final readonly class Updater implements UpdaterInterface
             $this->getPendingUpdates(),
             $interactor
         );
+    }
+
+    /**
+     * Yields every migration, run or not, because a table is only asked for once its migration has passed
+     *
+     * @return Generator<array{
+     *     versionFormatted: string,
+     *     version: int,
+     *     migration: MigrationInterface
+     * }>
+     */
+    private function getAllUpdates(): Generator
+    {
+        foreach (Versions::getAllMigrations() as $version => $migrationClass) {
+            /** @var MigrationInterface $migration */
+            $migration = $this->dic->get($migrationClass);
+
+            yield [
+                'versionFormatted' => $this->updateHelper->formatVersion((string) $version),
+                'version' => $version,
+                'migration' => $migration
+            ];
+        }
     }
 }

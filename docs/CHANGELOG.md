@@ -401,6 +401,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Moving an album's files to another catalog left a second copy of every disk behind in the old one, which the disk browse listed alongside the real one. Garbage collection matched a disk on its album and disk number but not its catalog, so the leftover never qualified
 * Deleting an entry from the Recently Skipped list removed it from the history but left the skip counted, so the count kept climbing away from the list it was drawn from. Deleting a download still leaves every counter alone, as before
 * User avatars were served by the generic art handler on an install in a subdirectory, because the rewrite that routes them tested for `/image.php` at the web root. The `.htaccess` files are rewritten for your web path on write, but only the rules, not their conditions
+* Database
+  * The missing table check reports and recreates tables again. It only ever looked at migrations that had yet to run, while a table is only claimed once its own migration has passed, so the two never met and nothing was reported at any version
+  * `object_count_summary` and `object_count_archive` are covered by that check, which they were not before
 * Unexpected errors from an API method were logged as a bare message with no file or line, leaving nothing to locate the cause by
 * Pages that stopped part way through and returned a blank or half-written page, because an uncaught error is logged and swallowed rather than shown
   * The embedded web player (`web_player_embedded.php`) and the video page, when opened without a `playlist_id`; the player gets an empty playlist instead
