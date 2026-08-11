@@ -93,6 +93,9 @@ if (!$this->isHideYear()) { ?>
 if ($this->isTableView()) {
     if (!$this->isHideGenre()) { ?>
         <td class="cel_tags"><?php echo $this->raw($song->getGenre()); ?></td>
+<?php   }
+    if (!$this->isHideMood()) { ?>
+        <td class="cel_moods"><?php echo $this->raw($song->getMoods()); ?></td>
 <?php   } ?>
         <td class="cel_time"><?php echo $this->e($song->getPlayDuration()); ?></td>
 <?php   if ($this->isShowLicense()) { ?>
@@ -107,6 +110,9 @@ if ($this->isTableView()) {
 } else {
     if (!$this->isHideGenre()) { ?>
         <td class="mash_tags"><?php echo $this->raw($song->getGenre()); ?></td>
+<?php   }
+    if (!$this->isHideMood()) { ?>
+        <td class="mash_moods"><?php echo $this->raw($song->getMoods()); ?></td>
 <?php   } ?>
         <td class="mash_time"><?php echo $this->e($song->getPlayDuration()); ?></td>
 <?php   if ($this->isShowLicense()) { ?>

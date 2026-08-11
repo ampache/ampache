@@ -1236,6 +1236,7 @@ table.tabledata tbody .cel_cover {
 
 table.tabledata tbody .cel_cover,
 table.tabledata tbody .cel_tags,
+table.tabledata tbody .cel_moods,
 table.tabledata tbody .cel_license {
     width: 150px !important;
     max-width: 150px;
@@ -2556,6 +2557,7 @@ a.option-list:hover {
 
     /* Zoomed grid cards keep name + artist; drop the genre line (shown on artist cards) and ratings so both text lines fit. */
     table.gridview td.grid_tags,
+    table.gridview td.grid_moods,
     table.gridview td.cel_ratings {
         display: none !important;
     }
