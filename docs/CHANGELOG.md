@@ -393,6 +393,8 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `Catalog::get_videos_count()` raised an unknown-column error for any catalog id
 * Adding a catalog stopped at the first WMA file carrying a boolean ASF tag (`IsVBR`), leaving the rest of the catalog unscanned
 * One unreadable file no longer stops a catalog add, verify or folder scan. Only a failure raised as an exception was skipped, so a file whose tags produced a type error ended the whole run instead of that file
+* A user who kept a preference row left behind by a much older version was never given the preferences added since. The repair pass finds users by how many preferences they hold, and the stale rows made up the difference; they are now cleared before the count is taken
+* Verifying a catalog larger than 10000 items with `catalog_verify_by_time` enabled checked the first 10000 over and over once everything was already up to date, leaving the rest of the catalog unverified. Each pass now takes the next page
 * Unexpected errors from an API method were logged as a bare message with no file or line, leaving nothing to locate the cause by
 * Pages that stopped part way through and returned a blank or half-written page, because an uncaught error is logged and swallowed rather than shown
   * The embedded web player (`web_player_embedded.php`) and the video page, when opened without a `playlist_id`; the player gets an empty playlist instead
