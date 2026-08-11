@@ -1332,7 +1332,7 @@ abstract class Catalog extends database_object
      */
     public static function get_user_filter(string $type, int $user_id): string
     {
-        $system = ($user_id < 0);
+        $system = ($user_id <= 0);
         switch ($type) {
             case 'album_disk':
             case 'album':

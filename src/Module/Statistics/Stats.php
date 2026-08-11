@@ -97,7 +97,7 @@ final class Stats
      * Consolidate play history older than $older_than days into `object_count_summary` and delete the detail rows,
      * inside a transaction.
      *
-     * Stored counters stay exact: the rebuild queries (Catalog::update_counts, Album/Artist::update_table_counts,
+     * Stored counters stay exact: the rebuild queries (Album/Artist::update_table_counts,
      * Video::update_video_counts, Stats::clear) combine both tables, all-time readers (Stats::get_object_count,
      * User::get_play_size, rating match plugin) include the summary table, and the cron cache (ObjectCache) merges
      * consolidated counts into its threshold 0 entries.
@@ -1097,7 +1097,7 @@ final class Stats
      *
      * The subtraction is exact rather than a truncate: a summary row can hold counts from a consolidation run that
      * predates the archive, and those have no detail to restore, so they have to survive.
-     * Counters are not rebuilt here, the caller runs Catalog::update_counts afterwards.
+     * Counters are not rebuilt here, the caller runs the catalog garbage collector afterwards.
      * @return array{rows: int, derived: int, executed: bool}
      */
     public static function restore(bool $dry_run = true): array
