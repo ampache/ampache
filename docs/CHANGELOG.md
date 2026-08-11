@@ -245,11 +245,16 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Garbage collection removes a wanted album once the library holds it, matched on release-group `mbid` or on name and album artist
 * Database 800014
   * Dropped four redundant `object_count` indexes: `object_count_full_index` (an exact duplicate of `object_count_UNIQUE_IDX`), `object_type` and `object_count_type_IDX` (leading-column prefixes of that key), and `date` (a prefix of `object_count_date_IDX`)
+* Database 800050
+  * Dropped two redundant `user_preference` indexes: `user_name_IDX` (an exact duplicate of `unique_name`) and `user` (a leading-column prefix of both `unique_name` and `user_preference_IDX`). On a server with many users this table carried more index than data, because the `(user, name)` key was stored twice
 * Play statistics
   * Database 800044
     * New `object_count_geo_IDX` index on `object_count`.`geo_latitude`, `geo_longitude`, so a place name is looked up instead of read by scanning the play history; only matters with `geolocation` on
     * New `object_type_date_IDX` index on `user_flag`.`object_type`, `date`, so the newest flagged lists stop at the rows they show
   * The recently played list picks the users whose history it may show before it reads the play rows, so a user with nothing recent to show no longer walks the whole play history to find that out
+  * The users who share their play history are looked up through `preference`.`id` instead of `user_preference`.`name`; no key starts with that column, so the list read the whole `user_preference` table on every home page. On a server with 8400 users that is 1.2M rows, and 1 second when they are not already cached
+  * The now playing list uses the same lookup. Its subquery is a per-row test while `now_playing` holds few rows, but the optimizer materialises it into the same full scan once the table grows, which is when the server is busiest
+  * A user with no `user_preference` rows can see their own now playing entry again; the own-user test sat inside the subquery that lists the sharers, so it only held for a user who already had rows there
   * The recent lists read the newest plays in date order and group those, instead of grouping every play ever recorded to sort them
   * Play counts for a page of songs or artists are read in one query instead of one per row, when a stats threshold applies
   * The democratic cooldown check reads the song ids it needs rather than every column of every play

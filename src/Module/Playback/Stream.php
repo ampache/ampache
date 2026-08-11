@@ -446,7 +446,8 @@ class Stream
         // We need to check only for users which have allowed view of personal info
         if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) && Core::get_global('user') instanceof User) {
             $current_user = Core::get_global('user')->getId();
-            $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`name`='allow_personal_info_now' AND `value`='1') OR `user` = ?))) ";
+            // same lookup through `preference`.`id`; the optimizer materialises the old form into a full table scan once now_playing grows
+            $sql .= "AND (`np`.`user` IN (SELECT `user_preference`.`user` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `preference`.`name` = 'allow_personal_info_now' AND `user_preference`.`value` = '1') OR `np`.`user` = ?) ";
             $params[] = $current_user;
         }
 
