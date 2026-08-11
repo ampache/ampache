@@ -55,6 +55,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Error;
 use Exception;
+use Throwable;
 
 /**
  * This class handles all actual work in regards to local catalogs.
@@ -465,7 +466,8 @@ class Catalog_local extends Catalog
                 if ($this->add_file($full_file, $options, $interactor)) {
                     $this->count++;
                 }
-            } catch (Exception $error) {
+            } catch (Throwable $error) {
+                // a malformed tag raises an Error rather than an Exception, and one unreadable file must not stop the catalog
                 $interactor?->info(
                     T_('Error') . ' ' . $error->getMessage(),
                     true
@@ -1901,7 +1903,7 @@ class Catalog_local extends Catalog
 
                     $this->_scan_folder($full_file, $interactor);
                 }
-            } catch (Exception $error) {
+            } catch (Throwable $error) {
                 $interactor?->info(
                     T_('Error') . ' ' . $error->getMessage(),
                     true

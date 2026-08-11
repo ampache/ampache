@@ -109,6 +109,7 @@ use Generator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
+use Throwable;
 
 /**
  * This class handles all actual work in regards to the catalog,
@@ -4013,7 +4014,8 @@ abstract class Catalog extends database_object
             );
             try {
                 $vainfo->gather_tags();
-            } catch (Exception $exception) {
+            } catch (Throwable $exception) {
+                // a malformed tag raises an Error rather than an Exception, and the caller treats no tags as unreadable
                 debug_event(self::class, 'Error ' . $exception->getMessage(), 1);
 
                 return [];
