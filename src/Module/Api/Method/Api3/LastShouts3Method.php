@@ -53,7 +53,7 @@ final class LastShouts3Method
         unset($user);
         $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = (int) AmpConfig::get('popular_threshold');
+            $limit = (int) AmpConfig::get('popular_threshold', 10);
         }
         if (AmpConfig::get('sociable')) {
             if (!empty($input['username'])) {

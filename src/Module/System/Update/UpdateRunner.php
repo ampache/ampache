@@ -87,6 +87,52 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        // Migration\V8\Migration800049 needs no rollback. It widens the `tag_map` and `user_activity` `object_type`
+        // enums, and Ampache7 writes neither the broadcast genre nor a folder activity that the extra values name.
+
+        if ($currentVersion >= 800048) {
+            // Migration\V8\Migration800048 (Ampache7 has no mood column in its browse rows)
+            if (!Preference::delete('hide_moods')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800047) {
+            // Migration\V8\Migration800047 (Ampache7 has no moods interface)
+            if (!Preference::delete('show_mood')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration800042 to Migration800046 need no rollback. They widen `song_preview`.`file`, add
+        // `wanted` to the `image` `object_type` enum, add indexes, create the `playlist_folder` tables and add
+        // `song_data`.`bpm`. Ampache7 reads none of them, and a wider column or an unused table costs it nothing.
+
+        if ($currentVersion >= 800041) {
+            // Migration\V8\Migration800041 (Ampache7 broadcasts always require a listener session)
+            if (!Preference::delete('broadcast_private')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800040) {
+            // Migration\V8\Migration800040 (restore the preferences deleted by the migration)
+            // Ampache7 still ships the 7digital plugin, and its install() tests `Preference::exists()` the wrong way
+            // round, so it cannot recreate these itself once they are gone. The stored keys went with the
+            // `user_preference` rows, so this puts the settings back empty for the owner to enter again.
+            if (
+                !Preference::insert('7digital_api_key', '7digital consumer key', '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', '7digital') ||
+                !Preference::insert('7digital_secret_api_key', '7digital secret', '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', '7digital')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration800035 to Migration800039 need no rollback. They drop a key on the Ampache8-only
+        // `collection_map`, repair columns missing from a stale seed, index `addition_time`, backfill `podcast`
+        // rows in `object_count` and delete `folder` rows holding a bare directory name. Ampache7 reads none of
+        // the Ampache8-only tables, and the repairs and counts are correct for it too.
+
         if ($currentVersion >= 800034) {
             // Migration\V8\Migration800034 (Ampache7's `label_asso` links a label to an artist only)
             // Its `artist` column is NOT NULL here, so the album-only rows Ampache8 writes have to go before the
