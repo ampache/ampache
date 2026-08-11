@@ -30,6 +30,7 @@ use Ampache\Module\Art\Art;
 use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\Database\DatabaseLockInterface;
 use Ampache\Module\Label\LabelListUpdaterInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
@@ -209,24 +210,7 @@ class Artist extends database_object implements
             return self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''];
         }
 
-        $artistRepository = self::getArtistRepository();
-        if ($mbid !== null && $mbid !== '' && $mbid !== '0') {
-            // check for artists by mbid (there should only ever be one sent here); the name match below never
-            // supplies the id, it only back-fills the mbid onto rows that were stored without one
-            $artist_id = $artistRepository->findIdByMbid($mbid) ?? 0;
-
-            // still missing? Match on the name and update the mbid
-            if (!$readonly) {
-                foreach ($artistRepository->findIdsByNameWithoutMbid($name, $full_name) as $matched_id) {
-                    $artistRepository->setField($matched_id, ArtistFieldEnum::MBID, $mbid);
-                }
-            }
-        } else {
-            // look for artists with no mbid (if they exist) and then match on mbid artists last
-            $artist_id = $artistRepository->findIdByName($name, $full_name, false)
-                ?? $artistRepository->findIdByName($name, $full_name, true)
-                ?? 0;
-        }
+        $artist_id = self::_find_existing($name, $full_name, $mbid, $readonly);
 
         // cache and return the result
         if ($artist_id > 0) {
@@ -258,13 +242,34 @@ class Artist extends database_object implements
             ? null
             : $mbid;
 
-        $artist_id = $artistRepository->create($name, $prefix, $mbid, $user);
-        if ($artist_id === null) {
-            return null;
+        // concurrent requests can each miss the lookup above and insert the same artist, so serialize on the name
+        $lock       = self::getDatabaseLock();
+        $lock_name  = sprintf('artist|%s|%s|%s', $name, $prefix ?? '', $mbid ?? '');
+        $lock_taken = $lock->acquire($lock_name);
+
+        try {
+            // whoever held the lock may have inserted this artist while we waited for it
+            if ($lock_taken) {
+                $artist_id = self::_find_existing($name, $full_name, $mbid, $readonly);
+                if ($artist_id > 0) {
+                    self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''] = $artist_id;
+
+                    return $artist_id;
+                }
+            }
+
+            $artist_id = self::getArtistRepository()->create($name, $prefix, $mbid, $user);
+            if ($artist_id === null) {
+                return null;
+            }
+            debug_event(self::class, sprintf('check artist: created {%d}', $artist_id), 4);
+            // map the new id
+            Catalog::update_map(0, 'artist', $artist_id);
+        } finally {
+            if ($lock_taken) {
+                $lock->release($lock_name);
+            }
         }
-        debug_event(self::class, sprintf('check artist: created {%d}', $artist_id), 4);
-        // map the new id
-        Catalog::update_map(0, 'artist', $artist_id);
 
         self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''] = $artist_id;
 
@@ -581,6 +586,32 @@ class Artist extends database_object implements
     }
 
     /**
+     * Looks for an existing artist, back-filling a known mbid onto matching rows that were stored without one
+     */
+    private static function _find_existing(string $name, string $full_name, ?string $mbid, bool $readonly): int
+    {
+        $artistRepository = self::getArtistRepository();
+        if ($mbid !== null && $mbid !== '' && $mbid !== '0') {
+            // check for artists by mbid (there should only ever be one sent here); the name match below only back-fills the mbid
+            $artist_id = $artistRepository->findIdByMbid($mbid) ?? 0;
+
+            // still missing? Match on the name and update the mbid
+            if (!$readonly) {
+                foreach ($artistRepository->findIdsByNameWithoutMbid($name, $full_name) as $matched_id) {
+                    $artistRepository->setField($matched_id, ArtistFieldEnum::MBID, $mbid);
+                }
+            }
+
+            return $artist_id;
+        }
+
+        // look for artists with no mbid (if they exist) and then match on mbid artists last
+        return $artistRepository->findIdByName($name, $full_name, false)
+            ?? $artistRepository->findIdByName($name, $full_name, true)
+            ?? 0;
+    }
+
+    /**
      * @deprecated Inject dependency
      */
     private static function getArtistRepository(): ArtistRepositoryInterface
@@ -588,6 +619,16 @@ class Artist extends database_object implements
         global $dic;
 
         return $dic->get(ArtistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getDatabaseLock(): DatabaseLockInterface
+    {
+        global $dic;
+
+        return $dic->get(DatabaseLockInterface::class);
     }
 
     /**

@@ -504,6 +504,8 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * User avatars requested through a `/play/art/{sid}/user/{id}/...` url were always denied when `public_images` is disabled; the `user` rewrite rules dropped the `auth` parameter the other art rules pass on
 * Upload
   * The artists of an uploaded song are mapped to the upload catalog as the song is added, so a new one is no longer missing from an artist browse filtered to that catalog until the next catalog update
+  * Uploading several files by the same new artist created a duplicate artist for each file, because the uploads run in parallel; a new album was duplicated the same way
+  * Uploading several files sharing a genre that was new renumbered that genre once per file, so every genre already given to a song was left pointing at a row that no longer existed
 * Rating or favouriting a playlist, collection, folder, search or live stream logged an SQL error on every click
 * Search
   * The `does not sound like` operator returned nothing on the `Genre`, `Song Genre`, `Album Genre`, `Artist Genre`, `Playlist Name`, `Song Artist` and `Album Artist` rules
