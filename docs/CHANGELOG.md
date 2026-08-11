@@ -392,6 +392,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Server totals (`album`, `album_disk`, `artist`, `catalog`, `label`, `license`, `tag`, `items`, `time`, `size`) were only correct for up to 30 minutes at a time; they are maintained as things are added and deleted, and repaired by garbage collection
   * `Catalog::get_videos_count()` raised an unknown-column error for any catalog id
 * Adding a catalog stopped at the first WMA file carrying a boolean ASF tag (`IsVBR`), leaving the rest of the catalog unscanned
+* One unreadable file no longer stops a catalog add, verify or folder scan. Only a failure raised as an exception was skipped, so a file whose tags produced a type error ended the whole run instead of that file
 * Unexpected errors from an API method were logged as a bare message with no file or line, leaving nothing to locate the cause by
 * Pages that stopped part way through and returned a blank or half-written page, because an uncaught error is logged and swallowed rather than shown
   * The embedded web player (`web_player_embedded.php`) and the video page, when opened without a `playlist_id`; the player gets an empty playlist instead
