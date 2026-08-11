@@ -2265,10 +2265,11 @@ abstract class Catalog extends database_object
             echo "<tbody>\n";
         }
 
-        $album  = false;
-        $artist = false;
-        $tags   = false;
-        $maps   = false;
+        $album   = false;
+        $artist  = false;
+        $tags    = false;
+        $maps    = false;
+        $changed = false;
         foreach ($songs as $song_id) {
             $diff = false;
             $song = new Song($song_id);
@@ -2277,11 +2278,12 @@ abstract class Catalog extends database_object
             } else {
                 $info = self::update_media_from_tags($song);
 
-                $diff   = array_key_exists('element', $info) && $info['element'] !== [];
-                $album  = ($album) || ($diff && array_key_exists('album', $info['element']));
-                $artist = ($artist) || ($diff && array_key_exists('artist', $info['element']));
-                $tags   = ($tags) || ($diff && array_key_exists('tags', $info['element']));
-                $maps   = ($maps) || ($diff && array_key_exists('maps', $info));
+                $changed = $changed || (bool) ($info['change'] ?? false);
+                $diff    = array_key_exists('element', $info) && $info['element'] !== [];
+                $album   = ($album) || ($diff && array_key_exists('album', $info['element']));
+                $artist  = ($artist) || ($diff && array_key_exists('artist', $info['element']));
+                $tags    = ($tags) || ($diff && array_key_exists('tags', $info['element']));
+                $maps    = ($maps) || ($diff && array_key_exists('maps', $info));
             }
 
             // don't echo useless info when using api
@@ -2360,7 +2362,7 @@ abstract class Catalog extends database_object
 
         return [
             'object_id' => $return_id,
-            'change' => ($album || $artist || $maps || $tags),
+            'change' => ($changed || $album || $artist || $maps || $tags),
         ];
     }
 
@@ -2598,6 +2600,10 @@ abstract class Catalog extends database_object
                 $song_tag_array[] = $genre['name'];
             }
         }
+
+        // moods are not part of the song comparison, so they are decided against what the object already carries
+        $song_mood_array = array_column(Mood::get_object_moods('song', $song->id), 'name');
+        $new_mood_array  = array_values(array_filter(array_map(trim(...), $filtered_results['mood'] ?? [])));
 
         // info for the artist table.
         $artist           = $filtered_results['artist'];
@@ -2961,15 +2967,6 @@ abstract class Catalog extends database_object
                 Tag::update_tag_list($tag_comma, 'song', $song->id, true, from_file_tags: true);
             }
 
-            // moods ride along with the genres; anything a user set by hand survives this
-            Mood::update_mood_list(
-                implode(',', $filtered_results['mood'] ?? []),
-                'song',
-                $song->id,
-                true,
-                from_file_tags: true
-            );
-
             if ($song->license !== $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
             }
@@ -2980,6 +2977,17 @@ abstract class Catalog extends database_object
         } else {
             // always update the time when you update
             Song::update_utime($song->id);
+        }
+
+        // a file whose only edit is the mood tag is not a song change, so this is outside it; anything a user set by hand survives
+        if (
+            array_udiff($song_mood_array, $new_mood_array, strcasecmp(...)) !== []
+            || array_udiff($new_mood_array, $song_mood_array, strcasecmp(...)) !== []
+        ) {
+            $mood_change = Mood::update_mood_list(implode(',', $new_mood_array), 'song', $song->id, true, from_file_tags: true);
+            if ($mood_change) {
+                $info['change'] = true;
+            }
         }
 
         // If song rating tag exists and is well formed (array user=>rating), update it
@@ -3038,10 +3046,10 @@ abstract class Catalog extends database_object
         $change = Tag::update_tag_list(implode(',', $tags), 'album', $album_id, true, from_file_tags: true);
 
         // an album has no file of its own, so its moods are whatever its songs carry; dropping one from every song takes it off the album
-        $moods = self::getMoodRepository()->getSongMoodNamesByAlbum($album_id);
-        Mood::update_mood_list(implode(',', $moods), 'album', $album_id, true, from_file_tags: true);
+        $moods       = self::getMoodRepository()->getSongMoodNamesByAlbum($album_id);
+        $mood_change = Mood::update_mood_list(implode(',', $moods), 'album', $album_id, true, from_file_tags: true);
 
-        return $change;
+        return $change || $mood_change;
     }
 
     /**
