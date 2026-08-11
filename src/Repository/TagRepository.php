@@ -91,6 +91,8 @@ final readonly class TagRepository implements TagRepositoryInterface
             );
         }
 
+        // a truncated write leaves the enum's error value, naming no object any sweep above can resolve, and the tag it holds is never empty
+        $statements[] = "DELETE FROM `tag_map` WHERE `object_type` = '';";
         // the maps of tags that have since been hidden, then the empty tags, keeping the hidden ones and anything still named as a merge target
         $statements[] = 'DELETE FROM `tag_map` WHERE `tag_id` IN (SELECT `id` FROM `tag` WHERE `is_hidden` = 1)';
         $statements[] = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`id` IS NULL AND `is_hidden` = 0 AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`);";

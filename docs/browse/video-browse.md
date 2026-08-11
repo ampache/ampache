@@ -51,6 +51,7 @@ e.g. `sort=name,DESC`
 | `catalog`          | The catalog id it belongs to.                                                                                            |
 | `codec`            | Video codec.                                                                                                             |
 | `id`               | The video id, which is the order they were created in.                                                                   |
+| `last_played`      | When it was last played. Anything never played has no value, so it groups first ascending and last descending.           |
 | `length`           | Video length in seconds.                                                                                                 |
 | `name`             | Video title.                                                                                                             |
 | `rand`             | Random order, applied per request. Paging through it repeats and skips videos, so ask for everything in one call.        |

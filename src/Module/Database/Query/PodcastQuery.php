@@ -57,6 +57,7 @@ final class PodcastQuery implements QueryInterface
         'catalog',
         'episodes',
         'id',
+        'last_played',
         'name',
         'rand',
         'rating',
@@ -194,6 +195,7 @@ final class PodcastQuery implements QueryInterface
             case 'catalog':
             case 'episodes':
             case 'id':
+            case 'last_played':
             case 'total_count':
             case 'website':
                 $sql = sprintf('`podcast`.`%s`', $field);

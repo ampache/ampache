@@ -77,6 +77,7 @@ final class SongQuery implements QueryInterface
         'catalog',
         'composer',
         'id',
+        'last_played',
         'name',
         'object_count',
         'rand',
@@ -289,6 +290,7 @@ final class SongQuery implements QueryInterface
             case 'catalog':
             case 'composer':
             case 'id':
+            case 'last_played':
             case 'time':
             case 'total_count':
             case 'total_skip':

@@ -74,6 +74,8 @@ final readonly class MoodRepository implements MoodRepositoryInterface
             );
         }
 
+        // a truncated write leaves the enum's error value, naming no object any sweep above can resolve, and the mood it holds is never empty
+        $statements[] = "DELETE FROM `mood_map` WHERE `object_type` = '';";
         // then the moods nothing points at any more; a mood has no hidden or merged form to spare
         $statements[] = 'DELETE FROM `mood` USING `mood` LEFT JOIN `mood_map` ON `mood`.`id`=`mood_map`.`mood_id` WHERE `mood_map`.`id` IS NULL;';
         // `unique_mood_map` counts the owner, so only a row repeated for the same user is a duplicate; the others are who set the mood

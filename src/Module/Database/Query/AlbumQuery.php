@@ -78,6 +78,7 @@ final class AlbumQuery implements QueryInterface
         'disk_count',
         'generic_artist',
         'id',
+        'last_played',
         'name_original_year',
         'name_year',
         'name',
@@ -370,6 +371,7 @@ final class AlbumQuery implements QueryInterface
             case 'catalog':
             case 'disk_count':
             case 'id':
+            case 'last_played':
             case 'release_status':
             case 'release_type':
             case 'song_count':

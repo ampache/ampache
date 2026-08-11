@@ -80,6 +80,11 @@ class TagRepositoryTest extends TestCase
             );
         }
 
+        // a write for a type the enum does not hold is truncated to the error value, and no other sweep can resolve it
+        static::assertNotEmpty(
+            array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'DELETE FROM `tag_map`') && str_contains($sql, "`object_type` = ''"))
+        );
+
         // the owner is part of `unique_tag_map`, so the duplicate sweep must not take the map a user set beside the one from the file
         static::assertNotEmpty(
             array_filter(
