@@ -67,11 +67,11 @@ class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterfac
      */
     public function install(): bool
     {
-        if (Preference::exists('7digital_api_key') && !Preference::insert('7digital_api_key', T_('7digital consumer key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('7digital_api_key', T_('7digital consumer key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        return !(Preference::exists('7digital_secret_api_key') && !Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name));
+        return Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
     }
 
     /**

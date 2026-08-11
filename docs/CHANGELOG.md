@@ -12,6 +12,9 @@
 * Playlist, smartlist and genre names were written into the search and genre-row templates without escaping
 * Every play, skip and play-count rollback ran an update against `folder` and `folder_map`, which are Ampache8 tables, so counting a song, video or podcast episode logged an SQL error on tables that do not exist in Ampache7
 * Renaming a smart playlist from the web interface did nothing, because the edit action passed the POSTed id along as a string and `Search` takes an int (#4426)
+* Activating the 7digital plugin created none of its preferences, so it could not be configured; the check meant to skip preferences that already exist was inverted, and only ran the insert when there was nothing to insert
+* Database
+  * Downgrading from Ampache8 removes the `broadcast_private`, `show_mood` and `hide_moods` preferences instead of leaving them in the preferences list
 
 ## Ampache 7.10.1
 

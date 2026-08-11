@@ -115,18 +115,10 @@ final class UpdateRunner implements UpdateRunnerInterface
             }
         }
 
-        if ($currentVersion >= 800040) {
-            // Migration\V8\Migration800040 (restore the preferences deleted by the migration)
-            // Ampache7 still ships the 7digital plugin, and its install() tests `Preference::exists()` the wrong way
-            // round, so it cannot recreate these itself once they are gone. The stored keys went with the
-            // `user_preference` rows, so this puts the settings back empty for the owner to enter again.
-            if (
-                !Preference::insert('7digital_api_key', '7digital consumer key', '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', '7digital') ||
-                !Preference::insert('7digital_secret_api_key', '7digital secret', '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', '7digital')
-            ) {
-                throw new UpdateFailedException();
-            }
-        }
+        // Migration\V8\Migration800040 needs no rollback. It removed the 7digital preferences along with the
+        // plugin's `update_info` version row, so Ampache7 already shows the plugin as inactive; reactivating it
+        // runs install() and writes the preferences back. The keys they held went with the `user_preference`
+        // rows and cannot be recovered either way.
 
         // Migration\V8\Migration800035 to Migration800039 need no rollback. They drop a key on the Ampache8-only
         // `collection_map`, repair columns missing from a stale seed, index `addition_time`, backfill `podcast`
