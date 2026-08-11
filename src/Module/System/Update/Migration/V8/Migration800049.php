@@ -36,9 +36,9 @@ final class Migration800049 extends AbstractMigration
 
     public function migrate(): void
     {
-        // an empty `object_type` is what a truncated write leaves, and the alter refuses a value its own enum does not hold
-        $this->updateDatabase("DELETE FROM `tag_map` WHERE `object_type` = '';");
-        $this->updateDatabase("DELETE FROM `user_activity` WHERE `object_type` = '';");
+        // an empty `object_type` is what a truncated write leaves and a null one is what the dump's nullable column allows; the alter takes neither
+        $this->updateDatabase("DELETE FROM `tag_map` WHERE `object_type` = '' OR `object_type` IS NULL;");
+        $this->updateDatabase("DELETE FROM `user_activity` WHERE `object_type` = '' OR `object_type` IS NULL;");
 
         // `broadcast` goes on the end, where a database that already holds the rest can take it without rebuilding the table
         $this->updateDatabase("ALTER TABLE `tag_map` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'folder', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'tvshow', 'tvshow_season', 'user', 'video', 'broadcast') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
