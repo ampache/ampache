@@ -51,7 +51,7 @@ final class UpdateAllFileTagsActions extends AbstractCatalogAction
         ServerRequestInterface $request,
         array $catalogIds,
     ): ?ResponseInterface {
-        catalog_worker('update_all_catalogs');
+        catalog_worker('update_all_file_tags');
 
         $this->ui->showConfirmation(
             T_('No Problem'),

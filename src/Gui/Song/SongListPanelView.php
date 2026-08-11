@@ -52,6 +52,7 @@ final class SongListPanelView extends AbstractView
         private readonly array $hiddenColumns,
         private readonly bool $showRatings,
         private readonly bool $hideGenres,
+        private readonly bool $hideMoods,
         private readonly bool $albumGroup,
         private readonly bool $showLicense,
         private readonly bool $showPlayedTimes,
@@ -92,6 +93,10 @@ final class SongListPanelView extends AbstractView
 
         if (!$this->hideGenres) {
             $columns[] = ['class' => 'cel_tags optional', 'label' => T_('Genres')];
+        }
+
+        if (!$this->hideMoods) {
+            $columns[] = ['class' => 'cel_moods optional', 'label' => T_('Moods')];
         }
 
         $columns[] = ['class' => 'cel_time optional', 'label' => T_('Time')];
@@ -163,6 +168,7 @@ final class SongListPanelView extends AbstractView
             false,
             $this->showLicense,
             $this->hideGenres,
+            $this->hideMoods,
             $this->isColumnHidden('cel_artist'),
             $this->isColumnHidden('cel_album'),
             $this->isColumnHidden('cel_year'),

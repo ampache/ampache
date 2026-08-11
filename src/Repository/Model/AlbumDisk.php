@@ -88,6 +88,9 @@ class AlbumDisk extends database_object implements
     private ?string $f_name = null;
     private ?bool $has_art  = null;
 
+    /** @var array<int, array{id: int, name: string, user: int, count: int}> $moods */
+    private ?array $moods = null;
+
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
@@ -255,6 +258,14 @@ class AlbumDisk extends database_object implements
     }
 
     /**
+     * Get item f_moods.
+     */
+    public function get_f_moods(): string
+    {
+        return Mood::get_display($this->get_moods(), true, 'album_disk');
+    }
+
+    /**
      * Return a formatted link to the parent object (if appliccable)
      */
     public function get_f_parent_link(): ?string
@@ -388,6 +399,19 @@ class AlbumDisk extends database_object implements
         }
 
         return $medias;
+    }
+
+    /**
+     * Get item moods. The moods a scan writes land on the album, so a disk weighs its album's.
+     * @return array<int, array{id: int, name: string, user: int, count: int}>
+     */
+    public function get_moods(): array
+    {
+        if ($this->moods === null) {
+            $this->moods = Mood::get_top_moods('album', $this->album_id, 0);
+        }
+
+        return $this->moods;
     }
 
     /**

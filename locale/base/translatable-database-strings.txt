@@ -321,6 +321,10 @@ msgid "Hide the Genre column in browse table rows"
 msgstr ""
 
 #: Ampache preference description
+msgid "Hide the Mood column in browse table rows"
+msgstr ""
+
+#: Ampache preference description
 msgid "Hide the Song Artist column for Albums with one Artist"
 msgstr ""
 

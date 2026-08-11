@@ -133,6 +133,8 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 
 * `playlists`/`list`/`index`/`stats` (API4 and above)
   * `sort=last_count` answered with an error instead of a list. The combined playlist and smartlist browse never carried the column it sorts on, though both tables have it
+* `stats` (API3)
+  * A `type` other than `newest`, `highest`, `frequent`, `recent` or `flagged` answered with an error instead of random albums, unless a `limit` was sent
 * `followers` (API4 and above)
   * The returned ids are the accounts doing the following. They were the ids of the follow records, which line up with real accounts only by coincidence, so `following` and `followers` disagreed about the same relationship
 * ALL

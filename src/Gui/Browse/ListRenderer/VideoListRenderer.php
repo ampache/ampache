@@ -54,6 +54,11 @@ final class VideoListRenderer extends AbstractBrowseListRenderer
         return (bool) $this->configContainer->get('hide_genres');
     }
 
+    public function areMoodsHidden(): bool
+    {
+        return (bool) $this->configContainer->get('hide_moods');
+    }
+
     public function arePlayedTimesShown(): bool
     {
         return (bool) $this->configContainer->get('show_played_times');
@@ -86,6 +91,10 @@ final class VideoListRenderer extends AbstractBrowseListRenderer
 
         if (!$this->areGenresHidden()) {
             $columns[] = ['class' => $this->getCellClass('cel_tags', 'grid_tags') . ' optional', 'label' => T_('Genres'), 'sort' => null];
+        }
+
+        if (!$this->areMoodsHidden()) {
+            $columns[] = ['class' => $this->getCellClass('cel_moods', 'grid_moods') . ' optional', 'label' => T_('Moods'), 'sort' => null];
         }
 
         if ($this->areRatingsShown()) {
@@ -124,9 +133,11 @@ final class VideoListRenderer extends AbstractBrowseListRenderer
             $this->getCellClass('cel_cover', 'grid_cover'),
             $this->getCellClass('cel_counter', 'grid_counter'),
             $this->getCellClass('cel_tags', 'grid_tags'),
+            $this->getCellClass('cel_moods', 'grid_moods'),
             $this->getBrowse()->getId(),
             $this->getBrowse()->is_grid_view(),
             $this->areGenresHidden(),
+            $this->areMoodsHidden(),
             $this->areRatingsShown(),
             $this->arePlayedTimesShown(),
             (bool) $this->configContainer->get('directplay'),

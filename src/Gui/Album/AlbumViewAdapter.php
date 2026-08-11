@@ -256,6 +256,11 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         return $this->album->getId();
     }
 
+    public function getMoods(): string
+    {
+        return $this->album->get_f_moods();
+    }
+
     public function getPlayedTimes(): int
     {
         return $this->album->total_count;

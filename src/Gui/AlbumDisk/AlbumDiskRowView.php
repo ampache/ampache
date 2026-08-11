@@ -42,12 +42,14 @@ final class AlbumDiskRowView extends AbstractView
         private readonly ConfigViewAdapterInterface $config,
         private readonly bool $usingRatings,
         private readonly bool $isHideGenre,
+        private readonly bool $isHideMood,
         private readonly bool $isShowPlayedTimes,
         private readonly bool $isShowPlaylistAdd,
         private readonly string $classCover,
         private readonly string $classAlbum,
         private readonly string $classArtist,
         private readonly string $classTags,
+        private readonly string $classMoods,
         private readonly string $classCounter,
     ) {}
 
@@ -76,6 +78,11 @@ final class AlbumDiskRowView extends AbstractView
         return $this->classCover;
     }
 
+    public function getClassMoods(): string
+    {
+        return $this->classMoods;
+    }
+
     public function getClassTags(): string
     {
         return $this->classTags;
@@ -89,6 +96,11 @@ final class AlbumDiskRowView extends AbstractView
     public function isHideGenre(): bool
     {
         return $this->isHideGenre;
+    }
+
+    public function isHideMood(): bool
+    {
+        return $this->isHideMood;
     }
 
     public function isShowPlayedTimes(): bool

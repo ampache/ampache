@@ -131,9 +131,10 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $filter = true;
                     }
 
-                    // user filtered by genre
-                    if (isset($_REQUEST['tag'])) {
-                        $browse->set_filter($_REQUEST['key'], $_REQUEST['tag']);
+                    // user filtered by genre or mood; the cloud names its value after the key it sends
+                    $cloudValue = $_REQUEST['tag'] ?? $_REQUEST['mood'] ?? null;
+                    if ($cloudValue !== null) {
+                        $browse->set_filter($_REQUEST['key'], $cloudValue);
                         $filter = true;
                     }
                 }

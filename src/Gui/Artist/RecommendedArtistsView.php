@@ -52,6 +52,7 @@ final class RecommendedArtistsView extends AbstractView
         private readonly int $browseId,
         private readonly bool $gridView,
         private readonly bool $hideGenres,
+        private readonly bool $hideMoods,
         private readonly bool $showRatings,
         private readonly bool $showPlayedTimes,
         private readonly bool $directPlay,
@@ -118,6 +119,10 @@ final class RecommendedArtistsView extends AbstractView
             $columns[] = ['class' => 'cel_tags', 'label' => T_('Genres')];
         }
 
+        if (!$this->hideMoods) {
+            $columns[] = ['class' => 'cel_moods', 'label' => T_('Moods')];
+        }
+
         if ($this->showRatings) {
             $columns[] = ['class' => 'cel_ratings optional', 'label' => T_('Rating')];
         }
@@ -162,9 +167,11 @@ final class RecommendedArtistsView extends AbstractView
             'cel_time',
             'cel_counter',
             'cel_tags',
+            'cel_moods',
             $this->browseId,
             $this->gridView,
             $this->hideGenres,
+            $this->hideMoods,
             $this->showRatings,
             $this->showPlayedTimes,
             $this->directPlay && $mayQueue,

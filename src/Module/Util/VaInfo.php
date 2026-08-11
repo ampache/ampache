@@ -466,7 +466,7 @@ final class VaInfo implements VaInfoInterface
 
         $order = [];
         foreach ($tagorderMap[$configKey] ?? [] as $source) {
-            //debug_event(self::class, "source: " . $source, true, 5);
+            //debug_event(self::class, "source: " . $source, 5);
             $order[] = strtolower((string) $source);
         }
 
@@ -1014,10 +1014,12 @@ final class VaInfo implements VaInfoInterface
                     $parsed['artists'] = $this->parseArtists($data);
                     break;
                 case 'genre':
+                    //case 'ab:genre':
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
-                    $parsed['mood'] = $this->parseMoods($data);
+                case 'ab:mood':
+                    $parsed['mood'] = $this->parseMoods($data, $parsed['mood'] ?? []);
                     break;
                 case 'partofset':
                     $elements             = explode('/', (string) $data[0]);
@@ -1154,11 +1156,13 @@ final class VaInfo implements VaInfoInterface
                     $parsed['artists'] = $this->parseArtists($data);
                     break;
                 case 'genre':
+                    //case 'ab:genre':
                     // Pass the array through
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
-                    $parsed['mood'] = $this->parseMoods($data);
+                case 'ab:mood':
+                    $parsed['mood'] = $this->parseMoods($data, $parsed['mood'] ?? []);
                     break;
                 case 'discsubtitle':
                     $parsed['disksubtitle'] = $data[0];
@@ -1264,7 +1268,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
-                    $parsed['mood'] = $this->parseMoods($data);
+                    $parsed['mood'] = $this->parseMoods($data, $parsed['mood'] ?? []);
                     break;
                 case 'discsubtitle':
                 case 'setsubtitle':
@@ -1372,6 +1376,9 @@ final class VaInfo implements VaInfoInterface
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
                         $parsed['artists'] = $this->parseArtists($id3v2['comments']['text'][$txxx['description']]);
+                        break;
+                    case 'ab:mood':
+                        $parsed['mood'] = $this->parseMoods($id3v2['comments']['text'][$txxx['description']], $parsed['mood'] ?? []);
                         break;
                     case 'albumartist':
                     case 'album artist':
@@ -1524,7 +1531,8 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
-                    $parsed['mood'] = $this->parseMoods($data);
+                case 'ab:mood':
+                    $parsed['mood'] = $this->parseMoods($data, $parsed['mood'] ?? []);
                     break;
                 case 'creation_date':
                     $parsed['creation_date'] = strtotime(str_replace(" ", "", $data[0]));
@@ -1665,7 +1673,8 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'mood':
-                    $parsed['mood'] = $this->parseMoods($data);
+                case 'ab:mood':
+                    $parsed['mood'] = $this->parseMoods($data, $parsed['mood'] ?? []);
                     break;
                 case 'tracknumber':
                 case 'track_number':
@@ -2177,13 +2186,14 @@ final class VaInfo implements VaInfoInterface
      * Split the mood tag the way genres are split: several in one frame joined by `additional_delimiters`, or by a null byte
      *
      * @param array<array-key, mixed>|string $data
+     * @param string[] $result moods already parsed from another mood tag on the same file
      *
      * @return string[]
      * @throws Exception
      */
-    private function parseMoods(array|string $data): array
+    private function parseMoods(array|string $data, array $result = []): array
     {
-        $result = [];
+        //debug_event(self::class, "parseMoods: " . print_r($data, true), 5);
         foreach ((is_array($data) ? $data : [$data]) as $row) {
             if (is_string($row) && $row !== '') {
                 foreach ($this->splitSlashedlist(str_replace("\x00", ';', $row)) as $mood) {

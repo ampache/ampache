@@ -263,6 +263,11 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
         return $this->albumDisk->getId();
     }
 
+    public function getMoods(): string
+    {
+        return $this->albumDisk->get_f_moods();
+    }
+
     public function getPlayedTimes(): int
     {
         return $this->albumDisk->total_count;
