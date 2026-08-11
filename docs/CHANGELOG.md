@@ -245,6 +245,8 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Garbage collection removes a wanted album once the library holds it, matched on release-group `mbid` or on name and album artist
 * Database 800014
   * Dropped four redundant `object_count` indexes: `object_count_full_index` (an exact duplicate of `object_count_UNIQUE_IDX`), `object_type` and `object_count_type_IDX` (leading-column prefixes of that key), and `date` (a prefix of `object_count_date_IDX`)
+* Database 800050
+  * Dropped two redundant `user_preference` indexes: `user_name_IDX` (an exact duplicate of `unique_name`) and `user` (a leading-column prefix of both `unique_name` and `user_preference_IDX`). On a server with many users this table carried more index than data, because the `(user, name)` key was stored twice
 * Play statistics
   * Database 800044
     * New `object_count_geo_IDX` index on `object_count`.`geo_latitude`, `geo_longitude`, so a place name is looked up instead of read by scanning the play history; only matters with `geolocation` on

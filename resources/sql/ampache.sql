@@ -1669,9 +1669,7 @@ CREATE TABLE IF NOT EXISTS `user_preference` (
   `name` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
   UNIQUE KEY `unique_name` (`user`,`name`),
-  KEY `user` (`user`),
   KEY `preference` (`preference`),
-  KEY `user_name_IDX` (`user`,`name`) USING BTREE,
   KEY `user_preference_IDX` (`user`,`preference`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
