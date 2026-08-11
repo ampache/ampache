@@ -365,23 +365,28 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
     parent.editType = edit_type;
     parent.editId = edit_id;
 
-    $.when($.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_tag_map&type=" + edit_type), $.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_labels&type=" + edit_type)).then(function( a1, a2 ) {
+    $.when($.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_tag_map&type=" + edit_type), $.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_labels&type=" + edit_type), $.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_moods&type=" + edit_type)).then(function( a1, a2, a3 ) {
 
-        if(a1[2].status !== 200 || a2[2].status !== 200){
+        if(a1[2].status !== 200 || a2[2].status !== 200 || a3[2].status !== 200){
             displayNotification("Failed to open dialog", 5000);
         }
 
         var tag_choices;
         var label_choices;
+        var mood_choices;
 
         tag_choices = $(a1[0]).find("content").text();
         label_choices = $(a2[0]).find("content").text();
+        mood_choices = $(a3[0]).find("content").text();
 
         var splitted = tag_choices.split(",");
         parent.editTagChoices = splitted.map($.trim);
 
         splitted = label_choices.split(",");
         parent.editLabelChoices = splitted.map($.trim);
+
+        splitted = mood_choices.split(",");
+        parent.editMoodChoices = splitted.map($.trim);
 
         parent.dialog_buttons = {};
         parent.dialog_buttons[jsSaveTitle] = function () {
@@ -443,6 +448,14 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
                             singleField: true,
                             singleFieldDelimiter: ",",
                             availableTags: parent.editLabelChoices
+                        });
+                    }
+                    if ($("#edit_moods").length > 0) {
+                        $("#edit_moods").tagit({
+                            allowSpaces: true,
+                            singleField: true,
+                            singleFieldDelimiter: ",",
+                            availableTags: parent.editMoodChoices
                         });
                     }
                 });
