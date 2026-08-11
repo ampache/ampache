@@ -39,6 +39,7 @@ final class MoodCloudView extends AbstractView
      * @param list<array{id: int, name: string, count: int}> $moods
      */
     public function __construct(
+        private readonly MoodFormView $form,
         private readonly MoodOrderView $order,
         private readonly int $browseId,
         private readonly array $moods,
@@ -53,6 +54,11 @@ final class MoodCloudView extends AbstractView
     public function getBrowseId(): int
     {
         return $this->browseId;
+    }
+
+    public function getForm(): MoodFormView
+    {
+        return $this->form;
     }
 
     /**

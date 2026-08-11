@@ -1054,6 +1054,7 @@ class Ui implements UiInterface
             case 'force_http_play':
             case 'geolocation':
             case 'hide_genres':
+            case 'hide_moods':
             case 'hide_single_artist':
             case 'home_moment_albums':
             case 'home_moment_videos':

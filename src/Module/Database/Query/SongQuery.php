@@ -150,7 +150,6 @@ final class SongQuery implements QueryInterface
             case 'no_tag':
                 $filter_sql = " (`song`.`id` NOT IN (SELECT `object_id` FROM `tag_map` WHERE `object_type`='song')) AND ";
                 break;
-            case 'genre':
             case 'mood':
                 $query->set_join('LEFT', '`mood_map`', '`mood_map`.`object_id`', '`song`.`id`', 100);
                 $filter_sql = " `mood_map`.`object_type`='song' AND (";
@@ -161,6 +160,7 @@ final class SongQuery implements QueryInterface
 
                 $filter_sql = rtrim($filter_sql, 'AND ') . ") AND ";
                 break;
+            case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
                 $filter_sql = " `tag_map`.`object_type`='song' AND (";

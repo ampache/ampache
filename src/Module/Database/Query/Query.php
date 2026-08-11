@@ -654,6 +654,16 @@ class Query
                 // remove any existing no_genre filter
                 unset($this->_state['filter']['no_genre']);
                 break;
+            case 'mood':
+                // array values; a mood is unrelated to the genre filters, so it clears none of them
+                if (is_array($value)) {
+                    $this->_state['filter'][$key] = $value;
+                } elseif (is_numeric($value)) {
+                    $this->_state['filter'][$key] = [$value];
+                } else {
+                    $this->_state['filter'][$key] = [];
+                }
+                break;
             default:
                 // you might be trying to set an invalid filter that doesn't exist
                 $type = (!empty($this->get_type()))

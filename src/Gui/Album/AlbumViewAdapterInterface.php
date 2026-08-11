@@ -79,6 +79,8 @@ interface AlbumViewAdapterInterface
 
     public function getId(): int;
 
+    public function getMoods(): string;
+
     public function getPlayedTimes(): int;
 
     public function getPostShoutIcon(): string;
