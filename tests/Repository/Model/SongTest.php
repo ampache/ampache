@@ -47,6 +47,72 @@ class SongTest extends MockeryTestCase
         ];
     }
 
+    /**
+     * A genre a user set by hand maps a second time, and a file can name the same genre twice, so the two lists held the
+     * same set of genres while the scan reported a difference on every pass
+     *
+     * @return list<array{list<string>, list<string>}>
+     */
+    public static function duplicateTagProvider(): array
+    {
+        return [
+            'file repeats a genre' => [
+                ['EBM', 'Electro', 'Electronic', 'Industrial'],
+                ['EBM', 'Electro', 'Electronic', 'Industrial', 'Industrial'],
+            ],
+            'file repeats a genre in another case' => [
+                ['EBM', 'Electro', 'Electronic', 'Industrial'],
+                ['EBM', 'Electro', 'Electronic', 'Industrial', 'industrial'],
+            ],
+            'a user mapped a genre the file also carries' => [
+                ['EBM', 'Electro', 'Electronic', 'Industrial', 'Industrial'],
+                ['EBM', 'Electro', 'Electronic', 'Industrial'],
+            ],
+        ];
+    }
+
+    /**
+     * @param list<string> $names
+     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     */
+    private static function tagRows(array $names): array
+    {
+        $rows = [];
+        foreach ($names as $index => $name) {
+            $rows[] = [
+                'id' => $index + 1,
+                'name' => $name,
+                'is_hidden' => 0,
+                'count' => 0,
+            ];
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @param list<string> $tags
+     * @param list<string> $new_tags
+     */
+    #[DataProvider('duplicateTagProvider')]
+    public function testCompareSongInformationIgnoresRepeatedTags(array $tags, array $new_tags): void
+    {
+        $song        = new Song();
+        $song->title = 'Grapevine';
+        $song->time  = 195;
+        $song->tags  = self::tagRows($tags);
+
+        $new_song        = new Song();
+        $new_song->title = 'Grapevine';
+        $new_song->time  = 195;
+        $new_song->tags  = self::tagRows($new_tags);
+
+        $result = Song::compare_song_information($song, $new_song);
+
+        $this->assertFalse($result['change']);
+        $this->assertSame([], $result['element']);
+    }
+
     public function testCompareSongInformationIgnoresWhitespaceOnlyStringChanges(): void
     {
         $song          = new Song();
@@ -99,6 +165,24 @@ class SongTest extends MockeryTestCase
 
         $this->assertTrue($result['change']);
         $this->assertSame(['title' => 'OLD: Grapevine --> I Heard It Through the Grapevine'], $result['element']);
+    }
+
+    public function testCompareSongInformationReportsTagChange(): void
+    {
+        $song        = new Song();
+        $song->title = 'Grapevine';
+        $song->time  = 195;
+        $song->tags  = self::tagRows(['EBM', 'Electro']);
+
+        $new_song        = new Song();
+        $new_song->title = 'Grapevine';
+        $new_song->time  = 195;
+        $new_song->tags  = self::tagRows(['EBM', 'Electro', 'Industrial']);
+
+        $result = Song::compare_song_information($song, $new_song);
+
+        $this->assertTrue($result['change']);
+        $this->assertSame(['tags' => 'OLD: EBM Electro --> EBM Electro Industrial'], $result['element']);
     }
 
     public function testIsCodecNameRejectsAnythingButABareWord(): void
