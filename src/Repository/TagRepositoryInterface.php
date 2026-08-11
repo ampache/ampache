@@ -86,6 +86,8 @@ interface TagRepositoryInterface
     /**
      * Reads every visible tag applied to one object type, optionally narrowed to a single object
      *
+     * One row per tag, whoever mapped it; `user` is 0 when only the file tags set it, otherwise a user who set it by hand.
+     *
      * @return list<array{id: int, name: string, is_hidden: int, user: int}>
      */
     public function getObjectTags(string $objectType, ?int $objectId): array;
@@ -129,7 +131,7 @@ interface TagRepositoryInterface
     /**
      * Reads the highest-weighted tags applied to a single object
      *
-     * `user` is the owner of the map: 0 when the genre came from the file tags, otherwise whoever set it by hand.
+     * One row per tag; `user` is 0 when only the file tags set it, otherwise a user who set it by hand.
      *
      * @return list<array{id: int, name: string, is_hidden: int, user: int, count: int}>
      */

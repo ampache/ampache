@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Gui\Edit\Renderer;
 
 use Ampache\Gui\Edit\AbstractEditFormRenderer;
+use Ampache\Repository\Model\Mood;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Video;
 use Override;
@@ -38,6 +39,11 @@ final class VideoEditFormRenderer extends AbstractEditFormRenderer
     public function getGenres(): string
     {
         return Tag::get_display($this->getItem()->get_tags());
+    }
+
+    public function getMoods(): string
+    {
+        return Mood::get_display($this->getItem()->get_moods());
     }
 
     public function getReleaseDate(): string

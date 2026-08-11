@@ -498,6 +498,7 @@ SORTS: dict[str, str] = {
     "last_add": "When something was last added to the catalog.",
     "last_clean": "When the catalog was last cleaned.",
     "last_count": "How many items the {item} held when it was last counted.",
+    "last_played": "When it was last played. Anything never played has no value, so it groups first ascending and last descending.",
     "last_seen": "When the user was last seen.",
     "last_update": "When it was last updated.",
     "lastvisit_date": "When the share was last opened.",
@@ -567,6 +568,7 @@ SORT_OVERRIDES: dict[str, dict[str, str]] = {
         "song_count": "How many songs the disk has, then album name and disk number.",
         "time": "Running time of the disk in seconds, then album name and disk number.",
         "total_count": "How many times the disk has been played, then album name and disk number.",
+        "last_played": "When the disk was last played, then album name and disk number.",
         "barcode": "Album barcode. Taken from the album, not the disk.",
         "catalog_number": "Album catalog number. Taken from the album, not the disk.",
         "release_status": "Album release status. Taken from the album, not the disk.",
@@ -579,6 +581,7 @@ SORT_OVERRIDES: dict[str, dict[str, str]] = {
         "name": "Artist name.",
         "time": "Total running time of the artist's songs in seconds.",
         "total_count": "How many times the artist's songs have been played.",
+        "last_played": "When the artist's songs were last played.",
     },
     "catalog": {
         "name": "Catalog name.",
@@ -643,6 +646,7 @@ SORT_OVERRIDES: dict[str, dict[str, str]] = {
     "podcast": {
         "name": "Podcast title.",
         "total_count": "How many times the podcast's episodes have been played.",
+        "last_played": "When the podcast's episodes were last played.",
     },
     "podcast_episode": {
         "name": "Episode title.",

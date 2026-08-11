@@ -109,6 +109,7 @@ use Generator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
+use Throwable;
 
 /**
  * This class handles all actual work in regards to the catalog,
@@ -785,7 +786,9 @@ abstract class Catalog extends database_object
             : null;
         $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
         if (empty($results['albumartist'])) {
-            $results['albumartist_id'] = ($song && $song->get_album_artist() > 0 && T_(($song->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) !== T_('Unknown (Orphaned)'))
+            $orphan_albumartist = T_(($song?->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) === T_('Unknown (Orphaned)');
+
+            $results['albumartist_id'] = ($song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album'])))
                 ? $song->get_album_artist()
                 : Artist::check($song?->get_parent_fullname() ?? $results['artist'], $results['albumartist_mbid']);
         }
@@ -1330,7 +1333,7 @@ abstract class Catalog extends database_object
      */
     public static function get_user_filter(string $type, int $user_id): string
     {
-        $system = ($user_id < 0);
+        $system = ($user_id <= 0);
         switch ($type) {
             case 'album_disk':
             case 'album':
@@ -2265,10 +2268,11 @@ abstract class Catalog extends database_object
             echo "<tbody>\n";
         }
 
-        $album  = false;
-        $artist = false;
-        $tags   = false;
-        $maps   = false;
+        $album   = false;
+        $artist  = false;
+        $tags    = false;
+        $maps    = false;
+        $changed = false;
         foreach ($songs as $song_id) {
             $diff = false;
             $song = new Song($song_id);
@@ -2277,11 +2281,12 @@ abstract class Catalog extends database_object
             } else {
                 $info = self::update_media_from_tags($song);
 
-                $diff   = array_key_exists('element', $info) && $info['element'] !== [];
-                $album  = ($album) || ($diff && array_key_exists('album', $info['element']));
-                $artist = ($artist) || ($diff && array_key_exists('artist', $info['element']));
-                $tags   = ($tags) || ($diff && array_key_exists('tags', $info['element']));
-                $maps   = ($maps) || ($diff && array_key_exists('maps', $info));
+                $changed = $changed || (bool) ($info['change'] ?? false);
+                $diff    = array_key_exists('element', $info) && $info['element'] !== [];
+                $album   = ($album) || ($diff && array_key_exists('album', $info['element']));
+                $artist  = ($artist) || ($diff && array_key_exists('artist', $info['element']));
+                $tags    = ($tags) || ($diff && array_key_exists('tags', $info['element']));
+                $maps    = ($maps) || ($diff && array_key_exists('maps', $info));
             }
 
             // don't echo useless info when using api
@@ -2360,7 +2365,7 @@ abstract class Catalog extends database_object
 
         return [
             'object_id' => $return_id,
-            'change' => ($album || $artist || $maps || $tags),
+            'change' => ($changed || $album || $artist || $maps || $tags),
         ];
     }
 
@@ -2394,6 +2399,9 @@ abstract class Catalog extends database_object
 
         $new_video_tags = $results['genre'];
 
+        $video_moods     = array_column(Mood::get_object_moods('video', $video->id), 'name');
+        $new_video_moods = array_values(array_filter(array_map(trim(...), (array) ($results['mood'] ?? []))));
+
         $info = Video::compare_video_information($video, $new_video);
         if ($info['change']) {
             debug_event(self::class, $video->file . " : differences found, updating database", 5);
@@ -2408,6 +2416,15 @@ abstract class Catalog extends database_object
         } else {
             // always update the time when you update
             Video::update_utime($video->id);
+        }
+
+        if (
+            array_udiff($video_moods, $new_video_moods, strcasecmp(...)) !== []
+            || array_udiff($new_video_moods, $video_moods, strcasecmp(...)) !== []
+        ) {
+            if (Mood::update_mood_list(implode(',', $new_video_moods), 'video', $video->id, true, from_file_tags: true)) {
+                $info['change'] = true;
+            }
         }
 
         return $info;
@@ -2598,6 +2615,10 @@ abstract class Catalog extends database_object
                 $song_tag_array[] = $genre['name'];
             }
         }
+
+        // moods are not part of the song comparison, so they are decided against what the object already carries
+        $song_mood_array = array_column(Mood::get_object_moods('song', $song->id), 'name');
+        $new_mood_array  = array_values(array_filter(array_map(trim(...), $filtered_results['mood'] ?? [])));
 
         // info for the artist table.
         $artist           = $filtered_results['artist'];
@@ -2961,15 +2982,6 @@ abstract class Catalog extends database_object
                 Tag::update_tag_list($tag_comma, 'song', $song->id, true, from_file_tags: true);
             }
 
-            // moods ride along with the genres; anything a user set by hand survives this
-            Mood::update_mood_list(
-                implode(',', $filtered_results['mood'] ?? []),
-                'song',
-                $song->id,
-                true,
-                from_file_tags: true
-            );
-
             if ($song->license !== $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
             }
@@ -2980,6 +2992,17 @@ abstract class Catalog extends database_object
         } else {
             // always update the time when you update
             Song::update_utime($song->id);
+        }
+
+        // a file whose only edit is the mood tag is not a song change, so this is outside it; anything a user set by hand survives
+        if (
+            array_udiff($song_mood_array, $new_mood_array, strcasecmp(...)) !== []
+            || array_udiff($new_mood_array, $song_mood_array, strcasecmp(...)) !== []
+        ) {
+            $mood_change = Mood::update_mood_list(implode(',', $new_mood_array), 'song', $song->id, true, from_file_tags: true);
+            if ($mood_change) {
+                $info['change'] = true;
+            }
         }
 
         // If song rating tag exists and is well formed (array user=>rating), update it
@@ -3038,10 +3061,10 @@ abstract class Catalog extends database_object
         $change = Tag::update_tag_list(implode(',', $tags), 'album', $album_id, true, from_file_tags: true);
 
         // an album has no file of its own, so its moods are whatever its songs carry; dropping one from every song takes it off the album
-        $moods = self::getMoodRepository()->getSongMoodNamesByAlbum($album_id);
-        Mood::update_mood_list(implode(',', $moods), 'album', $album_id, true, from_file_tags: true);
+        $moods       = self::getMoodRepository()->getSongMoodNamesByAlbum($album_id);
+        $mood_change = Mood::update_mood_list(implode(',', $moods), 'album', $album_id, true, from_file_tags: true);
 
-        return $change;
+        return $change || $mood_change;
     }
 
     /**
@@ -3991,7 +4014,8 @@ abstract class Catalog extends database_object
             );
             try {
                 $vainfo->gather_tags();
-            } catch (Exception $exception) {
+            } catch (Throwable $exception) {
+                // a malformed tag raises an Error rather than an Exception, and the caller treats no tags as unreadable
                 debug_event(self::class, 'Error ' . $exception->getMessage(), 1);
 
                 return [];

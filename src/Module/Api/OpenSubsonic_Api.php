@@ -3959,7 +3959,9 @@ class OpenSubsonic_Api
 
         if (AmpConfig::get('share')) {
             $share = new Share(self::getAmpacheId($sub_id));
-            if ($share->id > 0) {
+            if ($share->id > 0 && !$share->isAccessible($user)) {
+                $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            } elseif ($share->id > 0) {
                 $expires = (isset($input['expires']))
                     ? Share::get_expiry(((int) filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
                     : $share->expire_days;

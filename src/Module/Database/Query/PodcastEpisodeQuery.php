@@ -62,6 +62,7 @@ final class PodcastEpisodeQuery implements QueryInterface
         'catalog',
         'category',
         'id',
+        'last_played',
         'name',
         'podcast',
         'pubdate',
@@ -218,6 +219,7 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'catalog':
             case 'category':
             case 'id':
+            case 'last_played':
             case 'pubdate':
             case 'state':
             case 'time':

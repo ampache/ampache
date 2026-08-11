@@ -42,6 +42,26 @@ final readonly class TagRepository implements TagRepositoryInterface
      */
     private const array CATALOG_TYPES = ['artist', 'album', 'album_disk', 'song', 'video'];
 
+    /**
+     * Every `tag_map`.`object_type`, which is also the table its `object_id` names, so an orphaned map is found for all of them.
+     */
+    private const array MAPPED_TYPES = [
+        'album',
+        'album_disk',
+        'artist',
+        'catalog',
+        'label',
+        'live_stream',
+        'playlist',
+        'podcast',
+        'podcast_episode',
+        'search',
+        'song',
+        'tag',
+        'user',
+        'video',
+    ];
+
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private CatalogCounterInterface $catalogCounter,
@@ -59,17 +79,25 @@ final readonly class TagRepository implements TagRepositoryInterface
 
     public function collectGarbage(): void
     {
-        $statements = [
-            // maps pointing at objects that no longer exist, then the maps of tags that have since been hidden
-            "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL;",
-            "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL;",
-            "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL;",
-            "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `video` ON `video`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='video' AND `video`.`id` IS NULL;",
-            'DELETE FROM `tag_map` WHERE `tag_id` IN (SELECT `id` FROM `tag` WHERE `is_hidden` = 1)',
-            // now nuke the empty tags, keeping the hidden ones and anything still named as a merge target
-            "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`id` IS NULL AND `is_hidden` = 0 AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`);",
-            'DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND `a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`;',
-        ];
+        // maps pointing at objects that no longer exist, whoever set them, or a genre a user set by hand outlives the object
+        $statements = [];
+        foreach (self::MAPPED_TYPES as $objectType) {
+            $statements[] = sprintf(
+                "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `%s` ON `%s`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='%s' AND `%s`.`id` IS NULL;",
+                $objectType,
+                $objectType,
+                $objectType,
+                $objectType
+            );
+        }
+
+        // a truncated write leaves the enum's error value, naming no object any sweep above can resolve, and the tag it holds is never empty
+        $statements[] = "DELETE FROM `tag_map` WHERE `object_type` = '';";
+        // the maps of tags that have since been hidden, then the empty tags, keeping the hidden ones and anything still named as a merge target
+        $statements[] = 'DELETE FROM `tag_map` WHERE `tag_id` IN (SELECT `id` FROM `tag` WHERE `is_hidden` = 1)';
+        $statements[] = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`id` IS NULL AND `is_hidden` = 0 AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`);";
+        // `unique_tag_map` counts the owner, so only a row repeated for the same user is a duplicate; the others are who set the genre
+        $statements[] = 'DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND `a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type` AND `a`.`user` <=> `b`.`user`;';
 
         foreach ($statements as $sql) {
             $this->connection->query($sql);
@@ -169,11 +197,14 @@ final readonly class TagRepository implements TagRepositoryInterface
     public function getObjectTags(string $objectType, ?int $objectId): array
     {
         $params = [$objectType];
-        $sql    = 'SELECT `tag_map`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ?';
+        // a genre a user sets by hand is mapped again beside the one read from the file, so group to one row per tag
+        $sql = 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, MAX(`tag_map`.`user`) AS `user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ?';
         if ($objectId !== null) {
             $sql .= ' AND `tag_map`.`object_id` = ?';
             $params[] = $objectId;
         }
+
+        $sql .= ' GROUP BY `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`';
 
         $result = $this->connection->query($sql, $params);
 
@@ -320,10 +351,11 @@ final readonly class TagRepository implements TagRepositoryInterface
             : 'LIMIT ' . $limit;
 
         // the per-type counter column doubles as the weight, so a type without one falls back to the summed count
+        // one row per tag, not per map, or a genre a user set by hand is listed again beside the one read from the file
         $countType = TagCountTypeEnum::tryFrom($objectType);
         $sql       = ($countType instanceof TagCountTypeEnum)
-            ? sprintf('SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag_map`.`user`, `tag`.`%s` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `%s` DESC, `tag`.`id` ', $countType->value, $countType->value) . $limitClause
-            : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag_map`.`user`, (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `count` DESC, `tag`.`id` ' . $limitClause;
+            ? sprintf('SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, MAX(`tag_map`.`user`) AS `user`, `tag`.`%s` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? GROUP BY `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`%s` ORDER BY `%s` DESC, `tag`.`id` ', $countType->value, $countType->value, $countType->value) . $limitClause
+            : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, MAX(`tag_map`.`user`) AS `user`, (`tag`.`artist`+`tag`.`album`+`tag`.`song`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? GROUP BY `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`artist`, `tag`.`album`, `tag`.`song` ORDER BY `count` DESC, `tag`.`id` ' . $limitClause;
 
         $result = $this->connection->query($sql, [$objectType, $objectId]);
 

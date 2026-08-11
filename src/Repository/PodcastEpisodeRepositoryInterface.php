@@ -140,7 +140,7 @@ interface PodcastEpisodeRepositoryInterface
      *
      * @return list<array{id: int, file: string, min_update_time: int}>
      */
-    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array;
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $offset = 0): array;
 
     /**
      * Stores the path the episode was downloaded to

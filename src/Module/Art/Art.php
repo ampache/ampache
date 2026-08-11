@@ -1312,16 +1312,17 @@ class Art extends database_object
         $sizetext = $size['width'] . 'x' . $size['height'];
         $results  = self::getImageRepository()->getRowBySize($sizetext, $this->object_type, $this->object_id, $this->kind);
         if ($results !== []) {
-            if (AmpConfig::get('album_art_store_disk')) {
-                $image = self::_read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, $results['mime']);
-            } else {
+            $image = (AmpConfig::get('album_art_store_disk'))
+                ? self::_read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, $results['mime'])
+                : $results['image'];
+
+            // insert() keeps the image in the database whenever the disk write fails, so the read has to look there too
+            if (empty($image)) {
                 $image = $results['image'];
             }
 
             if ($image != null) {
-                return ['thumb' => (AmpConfig::get('album_art_store_disk'))
-                    ? self::_read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, $results['mime'])
-                    : $results['image'], 'thumb_mime' => $results['mime']];
+                return ['thumb' => $image, 'thumb_mime' => $results['mime']];
             }
 
             debug_event(self::class, 'Thumb entry found in database but associated data cannot be found.', 3);
@@ -1443,6 +1444,11 @@ class Art extends database_object
             $this->thumb      = (AmpConfig::get('album_art_store_disk'))
                 ? (string) self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime'])
                 : $results['image'];
+
+            // insert() keeps the image in the database whenever the disk write fails, so the read has to look there too
+            if (empty($this->thumb)) {
+                $this->thumb = (string) ($results['image'] ?? '');
+            }
 
             if (!empty($this->thumb)) {
                 return true;
