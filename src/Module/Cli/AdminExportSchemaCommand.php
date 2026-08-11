@@ -209,6 +209,7 @@ final class AdminExportSchemaCommand extends Command
 
     private function buildTableData(string $table): string
     {
+        $binary     = $this->getBinaryColumns($table);
         $db_results = Dba::read(sprintf('SELECT * FROM `%s`;', $table));
         $rows       = [];
         $columns    = [];
@@ -218,10 +219,13 @@ final class AdminExportSchemaCommand extends Command
             }
 
             $values = [];
-            foreach ($row as $value) {
-                $values[] = ($value === null)
-                    ? 'NULL'
-                    : sprintf("'%s'", Dba::escape($value));
+            foreach ($row as $column => $value) {
+                $values[] = match (true) {
+                    $value === null => 'NULL',
+                    // a raw byte written into a quoted string is not valid utf8, and the dump declares `SET NAMES utf8mb4`
+                    isset($binary[$column]) && $value !== '' => '0x' . bin2hex((string) $value),
+                    default => sprintf("'%s'", Dba::escape($value)),
+                };
             }
 
             $rows[] = sprintf('(%s)', implode(', ', $values));
@@ -246,6 +250,24 @@ final class AdminExportSchemaCommand extends Command
         $row        = Dba::fetch_row($db_results);
 
         return (int) ($row[0] ?? 0);
+    }
+
+    /**
+     * Names the columns holding raw bytes, which have to be dumped as hex literals
+     *
+     * @return array<string, true>
+     */
+    private function getBinaryColumns(string $table): array
+    {
+        $db_results = Dba::read(sprintf('SHOW COLUMNS FROM `%s`;', $table));
+        $columns    = [];
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            if (preg_match('/^(var)?binary\(|^(tiny|medium|long)?blob/i', (string) $row['Type']) === 1) {
+                $columns[(string) $row['Field']] = true;
+            }
+        }
+
+        return $columns;
     }
 
     /**

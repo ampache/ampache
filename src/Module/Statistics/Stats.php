@@ -1348,7 +1348,8 @@ final class Stats
     private static function _getSharedHistoryUsers(): array
     {
         $results    = [];
-        $db_results = Dba::read("SELECT `user` FROM `user_preference` WHERE `name` = 'allow_personal_info_recent' AND `value` = '1';");
+        // reach the rows through `preference`.`id`; no key starts with `user_preference`.`name`, so filtering on it reads the whole table
+        $db_results = Dba::read("SELECT `user_preference`.`user` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `preference`.`name` = 'allow_personal_info_recent' AND `user_preference`.`value` = '1';");
         while ($row = Dba::fetch_row($db_results)) {
             $results[] = (int) $row[0];
         }
