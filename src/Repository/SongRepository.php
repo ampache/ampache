@@ -998,13 +998,13 @@ final readonly class SongRepository implements SongRepositoryInterface
      *
      * @return list<array{id: int, file: string, min_update_time: int}>
      */
-    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $offset = 0): array
     {
         $sql = ($onlyStale)
             ? 'SELECT `song`.`id`, `song`.`file`, `song`.`update_time` AS `min_update_time` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = ? AND `song`.`update_time` < `catalog`.`last_update` ORDER BY `song`.`file` DESC LIMIT '
             : 'SELECT `song`.`id`, `song`.`file`, `song`.`update_time` AS `min_update_time` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = ? ORDER BY `song`.`file` DESC LIMIT ';
 
-        return $this->readVerifyRows($sql . $limit . ';', $catalogId);
+        return $this->readVerifyRows($sql . $limit . ' OFFSET ' . $offset . ';', $catalogId);
     }
 
     /**

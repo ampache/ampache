@@ -281,6 +281,7 @@ class Video extends database_object implements
         }
 
         $tags          = $data['genre'] ?? null;
+        $moods         = $data['mood'] ?? null;
         $channels      = (int) $data['channels'];
         $disx          = (int) $data['display_x'];
         $disy          = (int) $data['display_y'];
@@ -319,6 +320,15 @@ class Video extends database_object implements
                 $tag = trim((string) $tag);
                 if ($tag !== '' && $tag !== '0') {
                     Tag::add('video', $video_id, $tag);
+                }
+            }
+        }
+
+        if (is_array($moods)) {
+            foreach ($moods as $mood) {
+                $mood = trim((string) $mood);
+                if ($mood !== '') {
+                    Mood::add('video', $video_id, $mood);
                 }
             }
         }
@@ -904,6 +914,10 @@ class Video extends database_object implements
 
         if (isset($data['edit_tags'])) {
             Tag::update_tag_list((string) $data['edit_tags'], 'video', $this->id, true);
+        }
+
+        if (isset($data['edit_moods'])) {
+            Mood::update_mood_list((string) $data['edit_moods'], 'video', $this->id, true);
         }
 
         return $this->id;

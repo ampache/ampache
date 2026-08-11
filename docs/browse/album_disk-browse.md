@@ -69,6 +69,7 @@ e.g. `sort=name,DESC`
 | `disksubtitle`            | Disk subtitle, then album name and disk number.                                                                          |
 | `generic_artist`          | Album artist name, falling back to the artist of a song on the album when the album has no album artist.                 |
 | `id`                      | The album disk id, which is the order they were created in.                                                              |
+| `last_played`             | When the disk was last played, then album name and disk number.                                                          |
 | `name`                    | Album name, then original release year and disk number.                                                                  |
 | `name_original_year`      | Album name, then original release year and disk number.                                                                  |
 | `name_year`               | Album name, then release year and disk number.                                                                           |

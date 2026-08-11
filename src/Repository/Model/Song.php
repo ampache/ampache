@@ -333,7 +333,7 @@ class Song extends database_object implements
             // Represent the value as a string for simpler comparison. For array, ensure to sort similarly old/new values
             if (is_array($media->$key)) {
                 $arr = ($key === 'tags' && !empty($media->get_tags()))
-                    ? array_column($media->get_tags(), 'name')
+                    ? self::_unique_tag_names(array_column($media->get_tags(), 'name'))
                     : $media->$key;
                 sort($arr);
                 $mediaData = implode(" ", $arr);
@@ -353,7 +353,7 @@ class Song extends database_object implements
 
             if (is_array($new_media->$key)) {
                 $arr = ($key === 'tags' && !empty($new_media->get_tags()))
-                    ? array_column($new_media->get_tags(), 'name')
+                    ? self::_unique_tag_names(array_column($new_media->get_tags(), 'name'))
                     : $new_media->$key;
                 sort($arr);
                 $newMediaData = implode(" ", $arr);
@@ -1205,6 +1205,25 @@ class Song extends database_object implements
     private static function _scrub_custom_play_arg(string $value): string
     {
         return (string) preg_replace('/[;|&$`\\\\"\'<>(){}*?!#~\x00-\x1F]/u', '', $value);
+    }
+
+    /**
+     * A tag list is a set of names, so a repeat is not a difference; a hand-set genre maps a second time and a file can name one twice
+     *
+     * @param string[] $names
+     * @return string[]
+     */
+    private static function _unique_tag_names(array $names): array
+    {
+        $unique = [];
+        foreach ($names as $name) {
+            $name = trim($name);
+            if ($name !== '') {
+                $unique[strtolower($name)] = $name;
+            }
+        }
+
+        return array_values($unique);
     }
 
     /**

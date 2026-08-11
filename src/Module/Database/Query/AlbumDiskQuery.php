@@ -81,6 +81,7 @@ final class AlbumDiskQuery implements QueryInterface
         'disksubtitle',
         'generic_artist',
         'id',
+        'last_played',
         'name_original_year',
         'name_year',
         'name',
@@ -371,6 +372,7 @@ final class AlbumDiskQuery implements QueryInterface
             case 'disk_count':
             case 'disk':
             case 'disksubtitle':
+            case 'last_played':
             case 'song_count':
             case 'time':
             case 'total_count':

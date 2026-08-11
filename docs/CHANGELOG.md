@@ -8,7 +8,7 @@
 
 You can downgrade to Ampache7 if you try this out and have issues, using the cli (`bin/cli admin:updateDatabase -e`).
 
-**NOTE** The `/rest` rewrite rules changed a lot in this release. Use `php bin/installer htaccess -e` to update your htaccess files (or the Write buttons on the install/update page). The *rest/.htaccess configured?* check only tests the web path prefix, so an out of date file is not reported as a problem.
+**NOTE** The `/rest` rewrite rules changed a lot in this release. Use `php bin/installer htaccess -e` to update your htaccess files (or the Write buttons on the install/update page). The *rest/.htaccess configured?* check reports a file left over from an older release, so it will tell you when this is needed.
 
 * Ampache 8 requires **PHP 8.5+**
 * This version adds a new **Folder** domain which functions as a virtual filesystem browsing layer over catalog files.
@@ -16,6 +16,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Added (8.0.0)
 
+* Translations 2026-08-11
 * OpenID Connect (OIDC) login
   * New `oidc` auth method; add it to `auth_methods` to enable it (keep `mysql` so local accounts can still log in)
   * Configure a single provider (Keycloak, Entra ID, Authentik, Google, Okta, ...) with the new `oidc_*` config keys
@@ -129,6 +130,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Browse
   * Add `addition_time` sort to album, album_disk and artist. (A disk has no time of its own, so it sorts on its album's)
   * Add `update_time` sort to podcast_episode. (The column has existed since `750001` but was never a sort)
+  * Add `last_played` sort to album, album_disk, artist, podcast, podcast_episode, song and video. Anything never played has no value, so it groups first ascending and last descending
   * Every browse filter and sort is now documented with what it actually does, what value it takes and which methods use it, instead of a copy of the raw name list. The pages are generated from the query classes by `composer api:docs`, and cover the `folder`, `playlist_search` and `smartplaylist` browses for the first time
   * The user browse takes `username`, `fullname` and `email` filters for one column at a time, beside the existing text filters that match all three at once
   * The share browse takes the text filters and sorts by the title of the shared object (`name`, with `title` as an alias), plus `object_type` and `user` filters. It accepted no filters at all before, and its `object` sort named a column that does not exist
@@ -171,10 +173,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Database 800048
     * New `hide_moods` preference to hide the `Moods` column in browse table rows; it is on by default, so the column is opt-in
   * A mood is read out of the file tags on a scan: id3v2 `TMOO`, the `MOOD` comment of vorbis and APE, and the `ab:mood` tag AcousticBrainz taggers write. A file carrying both keeps the moods of both. Several in the one frame are split on your `additional_genre_delimiters`, so `Melancholy;Dreamy` becomes two
+  * A video carries its own moods, read from its file on a scan and editable in its dialog, the same as a song
   * Album and artist moods are derived from the songs, never from a file of their own. Drop a mood from every song of an album and it leaves the album too
   * New browse page at `browse.php?action=mood`, a cloud whose buttons filter the songs, albums, artists or videos carrying that mood
   * The sidebar link appears once something has been scanned; a library with no moods is not offered a link to an empty page
-  * The song page lists them, and the song, album and artist edit dialogs carry a `Moods` field next to `Genres`
+  * The song page lists them, and the song, album, artist and video edit dialogs carry a `Moods` field next to `Genres`
   * A `Moods` column on the song, album, album disk, artist and video browses, after `Genres`, whose values filter the browse the way a genre does
   * New `Mood` search rule on songs, albums and artists
   * Moods you set by hand are written back into the file tags when `write_tags` is on, so the file and the database converge instead of fighting. Albums and artists have no file, so theirs stay derived
@@ -209,6 +212,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Removing one by hand still removes it whoever set it, so a manager is not locked out by a user's choice. Only the tag read is restricted
   * User set genres are marked with a `*` carrying a `User set` tooltip, on the pages that render genres as links. The plain text form the edit fields, daap and upnp use is unchanged
   * Moods work the same way, and the two share the marker
+* The artist and album fields of an edit dialog become a search once the list is long
+  * Both were a select holding every artist or album you could see, built and sent in full every time a dialog opened; past 1000 of them the field is a search box that lists what matches as you type, and under that it is the same select as before
+  * Picking a suggestion files the item under it; typing a name that is not in the list creates it, which is what the `Add New` option always did
+  * Both lists now honour the catalog filter, so a user restricted to a filter group is no longer handed every artist and album in the database
+  * `SELECT_LIST_LIMIT` in `src/Config/functions.php` decides where the search takes over
 * Podcast feed text is stored as plain text
   * Feeds routinely put markup in their titles and descriptions, and some escape that markup a second time on the way into the xml. Both used to be stored as-is, so the podcast and episode pages showed `&lt;p&gt;` and `<br />` as words
   * Paragraphs and lists are kept as line breaks, the remaining tags are dropped and the entities are decoded; the podcast and episode pages render those breaks
@@ -342,7 +350,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `getSimilarSongs`, `getSimilarSongs2`, `getArtistInfo`, `getArtistInfo2`, `getNewestPodcasts` and `getTopSongs` failed when `count` was not a number
   * `setRating` with a non-numeric rating removed the rating instead of refusing it
   * A Subsonic catalog logged `Unable to insert song - %s` without the file path it was reporting
+  * `updateShare` answered with success when the share belonged to another user, having changed nothing
 * The admin `Enable Disabled` action and external share creation failed on their own inputs
+* The *rest/.htaccess configured?* and *play/.htaccess configured?* checks report a file left over from an older release, rather than only testing the web path prefix on whatever rules it already has. A file that has never been written reports as unconfigured instead of as configured
 * Sorting the combined playlist and smartlist list by `last_count` answered with an error instead of a list. The union it reads never carried the column it sorts on, though both tables have it
 * The followers list is the accounts doing the following. It was built from the ids of the follow records, so it could name people who follow nobody
 * Sorts a browse implemented but never offered, so clicking the column did nothing: `id` on broadcast, private message, share, shoutbox and wanted, `release_date` on video, `title` on genre and mood, and `genre` on genre. `from_user` on private messages and `username`, `last_seen` and `create_date` on followers are new, and the private message browse takes the `equal`/`exact_match` filters it already implemented
@@ -357,6 +367,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The websocket server logged a dozen PHP 8.5 deprecation errors on every connection, drowning the broadcast log; `cboden/ratchet` moves to the `0.4.x` branch, which supports PHP 8.5, and `ratchet/rfc6455` to v0.4.1
 * A database connection dropped by the server (idle timeout, restart, killed thread) was kept and reused, so every following query failed with `MySQL server has gone away`. Long running processes suffered worst: the websocket server could not register a broadcast or authorise a listener once its connection had timed out
 * Turning on `album_art_store_disk` without setting `local_metadata_dir` hid every cover; the art was still written to the database but only ever read back from disk
+  * Thumbnails took the same route and were rebuilt from the original on every request instead, so a browse page resized every cover it showed, every time it was drawn
 * Art stored for something that is not a library item, such as a wanted album, returned an empty image
 * Uploading a file with an album name always failed after the file had been copied into the catalog, leaving it on disk but absent from the library
 * Batch download was refused for every object type unless `allow_zip_types` named them; leaving it unset now allows all supported types, as `ampache.cfg.php.dist` documents
@@ -388,6 +399,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Server totals (`album`, `album_disk`, `artist`, `catalog`, `label`, `license`, `tag`, `items`, `time`, `size`) were only correct for up to 30 minutes at a time; they are maintained as things are added and deleted, and repaired by garbage collection
   * `Catalog::get_videos_count()` raised an unknown-column error for any catalog id
 * Adding a catalog stopped at the first WMA file carrying a boolean ASF tag (`IsVBR`), leaving the rest of the catalog unscanned
+* One unreadable file no longer stops a catalog add, verify or folder scan. Only a failure raised as an exception was skipped, so a file whose tags produced a type error ended the whole run instead of that file
+* A user who kept a preference row left behind by a much older version was never given the preferences added since. The repair pass finds users by how many preferences they hold, and the stale rows made up the difference; they are now cleared before the count is taken
+* Verifying a catalog larger than 10000 items with `catalog_verify_by_time` enabled checked the first 10000 over and over once everything was already up to date, leaving the rest of the catalog unverified. Each pass now takes the next page
+* Moving an album's files to another catalog left a second copy of every disk behind in the old one, which the disk browse listed alongside the real one. Garbage collection matched a disk on its album and disk number but not its catalog, so the leftover never qualified
+* Deleting an entry from the Recently Skipped list removed it from the history but left the skip counted, so the count kept climbing away from the list it was drawn from. Deleting a download still leaves every counter alone, as before
+* User avatars were served by the generic art handler on an install in a subdirectory, because the rewrite that routes them tested for `/image.php` at the web root. The `.htaccess` files are rewritten for your web path on write, but only the rules, not their conditions
 * Unexpected errors from an API method were logged as a bare message with no file or line, leaving nothing to locate the cause by
 * Pages that stopped part way through and returned a blank or half-written page, because an uncaught error is logged and swallowed rather than shown
   * The embedded web player (`web_player_embedded.php`) and the video page, when opened without a `playlist_id`; the player gets an empty playlist instead
@@ -443,6 +460,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The `View` menu on a playlist's items did nothing until the page was reloaded, so `Pages`, `Infinite Scroll`, `Alphabet` and `Multi-Select` all looked broken
 * Smartlist art was never gathered from the songs it matches; only a playlist took that path, so a smartlist fell through to the configured art providers and found nothing
 * With `album_art_store_disk` enabled, the art picker could not read any cover a playlist offered from one of its members; the file was looked for under the type being gathered for rather than the type the image row belongs to
+* Database 800049
+  * A genre set on a broadcast is saved and shown. The edit dialog has always offered the field, but `tag_map`.`object_type` had no `broadcast` value, so nothing was ever stored against the broadcast
+  * The rows those saves wrote instead name no object at all and are removed; they held a genre alive that nothing was using
+  * `tag_map`.`object_type` and `user_activity`.`object_type` accept a `folder` on an install seeded from `ampache.sql`, which had never received the widening every other table got in 800004
+* An update from tags leaves a song with no album tag alone instead of rewriting it every scan. Untagged songs by different artists share the one `Unknown (Orphaned)` album, and each scan handed that album to the artist of whichever song it read last
+* A genre spelled in a different case in the file tags no longer re-applies the album and artist genres on every update from tags
 * Database 800023
   * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
   * Where the same artwork was stored twice under both spellings the `image/jpg` row is left as it is, because `unique_image` includes `mime` and no art is deleted during an upgrade

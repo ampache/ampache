@@ -378,9 +378,11 @@ class Tag extends database_object implements library_item, displayable_item, con
                 }
 
                 //debug_event(self::class, 'update_tag_list ' . $object_type . ' current_tag ' . print_r($ctv, true), 5);
-                foreach ($editedTags as $tag_name) {
+                // the name is dropped from the list where it matched, so a file spelling a genre in another case does not add it again on every pass
+                foreach ($editedTags as $key => $tag_name) {
                     if (strtolower((string) $ctag->name) === strtolower($tag_name)) {
                         $found = true;
+                        unset($editedTags[$key]);
                         break;
                     }
 
@@ -389,13 +391,6 @@ class Tag extends database_object implements library_item, displayable_item, con
                     if ($merged->id && $merged->is_hidden && $merged->has_merge((string) $ctag->name)) {
                         $found = true;
                         break;
-                    }
-                }
-
-                if ($found) {
-                    //debug_event(self::class, 'update_tag_list ' . $object_type . ' matched {' . $ctag->id . '} to ' . $tag_name, 5);
-                    if (($key = array_search((string) $ctag->name, $editedTags)) !== false) {
-                        unset($editedTags[$key]);
                     }
                 }
 
@@ -424,8 +419,10 @@ class Tag extends database_object implements library_item, displayable_item, con
         foreach ($editedTags as $tag_name) {
             if ($tag_name != '') {
                 debug_event(self::class, 'update_tag_list ' . $object_type . ' add {' . $tag_name . '}', 5);
-                self::add($object_type, $object_id, $tag_name, $user_id);
-                $change = true;
+                // a name already mapped through a merge answers 0, and calling that a change re-runs the album and artist genres every scan
+                if (self::add($object_type, $object_id, $tag_name, $user_id) > 0) {
+                    $change = true;
+                }
             }
         }
 

@@ -47,6 +47,7 @@ e.g. `sort=name,DESC`
 | `catalog`          | The catalog id it belongs to.                                                                                            |
 | `category`         | Episode category.                                                                                                        |
 | `id`               | The episode id, which is the order they were created in.                                                                 |
+| `last_played`      | When it was last played. Anything never played has no value, so it groups first ascending and last descending.           |
 | `name`             | Episode title.                                                                                                           |
 | `podcast`          | The podcast id, then publication date.                                                                                   |
 | `pubdate`          | When the episode was published.                                                                                          |

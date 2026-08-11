@@ -286,13 +286,13 @@ final readonly class VideoRepository implements VideoRepositoryInterface
      *
      * @return list<array{id: int, file: string, min_update_time: int}>
      */
-    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $offset = 0): array
     {
         $sql = ($onlyStale)
             ? 'SELECT `video`.`id`, `video`.`file`, `video`.`update_time` AS `min_update_time` FROM `video` LEFT JOIN `catalog` ON `video`.`catalog` = `catalog`.`id` WHERE `video`.`catalog` = ? AND `video`.`update_time` < `catalog`.`last_update` ORDER BY `video`.`file` DESC LIMIT '
             : 'SELECT `video`.`id`, `video`.`file`, `video`.`update_time` AS `min_update_time` FROM `video` LEFT JOIN `catalog` ON `video`.`catalog` = `catalog`.`id` WHERE `video`.`catalog` = ? ORDER BY `video`.`file` DESC LIMIT ';
 
-        $result = $this->connection->query($sql . $limit . ';', [$catalogId]);
+        $result = $this->connection->query($sql . $limit . ' OFFSET ' . $offset . ';', [$catalogId]);
 
         $rows = [];
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

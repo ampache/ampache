@@ -57,12 +57,43 @@ class TagRepositoryTest extends TestCase
         static::assertSame(7, $this->subject->addMap(666, 'song', 42, 0));
     }
 
-    public function testCollectGarbageRecountsEveryTypeAfterTheDeletes(): void
+    public function testCollectGarbageSweepsEveryMappableTypeAndRecountsAfterwards(): void
     {
-        // seven deletes, then a recount and a zeroing statement for each of the four counted types
-        $this->connection->expects(static::exactly(15))->method('query');
+        $statements = [];
+        $this->connection->method('query')
+            ->willReturnCallback(function (string $sql) use (&$statements): PDOStatement {
+                $statements[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
 
         $this->subject->collectGarbage();
+
+        // a map is orphaned by whichever object it names, and a type with no sweep keeps the tag alive for ever
+        foreach (['album', 'album_disk', 'artist', 'catalog', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'tag', 'user', 'video'] as $objectType) {
+            static::assertNotEmpty(
+                array_filter(
+                    $statements,
+                    static fn(string $sql): bool => str_starts_with($sql, 'DELETE FROM `tag_map`') && str_contains($sql, sprintf("`tag_map`.`object_type`='%s'", $objectType))
+                ),
+                sprintf('no orphaned map sweep for %s', $objectType)
+            );
+        }
+
+        // a write for a type the enum does not hold is truncated to the error value, and no other sweep can resolve it
+        static::assertNotEmpty(
+            array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'DELETE FROM `tag_map`') && str_contains($sql, "`object_type` = ''"))
+        );
+
+        // the owner is part of `unique_tag_map`, so the duplicate sweep must not take the map a user set beside the one from the file
+        static::assertNotEmpty(
+            array_filter(
+                $statements,
+                static fn(string $sql): bool => str_starts_with($sql, 'DELETE `b` FROM `tag_map`') && str_contains($sql, '`a`.`user` <=> `b`.`user`')
+            )
+        );
+
+        static::assertCount(4 + 4, array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'UPDATE `tag`')));
     }
 
     public function testCreateTakesTheInsertIdBeforeTheCounterRunsItsOwnQueries(): void
@@ -165,6 +196,25 @@ class TagRepositoryTest extends TestCase
             ->willReturn(false);
 
         static::assertSame([], $this->subject->getSongTagNamesByArtist(42));
+    }
+
+    public function testGetTopTagsGroupsTheMapsOfOneTagIntoASingleRow(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::callback(
+                    static fn(string $sql): bool => str_contains($sql, 'MAX(`tag_map`.`user`) AS `user`') && str_contains($sql, 'GROUP BY `tag`.`id`')
+                ),
+                ['song', 42]
+            )
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturn(false);
+
+        static::assertSame([], $this->subject->getTopTags('song', 42, 0));
     }
 
     public function testIncrementCountWritesTheColumnFromTheEnum(): void

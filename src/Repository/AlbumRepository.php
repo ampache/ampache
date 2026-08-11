@@ -100,8 +100,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         }
 
         try {
-            // left over garbage
-            $result = $this->connection->query("SELECT `id` FROM `album_disk` WHERE CONCAT(`album_id`, '_', `disk`) NOT IN (SELECT CONCAT(`album`, '_', `disk`) AS `id` FROM `song`);");
+            // left over garbage, keyed on catalog like `unique_album_disk` so a disk left behind by a move goes too
+            $result = $this->connection->query("SELECT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE NOT (`album`.`catalog` = 0 AND `album_disk`.`catalog` = 0) AND CONCAT(`album_disk`.`album_id`, '_', `album_disk`.`disk`, '_', `album_disk`.`catalog`) NOT IN (SELECT CONCAT(`album`, '_', `disk`, '_', `catalog`) AS `id` FROM `song`);");
             while ($albumDiskId = $result->fetchColumn()) {
                 $this->connection->query('DELETE FROM `album_disk` WHERE `id` = ?;', [$albumDiskId], true);
             }
@@ -868,7 +868,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      *
      * @return list<array{id: int, file: string, min_update_time: int}>
      */
-    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $lastUpdate): array
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $lastUpdate, int $offset = 0): array
     {
         $params = [$catalogId];
         $sql    = 'SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? ';
@@ -878,7 +878,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         }
 
         $result = $this->connection->query(
-            $sql . 'GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT ' . $limit,
+            $sql . 'GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT ' . $limit . ' OFFSET ' . $offset,
             $params
         );
 

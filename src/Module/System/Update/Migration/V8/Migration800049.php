@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Ampache\Module\System\Update\Migration\V8;
+
+use Ampache\Module\System\Update\Migration\AbstractMigration;
+
+/**
+ * Let `tag_map` hold a broadcast, and bring both maps of `object_type` that a fresh install never widened up to date
+ */
+final class Migration800049 extends AbstractMigration
+{
+    protected array $changelog = ['Allow `tag_map` to hold a broadcast, and widen `tag_map` and `user_activity` `object_type` on installs seeded from the dump'];
+
+    public function migrate(): void
+    {
+        // an empty `object_type` is what a truncated write leaves and a null one is what the dump's nullable column allows; the alter takes neither
+        $this->updateDatabase("DELETE FROM `tag_map` WHERE `object_type` = '' OR `object_type` IS NULL;");
+        $this->updateDatabase("DELETE FROM `user_activity` WHERE `object_type` = '' OR `object_type` IS NULL;");
+
+        // `broadcast` goes on the end, where a database that already holds the rest can take it without rebuilding the table
+        $this->updateDatabase("ALTER TABLE `tag_map` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'folder', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'tvshow', 'tvshow_season', 'user', 'video', 'broadcast') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
+        $this->updateDatabase("ALTER TABLE `user_activity` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'folder', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
+    }
+}

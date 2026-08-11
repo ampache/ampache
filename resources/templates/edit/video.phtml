@@ -43,6 +43,11 @@ declare(strict_types=1);
                 <?php // Tag::get_display() escapes the link text and title itself?>
                 <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo $this->raw($this->getGenres()); ?>" /></td>
             </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Moods'); ?></td>
+                <?php // Mood::get_display() escapes the names itself and adds no markup without a link?>
+                <td><input type="text" name="edit_moods" id="edit_moods" value="<?php echo $this->raw($this->getMoods()); ?>" /></td>
+            </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $this->e($this->getVideoId()); ?>" />
         <input type="hidden" name="type" value="video_row" />

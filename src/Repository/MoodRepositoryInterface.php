@@ -81,6 +81,8 @@ interface MoodRepositoryInterface
     /**
      * Reads the moods mapped onto one object, or onto every object of a type when no id is given
      *
+     * One row per mood, whoever mapped it; `user` is 0 when only the file tags set it, otherwise a user who set it by hand.
+     *
      * @return list<array{id: int, name: string, user: int}>
      */
     public function getObjectMoods(string $objectType, ?int $objectId): array;
@@ -111,7 +113,7 @@ interface MoodRepositoryInterface
     /**
      * Reads the moods mapped onto one object, heaviest first
      *
-     * `user` is the owner of the map: 0 when the mood came from the file tags, otherwise whoever set it by hand.
+     * One row per mood; `user` is 0 when only the file tags set it, otherwise a user who set it by hand.
      *
      * @return list<array{id: int, name: string, user: int, count: int}>
      */

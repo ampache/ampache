@@ -97,7 +97,7 @@ final class Stats
      * Consolidate play history older than $older_than days into `object_count_summary` and delete the detail rows,
      * inside a transaction.
      *
-     * Stored counters stay exact: the rebuild queries (Catalog::update_counts, Album/Artist::update_table_counts,
+     * Stored counters stay exact: the rebuild queries (Album/Artist::update_table_counts,
      * Video::update_video_counts, Stats::clear) combine both tables, all-time readers (Stats::get_object_count,
      * User::get_play_size, rating match plugin) include the summary table, and the cron cache (ObjectCache) merges
      * consolidated counts into its threshold 0 entries.
@@ -163,6 +163,13 @@ final class Stats
      */
     public static function count(string $type, int $object_id, string $count_type, ?int $date = null): void
     {
+        // 'skip_remove' takes a skip back, which touches no play counter, so it is answered on its own
+        if ($count_type === 'skip_remove') {
+            self::_uncountSkip($type, $object_id);
+
+            return;
+        }
+
         // 'down' turns a play into a skip; 'remove' takes the play back without recording one
         $takesAPlayBack = ($count_type === 'down' || $count_type === 'remove');
         $skip           = ($count_type === 'down') ? ', `total_skip` = `total_skip` + 1' : '';
@@ -218,13 +225,22 @@ final class Stats
             $sql        = "SELECT `object_count`.`object_id`, `object_count`.`object_type`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`id` = ?;";
             $db_results = Dba::read($sql, [$activity_id]);
             if ($row = Dba::fetch_assoc($db_results)) {
-                $params     = [$row['date'], $row['user'], $row['agent'], $row['count_type']];
-                $sql        = "SELECT `object_id`, `object_type` FROM `object_count` WHERE `object_count`.`date` = ? AND `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`count_type` = ? AND `count_type` = 'stream'";
-                $db_results = Dba::read($sql, $params);
-                while ($row = Dba::fetch_assoc($db_results)) {
-                    // reduce the counts for these objects too
-                    if (in_array($row['object_type'], ['song', 'album', 'artist', 'video', 'podcast', 'podcast_episode'])) {
-                        self::count($row['object_type'], (int) $row['object_id'], 'remove');
+                $params = [$row['date'], $row['user'], $row['agent'], $row['count_type']];
+                // only a stream and a skip ever moved a counter, so removing a download changes the history alone
+                $mode = match ((string) $row['count_type']) {
+                    'stream' => 'remove',
+                    'skip' => 'skip_remove',
+                    default => null,
+                };
+
+                if ($mode !== null) {
+                    $sql        = "SELECT `object_id`, `object_type` FROM `object_count` WHERE `object_count`.`date` = ? AND `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`count_type` = ?";
+                    $db_results = Dba::read($sql, $params);
+                    while ($row = Dba::fetch_assoc($db_results)) {
+                        // reduce the counts for these objects too
+                        if (in_array($row['object_type'], ['song', 'album', 'artist', 'video', 'podcast', 'podcast_episode'])) {
+                            self::count($row['object_type'], (int) $row['object_id'], $mode);
+                        }
                     }
                 }
 
@@ -1097,7 +1113,7 @@ final class Stats
      *
      * The subtraction is exact rather than a truncate: a summary row can hold counts from a consolidation run that
      * predates the archive, and those have no detail to restore, so they have to survive.
-     * Counters are not rebuilt here, the caller runs Catalog::update_counts afterwards.
+     * Counters are not rebuilt here, the caller runs the catalog garbage collector afterwards.
      * @return array{rows: int, derived: int, executed: bool}
      */
     public static function restore(bool $dry_run = true): array
@@ -1338,6 +1354,26 @@ final class Stats
         }
 
         return $results;
+    }
+
+    /**
+     * Take a skip back from the object, and from every folder above it when the object is a media row
+     */
+    private static function _uncountSkip(string $type, int $object_id): void
+    {
+        if (!in_array($type, ['song', 'video', 'podcast_episode', 'album', 'album_disk', 'artist', 'podcast'], true)) {
+            return;
+        }
+
+        $decrement = 'CASE WHEN `total_skip` > 0 THEN `total_skip` - 1 ELSE `total_skip` END';
+        Dba::write(sprintf('UPDATE `%s` SET `total_skip` = %s WHERE `id` = ?;', $type, $decrement), [$object_id]);
+
+        if (in_array($type, ['song', 'video', 'podcast_episode'], true)) {
+            $folder_ids = self::_getFolderTree($type, $object_id);
+            if ($folder_ids !== []) {
+                Dba::write(sprintf('UPDATE `folder` SET `total_skip` = %s WHERE `id` IN (%s);', $decrement, implode(', ', $folder_ids)));
+            }
+        }
     }
 
     /**
