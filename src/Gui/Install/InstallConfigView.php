@@ -96,11 +96,13 @@ final class InstallConfigView extends AbstractInstallStepView
         return $this->installationHelper->install_get_transcode_modes();
     }
 
+    /**
+     * The config stores the base path that every url appends /client to, and install.php is served from /client
+     * itself, so the running script says nothing about the base and a subdirectory install has to type it here.
+     */
     public function getWebPathGuess(): string
     {
-        $guess = (string) ($_REQUEST['web_path'] ?? '');
-
-        return ($guess === '') ? get_web_path() : $guess;
+        return (string) ($_REQUEST['web_path'] ?? '');
     }
 
     public function hasBackends(): bool
