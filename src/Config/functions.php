@@ -615,12 +615,29 @@ function return_referer(): string
 }
 
 /**
- * The most options an edit dialog will put in a parent select before it offers a name field instead.
+ * The most options a parent select will hold before the edit dialogs offer a search field instead.
  */
-const SELECT_LIST_LIMIT = 1000;
+const SELECT_LIST_LIMIT = 5;
 
 /**
- * A select of the albums this user can see, or a name field when there are more of them than SELECT_LIST_LIMIT.
+ * A search field bound to `$name`, holding the id in a second field so a picked parent posts its id and a typed one its name.
+ */
+function show_parent_search(string $name, string $key, int $object_id, string $object_name, string $target): void
+{
+    // the box you type in carries no name of its own, so only one of the two hidden fields is ever posted
+    echo sprintf(
+        '<input type="text" id="%s_search" class="parent-search" value="%s" data-target="%s" autocomplete="off">' . "\n",
+        $key,
+        scrub_out($object_name),
+        $target
+    );
+    echo sprintf('<input type="hidden" id="%s" name="%s" value="%d">' . "\n", $key, $name, $object_id);
+    echo sprintf('<input type="hidden" id="%s_name" name="%s_name" value="" disabled="disabled">' . "\n", $key, $name);
+    echo sprintf('<script>parentSearch("%s");</script>' . "\n", $key);
+}
+
+/**
+ * A select of every album this user can see, or a search field once there are more of them than SELECT_LIST_LIMIT.
  */
 function show_album_select(string $name, int $album_id = 0, bool $allow_add = false, int $song_id = 0, bool $allow_none = false, ?int $user_id = null): void
 {
@@ -661,15 +678,12 @@ function show_album_select(string $name, int $album_id = 0, bool $allow_add = fa
     }
 
     $count = count($rows);
-
-    // past the limit the dropdown is unusable and costs more to build than the page it sits in, so it offers what you have and a name field
     if ($count > SELECT_LIST_LIMIT) {
-        $rows = ($album_id > 0)
-            ? [['id' => $album_id, 'name' => (new Album($album_id))->get_fullname(), 'prefix' => '']]
-            : [];
-    }
+        $album = new Album($album_id);
+        show_parent_search($name, $key, $album_id, (string) $album->get_fullname(), 'album');
 
-    $count = count($rows);
+        return;
+    }
 
     // Added ID field so we can easily observe this element
     echo "<select name=\"$name\" id=\"$key\">\n";
@@ -701,7 +715,7 @@ function show_album_select(string $name, int $album_id = 0, bool $allow_add = fa
 }
 
 /**
- * A select of the artists this user can see, or a name field when there are more of them than SELECT_LIST_LIMIT.
+ * A select of every artist this user can see, or a search field once there are more of them than SELECT_LIST_LIMIT.
  */
 function show_artist_select(string $name, int $artist_id = 0, bool $allow_add = false, int $song_id = 0, bool $allow_none = false, ?int $user_id = null): void
 {
@@ -740,15 +754,11 @@ function show_artist_select(string $name, int $artist_id = 0, bool $allow_add = 
     }
 
     $count = count($rows);
-
-    // past the limit the dropdown is unusable and costs more to build than the page it sits in, so it offers what you have and a name field
     if ($count > SELECT_LIST_LIMIT) {
-        $rows = ($artist_id > 0)
-            ? [['id' => $artist_id, 'name' => Artist::get_fullname_by_id($artist_id), 'prefix' => '']]
-            : [];
-    }
+        show_parent_search($name, $key, $artist_id, (string) Artist::get_fullname_by_id($artist_id), 'artist');
 
-    $count = count($rows);
+        return;
+    }
 
     echo "<select name=\"$name\" id=\"$key\">\n";
 
