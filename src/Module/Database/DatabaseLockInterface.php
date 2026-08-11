@@ -25,15 +25,20 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database;
 
-use Ampache\Module\Database\Query\BrowseFactory;
-use Ampache\Module\Database\Query\BrowseFactoryInterface;
-use Ampache\Module\Database\Query\Random;
+/**
+ * Named advisory locks, used to serialize a check-then-insert that no unique key can protect
+ */
+interface DatabaseLockInterface
+{
+    public const int DEFAULT_TIMEOUT = 10;
 
-use function DI\autowire;
+    /**
+     * Takes the named lock, waiting up to the timeout; false means the caller must proceed unprotected
+     */
+    public function acquire(string $name, int $timeout = self::DEFAULT_TIMEOUT): bool;
 
-return [
-    DatabaseCharsetUpdaterInterface::class => autowire(DatabaseCharsetUpdater::class),
-    DatabaseLockInterface::class => autowire(DatabaseLock::class),
-    BrowseFactoryInterface::class => autowire(BrowseFactory::class),
-    Random::class => autowire(),
-];
+    /**
+     * Releases a lock taken by acquire(); releasing one this connection does not hold is a no-op
+     */
+    public function release(string $name): void;
+}

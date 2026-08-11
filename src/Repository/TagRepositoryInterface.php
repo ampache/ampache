@@ -40,7 +40,7 @@ interface TagRepositoryInterface
     public function collectGarbage(): void;
 
     /**
-     * Inserts a tag by name, replacing any existing row with the same name, and returns its id
+     * Inserts a tag by name and returns its id; a row that already holds that name is kept and its id returned
      */
     public function create(string $name): int;
 
