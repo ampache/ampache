@@ -96,17 +96,46 @@ class TagRepositoryTest extends TestCase
         static::assertCount(4 + 4, array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'UPDATE `tag`')));
     }
 
+    public function testCreateReturnsTheExistingIdWhenTheNameWasTakenWhileWeInserted(): void
+    {
+        $statement = $this->createMock(PDOStatement::class);
+        $statement->method('rowCount')
+            ->willReturn(0);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('INSERT IGNORE INTO `tag` (`name`) VALUES (?)', ['some-genre'])
+            ->willReturn($statement);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `id` FROM `tag` WHERE `name` = ?', ['some-genre'])
+            ->willReturn('42');
+
+        // the row belongs to whoever inserted it first, so nothing was added and the counter must not be touched
+        $this->connection->expects(static::never())
+            ->method('getLastInsertedId');
+        $this->catalogCounter->expects(static::never())
+            ->method('count');
+
+        static::assertSame(42, $this->subject->create('some-genre'));
+    }
+
     public function testCreateTakesTheInsertIdBeforeTheCounterRunsItsOwnQueries(): void
     {
         $calls = [];
 
+        $statement = $this->createMock(PDOStatement::class);
+        $statement->method('rowCount')
+            ->willReturn(1);
+
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('REPLACE INTO `tag` SET `name` = ?', ['some-genre'])
-            ->willReturnCallback(function () use (&$calls): PDOStatement {
+            ->with('INSERT IGNORE INTO `tag` (`name`) VALUES (?)', ['some-genre'])
+            ->willReturnCallback(function () use (&$calls, $statement): PDOStatement {
                 $calls[] = 'insert';
 
-                return $this->createMock(PDOStatement::class);
+                return $statement;
             });
 
         $this->connection->expects(static::once())

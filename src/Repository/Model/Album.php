@@ -30,6 +30,7 @@ use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\Database\DatabaseLockInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
@@ -272,13 +273,35 @@ class Album extends database_object implements
             return 0;
         }
 
-        $album_id = self::getAlbumRepository()->create($properties, time());
-        if (!$album_id) {
-            return 0;
+        // concurrent requests can each miss the lookup above and insert the same album, so serialize on its properties
+        $lock       = self::getDatabaseLock();
+        $lock_name  = 'album|' . implode('|', array_map(strval(...), $properties));
+        $lock_taken = $lock->acquire($lock_name);
+
+        try {
+            // whoever held the lock may have inserted this album while we waited for it
+            if ($lock_taken) {
+                $album_id = self::getAlbumRepository()->findByProperties($properties);
+                if ($album_id > 0) {
+                    self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
+
+                    return $album_id;
+                }
+            }
+
+            $album_id = self::getAlbumRepository()->create($properties, time());
+            if (!$album_id) {
+                return 0;
+            }
+            debug_event(self::class, sprintf('check album: created {%s}', $album_id), 4);
+            // map the new id
+            Catalog::update_map($catalog_id, 'album', (int) $album_id);
+        } finally {
+            if ($lock_taken) {
+                $lock->release($lock_name);
+            }
         }
-        debug_event(self::class, sprintf('check album: created {%s}', $album_id), 4);
-        // map the new id
-        Catalog::update_map($catalog_id, 'album', (int) $album_id);
+
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             $user = Core::get_global('user');
@@ -425,6 +448,16 @@ class Album extends database_object implements
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getDatabaseLock(): DatabaseLockInterface
+    {
+        global $dic;
+
+        return $dic->get(DatabaseLockInterface::class);
     }
 
     /**
