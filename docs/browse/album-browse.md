@@ -66,6 +66,7 @@ e.g. `sort=name,DESC`
 | `disk_count`              | How many disks the album has.                                                                                            |
 | `generic_artist`          | Album artist name, falling back to the artist of a song on the album when the album has no album artist.                 |
 | `id`                      | The album id, which is the order they were created in.                                                                   |
+| `last_played`             | When it was last played. Anything never played has no value, so it groups first ascending and last descending.           |
 | `name`                    | Album name.                                                                                                              |
 | `name_original_year`      | Album name, then original release year, falling back to the release year.                                                |
 | `name_year`               | Album name, then release year.                                                                                           |

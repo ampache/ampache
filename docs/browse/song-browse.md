@@ -62,6 +62,7 @@ e.g. `sort=name,DESC`
 | `catalog`          | The catalog id it belongs to.                                                                                            |
 | `composer`         | Composer tag.                                                                                                            |
 | `id`               | The song id, which is the order they were created in.                                                                    |
+| `last_played`      | When it was last played. Anything never played has no value, so it groups first ascending and last descending.           |
 | `name`             | Song title.                                                                                                              |
 | `object_count`     | How many times the songs have been played, counted per song.                                                             |
 | `rand`             | Random order, applied per request. Paging through it repeats and skips songs, so ask for everything in one call.         |

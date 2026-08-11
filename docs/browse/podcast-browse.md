@@ -42,6 +42,7 @@ e.g. `sort=name,DESC`
 | `catalog`          | The catalog id it belongs to.                                                                                            |
 | `episodes`         | How many episodes the podcast has.                                                                                       |
 | `id`               | The podcast id, which is the order they were created in.                                                                 |
+| `last_played`      | When the podcast's episodes were last played.                                                                            |
 | `name`             | Podcast title.                                                                                                           |
 | `rand`             | Random order, applied per request. Paging through it repeats and skips podcasts, so ask for everything in one call.      |
 | `rating`           | Your own rating, then when you set it. Podcasts you have not rated group together.                                       |
