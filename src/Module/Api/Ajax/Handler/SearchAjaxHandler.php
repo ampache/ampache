@@ -89,6 +89,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $artist    = new Artist($artistid);
                         $results[] = [
                             'type' => T_('Artists'),
+                            'id' => $artistid,
                             'link' => $web_path . '/artists.php?action=show&artist=' . $artistid,
                             'label' => scrub_out($artist->get_fullname()),
                             'value' => scrub_out($artist->get_fullname()),
@@ -119,6 +120,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $album     = new Album($albumid);
                         $results[] = [
                             'type' => T_('Albums'),
+                            'id' => $albumid,
                             'link' => $web_path . '/albums.php?action=show&album=' . $albumid,
                             'label' => scrub_out($album->get_fullname()),
                             'value' => scrub_out($album->get_fullname()),
@@ -149,6 +151,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $albumdisk = new AlbumDisk($albumdiskid);
                         $results[] = [
                             'type' => T_('Albums'),
+                            'id' => $albumdiskid,
                             'link' => $web_path . '/albums.php?action=show_disk&album_disk=' . $albumdiskid,
                             'label' => scrub_out($albumdisk->get_fullname()),
                             'value' => scrub_out($albumdisk->get_fullname()),
@@ -183,6 +186,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $art_type   = ($show_song_art && $has_art) ? 'song' : 'album';
                         $results[]  = [
                             'type' => T_('Songs'),
+                            'id' => $songid,
                             'link' => $web_path . "/song.php?action=show_song&song_id=" . $songid,
                             'label' => scrub_out($song->title),
                             'value' => scrub_out($song->title),
@@ -214,6 +218,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $playlist  = new Playlist($playlistid);
                         $results[] = [
                             'type' => T_('Playlists'),
+                            'id' => $playlistid,
                             'link' => $web_path . '/playlist.php?action=show&playlist_id=' . $playlistid,
                             'label' => $playlist->name,
                             'value' => $playlist->get_fullname(),
@@ -247,6 +252,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         if ($label !== null) {
                             $results[] = [
                                 'type' => T_('Labels'),
+                                'id' => $labelid,
                                 'link' => $web_path . '/labels.php?action=show&label=' . $labelid,
                                 'label' => $label->name,
                                 'value' => $label->name,

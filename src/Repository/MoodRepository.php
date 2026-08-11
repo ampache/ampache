@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Mood;
 use Ampache\Repository\Model\MoodCountTypeEnum;
 use Ampache\Repository\Model\User;
 use PDO;
@@ -39,6 +40,11 @@ final readonly class MoodRepository implements MoodRepositoryInterface
      * The object types that carry a catalog, and therefore the only ones the enable/catalog filters can narrow.
      */
     private const array CATALOG_TYPES = ['artist', 'album', 'album_disk', 'song', 'video'];
+
+    /**
+     * Every `mood_map`.`object_type`, which is also the table its `object_id` names, so an orphaned map is found for all of them.
+     */
+    private const array MAPPED_TYPES = Mood::OBJECT_TYPES;
 
     public function __construct(
         private DatabaseConnectionInterface $connection,
@@ -56,16 +62,24 @@ final readonly class MoodRepository implements MoodRepositoryInterface
 
     public function collectGarbage(): void
     {
-        $statements = [
-            // maps pointing at objects that no longer exist
-            "DELETE FROM `mood_map` USING `mood_map` LEFT JOIN `song` ON `song`.`id`=`mood_map`.`object_id` WHERE `mood_map`.`object_type`='song' AND `song`.`id` IS NULL;",
-            "DELETE FROM `mood_map` USING `mood_map` LEFT JOIN `album` ON `album`.`id`=`mood_map`.`object_id` WHERE `mood_map`.`object_type`='album' AND `album`.`id` IS NULL;",
-            "DELETE FROM `mood_map` USING `mood_map` LEFT JOIN `artist` ON `artist`.`id`=`mood_map`.`object_id` WHERE `mood_map`.`object_type`='artist' AND `artist`.`id` IS NULL;",
-            "DELETE FROM `mood_map` USING `mood_map` LEFT JOIN `video` ON `video`.`id`=`mood_map`.`object_id` WHERE `mood_map`.`object_type`='video' AND `video`.`id` IS NULL;",
-            // then the moods nothing points at any more; a mood has no hidden or merged form to spare
-            'DELETE FROM `mood` USING `mood` LEFT JOIN `mood_map` ON `mood`.`id`=`mood_map`.`mood_id` WHERE `mood_map`.`id` IS NULL;',
-            'DELETE `b` FROM `mood_map` AS `a`, `mood_map` AS `b` WHERE `a`.`id` < `b`.`id` AND `a`.`mood_id` <=> `b`.`mood_id` AND `a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`;',
-        ];
+        // maps pointing at objects that no longer exist, whoever set them, or a mood a user set by hand outlives the object
+        $statements = [];
+        foreach (self::MAPPED_TYPES as $objectType) {
+            $statements[] = sprintf(
+                "DELETE FROM `mood_map` USING `mood_map` LEFT JOIN `%s` ON `%s`.`id`=`mood_map`.`object_id` WHERE `mood_map`.`object_type`='%s' AND `%s`.`id` IS NULL;",
+                $objectType,
+                $objectType,
+                $objectType,
+                $objectType
+            );
+        }
+
+        // a truncated write leaves the enum's error value, naming no object any sweep above can resolve, and the mood it holds is never empty
+        $statements[] = "DELETE FROM `mood_map` WHERE `object_type` = '';";
+        // then the moods nothing points at any more; a mood has no hidden or merged form to spare
+        $statements[] = 'DELETE FROM `mood` USING `mood` LEFT JOIN `mood_map` ON `mood`.`id`=`mood_map`.`mood_id` WHERE `mood_map`.`id` IS NULL;';
+        // `unique_mood_map` counts the owner, so only a row repeated for the same user is a duplicate; the others are who set the mood
+        $statements[] = 'DELETE `b` FROM `mood_map` AS `a`, `mood_map` AS `b` WHERE `a`.`id` < `b`.`id` AND `a`.`mood_id` <=> `b`.`mood_id` AND `a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type` AND `a`.`user` <=> `b`.`user`;';
 
         foreach ($statements as $sql) {
             $this->connection->query($sql);
@@ -193,11 +207,14 @@ final readonly class MoodRepository implements MoodRepositoryInterface
     public function getObjectMoods(string $objectType, ?int $objectId): array
     {
         $params = [$objectType];
-        $sql    = 'SELECT `mood_map`.`id`, `mood`.`name`, `mood_map`.`user` FROM `mood` LEFT JOIN `mood_map` ON `mood_map`.`mood_id`=`mood`.`id` WHERE `mood_map`.`object_type` = ?';
+        // a mood a user sets by hand is mapped again beside the one read from the file, so group to one row per mood
+        $sql = 'SELECT `mood`.`id`, `mood`.`name`, MAX(`mood_map`.`user`) AS `user` FROM `mood` LEFT JOIN `mood_map` ON `mood_map`.`mood_id`=`mood`.`id` WHERE `mood_map`.`object_type` = ?';
         if ($objectId !== null) {
             $sql .= ' AND `mood_map`.`object_id` = ?';
             $params[] = $objectId;
         }
+
+        $sql .= ' GROUP BY `mood`.`id`, `mood`.`name`';
 
         $result = $this->connection->query($sql, $params);
 
@@ -266,10 +283,11 @@ final readonly class MoodRepository implements MoodRepositoryInterface
             : 'LIMIT ' . $limit;
 
         // the per-type counter column doubles as the weight, so a type without one falls back to the summed count
+        // one row per mood, not per map, or a mood a user set by hand is listed again beside the one read from the file
         $countType = MoodCountTypeEnum::tryFrom($objectType);
         $sql       = ($countType instanceof MoodCountTypeEnum)
-            ? sprintf('SELECT `mood`.`id`, `mood`.`name`, `mood_map`.`user`, `mood`.`%s` AS `count` FROM `mood` LEFT JOIN `mood_map` ON `mood_map`.`mood_id`=`mood`.`id` WHERE `mood_map`.`object_type` = ? AND `mood_map`.`object_id` = ? ORDER BY `%s` DESC, `mood`.`id` ', $countType->value, $countType->value) . $limitClause
-            : 'SELECT `mood`.`id`, `mood`.`name`, `mood_map`.`user`, (SUM(`mood`.`artist`)+SUM(`mood`.`album`)+SUM(`mood`.`song`)) AS `count` FROM `mood` LEFT JOIN `mood_map` ON `mood_map`.`mood_id`=`mood`.`id` WHERE `mood_map`.`object_type` = ? AND `mood_map`.`object_id` = ? ORDER BY `count` DESC, `mood`.`id` ' . $limitClause;
+            ? sprintf('SELECT `mood`.`id`, `mood`.`name`, MAX(`mood_map`.`user`) AS `user`, `mood`.`%s` AS `count` FROM `mood` LEFT JOIN `mood_map` ON `mood_map`.`mood_id`=`mood`.`id` WHERE `mood_map`.`object_type` = ? AND `mood_map`.`object_id` = ? GROUP BY `mood`.`id`, `mood`.`name`, `mood`.`%s` ORDER BY `%s` DESC, `mood`.`id` ', $countType->value, $countType->value, $countType->value) . $limitClause
+            : 'SELECT `mood`.`id`, `mood`.`name`, MAX(`mood_map`.`user`) AS `user`, (`mood`.`artist`+`mood`.`album`+`mood`.`song`) AS `count` FROM `mood` LEFT JOIN `mood_map` ON `mood_map`.`mood_id`=`mood`.`id` WHERE `mood_map`.`object_type` = ? AND `mood_map`.`object_id` = ? GROUP BY `mood`.`id`, `mood`.`name`, `mood`.`artist`, `mood`.`album`, `mood`.`song` ORDER BY `count` DESC, `mood`.`id` ' . $limitClause;
 
         $result = $this->connection->query($sql, [$objectType, $objectId]);
 

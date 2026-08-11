@@ -69,6 +69,7 @@ final class ArtistQuery implements QueryInterface
         'addition_time',
         'album_count',
         'id',
+        'last_played',
         'name',
         'placeformed',
         'rand',
@@ -307,6 +308,7 @@ final class ArtistQuery implements QueryInterface
             case 'addition_time':
             case 'album_count':
             case 'id':
+            case 'last_played':
             case 'placeformed':
             case 'song_count':
             case 'time':

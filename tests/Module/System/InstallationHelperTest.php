@@ -44,8 +44,10 @@ class InstallationHelperTest extends MockeryTestCase
 
     public function tearDown(): void
     {
-        if ($this->file !== '' && file_exists($this->file)) {
-            unlink($this->file);
+        foreach ([$this->file, $this->file . '.dist'] as $path) {
+            if ($this->file !== '' && file_exists($path)) {
+                unlink($path);
+            }
         }
     }
 
@@ -86,11 +88,64 @@ class InstallationHelperTest extends MockeryTestCase
         );
     }
 
+    public function testShippedRestRulesValidateAgainstTheirOwnDist(): void
+    {
+        $dist = __DIR__ . '/../../../public/rest/.htaccess.dist';
+        $file = $this->writeRules((string) file_get_contents($dist));
+        copy($dist, $file . '.dist');
+
+        static::assertTrue($this->subject->install_check_rewrite_rules($file, ''));
+    }
+
+    /**
+     * A file left over from an older release keeps the right web path on the rules it does have, so the prefix
+     * test alone reports it as configured while every rule added since is missing.
+     */
+    public function testValidationFailsForAFileMissingRulesTheDistDeclares(): void
+    {
+        $file = $this->writeRules('RewriteRule ^old\.php$ /ampache/old.php [L]');
+        file_put_contents(
+            $file . '.dist',
+            implode("\n", [
+                'RewriteRule ^old\.php$ /old.php [L]',
+                'RewriteRule ^new\.php$ /new.php [L]',
+            ])
+        );
+
+        static::assertFalse($this->subject->install_check_rewrite_rules($file, '/ampache'));
+    }
+
     public function testValidationFailsForAnUnprefixedTarget(): void
     {
         static::assertFalse(
             $this->subject->install_check_rewrite_rules($this->writeRules('RewriteRule ^image\.php$ /image.php [R=302,L]'), '/ampache')
         );
+    }
+
+    public function testValidationFailsWhenTheFileHasNotBeenWrittenYet(): void
+    {
+        static::assertFalse(
+            $this->subject->install_check_rewrite_rules(sys_get_temp_dir() . '/nonexistent-htaccess', '')
+        );
+    }
+
+    public function testValidationPassesForAFileCarryingEveryDistRule(): void
+    {
+        $file = $this->writeRules(
+            implode("\n", [
+                'RewriteRule ^old\.php$ /ampache/old.php [L]',
+                'RewriteRule ^new\.php$ /ampache/new.php [L]',
+            ])
+        );
+        file_put_contents(
+            $file . '.dist',
+            implode("\n", [
+                'RewriteRule ^old\.php$ /old.php [L]',
+                'RewriteRule ^new\.php$ /new.php [L]',
+            ])
+        );
+
+        static::assertTrue($this->subject->install_check_rewrite_rules($file, '/ampache'));
     }
 
     /**

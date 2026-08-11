@@ -66,6 +66,7 @@ final class VideoQuery implements QueryInterface
         'catalog',
         'codec',
         'id',
+        'last_played',
         'length',
         'name',
         'rand',
@@ -239,6 +240,7 @@ final class VideoQuery implements QueryInterface
             case 'addition_time':
             case 'catalog':
             case 'id':
+            case 'last_played':
             case 'total_count':
             case 'total_skip':
             case 'update_time':

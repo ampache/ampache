@@ -109,12 +109,19 @@ final class InstallationHelper implements InstallationHelperInterface
 
     public function install_check_rewrite_rules(string $file, string $web_path, bool $fix = false): bool|string
     {
-        if (!is_readable($file)) {
-            $file .= '.dist';
+        $dist    = $file . '.dist';
+        $missing = !is_readable($file);
+        if ($missing) {
+            $file = $dist;
+        }
+
+        // a file that does not exist yet cannot be configured, whatever the shipped rules happen to look like
+        if ($missing && !$fix) {
+            return false;
         }
 
         $valid     = true;
-        $htaccess  = (string) file_get_contents($file);
+        $htaccess  = (is_readable($file)) ? (string) file_get_contents($file) : '';
         $new_lines = [];
         $lines     = explode("\n", $htaccess);
         foreach ($lines as $line) {
@@ -152,7 +159,8 @@ final class InstallationHelper implements InstallationHelperInterface
             return implode("\n", $new_lines);
         }
 
-        return $valid;
+        // an out of date file still passes the prefix test, so the shipped rule set decides whether it is current
+        return $valid && $this->_rewriteRulesAreCurrent($htaccess, $dist);
     }
 
     /**
@@ -700,6 +708,40 @@ final class InstallationHelper implements InstallationHelperInterface
 
         fwrite($handle, $new_data, $length);
         fclose($handle);
+
+        return true;
+    }
+
+    /**
+     * The match pattern of every RewriteRule in an htaccess body.
+     *
+     * @return string[]
+     */
+    private function _rewriteRulePatterns(string $htaccess): array
+    {
+        preg_match_all('/^\s*RewriteRule\s+(\S+)/m', $htaccess, $matches);
+
+        return $matches[1];
+    }
+
+    /**
+     * Whether an installed htaccess still carries every rewrite rule the shipped `.dist` declares.
+     *
+     * Rules are compared on their match pattern rather than their substitution, because only the substitution
+     * carries the install's own web path.
+     */
+    private function _rewriteRulesAreCurrent(string $htaccess, string $dist): bool
+    {
+        if (!is_readable($dist)) {
+            return true;
+        }
+
+        $current = $this->_rewriteRulePatterns($htaccess);
+        foreach ($this->_rewriteRulePatterns((string) file_get_contents($dist)) as $pattern) {
+            if (!in_array($pattern, $current, true)) {
+                return false;
+            }
+        }
 
         return true;
     }

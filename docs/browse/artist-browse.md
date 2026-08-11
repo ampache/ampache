@@ -58,6 +58,7 @@ e.g. `sort=name,DESC`
 | `addition_time`    | When it was added to the catalog.                                                                                        |
 | `album_count`      | How many albums the artist has.                                                                                          |
 | `id`               | The artist id, which is the order they were created in.                                                                  |
+| `last_played`      | When the artist's songs were last played.                                                                                |
 | `name`             | Artist name.                                                                                                             |
 | `placeformed`      | Where the artist was formed.                                                                                             |
 | `rand`             | Random order, applied per request. Paging through it repeats and skips artists, so ask for everything in one call.       |

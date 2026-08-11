@@ -94,6 +94,8 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
      */
     public function collectPreferenceGarbage(): void
     {
+        $this->collectGarbage();
+
         $statements = [
             'DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` WHERE (`user_preference`.`user` != -1 AND `user`.`id` IS NULL) OR `preference` = 0;',
             "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`category` = 'system';",

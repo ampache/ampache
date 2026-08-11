@@ -581,3 +581,59 @@ export function show_selected_license_link(license_select) {
         window.open(link);
     }
 }
+
+// The ajax search escapes its labels for html, so an entity would otherwise be typed back into the field verbatim.
+function decodeSearchText(value) {
+    return $("<textarea>").html(value).text();
+}
+
+/**
+ * The parent (artist, album) search an edit dialog offers instead of a select too long to browse.
+ *
+ * The box you type in posts nothing itself: picking a suggestion enables the hidden id and typing a name enables
+ * the hidden name, and `serializeArray()` leaves the disabled one out, so the save never receives both.
+ */
+export function parentSearch(key) {
+    var search = $("#" + key + "_search");
+    var idfield = $("#" + key);
+    var namefield = $("#" + key + "_name");
+    if (search.length === 0 || idfield.length === 0 || namefield.length === 0) {
+        return;
+    }
+
+    // a name that no longer matches what was picked is a new parent, and it travels as the name
+    search.on("input", function () {
+        idfield.prop("disabled", true);
+        namefield.val(search.val()).prop("disabled", false);
+    });
+
+    search.autocomplete({
+        minLength: 2,
+        source: function (request, response) {
+            $.getJSON(jsAjaxUrl, {
+                page: "search",
+                action: "search",
+                target: search.data("target"),
+                search: request.term,
+                limit: 10,
+                xoutput: "json"
+            }, function (data) {
+                response($.map(data || [], function (item) {
+                    var name = decodeSearchText(item.label);
+
+                    return { label: name, value: name, id: item.id };
+                }));
+            });
+        },
+        select: function (event, ui) {
+            search.val(ui.item.value);
+            idfield.val(ui.item.id).prop("disabled", false);
+            namefield.prop("disabled", true);
+
+            return false;
+        },
+        focus: function () {
+            return false;
+        }
+    });
+}

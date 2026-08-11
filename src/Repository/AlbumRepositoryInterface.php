@@ -274,7 +274,7 @@ interface AlbumRepositoryInterface
      *
      * @return list<array{id: int, file: string, min_update_time: int}>
      */
-    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $lastUpdate): array;
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $lastUpdate, int $offset = 0): array;
 
     /**
      * Whether the album is one of the placeholders the scanner parks songs on when their real album is unknown
