@@ -87,6 +87,9 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        // Migration\V8\Migration800050 needs no rollback. It drops two `user_preference` indexes that `unique_name`
+        // already covers, so Ampache7 reaches those rows by the same access paths without them.
+
         // Migration\V8\Migration800049 needs no rollback. It widens the `tag_map` and `user_activity` `object_type`
         // enums, and Ampache7 writes neither the broadcast genre nor a folder activity that the extra values name.
 
