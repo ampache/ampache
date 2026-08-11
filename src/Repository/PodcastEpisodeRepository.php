@@ -398,13 +398,13 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
      *
      * @return list<array{id: int, file: string, min_update_time: int}>
      */
-    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $offset = 0): array
     {
         $sql = ($onlyStale)
             ? 'SELECT `podcast_episode`.`id`, `podcast_episode`.`file`, `podcast_episode`.`update_time` AS `min_update_time` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = ? AND `podcast_episode`.`update_time` < `catalog`.`last_update` ORDER BY `podcast_episode`.`file` DESC LIMIT '
             : 'SELECT `podcast_episode`.`id`, `podcast_episode`.`file`, `podcast_episode`.`update_time` AS `min_update_time` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = ? ORDER BY `podcast_episode`.`file` DESC LIMIT ';
 
-        $result = $this->connection->query($sql . $limit . ';', [$catalogId]);
+        $result = $this->connection->query($sql . $limit . ' OFFSET ' . $offset . ';', [$catalogId]);
 
         $rows = [];
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

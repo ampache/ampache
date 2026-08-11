@@ -617,7 +617,7 @@ function return_referer(): string
 /**
  * The most options a parent select will hold before the edit dialogs offer a search field instead.
  */
-const SELECT_LIST_LIMIT = 5;
+const SELECT_LIST_LIMIT = 1000;
 
 /**
  * A search field bound to `$name`, holding the id in a second field so a picked parent posts its id and a typed one its name.

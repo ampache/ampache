@@ -117,7 +117,7 @@ interface VideoRepositoryInterface
      *
      * @return list<array{id: int, file: string, min_update_time: int}>
      */
-    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale): array;
+    public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $offset = 0): array;
 
     /**
      * Inserts a new video row and returns its id
