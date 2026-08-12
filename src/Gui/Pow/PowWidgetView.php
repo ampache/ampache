@@ -71,6 +71,12 @@ final class PowWidgetView extends AbstractView
         return $this->challenge->signature;
     }
 
+    /** Served as a file, not a blob: `worker-src` falls back to `script-src 'self'`. */
+    public function getWorkerUrl(): string
+    {
+        return $this->webPath . '/lib/javascript/pow.worker.js';
+    }
+
     #[Override]
     protected function templateFile(): string
     {

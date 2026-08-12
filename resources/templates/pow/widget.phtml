@@ -30,6 +30,7 @@ declare(strict_types=1);
 <div id="pow-widget" class="pow-widget"
      data-challenge="<?php echo $this->e($this->getChallengeId()); ?>"
      data-difficulty="<?php echo $this->e($this->getDifficulty()); ?>"
+     data-worker="<?php echo $this->e($this->getWorkerUrl()); ?>"
      data-text-working="<?php echo $this->e(T_('Checking your browser...')); ?>"
      <?php /* HINT: %d is how far along the check is, as a percentage */ ?>
      data-text-progress="<?php echo $this->e(T_('Checking your browser... %d%%')); ?>"
