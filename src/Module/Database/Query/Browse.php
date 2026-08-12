@@ -35,6 +35,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
@@ -538,13 +539,12 @@ class Browse extends Query
         $limit_threshold = $this->get_threshold();
 
         // a song_preview or folder browse is handed rows it built itself, so they are neither saved nor prefetched
-        $build_cache = false;
+        $prefetchable = ($type !== 'song_preview' && $type !== 'folder');
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
-        } elseif ($type !== 'song_preview' && $type !== 'folder') {
+        } elseif ($prefetchable) {
             /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
             $this->save_objects($object_ids);
-            $build_cache = true;
         }
 
         $object_ids = $this->_pageObjectIds($object_ids, $type);
@@ -552,12 +552,13 @@ class Browse extends Query
             return;
         }
 
-        if ($build_cache) {
+        // prefetch page objects for any path that yields real ids (incl. custom browses)
+        if ($prefetchable && $object_ids !== []) {
             $this->_prefetchPage($type, $object_ids, $limit_threshold);
         }
 
-        // Row templates are also included directly, so they repeat this prefetch unless told it is already done
-        $browse_cached = $build_cache;
+        // tell the row templates the prefetch is already done
+        $browse_cached = ($prefetchable && $object_ids !== []);
 
         // Load any additional object we need for this
         $extra_objects = $this->get_supplemental_objects();
@@ -819,6 +820,7 @@ class Browse extends Query
         match ($type) {
             'song' => Song::build_cache($this->_squashList($object_ids), $limit_threshold),
             'album' => Album::build_cache($this->_squashList($object_ids)),
+            'album_disk' => AlbumDisk::build_cache($this->_squashList($object_ids)),
             'artist' => Artist::build_cache($this->_squashList($object_ids), true, $limit_threshold),
             'playlist' => Playlist::build_cache($this->_squashList($object_ids)),
             'genre', 'tag', 'tag_hidden' => Tag::build_cache($this->_squashList($object_ids)),
