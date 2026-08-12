@@ -1297,6 +1297,65 @@ site_charset = "UTF-8"
 ; DEFAULT: "false"
 ;admin_notify_reg = "true"
 
+;#########################################################
+; Proof of work                                          #
+;#########################################################
+
+; Ampache can make a browser solve a small computational puzzle before it is
+; allowed through certain endpoints. The puzzle is trivial for one visitor and
+; expensive for a bot doing it thousands of times, which is what makes it worth
+; having in front of registration and batch downloads.
+;
+; It needs JavaScript and Web Workers: a client without them cannot get through
+; a protected endpoint at all. Do not protect anything you want indexed.
+
+; Who has to solve a challenge.
+; POSSIBLE VALUES: off, guest, all
+;   off   - disabled entirely, nothing is issued or checked
+;   guest - only visitors who are not logged in
+;   all   - everybody, logged in or not
+; DEFAULT: "off"
+;pow_mode = "guest"
+
+; Which endpoints are protected, as a comma separated list of scopes.
+; POSSIBLE VALUES: register, batch
+; DEFAULT: "register, batch"
+;pow_protected = "register, batch"
+
+; How hard the puzzle is, counted in leading zero bits of the hash.
+; Each extra bit doubles the work. 21 is roughly two to eight seconds on a
+; current desktop and noticeably longer on an old phone. Drop to 18 if your
+; visitors are mostly on mobile, raise to 23 if you are being hammered.
+; Above 26 the wait runs into minutes on ordinary hardware and 32, the ceiling,
+; means billions of hashes: treat those as siege settings, not defaults.
+; Values outside 8-32 are clamped.
+; DEFAULT: 21
+;pow_difficulty = 21
+
+; How long an issued challenge stays valid, in seconds. Long enough to fill in
+; a registration form without rushing, short enough that a harvested challenge
+; is not worth keeping. It also bounds how long a solved answer has to be
+; remembered, and therefore the size of the pow_challenge table.
+; DEFAULT: 1800
+;pow_ttl = 1800
+
+; Access level waved through when pow_mode is "all", so admins and scripted
+; maintenance are not made to solve a puzzle on every download.
+; POSSIBLE VALUES: 0 (nobody exempt), 25 (user), 50 (content manager),
+;                  75 (manager), 100 (admin)
+; DEFAULT: 0
+;pow_exempt_level = 100
+
+; Storage engine for the `pow_challenge` table, which is created on first use.
+; It only ever holds answers that have already been solved, keyed by a 32
+; character id with no payload, so it is tiny and MEMORY suits it.
+; Switch to InnoDB if you replicate your database, or if you would rather that
+; solved answers survive a database restart instead of becoming replayable for
+; the remainder of their pow_ttl.
+; POSSIBLE VALUES: MEMORY, InnoDB
+; DEFAULT: MEMORY
+;pow_table_engine = "InnoDB"
+
 ; This setting determines whether the user will be created as a disabled user.
 ; If this is on, an administrator will need to manually enable the account
 ; before it's usable.

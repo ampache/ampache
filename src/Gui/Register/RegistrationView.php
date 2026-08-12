@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Gui\Register;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Pow\PowWidgetView;
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Pow\PowServiceInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
 use Ampache\Module\Util\Ui;
@@ -48,6 +50,7 @@ final class RegistrationView extends AbstractView
     public function __construct(
         private readonly string $webPath,
         private readonly RegistrationAgreementRendererInterface $registrationAgreementRenderer,
+        private readonly PowServiceInterface $powService,
     ) {}
 
     /**
@@ -129,6 +132,14 @@ final class RegistrationView extends AbstractView
         return $this->registrationAgreementRenderer->render();
     }
 
+    /**
+     * The proof-of-work fields, issued fresh with the form so a scripted post has nothing to reuse.
+     */
+    public function renderPowWidget(): string
+    {
+        return (new PowWidgetView($this->powService->issue('register'), $this->webPath))->render();
+    }
+
     public function showAgreement(): bool
     {
         return (bool) AmpConfig::get('user_agreement');
@@ -137,6 +148,11 @@ final class RegistrationView extends AbstractView
     public function showCaptcha(): bool
     {
         return (bool) AmpConfig::get('captcha_public_reg');
+    }
+
+    public function showPow(): bool
+    {
+        return $this->powService->isRequired('register', null);
     }
 
     #[Override]

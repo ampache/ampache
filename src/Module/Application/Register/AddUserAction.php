@@ -34,6 +34,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Pow\PowServiceInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
@@ -56,6 +57,7 @@ final class AddUserAction implements ApplicationActionInterface
         private readonly ModelFactoryInterface $modelFactory,
         private readonly UserRepositoryInterface $userRepository,
         private readonly RegistrationAgreementRendererInterface $registrationAgreementRenderer,
+        private readonly PowServiceInterface $powService,
         public UiInterface $ui,
     ) {}
 
@@ -105,6 +107,15 @@ final class AddUserAction implements ApplicationActionInterface
             }
         }
 
+        // Checked alongside the captcha rather than before the field validation, so a failed check
+        // comes back as a form error with everything the visitor typed still in place.
+        if (
+            $this->powService->isRequired('register', null)
+            && !$this->powService->verifyRequest($request, 'register')
+        ) {
+            AmpError::add('pow', T_('Browser check failed. Please reload the page and try again'));
+        }
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_AGREEMENT) && !$_POST['accept_agreement']) {
             AmpError::add('user_agreement', T_('You must accept the user agreement'));
         } // if they have to agree to something
@@ -151,7 +162,8 @@ final class AddUserAction implements ApplicationActionInterface
         if (AmpError::occurred()) {
             echo (new RegistrationView(
                 AmpConfig::get_web_path(),
-                $this->registrationAgreementRenderer
+                $this->registrationAgreementRenderer,
+                $this->powService
             ))->render();
 
             return null;
@@ -182,7 +194,8 @@ final class AddUserAction implements ApplicationActionInterface
 
             echo (new RegistrationView(
                 AmpConfig::get_web_path(),
-                $this->registrationAgreementRenderer
+                $this->registrationAgreementRenderer,
+                $this->powService
             ))->render();
 
             return null;

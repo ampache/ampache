@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Pow\PowServiceInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -63,6 +64,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         private SongRepositoryInterface $songRepository,
         private ResponseFactoryInterface $responseFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
+        private PowServiceInterface $powService,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
@@ -72,6 +74,17 @@ final readonly class DefaultAction implements ApplicationActionInterface
             && !$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
         ) {
             throw new AccessDeniedException();
+        }
+
+        // A zip is expensive to build, so it is worth making a client prove it is a browser first.
+        // Requests carrying a stream session are exempt: Ampache has already authenticated them and
+        // they come from players that cannot run the challenge.
+        if (
+            !defined('NO_SESSION')
+            && $this->powService->isRequired('batch', $gatekeeper->getUser())
+            && !$this->powService->verifyRequest($request, 'batch')
+        ) {
+            return $this->powService->createChallengeResponse($request, 'batch');
         }
 
         $media_ids    = [];
