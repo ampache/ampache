@@ -32,6 +32,19 @@ use Psr\Http\Message\ServerRequestInterface;
 interface PowServiceInterface
 {
     /**
+     * Tells the browser that a delivery has actually begun.
+     *
+     * The interstitial cannot see when a download commits: the response goes into a hidden frame and
+     * a large archive is written in full before its headers are sent. This echoes the acknowledgement
+     * token the interstitial sent as a cookie, which reaches the client with those headers and at no
+     * other moment, so the page can return the visitor the instant leaving is safe.
+     *
+     * Returns the response untouched when there is no token to echo, so it is safe to call on any
+     * response.
+     */
+    public function confirmDelivery(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface;
+
+    /**
      * The interstitial page that solves a challenge and then replays the original request.
      *
      * For endpoints that are plain links, where there is no markup to embed the challenge into. The

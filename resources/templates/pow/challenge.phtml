@@ -92,11 +92,16 @@ use Ampache\Gui\Asset\StylesheetsView;
              before its headers are sent, so unloading this document would cancel the request. -->
         <form id="pow-form" method="get" action="<?php echo $this->e($this->getTargetPath()); ?>"
               target="pow-sink" data-pow-autosubmit="1"
-              data-pow-return="<?php echo $this->e($this->getReturnUrl()); ?>">
+              data-pow-return="<?php echo $this->e($this->getReturnUrl()); ?>"
+              data-pow-ack="<?php echo $this->confirmsDelivery() ? '1' : '0'; ?>">
             <?php foreach ($this->getTargetFields() as $field) { ?>
                 <input type="hidden" name="<?php echo $this->e($field['name']); ?>" value="<?php echo $this->e($field['value']); ?>" />
             <?php } ?>
             <?php echo $this->raw($this->renderWidget()); ?>
+            <!-- Filled in by the script just before submitting. The endpoint echoes it back as a
+                 cookie alongside the download headers, which is how the page learns the transfer has
+                 actually begun rather than guessing on a timer. -->
+            <input type="hidden" name="pow_ack" id="pow_ack" value="" />
             <noscript>
                 <input type="submit" value="<?php echo $this->e(T_('Continue')); ?>" disabled />
             </noscript>

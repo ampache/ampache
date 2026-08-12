@@ -57,6 +57,21 @@ use Throwable;
  */
 final readonly class PowService implements PowServiceInterface
 {
+    /** Name of the cookie that tells the interstitial a delivery has begun. */
+    private const string ACK_COOKIE = 'pow_ack';
+
+    /**
+     * Scopes whose endpoint can echo the acknowledgement.
+     *
+     * Only an endpoint that returns a response object can carry the cookie. Single downloads stream
+     * from the legacy playlist code and hand back nothing to decorate, so they stay on the timer
+     * rather than dragging that code into this.
+     */
+    private const array ACK_SCOPES = ['batch'];
+
+    /** Long enough for the page to notice, short enough not to linger in the jar. */
+    private const int ACK_TTL = 30;
+
     private const int DEFAULT_DIFFICULTY = 21;
 
     private const int DEFAULT_TTL = 1800;
@@ -80,6 +95,32 @@ final readonly class PowService implements PowServiceInterface
     ) {}
 
     #[Override]
+    public function confirmDelivery(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+        $token = (string) ($request->getQueryParams()[self::ACK_COOKIE] ?? '');
+
+        // The token comes back from the client and is about to be written into a response header, so
+        // anything that is not the shape this service hands out is dropped rather than escaped.
+        if (preg_match('/^[a-f0-9]{32}$/', $token) !== 1) {
+            return $response;
+        }
+
+        $cookie = sprintf(
+            '%s=%s; Path=/; Max-Age=%d; SameSite=Lax',
+            self::ACK_COOKIE,
+            $token,
+            self::ACK_TTL
+        );
+
+        // Readable by script on purpose: the page polls for it. Nothing is authorised by holding it.
+        if (strtolower($request->getUri()->getScheme()) === 'https') {
+            $cookie .= '; Secure';
+        }
+
+        return $response->withAddedHeader('Set-Cookie', $cookie);
+    }
+
+    #[Override]
     public function createChallengeResponse(ServerRequestInterface $request, string $scope): ResponseInterface
     {
         // The interstitial replays the interrupted request as a GET form, so a body would be
@@ -96,7 +137,8 @@ final readonly class PowService implements PowServiceInterface
             $this->issue($scope),
             (string) $request->getUri(),
             AmpConfig::get_web_path(),
-            $request->getHeaderLine('Referer')
+            $request->getHeaderLine('Referer'),
+            in_array($scope, self::ACK_SCOPES, true)
         );
 
         return $this->responseFactory

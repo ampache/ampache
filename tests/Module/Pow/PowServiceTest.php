@@ -54,6 +54,22 @@ class PowServiceTest extends MockeryTestCase
     private PowService $subject;
 
     /**
+     * @return array<string, array{string}>
+     */
+    public static function badAckTokenDataProvider(): array
+    {
+        return [
+            'absent' => [''],
+            'too short' => [str_repeat('a', 31)],
+            'too long' => [str_repeat('a', 33)],
+            'not hex' => [str_repeat('Z', 32)],
+            // Would break out of the header if it were echoed unchecked.
+            'header injection' => ["aaaaaaaaaaaaaaaa\r\nSet-Cookie: session=evil"],
+            'trailing newline' => [str_repeat('a', 31) . "\n"],
+        ];
+    }
+
+    /**
      * @return list<array{int, int}>
      */
     public static function difficultyClampDataProvider(): array
@@ -145,6 +161,68 @@ class PowServiceTest extends MockeryTestCase
         self::assertStringContainsString('answer already used', $logged->message);
     }
 
+    #[DataProvider('badAckTokenDataProvider')]
+    public function testConfirmDeliveryDropsATokenItDidNotIssue(string $token): void
+    {
+        $request = $this->mock(ServerRequestInterface::class);
+        $request->shouldReceive('getQueryParams')->andReturn(['pow_ack' => $token]);
+
+        $response = $this->mock(ResponseInterface::class);
+        $response->shouldNotReceive('withAddedHeader');
+
+        self::assertSame($response, $this->subject->confirmDelivery($request, $response));
+    }
+
+    public function testConfirmDeliveryEchoesAValidTokenAsAReadableCookie(): void
+    {
+        $token = str_repeat('a', 32);
+
+        $uri = $this->mock(UriInterface::class);
+        $uri->shouldReceive('getScheme')->andReturn('https');
+
+        $request = $this->mock(ServerRequestInterface::class);
+        $request->shouldReceive('getQueryParams')->andReturn(['pow_ack' => $token]);
+        $request->shouldReceive('getUri')->andReturn($uri);
+
+        $decorated = $this->mock(ResponseInterface::class);
+        $response  = $this->mock(ResponseInterface::class);
+        $response->shouldReceive('withAddedHeader')
+            ->once()
+            ->andReturnUsing(function (string $name, string $value) use ($decorated, $token): ResponseInterface {
+                self::assertSame('Set-Cookie', $name);
+                self::assertStringContainsString('pow_ack=' . $token, $value);
+                self::assertStringContainsString('SameSite=Lax', $value);
+                self::assertStringContainsString('Secure', $value);
+                // The page has to read it, so it deliberately is not HttpOnly.
+                self::assertStringNotContainsString('HttpOnly', $value);
+
+                return $decorated;
+            });
+
+        self::assertSame($decorated, $this->subject->confirmDelivery($request, $response));
+    }
+
+    public function testConfirmDeliveryLeavesSecureOffPlainHttp(): void
+    {
+        $uri = $this->mock(UriInterface::class);
+        $uri->shouldReceive('getScheme')->andReturn('http');
+
+        $request = $this->mock(ServerRequestInterface::class);
+        $request->shouldReceive('getQueryParams')->andReturn(['pow_ack' => str_repeat('b', 32)]);
+        $request->shouldReceive('getUri')->andReturn($uri);
+
+        $response = $this->mock(ResponseInterface::class);
+        $response->shouldReceive('withAddedHeader')
+            ->once()
+            ->andReturnUsing(function (string $name, string $value) use ($response): ResponseInterface {
+                self::assertStringNotContainsString('Secure', $value);
+
+                return $response;
+            });
+
+        $this->subject->confirmDelivery($request, $response);
+    }
+
     public function testCreateChallengeResponseRefusesToReplayANonGetRequest(): void
     {
         // The interstitial replays as a GET form, so a body would be dropped on the way through.
@@ -182,7 +260,10 @@ class PowServiceTest extends MockeryTestCase
                 self::assertStringContainsString('name="pow_sig"', $html);
                 // Submitted into the frame, so the page is not unloaded while the archive is built.
                 self::assertStringContainsString('target="pow-sink"', $html);
-                self::assertStringContainsString('data-pow-return="https://music.example/albums.php?id=42"', $html);
+                // Relative, so it can only ever resolve against this origin.
+                self::assertStringContainsString('data-pow-return="/albums.php?id=42"', $html);
+                // `batch` returns a response object, so it can echo the acknowledgement cookie.
+                self::assertStringContainsString('data-pow-ack="1"', $html);
 
                 return $body;
             });

@@ -225,11 +225,16 @@ final readonly class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        return $this->zipHandler->zip(
-            $this->responseFactory->createResponse(),
-            $name,
-            $this->getMediaFiles($media_ids),
-            $flat_path
+        // The archive is written in full before these headers go out, so the cookie riding along with
+        // them is the first moment the interstitial can know the transfer has begun.
+        return $this->powService->confirmDelivery(
+            $request,
+            $this->zipHandler->zip(
+                $this->responseFactory->createResponse(),
+                $name,
+                $this->getMediaFiles($media_ids),
+                $flat_path
+            )
         );
     }
 

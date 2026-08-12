@@ -43,7 +43,17 @@ final class PowChallengeView extends AbstractView
         private readonly string $targetUrl,
         private readonly string $webPath,
         private readonly string $referer = '',
+        private readonly bool $confirmsDelivery = false,
     ) {}
+
+    /**
+     * Whether this endpoint echoes the acknowledgement cookie, and so whether the page should wait
+     * for it rather than fall back to a timer.
+     */
+    public function confirmsDelivery(): bool
+    {
+        return $this->confirmsDelivery;
+    }
 
     public function getDocumentLanguage(): string
     {
@@ -54,32 +64,54 @@ final class PowChallengeView extends AbstractView
      * Where to send the visitor once the download is under way, so the interstitial is not left
      * sitting there with nothing to do.
      *
-     * The `Referer` is client supplied and ends up in `location.replace()`, so anything that is not
-     * the same origin as the request being replayed falls back to the home page rather than becoming
-     * an open redirect.
+     * Taken from the client supplied `Referer`, so it is reduced to a path and query and returned
+     * relative. An absolute url cannot come out of here, which is what keeps it from becoming an
+     * open redirect, and it removes any need to trust what the request says about itself.
+     *
+     * Scheme and port are deliberately not compared. Behind a proxy that terminates TLS, the
+     * request reaches PHP as http on port 80 while the browser sends an https referer, so demanding
+     * they match would send every visitor on such an install back to the home page.
      */
     public function getReturnUrl(): string
     {
         $fallback = $this->webPath . '/index.php';
-        $referer  = parse_url($this->referer);
-        $target   = parse_url($this->targetUrl);
 
-        if ($this->referer === '' || !is_array($referer) || !is_array($target)) {
+        if ($this->referer === '') {
             return $fallback;
         }
 
-        foreach (['scheme', 'host', 'port'] as $part) {
-            if (($referer[$part] ?? null) !== ($target[$part] ?? null)) {
+        $referer = parse_url($this->referer);
+        $target  = parse_url($this->targetUrl);
+
+        if (!is_array($referer) || !is_array($target)) {
+            return $fallback;
+        }
+
+        // A referer naming a host has to name this one. Where the request cannot say which host it
+        // is being served as, there is nothing to check it against, so it is refused rather than
+        // guessed at.
+        if (isset($referer['host'])) {
+            $host = $target['host'] ?? parse_url($this->webPath, PHP_URL_HOST);
+
+            if (!is_string($host) || strcasecmp($referer['host'], $host) !== 0) {
                 return $fallback;
             }
         }
 
-        // Coming back to the protected link itself would just start the download again.
-        if (($referer['path'] ?? '') === ($target['path'] ?? '')) {
+        // Has to be an absolute path on this host: `javascript:alert(1)` parses to a path of
+        // `alert(1)`, which is not somewhere to send anyone.
+        $path = $referer['path'] ?? '';
+
+        if (!str_starts_with($path, '/')) {
             return $fallback;
         }
 
-        return $this->referer;
+        // Coming back to the protected link itself would just start the download again.
+        if ($path === ($target['path'] ?? '')) {
+            return $fallback;
+        }
+
+        return $path . (isset($referer['query']) ? '?' . $referer['query'] : '');
     }
 
     public function getSiteCharset(): string
@@ -97,7 +129,15 @@ final class PowChallengeView extends AbstractView
     public function getTargetFields(): array
     {
         parse_str((string) parse_url($this->targetUrl, PHP_URL_QUERY), $query);
-        unset($query['pow_id'], $query['pow_exp'], $query['pow_diff'], $query['pow_sig'], $query['pow_nonce']);
+        unset(
+            $query['pow_id'],
+            $query['pow_exp'],
+            $query['pow_diff'],
+            $query['pow_sig'],
+            $query['pow_nonce'],
+            // A token from an earlier attempt would make the page return before this delivery starts.
+            $query['pow_ack']
+        );
 
         $fields = [];
         foreach ($this->flatten($query) as $name => $value) {

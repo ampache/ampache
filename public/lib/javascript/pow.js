@@ -305,6 +305,36 @@
     }
 
     /**
+     * A token the endpoint echoes back as a cookie, so the page can tell when the delivery has
+     * actually started. Only a UX signal: holding it authorises nothing.
+     */
+    function ackToken() {
+        var bytes = new Uint8Array(16);
+        var token = '';
+        var index;
+
+        if (window.crypto && window.crypto.getRandomValues) {
+            window.crypto.getRandomValues(bytes);
+        } else {
+            for (index = 0; index < bytes.length; index++) {
+                bytes[index] = Math.floor(Math.random() * 256);
+            }
+        }
+
+        for (index = 0; index < bytes.length; index++) {
+            token += (bytes[index] + 0x100).toString(16).slice(1);
+        }
+
+        return token;
+    }
+
+    function ackCookiePresent(token) {
+        return document.cookie.split(';').some(function (entry) {
+            return entry.trim() === 'pow_ack=' + token;
+        });
+    }
+
+    /**
      * Hands the request back to its original endpoint and gets out of the way.
      *
      * The form targets a hidden iframe, so this document stays loaded: a zip is written in full
@@ -312,20 +342,67 @@
      * fires `load` on the frame, so a `load` means the endpoint answered with a page instead --
      * an error, or a fresh challenge -- and the visitor should be looking at it rather than at a
      * frame they cannot see.
+     *
+     * Returning waits for the acknowledgement cookie, which arrives with the download headers and at
+     * no earlier moment. Before those headers the request is still a navigation the frame owns, and
+     * leaving would cancel it; after them the browser owns the transfer and leaving is harmless.
      */
     function replay() {
         var returnUrl = form.dataset.powReturn;
+        var acknowledges = form.dataset.powAck === '1';
+        var ackField = document.getElementById('pow_ack');
+        var token = ackToken();
+        // Ampache's own recommended configs send `Referrer-Policy: no-referrer`, so on most installs
+        // the server is handed nothing to build a return url from and falls back to the home page.
+        // The tab still knows where the visitor came from, so history is the route and the url the
+        // fallback, not the other way round.
+        var canGoBack = window.history.length > 1;
         var timer = null;
+        var poll = null;
         var leaving = false;
 
-        function leaveFor(url) {
+        function stop() {
+            leaving = true;
+            window.clearTimeout(timer);
+            window.clearInterval(poll);
+            // Spent: a token left behind would let the next visit return before its own delivery.
+            document.cookie = 'pow_ack=; Path=/; Max-Age=0; SameSite=Lax';
+        }
+
+        /** The endpoint answered with a page rather than a file, so show it instead of going back. */
+        function showResponse(url) {
             if (leaving || !url) {
                 return;
             }
 
-            leaving = true;
-            window.clearTimeout(timer);
+            stop();
             window.location.replace(url);
+        }
+
+        function goBack() {
+            if (leaving) {
+                return;
+            }
+
+            stop();
+
+            if (canGoBack) {
+                window.history.back();
+
+                // A back() that lands unloads this page well inside the delay; one that finds
+                // nothing to return to is silent, and this is what catches it.
+                window.setTimeout(function () {
+                    if (returnUrl) {
+                        window.location.replace(returnUrl);
+                    }
+                }, 700);
+
+                return;
+            }
+
+            if (returnUrl) {
+                window.location.replace(returnUrl);
+            }
         }
 
         if (sink) {
@@ -340,8 +417,12 @@
                     shown = form.action;
                 }
 
-                leaveFor(shown);
+                showResponse(shown);
             };
+        }
+
+        if (ackField) {
+            ackField.value = token;
         }
 
         form.submit();
@@ -350,14 +431,31 @@
 
         if (returnLink) {
             returnLink.hidden = false;
+
+            // The href is a working fallback on its own; this just routes the click through the
+            // same history-first path the timer uses.
+            var anchor = returnLink.querySelector('a');
+
+            if (anchor) {
+                anchor.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    goBack();
+                });
+            }
         }
 
-        // Only a fallback for the visitor who does not take the link. Long enough that a slow
-        // archive has usually reached its headers, by which point the browser owns the transfer and
-        // leaving no longer stops it.
-        timer = window.setTimeout(function () {
-            leaveFor(returnUrl);
-        }, 10000);
+        // Where the endpoint acknowledges, the cookie is the signal and the timer only covers the
+        // case where it never arrives. Where it does not, the timer is all there is, so it is short
+        // enough not to strand the visitor: those endpoints stream, and their headers go out at once.
+        if (acknowledges) {
+            poll = window.setInterval(function () {
+                if (ackCookiePresent(token)) {
+                    goBack();
+                }
+            }, 250);
+        }
+
+        timer = window.setTimeout(goBack, acknowledges ? 30000 : 5000);
     }
 
     worker.onmessage = function (event) {
