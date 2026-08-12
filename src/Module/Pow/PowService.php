@@ -267,8 +267,10 @@ final readonly class PowService implements PowServiceInterface
             . '`id` char(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL, '
             . '`expire` int(11) unsigned NOT NULL, '
             . 'PRIMARY KEY (`id`), '
-            . 'KEY `expire` (`expire`)'
-            . ') ENGINE=' . $engine
+            // A memory table indexes with hashes unless told otherwise, and a hash cannot answer
+            // the range scan the purge does, so this one is asked for explicitly. InnoDB ignores it.
+            . 'KEY `expire` (`expire`) USING BTREE'
+            . ') ENGINE=' . $engine . ' DEFAULT CHARSET=ascii'
         );
     }
 

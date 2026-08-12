@@ -97,6 +97,7 @@ class PowServiceTest extends MockeryTestCase
             'all, admin with nobody exempt' => ['all', 'batch', 1, 0, true],
             'all, admin exempt' => ['all', 'batch', 1, 100, false],
             'unknown mode falls back to off' => ['nonsense', 'register', 0, 0, false],
+            'download, guest' => ['guest', 'download', 0, 0, true],
         ];
     }
 
@@ -155,7 +156,7 @@ class PowServiceTest extends MockeryTestCase
             ->andReturn($mode);
         $this->configContainer->shouldReceive('getArray')
             ->with(ConfigurationKeyEnum::POW_PROTECTED)
-            ->andReturn(['register', 'batch']);
+            ->andReturn(['register', 'batch', 'download']);
         $this->configContainer->shouldReceive('get')
             ->with(ConfigurationKeyEnum::POW_EXEMPT_LEVEL)
             ->andReturn($exemptLevel);
@@ -180,6 +181,7 @@ class PowServiceTest extends MockeryTestCase
             ->andReturn(['register']);
 
         self::assertFalse($this->subject->isRequired('batch', null));
+        self::assertFalse($this->subject->isRequired('download', null));
         self::assertTrue($this->subject->isRequired('register', null));
     }
 
@@ -286,6 +288,8 @@ class PowServiceTest extends MockeryTestCase
         self::assertStringStartsWith('INSERT IGNORE', $queries[0]);
         self::assertStringContainsString('CREATE TABLE IF NOT EXISTS', $queries[1]);
         self::assertStringContainsString('ENGINE=MEMORY', $queries[1]);
+        // A memory table hashes its indexes unless asked otherwise, and the purge needs a range scan.
+        self::assertStringContainsString('USING BTREE', $queries[1]);
         self::assertStringStartsWith('INSERT IGNORE', $queries[2]);
     }
 

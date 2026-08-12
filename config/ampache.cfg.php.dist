@@ -1318,7 +1318,14 @@ site_charset = "UTF-8"
 ;pow_mode = "guest"
 
 ; Which endpoints are protected, as a comma separated list of scopes.
-; POSSIBLE VALUES: register, batch
+;   register - the public registration form
+;   batch    - zip downloads of an album, artist, playlist and so on
+;   download - single track downloads through stream.php
+; `download` is off by default and worth thinking about before enabling: it
+; guards the link the interface hands out, not the file itself, which
+; play/index.php still serves to anything holding a valid session. It also sits
+; in front of a one click action, so every download pays the wait.
+; POSSIBLE VALUES: register, batch, download
 ; DEFAULT: "register, batch"
 ;pow_protected = "register, batch"
 
