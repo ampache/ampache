@@ -145,6 +145,21 @@ class PowServiceTest extends MockeryTestCase
         self::assertStringContainsString('answer already used', $logged->message);
     }
 
+    public function testCreateChallengeResponseRefusesToReplayANonGetRequest(): void
+    {
+        // The interstitial replays as a GET form, so a body would be dropped on the way through.
+        $request = $this->mock(ServerRequestInterface::class);
+        $request->shouldReceive('getMethod')->andReturn('POST');
+
+        $response = $this->mock(ResponseInterface::class);
+        $response->shouldReceive('withHeader')->andReturnSelf();
+
+        $this->responseFactory->shouldReceive('createResponse')->with(405)->once()->andReturn($response);
+        $this->streamFactory->shouldNotReceive('createStream');
+
+        self::assertSame($response, $this->subject->createChallengeResponse($request, 'batch'));
+    }
+
     // -- the interstitial --------------------------------------------------
 
     public function testCreateChallengeResponseServesThePageWithoutTouchingTheDatabase(): void
@@ -173,21 +188,6 @@ class PowServiceTest extends MockeryTestCase
         $response->shouldReceive('withBody')->with($body)->andReturnSelf();
 
         $this->responseFactory->shouldReceive('createResponse')->with(200)->andReturn($response);
-
-        self::assertSame($response, $this->subject->createChallengeResponse($request, 'batch'));
-    }
-
-    public function testCreateChallengeResponseRefusesToReplayANonGetRequest(): void
-    {
-        // The interstitial replays as a GET form, so a body would be dropped on the way through.
-        $request = $this->mock(ServerRequestInterface::class);
-        $request->shouldReceive('getMethod')->andReturn('POST');
-
-        $response = $this->mock(ResponseInterface::class);
-        $response->shouldReceive('withHeader')->andReturnSelf();
-
-        $this->responseFactory->shouldReceive('createResponse')->with(405)->once()->andReturn($response);
-        $this->streamFactory->shouldNotReceive('createStream');
 
         self::assertSame($response, $this->subject->createChallengeResponse($request, 'batch'));
     }
