@@ -65,6 +65,21 @@ class StreamTest extends MockeryTestCase
         ];
     }
 
+    /**
+     * @return list<array{string, list<string>}>
+     */
+    public static function transcodeModeProvider(): array
+    {
+        return [
+            ['allowed', ['native', 'transcode']],
+            ['required', ['transcode']],
+            ['false', ['native']],
+            ['', ['native']],
+            ['true', ['native', 'transcode']],
+            ['REQUIRED', ['transcode']],
+        ];
+    }
+
     public function testGetAllowedBitrateReturnsUserBitrateInBpsWhenNoDownsampling(): void
     {
         AmpConfig::set('max_bit_rate', 0, true);
@@ -152,6 +167,28 @@ class StreamTest extends MockeryTestCase
         $this->assertSame(128000, Stream::get_player_bitrate('webplayer'));
         $this->assertSame(128000, Stream::get_player_bitrate('api'));
         $this->assertSame(128000, Stream::get_player_bitrate());
+    }
+
+    #[DataProvider('transcodeModeProvider')]
+    public function testGetStreamTypesForTypeReadsTheDocumentedModes(string $mode, array $expected): void
+    {
+        AmpConfig::set('transcode_flac', $mode, true);
+        AmpConfig::set('transcode_player_webplayer_flac', '', true);
+        AmpConfig::set('encode_player_webplayer_target', '', true);
+
+        $this->assertSame($expected, Stream::get_stream_types_for_type('flac', 'webplayer'));
+    }
+
+    /**
+     * a typo like "falsed" used to read as a boolean true, so mp3 gained a transcode type and was re-encoded
+     */
+    public function testGetStreamTypesForTypeRefusesAnInvalidTranscodeMode(): void
+    {
+        AmpConfig::set('transcode_mp3', 'falsed', true);
+        AmpConfig::set('transcode_player_webplayer_mp3', '', true);
+        AmpConfig::set('encode_player_webplayer_target', '', true);
+
+        $this->assertSame(['native'], Stream::get_stream_types_for_type('mp3', 'webplayer'));
     }
 
     public function testGetTranscodeFormatHonoursExplicitTargetOverPreferences(): void

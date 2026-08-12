@@ -27,6 +27,7 @@ namespace Ampache\Gui\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\EnvironmentInterface;
@@ -56,6 +57,22 @@ final class DebugView extends AbstractView
         'proxy_pass',
         'secret_key',
         'spotify_client_secret',
+    ];
+
+    /**
+     * `transcode_*` keys that are not a `transcode_TYPE` mode, so they are not checked against that enum.
+     */
+    private const array TRANSCODE_MODE_EXCEPTIONS = [
+        'transcode',
+        'transcode_bitrate',
+        'transcode_bitrate_api',
+        'transcode_bitrate_formats',
+        'transcode_bitrate_webplayer',
+        'transcode_cmd',
+        'transcode_input',
+        'transcode_player_customize',
+        'transcode_template',
+        'transcode_to',
     ];
 
     /**
@@ -124,6 +141,27 @@ final class DebugView extends AbstractView
     public function getForcedGitBranch(): string
     {
         return AutoUpdate::is_force_git_branch();
+    }
+
+    /**
+     * Configuration entries this install cannot act on, so an admin can see the typo the log would only mention.
+     *
+     * @return list<array{key: string, value: string}>
+     */
+    public function getInvalidSettings(): array
+    {
+        $invalid = [];
+        foreach ($this->configuration as $key => $value) {
+            if (!$this->isTranscodeMode($key) || !is_scalar($value)) {
+                continue;
+            }
+
+            if (Stream::normalize_transcode_mode($value) === null) {
+                $invalid[] = ['key' => $key, 'value' => (string) $value];
+            }
+        }
+
+        return $invalid;
     }
 
     public function getLastCronDate(): string
@@ -236,5 +274,15 @@ final class DebugView extends AbstractView
         }
 
         return $lines;
+    }
+
+    /**
+     * `transcode_TYPE` and `transcode_player_PLAYER_TYPE` both take the mode enum; every other transcode key is named.
+     */
+    private function isTranscodeMode(string $key): bool
+    {
+        return str_starts_with($key, 'transcode_')
+            && !str_starts_with($key, 'transcode_cmd_')
+            && !in_array($key, self::TRANSCODE_MODE_EXCEPTIONS, true);
     }
 }
