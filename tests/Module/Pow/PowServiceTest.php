@@ -387,6 +387,7 @@ class PowServiceTest extends MockeryTestCase
 
         $request = $this->mock(ServerRequestInterface::class);
         $request->shouldReceive('getParsedBody')->andReturn([]);
+        $request->shouldReceive('getHeaderLine')->with('User-Agent')->andReturn('Mozilla/5.0');
         $request->shouldReceive('getQueryParams')->andReturn([]);
 
         self::assertFalse($this->subject->verifyRequest($request, 'batch'));
@@ -401,6 +402,7 @@ class PowServiceTest extends MockeryTestCase
 
         $request = $this->mock(ServerRequestInterface::class);
         $request->shouldReceive('getParsedBody')->andReturn($this->answerFor($challenge));
+        $request->shouldReceive('getHeaderLine')->with('User-Agent')->andReturn('Mozilla/5.0');
         $request->shouldReceive('getQueryParams')->andReturn([]);
 
         self::assertTrue($this->subject->verifyRequest($request, 'register'));
@@ -417,6 +419,7 @@ class PowServiceTest extends MockeryTestCase
 
         $request = $this->mock(ServerRequestInterface::class);
         $request->shouldReceive('getParsedBody')->andReturn(null);
+        $request->shouldReceive('getHeaderLine')->with('User-Agent')->andReturn('Mozilla/5.0');
         $request->shouldReceive('getQueryParams')->andReturn($this->answerFor($challenge));
 
         self::assertTrue($this->subject->verifyRequest($request, 'batch'));

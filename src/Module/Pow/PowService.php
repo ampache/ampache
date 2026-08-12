@@ -141,46 +141,7 @@ final readonly class PowService implements PowServiceInterface
     #[Override]
     public function verify(string $scope, array $answer, ?User $user = null): bool
     {
-        $id         = $answer['pow_id'] ?? '';
-        $nonce      = $answer['pow_nonce'] ?? '';
-        $signature  = $answer['pow_sig'] ?? '';
-        $expire     = (int) ($answer['pow_exp'] ?? 0);
-        $difficulty = (int) ($answer['pow_diff'] ?? 0);
-
-        if (
-            preg_match('/^[a-f0-9]{32}$/', $id) !== 1
-            || preg_match('/^[0-9]{1,20}$/', $nonce) !== 1
-            || preg_match('/^[a-f0-9]{64}$/', $signature) !== 1
-        ) {
-            return $this->fail($scope, $user, 'malformed answer');
-        }
-
-        if ($difficulty < self::MIN_DIFFICULTY || $difficulty > self::MAX_DIFFICULTY) {
-            return $this->fail($scope, $user, 'difficulty out of range');
-        }
-
-        // The signature covers the scope, so an answer earned on a cheap endpoint cannot be spent on
-        // an expensive one, and the difficulty cannot be talked down on the way back.
-        if (!hash_equals($this->sign($id, $scope, $difficulty, $expire), $signature)) {
-            return $this->fail($scope, $user, 'bad signature');
-        }
-
-        if ($expire <= time()) {
-            return $this->fail($scope, $user, 'expired challenge');
-        }
-
-        // Checked before anything is written, so only an answer that cost real work can put a row in
-        // the table. A wrong nonce is free to retry against the same challenge, which is fine: every
-        // attempt still has to pay for itself.
-        if (!$this->hasLeadingZeroBits(hash('sha256', $id . ':' . $nonce, true), $difficulty)) {
-            return $this->fail($scope, $user, 'insufficient proof of work');
-        }
-
-        if (!$this->consume($id, $expire)) {
-            return $this->fail($scope, $user, 'answer already used');
-        }
-
-        return true;
+        return $this->check($scope, $answer, $user, null);
     }
 
     #[Override]
@@ -194,7 +155,56 @@ final readonly class PowService implements PowServiceInterface
             $answer[$field] = (string) ($body[$field] ?? $query[$field] ?? '');
         }
 
-        return $this->verify($scope, $answer, $user);
+        return $this->check($scope, $answer, $user, $request->getHeaderLine('User-Agent'));
+    }
+
+    /**
+     * @param array<string, string> $answer
+     */
+    private function check(string $scope, array $answer, ?User $user, ?string $agent): bool
+    {
+        $id         = $answer['pow_id'] ?? '';
+        $nonce      = $answer['pow_nonce'] ?? '';
+        $signature  = $answer['pow_sig'] ?? '';
+        $expire     = (int) ($answer['pow_exp'] ?? 0);
+        $difficulty = (int) ($answer['pow_diff'] ?? 0);
+
+        if (
+            preg_match('/^[a-f0-9]{32}$/', $id) !== 1
+            || preg_match('/^[0-9]{1,20}$/', $nonce) !== 1
+            || preg_match('/^[a-f0-9]{64}$/', $signature) !== 1
+        ) {
+            return $this->fail($scope, $user, $agent, 'malformed answer');
+        }
+
+        // Measured against the current setting, not just the static floor, so an answer signed
+        // when the config was lax stops working once an admin tightens it.
+        if ($difficulty < $this->getDifficulty() || $difficulty > self::MAX_DIFFICULTY) {
+            return $this->fail($scope, $user, $agent, 'difficulty out of range');
+        }
+
+        // The signature covers the scope, so an answer earned on a cheap endpoint cannot be spent on
+        // an expensive one, and the difficulty cannot be talked down on the way back.
+        if (!hash_equals($this->sign($id, $scope, $difficulty, $expire), $signature)) {
+            return $this->fail($scope, $user, $agent, 'bad signature');
+        }
+
+        if ($expire <= time()) {
+            return $this->fail($scope, $user, $agent, 'expired challenge');
+        }
+
+        // Checked before anything is written, so only an answer that cost real work can put a row in
+        // the table. A wrong nonce is free to retry against the same challenge, which is fine: every
+        // attempt still has to pay for itself.
+        if (!$this->hasLeadingZeroBits(hash('sha256', $id . ':' . $nonce, true), $difficulty)) {
+            return $this->fail($scope, $user, $agent, 'insufficient proof of work');
+        }
+
+        if (!$this->consume($id, $expire)) {
+            return $this->fail($scope, $user, $agent, 'answer already used');
+        }
+
+        return true;
     }
 
     private function collectGarbage(): void
@@ -238,9 +248,9 @@ final readonly class PowService implements PowServiceInterface
     }
 
     /** Refuses an answer, recording why on the way out. */
-    private function fail(string $scope, ?User $user, string $reason): false
+    private function fail(string $scope, ?User $user, ?string $agent, string $reason): false
     {
-        $this->logFailure($scope, $user, $reason);
+        $this->logFailure($scope, $user, $agent, $reason);
 
         return false;
     }
@@ -281,7 +291,7 @@ final readonly class PowService implements PowServiceInterface
      * site being crawled is most of the traffic. Turn it on to tune the difficulty or to work out
      * who is getting caught, rather than leaving it running.
      */
-    private function logFailure(string $scope, ?User $user, string $reason): void
+    private function logFailure(string $scope, ?User $user, ?string $agent, string $reason): void
     {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::POW_LOG_FAILURES)) {
             return;
@@ -297,8 +307,9 @@ final readonly class PowService implements PowServiceInterface
                 $scope,
                 $reason,
                 $identity,
+                // Core reads the proxy headers Ampache is configured to trust; a PSR request would not.
                 Core::get_user_ip() ?: '?',
-                substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? '?'), 0, 200)
+                substr($agent ?? '', 0, 200) ?: '?'
             ),
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );

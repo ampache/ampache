@@ -1308,6 +1308,9 @@ site_charset = "UTF-8"
 ;
 ; It needs JavaScript and Web Workers: a client without them cannot get through
 ; a protected endpoint at all. Do not protect anything you want indexed.
+;
+; It stops crawlers, not a determined attacker: native SHA-256 outruns the
+; browser solver by orders of magnitude. Pair it with a rate limit.
 
 ; Who has to solve a challenge.
 ; POSSIBLE VALUES: off, guest, all
