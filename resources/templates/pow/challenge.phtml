@@ -102,12 +102,11 @@ use Ampache\Gui\Asset\StylesheetsView;
                  cookie alongside the download headers, which is how the page learns the transfer has
                  actually begun rather than guessing on a timer. -->
             <input type="hidden" name="pow_ack" id="pow_ack" value="" />
-            <noscript>
-                <input type="submit" value="<?php echo $this->e(T_('Continue')); ?>" disabled />
-            </noscript>
         </form>
 
-        <p class="pow-explain"><?php echo $this->e(T_('This link is rate limited. Your download will start on its own.')); ?></p>
+        <?php // Nothing starts on its own without a script, so the promise is withdrawn rather than left standing.?>
+        <noscript><style>#pow-autostart { display: none; }</style></noscript>
+        <p id="pow-autostart" class="pow-explain"><?php echo $this->e(T_('This link is rate limited. Your download will start on its own.')); ?></p>
 
         <!-- Revealed once the download is under way. A large archive can take a while to build, so
              the visitor gets a way back straight away rather than waiting on the timer. -->

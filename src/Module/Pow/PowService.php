@@ -74,6 +74,12 @@ final readonly class PowService implements PowServiceInterface
 
     private const int DEFAULT_DIFFICULTY = 21;
 
+    /**
+     * Used when `pow_protected` is absent from the config, so that turning `pow_mode` on does
+     * something. An empty value is left empty: that is an admin saying so, not one who forgot.
+     */
+    private const array DEFAULT_PROTECTED = ['register', 'batch'];
+
     private const int DEFAULT_TTL = 1800;
 
     /** Roughly how often a verification also clears out answers that have expired. */
@@ -156,7 +162,7 @@ final readonly class PowService implements PowServiceInterface
             return false;
         }
 
-        if (!in_array($scope, $this->configContainer->getArray(ConfigurationKeyEnum::POW_PROTECTED), true)) {
+        if (!in_array($scope, $this->getProtectedScopes(), true)) {
             return false;
         }
 
@@ -316,6 +322,16 @@ final readonly class PowService implements PowServiceInterface
         $difficulty = (int) ($this->configContainer->get(ConfigurationKeyEnum::POW_DIFFICULTY) ?: self::DEFAULT_DIFFICULTY);
 
         return max(self::MIN_DIFFICULTY, min(self::MAX_DIFFICULTY, $difficulty));
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getProtectedScopes(): array
+    {
+        return ($this->configContainer->get(ConfigurationKeyEnum::POW_PROTECTED) === null)
+            ? self::DEFAULT_PROTECTED
+            : $this->configContainer->getArray(ConfigurationKeyEnum::POW_PROTECTED);
     }
 
     private function getTtl(): int

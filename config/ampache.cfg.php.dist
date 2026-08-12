@@ -1328,6 +1328,8 @@ site_charset = "UTF-8"
 ; guards the link the interface hands out, not the file itself, which
 ; play/index.php still serves to anything holding a valid session. It also sits
 ; in front of a one click action, so every download pays the wait.
+; Leave it out entirely and "register, batch" applies; set it to "" to protect
+; nothing while keeping pow_mode on.
 ; POSSIBLE VALUES: register, batch, download
 ; DEFAULT: "register, batch"
 ;pow_protected = "register, batch"

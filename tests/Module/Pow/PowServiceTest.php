@@ -283,6 +283,9 @@ class PowServiceTest extends MockeryTestCase
         $this->configContainer->shouldReceive('get')
             ->with(ConfigurationKeyEnum::POW_MODE)
             ->andReturn($mode);
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::POW_PROTECTED)
+            ->andReturn('register, batch, download');
         $this->configContainer->shouldReceive('getArray')
             ->with(ConfigurationKeyEnum::POW_PROTECTED)
             ->andReturn(['register', 'batch', 'download']);
@@ -300,11 +303,31 @@ class PowServiceTest extends MockeryTestCase
         self::assertSame($expected, $this->subject->isRequired($scope, $user));
     }
 
+    public function testIsRequiredFallsBackToTheDocumentedScopesWhenNoneAreConfigured(): void
+    {
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::POW_MODE)
+            ->andReturn('guest');
+        // Absent from the config entirely. Turning the mode on and protecting nothing would look
+        // enabled and do nothing, which is the one outcome an admin cannot spot.
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::POW_PROTECTED)
+            ->andReturn(null);
+
+        self::assertTrue($this->subject->isRequired('register', null));
+        self::assertTrue($this->subject->isRequired('batch', null));
+        // `download` is not in the documented default: it guards a one click action.
+        self::assertFalse($this->subject->isRequired('download', null));
+    }
+
     public function testIsRequiredIgnoresScopesOutsideTheConfiguredList(): void
     {
         $this->configContainer->shouldReceive('get')
             ->with(ConfigurationKeyEnum::POW_MODE)
             ->andReturn('all');
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::POW_PROTECTED)
+            ->andReturn('register');
         $this->configContainer->shouldReceive('getArray')
             ->with(ConfigurationKeyEnum::POW_PROTECTED)
             ->andReturn(['register']);
@@ -312,6 +335,23 @@ class PowServiceTest extends MockeryTestCase
         self::assertFalse($this->subject->isRequired('batch', null));
         self::assertFalse($this->subject->isRequired('download', null));
         self::assertTrue($this->subject->isRequired('register', null));
+    }
+
+    public function testIsRequiredProtectsNothingWhenTheListIsExplicitlyEmpty(): void
+    {
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::POW_MODE)
+            ->andReturn('all');
+        // An admin who wrote an empty value meant it, so the default must not creep back in.
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::POW_PROTECTED)
+            ->andReturn('');
+        $this->configContainer->shouldReceive('getArray')
+            ->with(ConfigurationKeyEnum::POW_PROTECTED)
+            ->andReturn([]);
+
+        self::assertFalse($this->subject->isRequired('register', null));
+        self::assertFalse($this->subject->isRequired('batch', null));
     }
 
     #[DataProvider('difficultyClampDataProvider')]

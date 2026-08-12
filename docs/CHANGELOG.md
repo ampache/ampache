@@ -12,6 +12,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Added (8.0.0)
 
+* Proof of work checks in front of the endpoints bots hammer
+  * Off by default; set `pow_mode` to `guest` or `all` to enable it
+  * `pow_protected` picks the endpoints: the registration form, batch (zip) downloads and single track downloads
+  * The browser solves a sha256 puzzle before it is let through, tuned with `pow_difficulty` (8-26) and `pow_ttl`
+  * `pow_exempt_level` waves trusted users through in `all` mode; `pow_log_failures` records what gets blocked
+  * Needs JavaScript and Web Workers: it stops crawlers, not a determined attacker, so pair it with a rate limit
 * Translations 2026-08-11
 * OpenID Connect (OIDC) login
   * New `oidc` auth method; add it to `auth_methods` to enable it (keep `mysql` so local accounts can still log in)
