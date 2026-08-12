@@ -172,6 +172,7 @@ class PowServiceTest extends MockeryTestCase
         $request = $this->mock(ServerRequestInterface::class);
         $request->shouldReceive('getMethod')->andReturn('GET');
         $request->shouldReceive('getUri')->andReturn($uri);
+        $request->shouldReceive('getHeaderLine')->with('Referer')->andReturn('https://music.example/albums.php?id=42');
 
         $body = $this->mock(StreamInterface::class);
         $this->streamFactory->shouldReceive('createStream')
@@ -179,6 +180,9 @@ class PowServiceTest extends MockeryTestCase
             ->andReturnUsing(function (string $html) use ($body): StreamInterface {
                 self::assertStringContainsString('data-challenge="', $html);
                 self::assertStringContainsString('name="pow_sig"', $html);
+                // Submitted into the frame, so the page is not unloaded while the archive is built.
+                self::assertStringContainsString('target="pow-sink"', $html);
+                self::assertStringContainsString('data-pow-return="https://music.example/albums.php?id=42"', $html);
 
                 return $body;
             });

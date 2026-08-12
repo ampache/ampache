@@ -49,6 +49,8 @@
     }
     var form = widget.closest('form');
     var autoSubmit = form !== null && form.dataset.powAutosubmit === '1';
+    var sink = document.getElementById('pow-sink');
+    var returnLink = document.getElementById('pow-return');
     var submits = form
         ? form.querySelectorAll('input[type=submit], button[type=submit], button:not([type])')
         : [];
@@ -302,6 +304,62 @@
         visualizer.start();
     }
 
+    /**
+     * Hands the request back to its original endpoint and gets out of the way.
+     *
+     * The form targets a hidden iframe, so this document stays loaded: a zip is written in full
+     * before its headers are sent, and unloading here would cancel the request. A download never
+     * fires `load` on the frame, so a `load` means the endpoint answered with a page instead --
+     * an error, or a fresh challenge -- and the visitor should be looking at it rather than at a
+     * frame they cannot see.
+     */
+    function replay() {
+        var returnUrl = form.dataset.powReturn;
+        var timer = null;
+        var leaving = false;
+
+        function leaveFor(url) {
+            if (leaving || !url) {
+                return;
+            }
+
+            leaving = true;
+            window.clearTimeout(timer);
+            window.location.replace(url);
+        }
+
+        if (sink) {
+            sink.onload = function () {
+                // Same origin, so the frame's own address is readable and there is nothing to
+                // rebuild; the form action is only there in case a browser withholds it.
+                var shown = form.action;
+
+                try {
+                    shown = sink.contentWindow.location.href || shown;
+                } catch (error) {
+                    shown = form.action;
+                }
+
+                leaveFor(shown);
+            };
+        }
+
+        form.submit();
+
+        say(text('Started', 'Your download has started.'));
+
+        if (returnLink) {
+            returnLink.hidden = false;
+        }
+
+        // Only a fallback for the visitor who does not take the link. Long enough that a slow
+        // archive has usually reached its headers, by which point the browser owns the transfer and
+        // leaving no longer stops it.
+        timer = window.setTimeout(function () {
+            leaveFor(returnUrl);
+        }, 10000);
+    }
+
     worker.onmessage = function (event) {
         if (!event.data.done) {
             var ratio = event.data.tried / expectedHashes;
@@ -335,7 +393,7 @@
         }
 
         if (!visualizer) {
-            form.submit();
+            replay();
 
             return;
         }
@@ -343,9 +401,7 @@
         // Long enough for the closing burst to read as an ending, short enough that nobody waiting
         // on a download notices it.
         visualizer.finish();
-        window.setTimeout(function () {
-            form.submit();
-        }, 600);
+        window.setTimeout(replay, 600);
     };
 
     worker.onerror = function () {

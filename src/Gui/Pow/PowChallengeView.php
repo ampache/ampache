@@ -42,11 +42,44 @@ final class PowChallengeView extends AbstractView
         private readonly PowChallenge $challenge,
         private readonly string $targetUrl,
         private readonly string $webPath,
+        private readonly string $referer = '',
     ) {}
 
     public function getDocumentLanguage(): string
     {
         return str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US'));
+    }
+
+    /**
+     * Where to send the visitor once the download is under way, so the interstitial is not left
+     * sitting there with nothing to do.
+     *
+     * The `Referer` is client supplied and ends up in `location.replace()`, so anything that is not
+     * the same origin as the request being replayed falls back to the home page rather than becoming
+     * an open redirect.
+     */
+    public function getReturnUrl(): string
+    {
+        $fallback = $this->webPath . '/index.php';
+        $referer  = parse_url($this->referer);
+        $target   = parse_url($this->targetUrl);
+
+        if ($this->referer === '' || !is_array($referer) || !is_array($target)) {
+            return $fallback;
+        }
+
+        foreach (['scheme', 'host', 'port'] as $part) {
+            if (($referer[$part] ?? null) !== ($target[$part] ?? null)) {
+                return $fallback;
+            }
+        }
+
+        // Coming back to the protected link itself would just start the download again.
+        if (($referer['path'] ?? '') === ($target['path'] ?? '')) {
+            return $fallback;
+        }
+
+        return $this->referer;
     }
 
     public function getSiteCharset(): string
