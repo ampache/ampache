@@ -124,9 +124,15 @@ final class AlbumDiskSectionView extends AbstractView
         return $this->mayUse && ($limit <= 0 || $this->disk->song_count <= $limit);
     }
 
+    /**
+     * Direct play streams without touching the temporary playlist, so it needs no access level.
+     */
     public function showDirectPlay(): bool
     {
-        return (bool) AmpConfig::get('directplay') && $this->showAdd();
+        $limit = AmpConfig::get_int('direct_play_limit');
+
+        return (bool) AmpConfig::get('directplay')
+            && ($limit <= 0 || $this->disk->song_count <= $limit);
     }
 
     public function showShare(): bool
