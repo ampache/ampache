@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 95
+config_version = 96
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -1333,16 +1333,17 @@ site_charset = "UTF-8"
 ; Each extra bit doubles the work. 21 is roughly two to eight seconds on a
 ; current desktop and noticeably longer on an old phone. Drop to 18 if your
 ; visitors are mostly on mobile, raise to 23 if you are being hammered.
-; Above 26 the wait runs into minutes on ordinary hardware and 32, the ceiling,
-; means billions of hashes: treat those as siege settings, not defaults.
-; Values outside 8-32 are clamped.
+; 26 is the ceiling and already means about a minute of solving on ordinary
+; hardware, several on an old phone: treat it as a siege setting, not a default.
+; Values outside 8-26 are clamped.
 ; DEFAULT: 21
 ;pow_difficulty = 21
 
 ; How long an issued challenge stays valid, in seconds. Long enough to fill in
 ; a registration form without rushing, short enough that a harvested challenge
 ; is not worth keeping. It also bounds how long a solved answer has to be
-; remembered, and therefore the size of the pow_challenge table.
+; remembered, and therefore the size of the `pow_challenge` table, which only
+; ever holds answers still inside this window.
 ; DEFAULT: 1800
 ;pow_ttl = 1800
 
@@ -1361,16 +1362,6 @@ site_charset = "UTF-8"
 ; who is getting caught, rather than leaving it running.
 ; DEFAULT: "false"
 ;pow_log_failures = "true"
-
-; Storage engine for the `pow_challenge` table, which is created on first use.
-; It only ever holds answers that have already been solved, keyed by a 32
-; character id with no payload, so it is tiny and MEMORY suits it.
-; Switch to InnoDB if you replicate your database, or if you would rather that
-; solved answers survive a database restart instead of becoming replayable for
-; the remainder of their pow_ttl.
-; POSSIBLE VALUES: MEMORY, InnoDB
-; DEFAULT: MEMORY
-;pow_table_engine = "InnoDB"
 
 ; This setting determines whether the user will be created as a disabled user.
 ; If this is on, an administrator will need to manually enable the account

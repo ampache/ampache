@@ -59,24 +59,11 @@ class PowServiceTest extends MockeryTestCase
     public static function difficultyClampDataProvider(): array
     {
         return [
-            [99, 32],
-            [33, 32],
+            [99, 26],
+            [27, 26],
             [1, 8],
             [0, 21],
             [21, 21],
-        ];
-    }
-
-    /**
-     * @return array<string, array{string, string}>
-     */
-    public static function engineDataProvider(): array
-    {
-        return [
-            'memory' => ['MEMORY', 'ENGINE=MEMORY'],
-            'innodb' => ['InnoDB', 'ENGINE=InnoDB'],
-            'unset falls back' => ['', 'ENGINE=MEMORY'],
-            'hostile value falls back' => ['MEMORY; DROP TABLE session', 'ENGINE=MEMORY'],
         ];
     }
 
@@ -114,6 +101,7 @@ class PowServiceTest extends MockeryTestCase
             'short signature' => [['pow_id' => str_repeat('a', 32), 'pow_exp' => '1', 'pow_diff' => '12', 'pow_sig' => 'ff', 'pow_nonce' => '1']],
             'difficulty below the floor' => [['pow_id' => str_repeat('a', 32), 'pow_exp' => '1', 'pow_diff' => '4', 'pow_sig' => str_repeat('a', 64), 'pow_nonce' => '1']],
             'difficulty above the ceiling' => [['pow_id' => str_repeat('a', 32), 'pow_exp' => '1', 'pow_diff' => '48', 'pow_sig' => str_repeat('a', 64), 'pow_nonce' => '1']],
+            'difficulty the solver could do but the service will not sign' => [['pow_id' => str_repeat('a', 32), 'pow_exp' => '1', 'pow_diff' => '32', 'pow_sig' => str_repeat('a', 64), 'pow_nonce' => '1']],
         ];
     }
 
@@ -272,37 +260,6 @@ class PowServiceTest extends MockeryTestCase
         self::assertFalse($this->subject->verify('register', []));
     }
 
-    #[DataProvider('engineDataProvider')]
-    public function testTheTableEngineIsValidatedBeforeItReachesTheStatement(string $configured, string $expected): void
-    {
-        $this->configureFor(difficulty: 12, ttl: 1800, engine: $configured);
-        $challenge = $this->subject->issue('register');
-
-        $statement = $this->mock(PDOStatement::class);
-        $statement->shouldReceive('rowCount')->andReturn(1);
-
-        $create = '';
-        $this->database->shouldReceive('query')
-            ->andReturnUsing(function (string $sql) use (&$create, $statement): PDOStatement {
-                if (str_contains($sql, 'CREATE TABLE')) {
-                    $create = $sql;
-
-                    return $statement;
-                }
-
-                if ($create === '') {
-                    throw new \RuntimeException('Table does not exist');
-                }
-
-                return $statement;
-            });
-
-        $this->subject->verify('register', $this->answerFor($challenge));
-
-        self::assertStringContainsString($expected, $create);
-        self::assertStringNotContainsString('DROP TABLE', $create);
-    }
-
     // -- verifying --------------------------------------------------------
 
     public function testVerifyAcceptsAPaidAnswerAndRecordsIt(): void
@@ -315,44 +272,15 @@ class PowServiceTest extends MockeryTestCase
         self::assertTrue($this->subject->verify('register', $this->answerFor($challenge)));
     }
 
-    public function testVerifyCreatesTheTableWhenItIsMissingAndRetries(): void
+    public function testVerifyRefusesRatherThanAcceptWhenStorageFails(): void
     {
-        $this->configureFor(difficulty: 12, ttl: 1800, engine: 'MEMORY');
+        $this->configureFor(difficulty: 12, ttl: 1800);
         $challenge = $this->subject->issue('register');
 
-        $statement = $this->mock(PDOStatement::class);
-        $statement->shouldReceive('rowCount')->andReturn(1);
-
-        $queries = [];
+        // Accepting would mean handing out answers that can no longer be checked for replay, so a
+        // database that cannot record one has to close the endpoint rather than open it.
         $this->database->shouldReceive('query')
-            ->times(3)
-            ->andReturnUsing(function (string $sql) use (&$queries, $statement): PDOStatement {
-                $queries[] = $sql;
-                if (count($queries) === 1) {
-                    throw new \RuntimeException('Table does not exist');
-                }
-
-                return $statement;
-            });
-
-        self::assertTrue($this->subject->verify('register', $this->answerFor($challenge)));
-        self::assertStringStartsWith('INSERT IGNORE', $queries[0]);
-        self::assertStringContainsString('CREATE TABLE IF NOT EXISTS', $queries[1]);
-        self::assertStringContainsString('ENGINE=MEMORY', $queries[1]);
-        // A memory table hashes its indexes unless asked otherwise, and the purge needs a range scan.
-        self::assertStringContainsString('USING BTREE', $queries[1]);
-        self::assertStringStartsWith('INSERT IGNORE', $queries[2]);
-    }
-
-    public function testVerifyRefusesRatherThanAcceptWhenStorageKeepsFailing(): void
-    {
-        $this->configureFor(difficulty: 12, ttl: 1800, engine: 'MEMORY');
-        $challenge = $this->subject->issue('register');
-
-        // A memory table that has filled up behaves like this. Accepting would mean handing out
-        // answers that can no longer be checked for replay, so the service has to close.
-        $this->database->shouldReceive('query')
-            ->andThrow(new \RuntimeException('The table is full'));
+            ->andThrow(new \RuntimeException('Lost connection to server'));
 
         $this->logger->shouldReceive('critical')->once();
 
@@ -548,7 +476,7 @@ class PowServiceTest extends MockeryTestCase
 
     // -- helpers -----------------------------------------------------------
 
-    private function configureFor(int $difficulty, int $ttl, string $engine = 'MEMORY', bool $logFailures = false): void
+    private function configureFor(int $difficulty, int $ttl, bool $logFailures = false): void
     {
         $this->configContainer->shouldReceive('get')
             ->with(ConfigurationKeyEnum::POW_DIFFICULTY)
@@ -559,9 +487,6 @@ class PowServiceTest extends MockeryTestCase
         $this->configContainer->shouldReceive('get')
             ->with(ConfigurationKeyEnum::SECRET_KEY)
             ->andReturn(self::SECRET);
-        $this->configContainer->shouldReceive('get')
-            ->with(ConfigurationKeyEnum::POW_TABLE_ENGINE)
-            ->andReturn($engine);
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::POW_LOG_FAILURES)
             ->andReturn($logFailures);

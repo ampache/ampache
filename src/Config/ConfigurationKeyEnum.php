@@ -190,7 +190,6 @@ final class ConfigurationKeyEnum
     public const string POW_LOG_FAILURES                      = 'pow_log_failures';
     public const string POW_MODE                              = 'pow_mode';
     public const string POW_PROTECTED                         = 'pow_protected';
-    public const string POW_TABLE_ENGINE                      = 'pow_table_engine';
     public const string POW_TTL                               = 'pow_ttl';
     public const string PROXY_HOST                            = 'proxy_host';
     public const string PROXY_PASS                            = 'proxy_pass';

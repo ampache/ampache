@@ -26,9 +26,16 @@ declare(strict_types=1);
 
 /** @var Ampache\Gui\Pow\PowWidgetView $this */
 ?>
+<?php // xgettext only scans php/phtml/inc, so pow.js gets its strings from here.?>
 <div id="pow-widget" class="pow-widget"
      data-challenge="<?php echo $this->e($this->getChallengeId()); ?>"
-     data-difficulty="<?php echo $this->e($this->getDifficulty()); ?>">
+     data-difficulty="<?php echo $this->e($this->getDifficulty()); ?>"
+     data-text-working="<?php echo $this->e(T_('Checking your browser...')); ?>"
+     <?php /* HINT: %d is how far along the check is, as a percentage */ ?>
+     data-text-progress="<?php echo $this->e(T_('Checking your browser... %d%%')); ?>"
+     data-text-passed="<?php echo $this->e(T_('Check passed.')); ?>"
+     data-text-unsupported="<?php echo $this->e(T_('Your browser is too old to pass this check.')); ?>"
+     data-text-error="<?php echo $this->e(T_('The browser check failed to run. Please reload the page.')); ?>">
     <p id="pow-status" class="pow-status"><?php echo $this->e(T_('Checking your browser...')); ?></p>
     <noscript>
         <p class="pow-status"><?php echo $this->e(T_('This page requires JavaScript.')); ?></p>

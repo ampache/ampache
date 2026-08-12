@@ -40,15 +40,22 @@
 
     var status = document.getElementById('pow-status');
     var nonceField = document.getElementById('pow_nonce');
+
+    // Strings come translated from widget.phtml; xgettext never scans .js files.
+    function text(name, fallback) {
+        var value = widget.dataset['text' + name];
+
+        return (typeof value === 'string' && value !== '') ? value : fallback;
+    }
     var form = widget.closest('form');
     var autoSubmit = form !== null && form.dataset.powAutosubmit === '1';
     var submits = form
         ? form.querySelectorAll('input[type=submit], button[type=submit], button:not([type])')
         : [];
 
-    function say(text) {
+    function say(message) {
         if (status) {
-            status.textContent = text;
+            status.textContent = message;
         }
     }
 
@@ -59,7 +66,7 @@
     }
 
     if (typeof Worker === 'undefined') {
-        say('Your browser is too old to pass this check.');
+        say(text('Unsupported', 'Your browser is too old to pass this check.'));
 
         return;
     }
@@ -304,8 +311,8 @@
 
         /**
          * First 32 bits of sha256 over an ascii string of at most 55 bytes, which is a single block.
-         * Only those bits are needed: the check is how many leading zero bits the digest has, and the
-         * server never asks for more than 28 of them.
+         * Only those bits are needed: the check is how many leading zero bits the digest has, and
+         * PowService clamps what it asks for to 26.
          */
         function sha256First32(text) {
             W.fill(0);
@@ -362,6 +369,7 @@
         self.onmessage = function (event) {
             var prefix = event.data.challenge + ':';
             var difficulty = event.data.difficulty;
+            // `>>>` shifts modulo 32, so 32 is spelled out rather than wrapping to no work.
             var ceiling = difficulty >= 32 ? 0 : (0xffffffff >>> difficulty);
             var started = Date.now();
             var nonce = 0;
@@ -418,9 +426,13 @@
                 visualizer.feed(event.data.samples, event.data.best, ratio);
             }
 
-            // The search is memoryless, so this is how far along an average solve would be rather
-            // than a real fraction of remaining work. It moves, which is all it is there for.
-            say('Checking your browser... ' + Math.min(99, Math.round(ratio * 100)) + '%');
+            // Memoryless search: this is an average solve, not remaining work. `%%` is unescaped
+            // after `%d` so a literal percent cannot eat the placeholder.
+            say(
+                text('Progress', 'Checking your browser... %d%%')
+                    .replace('%d', String(Math.min(99, Math.round(ratio * 100))))
+                    .replace(/%%/g, '%')
+            );
 
             return;
         }
@@ -432,7 +444,7 @@
         worker.terminate();
         URL.revokeObjectURL(blobUrl);
 
-        say('Check passed.');
+        say(text('Passed', 'Check passed.'));
         setSubmitEnabled(true);
 
         if (!autoSubmit || !form) {
@@ -454,7 +466,7 @@
     };
 
     worker.onerror = function () {
-        say('The browser check failed to run. Please reload the page.');
+        say(text('Error', 'The browser check failed to run. Please reload the page.'));
         setSubmitEnabled(true);
     };
 
