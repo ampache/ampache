@@ -82,6 +82,16 @@ final readonly class PowService implements PowServiceInterface
     #[Override]
     public function createChallengeResponse(ServerRequestInterface $request, string $scope): ResponseInterface
     {
+        // The interstitial replays the interrupted request as a GET form, so a body would be
+        // dropped on the way through. Refusing is loud; rebuilding the request as a GET is not.
+        // Anything that posts belongs on the inline widget instead, as `register` does.
+        if ($request->getMethod() !== 'GET') {
+            return $this->responseFactory
+                ->createResponse(405)
+                ->withHeader('Allow', 'GET')
+                ->withHeader('Cache-Control', 'no-store');
+        }
+
         $view = new PowChallengeView(
             $this->issue($scope),
             (string) $request->getUri(),

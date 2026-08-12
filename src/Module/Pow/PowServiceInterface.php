@@ -34,8 +34,9 @@ interface PowServiceInterface
     /**
      * The interstitial page that solves a challenge and then replays the original request.
      *
-     * Used by endpoints that are plain links rather than forms, where there is no markup to embed
-     * the challenge into.
+     * For endpoints that are plain links, where there is no markup to embed the challenge into. The
+     * replay is a GET form, so a non-GET request gets a 405 rather than being silently stripped of
+     * its body; a form should carry PowWidgetView inline instead, the way `register` does.
      */
     public function createChallengeResponse(ServerRequestInterface $request, string $scope): ResponseInterface;
 
@@ -60,7 +61,8 @@ interface PowServiceInterface
     public function verify(string $scope, array $answer, ?User $user = null): bool;
 
     /**
-     * Checks the answer carried by a request, wherever it was posted or queried from.
+     * Checks the answer carried by a request, from the body or the query string: the inline widget
+     * posts it with its form, the interstitial replays it as a query.
      *
      * The user is only there so a blocked attempt can be attributed when `pow_log_failures` is on.
      */

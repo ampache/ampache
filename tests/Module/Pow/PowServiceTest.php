@@ -155,6 +155,7 @@ class PowServiceTest extends MockeryTestCase
         $uri->shouldReceive('__toString')->andReturn('https://music.example/batch.php?action=album&id=42');
 
         $request = $this->mock(ServerRequestInterface::class);
+        $request->shouldReceive('getMethod')->andReturn('GET');
         $request->shouldReceive('getUri')->andReturn($uri);
 
         $body = $this->mock(StreamInterface::class);
@@ -172,6 +173,21 @@ class PowServiceTest extends MockeryTestCase
         $response->shouldReceive('withBody')->with($body)->andReturnSelf();
 
         $this->responseFactory->shouldReceive('createResponse')->with(200)->andReturn($response);
+
+        self::assertSame($response, $this->subject->createChallengeResponse($request, 'batch'));
+    }
+
+    public function testCreateChallengeResponseRefusesToReplayANonGetRequest(): void
+    {
+        // The interstitial replays as a GET form, so a body would be dropped on the way through.
+        $request = $this->mock(ServerRequestInterface::class);
+        $request->shouldReceive('getMethod')->andReturn('POST');
+
+        $response = $this->mock(ResponseInterface::class);
+        $response->shouldReceive('withHeader')->andReturnSelf();
+
+        $this->responseFactory->shouldReceive('createResponse')->with(405)->once()->andReturn($response);
+        $this->streamFactory->shouldNotReceive('createStream');
 
         self::assertSame($response, $this->subject->createChallengeResponse($request, 'batch'));
     }
