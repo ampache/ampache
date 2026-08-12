@@ -117,6 +117,46 @@ class PowServiceTest extends MockeryTestCase
         ];
     }
 
+    public function testABlockedAnonymousAttemptIsLoggedWithItsReason(): void
+    {
+        $this->configureFor(difficulty: 12, ttl: 1800, logFailures: true);
+
+        $logged = $this->captureWarning();
+
+        self::assertFalse($this->subject->verify('batch', []));
+        self::assertStringContainsString('Blocked `batch`', $logged->message);
+        self::assertStringContainsString('malformed answer', $logged->message);
+        self::assertStringContainsString('user: anonymous', $logged->message);
+    }
+
+    public function testABlockedAttemptNamesTheUserWhenThereIsOne(): void
+    {
+        $this->configureFor(difficulty: 12, ttl: 1800, logFailures: true);
+
+        $user           = $this->mock(User::class);
+        $user->username = 'zoe';
+        $user->shouldReceive('getId')->andReturn(42);
+
+        $logged = $this->captureWarning();
+
+        self::assertFalse($this->subject->verify('download', [], $user));
+        self::assertStringContainsString('Blocked `download`', $logged->message);
+        self::assertStringContainsString('user: zoe (id 42)', $logged->message);
+    }
+
+    public function testAReplayedAnswerIsLoggedAsSuch(): void
+    {
+        $this->configureFor(difficulty: 12, ttl: 1800, logFailures: true);
+        $challenge = $this->subject->issue('register');
+
+        $this->expectConsume($challenge->id, affected: 0);
+
+        $logged = $this->captureWarning();
+
+        self::assertFalse($this->subject->verify('register', $this->answerFor($challenge)));
+        self::assertStringContainsString('answer already used', $logged->message);
+    }
+
     // -- the interstitial --------------------------------------------------
 
     public function testCreateChallengeResponseServesThePageWithoutTouchingTheDatabase(): void
@@ -219,6 +259,17 @@ class PowServiceTest extends MockeryTestCase
             hash_hmac('sha256', implode('|', [$challenge->id, 'register', 14, $challenge->expire]), self::SECRET),
             $challenge->signature
         );
+    }
+
+    // -- logging blocked attempts -----------------------------------------
+
+    public function testNothingIsLoggedWhenFailureLoggingIsOff(): void
+    {
+        $this->configureFor(difficulty: 12, ttl: 1800, logFailures: false);
+
+        $this->logger->shouldNotReceive('warning');
+
+        self::assertFalse($this->subject->verify('register', []));
     }
 
     #[DataProvider('engineDataProvider')]
@@ -477,9 +528,27 @@ class PowServiceTest extends MockeryTestCase
         ];
     }
 
+    /**
+     * Expects exactly one warning and gives back a holder for its message.
+     */
+    private function captureWarning(): object
+    {
+        $logged = new class {
+            public string $message = '';
+        };
+
+        $this->logger->shouldReceive('warning')
+            ->once()
+            ->andReturnUsing(function (string $message) use ($logged): void {
+                $logged->message = $message;
+            });
+
+        return $logged;
+    }
+
     // -- helpers -----------------------------------------------------------
 
-    private function configureFor(int $difficulty, int $ttl, string $engine = 'MEMORY'): void
+    private function configureFor(int $difficulty, int $ttl, string $engine = 'MEMORY', bool $logFailures = false): void
     {
         $this->configContainer->shouldReceive('get')
             ->with(ConfigurationKeyEnum::POW_DIFFICULTY)
@@ -493,6 +562,9 @@ class PowServiceTest extends MockeryTestCase
         $this->configContainer->shouldReceive('get')
             ->with(ConfigurationKeyEnum::POW_TABLE_ENGINE)
             ->andReturn($engine);
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::POW_LOG_FAILURES)
+            ->andReturn($logFailures);
     }
 
     private function expectConsume(string $id, int $affected): void

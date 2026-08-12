@@ -1353,6 +1353,15 @@ site_charset = "UTF-8"
 ; DEFAULT: 0
 ;pow_exempt_level = 100
 
+; Log every attempt the check blocks: which scope, why, which user if they were
+; logged in, and from which address and browser. The line is timestamped by the
+; logger like any other Ampache log entry.
+; Off by default because a site being crawled produces one line per bot hit,
+; which is most of the traffic. Turn it on to tune pow_difficulty or to find out
+; who is getting caught, rather than leaving it running.
+; DEFAULT: "false"
+;pow_log_failures = "true"
+
 ; Storage engine for the `pow_challenge` table, which is created on first use.
 ; It only ever holds answers that have already been solved, keyed by a 32
 ; character id with no payload, so it is tiny and MEMORY suits it.

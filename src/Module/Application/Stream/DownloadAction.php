@@ -57,7 +57,7 @@ final class DownloadAction extends AbstractStreamAction
         if (
             !defined('NO_SESSION')
             && $this->powService->isRequired('download', $gatekeeper->getUser())
-            && !$this->powService->verifyRequest($request, 'download')
+            && !$this->powService->verifyRequest($request, 'download', $gatekeeper->getUser())
         ) {
             return $this->powService->createChallengeResponse($request, 'download');
         }

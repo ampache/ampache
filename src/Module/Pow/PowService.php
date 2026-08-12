@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Pow\PowChallengeView;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\User;
 use Override;
@@ -138,7 +139,7 @@ final readonly class PowService implements PowServiceInterface
     }
 
     #[Override]
-    public function verify(string $scope, array $answer): bool
+    public function verify(string $scope, array $answer, ?User $user = null): bool
     {
         $id         = $answer['pow_id'] ?? '';
         $nonce      = $answer['pow_nonce'] ?? '';
@@ -151,39 +152,39 @@ final readonly class PowService implements PowServiceInterface
             || preg_match('/^[0-9]{1,20}$/', $nonce) !== 1
             || preg_match('/^[a-f0-9]{64}$/', $signature) !== 1
         ) {
-            return $this->reject($scope, 'malformed answer');
+            return $this->reject($scope, $user, 'malformed answer');
         }
 
         if ($difficulty < self::MIN_DIFFICULTY || $difficulty > self::MAX_DIFFICULTY) {
-            return $this->reject($scope, 'difficulty out of range');
+            return $this->reject($scope, $user, 'difficulty out of range');
         }
 
         // The signature covers the scope, so an answer earned on a cheap endpoint cannot be spent on
         // an expensive one, and the difficulty cannot be talked down on the way back.
         if (!hash_equals($this->sign($id, $scope, $difficulty, $expire), $signature)) {
-            return $this->reject($scope, 'bad signature');
+            return $this->reject($scope, $user, 'bad signature');
         }
 
         if ($expire <= time()) {
-            return $this->reject($scope, 'expired challenge');
+            return $this->reject($scope, $user, 'expired challenge');
         }
 
         // Checked before anything is written, so only an answer that cost real work can put a row in
         // the table. A wrong nonce is free to retry against the same challenge, which is fine: every
         // attempt still has to pay for itself.
         if (!$this->hasLeadingZeroBits(hash('sha256', $id . ':' . $nonce, true), $difficulty)) {
-            return $this->reject($scope, 'insufficient proof of work');
+            return $this->reject($scope, $user, 'insufficient proof of work');
         }
 
         if (!$this->consume($id, $expire)) {
-            return $this->reject($scope, 'answer already used');
+            return $this->reject($scope, $user, 'answer already used');
         }
 
         return true;
     }
 
     #[Override]
-    public function verifyRequest(ServerRequestInterface $request, string $scope): bool
+    public function verifyRequest(ServerRequestInterface $request, string $scope, ?User $user = null): bool
     {
         $body   = (array) $request->getParsedBody();
         $query  = $request->getQueryParams();
@@ -193,7 +194,7 @@ final readonly class PowService implements PowServiceInterface
             $answer[$field] = (string) ($body[$field] ?? $query[$field] ?? '');
         }
 
-        return $this->verify($scope, $answer);
+        return $this->verify($scope, $answer, $user);
     }
 
     private function collectGarbage(): void
@@ -303,10 +304,32 @@ final readonly class PowService implements PowServiceInterface
         return $remaining === 0 || (ord($hash[$fullBytes]) >> (8 - $remaining)) === 0;
     }
 
-    private function reject(string $scope, string $reason): bool
+    /**
+     * Records a blocked attempt, if the admin asked for it.
+     *
+     * Off by default because it writes a line for every bot that walks into the check, which on a
+     * site being crawled is most of the traffic. Turn it on to tune the difficulty or to work out
+     * who is getting caught, rather than leaving it running.
+     */
+    private function reject(string $scope, ?User $user, string $reason): bool
     {
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::POW_LOG_FAILURES)) {
+            return false;
+        }
+
+        $identity = ($user instanceof User && $user->getId() > 0)
+            ? sprintf('%s (id %d)', $user->username ?? '?', $user->getId())
+            : 'anonymous';
+
         $this->logger->warning(
-            sprintf('Proof of work rejected for `%s`: %s', $scope, $reason),
+            sprintf(
+                'Blocked `%s`: %s | user: %s | ip: %s | agent: %s',
+                $scope,
+                $reason,
+                $identity,
+                Core::get_user_ip() ?: '?',
+                substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? '?'), 0, 200)
+            ),
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 

@@ -187,6 +187,7 @@ final class ConfigurationKeyEnum
     public const string POPULAR_THRESHOLD                     = 'popular_threshold';
     public const string POW_DIFFICULTY                        = 'pow_difficulty';
     public const string POW_EXEMPT_LEVEL                      = 'pow_exempt_level';
+    public const string POW_LOG_FAILURES                      = 'pow_log_failures';
     public const string POW_MODE                              = 'pow_mode';
     public const string POW_PROTECTED                         = 'pow_protected';
     public const string POW_TABLE_ENGINE                      = 'pow_table_engine';

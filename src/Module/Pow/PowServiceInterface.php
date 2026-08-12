@@ -57,10 +57,12 @@ interface PowServiceInterface
      *
      * @param array<string, string> $answer `pow_id`, `pow_exp`, `pow_diff`, `pow_sig`, `pow_nonce`
      */
-    public function verify(string $scope, array $answer): bool;
+    public function verify(string $scope, array $answer, ?User $user = null): bool;
 
     /**
      * Checks the answer carried by a request, wherever it was posted or queried from.
+     *
+     * The user is only there so a blocked attempt can be attributed when `pow_log_failures` is on.
      */
-    public function verifyRequest(ServerRequestInterface $request, string $scope): bool;
+    public function verifyRequest(ServerRequestInterface $request, string $scope, ?User $user = null): bool;
 }

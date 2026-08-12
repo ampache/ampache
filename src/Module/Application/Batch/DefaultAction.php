@@ -82,7 +82,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         if (
             !defined('NO_SESSION')
             && $this->powService->isRequired('batch', $gatekeeper->getUser())
-            && !$this->powService->verifyRequest($request, 'batch')
+            && !$this->powService->verifyRequest($request, 'batch', $gatekeeper->getUser())
         ) {
             return $this->powService->createChallengeResponse($request, 'batch');
         }
