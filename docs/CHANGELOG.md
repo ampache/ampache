@@ -2,7 +2,7 @@
 
 ## Ampache 8.0.1
 
-### Added (8.0.0)
+### Added (8.0.1)
 
 * Show Catalog name on song pages
 * Increase redirect count on Podcast Episode download from 5 to 10
