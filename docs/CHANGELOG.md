@@ -14,6 +14,8 @@
 * Database 801001
   * Dropped 24 redundant indexes across 15 tables; each repeated the leading columns of a wider key already on the same table
   * `album_map`, `artist_map`, `folder_map` and `song_map` carried the most, and grow with the catalog
+* Database 801002
+  * Convert `stream_beautiful_url` to an Admin preference
 
 ### Fixed (8.0.1)
 
