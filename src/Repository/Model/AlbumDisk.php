@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
@@ -148,6 +149,37 @@ class AlbumDisk extends database_object implements
         $this->addition_time     = $this->album->addition_time;
         $this->artist_count      = $this->album->artist_count;
         $this->song_artist_count = $this->album->song_artist_count;
+    }
+
+    /**
+     * build_cache
+     * @param int[]|string[] $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if ($ids === []) {
+            return false;
+        }
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        $idlist     = implode(',', array_map('intval', $ids));
+        $album_ids  = [];
+        $db_results = Dba::read(sprintf('SELECT * FROM `album_disk` WHERE `id` IN (%s)', $idlist));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            parent::add_to_cache('album_disk', (int) $row['id'], $row);
+            if (isset($row['album_id'])) {
+                $album_ids[(int) $row['album_id']] = (int) $row['album_id'];
+            }
+        }
+
+        // warm parent albums so the constructor's new Album() hits cache
+        if ($album_ids !== []) {
+            Album::build_cache(array_values($album_ids));
+        }
+
+        return true;
     }
 
     /**

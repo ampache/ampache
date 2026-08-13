@@ -184,13 +184,23 @@ class Album extends database_object implements
             return false;
         }
 
-        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        // cache off: rows discarded and per-object queries still run, net loss
         if (!database_object::isCacheEnabled()) {
             return false;
         }
 
+        $artist_ids = [];
         foreach (self::getAlbumRepository()->getRowsByIds($ids) as $row) {
             parent::add_to_cache('album', $row['id'], $row);
+            if (!empty($row['album_artist'])) {
+                $artist_ids[(int) $row['album_artist']] = (int) $row['album_artist'];
+            }
+        }
+
+        // warm grouped caches the row render would otherwise hit per album
+        Art::build_cache($ids, 'album');
+        if ($artist_ids !== []) {
+            Artist::build_cache(array_values($artist_ids));
         }
 
         return true;
