@@ -135,7 +135,8 @@ final readonly class PlayAction implements ApplicationActionInterface
 
             $_REQUEST     = $new_request;
             $action       = $new_request['action'] ?? '';
-            $stream_name  = $new_request['name'] ?? '';
+            // the path segments came straight off the raw query string, so 'name' is still percent-encoded
+            $stream_name  = rawurldecode($new_request['name'] ?? '');
             $object_id    = (int) scrub_in((string) ($new_request['oid'] ?? 0));
             $user_id      = (int) scrub_in((string) ($new_request['uid'] ?? 0));
             $session_id   = (string) scrub_in($new_request['ssid'] ?? '');
@@ -844,7 +845,7 @@ final readonly class PlayAction implements ApplicationActionInterface
         // Format the media name
         $media_name = ($stream_name === '' || $stream_name === '0')
             ? $media->get_stream_name() . "." . $streamConfiguration['file_type']
-            : rawurldecode($stream_name);
+            : $stream_name;
         $transcode_to = ($transcode_cfg == 'never' || $cache_file || ($is_download && !$transcode_to))
             ? null
             : Stream::get_transcode_format($streamConfiguration['file_type'], $transcode_to, $player, $type);

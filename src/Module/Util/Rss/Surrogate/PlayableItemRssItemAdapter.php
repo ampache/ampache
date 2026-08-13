@@ -101,11 +101,12 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * RSS channel language, two-letter code taken from the installation locale
+     * RSS channel language, a lowercase ISO 639 code with an optional region modifier (e.g. "en-us")
+     * https://help.apple.com/itc/podcasts_connect/#/itcb54353390
      */
     public function getLanguage(): string
     {
-        return strtolower(substr((string) AmpConfig::get('lang', 'en_US'), 0, 2));
+        return strtolower(str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US')));
     }
 
     /**
@@ -219,7 +220,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     public function getPodcastGuid(): string
     {
         // the query form identifies a feed whatever url shape it is served under
-        $params = $this->getQueryParams();
+        $params = RssUrl::currentQueryParams();
         unset($params['rsstoken']);
 
         return PodcastGuid::fromFeedUrl(RssUrl::canonical($params));
@@ -230,7 +231,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getRssLink(): string
     {
-        return RssUrl::published($this->getQueryParams(), $this->getTitle());
+        return RssUrl::published(RssUrl::currentQueryParams(), $this->getTitle());
     }
 
     /**
@@ -262,27 +263,11 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * Returns `true` if the item provides an image
-     */
-    public function hasImage(): bool
-    {
-        return $this->playable->has_art();
-    }
-
-    /**
      * Returns `true` if an item-owner is set
      */
     public function hasOwner(): bool
     {
         return ($this->playable->get_user_owner() ?? 0) > 0;
-    }
-
-    /**
-     * Returns `true` if the item provides a summary/description text
-     */
-    public function hasSummary(): bool
-    {
-        return $this->playable->get_description() !== '';
     }
 
     /**
@@ -295,15 +280,5 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
         return ($media->has_art())
             ? (Art::url($media->getId(), $type, null, 700) ?? $this->getImageUrl())
             : $this->getImageUrl();
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function getQueryParams(): array
-    {
-        parse_str((string) ($_SERVER['QUERY_STRING'] ?? ''), $params);
-
-        return array_map('strval', $params);
     }
 }

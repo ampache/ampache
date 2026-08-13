@@ -38,29 +38,20 @@ use Traversable;
  */
 abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
 {
-    /**
-     * @return array<string, string>
-     */
-    private static function queryParams(): array
-    {
-        parse_str((string) ($_SERVER['QUERY_STRING'] ?? ''), $params);
-
-        return array_map('strval', $params);
-    }
-
     #[Override]
     public function createView(): TemplateInterface
     {
         return new GenericRssFeedView(
             AmpConfig::get('site_title') . ' - ' . $this->getTitle(),
             AmpConfig::get_web_path(),
-            RssUrl::published(self::queryParams()),
+            RssUrl::published(RssUrl::currentQueryParams()),
             ($this->getPubDate()) ? date('r', (int) $this->getPubDate()) : null,
             $this->getImage(),
             $this->getItems(),
             $this->getMedium(),
             $this->getRemoteItems(),
-            strtolower(substr((string) AmpConfig::get('lang', 'en_US'), 0, 2)),
+            // lowercase ISO 639 + region (e.g. "en-us"); see https://help.apple.com/itc/podcasts_connect/#/itcb54353390
+            strtolower(str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US'))),
             (AmpConfig::get('rss_explicit', false)) ? 'true' : 'false'
         );
     }
