@@ -531,16 +531,19 @@ class Browse extends Query
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
+     * Pass null (the default) to reload whatever this browse last saved/cached. Pass an array -- including an
+     * empty one -- to render exactly those ids; an empty array means "the caller already searched and found
+     * nothing", not "go look up something else instead."
      * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
      */
-    public function show_objects(?array $object_ids = [], bool|array|string $argument = false, ?bool $skip_cookies = false): void
+    public function show_objects(?array $object_ids = null, bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {
         $type            = $this->get_type();
         $limit_threshold = $this->get_threshold();
 
         // a song_preview or folder browse is handed rows it built itself, so they are neither saved nor prefetched
         $prefetchable = ($type !== 'song_preview' && $type !== 'folder');
-        if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
+        if ($this->is_simple() || $object_ids === null) {
             $object_ids = $this->get_saved();
         } elseif ($prefetchable) {
             /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
