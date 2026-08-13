@@ -2,6 +2,11 @@
 
 ## Ampache 8.0.1
 
+### Added (8.0.0)
+
+* Show Catalog name on song pages
+* Increase redirect count on Podcast Episode download from 5 to 10
+
 ### Changed (8.0.1)
 
 * An unrecognised `transcode_TYPE` value (e.g. `transcode_mp3 = "falsed"`) no longer counts as enabling transcoding; only `allowed`, `required` and `false` are accepted and anything else is logged and treated as `false`
@@ -12,6 +17,7 @@
 
 ### Fixed (8.0.1)
 
+* Don't lock the UI on larger click operations. (e.g. Album delete)
 * Every disk section on a multi-disk album page listed the first disk's songs
 * A multi-disk album shows its `[Disk N]` label again on the album page, the disk page and in song lists
 * The Now Playing box no longer breaks the page when an entry has no recorded streaming agent, which is every play reported through Subsonic
