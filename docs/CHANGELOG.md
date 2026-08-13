@@ -11,7 +11,7 @@
 
 * An unrecognised `transcode_TYPE` value (e.g. `transcode_mp3 = "falsed"`) no longer counts as enabling transcoding; only `allowed`, `required` and `false` are accepted and anything else is logged and treated as `false`
 * Invalid `transcode_TYPE` values are listed on the admin debug page
-* Database 800051
+* Database 801001
   * Dropped 24 redundant indexes across 15 tables; each repeated the leading columns of a wider key already on the same table
   * `album_map`, `artist_map`, `folder_map` and `song_map` carried the most, and grow with the catalog
 

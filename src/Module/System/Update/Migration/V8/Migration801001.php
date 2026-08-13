@@ -31,7 +31,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 /**
  * Drop indexes whose columns are already the leftmost prefix of a wider key on the same table.
  */
-final class Migration800051 extends AbstractMigration
+final class Migration801001 extends AbstractMigration
 {
     protected array $changelog = [
         'Drop redundant indexes that repeat the leading columns of a wider key on the same table',
