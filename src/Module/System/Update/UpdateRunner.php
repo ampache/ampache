@@ -87,6 +87,9 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        // Migration\V8\Migration801002 needs no rollback. It collapses `stream_beautiful_url`'s per-admin
+        // `user_preference` rows into the single `user = -1` row and reclassifies it under category `system`.
+
         // Migration\V8\Migration801001 needs no rollback. It drops 24 indexes that repeat the leading columns of a
         // wider key, so every column stays indexed and Ampache7 keeps the same access paths without them.
 
