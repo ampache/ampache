@@ -84,7 +84,8 @@ final class AlbumPageView extends AbstractView
     {
         $name = '[' . $this->getParentName() . '] ' . $this->getFullname();
         ob_start();
-        Art::display($this->getObjectType(), $this->getAlbumId(), $name, ['width' => 384, 'height' => 384], null, true, false);
+        // art is stored against the album; a disk has none of its own
+        Art::display('album', $this->getUploadAlbumId(), $name, ['width' => 384, 'height' => 384], null, true, false);
 
         return (string) ob_get_clean();
     }
