@@ -32,7 +32,17 @@ interface RssItemInterface
     /**
      * Returns the itunes category of the item
      */
+    /**
+     * Returns the itunes author of the item
+     */
+    public function getAuthor(): string;
+
     public function getCategory(): string;
+
+    /**
+     * itunes:explicit value ('true' or 'false')
+     */
+    public function getExplicit(): string;
 
     /**
      * Returns the items image-url
@@ -85,6 +95,11 @@ interface RssItemInterface
      * Returns a link to the feed url
      */
     public function getRssLink(): string;
+
+    /**
+     * Apple sub-category, empty when unset
+     */
+    public function getSubCategory(): string;
 
     /**
      * Returns the items summary/description text

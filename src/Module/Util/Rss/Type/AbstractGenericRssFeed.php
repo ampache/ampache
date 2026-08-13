@@ -49,7 +49,8 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
             $this->getItems(),
             $this->getMedium(),
             $this->getRemoteItems(),
-            str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US'))
+            strtolower(substr((string) AmpConfig::get('lang', 'en_US'), 0, 2)),
+            (AmpConfig::get('rss_explicit', false)) ? 'true' : 'false'
         );
     }
 

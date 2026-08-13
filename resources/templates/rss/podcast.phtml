@@ -35,17 +35,21 @@ echo '<?xml version="1.0" encoding="utf-8"?>', "\n"; ?>
         <title><?php echo $this->e($item->getTitle()); ?></title>
         <link><?php echo $this->e($item->getLink()); ?></link>
         <atom:link href="<?php echo $this->e($item->getRssLink()); ?>" rel="self" type="application/rss+xml"/>
-<?php if ($item->hasImage()) { ?>
         <itunes:image href="<?php echo $this->e($item->getImageUrl()); ?>"/>
-<?php }
-if ($item->hasSummary()) { ?>
         <description><![CDATA[<?php echo nl2br(str_replace(']]>', ']]]]><![CDATA[>', $item->getSummary())); ?>]]></description>
         <itunes:summary><?php echo $this->e($item->getSummary()); ?></itunes:summary>
-<?php } ?>
         <language><?php echo $this->e($item->getLanguage()); ?></language>
         <generator>ampache</generator>
         <podcast:guid><?php echo $this->e($item->getPodcastGuid()); ?></podcast:guid>
+        <itunes:author><?php echo $this->e($item->getAuthor()); ?></itunes:author>
+        <itunes:explicit><?php echo $this->e($item->getExplicit()); ?></itunes:explicit>
+<?php if ($item->getSubCategory() !== '') { ?>
+        <itunes:category text="<?php echo $this->e($item->getCategory()); ?>">
+            <itunes:category text="<?php echo $this->e($item->getSubCategory()); ?>"/>
+        </itunes:category>
+<?php } else { ?>
         <itunes:category text="<?php echo $this->e($item->getCategory()); ?>"/>
+<?php } ?>
 <?php if ($item->hasOwner()) { ?>
         <itunes:owner>
             <itunes:name><?php echo $this->e($item->getOwnerName()); ?></itunes:name>

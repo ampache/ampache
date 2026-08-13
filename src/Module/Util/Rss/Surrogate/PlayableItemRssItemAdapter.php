@@ -51,6 +51,20 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     ) {}
 
     /**
+     * Returns the itunes author of the item
+     */
+    public function getAuthor(): string
+    {
+        $author = ($this->playable instanceof container_item)
+            ? $this->playable->get_parent_fullname()
+            : '';
+
+        return ($author !== '')
+            ? $author
+            : $this->getTitle();
+    }
+
+    /**
      * Returns the itunes category of the item
      * https://www.rssboard.org/rss-validator/docs/error/InvalidItunesCategory.html
      */
@@ -60,19 +74,37 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * Returns the items image-url
+     * itunes:explicit, required by directories. Ampache has no per-item rating so it comes from the config
      */
-    public function getImageUrl(): string
+    public function getExplicit(): string
     {
-        return (string) Art::url($this->playable->getId(), 'album');
+        return (AmpConfig::get('rss_explicit', false))
+            ? 'true'
+            : 'false';
     }
 
     /**
-     * RSS channel language (RFC 5646), from the installation locale
+     * Returns the items image-url; Art falls back to the placeholder when the item has no art
+     */
+    public function getImageUrl(): string
+    {
+        $type = $this->playable->getMediaType()->value;
+
+        // directories require 1400px artwork, so ask for the thumbnail that size unless upscaling is disabled
+        $thumb = (AmpConfig::get('upscale_images', true))
+            ? 700
+            : null;
+
+        return Art::url($this->playable->getId(), $type, null, $thumb)
+            ?? Art::get_fallback_url($type, 'original');
+    }
+
+    /**
+     * RSS channel language, two-letter code taken from the installation locale
      */
     public function getLanguage(): string
     {
-        return str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US'));
+        return strtolower(substr((string) AmpConfig::get('lang', 'en_US'), 0, 2));
     }
 
     /**
@@ -193,11 +225,23 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
+     * Apple sub-category, empty unless the admin picked one (Music Commentary, Music History, Music Interviews)
+     */
+    public function getSubCategory(): string
+    {
+        return (string) AmpConfig::get('rss_subcategory', '');
+    }
+
+    /**
      * Returns the items summary/description text
      */
     public function getSummary(): string
     {
-        return $this->playable->get_description();
+        $summary = $this->playable->get_description();
+
+        return ($summary !== '')
+            ? $summary
+            : sprintf(T_('%1$s on %2$s'), $this->getTitle(), (string) AmpConfig::get('site_title'));
     }
 
     /**

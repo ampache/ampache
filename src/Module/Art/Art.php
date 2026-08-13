@@ -534,7 +534,9 @@ class Art extends database_object
             }
         }
 
-        return AmpConfig::get_web_path() . '/images/' . $name . '_' . self::_fallback_size($size) . '.png';
+        $suffix = self::_fallback_size($size);
+
+        return AmpConfig::get_web_path() . '/images/' . $name . $suffix . '.png';
     }
 
     /**
@@ -711,6 +713,11 @@ class Art extends database_object
                 // large 174x174
                 $size['height'] = 174;
                 $size['width']  = 174;
+                break;
+            case 700:
+                // podcast/rss cover art: doubled to 1400x1400, the minimum size directories accept
+                $size['height'] = 700;
+                $size['width']  = 700;
                 break;
             case 300:
                 // extralarge, mega 300x300
@@ -955,15 +962,18 @@ class Art extends database_object
             $wanted = max((int) $matches[1], (int) $matches[2]);
         }
 
+        // the full size image, for 'original' and anything bigger than the largest thumbnail
+        if ($size === 'original') {
+            return '';
+        }
+
         foreach (self::FALLBACK_SIZES as $available) {
             if ($wanted <= $available) {
-                return $available . 'x' . $available;
+                return '_' . $available . 'x' . $available;
             }
         }
 
-        $largest = self::FALLBACK_SIZES[count(self::FALLBACK_SIZES) - 1];
-
-        return $largest . 'x' . $largest;
+        return '';
     }
 
     private static function _hasGD(): bool
