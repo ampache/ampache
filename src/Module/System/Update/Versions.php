@@ -378,6 +378,7 @@ use Ampache\Module\System\Update\Migration\V8\Migration800047;
 use Ampache\Module\System\Update\Migration\V8\Migration800048;
 use Ampache\Module\System\Update\Migration\V8\Migration800049;
 use Ampache\Module\System\Update\Migration\V8\Migration800050;
+use Ampache\Module\System\Update\Migration\V8\Migration800051;
 use Ampache\Module\System\Update\Migration\V8\Migration800052;
 use Generator;
 
@@ -743,7 +744,8 @@ final class Versions
         800048 => Migration800048::class,
         800049 => Migration800049::class,
         800050 => Migration800050::class,
-        800051 => Migration800052::class,
+        800051 => Migration800051::class,
+        800052 => Migration800052::class,
     ];
 
     /**

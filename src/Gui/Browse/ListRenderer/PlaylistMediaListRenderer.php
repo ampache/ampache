@@ -49,11 +49,6 @@ use Override;
  */
 final class PlaylistMediaListRenderer extends AbstractBrowseListRenderer
 {
-    /**
-     * @var list<array{item: displayable_item&library_item, type: string, trackId: int, track: int}>|null
-     */
-    private ?array $rows = null;
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
@@ -157,37 +152,36 @@ final class PlaylistMediaListRenderer extends AbstractBrowseListRenderer
      */
     public function getRows(): array
     {
-        if ($this->rows !== null) {
-            return $this->rows;
-        }
+        /** @var list<array{item: displayable_item&library_item, type: string, trackId: int, track: int}> */
+        return $this->cachePerRender('rows', function (): array {
+            $rows = [];
+            foreach ($this->getContext()->objectIds as $object) {
+                if (!is_array($object) || !isset($object['object_type'], $object['object_id'])) {
+                    continue;
+                }
 
-        $rows = [];
-        foreach ($this->getContext()->objectIds as $object) {
-            if (!is_array($object) || !isset($object['object_type'], $object['object_id'])) {
-                continue;
+                $type = (is_string($object['object_type']))
+                    ? LibraryItemEnum::tryFrom($object['object_type'])
+                    : $object['object_type'];
+                if (!$type instanceof LibraryItemEnum) {
+                    continue;
+                }
+
+                $item = $this->libraryItemLoader->load($type, (int) $object['object_id']);
+                if (!$item instanceof displayable_item || !$this->isVisible($item)) {
+                    continue;
+                }
+
+                $rows[] = [
+                    'item' => $item,
+                    'type' => $type->value,
+                    'trackId' => (int) ($object['track_id'] ?? 0),
+                    'track' => (int) ($object['track'] ?? 0),
+                ];
             }
 
-            $type = (is_string($object['object_type']))
-                ? LibraryItemEnum::tryFrom($object['object_type'])
-                : $object['object_type'];
-            if (!$type instanceof LibraryItemEnum) {
-                continue;
-            }
-
-            $item = $this->libraryItemLoader->load($type, (int) $object['object_id']);
-            if (!$item instanceof displayable_item || !$this->isVisible($item)) {
-                continue;
-            }
-
-            $rows[] = [
-                'item' => $item,
-                'type' => $type->value,
-                'trackId' => (int) ($object['track_id'] ?? 0),
-                'track' => (int) ($object['track'] ?? 0),
-            ];
-        }
-
-        return $this->rows = $rows;
+            return $rows;
+        });
     }
 
     public function getTimeClass(): string

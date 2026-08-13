@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## Ampache 8.0.1
+
+### Changed (8.0.1)
+
+* An unrecognised `transcode_TYPE` value (e.g. `transcode_mp3 = "falsed"`) no longer counts as enabling transcoding; only `allowed`, `required` and `false` are accepted and anything else is logged and treated as `false`
+* Invalid `transcode_TYPE` values are listed on the admin debug page
+* Database 800051
+  * Dropped 24 redundant indexes across 15 tables; each repeated the leading columns of a wider key already on the same table
+  * `album_map`, `artist_map`, `folder_map` and `song_map` carried the most, and grow with the catalog
+
+### Fixed (8.0.1)
+
+* Every disk section on a multi-disk album page listed the first disk's songs
+* A multi-disk album shows its `[Disk N]` label again on the album page, the disk page and in song lists
+* The Now Playing box no longer breaks the page when an entry has no recorded streaming agent, which is every play reported through Subsonic
+* New users are given the default `transcode_bitrate` of `128000` bps instead of `32`
+* Search
+  * A song search on album rating matched the wrong album when `album_group` is off; the `album_disk` rating is now looked up by disk instead of by album id
+  * A song search on album rating no longer joins `album_disk` when `album_group` is on, which multiplied the working set by the disk count for no gain
+
 ## Ampache 8.0.0
 
 You can downgrade to Ampache7 if you try this out and have issues, using the cli (`bin/cli admin:updateDatabase -e`).
