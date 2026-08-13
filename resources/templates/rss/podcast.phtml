@@ -30,13 +30,14 @@ declare(strict_types=1);
 $item = $this->getItem();
 
 echo '<?xml version="1.0" encoding="utf-8"?>', "\n"; ?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://podcastindex.org/namespace/1.0" version="2.0">
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://podcastindex.org/namespace/1.0" version="2.0">
     <channel>
         <title><?php echo $this->e($item->getTitle()); ?></title>
         <link><?php echo $this->e($item->getLink()); ?></link>
         <atom:link href="<?php echo $this->e($item->getRssLink()); ?>" rel="self" type="application/rss+xml"/>
         <itunes:image href="<?php echo $this->e($item->getImageUrl()); ?>"/>
         <description><![CDATA[<?php echo nl2br(str_replace(']]>', ']]]]><![CDATA[>', $item->getSummary())); ?>]]></description>
+        <content:encoded><![CDATA[<?php echo nl2br(str_replace(']]>', ']]]]><![CDATA[>', $item->getSummary())); ?>]]></content:encoded>
         <itunes:summary><?php echo $this->e($item->getSummary()); ?></itunes:summary>
         <language><?php echo $this->e($item->getLanguage()); ?></language>
         <generator>ampache</generator>
@@ -77,6 +78,12 @@ foreach ($item->getMedias() as $media) { ?>
 <?php   }
     if (!empty($media['episode'])) { ?>
             <podcast:episode><?php echo $this->e($media['episode']); ?></podcast:episode>
+<?php   }
+    if (!empty($media['image'])) { ?>
+            <itunes:image href="<?php echo $this->e($media['image']); ?>"/>
+<?php   }
+    if (!empty($media['explicit'])) { ?>
+            <itunes:explicit><?php echo $this->e($media['explicit']); ?></itunes:explicit>
 <?php   }
     if (!empty($media['url'])) { ?>
             <enclosure type="<?php echo $this->e($media['type']); ?>" length="<?php echo $this->e($media['size']); ?>" url="<?php echo $this->e($media['url']); ?>"/>

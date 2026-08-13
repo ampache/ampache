@@ -844,7 +844,7 @@ final readonly class PlayAction implements ApplicationActionInterface
         // Format the media name
         $media_name = ($stream_name === '' || $stream_name === '0')
             ? $media->get_stream_name() . "." . $streamConfiguration['file_type']
-            : $stream_name;
+            : rawurldecode($stream_name);
         $transcode_to = ($transcode_cfg == 'never' || $cache_file || ($is_download && !$transcode_to))
             ? null
             : Stream::get_transcode_format($streamConfiguration['file_type'], $transcode_to, $player, $type);

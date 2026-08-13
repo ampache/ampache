@@ -132,7 +132,9 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      *     url: null|string,
      *     season: null|string,
      *     season_name: null|string,
-     *     episode: null|string
+     *     episode: null|string,
+     *     image: string,
+     *     explicit: string
      * }>
      */
     public function getMedias(): Generator
@@ -165,6 +167,8 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                     : $media->get_description(),
                 'length' => $media->get_f_time(),
                 'author' => $media->get_parent_fullname(),
+                'image' => $this->getMediaImageUrl($media),
+                'explicit' => $this->getExplicit(),
                 'pubDate' => null,
                 'type' => null,
                 'size' => null,
@@ -274,5 +278,17 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     public function hasSummary(): bool
     {
         return $this->playable->get_description() !== '';
+    }
+
+    /**
+     * Art of a single episode, its own if it has any, the feed art otherwise
+     */
+    private function getMediaImageUrl(Song|Podcast_Episode $media): string
+    {
+        $type = $media->getMediaType()->value;
+
+        return ($media->has_art())
+            ? (Art::url($media->getId(), $type, null, 700) ?? $this->getImageUrl())
+            : $this->getImageUrl();
     }
 }
