@@ -87,7 +87,7 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
-        // Migration\V8\Migration800051 needs no rollback. It drops 24 indexes that repeat the leading columns of a
+        // Migration\V8\Migration801001 needs no rollback. It drops 24 indexes that repeat the leading columns of a
         // wider key, so every column stays indexed and Ampache7 keeps the same access paths without them.
 
         // Migration\V8\Migration800050 needs no rollback. It drops two `user_preference` indexes that `unique_name`
