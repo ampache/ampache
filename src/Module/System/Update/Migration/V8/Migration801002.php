@@ -30,17 +30,14 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 /**
  * Convert `stream_beautiful_url` into a system preference
  */
-final class Migration800052 extends AbstractMigration
+final class Migration801002 extends AbstractMigration
 {
     protected array $changelog = ['Convert `stream_beautiful_url` into a system preference'];
 
     public function migrate(): void
     {
-        // URL rewriting is set up in the web server, so it is true or false for the whole instance. Keep the value the
-        // server admin was using: the per-user rows are about to go and -1 may never have been touched.
-        $this->updateDatabase(
-            "UPDATE `user_preference` AS `system` JOIN `preference` ON `preference`.`id` = `system`.`preference` AND `preference`.`name` = 'stream_beautiful_url' JOIN (SELECT `user_preference`.`value` FROM `user_preference` JOIN `preference` ON `preference`.`id` = `user_preference`.`preference` AND `preference`.`name` = 'stream_beautiful_url' JOIN `user` ON `user`.`id` = `user_preference`.`user` AND `user`.`access` = 100 ORDER BY `user`.`id` LIMIT 1) AS `admin` SET `system`.`value` = `admin`.`value` WHERE `system`.`user` = -1;"
-        );
+        // URL rewriting is set up in the web server, so it is true or false for the whole instance. Keep the value the server admin was using: the per-user rows are about to go and -1 may never have been touched.
+        $this->updateDatabase("UPDATE `user_preference` AS `system` JOIN `preference` ON `preference`.`id` = `system`.`preference` AND `preference`.`name` = 'stream_beautiful_url' JOIN (SELECT `user_preference`.`value` FROM `user_preference` JOIN `preference` ON `preference`.`id` = `user_preference`.`preference` AND `preference`.`name` = 'stream_beautiful_url' JOIN `user` ON `user`.`id` = `user_preference`.`user` AND `user`.`access` = 100 ORDER BY `user`.`id` LIMIT 1) AS `admin` SET `system`.`value` = `admin`.`value` WHERE `system`.`user` = -1;");
         $this->updateDatabase("UPDATE `preference` SET `category` = 'system', `subcategory` = 'backend' WHERE `name` = 'stream_beautiful_url';");
         $this->updateDatabase("DELETE FROM `user_preference` WHERE `name` = 'stream_beautiful_url' AND `user` != -1;");
     }
