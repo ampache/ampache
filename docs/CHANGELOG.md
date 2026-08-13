@@ -11,6 +11,9 @@
 
 * The Now Playing box no longer breaks the page when an entry has no recorded streaming agent, which is every play reported through Subsonic
 * New users are given the default `transcode_bitrate` of `128000` bps instead of `32`
+* Search
+  * A song search on album rating matched the wrong album when `album_group` is off; the `album_disk` rating is now looked up by disk instead of by album id
+  * A song search on album rating no longer joins `album_disk` when `album_group` is on, which multiplied the working set by the disk count for no gain
 
 ## Ampache 8.0.0
 

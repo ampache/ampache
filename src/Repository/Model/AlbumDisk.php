@@ -153,7 +153,7 @@ class AlbumDisk extends database_object implements
 
     /**
      * build_cache
-     * @param int[] $ids
+     * @param int[]|string[] $ids
      */
     public static function build_cache(array $ids): bool
     {
