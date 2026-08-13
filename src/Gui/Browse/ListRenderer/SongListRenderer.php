@@ -49,11 +49,6 @@ use Override;
  */
 final class SongListRenderer extends AbstractBrowseListRenderer
 {
-    /**
-     * @var list<Song>|null
-     */
-    private ?array $songs = null;
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
@@ -168,28 +163,27 @@ final class SongListRenderer extends AbstractBrowseListRenderer
      */
     public function getSongs(): array
     {
-        if ($this->songs !== null) {
-            return $this->songs;
-        }
-
-        // repeating a browse's prefetch would also overwrite the threshold-adjusted play counts it cached
-        if (!$this->getContext()->prefetched) {
-            Song::build_cache($this->getObjectIds());
-        }
-
-        $mayManage = $this->gatekeeperFactory->createGuiGatekeeper()
-            ->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
-        $songs = [];
-        foreach ($this->getObjectIds() as $objectId) {
-            $song = new Song($objectId);
-            if ($song->isNew() || (!$song->enabled && !$mayManage)) {
-                continue;
+        /** @var list<Song> */
+        return $this->cachePerRender('songs', function (): array {
+            // repeating a browse's prefetch would also overwrite the threshold-adjusted play counts it cached
+            if (!$this->getContext()->prefetched) {
+                Song::build_cache($this->getObjectIds());
             }
 
-            $songs[] = $song;
-        }
+            $mayManage = $this->gatekeeperFactory->createGuiGatekeeper()
+                ->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
+            $songs = [];
+            foreach ($this->getObjectIds() as $objectId) {
+                $song = new Song($objectId);
+                if ($song->isNew() || (!$song->enabled && !$mayManage)) {
+                    continue;
+                }
 
-        return $this->songs = $songs;
+                $songs[] = $song;
+            }
+
+            return $songs;
+        });
     }
 
     /**

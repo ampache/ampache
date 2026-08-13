@@ -9,6 +9,8 @@
 
 ### Fixed (8.0.1)
 
+* Every disk section on a multi-disk album page listed the first disk's songs
+* A multi-disk album shows its `[Disk N]` label again on the album page, the disk page and in song lists
 * The Now Playing box no longer breaks the page when an entry has no recorded streaming agent, which is every play reported through Subsonic
 * New users are given the default `transcode_bitrate` of `128000` bps instead of `32`
 * Search
