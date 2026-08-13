@@ -127,6 +127,7 @@ class AlbumDisk extends database_object implements
         $this->album_id     = (int) ($info['album_id'] ?? 0);
         $this->catalog      = (int) ($info['catalog'] ?? 0);
         $this->disk         = (int) ($info['disk'] ?? 0);
+        $this->disk_count   = (int) ($info['disk_count'] ?? 0);
         $this->disksubtitle = $info['disksubtitle'] ?? null;
         $this->song_count   = (int) ($info['song_count'] ?? 0);
         $this->time         = isset($info['time']) ? (int) $info['time'] : null;
