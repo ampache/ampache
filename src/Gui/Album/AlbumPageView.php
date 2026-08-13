@@ -251,7 +251,8 @@ final class AlbumPageView extends AbstractView
 
     public function mayDelete(): bool
     {
-        return Catalog::can_remove($this->album);
+        // the delete action takes an album id; there is no action to delete a single disk
+        return !($this->album instanceof AlbumDisk) && Catalog::can_remove($this->album);
     }
 
     /**
