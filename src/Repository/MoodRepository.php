@@ -342,22 +342,20 @@ final readonly class MoodRepository implements MoodRepositoryInterface
         );
     }
 
-    public function removeAllMaps(string $objectType, int $objectId, ?int $userId = null): void
+    public function removeAllMaps(string $objectType, int $objectId, ?int $userId = null): int
     {
         // a null user clears the lot, which is what deleting the object wants; an id keeps everybody else's, so a scan cannot drop a hand-set mood
         if ($userId === null) {
-            $this->connection->query(
+            return $this->connection->query(
                 'DELETE FROM `mood_map` WHERE `object_type` = ? AND `object_id` = ?',
                 [$objectType, $objectId]
-            );
-
-            return;
+            )->rowCount();
         }
 
-        $this->connection->query(
+        return $this->connection->query(
             'DELETE FROM `mood_map` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?',
             [$objectType, $objectId, $userId]
-        );
+        )->rowCount();
     }
 
     public function removeMap(int $moodId, string $objectType, int $objectId, ?int $userId = null): void
