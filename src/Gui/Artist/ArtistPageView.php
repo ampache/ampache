@@ -220,9 +220,15 @@ final class ArtistPageView extends AbstractView
         return (bool) AmpConfig::get('lastfm_api_key');
     }
 
+    /**
+     * Direct play streams without touching the temporary playlist, so it needs no access level.
+     */
     public function showDirectPlay(): bool
     {
-        return (bool) AmpConfig::get('directplay') && $this->showAdd();
+        $limit = AmpConfig::get_int('direct_play_limit');
+
+        return (bool) AmpConfig::get('directplay')
+            && ($limit <= 0 || $this->artist->song_count <= $limit);
     }
 
     public function showGraphs(): bool

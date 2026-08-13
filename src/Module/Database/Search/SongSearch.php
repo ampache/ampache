@@ -494,14 +494,15 @@ final class SongSearch implements SearchInterface
                     $join['artist'] = true;
                     break;
                 case 'albumrating':
-                    $album_group = AmpConfig::get('album_group');
+                    $album_group = AmpConfig::get_bool('album_group');
                     $my_type     = 'album';
                     $albumString = ($album_group)
                         ? 'album'
                         : 'album_disk';
+                    // an `album_disk` rating is keyed by the disk row, so grouped albums rate `song`.`album` instead
                     $join_col = ($album_group)
                         ? '`song`.`album`'
-                        : '`album_disk`.`album_id`';
+                        : '`album_disk`.`id`';
                     if ($input == 0 && $operator_sql == '>=') {
                         break;
                     }
@@ -526,7 +527,10 @@ final class SongSearch implements SearchInterface
                     $table['rating'] .= (strpos($table['rating'], "rating_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = " . $search_user_id . sprintf(" AND `object_type`='%s') AS `rating_", $albumString) . $my_type . "_" . $search_user_id . "` ON `rating_" . $my_type . "_" . $search_user_id . ('`.`object_id` = ' . $join_col);
-                    $join['album_disk'] = !$album_group;
+                    if (!$album_group) {
+                        $join['album_disk'] = true;
+                    }
+
                     break;
                 case 'myrating':
                 case 'artistrating':
