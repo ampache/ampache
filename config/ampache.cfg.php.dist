@@ -988,6 +988,12 @@ show_footer_statistics = "true"
 ; DEFAULT: "false"
 ;rss_explicit = "true"
 
+; Serve rss feeds under /rss/{object_type}/{object_id}/{slug} instead of a
+; query string. Requires the rewrite rules shipped in public/rss/.htaccess.dist
+; (apache) or docs/examples/nginx-site.conf (nginx).
+; DEFAULT: "false"
+;rss_beautiful_url = "true"
+
 ; Apple sub-category advertised by podcast feeds, on top of the "Music"
 ; category. Valid values: Music Commentary, Music History, Music Interviews
 ; DEFAULT: ""

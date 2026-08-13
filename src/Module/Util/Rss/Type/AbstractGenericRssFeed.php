@@ -27,6 +27,7 @@ namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\TemplateInterface;
+use Ampache\Module\Util\Rss\RssUrl;
 use Ampache\Module\Util\Rss\View\GenericRssFeedView;
 use Generator;
 use Override;
@@ -37,13 +38,23 @@ use Traversable;
  */
 abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
 {
+    /**
+     * @return array<string, string>
+     */
+    private static function queryParams(): array
+    {
+        parse_str((string) ($_SERVER['QUERY_STRING'] ?? ''), $params);
+
+        return array_map('strval', $params);
+    }
+
     #[Override]
     public function createView(): TemplateInterface
     {
         return new GenericRssFeedView(
             AmpConfig::get('site_title') . ' - ' . $this->getTitle(),
             AmpConfig::get_web_path(),
-            AmpConfig::get_web_path() . '/rss.php?' . ($_SERVER['QUERY_STRING'] ?? ''),
+            RssUrl::published(self::queryParams()),
             ($this->getPubDate()) ? date('r', (int) $this->getPubDate()) : null,
             $this->getImage(),
             $this->getItems(),

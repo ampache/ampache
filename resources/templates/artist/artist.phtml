@@ -117,7 +117,7 @@ Ui::show_box_top($this->e($this->getFullname()), 'info-box'); ?>
         <?php } ?>
         <?php } ?>
         <?php if ($this->showRss()) { ?>
-        <li><?php echo $this->raw(Ui::getRssLink(RssFeedTypeEnum::LIBRARY_ITEM, $this->getUser(), T_('RSS Feed'), ['object_type' => 'artist', 'object_id' => (string) $artistId])); ?></li>
+        <li><?php echo $this->raw(Ui::getRssLink(RssFeedTypeEnum::LIBRARY_ITEM, $this->getUser(), T_('RSS Feed'), ['object_type' => 'artist', 'object_id' => (string) $artistId], $this->getFullname())); ?></li>
         <?php } ?>
         <?php if ($this->showShout()) { ?>
         <li>

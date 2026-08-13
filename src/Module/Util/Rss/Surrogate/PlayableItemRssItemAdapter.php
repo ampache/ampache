@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Util\Rss\EnclosureResolver;
 use Ampache\Module\Util\Rss\PodcastGuid;
+use Ampache\Module\Util\Rss\RssUrl;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -217,7 +218,11 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getPodcastGuid(): string
     {
-        return PodcastGuid::fromFeedUrl((string) preg_replace('/&?rsstoken=[^&]*/', '', $this->getRssLink()));
+        // the query form identifies a feed whatever url shape it is served under
+        $params = $this->getQueryParams();
+        unset($params['rsstoken']);
+
+        return PodcastGuid::fromFeedUrl(RssUrl::canonical($params));
     }
 
     /**
@@ -225,7 +230,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getRssLink(): string
     {
-        return AmpConfig::get_web_path() . '/rss.php?' . ($_SERVER['QUERY_STRING'] ?? '');
+        return RssUrl::published($this->getQueryParams(), $this->getTitle());
     }
 
     /**
@@ -290,5 +295,15 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
         return ($media->has_art())
             ? (Art::url($media->getId(), $type, null, 700) ?? $this->getImageUrl())
             : $this->getImageUrl();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getQueryParams(): array
+    {
+        parse_str((string) ($_SERVER['QUERY_STRING'] ?? ''), $params);
+
+        return array_map('strval', $params);
     }
 }

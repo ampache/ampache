@@ -67,14 +67,15 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $queryParams = $request->getQueryParams();
 
-        $type     = RssFeedTypeEnum::tryFrom($queryParams['type'] ?? '') ?? RssFeedTypeEnum::NOW_PLAYING;
+        // a beautiful url spells the types with dashes
+        $type     = RssFeedTypeEnum::tryFrom(str_replace('-', '_', (string) ($queryParams['type'] ?? ''))) ?? RssFeedTypeEnum::NOW_PLAYING;
         $rssToken = $queryParams['rsstoken'] ?? '';
 
         $user = $this->userRepository->getByRssToken($rssToken);
 
         if ($type === RssFeedTypeEnum::LIBRARY_ITEM) {
             $item = $this->libraryItemLoader->load(
-                LibraryItemEnum::tryFrom($queryParams['object_type'] ?? '') ?? LibraryItemEnum::SONG,
+                LibraryItemEnum::tryFrom(str_replace('-', '_', (string) ($queryParams['object_type'] ?? ''))) ?? LibraryItemEnum::SONG,
                 (int) ($queryParams['object_id'] ?? 0),
                 [Album::class, AlbumDisk::class, Artist::class, Podcast::class, Song::class]
             );

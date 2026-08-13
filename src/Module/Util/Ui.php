@@ -55,6 +55,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\System\Preference;
+use Ampache\Module\Util\Rss\RssUrl;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Plugin\AmpacheLastfm;
 use Ampache\Plugin\Ampachelibrefm;
@@ -476,25 +477,24 @@ class Ui implements UiInterface
         ?User $user = null,
         string $title = '',
         ?array $params = null,
+        string $slug = '',
     ): string {
-        $strparams = "";
-        if (is_array($params)) {
-            foreach ($params as $key => $value) {
-                $strparams .= "&" . scrub_out($key) . "=" . scrub_out($value);
-            }
-        }
-
-        $rsstoken = '';
+        $query = ['type' => $type->value];
         if ($user !== null && AmpConfig::get('use_auth')) {
             // On an open instance (use_auth false) every visitor shares the same default user,
             // so a token adds nothing and would leak into publicly served pages
-            $rsstoken = "&rsstoken=" . $user->getRssToken();
+            $query['rsstoken'] = $user->getRssToken();
+        }
+
+        if (is_array($params)) {
+            foreach ($params as $key => $value) {
+                $query[$key] = $value;
+            }
         }
 
         $string = (
-            '<a class="nohtml" href="' . AmpConfig::get_web_path()
-            . '/rss.php?type=' . $type->value
-            . $rsstoken . $strparams . '" target="_blank">'
+            '<a class="nohtml" href="' . scrub_out(RssUrl::published($query, $slug))
+            . '" target="_blank">'
             . self::get_material_symbol(
                 'rss_feed',
                 T_('RSS Feed')
