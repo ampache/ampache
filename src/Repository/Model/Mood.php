@@ -311,7 +311,8 @@ class Mood extends database_object implements GarbageCollectibleInterface
 
             $found = false;
             foreach ($editedMoods as $key => $mood_name) {
-                if (strtolower((string) $cmv['name']) === strtolower($mood_name)) {
+                // `name` is a _ci column, fold the same way
+                if (mb_strtolower((string) $cmv['name']) === mb_strtolower($mood_name)) {
                     $found = true;
                     unset($editedMoods[$key]);
                     break;
@@ -456,7 +457,10 @@ class Mood extends database_object implements GarbageCollectibleInterface
         }
 
         $moodRepository = self::getMoodRepository();
-        $moodRepository->removeAllMaps($object_type, $object_id, $user_id);
+        // nothing was mapped, nothing to recount
+        if ($moodRepository->removeAllMaps($object_type, $object_id, $user_id) === 0) {
+            return true;
+        }
 
         $countType = MoodCountTypeEnum::tryFrom($object_type);
         if ($countType instanceof MoodCountTypeEnum) {

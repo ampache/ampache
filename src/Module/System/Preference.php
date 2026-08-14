@@ -103,7 +103,7 @@ class Preference extends database_object
         'autoupdate_lastversion_new' => ['', 'AutoUpdate last version from last check is newer', AccessLevelEnum::USER->value, 'boolean', 'internal', 'update'],
         'webplayer_confirmclose' => ['0', 'Confirmation when closing current playing window', AccessLevelEnum::USER->value, 'boolean', 'interface', 'player'],
         'webplayer_pausetabs' => ['1', 'Auto-pause between tabs', AccessLevelEnum::USER->value, 'boolean', 'interface', 'player'],
-        'stream_beautiful_url' => ['0', 'Enable URL Rewriting', AccessLevelEnum::ADMIN->value, 'boolean', 'streaming', null],
+        'stream_beautiful_url' => ['0', 'Enable URL Rewriting', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend'],
         'share' => ['0', 'Allow Share', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'feature'],
         'share_expire' => ['7', 'Share links default expiration days (0=never)', AccessLevelEnum::ADMIN->value, 'integer', 'system', 'share'],
         'slideshow_time' => ['0', 'Artist slideshow inactivity time', AccessLevelEnum::USER->value, 'integer', 'interface', 'player'],

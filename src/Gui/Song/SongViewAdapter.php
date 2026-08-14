@@ -41,6 +41,7 @@ use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Waveform;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
@@ -50,6 +51,7 @@ use Override;
 final class SongViewAdapter extends AbstractView implements SongViewAdapterInterface
 {
     public function __construct(
+        private readonly CatalogRepositoryInterface $catalogRepository,
         private readonly ConfigContainerInterface $configContainer,
         private readonly ModelFactoryInterface $modelFactory,
         private readonly ConfigViewAdapterInterface $config,
@@ -453,6 +455,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             $songprops[T_('Path')]     = scrub_out((string) ($data['dirname'] ?? ''));
             $songprops[T_('Filename')] = scrub_out($data['filename'] . "." . ($data['extension'] ?? ''));
             $songprops[T_('Size')]     = Ui::format_bytes($this->song->size);
+            $songprops[T_('Catalog')]  = $this->catalogRepository->findName($this->song->catalog);
         }
 
         if ($this->song->update_time !== 0) {

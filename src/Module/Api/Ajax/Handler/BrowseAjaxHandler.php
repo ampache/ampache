@@ -177,7 +177,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $browse->show_objects([], $argument, true);
+                $browse->show_objects(null, $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'delete_object':
@@ -229,12 +229,12 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
             case 'page':
                 $browse->set_start((int) ($_REQUEST['start'] ?? 0));
                 ob_start();
-                $browse->show_objects([], $argument, true);
+                $browse->show_objects(null, $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'show_art':
                 ob_start();
-                $browse->show_objects([], $argument, true);
+                $browse->show_objects(null, $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_filters':
