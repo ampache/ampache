@@ -17,6 +17,8 @@
   * `album_map`, `artist_map`, `folder_map` and `song_map` carried the most, and grow with the catalog
 * Database 801002
   * Convert `stream_beautiful_url` to an Admin preference
+* Garbage collection actions (`admin/catalog.php?action=garbage_collect` and `php bin/cli run:updateCatalog -t`) now run `Session::garbage_collection()`, cleaning up `tmp_playlist`/`tmp_playlist_data`, `stream_playlist`, `song_preview` and the query cache, not just library objects
+  * **Run this at least once after upgrading** On a database with cron disabled that's never had this data collected, the first run can be slow
 
 ### Fixed (8.0.1)
 
