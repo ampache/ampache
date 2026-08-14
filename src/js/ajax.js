@@ -178,14 +178,13 @@ $(function() {
         };
 
         if (hasFile) {
-            // must be async: sending a file body on a synchronous XHR is deprecated and browsers
-            // refuse it for larger payloads
+            // sending a file body on a synchronous XHR is deprecated and browsers refuse it for larger payloads
             options.data        = new FormData(this);
             options.processData = false;
             options.contentType = false;
         } else {
-            options.async = false;
-            options.data  = $(this).serializeArray();
+            // async, so a slow request (e.g. deleting an album's files) doesn't freeze the tab and interrupt playback while it's in flight
+            options.data = $(this).serializeArray();
         }
 
         $.ajax(options);

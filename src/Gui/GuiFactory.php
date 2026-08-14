@@ -65,6 +65,7 @@ use Ampache\Module\System\Update\UpdateHelperInterface;
 use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
@@ -83,6 +84,7 @@ use Ampache\Repository\VideoRepositoryInterface;
 final readonly class GuiFactory implements GuiFactoryInterface
 {
     public function __construct(
+        private CatalogRepositoryInterface $catalogRepository,
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
         private ZipHandlerInterface $zipHandler,
@@ -367,6 +369,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
         Song $song,
     ): SongViewAdapterInterface {
         return new SongViewAdapter(
+            $this->catalogRepository,
             $this->configContainer,
             $this->modelFactory,
             $this->createConfigViewAdapter(),

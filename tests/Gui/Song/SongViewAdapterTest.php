@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Rating;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
@@ -42,6 +43,7 @@ use Override;
 
 class SongViewAdapterTest extends MockeryTestCase
 {
+    private CatalogRepositoryInterface|MockInterface|null $catalogRepository;
     private ConfigViewAdapterInterface|MockInterface|null $config;
     private ConfigContainerInterface|MockInterface|null $configContainer;
     private MockInterface|GuiGatekeeperInterface|null $gatekeeper;
@@ -557,13 +559,15 @@ class SongViewAdapterTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->config          = $this->mock(ConfigViewAdapterInterface::class);
-        $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
-        $this->song            = $this->mock(Song::class);
+        $this->catalogRepository = $this->mock(CatalogRepositoryInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
+        $this->config            = $this->mock(ConfigViewAdapterInterface::class);
+        $this->gatekeeper        = $this->mock(GuiGatekeeperInterface::class);
+        $this->song              = $this->mock(Song::class);
 
         $this->subject = new SongViewAdapter(
+            $this->catalogRepository,
             $this->configContainer,
             $this->modelFactory,
             $this->config,

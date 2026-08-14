@@ -140,9 +140,9 @@ interface MoodRepositoryInterface
     public function recountType(MoodCountTypeEnum $type): void;
 
     /**
-     * Drops every mood mapped onto an object
+     * Drops every mood mapped onto an object and returns how many went
      */
-    public function removeAllMaps(string $objectType, int $objectId, ?int $userId = null): void;
+    public function removeAllMaps(string $objectType, int $objectId, ?int $userId = null): int;
 
     /**
      * Drops one mood from one object
