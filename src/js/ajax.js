@@ -332,6 +332,8 @@ export function loadContentData(data, status, jqXHR)
 
     // data needs a full document here (e.g. the login page after a session expired mid-navigation).
     if ($response.find("#guts").length === 0) {
+        var incomingBody = new DOMParser().parseFromString(data, "text/html").body;
+
         $("body").undelegate("a");
         $("body").undelegate("form");
         document.body.id        = incomingBody.id;
