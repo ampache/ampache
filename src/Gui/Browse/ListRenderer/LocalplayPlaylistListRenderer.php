@@ -37,13 +37,6 @@ use Override;
  */
 final class LocalplayPlaylistListRenderer extends AbstractBrowseListRenderer
 {
-    private ?LocalPlay $localplay = null;
-
-    /**
-     * @var array<string, mixed>|null
-     */
-    private ?array $status = null;
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
     ) {}
@@ -82,12 +75,13 @@ final class LocalplayPlaylistListRenderer extends AbstractBrowseListRenderer
 
     private function getLocalplay(): LocalPlay
     {
-        if ($this->localplay === null) {
-            $this->localplay = new LocalPlay((string) $this->configContainer->get('localplay_controller'));
-            $this->localplay->connect();
-        }
+        /** @var LocalPlay */
+        return $this->cachePerRender('localplay', function (): LocalPlay {
+            $localplay = new LocalPlay((string) $this->configContainer->get('localplay_controller'));
+            $localplay->connect();
 
-        return $this->localplay;
+            return $localplay;
+        });
     }
 
     /**
@@ -95,10 +89,7 @@ final class LocalplayPlaylistListRenderer extends AbstractBrowseListRenderer
      */
     private function getStatus(): array
     {
-        if ($this->status === null) {
-            $this->status = $this->getLocalplay()->status() ?? [];
-        }
-
-        return $this->status;
+        /** @var array<string, mixed> */
+        return $this->cachePerRender('status', fn(): array => $this->getLocalplay()->status() ?? []);
     }
 }

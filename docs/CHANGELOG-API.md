@@ -2,7 +2,7 @@
 
 ## API 8.0.0
 
-This version is being developed for Ampache8 (`develop` branch) **only** and is not yet released.
+This version is being developed for Ampache8 **only**
 
 API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 remains unused/unsupported), built on the `MethodInterface`/DI method pattern.
 

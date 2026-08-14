@@ -1124,6 +1124,9 @@ final class VaInfo implements VaInfoInterface
                     case 'wm/publisher':
                         $parsed['publisher'] = $value;
                         break;
+                    case 'wm/composer':
+                        $parsed['composer'] = $value;
+                        break;
                     default:
                         $frame = strtolower($this->trimAscii($wmaTag['name']));
                         if ($enable_custom_metadata && !isset(self::DEFAULT_INFO[$frame]) && !in_array($frame, $parsed)) {
