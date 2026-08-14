@@ -494,7 +494,7 @@ class Ui implements UiInterface
 
         $string = (
             '<a class="nohtml" href="' . scrub_out(RssUrl::published($query, $slug))
-            . '" target="_blank">'
+            . '" target="_blank" rel="nofollow noopener">'
             . self::get_material_symbol(
                 'rss_feed',
                 T_('RSS Feed')

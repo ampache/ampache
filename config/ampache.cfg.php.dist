@@ -994,6 +994,12 @@ show_footer_statistics = "true"
 ; DEFAULT: "false"
 ;rss_beautiful_url = "true"
 
+; Send X-Robots-Tag: noindex with rss feeds. Feeds are meant to be found, and
+; podcast directories skip a feed marked noindex, so this is off by default.
+; Note that the shipped web server configs send X-Robots-Tag: none site wide.
+; DEFAULT: "false"
+;rss_noindex = "true"
+
 ; Apple sub-category advertised by podcast feeds, on top of the "Music"
 ; category. Valid values: Music Commentary, Music History, Music Interviews
 ; DEFAULT: ""
