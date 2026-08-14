@@ -52,6 +52,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Module\System\Session;
 use Ampache\Module\User\Activity\Useractivity;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
@@ -1901,6 +1902,7 @@ abstract class Catalog extends database_object
 
                 debug_event(self::class, 'Run Garbage collection', 5);
                 self::getCatalogGarbageCollector()->collect();
+                Session::garbage_collection();
                 $catalog_media_types = [];
                 if (!empty($catalogs)) {
                     foreach ($catalogs as $catalog_id) {

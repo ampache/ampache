@@ -31,6 +31,7 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Session;
 use Ampache\Repository\CatalogFilterRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\UserRepositoryInterface;
@@ -328,6 +329,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 true
             );
             $this->catalogGarbageCollector->collect();
+            Session::garbage_collection();
             Catalog::clean_empty_albums();
             Album::update_album_artist();
             if (in_array($catalogName, [null, '', '0'], true)) {
