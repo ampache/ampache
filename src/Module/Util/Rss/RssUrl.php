@@ -44,6 +44,32 @@ final class RssUrl
     }
 
     /**
+     * The current request's own query params, normalized back to underscores so a feed built from them
+     * identifies the same way whether this request arrived beautiful or not
+     *
+     * @return array<string, string>
+     */
+    public static function currentQueryParams(): array
+    {
+        parse_str((string) ($_SERVER['QUERY_STRING'] ?? ''), $parsed);
+
+        $params = [];
+        foreach ($parsed as $key => $value) {
+            if (is_scalar($value)) {
+                $params[(string) $key] = (string) $value;
+            }
+        }
+
+        foreach (['type', 'object_type'] as $key) {
+            if (isset($params[$key])) {
+                $params[$key] = str_replace('-', '_', $params[$key]);
+            }
+        }
+
+        return $params;
+    }
+
+    /**
      * The url a feed is published under, a path when rss_beautiful_url is on
      *
      * @param array<string, string> $params
@@ -72,32 +98,6 @@ final class RssUrl
         return AmpConfig::get_web_path() . '/rss/' . $path . (($token !== '')
             ? '?rsstoken=' . rawurlencode($token)
             : '');
-    }
-
-    /**
-     * The current request's own query params, normalized back to underscores so a feed built from them
-     * identifies the same way whether this request arrived beautiful or not
-     *
-     * @return array<string, string>
-     */
-    public static function currentQueryParams(): array
-    {
-        parse_str((string) ($_SERVER['QUERY_STRING'] ?? ''), $parsed);
-
-        $params = [];
-        foreach ($parsed as $key => $value) {
-            if (is_scalar($value)) {
-                $params[(string) $key] = (string) $value;
-            }
-        }
-
-        foreach (['type', 'object_type'] as $key) {
-            if (isset($params[$key])) {
-                $params[$key] = str_replace('-', '_', $params[$key]);
-            }
-        }
-
-        return $params;
     }
 
     /**
