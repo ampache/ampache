@@ -10,6 +10,7 @@
 
 ### Changed (8.0.1)
 
+* Lock database connection on catalog actions to avoid repeats and deadlocks
 * An unrecognised `transcode_TYPE` value (e.g. `transcode_mp3 = "falsed"`) no longer counts as enabling transcoding; only `allowed`, `required` and `false` are accepted and anything else is logged and treated as `false`
 * Invalid `transcode_TYPE` values are listed on the admin debug page
 * Database 801001
@@ -22,9 +23,12 @@
 
 ### Fixed (8.0.1)
 
+* Many possible nullable database column issues fixed
 * Don't lock the UI on larger click operations. (e.g. Album delete)
+* Redirect to the full login page on session failure
 * Every disk section on a multi-disk album page listed the first disk's songs
 * A multi-disk album shows its `[Disk N]` label again on the album page, the disk page and in song lists
+* Install Localplay as the system user so it's applied to all users
 * Album disk page
   * Rating and flag icons acted on the whole album instead of just that disk
   * Album art didn't display, since it was looked up against the disk instead of the album it belongs to
