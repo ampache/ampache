@@ -31,7 +31,28 @@ use Ampache\Module\System\Dba;
 
 final class ObjectCache implements ObjectCacheInterface
 {
+    // `run:computeCache` and `run:cronProcess` both call compute() independently; the rebuild ends in a
+    // table RENAME-swap, so an overlapping run would double-count into the summary merge and could publish
+    // a half-built table out from under the other run.
+    private const string LOCK_NAME = 'ampache_object_cache_compute';
+
     public function compute(): void
+    {
+        $lock = Dba::fetch_assoc(Dba::read('SELECT GET_LOCK(?, 0) AS locked', [self::LOCK_NAME]));
+        if ((int) ($lock['locked'] ?? 0) !== 1) {
+            debug_event(self::class, 'compute() is already running elsewhere, skipping', 3);
+
+            return;
+        }
+
+        try {
+            $this->doCompute();
+        } finally {
+            Dba::write('SELECT RELEASE_LOCK(?)', [self::LOCK_NAME]);
+        }
+    }
+
+    private function doCompute(): void
     {
         $count_types = [
             'stream',

@@ -20,6 +20,8 @@
   * Convert `stream_beautiful_url` to an Admin preference
 * Garbage collection actions (`admin/catalog.php?action=garbage_collect` and `php bin/cli run:updateCatalog -t`) now run `Session::garbage_collection()`, cleaning up `tmp_playlist`/`tmp_playlist_data`, `stream_playlist`, `song_preview` and the query cache, not just library objects
   * **Run this at least once after upgrading** On a database with cron disabled that's never had this data collected, the first run can be slow
+* `php bin/cli run:cronProcess`'s garbage collection now shares the same lock as the other garbage collection triggers, so a scheduled cron run can't race a manual one
+* `run:computeCache` and `run:cronProcess`'s cache rebuild now take their own lock, so two overlapping runs can't double-count the results or publish a half-rebuilt table
 
 ### Fixed (8.0.1)
 
@@ -33,7 +35,8 @@
   * `preferences.php` no longer renders for an unregistered/guest visitor
   * Plugin credential preferences (api keys, tokens, passwords) are write-only in the edit form; the stored value is never echoed back, only replaced
   * The `user_preferences` API method (and REST `preferences`) returned those same plugin credential values in the response; they're blanked there too
-* An unregistered/guest visitor could upload and import a playlist file, or export every podcast subscription in the system, neither of which checked for a real account
+* An unregistered/guest visitor could upload and import a playlist file, or export every podcast subscription in the system, neither of which checked for a real account; importing a playlist also now verifies the request came from Ampache's own form
+* A user's last-seen date/time on their profile page ignored their `allow_personal_info_time` preference, unlike the recent-activity list right next to it on the same page
 * Album disk page
   * Rating and flag icons acted on the whole album instead of just that disk
   * Album art didn't display, since it was looked up against the disk instead of the album it belongs to
