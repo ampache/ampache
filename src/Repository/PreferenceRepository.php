@@ -305,7 +305,7 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
                 'name' => $row['name'],
                 'level' => (int) $row['level'],
                 'description' => T_((string) ($row['description'] ?? '')),
-                'value' => $row['value'],
+                'value' => (Preference::isSecretName($row['name'])) ? '' : $row['value'],
                 'type' => $row['type'],
                 'category' => $row['category'],
                 'subcategory' => $row['subcategory']

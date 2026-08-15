@@ -1908,44 +1908,55 @@ abstract class Catalog extends database_object
                 );
                 break;
             case 'garbage_collect':
-                if (!$catalogs) {
-                    $catalogs = self::get_catalogs();
+                // Not scoped to one catalog (the sweep touches every catalog), so it needs its own lock
+                $catalogRepository = self::getCatalogRepository();
+                if (!$catalogRepository->tryAcquireActionLock('garbage_collect')) {
+                    debug_event(self::class, 'Garbage collection is already running, skipping', 3);
+                    break;
                 }
 
-                debug_event(self::class, 'Run Garbage collection', 5);
-                self::getCatalogGarbageCollector()->collect();
-                Session::garbage_collection();
-                $catalog_media_types = [];
-                if (!empty($catalogs)) {
-                    foreach ($catalogs as $catalog_id) {
-                        $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null && !in_array($catalog->gather_types, $catalog_media_types)) {
-                            $catalog_media_types[] = (string) $catalog->gather_types;
-                        }
+                try {
+                    if (!$catalogs) {
+                        $catalogs = self::get_catalogs();
                     }
 
-                    foreach ($catalog_media_types as $catalog_media_type) {
-                        if ($catalog_media_type == 'music') {
-                            self::clean_empty_albums();
-                            Album::update_album_artist();
+                    debug_event(self::class, 'Run Garbage collection', 5);
+                    self::getCatalogGarbageCollector()->collect();
+                    Session::garbage_collection();
+                    $catalog_media_types = [];
+                    if (!empty($catalogs)) {
+                        foreach ($catalogs as $catalog_id) {
+                            $catalog = self::create_from_id($catalog_id);
+                            if ($catalog !== null && !in_array($catalog->gather_types, $catalog_media_types)) {
+                                $catalog_media_types[] = (string) $catalog->gather_types;
+                            }
                         }
 
-                        self::update_catalog_map($catalog_media_type);
-                        switch ($catalog_media_type) {
-                            case 'podcast':
-                                self::garbage_collect_mapping(['podcast_episode', 'podcast']);
-                                break;
-                            case 'video':
-                                self::garbage_collect_mapping(['video']);
-                                break;
-                            case 'music':
-                                self::garbage_collect_mapping(['album', 'artist', 'song']);
-                                break;
+                        foreach ($catalog_media_types as $catalog_media_type) {
+                            if ($catalog_media_type == 'music') {
+                                self::clean_empty_albums();
+                                Album::update_album_artist();
+                            }
+
+                            self::update_catalog_map($catalog_media_type);
+                            switch ($catalog_media_type) {
+                                case 'podcast':
+                                    self::garbage_collect_mapping(['podcast_episode', 'podcast']);
+                                    break;
+                                case 'video':
+                                    self::garbage_collect_mapping(['video']);
+                                    break;
+                                case 'music':
+                                    self::garbage_collect_mapping(['album', 'artist', 'song']);
+                                    break;
+                            }
                         }
+
+                        self::getCatalogFilterRepository()->collectGarbage();
+                        self::getUserRepository()->resetMissingCatalogFilterGroups();
                     }
-
-                    self::getCatalogFilterRepository()->collectGarbage();
-                    self::getUserRepository()->resetMissingCatalogFilterGroups();
+                } finally {
+                    $catalogRepository->releaseActionLock('garbage_collect');
                 }
                 break;
             case 'scan_all_catalog_folders':
