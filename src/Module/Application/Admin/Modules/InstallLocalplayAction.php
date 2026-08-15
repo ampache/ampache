@@ -70,8 +70,9 @@ final readonly class InstallLocalplayAction implements ApplicationActionInterfac
         }
 
         // The manager loads the controller, installs it and applies the localplay enable/level/controller preferences
+        // to every user (-1), matching the CLI installer's default rather than only the clicking admin
         $type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
-        if (!$this->pluginManager->installLocalplay($type, $user->getId())) {
+        if (!$this->pluginManager->installLocalplay($type, -1)) {
             AmpError::add('general', T_('Failed to enable the Localplay module'));
             echo AmpError::display('general');
 

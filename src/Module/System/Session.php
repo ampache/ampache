@@ -760,7 +760,7 @@ final readonly class Session implements SessionInterface
         if ($results = Dba::fetch_assoc($db_results)) {
             //debug_event(self::class, 'Read session from key ' . $key . ' ' . $results[$column], 3);
 
-            return $results[$column];
+            return (string) ($results[$column] ?? '');
         }
 
         debug_event(self::class, 'Unable to read ' . $column . ' from key ' . $key . ' no data found', 3);

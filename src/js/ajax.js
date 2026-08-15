@@ -330,10 +330,15 @@ export function loadContentData(data, status, jqXHR)
 {
     var $response = $(data);
 
+    // data needs a full document here (e.g. the login page after a session expired mid-navigation).
     if ($response.find("#guts").length === 0) {
+        var incomingBody = new DOMParser().parseFromString(data, "text/html").body;
+
         $("body").undelegate("a");
         $("body").undelegate("form");
-        $("body").empty().append($response);
+        document.body.id        = incomingBody.id;
+        document.body.className = incomingBody.className;
+        $("body").empty().append($(incomingBody.childNodes));
         // body was emptied, so the store went with it -- rebuild it from what just arrived
         hoistMaterialSymbols();
 
