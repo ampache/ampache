@@ -26,7 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\PlaylistImporter;
 use Ampache\Module\System\Core;
@@ -46,6 +50,14 @@ final readonly class ImportPlaylistAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        // A no-auth/demo guest still resolves to a real User instance, so require real account access here, before ever touching the uploaded file.
+        if (
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+        ) {
+            throw new AccessDeniedException();
+        }
+
         $this->ui->showHeader();
 
         // $_FILES is empty whenever this action is reached without an upload -- a bare GET, or a POST

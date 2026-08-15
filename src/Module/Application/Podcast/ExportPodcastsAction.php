@@ -28,6 +28,9 @@ namespace Ampache\Module\Application\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\Exchange\PodcastExporterInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -35,7 +38,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Exports all podcast subscriptions
+ * Exports every podcast in the system (unscoped by catalog access), not just the caller's own
  */
 final readonly class ExportPodcastsAction implements ApplicationActionInterface
 {
@@ -49,6 +52,11 @@ final readonly class ExportPodcastsAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        // A no-auth/demo guest still resolves to a real User instance, so require real account access here.
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false) {
+            throw new AccessDeniedException();
+        }
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST) === false) {
             return null;
         }
