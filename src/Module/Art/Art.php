@@ -596,7 +596,7 @@ class Art extends database_object
                         (string) $row['object_type'],
                         (int) $row['object_id'],
                         (empty($row['kind'])) ? 'default' : (string) $row['kind'],
-                        $row['mime']
+                        (string) ($row['mime'] ?? '')
                     );
                 }
 
@@ -1270,7 +1270,7 @@ class Art extends database_object
 
         if ($results !== []) {
             $raw = (AmpConfig::get('album_art_store_disk'))
-                ? (string) self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime'])
+                ? (string) self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, (string) ($results['mime'] ?? ''))
                 : '';
 
             // insert() keeps the image in the database whenever the disk write fails, so the read has to look there too
@@ -1283,7 +1283,7 @@ class Art extends database_object
             }
 
             $this->raw      = $raw;
-            $this->raw_mime = $results['mime'];
+            $this->raw_mime = (string) ($results['mime'] ?? '');
             $this->id       = (int) $results['id'];
             $this->width    = (int) $results['width'];
             $this->height   = (int) $results['height'];
@@ -1323,7 +1323,7 @@ class Art extends database_object
         $results  = self::getImageRepository()->getRowBySize($sizetext, $this->object_type, $this->object_id, $this->kind);
         if ($results !== []) {
             $image = (AmpConfig::get('album_art_store_disk'))
-                ? self::_read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, $results['mime'])
+                ? self::_read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, (string) ($results['mime'] ?? ''))
                 : $results['image'];
 
             // insert() keeps the image in the database whenever the disk write fails, so the read has to look there too
@@ -1332,7 +1332,7 @@ class Art extends database_object
             }
 
             if ($image != null) {
-                return ['thumb' => $image, 'thumb_mime' => $results['mime']];
+                return ['thumb' => $image, 'thumb_mime' => (string) ($results['mime'] ?? '')];
             }
 
             debug_event(self::class, 'Thumb entry found in database but associated data cannot be found.', 3);

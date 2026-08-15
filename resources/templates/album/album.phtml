@@ -44,8 +44,8 @@ Ui::show_box_top($this->getTitle(), 'info-box'); ?>
     <?php echo ($this->showArt()) ? $this->raw($this->getArt()) : ''; ?>
 </div>
 <?php if ($this->showRatings()) { ?>
-<span id="rating_<?php echo $albumId; ?>_album"><?php echo $this->raw(Rating::show($albumId, 'album', true)); ?></span>
-<span id="userflag_<?php echo $albumId; ?>_album"><?php echo $this->raw(Userflag::show($albumId, 'album')); ?></span>
+<span id="rating_<?php echo $albumId; ?>_<?php echo $this->e($type); ?>"><?php echo $this->raw(Rating::show($albumId, $type, true)); ?></span>
+<span id="userflag_<?php echo $albumId; ?>_<?php echo $this->e($type); ?>"><?php echo $this->raw(Userflag::show($albumId, $type)); ?></span>
 <?php } ?>
 <?php if ($this->showPlayedTimes()) { ?>
 <br />
