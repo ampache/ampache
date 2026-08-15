@@ -26,6 +26,9 @@ namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\Exchange\PodcastExporterInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -54,6 +57,11 @@ class ExportPodcastsActionTest extends TestCase
 
         $result      = 'some-result';
         $contentType = 'some-content-type';
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->willReturn(true);
 
         $this->configContainer->expects(static::once())
             ->method('isFeatureEnabled')
@@ -96,6 +104,11 @@ class ExportPodcastsActionTest extends TestCase
 
     public function testRunReturnsNullIfPodcastsAreDisabled(): void
     {
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->willReturn(true);
+
         $this->configContainer->expects(static::once())
             ->method('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::PODCAST)
@@ -104,6 +117,18 @@ class ExportPodcastsActionTest extends TestCase
         self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->willReturn(false);
+
+        $this->expectException(AccessDeniedException::class);
+
+        $this->subject->run($this->request, $this->gatekeeper);
     }
 
     protected function setUp(): void

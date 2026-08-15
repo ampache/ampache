@@ -1359,6 +1359,16 @@ class Preference extends database_object
     }
 
     /**
+     * Whether the name marks this as a credential (api key, token, password) never echoed back once set
+     */
+    public static function isSecretName(string $name): bool
+    {
+        return str_ends_with($name, '_pass')
+            || str_ends_with($name, '_token')
+            || str_ends_with($name, '_key');
+    }
+
+    /**
      * load_from_session
      * This loads the preferences from the session rather then creating a connection to the database
      */

@@ -340,54 +340,64 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             }
         }
 
-        if ($collectGarbage || (($cleanup || $verification || $scanFolders) && $changed > 0)) {
-            $interactor->info(
-                T_('Garbage Collection'),
-                true
-            );
-            $this->catalogGarbageCollector->collect();
-            Session::garbage_collection();
-            Catalog::clean_empty_albums();
-            Album::update_album_artist();
-            if (in_array($catalogName, [null, '', '0'], true)) {
-                $catalog?->count_scan_folders($interactor);
-            }
+        // Shares its lock key with Catalog::process_action()'s 'garbage_collect' case, so a cron run here and a web-triggered sweep can't race each other.
+        if (
+            ($collectGarbage || (($cleanup || $verification || $scanFolders) && $changed > 0) || ($changed > 0 && !$missing))
+            && $this->catalogRepository->tryAcquireActionLock('garbage_collect')
+        ) {
+            try {
+                if ($collectGarbage || (($cleanup || $verification || $scanFolders) && $changed > 0)) {
+                    $interactor->info(
+                        T_('Garbage Collection'),
+                        true
+                    );
+                    $this->catalogGarbageCollector->collect();
+                    Session::garbage_collection();
+                    Catalog::clean_empty_albums();
+                    Album::update_album_artist();
+                    if (in_array($catalogName, [null, '', '0'], true)) {
+                        $catalog?->count_scan_folders($interactor);
+                    }
 
-            $interactor->info(
-                '------------------',
-                true
-            );
-        }
-
-        if ($changed > 0 || ($collectGarbage && !$missing)) {
-            $interactor->info(
-                T_('Update table mapping, counts and delete garbage data'),
-                true
-            );
-            // clean up after the action
-            foreach ($gather_types as $media_type) {
-                Catalog::update_catalog_map($media_type);
-                switch ($media_type) {
-                    case 'podcast':
-                        Catalog::garbage_collect_mapping(['podcast_episode', 'podcast']);
-                        break;
-                    case 'video':
-                        Catalog::garbage_collect_mapping(['video']);
-                        break;
-                    case 'music':
-                        Catalog::garbage_collect_mapping(['album', 'artist', 'song']);
-                        break;
+                    $interactor->info(
+                        '------------------',
+                        true
+                    );
                 }
+
+                if ($changed > 0 || ($collectGarbage && !$missing)) {
+                    $interactor->info(
+                        T_('Update table mapping, counts and delete garbage data'),
+                        true
+                    );
+                    // clean up after the action
+                    foreach ($gather_types as $media_type) {
+                        Catalog::update_catalog_map($media_type);
+                        switch ($media_type) {
+                            case 'podcast':
+                                Catalog::garbage_collect_mapping(['podcast_episode', 'podcast']);
+                                break;
+                            case 'video':
+                                Catalog::garbage_collect_mapping(['video']);
+                                break;
+                            case 'music':
+                                Catalog::garbage_collect_mapping(['album', 'artist', 'song']);
+                                break;
+                        }
+                    }
+
+                    $catalog?->count_scan_folders($interactor);
+
+                    $this->catalogFilterRepository->collectGarbage();
+                    $this->userRepository->resetMissingCatalogFilterGroups();
+                    $interactor->info(
+                        '------------------',
+                        true
+                    );
+                }
+            } finally {
+                $this->catalogRepository->releaseActionLock('garbage_collect');
             }
-
-            $catalog?->count_scan_folders($interactor);
-
-            $this->catalogFilterRepository->collectGarbage();
-            $this->userRepository->resetMissingCatalogFilterGroups();
-            $interactor->info(
-                '------------------',
-                true
-            );
         }
 
         if ($optimizeDatabase) {
