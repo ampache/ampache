@@ -6,9 +6,11 @@
 
 * Show Catalog name on song pages
 * Increase redirect count on Podcast Episode download from 5 to 10
+* Missing ASF/Windows Media tag for Composer
 
 ### Changed (8.0.1)
 
+* Lock database connection on catalog actions to avoid repeats and deadlocks
 * An unrecognised `transcode_TYPE` value (e.g. `transcode_mp3 = "falsed"`) no longer counts as enabling transcoding; only `allowed`, `required` and `false` are accepted and anything else is logged and treated as `false`
 * Invalid `transcode_TYPE` values are listed on the admin debug page
 * Database 801001
@@ -16,14 +18,25 @@
   * `album_map`, `artist_map`, `folder_map` and `song_map` carried the most, and grow with the catalog
 * Database 801002
   * Convert `stream_beautiful_url` to an Admin preference
+* Garbage collection actions (`admin/catalog.php?action=garbage_collect` and `php bin/cli run:updateCatalog -t`) now run `Session::garbage_collection()`, cleaning up `tmp_playlist`/`tmp_playlist_data`, `stream_playlist`, `song_preview` and the query cache, not just library objects
+  * **Run this at least once after upgrading** On a database with cron disabled that's never had this data collected, the first run can be slow
 
 ### Fixed (8.0.1)
 
+* Many possible nullable database column issues fixed
 * Don't lock the UI on larger click operations. (e.g. Album delete)
+* Redirect to the full login page on session failure
 * Every disk section on a multi-disk album page listed the first disk's songs
 * A multi-disk album shows its `[Disk N]` label again on the album page, the disk page and in song lists
+* Install Localplay as the system user so it's applied to all users
+* Album disk page
+  * Rating and flag icons acted on the whole album instead of just that disk
+  * Album art didn't display, since it was looked up against the disk instead of the album it belongs to
+  * The delete link deleted the entire album instead of the disk, so it's hidden there until deleting a single disk is supported
 * The Now Playing box no longer breaks the page when an entry has no recorded streaming agent, which is every play reported through Subsonic
 * New users are given the default `transcode_bitrate` of `128000` bps instead of `32`
+* A file tag rescan or manual edit could drop and recreate a mood whose name differs from the stored one only by non-ASCII case (e.g. accented letters), instead of leaving the existing mapping alone
+* A search, filter or page turn that matched nothing reloaded the browse's previous page instead of showing zero results
 * Search
   * A song search on album rating matched the wrong album when `album_group` is off; the `album_disk` rating is now looked up by disk instead of by album id
   * A song search on album rating no longer joins `album_disk` when `album_group` is on, which multiplied the working set by the disk count for no gain

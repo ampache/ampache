@@ -51,8 +51,8 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
 
         // Get current keys
         $sql = ($user_id == '-1')
-            ? "SELECT `id`, `name`, `type` FROM `preference`"
-            : "SELECT `id`, `name`, `type` FROM `preference` WHERE `category` != 'system'";
+            ? "SELECT `id`, `name` FROM `preference`"
+            : "SELECT `id`, `name` FROM `preference` WHERE `category` != 'system'";
 
         $db_results = Dba::read($sql);
         $results    = [];
@@ -61,7 +61,6 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
             $results[] = [
                 'id' => $row['id'],
                 'name' => $row['name'],
-                'type' => $row['type']
             ];
         }
 
@@ -121,8 +120,13 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
                     break;
             }
 
-            if (str_ends_with($name, '_pass')) {
-                if ($value == '******') {
+            if (
+                str_ends_with($name, '_pass')
+                || str_ends_with($name, '_token')
+                || str_ends_with($name, '_key')
+            ) {
+                // The field always renders blank, so a blank submit means "leave the stored secret alone"
+                if ($value === '') {
                     unset($_REQUEST[$name]);
                 } elseif (str_ends_with($name, 'md5_pass')) {
                     $value = md5((string) $value);

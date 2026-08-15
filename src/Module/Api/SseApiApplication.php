@@ -33,13 +33,18 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 
 final class SseApiApplication implements ApiApplicationInterface
 {
+    // wait on an already-running scan before giving up and treating it as a fresh trigger.
+    private const int MAX_WAIT_SECONDS = 14400;
+
     private UiInterface $ui;
 
     public function __construct(
         UiInterface $ui,
+        private readonly CatalogRepositoryInterface $catalogRepository,
     ) {
         $this->ui = $ui;
     }
@@ -91,7 +96,19 @@ final class SseApiApplication implements ApiApplicationInterface
                 flush();
             }
 
-            Catalog::process_action(Core::get_request('action'), $catalogs, $options);
+            $action  = Core::get_request('action');
+            $lockKey = $this->buildActionLockKey($action, $catalogs);
+
+            // A reconnect (the browser/a proxy dropped the stream mid-scan) resends the same url
+            if (!$this->catalogRepository->tryAcquireActionLock($lockKey)) {
+                $this->waitWhileProcessing($lockKey);
+            } else {
+                try {
+                    Catalog::process_action($action, $catalogs, $options);
+                } finally {
+                    $this->catalogRepository->releaseActionLock($lockKey);
+                }
+            }
 
             if (defined('SSE_OUTPUT')) {
                 echo "data: " . json_encode(['fn' => 'toggleVisible', 'args' => ['ajax-loading']]) . "\n\n";
@@ -104,6 +121,36 @@ final class SseApiApplication implements ApiApplicationInterface
             } else {
                 echo AmpError::display('general');
             }
+        }
+    }
+
+    /**
+     * Identify SSE action calls by action and catalog ids.
+     *
+     * @param null|int[] $catalogIds
+     */
+    private function buildActionLockKey(string $action, ?array $catalogIds): string
+    {
+        $catalogPart = ($catalogIds === null) ? 'null' : implode(',', $catalogIds);
+
+        return hash('sha256', $action . '|' . $catalogPart);
+    }
+
+    /**
+     * Sends a comment line so the browser/any proxy sees activity and doesn't drop the connection again.
+     */
+    private function waitWhileProcessing(string $lockKey): void
+    {
+        $waited = 0;
+        while ($this->catalogRepository->isActionProcessing($lockKey) && $waited < self::MAX_WAIT_SECONDS) {
+            if (defined('SSE_OUTPUT')) {
+                echo ": still processing\n\n";
+                ob_flush();
+                flush();
+            }
+
+            sleep(1);
+            ++$waited;
         }
     }
 }

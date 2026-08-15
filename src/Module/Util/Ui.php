@@ -924,6 +924,16 @@ class Ui implements UiInterface
         return self::$_symbol_cache[$symbol_key];
     }
 
+    /**
+     * Whether the name marks this as a credential (api key, token, password) never echoed back once set
+     */
+    private static function isSecretPreferenceName(string $name): bool
+    {
+        return str_ends_with($name, '_pass')
+            || str_ends_with($name, '_token')
+            || str_ends_with($name, '_key');
+    }
+
     public function accessDenied(string $error = 'Access Denied'): void
     {
         // Clear any buffered crap
@@ -948,18 +958,26 @@ class Ui implements UiInterface
         ?string $type = null,
     ): void {
         if (!Preference::has_access($name)) {
-            if ($value == '1') {
+            if (self::isSecretPreferenceName($name)) {
+                echo "******";
+            } elseif ($value == '1') {
                 echo T_("Enabled");
             } elseif ($value == '0') {
                 echo T_("Disabled");
-            } elseif (str_ends_with($name, '_pass') || str_ends_with($name, '_api_key')) {
-                echo "******";
             } else {
                 echo $value;
             }
 
             return;
         } // if we don't have access to it
+
+        // A secret is write-only: the stored value never comes back out, so a blank submit keeps it as-is.
+        if (self::isSecretPreferenceName($name)) {
+            $placeholder = ($value !== null && $value !== '') ? '******' : '';
+            echo '<input type="password" name="' . $name . '" value="" placeholder="' . $placeholder . '" autocomplete="new-password" />';
+
+            return;
+        }
 
         // Transcoding-format preferences render as a capability-driven output-format picker.
         // The available formats come from the configured `encode_args_<format>` keys.
@@ -1592,11 +1610,7 @@ class Ui implements UiInterface
                 echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" />';
                 break;
             default:
-                if (str_ends_with($name, '_pass')) {
-                    echo '<input type="password" name="' . $name . '" value="******" />';
-                } else {
-                    echo '<input type="text" name="' . $name . '" value="' . strip_tags((string) $value) . '" />';
-                }
+                echo '<input type="text" name="' . $name . '" value="' . strip_tags((string) $value) . '" />';
 
                 break;
         }
