@@ -308,6 +308,19 @@ final readonly class CatalogRepository implements CatalogRepositoryInterface
         return true;
     }
 
+    public function isActionProcessing(string $lockKey): bool
+    {
+        return $this->connection->fetchOne(
+            'SELECT IS_USED_LOCK(?)',
+            ['ampache_sse_action_' . $lockKey]
+        ) !== null;
+    }
+
+    public function releaseActionLock(string $lockKey): void
+    {
+        $this->connection->query('SELECT RELEASE_LOCK(?)', ['ampache_sse_action_' . $lockKey]);
+    }
+
     public function releaseProcessingLock(int $catalogId): void
     {
         $this->connection->query('SELECT RELEASE_LOCK(?)', ['ampache_catalog_' . $catalogId]);
@@ -346,6 +359,19 @@ final readonly class CatalogRepository implements CatalogRepositoryInterface
             sprintf('SELECT `id` FROM `%s` WHERE `%s` = ?', $type->tableName(), CatalogSubTypeFieldEnum::from($column)->value),
             [$value]
         ) !== false;
+    }
+
+    /**
+     * Takes an exclusive, session-scoped lock for one SSE action call, keyed by the action and its params
+     *
+     * Backed by `GET_LOCK()`, so a crashed process releases it automatically rather than leaving it stuck.
+     */
+    public function tryAcquireActionLock(string $lockKey): bool
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT GET_LOCK(?, 0)',
+            ['ampache_sse_action_' . $lockKey]
+        ) === 1;
     }
 
     /**
