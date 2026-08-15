@@ -29,6 +29,11 @@
 * Every disk section on a multi-disk album page listed the first disk's songs
 * A multi-disk album shows its `[Disk N]` label again on the album page, the disk page and in song lists
 * Install Localplay as the system user so it's applied to all users
+* Preferences page
+  * `preferences.php` no longer renders for an unregistered/guest visitor
+  * Plugin credential preferences (api keys, tokens, passwords) are write-only in the edit form; the stored value is never echoed back, only replaced
+  * The `user_preferences` API method (and REST `preferences`) returned those same plugin credential values in the response; they're blanked there too
+* An unregistered/guest visitor could upload and import a playlist file, or export every podcast subscription in the system, neither of which checked for a real account
 * Album disk page
   * Rating and flag icons acted on the whole album instead of just that disk
   * Album art didn't display, since it was looked up against the disk instead of the album it belongs to
