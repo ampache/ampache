@@ -304,7 +304,7 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
                 'id' => (int) $row['id'],
                 'name' => $row['name'],
                 'level' => (int) $row['level'],
-                'description' => T_($row['description']),
+                'description' => T_((string) ($row['description'] ?? '')),
                 'value' => $row['value'],
                 'type' => $row['type'],
                 'category' => $row['category'],
