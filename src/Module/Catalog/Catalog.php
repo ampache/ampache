@@ -1676,10 +1676,12 @@ abstract class Catalog extends database_object
                 $catalog_media_types   = [];
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
-                        $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null && $catalog->add_to_catalog($options)) {
-                            $catalog_media_types[] = $catalog->gather_types;
-                        }
+                        self::withCatalogLock($catalog_id, function () use ($catalog_id, $options, &$catalog_media_types): void {
+                            $catalog = self::create_from_id($catalog_id);
+                            if ($catalog !== null && $catalog->add_to_catalog($options)) {
+                                $catalog_media_types[] = $catalog->gather_types;
+                            }
+                        });
                     }
 
                     if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
@@ -1707,8 +1709,10 @@ abstract class Catalog extends database_object
             case 'update_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
-                        $catalog = self::create_from_id($catalog_id);
-                        $catalog?->verify_catalog();
+                        self::withCatalogLock($catalog_id, function () use ($catalog_id): void {
+                            $catalog = self::create_from_id($catalog_id);
+                            $catalog?->verify_catalog();
+                        });
                     }
                 }
                 break;
@@ -1720,17 +1724,19 @@ abstract class Catalog extends database_object
                 /* This runs the clean/verify/add in that order */
                 $catalog_media_types = [];
                 foreach ($catalogs as $catalog_id) {
-                    $catalog = self::create_from_id($catalog_id);
-                    if ($catalog !== null) {
-                        if ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types)) {
-                            $catalog_media_types[] = $catalog->gather_types;
-                        }
+                    self::withCatalogLock($catalog_id, function () use ($catalog_id, &$catalog_media_types): void {
+                        $catalog = self::create_from_id($catalog_id);
+                        if ($catalog !== null) {
+                            if ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types)) {
+                                $catalog_media_types[] = $catalog->gather_types;
+                            }
 
-                        $catalog->verify_catalog();
-                        if ($catalog->add_to_catalog() && !in_array($catalog->gather_types, $catalog_media_types)) {
-                            $catalog_media_types[] = $catalog->gather_types;
+                            $catalog->verify_catalog();
+                            if ($catalog->add_to_catalog() && !in_array($catalog->gather_types, $catalog_media_types)) {
+                                $catalog_media_types[] = $catalog->gather_types;
+                            }
                         }
-                    }
+                    });
                 }
 
                 foreach ($catalog_media_types as $catalog_media_type) {
@@ -1749,10 +1755,12 @@ abstract class Catalog extends database_object
                 if ($catalogs) {
                     $catalog_media_types = [];
                     foreach ($catalogs as $catalog_id) {
-                        $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null && ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types))) {
-                            $catalog_media_types[] = $catalog->gather_types;
-                        }
+                        self::withCatalogLock($catalog_id, function () use ($catalog_id, &$catalog_media_types): void {
+                            $catalog = self::create_from_id($catalog_id);
+                            if ($catalog !== null && ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types))) {
+                                $catalog_media_types[] = $catalog->gather_types;
+                            }
+                        });
                     }
                     foreach ($catalog_media_types as $catalog_media_type) {
                         if ($catalog_media_type == 'music') {
@@ -1776,48 +1784,50 @@ abstract class Catalog extends database_object
                 if (strlen($clean_path) && $clean_path != '/') {
                     $catalog_id = Catalog_local::get_from_path($clean_path);
                     if (is_int($catalog_id)) {
-                        $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null && $catalog->catalog_type == 'local') {
-                            switch ($catalog->gather_types) {
-                                case 'podcast':
-                                    $type      = 'podcast_episode';
-                                    $file_ids  = self::get_ids_from_folder($clean_path, $type);
-                                    $className = Podcast_Episode::class;
-                                    break;
-                                case 'video':
-                                    $type      = 'video';
-                                    $file_ids  = self::get_ids_from_folder($clean_path, $type);
-                                    $className = Video::class;
-                                    break;
-                                case 'music':
-                                default:
-                                    $type      = 'song';
-                                    $file_ids  = self::get_ids_from_folder($clean_path, $type);
-                                    $className = Song::class;
-                                    break;
-                            }
+                        self::withCatalogLock($catalog_id, function () use ($catalog_id, $clean_path): void {
+                            $catalog = self::create_from_id($catalog_id);
+                            if ($catalog !== null && $catalog->catalog_type == 'local') {
+                                switch ($catalog->gather_types) {
+                                    case 'podcast':
+                                        $type      = 'podcast_episode';
+                                        $file_ids  = self::get_ids_from_folder($clean_path, $type);
+                                        $className = Podcast_Episode::class;
+                                        break;
+                                    case 'video':
+                                        $type      = 'video';
+                                        $file_ids  = self::get_ids_from_folder($clean_path, $type);
+                                        $className = Video::class;
+                                        break;
+                                    case 'music':
+                                    default:
+                                        $type      = 'song';
+                                        $file_ids  = self::get_ids_from_folder($clean_path, $type);
+                                        $className = Song::class;
+                                        break;
+                                }
 
-                            $changed = 0;
-                            foreach ($file_ids as $file_id) {
-                                $media = new $className($file_id);
-                                if ($media->file) {
-                                    /** @var Catalog_local $catalog */
-                                    if ($catalog->clean_file($media->file, $type)) {
-                                        ++$changed;
+                                $changed = 0;
+                                foreach ($file_ids as $file_id) {
+                                    $media = new $className($file_id);
+                                    if ($media->file) {
+                                        /** @var Catalog_local $catalog */
+                                        if ($catalog->clean_file($media->file, $type)) {
+                                            ++$changed;
+                                        }
                                     }
                                 }
-                            }
 
-                            if ($changed > 0) {
-                                if ($catalog->gather_types === 'music') {
-                                    self::clean_empty_albums();
-                                    Album::update_album_artist();
-                                    Album::update_table_counts();
-                                    Artist::update_table_counts();
+                                if ($changed > 0) {
+                                    if ($catalog->gather_types === 'music') {
+                                        self::clean_empty_albums();
+                                        Album::update_album_artist();
+                                        Album::update_table_counts();
+                                        Artist::update_table_counts();
+                                    }
+                                    self::update_catalog_map($catalog->gather_types);
                                 }
-                                self::update_catalog_map($catalog->gather_types);
                             }
-                        }
+                        });
                     }
                 }
 
@@ -1835,10 +1845,12 @@ abstract class Catalog extends database_object
                 if (strlen($add_path) && $add_path != '/') {
                     $catalog_id = Catalog_local::get_from_path($add_path);
                     if (is_int($catalog_id)) {
-                        $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null && $catalog->add_to_catalog(['subdirectory' => $add_path])) {
-                            self::update_catalog_map($catalog->gather_types);
-                        }
+                        self::withCatalogLock($catalog_id, function () use ($catalog_id, $add_path): void {
+                            $catalog = self::create_from_id($catalog_id);
+                            if ($catalog !== null && $catalog->add_to_catalog(['subdirectory' => $add_path])) {
+                                self::update_catalog_map($catalog->gather_types);
+                            }
+                        });
                     }
                 }
 
@@ -3550,6 +3562,26 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(WantedRepositoryInterface::class);
+    }
+
+    /**
+     * Runs a catalog scan under an exclusive per-catalog lock, so an overlapping call can't race it.
+     * A catalog already locked is skipped rather than waited for.
+     */
+    private static function withCatalogLock(int $catalog_id, callable $callback): void
+    {
+        $catalogRepository = self::getCatalogRepository();
+        if (!$catalogRepository->tryAcquireProcessingLock($catalog_id)) {
+            debug_event(self::class, sprintf('Catalog %d is already being processed, skipping', $catalog_id), 3);
+
+            return;
+        }
+
+        try {
+            $callback();
+        } finally {
+            $catalogRepository->releaseProcessingLock($catalog_id);
+        }
     }
 
     /**

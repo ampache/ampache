@@ -273,6 +273,15 @@ class CatalogRepositoryTest extends TestCase
         static::assertSame(4, $this->subject->insert('some-catalog', 'local', '%T', '%a', 'music'));
     }
 
+    public function testReleaseProcessingLockCallsReleaseLockWithTheNamespacedName(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT RELEASE_LOCK(?)', ['ampache_catalog_7']);
+
+        $this->subject->releaseProcessingLock(7);
+    }
+
     public function testSetFieldNamesOnlyABoundedColumn(): void
     {
         $this->connection->expects(static::once())
@@ -301,6 +310,17 @@ class CatalogRepositoryTest extends TestCase
             ->willReturn('1');
 
         static::assertTrue($this->subject->subTypeValueExists(CatalogTypeEnum::BEETSREMOTE, 'uri', 'http://host'));
+    }
+
+    public function testTryAcquireProcessingLockReflectsWhoWonTheLock(): void
+    {
+        $this->connection->expects(static::exactly(2))
+            ->method('fetchOne')
+            ->with('SELECT GET_LOCK(?, 0)', ['ampache_catalog_7'])
+            ->willReturn('1', '0');
+
+        static::assertTrue($this->subject->tryAcquireProcessingLock(7));
+        static::assertFalse($this->subject->tryAcquireProcessingLock(7));
     }
 
     public function testUpdateSettingsWritesTheThreeFormFields(): void

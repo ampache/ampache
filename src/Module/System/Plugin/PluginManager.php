@@ -121,7 +121,7 @@ final class PluginManager implements PluginManagerInterface
 
         $localplay->install();
 
-        // Mirror the web admin: enable playback globally, then set this user's localplay level and controller
+        // Enable playback globally, then set the localplay level and controller for the given user (-1 = every user)
         Preference::update('allow_localplay_playback', -1, '1');
         Preference::update('localplay_level', $userId, AccessLevelEnum::ADMIN->value);
         Preference::update('localplay_controller', $userId, $localplay->type);

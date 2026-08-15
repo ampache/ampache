@@ -308,6 +308,11 @@ final readonly class CatalogRepository implements CatalogRepositoryInterface
         return true;
     }
 
+    public function releaseProcessingLock(int $catalogId): void
+    {
+        $this->connection->query('SELECT RELEASE_LOCK(?)', ['ampache_catalog_' . $catalogId]);
+    }
+
     public function setField(int $catalogId, CatalogFieldEnum $field, int|string $value): bool
     {
         try {
@@ -341,6 +346,19 @@ final readonly class CatalogRepository implements CatalogRepositoryInterface
             sprintf('SELECT `id` FROM `%s` WHERE `%s` = ?', $type->tableName(), CatalogSubTypeFieldEnum::from($column)->value),
             [$value]
         ) !== false;
+    }
+
+    /**
+     * Takes an exclusive, session-scoped lock for one catalog so overlapping scans can't race each other
+     *
+     * Backed by `GET_LOCK()`, so a crashed process releases it automatically rather than leaving it stuck.
+     */
+    public function tryAcquireProcessingLock(int $catalogId): bool
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT GET_LOCK(?, 0)',
+            ['ampache_catalog_' . $catalogId]
+        ) === 1;
     }
 
     public function updateSettings(int $catalogId, string $name, string $renamePattern, string $sortPattern): void

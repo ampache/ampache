@@ -137,6 +137,11 @@ interface CatalogRepositoryInterface
     public function insertSubType(CatalogTypeEnum $type, array $values, int $catalogId): bool;
 
     /**
+     * Releases the processing lock taken by `tryAcquireProcessingLock()`
+     */
+    public function releaseProcessingLock(int $catalogId): void;
+
+    /**
      * Writes one bounded column of a catalog
      */
     public function setField(int $catalogId, CatalogFieldEnum $field, int|string $value): bool;
@@ -150,6 +155,13 @@ interface CatalogRepositoryInterface
      * Whether a backend already has a catalog holding this value, which is what stops a duplicate
      */
     public function subTypeValueExists(CatalogTypeEnum $type, string $column, string $value): bool;
+
+    /**
+     * Takes an exclusive, session-scoped lock for one catalog so overlapping scans can't race each other
+     *
+     * Backed by `GET_LOCK()`, so a crashed process releases it automatically rather than leaving it stuck.
+     */
+    public function tryAcquireProcessingLock(int $catalogId): bool;
 
     /**
      * Writes the three settings the catalog edit form exposes
