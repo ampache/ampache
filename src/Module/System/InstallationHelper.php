@@ -583,8 +583,8 @@ final class InstallationHelper implements InstallationHelperInterface
 
                 // Default local UI preferences to have a better 'minimalist first look'.
                 setcookie('sidebar_state', 'collapsed', $cookie_options);
-                setcookie('browse_album_grid_view', 'false', $cookie_options);
-                setcookie('browse_artist_grid_view', 'false', $cookie_options);
+                setcookie('browse_album_grid_view', 'false', $cookie_options + ['httponly' => true]);
+                setcookie('browse_artist_grid_view', 'false', $cookie_options + ['httponly' => true]);
                 break;
             case 'community':
                 $trconfig['use_auth']                  = 'false';

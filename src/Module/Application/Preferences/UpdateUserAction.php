@@ -86,8 +86,9 @@ final class UpdateUserAction implements ApplicationActionInterface
         // Remove the value
         unset($_SESSION['forms']['account']);
 
-        // Don't let them change access, or username here
+        // Don't let them change access, catalog_filter_group, or username here
         unset($_POST['access']);
+        unset($_POST['catalog_filter_group']);
         $_POST['username'] = $user->username;
 
         $mandatory_fields = (array) $this->configContainer->get(ConfigurationKeyEnum::REGISTRATION_MANDATORY_FIELDS);

@@ -716,9 +716,9 @@ class Horde_Browser
         $inline = false,
         $cLength = null
     ): array {
-        /* Remove linebreaks (and ',', ';') from file names. */
+        /* Remove linebreaks (and ',', ';', '"') from file names. */
         $filename = str_replace(["\r\n", "\r", "\n"], ' ', $filename);
-        $filename = str_replace([",", ";"], '', $filename);
+        $filename = str_replace([",", ";", '"'], '', $filename);
 
         /* Some browsers don't like spaces in the filename. */
         if ($this->hasQuirk('no_filename_spaces')) {

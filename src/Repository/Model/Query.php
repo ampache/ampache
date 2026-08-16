@@ -66,6 +66,8 @@ use Ampache\Module\System\Dba;
  */
 class Query
 {
+    private const MAX_REGEX_FILTER_LENGTH = 100;
+
     private const SORT_ORDER = [
         'active' => 'ASC',
         'last_count' => 'ASC',
@@ -259,15 +261,9 @@ class Query
             case 'year_lt':
                 $this->_state['filter'][$key] = (int)($value);
                 break;
-            case 'alpha_match':
-            case 'equal':
-            case 'exact_match':
-            case 'like':
-            case 'not_starts_with':
             case 'regex_match':
             case 'regex_not_match':
-            case 'starts_with':
-                if ($this->is_static_content()) {
+                if ($this->is_static_content() || strlen((string) $value) > self::MAX_REGEX_FILTER_LENGTH) {
                     return false;
                 }
 
@@ -279,6 +275,18 @@ class Query
                 if ($key == 'regex_not_match') {
                     unset($this->_state['filter']['regex_match']);
                 }
+                break;
+            case 'alpha_match':
+            case 'equal':
+            case 'exact_match':
+            case 'like':
+            case 'not_starts_with':
+            case 'starts_with':
+                if ($this->is_static_content()) {
+                    return false;
+                }
+
+                $this->_state['filter'][$key] = $value;
                 break;
             case 'playlist_type':
                 // 0 = your user only, 1 = public or your user (User is found using GLOBAL)
