@@ -1009,17 +1009,11 @@ class Art extends database_object
             return null;
         }
 
-        $image    = '';
-        $filepath = fopen($path, "rb");
-        if ($filepath) {
-            do {
-                $image .= fread($filepath, 2048);
-            } while (!feof($filepath));
+        $image = file_get_contents($path);
 
-            fclose($filepath);
-        }
-
-        return $image;
+        return ($image === false)
+            ? null
+            : $image;
     }
 
     /**
@@ -1848,17 +1842,11 @@ class Art extends database_object
             return '';
         }
 
-        $image    = '';
-        $filepath = fopen($path, "rb");
-        if ($filepath) {
-            do {
-                $image .= fread($filepath, 2048);
-            } while (!feof($filepath));
+        $image = file_get_contents($path);
 
-            fclose($filepath);
-        }
-
-        return $image;
+        return ($image === false)
+            ? ''
+            : $image;
     }
 
     /**
