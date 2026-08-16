@@ -850,10 +850,6 @@ class Subsonic_Xml_Data
                 $xplayqueue->addAttribute('changedBy', $changedBy);
             }
 
-            $xplayqueue->addAttribute('username', $username);
-            $xplayqueue->addAttribute('changed', $date->format('c'));
-            $xplayqueue->addAttribute('changedBy', $changedBy);
-
             foreach ($items as $row) {
                 $song = new Song((int) $row['object_id']);
                 if ($song->isNew() || !$song->enabled) {

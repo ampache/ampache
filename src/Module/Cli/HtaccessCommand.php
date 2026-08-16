@@ -70,6 +70,7 @@ final class HtaccessCommand extends Command
 
             return;
         }
+
         $htaccess_play_file = __DIR__ . '/../../../play/.htaccess';
         $htaccess_rest_file = __DIR__ . '/../../../rest/.htaccess';
 
