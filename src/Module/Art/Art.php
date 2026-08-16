@@ -233,7 +233,7 @@ class Art extends database_object
         }
 
         $art    = new Art($object_id, $object_type, $kind);
-        $has_db = $art->has_db_info();
+        $has_db = $art->has_db_meta();
         // Don't show any image if not available
         if (!$show_default && !$has_db) {
             return false;
@@ -303,8 +303,9 @@ class Art extends database_object
             }
 
             // This to keep browser cache feature but force a refresh in case image just changed
-            if ($art->has_db_info($out_size)) {
-                $imgurl .= '&id=' . $art->id;
+            $thumbRow = self::getImageRepository()->findThumbnail($object_type, $object_id, $out_size, $kind, 0, 0);
+            if ($thumbRow !== []) {
+                $imgurl .= '&id=' . (int) $thumbRow['id'];
             }
         } else {
             // one shared url for every item with no art, so the browser fetches and caches the placeholder once
@@ -1479,6 +1480,24 @@ class Art extends database_object
         }
 
         return false;
+    }
+
+    /**
+     * Fills id/width/height from the database without reading the file off disk.
+     */
+    public function has_db_meta(): bool
+    {
+        $row = self::getImageRepository()->getOriginalRow($this->object_type, $this->object_id, $this->kind);
+        if ($row === []) {
+            return false;
+        }
+
+        $this->id       = (int) $row['id'];
+        $this->width    = (int) $row['width'];
+        $this->height   = (int) $row['height'];
+        $this->raw_mime = (string) ($row['mime'] ?? '');
+
+        return true;
     }
 
     /**
