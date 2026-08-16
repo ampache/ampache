@@ -46,6 +46,16 @@
 * `Core::generate_random_key()` hashed a predictable seed instead of drawing directly from a secure random source; it backs session ids, api keys and the CSRF form token, and now uses `random_bytes()` for the full 128 bits
 * Browse
   * A handful of filters (`rating`, `folder`'s `id`, `song`'s `top50` artist match, `playlist`'s smartlist id list) built their `WHERE`/`IN` value without the surrounding quotes `Dba::escape()` expects; the value is quoted like every other escaped filter now
+* The `upload_script` post-processing hook (opt-in, off by default) substituted the uploaded file's own client-supplied name into `%FILE%` and ran the result as a shell command; a filename carrying shell metacharacters could run arbitrary commands as the web server user. The filename is shell-escaped before substitution now
+* Login compared the stored password hash to the submitted one with `==`/`in_array()` instead of a constant-time comparison; both now use `hash_equals()`
+* Logging in with a `referrer` pointing at a host that merely starts with the site's own url (e.g. `yoursite.com.attacker.net`) was honoured as a same-site redirect after a successful login; the referrer's host is now compared exactly
+* A song or video title containing a `"` broke out of the quoted `Content-Disposition` filename on download, letting extra parameters be appended; the character is stripped like the linebreak/comma/semicolon it already strips
+* The `theme_name`/`theme_color` preferences were only checked for existing on disk, not for staying inside the themes directory; both are now rejected outright if they contain a path separator
+* A profile self-update could smuggle in `catalog_filter_group` alongside the fields the form actually offers, silently reassigning the user's own catalog visibility group; it's stripped from the request like `access` already was
+* The session, `_remember` and `_user`/`_lang` cookies were missing `HttpOnly`, so any XSS could read them and steal the session directly instead of just acting within the page; it's set on every auth-bearing cookie now
+* Browse
+  * The `regex_match`/`regex_not_match` filter value reaches SQL `REGEXP` as-is with no length limit; it's now capped at 100 characters against a catastrophic-backtracking pattern
+* A share's secret was compared with `!=` instead of a constant-time comparison, so two "magic hash" values (`0e` followed only by digits) could match each other regardless of their actual digits; it now uses `hash_equals()`
 * Database 800038
   * The podcast play-count backfill could loop forever, inserting duplicate rows, for a podcast episode play with no recorded streaming agent
 * Database 801003

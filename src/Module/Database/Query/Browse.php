@@ -880,6 +880,7 @@ class Browse extends Query
                 'path' => (string) AmpConfig::get('cookie_path'),
                 'domain' => (string) AmpConfig::get('cookie_domain'),
                 'secure' => AmpConfig::get_bool('cookie_secure'),
+                'httponly' => true,
                 'samesite' => 'Strict',
             ];
             setcookie('browse_' . $this->get_type() . '_' . $option, $value, $cookie_options);

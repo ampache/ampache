@@ -24,16 +24,39 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\ShareRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class ShareTest extends TestCase
 {
     private ContainerInterface&MockObject $dic;
     private ShareRepositoryInterface&MockObject $shareRepository;
+
+    /**
+     * The secret is compared with `hash_equals()`; a wrong guess must fail even when both the stored secret and
+     * the guess are "magic hash" shaped (`0e` followed only by digits), which PHP's loose `!=` treats as equal
+     * numbers rather than as the different strings they are
+     */
+    public function testIsValidRefusesAWrongSecretEvenWhenBothAreMagicHashShaped(): void
+    {
+        AmpConfig::set('share', true, true);
+
+        $subject                 = new Share();
+        $subject->id             = 666;
+        $subject->secret         = '0e123456';
+        $subject->expire_days    = 0;
+        $subject->max_counter    = 0;
+        $subject->allow_stream   = false;
+        $subject->allow_download = false;
+
+        self::assertFalse($subject->is_valid('0e000000', ''));
+        self::assertTrue($subject->is_valid('0e123456', ''));
+    }
 
     public function testUpdateAppliesTheDataAndPersists(): void
     {
@@ -128,8 +151,10 @@ class ShareTest extends TestCase
         $this->dic             = $this->createMock(ContainerInterface::class);
 
         $this->dic->method('get')
-            ->with(ShareRepositoryInterface::class)
-            ->willReturn($this->shareRepository);
+            ->willReturnMap([
+                [ShareRepositoryInterface::class, $this->shareRepository],
+                [LoggerInterface::class, $this->createMock(LoggerInterface::class)],
+            ]);
 
         // the model reaches its repository through the `global $dic` bridge; phpunit.xml sets
         // backupGlobals so the real container is restored after every test

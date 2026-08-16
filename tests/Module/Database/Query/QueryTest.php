@@ -85,6 +85,23 @@ class QueryTest extends MockeryTestCase
     }
 
     /**
+     * A regex_match/regex_not_match value reaches SQL REGEXP verbatim, so an unbounded one is a
+     * catastrophic-backtracking DoS risk; it must be refused rather than silently truncated
+     */
+    public function testSetFilterRefusesARegexMatchOverTheLengthLimit(): void
+    {
+        $query = $this->subject();
+
+        $accepted = $query->set_filter('regex_match', str_repeat('a', 100));
+        $refused  = $query->set_filter('regex_not_match', str_repeat('a', 101));
+
+        $this->assertTrue($accepted);
+        $this->assertFalse($refused);
+        $this->assertSame(str_repeat('a', 100), $query->get_filter('regex_match'));
+        $this->assertNull($query->get_filter('regex_not_match'));
+    }
+
+    /**
      * An uncached query keeps its state in memory and never reaches the database.
      */
     private function subject(): Query

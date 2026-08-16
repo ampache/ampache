@@ -336,9 +336,12 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     );
             }
 
+            $referrerParts = parse_url($referrer);
             if (
                 $referrer !== ''
-                && str_starts_with($referrer, $web_path)
+                && $referrerParts !== false
+                && isset($referrerParts['host'])
+                && $referrerParts['host'] === $request->getUri()->getHost()
                 && !str_contains($referrer, 'install.php')
                 && !str_contains($referrer, 'login.php')
                 && !str_contains($referrer, 'logout.php')
