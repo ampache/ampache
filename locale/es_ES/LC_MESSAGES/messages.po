@@ -1540,7 +1540,7 @@ msgid "Browse Ampache..."
 msgstr "Navegar por Ampache"
 
 msgid "Album Artists"
-msgstr "Artistas de los álbumes"
+msgstr "Artistas"
 
 msgid "Broadcasts"
 msgstr "Emisiones"
