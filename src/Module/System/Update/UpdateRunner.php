@@ -87,6 +87,56 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        // Migration\V8\Migration801003 needs no rollback. It raises `headphones_api_url`/`headphones_api_key` to
+        // Manager level; a downgrade should keep that restriction rather than reopen the access-level hole it fixed.
+
+        // Migration\V8\Migration801002 needs no rollback. It collapses `stream_beautiful_url`'s per-admin
+        // `user_preference` rows into the single `user = -1` row and reclassifies it under category `system`.
+
+        // Migration\V8\Migration801001 needs no rollback. It drops 24 indexes that repeat the leading columns of a
+        // wider key, so every column stays indexed and Ampache7 keeps the same access paths without them.
+
+        // Migration\V8\Migration800050 needs no rollback. It drops two `user_preference` indexes that `unique_name`
+        // already covers, so Ampache7 reaches those rows by the same access paths without them.
+
+        // Migration\V8\Migration800049 needs no rollback. It widens the `tag_map` and `user_activity` `object_type`
+        // enums, and Ampache7 writes neither the broadcast genre nor a folder activity that the extra values name.
+
+        if ($currentVersion >= 800048) {
+            // Migration\V8\Migration800048 (Ampache7 has no mood column in its browse rows)
+            if (!Preference::delete('hide_moods')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800047) {
+            // Migration\V8\Migration800047 (Ampache7 has no moods interface)
+            if (!Preference::delete('show_mood')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration800042 to Migration800046 need no rollback. They widen `song_preview`.`file`, add
+        // `wanted` to the `image` `object_type` enum, add indexes, create the `playlist_folder` tables and add
+        // `song_data`.`bpm`. Ampache7 reads none of them, and a wider column or an unused table costs it nothing.
+
+        if ($currentVersion >= 800041) {
+            // Migration\V8\Migration800041 (Ampache7 broadcasts always require a listener session)
+            if (!Preference::delete('broadcast_private')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration800040 needs no rollback. It removed the 7digital preferences along with the
+        // plugin's `update_info` version row, so Ampache7 already shows the plugin as inactive; reactivating it
+        // runs install() and writes the preferences back. The keys they held went with the `user_preference`
+        // rows and cannot be recovered either way.
+
+        // Migration\V8\Migration800035 to Migration800039 need no rollback. They drop a key on the Ampache8-only
+        // `collection_map`, repair columns missing from a stale seed, index `addition_time`, backfill `podcast`
+        // rows in `object_count` and delete `folder` rows holding a bare directory name. Ampache7 reads none of
+        // the Ampache8-only tables, and the repairs and counts are correct for it too.
+
         if ($currentVersion >= 800034) {
             // Migration\V8\Migration800034 (Ampache7's `label_asso` links a label to an artist only)
             // Its `artist` column is NOT NULL here, so the album-only rows Ampache8 writes have to go before the

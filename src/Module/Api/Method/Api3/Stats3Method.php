@@ -87,7 +87,7 @@ final class Stats3Method
             $results = Userflag::get_latest('album');
         } else {
             if (!$limit) {
-                $limit = AmpConfig::get('popular_threshold');
+                $limit = (int) AmpConfig::get('popular_threshold', 10);
             }
             $results = self::getAlbumRepository()->getRandom($user->id, $limit);
         }

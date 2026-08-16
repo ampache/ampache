@@ -171,7 +171,7 @@ final class PlaylistQuery implements QueryInterface
             case 'user_rating':
                 $filter_sql = ((int)$value === 0)
                     ? " `playlist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'playlist' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `playlist`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'playlist' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                    : " `playlist`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'playlist' AND `user` = " . (int)$query->user_id . " AND `rating` = '" . Dba::escape($value) . "') AND ";
                 break;
         }
 
