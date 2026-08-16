@@ -1339,6 +1339,7 @@ abstract class Catalog extends database_object
             case 'album_disk':
             case 'album':
             case 'folder':
+            case 'folder_map':
             case 'live_stream':
             case 'podcast_episode':
             case 'podcast':

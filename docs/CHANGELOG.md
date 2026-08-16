@@ -56,6 +56,7 @@
 * Browse
   * The `regex_match`/`regex_not_match` filter value reaches SQL `REGEXP` as-is with no length limit; it's now capped at 100 characters against a catastrophic-backtracking pattern
 * A share's secret was compared with `!=` instead of a constant-time comparison, so two "magic hash" values (`0e` followed only by digits) could match each other regardless of their actual digits; it now uses `hash_equals()`
+* Folders (browse, WebDAV) never honoured the opt-in `catalog_filter` restriction that every other object type already respects; a user's `catalog_filter_group` is now applied to a folder's children, media count and media list the same way it is everywhere else
 * Database 800038
   * The podcast play-count backfill could loop forever, inserting duplicate rows, for a podcast episode play with no recorded streaming agent
 * Database 801003

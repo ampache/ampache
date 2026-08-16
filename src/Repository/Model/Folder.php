@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\System\Core;
 use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 
@@ -226,6 +227,14 @@ class Folder extends database_object implements
     }
 
     /**
+     * The current request's user id, or -1 (system/guest) outside a user context
+     */
+    private static function currentUserId(): int
+    {
+        return Core::get_global('user')?->getId() ?? -1;
+    }
+
+    /**
      * @deprecated inject dependency
      */
     private static function getFolderRepository(): FolderRepositoryInterface
@@ -255,7 +264,8 @@ class Folder extends database_object implements
         debug_event(self::class, 'get_children ' . $name, 5);
 
         return self::getFolderRepository()->getChildren(
-            ($this->getId() === -1) ? null : $this->id
+            ($this->getId() === -1) ? null : $this->id,
+            self::currentUserId()
         );
     }
 
@@ -409,7 +419,7 @@ class Folder extends database_object implements
      */
     public function get_media_count(): int
     {
-        return self::getFolderRepository()->getMediaCount($this);
+        return self::getFolderRepository()->getMediaCount($this, self::currentUserId());
     }
 
     /**
@@ -417,7 +427,7 @@ class Folder extends database_object implements
      */
     public function get_medias(?string $filter_type = null): array
     {
-        return self::getFolderRepository()->getMedias($this, $filter_type);
+        return self::getFolderRepository()->getMedias($this, $filter_type, self::currentUserId());
     }
 
     /**
@@ -431,7 +441,8 @@ class Folder extends database_object implements
     {
         if (empty($this->children)) {
             $this->children = self::getFolderRepository()->getObjects(
-                ($this->getId() === -1) ? null : $this->getId()
+                ($this->getId() === -1) ? null : $this->getId(),
+                self::currentUserId()
             );
         }
 
@@ -527,7 +538,7 @@ class Folder extends database_object implements
     {
         debug_event(self::class, 'has_children ' . $name, 5);
 
-        return self::getFolderRepository()->hasChildren($this->id);
+        return self::getFolderRepository()->hasChildren($this->id, self::currentUserId());
     }
 
     public function isNew(): bool
