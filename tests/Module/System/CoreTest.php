@@ -40,6 +40,27 @@ class CoreTest extends MockeryTestCase
     /** 1x1 png */
     private const string PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
 
+    public function testGenerateRandomKeyIsUnpredictableAcrossCalls(): void
+    {
+        $keys = [];
+        for ($i = 0; $i < 100; $i++) {
+            $keys[] = Core::generate_random_key();
+        }
+
+        $this->assertCount(100, array_unique($keys));
+    }
+
+    /**
+     * Backs session/api keys and the CSRF form token, so it must be a full 128 bits from `random_bytes()`,
+     * not a hash of a predictable seed
+     */
+    public function testGenerateRandomKeyReturnsA32CharacterHexString(): void
+    {
+        $key = Core::generate_random_key();
+
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $key);
+    }
+
     public function testImageMimeDetectsGif(): void
     {
         $this->assertSame('image/gif', Core::image_mime((string) base64_decode(self::GIF)));

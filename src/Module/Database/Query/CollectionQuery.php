@@ -181,7 +181,7 @@ final class CollectionQuery implements QueryInterface
             case 'user_rating':
                 $filter_sql = ((int) $value === 0)
                     ? " `collection`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'collection' AND `user` = " . (int) $query->user_id . ") AND "
-                    : " `collection`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'collection' AND `user` = " . (int) $query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                    : " `collection`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'collection' AND `user` = " . (int) $query->user_id . " AND `rating` = '" . Dba::escape($value) . "') AND ";
                 break;
         }
 

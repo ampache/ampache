@@ -26,12 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Plugin;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
+use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
+use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Repository\Model\User;
-use Exception;
 use Override;
-use WpOrg\Requests\Requests;
 
 class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
 {
@@ -65,8 +64,9 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly WebFetcherInterface $webFetcher,
+    ) {
         $this->description = T_('URL shorteners on shared links with YOURLS');
     }
 
@@ -139,8 +139,8 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
         $apiurl = 'http://' . $this->yourls_domain . '/yourls-api.php?signature=' . $this->yourls_api_key . '&action=shorturl&format=simple&url=' . urlencode($url);
         try {
             debug_event('yourls.plugin', 'YOURLS api call: ' . $apiurl, 5);
-            $request  = Requests::get($apiurl, [], Core::requests_options());
-            $shorturl = $request->body;
+            // yourls_domain is admin-configured, but validated the same as any other outbound fetch
+            $shorturl = $this->webFetcher->fetch($apiurl);
             if ($this->yourls_use_idn) {
                 // WARNING: idn_to_utf8 requires php-idn module.
                 // WARNING: http_build_url requires php-pecl-http module.
@@ -153,7 +153,7 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
                     $shorturl     = http_build_url($purl);
                 }
             }
-        } catch (Exception $exception) {
+        } catch (FetchFailedException $exception) {
             debug_event('yourls.plugin', 'YOURLS api http exception: ' . $exception->getMessage(), 1);
 
             return null;

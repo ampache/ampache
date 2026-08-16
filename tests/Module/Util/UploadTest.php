@@ -46,6 +46,46 @@ class UploadTest extends TestCase
         ];
     }
 
+    public function testCheckTargetDirAllowsARealSubdirectory(): void
+    {
+        $catalogDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'ampache-upload-test-' . bin2hex(random_bytes(8));
+        $subDir     = $catalogDir . DIRECTORY_SEPARATOR . 'sub';
+        mkdir($subDir, 0777, true);
+
+        try {
+            $_POST['folder'] = 'sub';
+
+            static::assertSame(realpath($subDir), Upload::check_target_dir($catalogDir));
+        } finally {
+            unset($_POST['folder']);
+            rmdir($subDir);
+            rmdir($catalogDir);
+        }
+    }
+
+    /**
+     * A sibling directory that merely starts with the catalog path (`/mnt/music-private` vs `/mnt/music`) must be
+     * refused; the old `str_contains()` check accepted it because it is not anchored to a real parent directory.
+     */
+    public function testCheckTargetDirRefusesASiblingDirectoryThatOnlySharesAPrefix(): void
+    {
+        $base       = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'ampache-upload-test-' . bin2hex(random_bytes(8));
+        $catalogDir = $base . '-music';
+        $siblingDir = $base . '-music-private';
+        mkdir($catalogDir, 0777, true);
+        mkdir($siblingDir, 0777, true);
+
+        try {
+            $_POST['folder'] = '..' . DIRECTORY_SEPARATOR . basename($siblingDir);
+
+            static::assertNull(Upload::check_target_dir($catalogDir));
+        } finally {
+            unset($_POST['folder']);
+            rmdir($catalogDir);
+            rmdir($siblingDir);
+        }
+    }
+
     /**
      * The name is joined onto the catalog directory, so a name carrying a path would write outside the catalog.
      */

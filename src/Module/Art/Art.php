@@ -37,8 +37,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
+use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Plugin\AmpacheDiscogs;
 use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Plugin\AmpacheTheaudiodb;
@@ -49,10 +50,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;
-use Exception;
 use RuntimeException;
-use WpOrg\Requests\Autoload;
-use WpOrg\Requests\Requests;
 
 /**
  * This class handles the images / artwork in ampache
@@ -604,25 +602,16 @@ class Art extends database_object
 
         // Check to see if it's a URL
         if (array_key_exists('url', $data) && filter_var($data['url'], FILTER_VALIDATE_URL)) {
-            if (!self::getUrlValidator()->isPublicHttpUrl((string) $data['url'])) {
-                debug_event(self::class, 'Refusing to fetch art from unsafe URL ' . $data['url'], 2);
+            debug_event(self::class, 'CHECKING URL ' . $data['url'], 2);
+
+            try {
+                // Validates every redirect hop, not just the url as given, before following it
+                return self::getWebFetcher()->fetch((string) $data['url']);
+            } catch (FetchFailedException $error) {
+                debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
 
                 return '';
             }
-
-            debug_event(self::class, 'CHECKING URL ' . $data['url'], 2);
-            $options = [];
-            try {
-                $options['timeout'] = 10;
-                Autoload::register();
-                $request = Requests::get($data['url'], [], Core::requests_options($options));
-                $raw     = $request->body;
-            } catch (Exception $error) {
-                debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
-                $raw = '';
-            }
-
-            return $raw;
         }
 
         // Check to see if it's a FILE
@@ -1091,11 +1080,11 @@ class Art extends database_object
     /**
      * @deprecated inject dependency
      */
-    private static function getUrlValidator(): UrlValidatorInterface
+    private static function getWebFetcher(): WebFetcherInterface
     {
         global $dic;
 
-        return $dic->get(UrlValidatorInterface::class);
+        return $dic->get(WebFetcherInterface::class);
     }
 
     /**
