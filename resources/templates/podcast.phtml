@@ -99,7 +99,8 @@ if ($this->areRatingsShown()) { ?>
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $this->getCurrentUser(),
                 T_('RSS Feed'),
-                ['object_type' => 'podcast', 'object_id' => (string) $podcastId]
+                ['object_type' => 'podcast', 'object_id' => (string) $podcastId],
+                $this->getName()
             )); ?>
         </li>
     <?php }

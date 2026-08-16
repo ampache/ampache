@@ -65,8 +65,14 @@ final class GenericRssFeedView extends AbstractView
         private readonly Traversable $items,
         private readonly ?string $medium = null,
         private readonly array $remoteItems = [],
-        private readonly string $language = 'en-US',
+        private readonly string $language = 'en-us',
+        private readonly string $explicit = 'false',
     ) {}
+
+    public function getExplicit(): string
+    {
+        return $this->explicit;
+    }
 
     public function getImage(): ?string
     {
