@@ -16,8 +16,13 @@
 * Every play, skip and play-count rollback ran an update against `folder` and `folder_map`, which are Ampache8 tables, so counting a song, video or podcast episode logged an SQL error on tables that do not exist in Ampache7
 * Renaming a smart playlist from the web interface did nothing, because the edit action passed the POSTed id along as a string and `Search` takes an int (#4426)
 * Activating the 7digital plugin created none of its preferences, so it could not be configured; the check meant to skip preferences that already exist was inverted, and only ran the insert when there was nothing to insert
+* The Headphones plugin's `headphones_api_url` and `headphones_api_key` preferences were installed at User level, so any regular user could point the server at an arbitrary internal address; both are now Manager level, matching every other plugin url preference
+* `Core::generate_random_key()` hashed a predictable seed instead of drawing directly from a secure random source; it backs session ids, api keys and the CSRF form token, and now uses `random_bytes()` for the full 128 bits
+* Browse
+  * A handful of filters (`rating`, `song`'s `top50` artist match) built their `WHERE` value without the surrounding quotes `Dba::escape()` expects; the value is quoted like every other escaped filter now
 * Database
   * Downgrading from Ampache8 removes the `broadcast_private`, `show_mood` and `hide_moods` preferences instead of leaving them in the preferences list
+  * `headphones_api_url`/`headphones_api_key` are raised to Manager level for existing installs
 
 ## Ampache 7.10.1
 

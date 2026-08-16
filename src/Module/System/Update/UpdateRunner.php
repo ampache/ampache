@@ -87,6 +87,9 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        // Migration\V8\Migration801003 needs no rollback. It raises `headphones_api_url`/`headphones_api_key` to
+        // Manager level; a downgrade should keep that restriction rather than reopen the access-level hole it fixed.
+
         // Migration\V8\Migration801002 needs no rollback. It collapses `stream_beautiful_url`'s per-admin
         // `user_preference` rows into the single `user = -1` row and reclassifies it under category `system`.
 

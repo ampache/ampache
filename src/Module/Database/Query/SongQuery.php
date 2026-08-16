@@ -144,7 +144,7 @@ final class SongQuery implements QueryInterface
             case 'top50':
                 $query->set_join_and('LEFT', '`artist_map`', '`artist_map`.`object_id`', '`song`.`id`', '`artist_map`.`object_type`', "'song'", 50);
                 $query->set_join_and_and('LEFT', '`object_count`', '`object_count`.`object_id`', '`song`.`id`', '`object_count`.`object_type`', "'song'", '`object_count`.`count_type`', "'stream'", 100);
-                $filter_sql = " `artist_map`.`artist_id` = " . Dba::escape($value) . " AND ";
+                $filter_sql = " `artist_map`.`artist_id` = '" . Dba::escape($value) . "' AND ";
                 break;
             case 'no_genre':
             case 'no_tag':
@@ -239,7 +239,7 @@ final class SongQuery implements QueryInterface
             case 'user_rating':
                 $filter_sql = ((int)$value === 0)
                     ? " `song`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'song' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `song`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'song' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                    : " `song`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'song' AND `user` = " . (int)$query->user_id . " AND `rating` = '" . Dba::escape($value) . "') AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
