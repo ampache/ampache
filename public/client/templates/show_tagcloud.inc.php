@@ -43,7 +43,7 @@ $ui = $dic->get(UiInterface::class);
 /** @var string $browse_type */
 /** @var string $countOrder */
 
-$webPath = AmpConfig::get_web_path();
+$webPath = AmpConfig::get_web_path('/client');
 
 $ui->show(
     'show_form_genre.inc.php',

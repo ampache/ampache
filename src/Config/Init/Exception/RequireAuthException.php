@@ -25,18 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init\Exception;
 
-<<<<<<<< HEAD:public/client/captcha/captcha.php
-define('NO_SESSION', 1);
-
-$dic = require __DIR__ . '/../../../src/Config/Init.php';
-
-ini_set('display_errors', '1');
-
-easy_captcha_utility::API();
-========
 final class RequireAuthException extends InitializationException
 {
     /** @var string */
     protected $message = 'Authentication is required to proceed';
 }
->>>>>>>> develop:src/Config/Init/Exception/RequireAuthException.php

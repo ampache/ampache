@@ -288,7 +288,7 @@ class Song_Preview extends database_object implements Media, playable_item
     public function get_f_album_link(): ?string
     {
         if ($this->f_album_link === null && $this->f_album !== null) {
-            $this->f_album_link = "<a href=\"" . AmpConfig::get_web_path() . "/albums.php?action=show_missing&mbid=" . $this->album_mbid . "&;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
+            $this->f_album_link = "<a href=\"" . AmpConfig::get_web_path('/client') . "/albums.php?action=show_missing&mbid=" . $this->album_mbid . "&;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
         }
 
         return $this->f_album_link;
