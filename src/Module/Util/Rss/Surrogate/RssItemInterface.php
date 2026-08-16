@@ -77,7 +77,9 @@ interface RssItemInterface
      *   url: ?string,
      *   season: ?string,
      *   season_name: ?string,
-     *   episode: ?string
+     *   episode: ?string,
+     *   image: string,
+     *   explicit: string
      * }>
      */
     public function getMedias(): Traversable;

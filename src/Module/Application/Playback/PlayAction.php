@@ -459,7 +459,13 @@ final readonly class PlayAction implements ApplicationActionInterface
         }
 
         // If they are using access lists let's make sure that they have enough access to play this mojo
-        if (AmpConfig::get('access_control') && (!$this->networkChecker->check(AccessTypeEnum::STREAM, Core::get_global('user')?->getId()) && !$this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')?->getId()))) {
+        if (
+            AmpConfig::get('access_control')
+            && (
+                !$this->networkChecker->check(AccessTypeEnum::STREAM, Core::get_global('user')?->getId())
+                && !$this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')?->getId())
+            )
+        ) {
             throw new AccessDeniedException(
                 sprintf('Streaming Access Denied: %s does not have stream level access', Core::get_user_ip())
             );
@@ -897,6 +903,8 @@ final readonly class PlayAction implements ApplicationActionInterface
             $start        = 0;
             $end          = 0;
             $range_values = sscanf(Core::get_server('HTTP_RANGE'), "bytes=%d-%d", $start, $end);
+            $start        = (int) $start;
+            $end          = (int) $end;
             $stream_size  = $file_size;
             if ($range_values > 0) {
                 if ($start < 0) {
@@ -1213,6 +1221,8 @@ final readonly class PlayAction implements ApplicationActionInterface
         $start        = 0;
         $end          = 0;
         $range_values = sscanf(Core::get_server('HTTP_RANGE'), "bytes=%d-%d", $start, $end);
+        $start        = (int) $start;
+        $end          = (int) $end;
 
         if (!$transcode && $range_values > 0) {
             // Calculate stream size from byte range

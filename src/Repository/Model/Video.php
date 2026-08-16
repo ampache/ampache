@@ -158,6 +158,8 @@ class Video extends database_object implements
             parent::add_to_cache('video', $row['id'], $row);
         }
 
+        Art::build_cache($ids, 'video', ['default', 'preview']);
+
         return true;
     }
 

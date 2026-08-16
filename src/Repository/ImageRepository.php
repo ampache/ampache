@@ -198,6 +198,35 @@ final readonly class ImageRepository implements ImageRepositoryInterface
     }
 
     /**
+     * Reads the original-size art metadata for a set of objects/kinds, for the in-request cache
+     *
+     * @param list<int|string> $objectIds
+     * @param list<string> $kinds
+     * @return list<array<string, mixed>>
+     */
+    public function getOriginalRowsByObjectIds(array $objectIds, string $objectType, array $kinds): array
+    {
+        if ($objectIds === [] || $kinds === []) {
+            return [];
+        }
+
+        $sql = sprintf(
+            "SELECT `object_id`, `id`, `width`, `height`, `mime`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` IN (%s) AND `size` = 'original' AND `kind` IN (%s)",
+            implode(',', array_map(intval(...), $objectIds)),
+            implode(',', array_fill(0, count($kinds), '?'))
+        );
+
+        $result = $this->connection->query($sql, [$objectType, ...$kinds]);
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
      * Get the object details for the art table
      */
     public function getRawImage(

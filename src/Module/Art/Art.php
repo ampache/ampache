@@ -121,8 +121,9 @@ class Art extends database_object
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
      * @param array<int|string> $object_ids
+     * @param list<string> $kinds
      */
-    public static function build_cache(array $object_ids, ?string $type = null): bool
+    public static function build_cache(array $object_ids, ?string $type = null, array $kinds = ['default']): bool
     {
         if ($object_ids === []) {
             return false;
@@ -133,8 +134,33 @@ class Art extends database_object
             return false;
         }
 
-        foreach (self::getImageRepository()->getRowsByObjectIds(array_values($object_ids), $type) as $row) {
+        $ids = array_values($object_ids);
+
+        foreach (self::getImageRepository()->getRowsByObjectIds($ids, $type) as $row) {
             parent::add_to_cache('art', $row['object_type'] . $row['object_id'] . $row['size'], $row);
+        }
+
+        // also warm has_db_meta()'s per-object cache, so row rendering stops querying once per item
+        if ($type !== null) {
+            $remaining = [];
+            foreach ($ids as $id) {
+                foreach ($kinds as $kind) {
+                    $remaining[$kind][(int) $id] = true;
+                }
+            }
+
+            foreach (self::getImageRepository()->getOriginalRowsByObjectIds($ids, $type, $kinds) as $row) {
+                $kind = (string) $row['kind'];
+                parent::add_to_cache('art_meta_' . $type . '_' . $kind, (int) $row['object_id'], $row);
+                unset($remaining[$kind][(int) $row['object_id']]);
+            }
+
+            // objects with no art of a given kind would otherwise keep re-querying on every cache miss
+            foreach ($remaining as $kind => $object_ids_without_art) {
+                foreach (array_keys($object_ids_without_art) as $object_id) {
+                    parent::add_to_cache('art_meta_' . $type . '_' . $kind, $object_id, [0]);
+                }
+            }
         }
 
         return true;

@@ -47,6 +47,10 @@ final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
+    private const int CACHE_SECONDS = 300;
+
+    private const int NOT_MODIFIED = 304;
+
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private ResponseFactoryInterface $responseFactory,
