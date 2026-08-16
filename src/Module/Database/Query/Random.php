@@ -628,7 +628,7 @@ class Random
     {
         /* Figure out our object limit */
         $limit     = (int) ($data['limit'] ?? -1);
-        $limit_sql = "LIMIT " . Dba::escape($limit);
+        $limit_sql = "LIMIT " . $limit;
 
         /* If they've passed -1 as limit then get everything */
         if ($limit == -1) {

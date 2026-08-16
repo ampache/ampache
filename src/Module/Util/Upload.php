@@ -260,9 +260,14 @@ class Upload
             $targetdir .= DIRECTORY_SEPARATOR . $folder;
         }
 
-        $targetdir = realpath($targetdir);
+        $targetdir      = realpath($targetdir);
+        $catalogRealDir = realpath($catalog_dir);
         debug_event(self::class, 'Target Directory `' . $targetdir, 4);
-        if ($targetdir === false || !str_contains($targetdir, $catalog_dir)) {
+        if (
+            $targetdir === false
+            || $catalogRealDir === false
+            || ($targetdir !== $catalogRealDir && !str_starts_with($targetdir, $catalogRealDir . DIRECTORY_SEPARATOR))
+        ) {
             debug_event(self::class, 'Something wrong with final upload path.', 1);
 
             return null;

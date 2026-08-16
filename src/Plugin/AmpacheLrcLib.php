@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Collator;
@@ -71,8 +72,9 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly UrlValidatorInterface $urlValidator,
+    ) {
         $this->description = T_('Get lyrics from an LrcLib compatible server');
     }
 
@@ -199,6 +201,13 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
         $url = ($query_str === '' || $query_str === '0')
             ? $this->site_url . $path_str
             : $this->site_url . $path_str . '?' . $query_str;
+
+        // lrclib_site_url is an admin-configured preference, validated like any other outbound fetch
+        if (!$this->urlValidator->isPublicHttpUrl($url)) {
+            debug_event(self::class, 'Refusing to fetch lyrics from ' . $url, 3);
+
+            return null;
+        }
 
         $headers = [
             'Accept' => 'application/json',

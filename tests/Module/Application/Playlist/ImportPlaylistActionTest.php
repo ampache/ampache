@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Override;
@@ -40,6 +41,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class ImportPlaylistActionTest extends MockeryTestCase
 {
     private MockInterface|ConfigContainerInterface $configContainer;
+    private MockInterface|RequestParserInterface $requestParser;
     private ImportPlaylistAction $subject;
     private MockInterface|UiInterface $ui;
 
@@ -52,6 +54,29 @@ class ImportPlaylistActionTest extends MockeryTestCase
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsExceptionIfFormTokenIsInvalid(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->expectException(AccessDeniedException::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+        $this->requestParser->shouldReceive('verifyForm')
+            ->with('import_playlist')
             ->once()
             ->andReturnFalse();
 
@@ -82,10 +107,12 @@ class ImportPlaylistActionTest extends MockeryTestCase
     {
         $this->ui              = $this->mock(UiInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->requestParser   = $this->mock(RequestParserInterface::class);
 
         $this->subject = new ImportPlaylistAction(
             $this->ui,
             $this->configContainer,
+            $this->requestParser,
         );
     }
 }

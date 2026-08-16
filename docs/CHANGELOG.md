@@ -20,6 +20,9 @@
   * Convert `stream_beautiful_url` to an Admin preference
 * Garbage collection actions (`admin/catalog.php?action=garbage_collect` and `php bin/cli run:updateCatalog -t`) now run `Session::garbage_collection()`, cleaning up `tmp_playlist`/`tmp_playlist_data`, `stream_playlist`, `song_preview` and the query cache, not just library objects
   * **Run this at least once after upgrading** On a database with cron disabled that's never had this data collected, the first run can be slow
+* `php bin/cli run:cronProcess`'s garbage collection now shares the same lock as the other garbage collection triggers, so a scheduled cron run can't race a manual one
+* `run:computeCache` and `run:cronProcess`'s cache rebuild now take their own lock, so two overlapping runs can't double-count the results or publish a half-rebuilt table
+* UPnP playlist browsing counts a playlist's tracks without loading them, the same way the rest of the app already does
 
 ### Fixed (8.0.1)
 
@@ -33,7 +36,22 @@
   * `preferences.php` no longer renders for an unregistered/guest visitor
   * Plugin credential preferences (api keys, tokens, passwords) are write-only in the edit form; the stored value is never echoed back, only replaced
   * The `user_preferences` API method (and REST `preferences`) returned those same plugin credential values in the response; they're blanked there too
-* An unregistered/guest visitor could upload and import a playlist file, or export every podcast subscription in the system, neither of which checked for a real account
+* An unregistered/guest visitor could upload and import a playlist file, or export every podcast subscription in the system, neither of which checked for a real account; importing a playlist also now verifies the request came from Ampache's own form
+* A user's last-seen date/time on their profile page ignored their `allow_personal_info_time` preference, unlike the recent-activity list right next to it on the same page
+* Outbound fetches
+  * Now check every redirect hop against the same private-address rule as the initial url, not just the url as given; applies to remote/radio stream playback, art fetching, and the Lyrist and YOURLS plugins
+  * The LrcLib and AudioMuse-AI plugins didn't check the configured server url at all before fetching from it; they now do
+* A podcast feed's own `<title>` was used unsanitized as a folder name, so a hostile feed containing `../` could create directories and write episode files outside the catalog
+* Upload's target-folder check accepted any resolved path that merely started with the catalog path as a string (e.g. a sibling `music-private` folder next to `music`), rather than requiring it to actually be inside the catalog directory
+* `Core::generate_random_key()` hashed a predictable seed instead of drawing directly from a secure random source; it backs session ids, api keys and the CSRF form token, and now uses `random_bytes()` for the full 128 bits
+* Browse
+  * A handful of filters (`rating`, `folder`'s `id`, `song`'s `top50` artist match, `playlist`'s smartlist id list) built their `WHERE`/`IN` value without the surrounding quotes `Dba::escape()` expects; the value is quoted like every other escaped filter now
+* Database 800038
+  * The podcast play-count backfill could loop forever, inserting duplicate rows, for a podcast episode play with no recorded streaming agent
+* Database 801003
+  * Restrict `headphones_api_url`/`headphones_api_key` to Manager level; a regular account could previously point the server at an arbitrary internal address
+* A song's disk subtitle was printed unescaped on the song details page, unlike everywhere else it appears
+* A play url read back in a later request than the one that built it (a Localplay queue, an API url-to-song lookup, a stored playlist import) could be misparsed if `stream_beautiful_url` had changed in between, breaking democratic voting, HLS playback, download links and Localplay's democratic auto-repeat
 * Album disk page
   * Rating and flag icons acted on the whole album instead of just that disk
   * Album art didn't display, since it was looked up against the disk instead of the album it belongs to

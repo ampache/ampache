@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Plugin;
 
 use Ampache\Module\Api\OpenSubsonic_Api;
+use Ampache\Module\Util\UrlValidatorInterface;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
@@ -46,8 +47,15 @@ class AmpacheAudioMuseTest extends TestCase
     {
         $method = new ReflectionMethod(AmpacheAudioMuse::class, '_toMatches');
 
+        $urlValidator = new class implements UrlValidatorInterface {
+            public function isPublicHttpUrl(string $url): bool
+            {
+                return true;
+            }
+        };
+
         /** @var list<array{'id': int, 'similarity': float}> $result */
-        $result = $method->invoke(new AmpacheAudioMuse(), $rows);
+        $result = $method->invoke(new AmpacheAudioMuse($urlValidator), $rows);
 
         return $result;
     }

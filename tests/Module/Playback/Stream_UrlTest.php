@@ -34,6 +34,20 @@ class Stream_UrlTest extends MockeryTestCase
     private const string SSID = 'e2d6acb460a2de459967bfc8f01efd4c04cb0c5a';
 
     /**
+     * A stored url (a localplay queue, a playlist file) can be read back after `stream_beautiful_url` changed:
+     * the API forces it off and UPnP forces it on, independently of whatever wrote the url in the first place.
+     *
+     * @return list<array{bool, string}>
+     */
+    public static function crossFlagDemocraticUrlProvider(): array
+    {
+        return [
+            'stored plain, read back with beautiful urls on' => [true, 'https://ampache.test/play/index.php?ssid=' . self::SSID . '&uid=1&demo_id=7'],
+            'stored beautiful, read back with beautiful urls off' => [false, 'https://ampache.test/play/ssid/' . self::SSID . '/uid/1/demo_id/7'],
+        ];
+    }
+
+    /**
      * `Stream_Playlist::create_localplay()` enables Localplay repeat for a democratic url so the player re-requests
      * it and receives the next voted song, and it identifies one through this parser
      *
@@ -81,6 +95,17 @@ class Stream_UrlTest extends MockeryTestCase
 
         self::assertSame('democratic', $result['type'] ?? null);
         self::assertSame($expectedId, $result['demo_id'] ?? null);
+    }
+
+    #[DataProvider('crossFlagDemocraticUrlProvider')]
+    public function testParseDetectsDemocraticWhenTheCurrentFlagDisagreesWithTheUrlsOwnShape(bool $beautifulNow, string $url): void
+    {
+        AmpConfig::set('stream_beautiful_url', $beautifulNow, true);
+
+        $result = Stream_Url::parse($url);
+
+        self::assertSame('democratic', $result['type'] ?? null);
+        self::assertSame('7', $result['demo_id'] ?? null);
     }
 
     #[DataProvider('nonDemocraticUrlProvider')]
