@@ -231,7 +231,7 @@ class Art extends database_object
         }
 
         $art    = new Art($object_id, $object_type, $kind);
-        $has_db = $art->has_db_info();
+        $has_db = $art->has_db_meta();
         // Don't show any image if not available
         if (!$show_default && !$has_db) {
             return false;
@@ -301,8 +301,9 @@ class Art extends database_object
             }
 
             // This to keep browser cache feature but force a refresh in case image just changed
-            if ($art->has_db_info($out_size)) {
-                $imgurl .= '&id=' . $art->id;
+            $thumbRow = self::getImageRepository()->findThumbnail($object_type, $object_id, $out_size, $kind, 0, 0);
+            if ($thumbRow !== []) {
+                $imgurl .= '&id=' . (int) $thumbRow['id'];
             }
         } else {
             // one shared url for every item with no art, so the browser fetches and caches the placeholder once
@@ -997,17 +998,11 @@ class Art extends database_object
             return null;
         }
 
-        $image    = '';
-        $filepath = fopen($path, "rb");
-        if ($filepath) {
-            do {
-                $image .= fread($filepath, 2048);
-            } while (!feof($filepath));
+        $image = file_get_contents($path);
 
-            fclose($filepath);
-        }
-
-        return $image;
+        return ($image === false)
+            ? null
+            : $image;
     }
 
     /**
@@ -1471,6 +1466,32 @@ class Art extends database_object
     }
 
     /**
+     * Fills id/width/height from the database without reading the file off disk.
+     */
+    public function has_db_meta(): bool
+    {
+        $index = 'art_meta_' . $this->object_type . '_' . $this->kind;
+        if (database_object::is_cached($index, $this->object_id)) {
+            $row = database_object::get_from_cache($index, $this->object_id);
+        } else {
+            $row = self::getImageRepository()->getOriginalRow($this->object_type, $this->object_id, $this->kind);
+            // [0] marks "no art": add_to_cache() drops empty arrays, so a miss would re-query every time
+            database_object::add_to_cache($index, $this->object_id, ($row === []) ? [0] : $row);
+        }
+
+        if ($row === [] || $row === [0]) {
+            return false;
+        }
+
+        $this->id       = (int) $row['id'];
+        $this->width    = (int) $row['width'];
+        $this->height   = (int) $row['height'];
+        $this->raw_mime = (string) ($row['mime'] ?? '');
+
+        return true;
+    }
+
+    /**
      * insert
      * This takes the string representation of an image and inserts it into
      * the database. You must also pass the mime type.
@@ -1818,17 +1839,11 @@ class Art extends database_object
             return '';
         }
 
-        $image    = '';
-        $filepath = fopen($path, "rb");
-        if ($filepath) {
-            do {
-                $image .= fread($filepath, 2048);
-            } while (!feof($filepath));
+        $image = file_get_contents($path);
 
-            fclose($filepath);
-        }
-
-        return $image;
+        return ($image === false)
+            ? ''
+            : $image;
     }
 
     /**
