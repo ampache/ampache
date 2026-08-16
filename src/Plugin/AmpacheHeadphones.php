@@ -75,11 +75,11 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
      */
     public function install(): bool
     {
-        if (!Preference::insert('headphones_api_url', T_('Headphones URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('headphones_api_url', T_('Headphones URL'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        return Preference::insert('headphones_api_key', T_('Headphones API key'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+        return Preference::insert('headphones_api_key', T_('Headphones API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
     }
 
     /**
