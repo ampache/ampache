@@ -1481,8 +1481,16 @@ class Art extends database_object
      */
     public function has_db_meta(): bool
     {
-        $row = self::getImageRepository()->getOriginalRow($this->object_type, $this->object_id, $this->kind);
-        if ($row === []) {
+        $index = 'art_meta_' . $this->object_type . '_' . $this->kind;
+        if (database_object::is_cached($index, $this->object_id)) {
+            $row = database_object::get_from_cache($index, $this->object_id);
+        } else {
+            $row = self::getImageRepository()->getOriginalRow($this->object_type, $this->object_id, $this->kind);
+            // [0] marks "no art": add_to_cache() drops empty arrays, so a miss would re-query every time
+            database_object::add_to_cache($index, $this->object_id, ($row === []) ? [0] : $row);
+        }
+
+        if ($row === [] || $row === [0]) {
             return false;
         }
 
