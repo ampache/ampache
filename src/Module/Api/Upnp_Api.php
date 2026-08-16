@@ -924,7 +924,7 @@ final class Upnp_Api
             'id' => 'amp://music/playlists/' . $playlist->id,
             'parentID' => $parent,
             'restricted' => 'false',
-            'childCount' => count($playlist->get_items()),
+            'childCount' => $playlist->get_media_count(),
             'dc:title' => self::_replaceSpecialSymbols($playlist->name),
             'upnp:class' => 'object.container', // object.container.playlistContainer
         ];

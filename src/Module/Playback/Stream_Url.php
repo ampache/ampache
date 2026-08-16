@@ -68,7 +68,9 @@ class Stream_Url extends MemoryObject
      */
     public static function add_options(string $url, string $options): string
     {
-        if (AmpConfig::get('stream_beautiful_url')) {
+        // Shape is read from the url itself, not the current stream_beautiful_url: a stored url (a
+        // localplay queue, a playlist file) may have been built under a different setting than is active now.
+        if (!str_contains($url, '?')) {
             // We probably want beautiful url to have a real mp3 filename at the end.
             // Add the new options before the filename
 
@@ -142,20 +144,20 @@ class Stream_Url extends MemoryObject
             return [];
         }
 
-        if (AmpConfig::get('stream_beautiful_url')) {
-            $posargs = strpos($url, '/play/');
-            if ($posargs !== false) {
-                $argsstr = substr($url, $posargs + 6);
-                $url     = substr($url, 0, $posargs + 6) . 'index.php?';
-                $args    = explode('/', $argsstr);
-                $a_count = count($args);
-                for ($index = 0; $index < $a_count; $index += 2) {
-                    if ($index > 0) {
-                        $url .= '&';
-                    }
-
-                    $url .= $args[$index] . '=' . $args[$index + 1];
+        // Shape is read from the url itself, not the current stream_beautiful_url: a stored url (a
+        // localplay queue, a playlist file) may have been built under a different setting than is active now.
+        $posargs = strpos($url, '/play/');
+        if ($posargs !== false && !str_contains(substr($url, $posargs), '?')) {
+            $argsstr = substr($url, $posargs + 6);
+            $url     = substr($url, 0, $posargs + 6) . 'index.php?';
+            $args    = explode('/', $argsstr);
+            $a_count = count($args);
+            for ($index = 0; $index < $a_count; $index += 2) {
+                if ($index > 0) {
+                    $url .= '&';
                 }
+
+                $url .= $args[$index] . '=' . ($args[$index + 1] ?? '');
             }
         }
 

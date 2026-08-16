@@ -27,6 +27,7 @@ namespace Ampache\Module\Playback;
 
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\UrlValidatorInterface;
 use CurlHandle;
 use Psr\Log\LoggerInterface;
 
@@ -41,11 +42,23 @@ final readonly class StreamProxy implements StreamProxyInterface
 {
     public function __construct(
         private LoggerInterface $logger,
+        private UrlValidatorInterface $urlValidator,
     ) {}
 
     public function proxy(string $url): bool
     {
         if (!function_exists('curl_version')) {
+            return false;
+        }
+
+        // The url comes from a stored live_stream/remote row, so it is refetched from the network on every
+        // play; curl still follows redirects server-side (see outputHeader()), each one checked in turn.
+        if (!$this->urlValidator->isPublicHttpUrl($url)) {
+            $this->logger->warning(
+                'Stream proxy refusing url: ' . $url,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
             return false;
         }
 
@@ -123,8 +136,6 @@ final readonly class StreamProxy implements StreamProxyInterface
 
     private function outputHeader(CurlHandle $curl, string $header): int
     {
-        unset($curl);
-
         $rheader = trim($header);
         $rhpart  = explode(':', $rheader);
         // the status line carries no colon, and a range request has to keep its 206 rather than fall back to 200
@@ -134,11 +145,45 @@ final readonly class StreamProxy implements StreamProxyInterface
             return strlen($header);
         }
 
+        // curl follows this redirect itself; refuse the hop rather than let it reach a private address
+        if (strcasecmp($rhpart[0], 'Location') === 0 && count($rhpart) > 1) {
+            $location = $this->resolveRedirectLocation($curl, trim(substr($rheader, strlen($rhpart[0]) + 1)));
+            if (!$this->urlValidator->isPublicHttpUrl($location)) {
+                $this->logger->warning(
+                    'Stream proxy refusing redirect to: ' . $location,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+
+                // any return value other than the header's own length aborts the transfer
+                return 0;
+            }
+        }
+
         // this server decides the transfer encoding, so passing the remote one on would corrupt the response
         if ($rheader !== '' && count($rhpart) > 1 && $rhpart[0] !== 'Transfer-Encoding') {
             header($rheader);
         }
 
         return strlen($header);
+    }
+
+    /**
+     * The absolute url a Location header points at, resolving a relative one against the url that answered it
+     */
+    private function resolveRedirectLocation(CurlHandle $curl, string $location): string
+    {
+        if ($location === '' || parse_url($location, PHP_URL_SCHEME) !== null) {
+            return $location;
+        }
+
+        $base = parse_url((string) curl_getinfo($curl, CURLINFO_EFFECTIVE_URL));
+
+        return sprintf(
+            '%s://%s%s%s',
+            $base['scheme'] ?? 'http',
+            $base['host'] ?? '',
+            isset($base['port']) ? ':' . $base['port'] : '',
+            str_starts_with($location, '/') ? $location : '/' . $location
+        );
     }
 }

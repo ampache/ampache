@@ -376,7 +376,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
         $songprops[T_('Track')]         = $this->song->track;
         $songprops[T_('Disk')]          = $this->song->disk;
-        $songprops[T_('Disk Subtitle')] = $this->song->disksubtitle ?? '';
+        $songprops[T_('Disk Subtitle')] = scrub_out($this->song->disksubtitle ?? '');
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = $this->song->get_album_original_year($this->song->album);
         $songprops[T_('Length')]        = scrub_out($this->song->get_f_time());

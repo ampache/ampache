@@ -33,6 +33,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -51,6 +52,7 @@ final class CronProcessCommand extends Command
         private readonly UpdateInfoRepositoryInterface $updateInfoRepository,
         private readonly ShareRepositoryInterface $shareRepository,
         private readonly PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        private readonly CatalogRepositoryInterface $catalogRepository,
     ) {
         parent::__construct('run:cronProcess', T_('Run the cron process'));
     }
@@ -99,19 +101,29 @@ final class CronProcessCommand extends Command
          * Metadata::garbage_collection();
          * MetadataField::garbage_collection();
          */
-        $this->catalogGarbageCollector->collect();
-        debug_event(self::class, 'finished catalogGarbageCollector->collect()', 5);
+        // Shares its lock key with Catalog::process_action()'s 'garbage_collect' case and
+        // UpdateCatalog::update(), so this cron run can't race a web-triggered sweep either.
+        if ($this->catalogRepository->tryAcquireActionLock('garbage_collect')) {
+            try {
+                $this->catalogGarbageCollector->collect();
+                debug_event(self::class, 'finished catalogGarbageCollector->collect()', 5);
 
-        /**
-         * Session garbage_collection covers these functions.
-         *
-         * Query::garbage_collection();
-         * Stream_Playlist::garbage_collection();
-         * Ampache\Model\Song_Preview::garbage_collection();
-         * Ampache\Model\Tmp_Playlist::garbage_collection();
-         */
-        Session::garbage_collection();
-        debug_event(self::class, 'finished Session::garbage_collection()', 5);
+                /**
+                 * Session garbage_collection covers these functions.
+                 *
+                 * Query::garbage_collection();
+                 * Stream_Playlist::garbage_collection();
+                 * Ampache\Model\Song_Preview::garbage_collection();
+                 * Ampache\Model\Tmp_Playlist::garbage_collection();
+                 */
+                Session::garbage_collection();
+                debug_event(self::class, 'finished Session::garbage_collection()', 5);
+            } finally {
+                $this->catalogRepository->releaseActionLock('garbage_collect');
+            }
+        } else {
+            debug_event(self::class, 'garbage collection already running elsewhere, skipping', 3);
+        }
 
         /**
          * Clean up remaining functions.
