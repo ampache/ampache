@@ -340,21 +340,26 @@ final class DefaultAction implements ApplicationActionInterface
             /* Make sure they are actually trying to get to this site and don't try
              * to redirect them back into an admin section
              */
-            $web_path = $this->configContainer->getWebPath('/client');
+            $web_path      = $this->configContainer->getWebPath('/client');
+            $referrer      = (string) ($_POST['referrer'] ?? '');
+            $referrerParts = parse_url($referrer);
             if (
-                (substr($_POST['referrer'], 0, strlen((string) $web_path)) == $web_path) &&
-                strpos($_POST['referrer'], 'install.php') === false &&
-                strpos($_POST['referrer'], 'login.php') === false &&
-                strpos($_POST['referrer'], 'logout.php') === false &&
-                strpos($_POST['referrer'], 'update.php') === false &&
-                strpos($_POST['referrer'], 'activate.php') === false &&
-                strpos($_POST['referrer'], 'admin') === false
+                $referrer !== '' &&
+                $referrerParts !== false &&
+                isset($referrerParts['host']) &&
+                $referrerParts['host'] === $request->getUri()->getHost() &&
+                strpos($referrer, 'install.php') === false &&
+                strpos($referrer, 'login.php') === false &&
+                strpos($referrer, 'logout.php') === false &&
+                strpos($referrer, 'update.php') === false &&
+                strpos($referrer, 'activate.php') === false &&
+                strpos($referrer, 'admin') === false
             ) {
                 return $this->responseFactory
                     ->createResponse(StatusCode\RFC\RFC7231::FOUND)
                     ->withHeader(
                         'Location',
-                        $_POST['referrer']
+                        $referrer
                     );
             } // if we've got a referrer
 

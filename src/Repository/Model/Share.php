@@ -256,7 +256,7 @@ class Share extends database_object
             $this->secret !== null &&
             $this->secret !== '' &&
             $this->secret !== '0' &&
-            $secret != $this->secret
+            !hash_equals($this->secret, $secret)
         ) {
             debug_event(self::class, 'Access Denied: secret requires to access share ' . $this->id . '.', 3);
 

@@ -74,11 +74,11 @@ class Core
     }
 
     /**
-     * generate a random md5 key using random_int
+     * generate a 32 character hex key from a cryptographically secure source, for session ids, api keys and CSRF tokens
      */
     public static function generate_random_key(): string
     {
-        return md5(uniqid((string) random_int(0, mt_getrandmax()), true));
+        return bin2hex(random_bytes(16));
     }
 
     /**

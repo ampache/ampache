@@ -65,6 +65,7 @@ final class LogoutAction implements ApplicationActionInterface
                 'path' => (string)$this->configContainer->get('cookie_path'),
                 'domain' => (string)$this->configContainer->get('cookie_domain'),
                 'secure' => make_bool($this->configContainer->get('cookie_secure')),
+                'httponly' => true,
                 'samesite' => 'Strict'
             ];
             $this->logger->debug(
