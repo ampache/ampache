@@ -395,6 +395,7 @@ class Catalog_local extends Catalog
      * full path in an array. Passes gather_type to determine if we need to
      * check id3 information against the db.
      * @param array<string, mixed> $options
+     * @phpstan-impure
      */
     public function add_files(string $path, array $options, ?Interactor $interactor = null): int
     {

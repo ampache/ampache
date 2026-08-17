@@ -785,12 +785,15 @@ class Preference extends database_object
             return [];
         }
 
+        // secret-named preferences are write-only, matching the web UI's createPreferenceInput() policy
+        $value = (self::isSecretName($row['name'])) ? '' : $row['value'];
+
         return [[
             'id' => $row['id'],
             'name' => $row['name'],
             'level' => $row['level'],
             'description' => $row['description'],
-            'value' => $row['value'],
+            'value' => $value,
             'type' => $row['type'],
             'category' => $row['category'],
             'subcategory' => $row['subcategory'],
@@ -1146,6 +1149,7 @@ class Preference extends database_object
             'api_enable_4',
             'api_enable_5',
             'api_enable_6',
+            'api_enable_8',
             'api_hide_dupe_searches',
             'art_zip_add',
             'auth_password_save',
@@ -1263,8 +1267,10 @@ class Preference extends database_object
             'perpetual_api_session',
             'personalfav_display',
             'playlist_art',
+            'playlist_art_mosaic',
             'podcast',
             'prevent_multiple_logins',
+            'public_images',
             'quarantine',
             'rating_browse_filter',
             'rating_browse_minimum_stars',
@@ -1282,7 +1288,9 @@ class Preference extends database_object
             'share',
             'show_album_artist',
             'show_artist',
+            'show_collection',
             'show_donate',
+            'show_folder',
             'show_footer_statistics',
             'show_header_login',
             'show_license',
@@ -1334,6 +1342,7 @@ class Preference extends database_object
             'use_original_year',
             'use_rss',
             'user_agreement',
+            'user_create_apikey',
             'user_create_streamtoken',
             'user_no_email_confirm',
             'vite_dev',
