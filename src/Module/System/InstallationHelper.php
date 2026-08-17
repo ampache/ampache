@@ -65,7 +65,7 @@ final readonly class InstallationHelper implements InstallationHelperInterface
     {
         // Start building the new config file
         $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
-        $dist = (Core::is_readable($distfile))
+        $dist     = (Core::is_readable($distfile))
             ? file_get_contents($distfile)
             : false;
         if ($dist === false || $dist === '') {
