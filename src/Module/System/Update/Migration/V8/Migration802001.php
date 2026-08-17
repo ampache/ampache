@@ -31,7 +31,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 /**
  * Index `folder_map`.`path_name` so a folder page's subtree media count stops needing a full table scan.
  */
-final class Migration801004 extends AbstractMigration
+final class Migration802001 extends AbstractMigration
 {
     protected array $changelog = [
         'Add an index on `folder_map`.`path_name` so counting the media below a folder can use an index instead of scanning the whole table',
