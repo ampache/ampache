@@ -1086,20 +1086,6 @@ CREATE TABLE IF NOT EXISTS `podcast_episode` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pow_challenge`
---
-
-DROP TABLE IF EXISTS `pow_challenge`;
-CREATE TABLE IF NOT EXISTS `pow_challenge` (
-  `id` char(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `expire` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `expire_index` (`expire`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `preference`
 --
 
@@ -1837,7 +1823,7 @@ CREATE TABLE IF NOT EXISTS `wanted` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '800051');
+('db_version', '800050');
 
 COMMIT;
 

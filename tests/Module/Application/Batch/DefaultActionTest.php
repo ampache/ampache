@@ -30,6 +30,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Pow\PowServiceInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -54,6 +55,7 @@ class DefaultActionTest extends MockeryTestCase
     private MockInterface|SongRepositoryInterface $songRepository;
     private DefaultAction $subject;
     private MockInterface|ZipHandlerInterface $zipHandler;
+    private MockInterface|PowServiceInterface $powService;
 
     /**
      * Every id fans out to a full item load plus its own medias, so an unbounded request-supplied
@@ -103,8 +105,12 @@ class DefaultActionTest extends MockeryTestCase
         $this->songRepository    = $this->mock(SongRepositoryInterface::class);
         $this->responseFactory   = $this->mock(ResponseFactoryInterface::class);
         $this->libraryItemLoader = $this->mock(LibraryItemLoaderInterface::class);
+        $this->powService        = $this->mock(PowServiceInterface::class);
 
         $this->logger->shouldReceive('warning');
+
+        // The id-list cap is checked before the proof of work, so the guard stays out of the way here.
+        $this->powService->shouldReceive('isRequired')->andReturnFalse();
 
         $this->subject = new DefaultAction(
             $this->requestParser,
@@ -116,6 +122,7 @@ class DefaultActionTest extends MockeryTestCase
             $this->songRepository,
             $this->responseFactory,
             $this->libraryItemLoader,
+            $this->powService,
         );
     }
 }
