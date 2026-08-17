@@ -40,7 +40,7 @@ final class RssUrl
      */
     public static function canonical(array $params): string
     {
-        return AmpConfig::get_web_path() . '/rss.php?' . http_build_query($params);
+        return AmpConfig::get_web_path('/client') . '/rss.php?' . http_build_query($params);
     }
 
     /**
@@ -95,7 +95,7 @@ final class RssUrl
             $path .= '/' . $slug;
         }
 
-        return AmpConfig::get_web_path() . '/rss/' . $path . (($token !== '')
+        return AmpConfig::get_web_path('/client') . '/rss/' . $path . (($token !== '')
             ? '?rsstoken=' . rawurlencode($token)
             : '');
     }
