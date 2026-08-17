@@ -924,6 +924,15 @@ class Ui implements UiInterface
         return self::$_symbol_cache[$symbol_key];
     }
 
+    /**
+     * callers pass both absolute urls (which may target a plain web-root page with no `/client` segment on
+     * the client structure) and bare page paths; only the latter need the web path prefixed.
+     */
+    private static function isAbsoluteUrl(string $url): bool
+    {
+        return str_starts_with($url, 'http://') || str_starts_with($url, 'https://');
+    }
+
     public function accessDenied(string $error = 'Access Denied'): void
     {
         // Clear any buffered crap
@@ -1652,15 +1661,6 @@ class Ui implements UiInterface
     }
 
     /**
-     * callers pass both absolute urls (which may target a plain web-root page with no `/client` segment on
-     * the client structure) and bare page paths; only the latter need the web path prefixed.
-     */
-    private static function isAbsoluteUrl(string $url): bool
-    {
-        return str_starts_with($url, 'http://') || str_starts_with($url, 'https://');
-    }
-
-    /**
      * shows a confirmation of an action
      */
     public function showConfirmation(
@@ -1671,8 +1671,16 @@ class Ui implements UiInterface
         ?string $form_name = 'confirmation',
         ?bool $visible = true,
     ): void {
-        $webPath = $this->configContainer->getWebPath('/client');
-        $path    = self::isAbsoluteUrl($next_url) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+        $webPath   = $this->configContainer->getWebPath('/client');
+        $path      = self::isAbsoluteUrl($next_url) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+        $cancelUrl = null;
+        if ($cancel) {
+            // return_referer() already went through scrub_in(), so its & is html-escaped; decode before use or e() escapes it twice.
+            $referer = htmlspecialchars_decode(return_referer(), ENT_NOQUOTES);
+            // explicit '' survives the client-structure build unchanged, unlike $webPath; the referer already has its own "admin/" prefix when needed.
+            $refererBase = str_starts_with($referer, 'admin/') ? $this->configContainer->getWebPath('') : $webPath;
+            $cancelUrl   = sprintf('%s/%s', $refererBase, $referer);
+        }
 
         echo (new ConfirmationView(
             $webPath,
@@ -1680,7 +1688,7 @@ class Ui implements UiInterface
             $text,
             $path,
             (string) $form_name,
-            ($cancel) ? $webPath . '/' . return_referer() : null
+            $cancelUrl
         ))->render();
     }
 
