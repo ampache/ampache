@@ -144,6 +144,32 @@ final readonly class LabelRepository implements LabelRepositoryInterface
     }
 
     /**
+     * Counts each label's associated artists in one statement instead of one query per label
+     *
+     * @param array<int|string> $labelIds
+     * @return array<int, int>
+     */
+    public function getArtistCountsByIds(array $labelIds): array
+    {
+        if ($labelIds === []) {
+            return [];
+        }
+
+        $idList = implode(',', array_map('intval', $labelIds));
+
+        $result = $this->connection->query(
+            'SELECT `label`, COUNT(`artist`) AS `count` FROM `label_asso` WHERE `label` IN (' . $idList . ') AND `artist` IS NOT NULL GROUP BY `label`'
+        );
+
+        $counts = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $counts[(int) $row['label']] = (int) $row['count'];
+        }
+
+        return $counts;
+    }
+
+    /**
      * Returns the ids of every artist associated with the label
      *
      * @return int[]
@@ -222,6 +248,30 @@ final readonly class LabelRepository implements LabelRepositoryInterface
         }
 
         return $labelIds;
+    }
+
+    /**
+     * Reads whole label rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $labelIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $labelIds): array
+    {
+        if ($labelIds === []) {
+            return [];
+        }
+
+        $idList = implode(',', array_map('intval', $labelIds));
+
+        $result = $this->connection->query('SELECT * FROM `label` WHERE `id` IN (' . $idList . ')');
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 
     public function lookup(string $labelName, int $labelId = 0): int

@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
+use Ampache\Module\Database\database_object;
 use Ampache\Repository\CollectionRepositoryInterface;
 
 /**
@@ -83,6 +84,32 @@ class Collection extends playlist_object
     }
 
     /**
+     * build_cache
+     * This attempts to reduce # of queries by asking for everything in the
+     * browse all at once and storing it in the cache
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if (empty($ids)) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getCollectionRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('collection', (int) $row['id'], $row);
+        }
+
+        Art::build_cache($ids, 'collection');
+
+        return true;
+    }
+
+    /**
      * The inverse: the spelling a collection stores and `VALID_TYPES` lists.
      */
     public static function denormalizeType(string $objectType): string
@@ -117,6 +144,16 @@ class Collection extends playlist_object
             'label' => (bool) AmpConfig::get('label'),
             default => true,
         };
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getCollectionRepository(): CollectionRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CollectionRepositoryInterface::class);
     }
 
     /**
@@ -464,16 +501,6 @@ class Collection extends playlist_object
     protected function get_art_items(): array
     {
         return $this->get_items();
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private function getCollectionRepository(): CollectionRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(CollectionRepositoryInterface::class);
     }
 
     /**

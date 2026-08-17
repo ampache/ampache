@@ -199,6 +199,10 @@ final class ConfigurationKeyEnum
     public const string REGISTRATION_MANDATORY_FIELDS         = 'registration_mandatory_fields';
     public const string REQUIRE_SESSION                       = 'require_session';
     public const string RESIZE_IMAGES                         = 'resize_images';
+    public const string RSS_BEAUTIFUL_URL                     = 'rss_beautiful_url';
+    public const string RSS_EXPLICIT                          = 'rss_explicit';
+    public const string RSS_NOINDEX                           = 'rss_noindex';
+    public const string RSS_SUBCATEGORY                       = 'rss_subcategory';
     public const string SECRET_KEY                            = 'secret_key';
     public const string SESSION_NAME                          = 'session_name';
     public const string SHARE                                 = 'share';

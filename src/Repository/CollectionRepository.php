@@ -211,6 +211,30 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
     }
 
     /**
+     * Reads whole collection rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $collectionIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $collectionIds): array
+    {
+        if ($collectionIds === []) {
+            return [];
+        }
+
+        $idList = implode(',', array_map('intval', $collectionIds));
+
+        $result = $this->connection->query('SELECT * FROM `collection` WHERE `id` IN (' . $idList . ')');
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
      * Entry ids in their stored order, for renumbering after a removal or a move
      *
      * @return list<int>

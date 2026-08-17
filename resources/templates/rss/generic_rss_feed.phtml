@@ -36,6 +36,7 @@ echo '<?xml version="1.0"?>', "\n"; ?>
         <description><?php echo $this->e($this->getTitle()); ?></description>
         <language><?php echo $this->e($this->getLanguage()); ?></language>
         <itunes:category text="Music"/>
+        <itunes:explicit><?php echo $this->e($this->getExplicit()); ?></itunes:explicit>
 <?php if ($this->getPubDate() !== null) { ?>
         <pubDate><?php echo $this->e($this->getPubDate()); ?></pubDate>
 <?php }

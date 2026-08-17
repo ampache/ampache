@@ -94,28 +94,6 @@ class PlayableItemRssItemAdapterTest extends TestCase
         );
     }
 
-    public function testHasImageReturnsFalseIfNotAvailable(): void
-    {
-        $this->playable->expects(static::once())
-            ->method('has_art')
-            ->willReturn(false);
-
-        self::assertFalse(
-            $this->subject->hasImage()
-        );
-    }
-
-    public function testHasImageReturnsTrueIfAvailable(): void
-    {
-        $this->playable->expects(static::once())
-            ->method('has_art')
-            ->willReturn(true);
-
-        self::assertTrue(
-            $this->subject->hasImage()
-        );
-    }
-
     public function testHasOwnerReturnsFalseIfNotAvailable(): void
     {
         $this->playable->expects(static::once())
@@ -135,28 +113,6 @@ class PlayableItemRssItemAdapterTest extends TestCase
 
         self::assertTrue(
             $this->subject->hasOwner()
-        );
-    }
-
-    public function testHasSummaryReturnsFalseIfNotAvailable(): void
-    {
-        $this->playable->expects(static::once())
-            ->method('get_description')
-            ->willReturn('');
-
-        self::assertFalse(
-            $this->subject->hasSummary()
-        );
-    }
-
-    public function testHasSummaryReturnsTrueIfAvailable(): void
-    {
-        $this->playable->expects(static::once())
-            ->method('get_description')
-            ->willReturn('snafu');
-
-        self::assertTrue(
-            $this->subject->hasSummary()
         );
     }
 

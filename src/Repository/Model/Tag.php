@@ -134,6 +134,8 @@ class Tag extends database_object implements library_item, displayable_item, con
             parent::add_to_cache('tag', (int) $row['id'], $row);
         }
 
+        Art::build_cache($ids, 'tag');
+
         return true;
     }
 

@@ -82,7 +82,7 @@ Ui::show_box_top($this->getTitle(), 'info-box'); ?>
         </li>
         <?php } ?>
         <?php if ($this->showRss()) { ?>
-        <li><?php echo $this->raw(Ui::getRssLink(RssFeedTypeEnum::LIBRARY_ITEM, $this->getUser(), T_('RSS Feed'), ['object_type' => $type, 'object_id' => (string) $albumId])); ?></li>
+        <li><?php echo $this->raw(Ui::getRssLink(RssFeedTypeEnum::LIBRARY_ITEM, $this->getUser(), T_('RSS Feed'), ['object_type' => $type, 'object_id' => (string) $albumId], $this->getTitle())); ?></li>
         <?php } ?>
         <?php if ($this->showShout()) { ?>
         <li>

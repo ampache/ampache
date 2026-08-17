@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 95
+config_version = 96
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -982,6 +982,28 @@ show_footer_statistics = "true"
 ; use_rss = false (values true | false)
 ; DEFAULT: "false"
 ;use_rss = "true"
+
+; Set the itunes:explicit flag sent in rss feeds. Podcast directories
+; require the tag, Ampache has no per-item rating to fill it from.
+; DEFAULT: "false"
+;rss_explicit = "true"
+
+; Serve rss feeds under /rss/{object_type}/{object_id}/{slug} instead of a
+; query string. Requires the rewrite rules shipped in public/rss/.htaccess.dist
+; (apache) or docs/examples/nginx-site.conf (nginx).
+; DEFAULT: "false"
+;rss_beautiful_url = "true"
+
+; Send X-Robots-Tag: noindex with rss feeds. Feeds are meant to be found, and
+; podcast directories skip a feed marked noindex, so this is off by default.
+; Note that the shipped web server configs send X-Robots-Tag: none site wide.
+; DEFAULT: "false"
+;rss_noindex = "true"
+
+; Apple sub-category advertised by podcast feeds, on top of the "Music"
+; category. Valid values: Music Commentary, Music History, Music Interviews
+; DEFAULT: ""
+;rss_subcategory = "Music Commentary"
 
 ; This setting allows themes to overwrite PHP template files. This can be really
 ; dangerous. Do this only if you trust every theme in your themes/ directory.

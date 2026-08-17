@@ -49,6 +49,28 @@ class FolderTest extends TestCase
         static::assertSame([], $subject->get_children('some-name'));
     }
 
+    /**
+     * folder_map rows carry their own `catalog` column, so a folder listing needs the requesting user's
+     * id to honour the opt-in `catalog_filter` feature the same way every other browse type does
+     */
+    public function testGetChildrenPassesTheCurrentUserId(): void
+    {
+        $subject = new Folder();
+
+        $subject->id = 666;
+
+        $user = $this->createMock(User::class);
+        $user->method('getId')->willReturn(42);
+        $GLOBALS['user'] = $user;
+
+        $this->folderRepository->expects(static::once())
+            ->method('getChildren')
+            ->with(666, 42)
+            ->willReturn([]);
+
+        static::assertSame([], $subject->get_children('some-name'));
+    }
+
     public function testGetChildrenPassesTheIdForARealFolder(): void
     {
         $subject = new Folder();

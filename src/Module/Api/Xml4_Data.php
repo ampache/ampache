@@ -41,6 +41,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Shoutbox;
@@ -150,7 +151,9 @@ class Xml4_Data
 
         $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
+        Album::build_cache($objects);
         Rating::build_cache('album', $objects);
+        Userflag::build_cache('album', $objects);
 
         foreach ($objects as $album_id) {
             $album = new Album((int) $album_id);
@@ -200,7 +203,9 @@ class Xml4_Data
 
         $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
+        Artist::build_cache($objects);
         Rating::build_cache('artist', $objects);
+        Userflag::build_cache('artist', $objects);
 
         foreach ($objects as $artist_id) {
             $artist = new Artist((int) $artist_id);
@@ -247,6 +252,8 @@ class Xml4_Data
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = "<total_count>" . $this->count . "</total_count>\n";
+
+        Catalog::build_cache($objects);
 
         foreach ($objects as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
@@ -480,6 +487,14 @@ class Xml4_Data
 
         $string = "<total_count>" . $this->count . "</total_count>\n";
 
+        // ids may be real playlists or "smart_N" search ids mixed together; build_cache's WHERE id IN (...)
+        // simply matches nothing for whichever kind isn't a real playlist row
+        Playlist::build_cache($objects);
+        Rating::build_cache('playlist', $objects);
+        Rating::build_cache('search', $objects);
+        Userflag::build_cache('playlist', $objects);
+        Userflag::build_cache('search', $objects);
+
         // Foreach the playlist ids
         foreach ($objects as $playlist_id) {
             /**
@@ -533,6 +548,10 @@ class Xml4_Data
 
         $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
+        Podcast_Episode::build_cache($objects);
+        Rating::build_cache('podcast_episode', $objects);
+        Userflag::build_cache('podcast_episode', $objects);
+
         foreach ($objects as $episode_id) {
             $episode = new Podcast_Episode((int) $episode_id);
             if ($episode->isNew()) {
@@ -566,6 +585,10 @@ class Xml4_Data
         $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
         $podcastRepository = $this->podcastRepository;
+
+        Podcast::build_cache($objects);
+        Rating::build_cache('podcast', $objects);
+        Userflag::build_cache('podcast', $objects);
 
         foreach ($objects as $podcast_id) {
             $podcast = $podcastRepository->findById((int) $podcast_id);
@@ -684,6 +707,8 @@ class Xml4_Data
         $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
 
         Song::build_cache($objects);
+        Rating::build_cache('song', $objects);
+        Userflag::build_cache('song', $objects);
         Stream::set_session($auth);
 
         $playlist_track = 0;
@@ -749,6 +774,8 @@ class Xml4_Data
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = "<total_count>" . $this->count . "</total_count>\n";
+
+        Tag::build_cache($objects);
 
         foreach ($objects as $tag_id) {
             $tag = new Tag((int) $tag_id);
@@ -844,6 +871,10 @@ class Xml4_Data
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n" : '';
+
+        Video::build_cache($objects);
+        Rating::build_cache('video', $objects);
+        Userflag::build_cache('video', $objects);
 
         foreach ($objects as $video_id) {
             $video = new Video((int) $video_id);
