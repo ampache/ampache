@@ -149,10 +149,20 @@ class Art extends database_object
                 }
             }
 
+            // has_db()/has_art()'s cache only ever looks at the default-kind original image
+            $has_default_art = (in_array('default', $kinds, true))
+                ? array_fill_keys(array_map(intval(...), $ids), false)
+                : [];
+
             foreach (self::getImageRepository()->getOriginalRowsByObjectIds($ids, $type, $kinds) as $row) {
-                $kind = (string) $row['kind'];
-                parent::add_to_cache('art_meta_' . $type . '_' . $kind, (int) $row['object_id'], $row);
-                unset($remaining[$kind][(int) $row['object_id']]);
+                $kind      = (string) $row['kind'];
+                $object_id = (int) $row['object_id'];
+                parent::add_to_cache('art_meta_' . $type . '_' . $kind, $object_id, $row);
+                unset($remaining[$kind][$object_id]);
+
+                if ($kind === 'default') {
+                    $has_default_art[$object_id] = true;
+                }
             }
 
             // objects with no art of a given kind would otherwise keep re-querying on every cache miss
@@ -160,6 +170,11 @@ class Art extends database_object
                 foreach (array_keys($object_ids_without_art) as $object_id) {
                     parent::add_to_cache('art_meta_' . $type . '_' . $kind, $object_id, [0]);
                 }
+            }
+
+            // also warm has_db()'s per-object cache, read by has_art()-style checks ahead of display()
+            foreach ($has_default_art as $object_id => $hasArt) {
+                parent::add_to_cache('art_has_db_' . $type, $object_id, [(int) $hasArt]);
             }
         }
 

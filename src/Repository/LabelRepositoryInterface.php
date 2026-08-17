@@ -61,6 +61,14 @@ interface LabelRepositoryInterface
     public function getAll(): array;
 
     /**
+     * Counts each label's associated artists in one statement instead of one query per label
+     *
+     * @param array<int|string> $labelIds
+     * @return array<int, int>
+     */
+    public function getArtistCountsByIds(array $labelIds): array;
+
+    /**
      * Returns the ids of every artist associated with the label
      *
      * @return int[]
@@ -83,6 +91,14 @@ interface LabelRepositoryInterface
      * @return list<int>
      */
     public function getIdsByCategory(string $category): array;
+
+    /**
+     * Reads whole label rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $labelIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $labelIds): array;
 
     public function lookup(string $labelName, int $labelId = 0): int;
 

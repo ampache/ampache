@@ -115,6 +115,30 @@ class Folder extends database_object implements
     }
 
     /**
+     * build_cache
+     * This attempts to reduce # of queries by asking for everything in the
+     * browse all at once and storing it in the cache
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if (empty($ids)) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getFolderRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('folder', (int) $row['id'], $row);
+        }
+
+        return true;
+    }
+
+    /**
      * create
      * @param array{
      *     name: string,

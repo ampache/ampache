@@ -99,6 +99,14 @@ interface FolderRepositoryInterface
     public function getObjects(?int $folderId, int $userId = -1): array;
 
     /**
+     * Reads whole folder rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $folderIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $folderIds): array;
+
+    /**
      * Whether the folder has any mapped children
      */
     public function hasChildren(int $folderId, int $userId = -1): bool;

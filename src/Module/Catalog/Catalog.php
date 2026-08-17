@@ -158,6 +158,32 @@ abstract class Catalog extends database_object
     private ?string $f_link = null;
 
     /**
+     * build_cache
+     * This attempts to reduce # of queries by asking for everything in the
+     * browse all at once and storing it in the cache
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if (empty($ids)) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!self::isCacheEnabled()) {
+            return false;
+        }
+
+        $idlist     = implode(',', array_map('intval', $ids));
+        $db_results = Dba::read(sprintf('SELECT * FROM `catalog` WHERE `id` IN (%s)', $idlist));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            self::add_to_cache('catalog', (int) $row['id'], $row);
+        }
+
+        return true;
+    }
+
+    /**
      * Run the cache_catalog_proc() on music catalogs.
      */
     public static function cache_catalogs(?Interactor $interactor = null, bool $cleanup = false): void
@@ -594,8 +620,12 @@ abstract class Catalog extends database_object
      */
     public static function create_from_id(int $catalog_id): ?Catalog
     {
-        $type = self::getCatalogRepository()->findType($catalog_id);
-        if ($type === null) {
+        // catalog_type is already on the batch-cached row, so a warm cache skips the extra lookup query
+        $type = (self::is_cached('catalog', $catalog_id))
+            ? (string) (self::get_from_cache('catalog', $catalog_id)['catalog_type'] ?? '')
+            : (string) self::getCatalogRepository()->findType($catalog_id);
+
+        if ($type === '') {
             return null;
         }
 

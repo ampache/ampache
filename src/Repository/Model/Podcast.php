@@ -103,6 +103,52 @@ class Podcast extends database_object implements
     }
 
     /**
+     * build_cache
+     * This attempts to reduce # of queries by asking for everything in the
+     * browse all at once and storing it in the cache
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if (empty($ids)) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getPodcastRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('podcast', (int) $row['id'], $row);
+        }
+
+        Art::build_cache($ids, 'podcast');
+
+        return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
      * display_art
      * @param array{width: int, height: int} $size
      */
@@ -536,25 +582,5 @@ class Podcast extends database_object implements
     public function update(array $data): never
     {
         throw new LogicException('Podcast::update is not in use');
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastEpisodeRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

@@ -145,6 +145,41 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
+     * build_cache
+     * This attempts to reduce # of queries by asking for everything in the
+     * browse all at once and storing it in the cache
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if (empty($ids)) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        $podcast_ids = [];
+        foreach (self::getPodcastEpisodeRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('podcast_episode', (int) $row['id'], $row);
+            if (!empty($row['podcast'])) {
+                $podcast_ids[(int) $row['podcast']] = (int) $row['podcast'];
+            }
+        }
+
+        // warm parent podcasts so getPodcastLink()/getPodcastName() hit cache instead of one query per row
+        if ($podcast_ids !== []) {
+            Podcast::build_cache(array_values($podcast_ids));
+        }
+
+        Art::build_cache($ids, 'podcast_episode');
+
+        return true;
+    }
+
+    /**
      * update_file
      * sets the file path
      */

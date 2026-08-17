@@ -39,8 +39,12 @@ use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
@@ -541,11 +545,13 @@ class Browse extends Query
         $type            = $this->get_type();
         $limit_threshold = $this->get_threshold();
 
-        // a song_preview or folder browse is handed rows it built itself, so they are neither saved nor prefetched
-        $prefetchable = ($type !== 'song_preview' && $type !== 'folder');
+        // a song_preview browse is handed rows it built itself, so it is neither saved nor prefetched
+        $prefetchable = ($type !== 'song_preview');
+        // a folder browse is handed encoded ids that don't go through the normal saved-browse-state flow
+        $persistable = ($prefetchable && $type !== 'folder');
         if ($this->is_simple() || $object_ids === null) {
             $object_ids = $this->get_saved();
-        } elseif ($prefetchable) {
+        } elseif ($persistable) {
             /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
             $this->save_objects($object_ids);
         }
@@ -813,6 +819,49 @@ class Browse extends Query
     }
 
     /**
+     * Warms the cache for a page whose rows are not a uniform list of one type's ids — a folder browse's entries
+     * are each either a bare numeric folder id or an encoded "type-id" string, and a collection_items browse's
+     * entries are each a shaped {object_type, object_id} record. Group by the embedded type, then reuse each
+     * type's own build_cache().
+     *
+     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum|string, object_id: int, track_id?: int, track?: int}> $object_ids
+     */
+    private function _prefetchMixedTypes(array $object_ids): void
+    {
+        $grouped = [];
+        foreach ($object_ids as $entry) {
+            if (is_array($entry)) {
+                $entryType = ($entry['object_type'] instanceof LibraryItemEnum)
+                    ? $entry['object_type']->value
+                    : (string) $entry['object_type'];
+                $grouped[$entryType][] = (int) $entry['object_id'];
+
+                continue;
+            }
+
+            $entry = (string) $entry;
+            if (preg_match('/^[0-9]+$/', $entry) === 1) {
+                $grouped['folder'][] = (int) $entry;
+            } elseif (preg_match('/^([a-z_]+)-([0-9]+)$/', $entry, $matches) === 1) {
+                $grouped[$matches[1]][] = (int) $matches[2];
+            }
+        }
+
+        foreach ($grouped as $entryType => $ids) {
+            match ($entryType) {
+                'folder' => Folder::build_cache($ids),
+                'song' => Song::build_cache($ids),
+                'album' => Album::build_cache($ids),
+                'artist' => Artist::build_cache($ids),
+                'video' => Video::build_cache($ids),
+                'playlist' => Playlist::build_cache($ids),
+                'podcast_episode' => Podcast_Episode::build_cache($ids),
+                default => null,
+            };
+        }
+    }
+
+    /**
      * Warm the object cache for the rows this page shows, so the row templates read them without a query each.
      *
      * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
@@ -828,6 +877,13 @@ class Browse extends Query
             'playlist' => Playlist::build_cache($this->_squashList($object_ids)),
             'genre', 'tag', 'tag_hidden' => Tag::build_cache($this->_squashList($object_ids)),
             'video' => Video::build_cache($this->_squashList($object_ids)),
+            'podcast' => Podcast::build_cache($this->_squashList($object_ids)),
+            'podcast_episode' => Podcast_Episode::build_cache($this->_squashList($object_ids)),
+            'live_stream' => Live_Stream::build_cache($this->_squashList($object_ids)),
+            'label' => Label::build_cache($this->_squashList($object_ids)),
+            'catalog' => Catalog::build_cache($this->_squashList($object_ids)),
+            'collection' => Collection::build_cache($this->_squashList($object_ids)),
+            'folder', 'collection_items' => $this->_prefetchMixedTypes($object_ids),
             default => null,
         };
     }

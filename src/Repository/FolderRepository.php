@@ -317,6 +317,30 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
+     * Reads whole folder rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $folderIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $folderIds): array
+    {
+        if ($folderIds === []) {
+            return [];
+        }
+
+        $idList = implode(',', array_map('intval', $folderIds));
+
+        $result = $this->connection->query('SELECT * FROM `folder` WHERE `id` IN (' . $idList . ')');
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
      * Whether the folder has any mapped children
      */
     public function hasChildren(int $folderId, int $userId = -1): bool
