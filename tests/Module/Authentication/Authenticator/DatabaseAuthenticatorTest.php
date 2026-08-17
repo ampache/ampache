@@ -97,6 +97,21 @@ class DatabaseAuthenticatorTest extends MockeryTestCase
         );
     }
 
+    /**
+     * The stored hash and the candidate are compared with `hash_equals()`; a wrong password must still fail
+     * even though both are same-length sha256 digests, the shape a magic-hash/type-juggling attack relies on
+     */
+    public function testAuthFailsWithTheWrongPassword(): void
+    {
+        $this->expectPasswordRow(['password' => hash('sha256', 'the-real-password')]);
+        $this->expectSecretRow(['apikey' => null, 'subsonic_secret' => null]);
+
+        self::assertSame(
+            ['success' => false, 'error' => 'MySQL login attempt failed'],
+            $this->subject->auth(self::USERNAME, 'not-the-real-password')
+        );
+    }
+
     public function testAuthFailsWithTheWrongSubsonicSecret(): void
     {
         $this->expectPasswordRow(false);

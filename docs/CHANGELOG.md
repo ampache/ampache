@@ -4,9 +4,14 @@
 
 ### Added (8.0.1)
 
+* Translations 2026-08-17
 * Show Catalog name on song pages
 * Increase redirect count on Podcast Episode download from 5 to 10
 * Missing ASF/Windows Media tag for Composer
+* Podcast RSS feeds
+  * `itunes:image` (per-episode too), `itunes:author`, `itunes:explicit` and an optional Apple sub-category (`rss_subcategory`)
+  * Optional path-style feed urls (`rss_beautiful_url`)
+  * Feeds are indexable and cacheable (etag/304) by default
 
 ### Changed (8.0.1)
 
@@ -20,9 +25,13 @@
   * Convert `stream_beautiful_url` to an Admin preference
 * Garbage collection actions (`admin/catalog.php?action=garbage_collect` and `php bin/cli run:updateCatalog -t`) now run `Session::garbage_collection()`, cleaning up `tmp_playlist`/`tmp_playlist_data`, `stream_playlist`, `song_preview` and the query cache, not just library objects
   * **Run this at least once after upgrading** On a database with cron disabled that's never had this data collected, the first run can be slow
+  * Also resets the `AUTO_INCREMENT` on `stream_playlist`, `playlist_data`, `tmp_playlist` and `tmp_playlist_data` afterwards, instead of leaving those ids climb forever
 * `php bin/cli run:cronProcess`'s garbage collection now shares the same lock as the other garbage collection triggers, so a scheduled cron run can't race a manual one
 * `run:computeCache` and `run:cronProcess`'s cache rebuild now take their own lock, so two overlapping runs can't double-count the results or publish a half-rebuilt table
 * UPnP playlist browsing counts a playlist's tracks without loading them, the same way the rest of the app already does
+* Row-prefetch caching (avoiding a query per row) is extended to more listings: Browse now also covers podcast, podcast episode, live stream, label, catalog, collection and folder pages, and the JSON/XML API list endpoints (album, artist, catalog, playlist, podcast, podcast episode, song, tag, video) now warm the same object/rating/userflag caches before their loop instead of querying per item
+* Art existence/metadata lookups (`has_db`/`has_art`) are batch-prefetched the same way during browse and artist/playlist/tag/video listing, instead of querying disk or the database per row
+* Album/album disk/video search read the catalog id straight off the row instead of joining `catalog_map`, since it's already stored there directly
 
 ### Fixed (8.0.1)
 
@@ -46,6 +55,18 @@
 * `Core::generate_random_key()` hashed a predictable seed instead of drawing directly from a secure random source; it backs session ids, api keys and the CSRF form token, and now uses `random_bytes()` for the full 128 bits
 * Browse
   * A handful of filters (`rating`, `folder`'s `id`, `song`'s `top50` artist match, `playlist`'s smartlist id list) built their `WHERE`/`IN` value without the surrounding quotes `Dba::escape()` expects; the value is quoted like every other escaped filter now
+* The `upload_script` post-processing hook (opt-in, off by default) substituted the uploaded file's own client-supplied name into `%FILE%` and ran the result as a shell command; a filename carrying shell metacharacters could run arbitrary commands as the web server user. The filename is shell-escaped before substitution now
+* Login compared the stored password hash to the submitted one with `==`/`in_array()` instead of a constant-time comparison; both now use `hash_equals()`
+* Logging in with a `referrer` pointing at a host that merely starts with the site's own url (e.g. `yoursite.com.attacker.net`) was honoured as a same-site redirect after a successful login; the referrer's host is now compared exactly
+* A song or video title containing a `"` broke out of the quoted `Content-Disposition` filename on download, letting extra parameters be appended; the character is stripped like the linebreak/comma/semicolon it already strips
+* The `theme_name`/`theme_color` preferences were only checked for existing on disk, not for staying inside the themes directory; both are now rejected outright if they contain a path separator
+* A profile self-update could smuggle in `catalog_filter_group` alongside the fields the form actually offers, silently reassigning the user's own catalog visibility group; it's stripped from the request like `access` already was
+* The session, `_remember` and `_user`/`_lang` cookies were missing `HttpOnly`, so any XSS could read them and steal the session directly instead of just acting within the page; it's set on every auth-bearing cookie now
+* Browse
+  * The `regex_match`/`regex_not_match` filter value reaches SQL `REGEXP` as-is with no length limit; it's now capped at 100 characters against a catastrophic-backtracking pattern
+* A share's secret was compared with `!=` instead of a constant-time comparison, so two "magic hash" values (`0e` followed only by digits) could match each other regardless of their actual digits; it now uses `hash_equals()`
+* Folders (browse, WebDAV) never honoured the opt-in `catalog_filter` restriction that every other object type already respects; a user's `catalog_filter_group` is now applied to a folder's children, media count and media list the same way it is everywhere else
+* A zip/batch download's `id` list had no length limit, so a single request could drive an unbounded number of item loads and file reads; it's now capped at 500 ids
 * Database 800038
   * The podcast play-count backfill could loop forever, inserting duplicate rows, for a podcast episode play with no recorded streaming agent
 * Database 801003
@@ -63,6 +84,17 @@
 * Search
   * A song search on album rating matched the wrong album when `album_group` is off; the `album_disk` rating is now looked up by disk instead of by album id
   * A song search on album rating no longer joins `album_disk` when `album_group` is on, which multiplied the working set by the disk count for no gain
+* PHP 8.2+ dynamic-property deprecation noise from vendor libraries (e.g. Ratchet) no longer floods the log; deprecations from Ampache's own code still show
+* The Popular/Newest/Userflag Video pages could throw a `TypeError` on `Browse::set_threshold()`
+* Recently played (activity feed and RSS)
+  * A play repeated the same MusicBrainz-derived guid on every listen of that song instead of a per-play one, so RSS clients treated repeats as a single duplicate entry
+  * An item mapped to more than one catalog could show up twice
+* Podcast RSS feed
+  * Cover art used the item's own type instead of always `album`, and art fallback urls served a 128px image instead of the full size
+  * `language` used the full locale (`fr-FR`) instead of the two-letter code iTunes expects
+  * A `bytes=0-`/`bytes=0-0` range request answered `200` instead of `206`; suffix ranges (`bytes=-500`) are now resolved against the file size too
+  * Streamed episodes were sent as attachments instead of inline, forcing a download prompt in podcast apps that just want to play them
+  * Episode urls weren't percent-encoded, breaking any filename containing a space
 
 ## Ampache 8.0.0
 

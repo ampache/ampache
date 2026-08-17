@@ -52,6 +52,10 @@ final readonly class TmpPlaylistRepository implements TmpPlaylistRepositoryInter
         $statements = [
             "DELETE FROM `tmp_playlist` USING `tmp_playlist` LEFT JOIN `session` ON `session`.`id`=`tmp_playlist`.`session` WHERE `session`.`id` IS NULL AND `tmp_playlist`.`type` != 'vote'",
             'DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `tmp_playlist` ON `tmp_playlist_data`.`tmp_playlist`=`tmp_playlist`.`id` WHERE `tmp_playlist`.`id` IS NULL',
+
+            // clamp the max id
+            'ALTER TABLE `tmp_playlist` AUTO_INCREMENT = 1',
+            'ALTER TABLE `tmp_playlist_data` AUTO_INCREMENT = 1',
         ];
 
         foreach ($statements as $sql) {

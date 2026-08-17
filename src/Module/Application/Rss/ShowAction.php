@@ -47,6 +47,10 @@ final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
+    private const int CACHE_SECONDS = 300;
+
+    private const int NOT_MODIFIED = 304;
+
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private ResponseFactoryInterface $responseFactory,
@@ -67,14 +71,15 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $queryParams = $request->getQueryParams();
 
-        $type     = RssFeedTypeEnum::tryFrom($queryParams['type'] ?? '') ?? RssFeedTypeEnum::NOW_PLAYING;
+        // a beautiful url spells the types with dashes
+        $type     = RssFeedTypeEnum::tryFrom(str_replace('-', '_', (string) ($queryParams['type'] ?? ''))) ?? RssFeedTypeEnum::NOW_PLAYING;
         $rssToken = $queryParams['rsstoken'] ?? '';
 
         $user = $this->userRepository->getByRssToken($rssToken);
 
         if ($type === RssFeedTypeEnum::LIBRARY_ITEM) {
             $item = $this->libraryItemLoader->load(
-                LibraryItemEnum::tryFrom($queryParams['object_type'] ?? '') ?? LibraryItemEnum::SONG,
+                LibraryItemEnum::tryFrom(str_replace('-', '_', (string) ($queryParams['object_type'] ?? ''))) ?? LibraryItemEnum::SONG,
                 (int) ($queryParams['object_id'] ?? 0),
                 [Album::class, AlbumDisk::class, Artist::class, Podcast::class, Song::class]
             );
@@ -95,17 +100,35 @@ final readonly class ShowAction implements ApplicationActionInterface
             };
         }
 
+        $body = $handler->createView()->render();
+        $etag = '"' . md5($body) . '"';
+
         $response = $this->responseFactory->createResponse()
-            ->withHeader('X-Robots-Tag', 'noindex')
             ->withHeader(
                 'Content-Type',
                 sprintf(
                     'application/xml; charset=%s',
                     $this->configContainer->get(ConfigurationKeyEnum::SITE_CHARSET)
                 )
-            );
+            )
+            // bots and podcast apps poll feeds hard: let them cache, and answer 304 when nothing moved
+            ->withHeader('ETag', $etag)
+            ->withHeader('Cache-Control', 'public, max-age=' . self::CACHE_SECONDS);
 
-        $response->getBody()->write($handler->createView()->render());
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RSS_NOINDEX)) {
+            $response = $response->withHeader('X-Robots-Tag', 'noindex');
+        }
+
+        // If-None-Match uses weak comparison, so a W/ prefix still matches
+        $known = array_map(
+            static fn(string $value): string => ltrim(trim($value), 'W/'),
+            explode(',', $request->getHeaderLine('If-None-Match'))
+        );
+        if (in_array($etag, $known, true)) {
+            return $response->withStatus(self::NOT_MODIFIED);
+        }
+
+        $response->getBody()->write($body);
 
         return $response;
     }

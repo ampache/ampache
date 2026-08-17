@@ -70,7 +70,7 @@ final readonly class PopularVideoAction implements ApplicationActionInterface
         ) {
             $objects = Stats::get_top('video', -1, $thresh_value, 0, $gatekeeper->getUser(), false, 0, 0, $by_user);
             $browse  = $this->browseFactory->create();
-            $browse->set_threshold($thresh_value);
+            $browse->set_threshold((string) $thresh_value);
             $browse->set_type('video');
             $browse->show_objects($objects);
             $browse->store();

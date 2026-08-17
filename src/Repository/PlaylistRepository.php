@@ -108,6 +108,9 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
         $this->connection->query("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `live_stream` ON `live_stream`.`id` = `playlist_data`.`object_id` WHERE `live_stream`.`id` IS NULL AND `playlist_data`.`object_type`='live_stream';");
         $this->connection->query('DELETE FROM `playlist` USING `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` WHERE `playlist_data`.`object_id` IS NULL;');
         $this->connection->query("DELETE FROM `user_playlist_map` WHERE `playlist_id` NOT LIKE 'smart\\_%' AND `playlist_id` NOT IN (SELECT `id` FROM `playlist`);");
+
+        // clamp the max id
+        $this->connection->query('ALTER TABLE `playlist_data` AUTO_INCREMENT = 1');
     }
 
     /**

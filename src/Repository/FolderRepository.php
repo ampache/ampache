@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\LegacyLogger;
@@ -221,11 +223,13 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function getChildren(?int $folderId): array
+    public function getChildren(?int $folderId, int $userId = -1): array
     {
+        $filterSql = $this->catalogFilterSql('folder_map', $userId);
+
         $result = ($folderId === null)
-            ? $this->connection->query('SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` IS NULL ORDER BY `name`;')
-            : $this->connection->query('SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ? ORDER BY `name`;', [$folderId]);
+            ? $this->connection->query("SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` IS NULL{$filterSql} ORDER BY `name`;")
+            : $this->connection->query("SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?{$filterSql} ORDER BY `name`;", [$folderId]);
 
         return $this->mapObjectRows($result);
     }
@@ -246,10 +250,12 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     /**
      * Counts everything playable below a folder, without hydrating the rows
      */
-    public function getMediaCount(Folder $folder): int
+    public function getMediaCount(Folder $folder, int $userId = -1): int
     {
+        $filterSql = $this->catalogFilterSql('folder_map', $userId);
+
         $count = $this->connection->fetchOne(
-            "SELECT COUNT(*) FROM `folder_map` WHERE `folder_map`.`object_type` != 'folder' AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?);",
+            "SELECT COUNT(*) FROM `folder_map` WHERE `folder_map`.`object_type` != 'folder' AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?){$filterSql};",
             [$folder->getId(), $folder->path_name . '/%']
         );
 
@@ -263,15 +269,17 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function getMedias(Folder $folder, ?string $filterType = null): array
+    public function getMedias(Folder $folder, ?string $filterType = null, int $userId = -1): array
     {
+        $filterSql = $this->catalogFilterSql('folder_map', $userId);
+
         $result = ($filterType === null)
             ? $this->connection->query(
-                "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` != 'folder' AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?) ORDER BY `folder_map`.`name`;",
+                "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` != 'folder' AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?){$filterSql} ORDER BY `folder_map`.`name`;",
                 [$folder->getId(), $folder->path_name . '/%']
             )
             : $this->connection->query(
-                'SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` = ? AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?) ORDER BY `folder_map`.`name`;',
+                "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` = ? AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?){$filterSql} ORDER BY `folder_map`.`name`;",
                 [$filterType, $folder->getId(), $folder->path_name . '/%']
             );
 
@@ -299,22 +307,46 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function getObjects(?int $folderId): array
+    public function getObjects(?int $folderId, int $userId = -1): array
     {
         $result = ($folderId === null)
-            ? $this->connection->query("SELECT `id` AS `object_id`, 'folder' AS `object_type` FROM `folder` WHERE `parent` IS NULL;")
-            : $this->connection->query('SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;', [$folderId]);
+            ? $this->connection->query("SELECT `id` AS `object_id`, 'folder' AS `object_type` FROM `folder` WHERE `parent` IS NULL{$this->catalogFilterSql('folder', $userId)};")
+            : $this->connection->query("SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?{$this->catalogFilterSql('folder_map', $userId)};", [$folderId]);
 
         return $this->mapObjectRows($result);
     }
 
     /**
+     * Reads whole folder rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $folderIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $folderIds): array
+    {
+        if ($folderIds === []) {
+            return [];
+        }
+
+        $idList = implode(',', array_map('intval', $folderIds));
+
+        $result = $this->connection->query('SELECT * FROM `folder` WHERE `id` IN (' . $idList . ')');
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
      * Whether the folder has any mapped children
      */
-    public function hasChildren(int $folderId): bool
+    public function hasChildren(int $folderId, int $userId = -1): bool
     {
         $result = $this->connection->query(
-            'SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;',
+            "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?{$this->catalogFilterSql('folder_map', $userId)};",
             [$folderId]
         );
 
@@ -490,6 +522,18 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
         $sql = "UPDATE `folder` SET `update_time` = ? WHERE `id` = ?;";
         $this->connection->query($sql, [$time, $folder_id]);
+    }
+
+    /**
+     * The `catalog_filter` feature is opt-in; when it's off, every catalog is visible as before
+     */
+    private function catalogFilterSql(string $type, int $userId): string
+    {
+        if (!AmpConfig::get('catalog_filter')) {
+            return '';
+        }
+
+        return ' AND ' . trim(Catalog::get_user_filter($type, $userId));
     }
 
     /**

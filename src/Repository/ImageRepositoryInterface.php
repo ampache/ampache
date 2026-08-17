@@ -90,6 +90,15 @@ interface ImageRepositoryInterface
     public function getOriginalRow(string $objectType, int $objectId, string $kind): array;
 
     /**
+     * Reads the original-size art metadata for a set of objects/kinds, for the in-request cache
+     *
+     * @param list<int|string> $objectIds
+     * @param list<string> $kinds
+     * @return list<array<string, mixed>>
+     */
+    public function getOriginalRowsByObjectIds(array $objectIds, string $objectType, array $kinds): array;
+
+    /**
      * Get the object details for the art table
      */
     public function getRawImage(

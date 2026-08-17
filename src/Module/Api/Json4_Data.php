@@ -42,6 +42,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Shoutbox;
@@ -183,7 +184,9 @@ class Json4_Data
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
+        Album::build_cache($objects);
         Rating::build_cache('album', $objects);
+        Userflag::build_cache('album', $objects);
 
         $JSON = [];
         foreach ($objects as $album_id) {
@@ -281,7 +284,9 @@ class Json4_Data
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
 
+        Album::build_cache($objects);
         Rating::build_cache('album', $objects);
+        Userflag::build_cache('album', $objects);
         $JSON = [];
         foreach ($objects as $album_id) {
             $album = new Album((int) $album_id);
@@ -414,7 +419,9 @@ class Json4_Data
 
         $JSON = [];
 
+        Artist::build_cache($objects);
         Rating::build_cache('artist', $objects);
+        Userflag::build_cache('artist', $objects);
 
         foreach ($objects as $artist_id) {
             $artist = new Artist((int) $artist_id);
@@ -476,6 +483,8 @@ class Json4_Data
     {
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
+
+        Catalog::build_cache($objects);
 
         $allCatalogs = [];
         foreach ($objects as $catalog_id) {
@@ -697,6 +706,13 @@ class Json4_Data
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
+        // safe even mixed with smart-playlist ids: those simply match nothing in the playlist table
+        Playlist::build_cache($objects);
+        Rating::build_cache('playlist', $objects);
+        Rating::build_cache('search', $objects);
+        Userflag::build_cache('playlist', $objects);
+        Userflag::build_cache('search', $objects);
+
         $JSON = [];
 
         // Foreach the playlist ids
@@ -814,6 +830,10 @@ class Json4_Data
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $encode);
 
+        Podcast_Episode::build_cache($objects);
+        Rating::build_cache('podcast_episode', $objects);
+        Userflag::build_cache('podcast_episode', $objects);
+
         $JSON = [];
         foreach ($objects as $episode_id) {
             $episode = new Podcast_Episode((int) $episode_id);
@@ -924,6 +944,10 @@ class Json4_Data
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $podcastRepository = $this->podcastRepository;
+
+        Podcast::build_cache($objects);
+        Rating::build_cache('podcast', $objects);
+        Userflag::build_cache('podcast', $objects);
 
         $JSON = [];
         foreach ($objects as $podcast_id) {
@@ -1119,6 +1143,8 @@ class Json4_Data
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $encode);
 
         Song::build_cache($objects);
+        Rating::build_cache('song', $objects);
+        Userflag::build_cache('song', $objects);
         Stream::set_session($auth);
 
         $JSON           = [];
@@ -1250,6 +1276,8 @@ class Json4_Data
     {
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
+
+        Tag::build_cache($objects);
 
         $JSON = [];
         $TAGS = [];
@@ -1442,6 +1470,10 @@ class Json4_Data
     {
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
+
+        Video::build_cache($objects);
+        Rating::build_cache('video', $objects);
+        Userflag::build_cache('video', $objects);
 
         $JSON = [];
         foreach ($objects as $video_id) {

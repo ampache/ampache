@@ -125,6 +125,7 @@ final readonly class Session implements SessionInterface
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => AmpConfig::get_bool('cookie_secure'),
+            'httponly' => true,
             'samesite' => 'Lax',
         ];
 
@@ -268,6 +269,7 @@ final readonly class Session implements SessionInterface
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => AmpConfig::get_bool('cookie_secure'),
+            'httponly' => true,
             'samesite' => 'Lax',
         ];
         if (isset($_SESSION)) {
@@ -276,6 +278,7 @@ final readonly class Session implements SessionInterface
                 'path' => (string) AmpConfig::get('cookie_path'),
                 'domain' => (string) AmpConfig::get('cookie_domain'),
                 'secure' => AmpConfig::get_bool('cookie_secure'),
+                'httponly' => true,
                 'samesite' => 'Lax'
             ];
             setcookie((string) session_name(), (string) session_id(), $cookie_options);
@@ -304,6 +307,7 @@ final readonly class Session implements SessionInterface
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => AmpConfig::get_bool('cookie_secure'),
+            'httponly' => true,
             'samesite' => 'Strict',
         ];
 
@@ -358,6 +362,7 @@ final readonly class Session implements SessionInterface
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => AmpConfig::get_bool('cookie_secure'),
+            'httponly' => true,
             'samesite' => 'Strict',
         ];
 
@@ -386,6 +391,7 @@ final readonly class Session implements SessionInterface
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => AmpConfig::get_bool('cookie_secure'),
+            'httponly' => true,
             'samesite' => 'Strict',
         ];
 
@@ -430,6 +436,7 @@ final readonly class Session implements SessionInterface
             'path' => (string) AmpConfig::get('cookie_path'),
             'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => AmpConfig::get_bool('cookie_secure'),
+            'httponly' => true,
             'samesite' => 'Strict',
         ];
 

@@ -451,7 +451,7 @@ class Upload
         $script = AmpConfig::get('upload_script');
         if (AmpConfig::get('allow_upload_scripts') && $script) {
             chdir($targetdir);
-            $script = str_replace('%FILE%', $targetfile, $script);
+            $script = str_replace('%FILE%', escapeshellarg($targetfile), $script);
             exec($script);
         }
     }

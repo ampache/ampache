@@ -79,6 +79,32 @@ class Live_Stream extends database_object implements Media, displayable_item, co
     }
 
     /**
+     * build_cache
+     * This attempts to reduce # of queries by asking for everything in the
+     * browse all at once and storing it in the cache
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if (empty($ids)) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getLiveStreamRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('live_stream', (int) $row['id'], $row);
+        }
+
+        Art::build_cache($ids, 'live_stream');
+
+        return true;
+    }
+
+    /**
      * create
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
