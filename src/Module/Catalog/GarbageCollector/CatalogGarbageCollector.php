@@ -40,6 +40,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\BroadcastRepositoryInterface;
+use Ampache\Repository\DeletedPodcastEpisodeRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Mood;
@@ -87,6 +88,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         private PodcastRepositoryInterface $podcastRepository,
         private CatalogCounterInterface $catalogCounter,
         private ConfigContainerInterface $configContainer,
+        private DeletedPodcastEpisodeRepositoryInterface $deletedPodcastEpisodeRepository,
     ) {}
 
     public function collect(): void
@@ -122,6 +124,13 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
 
         $this->metadataManager->collectGarbage();
         $this->podcastEpisodeRepository->collectGarbage();
+
+        $deletedHistoryDays = $this->configContainer->getInt(ConfigurationKeyEnum::DELETED_HISTORY_DAYS);
+        if ($deletedHistoryDays > 0) {
+            $this->songRepository->pruneDeletedHistory($deletedHistoryDays);
+            $this->videoRepository->pruneDeletedHistory($deletedHistoryDays);
+            $this->deletedPodcastEpisodeRepository->pruneDeletedHistory($deletedHistoryDays);
+        }
 
         $this->recount();
     }

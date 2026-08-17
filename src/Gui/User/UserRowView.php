@@ -87,7 +87,7 @@ final class UserRowView extends AbstractView
     }
 
     /**
-     * The online cell is a coloured block, so its state is a class rather than any content.
+     * The online cell is a colored block, so its state is a class rather than any content.
      */
     public function getOnlineClass(): string
     {

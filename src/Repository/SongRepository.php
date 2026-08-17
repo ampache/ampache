@@ -1127,6 +1127,21 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * Removes `deleted_song` rows older than the given retention
+     */
+    public function pruneDeletedHistory(int $days): void
+    {
+        if ($days <= 0) {
+            return;
+        }
+
+        $this->connection->query(
+            'DELETE FROM `deleted_song` WHERE `delete_time` < (UNIX_TIMESTAMP() - (? * 86400));',
+            [$days]
+        );
+    }
+
+    /**
      * Rewrites the leading path of every file of one catalog, for a catalog that moved on disk
      */
     public function replaceFilePathForCatalog(int $catalogId, string $oldPath, string $newPath): void

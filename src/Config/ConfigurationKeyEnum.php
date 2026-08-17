@@ -101,6 +101,7 @@ final class ConfigurationKeyEnum
     public const string DAAP_PASS                             = 'daap_pass';
     public const string DEBUG_MODE                            = 'debug';
     public const string DELETE_FROM_DISK                      = 'delete_from_disk';
+    public const string DELETED_HISTORY_DAYS                  = 'deleted_history_days';
     public const string DEMO_CLEAR_SESSIONS                   = 'demo_clear_sessions';
     public const string DEMO_MODE                             = 'demo_mode';
     public const string DEMO_USE_SEARCH                       = 'demo_use_search';

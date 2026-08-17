@@ -380,6 +380,11 @@ interface SongRepositoryInterface
     public function migrateArtist(int $newArtistId, int $oldArtistId): bool;
 
     /**
+     * Removes `deleted_song` rows older than the given retention
+     */
+    public function pruneDeletedHistory(int $days): void;
+
+    /**
      * Rewrites the leading path of every file of one catalog, for a catalog that moved on disk
      */
     public function replaceFilePathForCatalog(int $catalogId, string $oldPath, string $newPath): void;
