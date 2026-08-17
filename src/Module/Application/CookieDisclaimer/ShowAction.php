@@ -46,10 +46,10 @@ final readonly class ShowAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        echo (new CookieDisclaimerView(
+        echo new CookieDisclaimerView(
             $this->configContainer->getWebPath('/client'),
             (string) AmpConfig::get('session_name', 'ampache')
-        ))->render();
+        )->render();
         $this->ui->showFooter();
 
         return null;

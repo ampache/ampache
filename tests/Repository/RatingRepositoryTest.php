@@ -83,7 +83,7 @@ class RatingRepositoryTest extends TestCase
 
         $this->subject->collectGarbage('song', 666);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'DELETE FROM `rating` WHERE `object_type` = ? AND `object_id` = ?',
                 'DELETE FROM `rating` WHERE `rating`.`rating` = 0;',
@@ -102,7 +102,7 @@ class RatingRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertNull($this->subject->getAverageRating(666, 'song'));
+        self::assertNull($this->subject->getAverageRating(666, 'song'));
     }
 
     public function testGetAverageRatingsNarrowsTheSameWayTheSingleObjectQueryDoes(): void
@@ -123,7 +123,7 @@ class RatingRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(['object_id' => '1', 'rating' => '3.67'], false);
 
-        static::assertSame([1 => 3.67], $this->subject->getAverageRatings('song', [1, 2]));
+        self::assertSame([1 => 3.67], $this->subject->getAverageRatings('song', [1, 2]));
     }
 
     public function testGetUserRatingReturnsTheStoredValue(): void
@@ -136,7 +136,7 @@ class RatingRepositoryTest extends TestCase
             )
             ->willReturn('4');
 
-        static::assertSame(4, $this->subject->getUserRating(666, 'song', 42));
+        self::assertSame(4, $this->subject->getUserRating(666, 'song', 42));
     }
 
     public function testGetUserRatingsKeysTheRowsByObjectAndCastsTheIdList(): void
@@ -156,7 +156,7 @@ class RatingRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['object_id' => '2', 'rating' => '5'], false);
 
-        static::assertSame(
+        self::assertSame(
             [2 => 5],
             $this->subject->getUserRatings('song', [1, '2'], 42)
         );
@@ -167,7 +167,7 @@ class RatingRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertSame([], $this->subject->getUserRatings('song', [], 42));
+        self::assertSame([], $this->subject->getUserRatings('song', [], 42));
     }
 
     public function testMigrateMovesTheRatingsKeepingWhatTheTargetHad(): void

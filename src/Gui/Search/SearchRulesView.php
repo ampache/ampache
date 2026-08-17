@@ -54,7 +54,7 @@ final class SearchRulesView extends AbstractView
      */
     public function getLogicOperator(): string
     {
-        $operator = (string) Core::get_request('operator');
+        $operator = Core::get_request('operator');
         if ($operator === '') {
             $operator             = ($this->playlist instanceof Search) ? (string) $this->playlist->logic_operator : 'and';
             $_REQUEST['operator'] = $operator;

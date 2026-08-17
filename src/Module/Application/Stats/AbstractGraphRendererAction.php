@@ -133,7 +133,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
             $blink = $user->get_f_link();
         }
 
-        echo (new GraphsView(
+        echo new GraphsView(
             $this->graph,
             AmpConfig::get_web_path('/client'),
             $gtypes,
@@ -143,11 +143,11 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
             $start_date,
             $end_date,
             $zoom,
-            (string) $f_start_date,
-            (string) $f_end_date,
-            (string) Core::get_request('action'),
+            $f_start_date,
+            $f_end_date,
+            Core::get_request('action'),
             $blink,
             (bool) AmpConfig::get('geolocation')
-        ))->render();
+        )->render();
     }
 }

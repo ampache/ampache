@@ -51,10 +51,10 @@ final readonly class ShowCatalogTypesAction implements ApplicationActionInterfac
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Catalog Types'), 'box box_catalog_types');
-        echo (new CatalogTypeTableView(
+        echo new CatalogTypeTableView(
             AmpConfig::get_web_path('/admin'),
             Catalog::CATALOG_TYPES
-        ))->render();
+        )->render();
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

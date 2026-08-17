@@ -48,12 +48,12 @@ final readonly class AdvancedAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        echo (new RandomFormView(
+        echo new RandomFormView(
             [],
             $this->browseFactory,
             $this->videoRepository,
             AmpConfig::get_web_path('/client')
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

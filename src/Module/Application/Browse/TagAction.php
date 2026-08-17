@@ -92,19 +92,19 @@ final readonly class TagAction implements ApplicationActionInterface
         $browse = $this->browseFactory->create();
         $browse->set_type($browse_type);
         if ($request_type === 'tag_hidden') {
-            echo (new HiddenGenreCloudView(
+            echo new HiddenGenreCloudView(
                 $this->createGenreFormView('tag_hidden'),
                 new GenreOrderView(AmpConfig::get_web_path('/client'), 'tag_hidden', $countOrder),
                 $this->ajaxUriRetriever->getAjaxUri(),
                 $browse->getId(),
                 $object_ids,
                 Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ))->render();
+            )->render();
 
             $this->ui->showBoxBottom();
         } else {
             $showGenre = $this->requestParser->getFromRequest('show_tag');
-            echo (new GenreCloudView(
+            echo new GenreCloudView(
                 $this->createGenreFormView($browse_type),
                 new GenreOrderView(AmpConfig::get_web_path('/client'), $browse_type, $countOrder),
                 $this->ajaxUriRetriever->getAjaxUri(),
@@ -112,10 +112,10 @@ final readonly class TagAction implements ApplicationActionInterface
                 $object_ids,
                 Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
                 ($showGenre !== '') ? (int) $showGenre : null
-            ))->render();
+            )->render();
 
             $this->ui->showBoxBottom();
-            echo (new BrowseContentView($browse->get_content_div()))->render();
+            echo new BrowseContentView($browse->get_content_div())->render();
         }
 
         $browse->store();

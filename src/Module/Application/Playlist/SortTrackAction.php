@@ -63,13 +63,13 @@ final readonly class SortTrackAction implements ApplicationActionInterface
         /* Sort the tracks */
         $playlist->sort_tracks();
         $object_ids = $playlist->get_items();
-        echo (new PlaylistPageView(
+        echo new PlaylistPageView(
             $playlist,
             $object_ids,
             $this->zipHandler,
             $this->browseFactory,
             AmpConfig::get_web_path('/client')
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

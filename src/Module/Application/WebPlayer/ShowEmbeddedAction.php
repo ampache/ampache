@@ -36,7 +36,7 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowEmbeddedAction implements ApplicationActionInterface
+final readonly class ShowEmbeddedAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
@@ -50,11 +50,11 @@ final class ShowEmbeddedAction implements ApplicationActionInterface
         header('Pragma: no-cache');
         header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 
-        echo (new WebPlayerPageView(
+        echo new WebPlayerPageView(
             AmpConfig::get_web_path('/client'),
             $this->ajaxUriRetriever,
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        ))->render();
+        )->render();
 
         return null;
     }

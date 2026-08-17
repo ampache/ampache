@@ -73,6 +73,29 @@ class Broadcast extends database_object implements library_item, displayable_ite
     }
 
     /**
+     * Caches a set of broadcasts in one query rather than one per object
+     *
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if ($ids === []) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getBroadcastRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('broadcast', (int) $row['id'], $row);
+        }
+
+        return true;
+    }
+
+    /**
      * Create a broadcast
      */
     public static function create(string $name, string $description = ''): int

@@ -48,11 +48,11 @@ final readonly class ShowImportPlaylistAction implements ApplicationActionInterf
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        echo (new ImportPlaylistFormView(
+        echo new ImportPlaylistFormView(
             $this->configContainer->getWebPath('/client'),
             $this->requestParser->getFromRequest('filename'),
             (string) AmpConfig::get('catalog_playlist_pattern')
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

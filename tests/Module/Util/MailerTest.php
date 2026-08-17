@@ -34,10 +34,10 @@ class MailerTest extends TestCase
 
     public function testFluentSettersReturnTheSameInstance(): void
     {
-        static::assertSame($this->subject, $this->subject->setMessage('some message'));
-        static::assertSame($this->subject, $this->subject->setRecipient('someone@example.com', 'Someone'));
-        static::assertSame($this->subject, $this->subject->setSender('sender@example.com', 'Sender'));
-        static::assertSame($this->subject, $this->subject->setSubject('some subject'));
+        self::assertSame($this->subject, $this->subject->setMessage('some message'));
+        self::assertSame($this->subject, $this->subject->setRecipient('someone@example.com', 'Someone'));
+        self::assertSame($this->subject, $this->subject->setSender('sender@example.com', 'Sender'));
+        self::assertSame($this->subject, $this->subject->setSubject('some subject'));
     }
 
     public function testIsMailEnabledIsFalseInDemoMode(): void
@@ -45,7 +45,7 @@ class MailerTest extends TestCase
         AmpConfig::set('mail_enable', true, true);
         AmpConfig::set('demo_mode', true, true);
 
-        static::assertFalse(Mailer::is_mail_enabled());
+        self::assertFalse(Mailer::is_mail_enabled());
     }
 
     public function testIsMailEnabledReflectsConfig(): void
@@ -53,8 +53,8 @@ class MailerTest extends TestCase
         AmpConfig::set('mail_enable', true, true);
         AmpConfig::set('demo_mode', false, true);
 
-        static::assertTrue(Mailer::is_mail_enabled());
-        static::assertTrue($this->subject->isMailEnabled());
+        self::assertTrue(Mailer::is_mail_enabled());
+        self::assertTrue($this->subject->isMailEnabled());
     }
 
     public function testSetDefaultSenderUsesConfiguredValues(): void
@@ -63,17 +63,17 @@ class MailerTest extends TestCase
         AmpConfig::set('mail_domain', 'ampache.test', true);
         AmpConfig::set('mail_name', 'Ampache Test', true);
 
-        static::assertSame($this->subject, $this->subject->set_default_sender());
+        self::assertSame($this->subject, $this->subject->set_default_sender());
     }
 
     public function testValidateAddressAcceptsAValidEmail(): void
     {
-        static::assertTrue(Mailer::validate_address('someone@example.com'));
+        self::assertTrue(Mailer::validate_address('someone@example.com'));
     }
 
     public function testValidateAddressRejectsAnInvalidEmail(): void
     {
-        static::assertFalse(Mailer::validate_address('not-an-email'));
+        self::assertFalse(Mailer::validate_address('not-an-email'));
     }
 
     protected function setUp(): void

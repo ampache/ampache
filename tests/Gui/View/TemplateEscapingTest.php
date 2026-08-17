@@ -76,7 +76,7 @@ class TemplateEscapingTest extends TestCase
             }
         }
 
-        static::assertSame(
+        self::assertSame(
             [],
             array_values(array_unique($violations)),
             'echoed directly instead of through $this->e() or $this->raw()'
@@ -96,7 +96,7 @@ class TemplateEscapingTest extends TestCase
             }
         }
 
-        static::assertSame([], $missing, 'templates with no `@var <class> $this` docblock');
+        self::assertSame([], $missing, 'templates with no `@var <class> $this` docblock');
     }
 
     /**
@@ -113,7 +113,7 @@ class TemplateEscapingTest extends TestCase
                 return false;
             }
 
-            $returnType = (new ReflectionMethod($current, $method))->getReturnType();
+            $returnType = new ReflectionMethod($current, $method)->getReturnType();
             if (!$returnType instanceof ReflectionNamedType) {
                 // an untyped or union return could be anything, so it has to go through the seam
                 return true;

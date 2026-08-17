@@ -114,7 +114,7 @@ final class SmartPlaylistListRenderer extends AbstractBrowseListRenderer
 
     public function renderRow(Search $search): string
     {
-        return (new SearchRowView(
+        return new SearchRowView(
             $this->configContainer->getWebPath('/client'),
             $search,
             (bool) $this->configContainer->get('directplay'),
@@ -123,7 +123,7 @@ final class SmartPlaylistListRenderer extends AbstractBrowseListRenderer
             $this->areRatingsShown(),
             Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('search'),
             $search->has_access()
-        ))->render();
+        )->render();
     }
 
     #[Override]

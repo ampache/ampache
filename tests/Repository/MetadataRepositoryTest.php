@@ -60,7 +60,7 @@ class MetadataRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, \'\') AS `type` FROM `metadata` WHERE `id` = ?',
+                "SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, '') AS `type` FROM `metadata` WHERE `id` = ?",
                 [
                     $metadataId
                 ],
@@ -89,7 +89,7 @@ class MetadataRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, \'\') AS `type` FROM `metadata` WHERE `id` = ?',
+                "SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, '') AS `type` FROM `metadata` WHERE `id` = ?",
                 [
                     $metadataId
                 ],
@@ -125,7 +125,7 @@ class MetadataRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, \'\') AS `type` FROM `metadata` WHERE `object_id` = ? AND `type` = ? AND `field` = ? LIMIT 1',
+                "SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, '') AS `type` FROM `metadata` WHERE `object_id` = ? AND `type` = ? AND `field` = ? LIMIT 1",
                 [
                     $objectId,
                     ucfirst($objectType),
@@ -163,7 +163,7 @@ class MetadataRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, \'\') AS `type` FROM `metadata` WHERE `object_id` = ? AND `type` = ? AND `field` = ? LIMIT 1',
+                "SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, '') AS `type` FROM `metadata` WHERE `object_id` = ? AND `type` = ? AND `field` = ? LIMIT 1",
                 [
                     $objectId,
                     ucfirst($objectType),
@@ -195,7 +195,7 @@ class MetadataRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, \'\') AS `type` FROM `metadata` WHERE `object_id` = ? AND `type` = ?',
+                "SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, '') AS `type` FROM `metadata` WHERE `object_id` = ? AND `type` = ?",
                 [
                     $objectId,
                     ucfirst($objectType),

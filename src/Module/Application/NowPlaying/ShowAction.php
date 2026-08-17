@@ -114,7 +114,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $user_id = (int) $this->requestParser->getFromRequest('user_id');
         $results = Stream::get_now_playing($user_id);
 
-        echo (new NowPlayingView($results, $this->configContainer->getWebPath('/client')))->render();
+        echo new NowPlayingView($results, $this->configContainer->getWebPath('/client'))->render();
         print('</body></html>');
 
         return null;

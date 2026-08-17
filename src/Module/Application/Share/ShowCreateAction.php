@@ -82,7 +82,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
             );
 
             if ($object instanceof displayable_item) {
-                echo (new AddShareView(
+                echo new AddShareView(
                     $object,
                     $object_type,
                     $this->passwordGenerator->generate_token(),
@@ -91,7 +91,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
                     '',
                     $this->configContainer->getWebPath('/client'),
                     $this->configContainer->getInt('share_expire')
-                ))->render();
+                )->render();
             }
         }
 

@@ -87,7 +87,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $mayDelete = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER);
             $mayManage = $mayDelete || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 
-            echo (new PodcastView(
+            echo new PodcastView(
                 AmpConfig::get_web_path('/client'),
                 $podcast,
                 $browse,
@@ -103,7 +103,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $mayDelete,
                 (bool) AmpConfig::get('statistical_graphs'),
                 (bool) AmpConfig::get('use_rss')
-            ))->render();
+            )->render();
         }
 
         $this->ui->showQueryStats();

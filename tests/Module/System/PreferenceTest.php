@@ -35,10 +35,10 @@ class PreferenceTest extends TestCase
     public function testEveryDefaultRowCarriesEveryColumn(): void
     {
         foreach (Preference::DEFAULTS as $name => $row) {
-            static::assertCount(6, $row, sprintf('%s does not carry all six columns', $name));
-            static::assertIsString($row[0], sprintf('%s has a non-string value', $name));
-            static::assertIsString($row[1], sprintf('%s has a non-string description', $name));
-            static::assertIsInt($row[2], sprintf('%s has a non-integer level', $name));
+            self::assertCount(6, $row, sprintf('%s does not carry all six columns', $name));
+            self::assertIsString($row[0], sprintf('%s has a non-string value', $name));
+            self::assertIsString($row[1], sprintf('%s has a non-string description', $name));
+            self::assertIsInt($row[2], sprintf('%s has a non-integer level', $name));
         }
     }
 
@@ -48,13 +48,13 @@ class PreferenceTest extends TestCase
      */
     public function testEverySystemPreferenceHasADefaultRow(): void
     {
-        static::assertSame(
+        self::assertSame(
             [],
             array_values(array_diff(Preference::SYSTEM_LIST, array_keys(Preference::DEFAULTS))),
             'SYSTEM_LIST entries with no row in DEFAULTS'
         );
 
-        static::assertSame(
+        self::assertSame(
             [],
             array_values(array_diff(array_keys(Preference::DEFAULTS), Preference::SYSTEM_LIST)),
             'DEFAULTS rows that SYSTEM_LIST never asks for'

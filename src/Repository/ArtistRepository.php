@@ -323,7 +323,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $artistIds));
+        $idList = implode(',', array_map(intval(...), $artistIds));
         $result = $this->connection->query(
             "SELECT `id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name` FROM `artist` WHERE `id` IN (" . $idList . ")"
         );
@@ -505,7 +505,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $artistIds));
+        $idList = implode(',', array_map(intval(...), $artistIds));
 
         $result = $this->connection->query(
             'SELECT `song`.`artist`, SUM(`song`.`total_count`) AS `total_count` FROM `song` WHERE `song`.`artist` IN (' . $idList . ') GROUP BY `song`.`artist`'
@@ -588,7 +588,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $artistIds));
+        $idList = implode(',', array_map(intval(...), $artistIds));
 
         $result = $this->connection->query('SELECT * FROM `artist` WHERE `id` IN (' . $idList . ')');
 

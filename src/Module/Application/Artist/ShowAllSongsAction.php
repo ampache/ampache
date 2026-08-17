@@ -61,7 +61,7 @@ final readonly class ShowAllSongsAction implements ApplicationActionInterface
         $artist = $this->modelFactory->createArtist($artistId);
 
         $this->ui->showHeader();
-        echo (new ArtistPageView(
+        echo new ArtistPageView(
             $artist,
             ['' => $this->songRepository->getAllByArtist($artistId)],
             'song',
@@ -72,7 +72,7 @@ final readonly class ShowAllSongsAction implements ApplicationActionInterface
             $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('artist'),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

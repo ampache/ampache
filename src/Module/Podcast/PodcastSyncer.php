@@ -136,8 +136,8 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
 
         try {
             $xmlstr = $this->webFetcher->fetch($feed);
-        } catch (FetchFailedException $error) {
-            debug_event(self::class, 'Cannot access feed ' . $feed . ': ' . $error->getMessage(), 1);
+        } catch (FetchFailedException $fetchFailedException) {
+            debug_event(self::class, 'Cannot access feed ' . $feed . ': ' . $fetchFailedException->getMessage(), 1);
 
             return false;
         }

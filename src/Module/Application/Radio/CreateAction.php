@@ -65,14 +65,14 @@ final readonly class CreateAction implements ApplicationActionInterface
 
         // Try to create the sucker
         if (!Live_Stream::create($_POST)) {
-            echo (new CreateLiveStreamFormView(
+            echo new CreateLiveStreamFormView(
                 $this->configContainer->getWebPath('/client'),
                 $this->requestParser->getFromRequest('name'),
                 $this->requestParser->getFromRequest('site_url'),
                 $this->requestParser->getFromRequest('url'),
                 $this->requestParser->getFromRequest('codec'),
                 (int) $this->requestParser->getFromRequest('catalog')
-            ))->render();
+            )->render();
         } else {
             Catalog::update_mapping('live_stream');
             $body  = T_('Radio Station created');

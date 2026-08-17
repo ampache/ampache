@@ -57,13 +57,13 @@ final readonly class ShowEditRecordAction implements ApplicationActionInterface
         $accessId = (int) ($request->getQueryParams()['access_id'] ?? 0);
 
         $this->ui->showHeader();
-        echo (new EditAccessFormView(
+        echo new EditAccessFormView(
             $this->configContainer->getWebPath('/admin'),
             new AccessListItem(
                 $this->modelFactory,
                 $this->modelFactory->createAccess($accessId)
             )
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

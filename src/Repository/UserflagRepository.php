@@ -223,16 +223,16 @@ final readonly class UserflagRepository implements UserflagRepositoryInterface
     ): string {
         $type = Stats::validate_type($inputType);
         $sql  = "";
-        if ($inputType == 'album_artist' || $inputType == 'song_artist') {
+        if ($inputType === 'album_artist' || $inputType === 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `user_flag`.`object_id` AND `user_flag`.`object_type` = 'artist'";
         }
 
         $sql .= " WHERE `user_flag`.`object_type` = '" . $type . "'";
         if ($byUser && $user?->id > 0) {
-            $sql .= sprintf(' AND `user_flag`.`user` = \'%s\'', $user->id);
+            $sql .= sprintf(" AND `user_flag`.`user` = '%s'", $user->id);
         }
 
-        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'], true)) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
 
@@ -248,11 +248,11 @@ final readonly class UserflagRepository implements UserflagRepositoryInterface
             $sql .= " AND " . $catalog_sql;
         }
 
-        if ($inputType == 'album_artist') {
+        if ($inputType === 'album_artist') {
             $sql .= " AND `artist`.`album_count` > 0";
         }
 
-        if ($inputType == 'song_artist') {
+        if ($inputType === 'song_artist') {
             $sql .= " AND `artist`.`song_count` > 0";
         }
 

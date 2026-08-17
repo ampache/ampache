@@ -62,7 +62,7 @@ final readonly class SidebarViewFactory implements SidebarViewFactoryInterface
             $this->folderRepository,
             $this->moodRepository,
             $activeTab,
-            (string) Session::get(),
+            Session::get(),
             User::is_registered(),
             User::is_registered() && (($user instanceof User) ? $user->getId() : 0) > 0,
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),

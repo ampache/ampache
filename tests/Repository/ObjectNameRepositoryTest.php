@@ -68,7 +68,7 @@ class ObjectNameRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::stringContains('WHERE `id` IN (?,?);'),
+                self::stringContains('WHERE `id` IN (?,?);'),
                 [3, 'smart_7']
             )
             ->willReturn($result);
@@ -78,7 +78,7 @@ class ObjectNameRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => 'smart_7', 'name' => 'Some Smartlist'], false);
 
-        static::assertSame(
+        self::assertSame(
             [['id' => 'smart_7', 'name' => 'Some Smartlist']],
             $this->subject->findNames(ObjectNameTypeEnum::PLAYLIST_SEARCH, [3, 'smart_7'])
         );
@@ -90,7 +90,7 @@ class ObjectNameRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::logicalNot(static::stringContains('ORDER BY')), [1])
+            ->with(self::logicalNot(self::stringContains('ORDER BY')), [1])
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -106,7 +106,7 @@ class ObjectNameRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringEndsWith(' ORDER BY `name` ASC;'), [1])
+            ->with(self::stringEndsWith(' ORDER BY `name` ASC;'), [1])
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -122,7 +122,7 @@ class ObjectNameRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringEndsWith(' ORDER BY `name` DESC, `original_year` DESC;'), [1])
+            ->with(self::stringEndsWith(' ORDER BY `name` DESC, `original_year` DESC;'), [1])
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -139,14 +139,14 @@ class ObjectNameRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains($expected), [1])
+            ->with(self::stringContains($expected), [1])
             ->willReturn($result);
 
         $result->expects(static::once())
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->findNames($type, [1]));
+        self::assertSame([], $this->subject->findNames($type, [1]));
     }
 
     public function testFindNamesSkipsTheQueryForAnEmptyIdList(): void
@@ -154,7 +154,7 @@ class ObjectNameRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertSame([], $this->subject->findNames(ObjectNameTypeEnum::SONG, []));
+        self::assertSame([], $this->subject->findNames(ObjectNameTypeEnum::SONG, []));
     }
 
     public function testFindNamesUsesOnePlaceholderPerId(): void

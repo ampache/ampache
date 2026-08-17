@@ -54,7 +54,7 @@ class TagRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(7);
 
-        static::assertSame(7, $this->subject->addMap(666, 'song', 42, 0));
+        self::assertSame(7, $this->subject->addMap(666, 'song', 42, 0));
     }
 
     public function testCollectGarbageSweepsEveryMappableTypeAndRecountsAfterwards(): void
@@ -71,7 +71,7 @@ class TagRepositoryTest extends TestCase
 
         // a map is orphaned by whichever object it names, and a type with no sweep keeps the tag alive for ever
         foreach (['album', 'album_disk', 'artist', 'catalog', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'tag', 'user', 'video'] as $objectType) {
-            static::assertNotEmpty(
+            self::assertNotEmpty(
                 array_filter(
                     $statements,
                     static fn(string $sql): bool => str_starts_with($sql, 'DELETE FROM `tag_map`') && str_contains($sql, sprintf("`tag_map`.`object_type`='%s'", $objectType))
@@ -81,19 +81,19 @@ class TagRepositoryTest extends TestCase
         }
 
         // a write for a type the enum does not hold is truncated to the error value, and no other sweep can resolve it
-        static::assertNotEmpty(
+        self::assertNotEmpty(
             array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'DELETE FROM `tag_map`') && str_contains($sql, "`object_type` = ''"))
         );
 
         // the owner is part of `unique_tag_map`, so the duplicate sweep must not take the map a user set beside the one from the file
-        static::assertNotEmpty(
+        self::assertNotEmpty(
             array_filter(
                 $statements,
                 static fn(string $sql): bool => str_starts_with($sql, 'DELETE `b` FROM `tag_map`') && str_contains($sql, '`a`.`user` <=> `b`.`user`')
             )
         );
 
-        static::assertCount(4 + 4, array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'UPDATE `tag`')));
+        self::assertCount(4 + 4, array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'UPDATE `tag`')));
     }
 
     public function testCreateReturnsTheExistingIdWhenTheNameWasTakenWhileWeInserted(): void
@@ -118,7 +118,7 @@ class TagRepositoryTest extends TestCase
         $this->catalogCounter->expects(static::never())
             ->method('count');
 
-        static::assertSame(42, $this->subject->create('some-genre'));
+        self::assertSame(42, $this->subject->create('some-genre'));
     }
 
     public function testCreateTakesTheInsertIdBeforeTheCounterRunsItsOwnQueries(): void
@@ -154,8 +154,8 @@ class TagRepositoryTest extends TestCase
                 return 1;
             });
 
-        static::assertSame(42, $this->subject->create('some-genre'));
-        static::assertSame(['insert', 'id', 'count'], $calls);
+        self::assertSame(42, $this->subject->create('some-genre'));
+        self::assertSame(['insert', 'id', 'count'], $calls);
     }
 
     public function testDecrementCountRefusesToGoNegative(): void
@@ -186,7 +186,7 @@ class TagRepositoryTest extends TestCase
     {
         $this->connection->method('fetchOne')->willReturn(false);
 
-        static::assertNull($this->subject->findIdByName('some-tag'));
+        self::assertNull($this->subject->findIdByName('some-tag'));
     }
 
     public function testGetSongTagNamesByAlbumReadsTheGenresOfItsSongs(): void
@@ -205,7 +205,7 @@ class TagRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('Rock', false);
 
-        static::assertSame(['Rock'], $this->subject->getSongTagNamesByAlbum(666));
+        self::assertSame(['Rock'], $this->subject->getSongTagNamesByAlbum(666));
     }
 
     public function testGetSongTagNamesByArtistGoesThroughTheArtistMap(): void
@@ -215,7 +215,7 @@ class TagRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::stringContains("`song`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = 'song')"),
+                self::stringContains("`song`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = 'song')"),
                 [42]
             )
             ->willReturn($result);
@@ -224,7 +224,7 @@ class TagRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getSongTagNamesByArtist(42));
+        self::assertSame([], $this->subject->getSongTagNamesByArtist(42));
     }
 
     public function testGetTopTagsGroupsTheMapsOfOneTagIntoASingleRow(): void
@@ -234,7 +234,7 @@ class TagRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::callback(
+                self::callback(
                     static fn(string $sql): bool => str_contains($sql, 'MAX(`tag_map`.`user`) AS `user`') && str_contains($sql, 'GROUP BY `tag`.`id`')
                 ),
                 ['song', 42]
@@ -243,7 +243,7 @@ class TagRepositoryTest extends TestCase
 
         $result->method('fetch')->willReturn(false);
 
-        static::assertSame([], $this->subject->getTopTags('song', 42, 0));
+        self::assertSame([], $this->subject->getTopTags('song', 42, 0));
     }
 
     public function testIncrementCountWritesTheColumnFromTheEnum(): void
@@ -265,14 +265,14 @@ class TagRepositoryTest extends TestCase
             )
             ->willReturn(['id' => '7']);
 
-        static::assertTrue($this->subject->mapExists('song', 42, 666, 0));
+        self::assertTrue($this->subject->mapExists('song', 42, 666, 0));
     }
 
     public function testMapExistsReturnsFalseWithoutARow(): void
     {
         $this->connection->method('fetchRow')->willReturn(false);
 
-        static::assertFalse($this->subject->mapExists('song', 42, 666, 0));
+        self::assertFalse($this->subject->mapExists('song', 42, 666, 0));
     }
 
     public function testMergeIntoBindsBothTagIdsRatherThanInterpolatingThem(): void

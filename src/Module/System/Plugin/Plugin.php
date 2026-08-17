@@ -205,7 +205,7 @@ class Plugin
             }
         }
 
-        return $failure !== true;
+        return !$failure;
     }
 
     /**

@@ -46,7 +46,7 @@ class DatabaseLockTest extends TestCase
             ->with('SELECT GET_LOCK(?, ?)', [$this->lockName('test_db', 'artist|Various'), 42])
             ->willReturn('1');
 
-        static::assertTrue($this->subject->acquire('artist|Various', 42));
+        self::assertTrue($this->subject->acquire('artist|Various', 42));
     }
 
     public function testAcquireReturnsFalseIfTheLockTimedOut(): void
@@ -55,7 +55,7 @@ class DatabaseLockTest extends TestCase
             ->method('fetchOne')
             ->willReturn('0');
 
-        static::assertFalse($this->subject->acquire('artist|Various'));
+        self::assertFalse($this->subject->acquire('artist|Various'));
     }
 
     public function testAcquireReturnsFalseIfTheQueryFailed(): void
@@ -64,7 +64,7 @@ class DatabaseLockTest extends TestCase
             ->method('fetchOne')
             ->willThrowException(new QueryFailedException());
 
-        static::assertFalse($this->subject->acquire('artist|Various'));
+        self::assertFalse($this->subject->acquire('artist|Various'));
     }
 
     public function testAcquireReturnsTrueIfTheLockWasTaken(): void
@@ -74,7 +74,7 @@ class DatabaseLockTest extends TestCase
             ->with('SELECT GET_LOCK(?, ?)', [$this->lockName('test_db', 'artist|Various'), 10])
             ->willReturn('1');
 
-        static::assertTrue($this->subject->acquire('artist|Various'));
+        self::assertTrue($this->subject->acquire('artist|Various'));
     }
 
     public function testAcquireScopesTheLockNameToTheDatabase(): void
@@ -91,7 +91,7 @@ class DatabaseLockTest extends TestCase
 
         $subject = new DatabaseLock($this->connection, $configContainer, $this->logger);
 
-        static::assertTrue($subject->acquire('artist|Various'));
+        self::assertTrue($subject->acquire('artist|Various'));
     }
 
     public function testReleaseReleasesTheLock(): void

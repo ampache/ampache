@@ -102,10 +102,10 @@ final class NowPlayingView extends AbstractView
     public function renderRow(Song|Video $media, User $client, string $agent): string
     {
         if ($media instanceof Video) {
-            return (new NowPlayingVideoRowView($media, $client, $agent, $this->webPath))->render();
+            return new NowPlayingVideoRowView($media, $client, $agent, $this->webPath)->render();
         }
 
-        return (new NowPlayingSongRowView($media, $client, $agent, $this->webPath))->render();
+        return new NowPlayingSongRowView($media, $client, $agent, $this->webPath)->render();
     }
 
     #[Override]

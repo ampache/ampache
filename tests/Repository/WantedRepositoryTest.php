@@ -28,6 +28,7 @@ use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
+use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -65,15 +66,15 @@ class WantedRepositoryTest extends TestCase
 
         $this->subject->collectGarbage();
 
-        static::assertSame(
+        self::assertSame(
             'DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)',
             $queries[0]
         );
-        static::assertSame(
+        self::assertSame(
             'DELETE FROM `wanted` WHERE `wanted`.`mbid` IS NOT NULL AND EXISTS (SELECT 1 FROM `album` WHERE `album`.`mbid_group` = `wanted`.`mbid`)',
             $queries[1]
         );
-        static::assertSame(
+        self::assertSame(
             "DELETE FROM `wanted` WHERE `wanted`.`artist` IS NOT NULL AND `wanted`.`name` IS NOT NULL AND EXISTS (SELECT 1 FROM `album` WHERE `album`.`album_artist` = `wanted`.`artist` AND (`album`.`name` = `wanted`.`name` OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = `wanted`.`name`))",
             $queries[2]
         );
@@ -265,6 +266,31 @@ class WantedRepositoryTest extends TestCase
             $value,
             $this->subject->getAcceptedCount()
         );
+    }
+
+    public function testGetRowsByIdsCastsTheIdsIntoTheStatement(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT * FROM `wanted` WHERE `id` IN (1,0,3)')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(['id' => 1], false);
+
+        self::assertSame([['id' => 1]], $this->subject->getRowsByIds([1, 'x', 3]));
+    }
+
+    public function testGetRowsByIdsReturnsNothingForAnEmptyList(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->getRowsByIds([]));
     }
 
     public function testMigrateArtistMigrates(): void

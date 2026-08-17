@@ -66,13 +66,13 @@ final readonly class ValidateAction implements ApplicationActionInterface
             $validationResult = false;
         }
 
-        echo (new UserActivationView(
+        echo new UserActivationView(
             AmpConfig::get_web_path('/client'),
             str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US')),
             (string) AmpConfig::get('site_charset', 'UTF-8'),
             (string) AmpConfig::get('site_title'),
             $validationResult
-        ))->render();
+        )->render();
 
         return null;
     }

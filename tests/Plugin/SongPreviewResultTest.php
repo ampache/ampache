@@ -29,50 +29,50 @@ use PHPUnit\Framework\TestCase;
 
 class SongPreviewResultTest extends TestCase
 {
-    private static function preview(string $artist, string $title): SongPreviewResult
-    {
-        return new SongPreviewResult('https://example.org/' . md5($artist . $title) . '.m4a', $title, $artist);
-    }
-
     public function testAnEmptyRequestMatchesNothing(): void
     {
-        static::assertSame([], SongPreviewResult::rank([self::preview('Daft Punk', 'Get Lucky')], '', ''));
+        self::assertSame([], SongPreviewResult::rank([$this->preview('Daft Punk', 'Get Lucky')], '', ''));
     }
 
     public function testDropsACoverByADifferentArtist(): void
     {
-        $cover = self::preview('The Wedding Band', 'Get Lucky');
+        $cover = $this->preview('The Wedding Band', 'Get Lucky');
 
-        static::assertSame([], SongPreviewResult::rank([$cover], 'Daft Punk', 'Get Lucky'));
+        self::assertSame([], SongPreviewResult::rank([$cover], 'Daft Punk', 'Get Lucky'));
     }
 
     public function testDropsADifferentTrackByTheSameArtist(): void
     {
-        $other = self::preview('Daft Punk', 'Around the World');
+        $other = $this->preview('Daft Punk', 'Around the World');
 
-        static::assertSame([], SongPreviewResult::rank([$other], 'Daft Punk', 'Get Lucky'));
+        self::assertSame([], SongPreviewResult::rank([$other], 'Daft Punk', 'Get Lucky'));
     }
 
     public function testKeepsAnExactMatch(): void
     {
-        $wanted = self::preview('Daft Punk', 'Get Lucky');
+        $wanted = $this->preview('Daft Punk', 'Get Lucky');
 
-        static::assertSame([$wanted], SongPreviewResult::rank([$wanted], 'Daft Punk', 'Get Lucky'));
+        self::assertSame([$wanted], SongPreviewResult::rank([$wanted], 'Daft Punk', 'Get Lucky'));
     }
 
     public function testKeepsAResultCarryingExtraCreditsAndASuffix(): void
     {
         // what the providers actually return for this track
-        $wanted = self::preview('Daft Punk, Pharrell Williams & Nile Rodgers', 'Get Lucky (Radio Edit)');
+        $wanted = $this->preview('Daft Punk, Pharrell Williams & Nile Rodgers', 'Get Lucky (Radio Edit)');
 
-        static::assertSame([$wanted], SongPreviewResult::rank([$wanted], 'Daft Punk', 'Get Lucky'));
+        self::assertSame([$wanted], SongPreviewResult::rank([$wanted], 'Daft Punk', 'Get Lucky'));
     }
 
     public function testPutsTheClosestMatchFirst(): void
     {
-        $loose = self::preview('Daft Punk, Pharrell Williams & Nile Rodgers', 'Get Lucky (Radio Edit)');
-        $exact = self::preview('Daft Punk', 'Get Lucky');
+        $loose = $this->preview('Daft Punk, Pharrell Williams & Nile Rodgers', 'Get Lucky (Radio Edit)');
+        $exact = $this->preview('Daft Punk', 'Get Lucky');
 
-        static::assertSame([$exact, $loose], SongPreviewResult::rank([$loose, $exact], 'Daft Punk', 'Get Lucky'));
+        self::assertSame([$exact, $loose], SongPreviewResult::rank([$loose, $exact], 'Daft Punk', 'Get Lucky'));
+    }
+
+    private function preview(string $artist, string $title): SongPreviewResult
+    {
+        return new SongPreviewResult('https://example.org/' . md5($artist . $title) . '.m4a', $title, $artist);
     }
 }

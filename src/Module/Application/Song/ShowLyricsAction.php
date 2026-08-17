@@ -60,11 +60,11 @@ final readonly class ShowLyricsAction implements ApplicationActionInterface
 
         $lyrics = $song->get_lyrics();
 
-        echo (new LyricsView(
+        echo new LyricsView(
             AmpConfig::get_web_path('/client'),
             $song,
             $lyrics
-        ))->render();
+        )->render();
 
         // Show the Footer
         $this->ui->showQueryStats();

@@ -159,24 +159,12 @@ final class MoodQuery implements QueryInterface
      */
     public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
-        switch ($field) {
-            case 'id':
-            case 'mood':
-                $sql = "`mood`.`id`";
-                break;
-            case 'name':
-            case 'title':
-                $sql = "`mood`.`name`";
-                break;
-            case 'artist':
-            case 'album':
-            case 'song':
-            case 'video':
-                $sql = sprintf('`mood`.`%s`', $field);
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'id', 'mood' => "`mood`.`id`",
+            'name', 'title' => "`mood`.`name`",
+            'artist', 'album', 'song', 'video' => sprintf('`mood`.`%s`', $field),
+            default => '',
+        };
 
         if ($sql === '') {
             return '';

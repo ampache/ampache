@@ -97,11 +97,11 @@ final readonly class DefaultAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         if ($this->configContainer->get(ConfigurationKeyEnum::UPLOAD_CATALOG) > 0) {
-            echo (new UploadView(
+            echo new UploadView(
                 AmpConfig::get_web_path('/client'),
                 $ajaxfs,
                 (int) $upload_max
-            ))->render();
+            )->render();
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '<br>' . '<a href="https://ampache.org/docs/help/upload-catalogs" target="_blank">' . T_('Help') . " " . Ui::get_material_symbol('open_in_new', T_('Link')) . "</a>";

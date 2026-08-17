@@ -64,10 +64,10 @@ final class RunWebsocketCommand extends Command
         );
 
         // the browser's Origin is the site's host, which is not always the one websocket_address names
-        $webPathHost = parse_url((string) $this->configContainer->getWebPath('/client'), PHP_URL_HOST);
-        $allowed     = ($webPathHost !== null && $webPathHost !== false && $webPathHost !== $host)
-            ? [$webPathHost]
-            : [];
+        $webPathHost = parse_url($this->configContainer->getWebPath('/client'), PHP_URL_HOST);
+        $allowed     = (in_array($webPathHost, [null, false, $host], true))
+            ? []
+            : [$webPathHost];
 
         if ($allowed !== []) {
             $this->io()->info(

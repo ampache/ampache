@@ -38,6 +38,7 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Override;
 
 /**
  * This class handles democratic play, which is a fancy
@@ -110,6 +111,7 @@ class Democratic extends Tmp_Playlist
      *     make_default: int,
      * } $data
      */
+    #[Override]
     public static function create(array $data): ?string
     {
         // Clean up the input
@@ -158,9 +160,9 @@ class Democratic extends Tmp_Playlist
             $user = Core::get_global('user');
         }
 
-        $democratic_id = AmpConfig::get('democratic_id', null);
+        $democratic_id = AmpConfig::get('democratic_id');
         if (!$democratic_id) {
-            $democraticId = self::getDemocraticRepository()->findByAccessLevel((int) ($user->access ?? 0));
+            $democraticId = self::getDemocraticRepository()->findByAccessLevel($user->access ?? 0);
             $row          = ($democraticId === null) ? [] : ['id' => $democraticId];
             if ($row !== []) {
                 $democratic_id = (int) $row['id'];
@@ -208,7 +210,7 @@ class Democratic extends Tmp_Playlist
 
         foreach ($playlists as $key => $value) {
             $select_txt = '';
-            if (!$already_selected && ($key == $selected || $index == $nb_items)) {
+            if (!$already_selected && ($key == $selected || $index === $nb_items)) {
                 $select_txt       = 'selected="selected"';
                 $already_selected = true;
             }
@@ -255,6 +257,7 @@ class Democratic extends Tmp_Playlist
      * This is really just a wrapper function, it clears the entire playlist
      * including all votes etc.
      */
+    #[Override]
     public function clear(): bool
     {
         if (!$this->tmp_playlist) {
@@ -340,6 +343,7 @@ class Democratic extends Tmp_Playlist
      *   track_id: int,
      *   track: int}>
      */
+    #[Override]
     public function get_items(?int $limit = null): array
     {
         $repository = self::getDemocraticRepository();
@@ -371,6 +375,7 @@ class Democratic extends Tmp_Playlist
      * base_playlist and no items in the playlist then it returns a random
      * entry from the base_playlist
      */
+    #[Override]
     public function get_next_object(int $offset = 0): ?int
     {
         // FIXME: Shouldn't this return object_type?
@@ -391,6 +396,7 @@ class Democratic extends Tmp_Playlist
 
             return $data[0]['object_id'];
         }
+
         $catalogFilter = (AmpConfig::get('catalog_filter'))
             ? ' AND' . Catalog::get_user_filter('song', Core::get_global('user')->id ?? -1)
             : '';
@@ -432,9 +438,10 @@ class Democratic extends Tmp_Playlist
         return AccessLevelEnum::from($this->level);
     }
 
+    #[Override]
     public function getId(): int
     {
-        return $this->id ?: 0;
+        return $this->id;
     }
 
     /**
@@ -463,6 +470,7 @@ class Democratic extends Tmp_Playlist
         return (bool) $this->tmp_playlist;
     }
 
+    #[Override]
     public function isNew(): bool
     {
         return $this->getId() === 0;
@@ -555,7 +563,7 @@ class Democratic extends Tmp_Playlist
         $className = ObjectTypeToClassNameMapper::map($object_type);
         /** @var Media $media */
         $media = new $className($object_id);
-        $track = (isset($media->track)) ? (int) ($media->track) : null;
+        $track = (property_exists($media, 'track') && $media->track !== null) ? (int) ($media->track) : null;
 
         $repository = self::getDemocraticRepository();
 

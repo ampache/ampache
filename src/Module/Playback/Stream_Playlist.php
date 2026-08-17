@@ -638,7 +638,7 @@ class Stream_Playlist
      */
     public function create_web_player(): void
     {
-        echo (new WebPlayerFrameView(AmpConfig::get_web_path('/client'), $this))->render();
+        echo new WebPlayerFrameView(AmpConfig::get_web_path('/client'), $this)->render();
     }
 
     public function create_xspf(): void

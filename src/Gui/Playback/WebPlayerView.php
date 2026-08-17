@@ -262,7 +262,7 @@ final class WebPlayerView extends AbstractView
 
     public function renderHeaders(): string
     {
-        return (new WebPlayerHeadersView($this->webPath, $this->ajaxUriRetriever, $this->iframed, $this->isShare))->render();
+        return new WebPlayerHeadersView($this->webPath, $this->ajaxUriRetriever, $this->iframed, $this->isShare)->render();
     }
 
     public function showBroadcast(): bool

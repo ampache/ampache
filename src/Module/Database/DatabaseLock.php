@@ -83,6 +83,6 @@ final readonly class DatabaseLock implements DatabaseLockInterface
      */
     private function lockName(string $name): string
     {
-        return 'ampache_' . md5((string) $this->configContainer->get('database_name') . '|' . $name);
+        return 'ampache_' . md5($this->configContainer->get('database_name') . '|' . $name);
     }
 }

@@ -44,7 +44,7 @@ class TemplateMetaRefreshTest extends TestCase
             preg_match_all('/<meta\s+http-equiv="refresh"\s+content="([^"]*)"/i', $contents, $matches);
 
             foreach ($matches[1] as $content) {
-                static::assertMatchesRegularExpression(
+                self::assertMatchesRegularExpression(
                     '/^\d+\s*;\s*URL=/i',
                     $content,
                     sprintf(

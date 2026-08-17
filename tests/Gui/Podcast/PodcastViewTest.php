@@ -54,8 +54,8 @@ class PodcastViewTest extends TestCase
 
     public function testGetArtSizeFollowsTheGridPreference(): void
     {
-        static::assertSame(['width' => 150, 'height' => 150], $this->createSubject(gridView: true)->getArtSize());
-        static::assertSame(['width' => 384, 'height' => 384], $this->createSubject(gridView: false)->getArtSize());
+        self::assertSame(['width' => 150, 'height' => 150], $this->createSubject(gridView: true)->getArtSize());
+        self::assertSame(['width' => 384, 'height' => 384], $this->createSubject(gridView: false)->getArtSize());
     }
 
     #[DataProvider('websiteDataProvider')]
@@ -64,7 +64,7 @@ class PodcastViewTest extends TestCase
         $podcast = $this->createMock(Podcast::class);
         $podcast->method('getWebsite')->willReturn($website);
 
-        static::assertSame($expected, $this->createSubject($podcast)->getWebsiteUrl());
+        self::assertSame($expected, $this->createSubject($podcast)->getWebsiteUrl());
     }
 
     /**
@@ -74,9 +74,9 @@ class PodcastViewTest extends TestCase
     {
         $subject = $this->createSubject(mayInteract: true, mayManage: true, mayDelete: false);
 
-        static::assertTrue($subject->mayInteract());
-        static::assertTrue($subject->mayManage());
-        static::assertFalse($subject->mayDelete());
+        self::assertTrue($subject->mayInteract());
+        self::assertTrue($subject->mayManage());
+        self::assertFalse($subject->mayDelete());
     }
 
     public function testUrlsCarryThePodcastId(): void
@@ -86,8 +86,8 @@ class PodcastViewTest extends TestCase
 
         $subject = $this->createSubject($podcast);
 
-        static::assertSame('some-path/podcast.php?action=delete&podcast_id=666', $subject->getDeleteUrl());
-        static::assertSame('some-path/stats.php?action=graph&object_type=podcast&object_id=666', $subject->getGraphUrl());
+        self::assertSame('some-path/podcast.php?action=delete&podcast_id=666', $subject->getDeleteUrl());
+        self::assertSame('some-path/stats.php?action=graph&object_type=podcast&object_id=666', $subject->getGraphUrl());
     }
 
     private function createSubject(

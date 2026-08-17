@@ -100,7 +100,7 @@ class TemplateDoubleEscapingTest extends TestCase
             }
         }
 
-        static::assertSame(
+        self::assertSame(
             [],
             array_values(array_unique($violations)),
             'already escaped by the getter, so the template must use raw() or an unescaped getter'
@@ -138,7 +138,7 @@ class TemplateDoubleEscapingTest extends TestCase
             }
         }
 
-        static::assertSame(
+        self::assertSame(
             [],
             array_values(array_unique($violations)),
             'markup escaped into text, so the template must use raw()'
@@ -232,7 +232,7 @@ class TemplateDoubleEscapingTest extends TestCase
     private function getPropertyClass(string $class, string $property): ?string
     {
         try {
-            $type = (new ReflectionProperty($class, $property))->getType();
+            $type = new ReflectionProperty($class, $property)->getType();
         } catch (Throwable) {
             return null;
         }

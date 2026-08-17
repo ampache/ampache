@@ -81,7 +81,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
             echo T_('You have requested an object that does not exist');
         } else {
             $viewer = Core::get_global('user');
-            echo (new UserPageView(
+            echo new UserPageView(
                 $client,
                 ($viewer instanceof User) ? $viewer : null,
                 $this->userFollowerRepository->getFollowing($client),
@@ -95,7 +95,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ))->render();
+            )->render();
             show_table_render(false, true);
         }
 

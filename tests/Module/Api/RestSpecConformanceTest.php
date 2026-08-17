@@ -95,7 +95,7 @@ class RestSpecConformanceTest extends TestCase
         }
 
         $schemaName = basename($reference);
-        $errors     = (new OpenApiResponseValidator($spec))->validate($body, $schemaName);
+        $errors     = new OpenApiResponseValidator($spec)->validate($body, $schemaName);
 
         $reason = self::KNOWN_DEVIATIONS[$path] ?? null;
         if ($reason !== null) {

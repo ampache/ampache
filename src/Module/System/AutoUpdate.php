@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Ajax;
 use Exception;
+use stdClass;
 use WpOrg\Requests\Requests;
 
 /**
@@ -120,7 +121,7 @@ class AutoUpdate
             }
 
             if (
-                $commits instanceof \stdClass
+                $commits instanceof stdClass
                 && isset($commits->sha)
             ) {
                 $lastversion = $commits->sha;
@@ -169,9 +170,9 @@ class AutoUpdate
 
     /**
      * Perform a GitHub request.
-     * @return array<int, \stdClass>|\stdClass|null
+     * @return array<int, stdClass>|stdClass|null
      */
-    public static function github_request(string $action): array|\stdClass|null
+    public static function github_request(string $action): array|stdClass|null
     {
         try {
             // https is mandatory
@@ -188,7 +189,7 @@ class AutoUpdate
             debug_event(self::class, 'GitHub API request ' . $url, 5);
             $result = json_decode($request->body);
 
-            return ($result instanceof \stdClass || is_array($result))
+            return ($result instanceof stdClass || is_array($result))
                 ? $result
                 : null;
         } catch (Exception $exception) {
@@ -512,7 +513,7 @@ class AutoUpdate
         }
 
         $commit = self::github_request('/commits/' . $version);
-        $ctime  = ($commit instanceof \stdClass && isset($commit->commit->author->date))
+        $ctime  = ($commit instanceof stdClass && isset($commit->commit->author->date))
             ? (int) strtotime((string) $commit->commit->author->date)
             : 0;
 

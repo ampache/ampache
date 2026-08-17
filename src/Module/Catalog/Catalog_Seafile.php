@@ -147,7 +147,7 @@ class Catalog_Seafile extends Catalog
                     'server_uri' => $server_uri,
                     'api_key' => $api_key,
                     'library_name' => $library_name,
-                    'api_call_delay' => (int) $api_call_delay,
+                    'api_call_delay' => $api_call_delay,
                 ],
                 $catalog_id
             );

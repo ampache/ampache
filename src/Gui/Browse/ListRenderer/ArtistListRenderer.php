@@ -164,7 +164,7 @@ final class ArtistListRenderer extends AbstractBrowseListRenderer
             $mayAdd = $artist->song_count <= $limit;
         }
 
-        return (new ArtistRowView(
+        return new ArtistRowView(
             $artist,
             $this->configContainer->getWebPath('/client'),
             $this->getCoverClass(),
@@ -184,7 +184,7 @@ final class ArtistListRenderer extends AbstractBrowseListRenderer
             $anonymous && (bool) $this->configContainer->get('sociable'),
             $anonymous && canEditArtist($artist, $gatekeeper->getUserId()),
             $anonymous && Catalog::can_remove($artist)
-        ))->render();
+        )->render();
     }
 
     public function showPlayedTimes(): bool

@@ -59,7 +59,7 @@ final readonly class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        $action = $this->requestParser->getFromRequest('action');
+        $this->requestParser->getFromRequest('action');
 
         if (!Core::is_session_started()) {
             session_start();
@@ -78,17 +78,17 @@ final readonly class ShowAction implements ApplicationActionInterface
             $refreshLimit > 5
             && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HOME_NOW_PLAYING)
         ) {
-            echo (new JavascriptRefreshView($refreshLimit, '?page=index&action=refresh_index'))->render();
+            echo new JavascriptRefreshView($refreshLimit, '?page=index&action=refresh_index')->render();
         }
 
         $user = Core::get_global('user');
-        echo (new HomeView(
+        echo new HomeView(
             ($user instanceof User) ? $user : null,
             $this->statsFormViewFactory->createBrowse()->render(),
             $this->videoRepository,
             AmpConfig::get_web_path('/client'),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        ))->render();
+        )->render();
 
         // Show the Footer
         $this->ui->showQueryStats();

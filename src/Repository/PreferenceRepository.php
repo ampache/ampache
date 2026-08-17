@@ -56,8 +56,8 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
     ];
 
     public function __construct(
-        private readonly DatabaseConnectionInterface $connection,
-        private readonly LoggerInterface $logger,
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
     ) {}
 
     /**

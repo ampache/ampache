@@ -97,7 +97,7 @@ final class LicenseListRenderer extends AbstractBrowseListRenderer
 
     public function renderRow(License $license): string
     {
-        return (new LicenseRowView($this->getAdminPath(), $license))->render();
+        return new LicenseRowView($this->getAdminPath(), $license)->render();
     }
 
     #[Override]

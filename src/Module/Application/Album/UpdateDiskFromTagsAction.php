@@ -68,7 +68,7 @@ final readonly class UpdateDiskFromTagsAction implements ApplicationActionInterf
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Starting Update from Tags'), 'box box_update_items');
-        echo (new UpdateItemsView(
+        echo new UpdateItemsView(
             $this->singleItemUpdater->update(
                 'album_disk',
                 $albumDiskId,
@@ -79,7 +79,7 @@ final readonly class UpdateDiskFromTagsAction implements ApplicationActionInterf
                     $albumDiskId
                 )
             )
-        ))->render();
+        )->render();
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

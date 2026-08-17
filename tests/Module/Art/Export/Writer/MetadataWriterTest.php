@@ -40,8 +40,8 @@ class MetadataWriterTest extends TestCase
 
         $this->subject->write($art, $filePath, 'unused-file-name.jpg');
 
-        static::assertTrue($root->hasChild('art.jpg'));
-        static::assertSame('', file_get_contents($filePath));
+        self::assertTrue($root->hasChild('art.jpg'));
+        self::assertSame('', file_get_contents($filePath));
     }
 
     public function testWriteWritesRawArtToDirNamePath(): void
@@ -54,8 +54,8 @@ class MetadataWriterTest extends TestCase
 
         $this->subject->write($art, $filePath, 'unused-file-name.jpg');
 
-        static::assertTrue($root->hasChild('art.jpg'));
-        static::assertSame('some-raw-bytes', file_get_contents($filePath));
+        self::assertTrue($root->hasChild('art.jpg'));
+        self::assertSame('some-raw-bytes', file_get_contents($filePath));
     }
 
     protected function setUp(): void

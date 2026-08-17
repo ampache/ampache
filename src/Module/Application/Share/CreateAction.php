@@ -136,7 +136,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                 $message   = T_('Failed to create share');
                 $token     = $this->passwordGenerator->generate_token();
                 $isZipable = $this->zipHandler->isZipable($object_type->value);
-                echo (new AddShareView(
+                echo new AddShareView(
                     $object,
                     $object_type,
                     $token,
@@ -145,7 +145,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                     $message,
                     $this->configContainer->getWebPath('/client'),
                     $this->configContainer->getInt('share_expire')
-                ))->render();
+                )->render();
             }
         }
 

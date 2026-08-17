@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Gui\Playlist;
 
 use Ampache\Gui\View\TemplateInterface;
+use Ampache\Repository\Model\Collection;
 
 interface NewPlaylistDialogAdapterInterface extends TemplateInterface
 {
@@ -36,7 +37,7 @@ interface NewPlaylistDialogAdapterInterface extends TemplateInterface
     /**
      * The collections this user may curate that will accept what is being added
      *
-     * @return list<\Ampache\Repository\Model\Collection>
+     * @return list<Collection>
      */
     public function getCollections(): array;
 

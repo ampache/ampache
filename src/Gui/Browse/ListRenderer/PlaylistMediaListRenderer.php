@@ -217,7 +217,7 @@ final class PlaylistMediaListRenderer extends AbstractBrowseListRenderer
     {
         $playlist = $this->getSupplementalObject('playlist');
 
-        return (new PlaylistMediaRowView(
+        return new PlaylistMediaRowView(
             $this->configContainer->getWebPath('/client'),
             $row['item'],
             $row['type'],
@@ -240,7 +240,7 @@ final class PlaylistMediaListRenderer extends AbstractBrowseListRenderer
             (bool) $this->configContainer->get('download'),
             $this->mayAdd() && (bool) $this->configContainer->get('share'),
             $this->mayRemove()
-        ))->render();
+        )->render();
     }
 
     public function showMultiselect(): bool

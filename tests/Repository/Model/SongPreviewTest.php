@@ -70,14 +70,14 @@ class SongPreviewTest extends TestCase
             'file' => 'https://example.com/preview.mp3',
         ]);
 
-        static::assertSame($expectedDisk, $this->inserted['disk'] ?? null);
-        static::assertSame($expectedTrack, $this->inserted['track'] ?? null);
+        self::assertSame($expectedDisk, $this->inserted['disk'] ?? null);
+        self::assertSame($expectedTrack, $this->inserted['track'] ?? null);
     }
 
     protected function setUp(): void
     {
         $repository = $this->createMock(SongPreviewRepositoryInterface::class);
-        $repository->method('insert')->willReturnCallback(function (array $data): ?int {
+        $repository->method('insert')->willReturnCallback(function (array $data): int {
             $this->inserted = $data;
 
             return 1;

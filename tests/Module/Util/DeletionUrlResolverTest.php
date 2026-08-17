@@ -73,7 +73,7 @@ class DeletionUrlResolverTest extends TestCase
         $this->configContainer->expects(static::never())
             ->method('getWebPath');
 
-        static::assertSame(
+        self::assertSame(
             '',
             $this->subject->resolveBurl($encodedBurl)
         );
@@ -85,7 +85,7 @@ class DeletionUrlResolverTest extends TestCase
         $this->configContainer->method('getWebPath')
             ->willReturn(self::WEB_PATH);
 
-        static::assertSame(
+        self::assertSame(
             '',
             $this->subject->resolveBurl(base64_encode($burl))
         );
@@ -99,7 +99,7 @@ class DeletionUrlResolverTest extends TestCase
             ->method('getWebPath')
             ->willReturn(self::WEB_PATH);
 
-        static::assertSame(
+        self::assertSame(
             $burl,
             $this->subject->resolveBurl(base64_encode($burl))
         );
@@ -113,7 +113,7 @@ class DeletionUrlResolverTest extends TestCase
             ->method('getWebPath')
             ->willReturn(self::WEB_PATH);
 
-        static::assertSame(
+        self::assertSame(
             $burl,
             $this->subject->resolveBurl(base64_encode($burl))
         );
@@ -121,7 +121,7 @@ class DeletionUrlResolverTest extends TestCase
 
     public function testResolveContinueUrlFallsBackWhenLeavingTheOwnPageWithoutAParent(): void
     {
-        static::assertSame(
+        self::assertSame(
             'fallback-url',
             $this->subject->resolveContinueUrl(
                 self::WEB_PATH . '/albums.php?action=show&album=42',
@@ -135,7 +135,7 @@ class DeletionUrlResolverTest extends TestCase
 
     public function testResolveContinueUrlFallsBackWithoutAnOriginPageOrParent(): void
     {
-        static::assertSame(
+        self::assertSame(
             'fallback-url',
             $this->subject->resolveContinueUrl('', 'album', 42, '', 'fallback-url')
         );
@@ -145,7 +145,7 @@ class DeletionUrlResolverTest extends TestCase
     {
         $burl = self::WEB_PATH . '/albums.php?action=show&album=43';
 
-        static::assertSame(
+        self::assertSame(
             $burl,
             $this->subject->resolveContinueUrl($burl, 'album', 42, 'parent-url', 'fallback-url')
         );
@@ -155,7 +155,7 @@ class DeletionUrlResolverTest extends TestCase
     {
         $burl = self::WEB_PATH . '/albums.php?action=show&album[]=42';
 
-        static::assertSame(
+        self::assertSame(
             $burl,
             $this->subject->resolveContinueUrl($burl, 'album', 42, 'parent-url', 'fallback-url')
         );
@@ -165,7 +165,7 @@ class DeletionUrlResolverTest extends TestCase
     {
         $burl = self::WEB_PATH . '/albums.php?action=show&album=0';
 
-        static::assertSame(
+        self::assertSame(
             $burl,
             $this->subject->resolveContinueUrl($burl, 'album', 0, 'parent-url', 'fallback-url')
         );
@@ -175,7 +175,7 @@ class DeletionUrlResolverTest extends TestCase
     {
         $burl = self::WEB_PATH . '/artists.php?action=show&artist=7';
 
-        static::assertSame(
+        self::assertSame(
             $burl,
             $this->subject->resolveContinueUrl($burl, 'album', 42, 'parent-url', 'fallback-url')
         );
@@ -183,7 +183,7 @@ class DeletionUrlResolverTest extends TestCase
 
     public function testResolveContinueUrlReturnsTheParentWhenLeavingTheOwnPage(): void
     {
-        static::assertSame(
+        self::assertSame(
             'parent-url',
             $this->subject->resolveContinueUrl(
                 self::WEB_PATH . '/albums.php?action=show&album=42',
@@ -197,7 +197,7 @@ class DeletionUrlResolverTest extends TestCase
 
     public function testResolveContinueUrlReturnsTheParentWithoutAnOriginPage(): void
     {
-        static::assertSame(
+        self::assertSame(
             'parent-url',
             $this->subject->resolveContinueUrl('', 'album', 42, 'parent-url', 'fallback-url')
         );

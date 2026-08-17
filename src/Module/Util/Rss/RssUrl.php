@@ -56,7 +56,7 @@ final class RssUrl
         $params = [];
         foreach ($parsed as $key => $value) {
             if (is_scalar($value)) {
-                $params[(string) $key] = (string) $value;
+                $params[(string) $key] = $value;
             }
         }
 
@@ -84,7 +84,7 @@ final class RssUrl
         $token = (string) ($params['rsstoken'] ?? '');
 
         $path = ($type === 'library-item')
-            ? str_replace('_', '-', (string) ($params['object_type'] ?? '')) . '/' . (string) ($params['object_id'] ?? '')
+            ? str_replace('_', '-', (string) ($params['object_type'] ?? '')) . '/' . ($params['object_id'] ?? '')
             : $type;
         if ($path === '' || str_ends_with($path, '/')) {
             return self::canonical($params);

@@ -64,10 +64,10 @@ class ShoutRendererTest extends TestCase
 
         $result = $this->subject->render($shout);
 
-        static::assertStringNotContainsString('<script>', $result);
-        static::assertStringContainsString('&lt;script&gt;', $result);
-        static::assertStringContainsString('second line', $result);
-        static::assertStringContainsString('<br />', $result);
+        self::assertStringNotContainsString('<script>', $result);
+        self::assertStringContainsString('&lt;script&gt;', $result);
+        self::assertStringContainsString('second line', $result);
+        self::assertStringContainsString('<br />', $result);
     }
 
     public function testRenderIncludesShoutTextAndPostLinkWhenAllowed(): void
@@ -98,9 +98,9 @@ class ShoutRendererTest extends TestCase
 
         $result = $this->subject->render($shout);
 
-        static::assertStringContainsString('some shout text', $result);
-        static::assertStringContainsString('show_add_shout', $result);
-        static::assertStringContainsString(T_('Guest'), $result);
+        self::assertStringContainsString('some shout text', $result);
+        self::assertStringContainsString('show_add_shout', $result);
+        self::assertStringContainsString(T_('Guest'), $result);
     }
 
     public function testRenderOmitsPostLinkWhenNotAllowed(): void
@@ -127,7 +127,7 @@ class ShoutRendererTest extends TestCase
 
         $result = $this->subject->render($shout);
 
-        static::assertStringNotContainsString('show_add_shout', $result);
+        self::assertStringNotContainsString('show_add_shout', $result);
     }
 
     public function testRenderReturnsEmptyStringWhenObjectCannotBeLoaded(): void
@@ -142,7 +142,7 @@ class ShoutRendererTest extends TestCase
             ->with($shout)
             ->willReturn(null);
 
-        static::assertSame('', $this->subject->render($shout));
+        self::assertSame('', $this->subject->render($shout));
     }
 
     protected function setUp(): void

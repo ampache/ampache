@@ -110,7 +110,7 @@ final class LiveStreamListRenderer extends AbstractBrowseListRenderer
     {
         $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
 
-        return (new LiveStreamRowView(
+        return new LiveStreamRowView(
             $stream,
             $this->getCoverClass(),
             $this->getBrowse()->getId(),
@@ -120,7 +120,7 @@ final class LiveStreamListRenderer extends AbstractBrowseListRenderer
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-        ))->render();
+        )->render();
     }
 
     #[Override]

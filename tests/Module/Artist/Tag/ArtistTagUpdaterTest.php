@@ -60,6 +60,7 @@ class ArtistTagUpdaterTest extends TestCase
     {
         $artist     = $this->createMock(Artist::class);
         $artist->id = 21;
+
         $album      = $this->createMock(Album::class);
         $albumId    = 42;
 
@@ -84,6 +85,7 @@ class ArtistTagUpdaterTest extends TestCase
     {
         $artist     = $this->createMock(Artist::class);
         $artist->id = 21;
+
         $album      = $this->createMock(Album::class);
         $albumId    = 42;
 

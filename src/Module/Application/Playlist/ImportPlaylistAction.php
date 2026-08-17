@@ -76,6 +76,7 @@ final readonly class ImportPlaylistAction implements ApplicationActionInterface
             $filename = dirname($uploadTmpName) . "/" . basename($uploadName);
             move_uploaded_file($uploadTmpName, $filename);
         }
+
         // allow setting public or private for your imports
         $playlist_type = (string) filter_input(INPUT_POST, 'playlist_visibility', FILTER_SANITIZE_SPECIAL_CHARS);
 

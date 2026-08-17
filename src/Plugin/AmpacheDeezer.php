@@ -33,9 +33,9 @@ use WpOrg\Requests\Requests;
 
 class AmpacheDeezer extends AmpachePlugin implements PluginSongPreviewInterface
 {
-    private const CONNECT_TIMEOUT = 3;
+    private const int CONNECT_TIMEOUT = 3;
 
-    private const REQUEST_TIMEOUT = 7;
+    private const int REQUEST_TIMEOUT = 7;
 
     #[Override]
     public string $categories = 'preview';
@@ -158,8 +158,8 @@ class AmpacheDeezer extends AmpachePlugin implements PluginSongPreviewInterface
             $body = json_decode($request->body);
 
             return is_object($body) ? $body : null;
-        } catch (Throwable $error) {
-            debug_event(self::class, 'query failed: ' . $error->getMessage(), 3);
+        } catch (Throwable $throwable) {
+            debug_event(self::class, 'query failed: ' . $throwable->getMessage(), 3);
 
             return null;
         }

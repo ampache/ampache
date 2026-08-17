@@ -88,12 +88,12 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         if (!class_exists(Translations::class)) {
-            echo (new TestErrorPageView())->render();
+            echo new TestErrorPageView()->render();
             throw new Exception('load_gettext()');
         }
 
         load_gettext();
-        echo (new TestPageView($this->environment, __DIR__ . '/../../../../config/ampache.cfg.php'))->render();
+        echo new TestPageView($this->environment, __DIR__ . '/../../../../config/ampache.cfg.php')->render();
 
         return null;
     }

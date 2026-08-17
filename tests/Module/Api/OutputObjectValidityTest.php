@@ -80,7 +80,7 @@ class OutputObjectValidityTest extends TestCase
         // `break` here drops every remaining object as well, so one dead id truncates a whole page
         $truncating = preg_match_all('/->isNew\(\)\)\s*\{\s*break;/', $source);
 
-        static::assertSame(
+        self::assertSame(
             0,
             $truncating,
             basename($path) . ' ends the loop on a missing object, which silently drops the objects after it'
@@ -121,7 +121,7 @@ class OutputObjectValidityTest extends TestCase
             }
         }
 
-        static::assertSame(
+        self::assertSame(
             [],
             $unguarded,
             sprintf(

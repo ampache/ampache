@@ -67,7 +67,7 @@ class Api6Test extends TestCase
     {
         $input = ['filter' => '', 'type' => 'song'];
 
-        static::assertSame(
+        self::assertSame(
             Api::parameter_exists($input, ['filter', 'type']),
             Api6::parameter_exists($input, ['filter', 'type'])
         );
@@ -75,7 +75,7 @@ class Api6Test extends TestCase
 
     public function testParameterExistsReportsTheFirstMissingParameter(): void
     {
-        static::assertSame(
+        self::assertSame(
             'type',
             Api6::parameter_exists(['filter' => '123', 'type' => '', 'auth' => ''], ['filter', 'type', 'auth'])
         );
@@ -83,17 +83,17 @@ class Api6Test extends TestCase
 
     public function testParameterExistsReturnsTheNameOfAnAbsentParameter(): void
     {
-        static::assertSame('filter', Api6::parameter_exists([], ['filter']));
+        self::assertSame('filter', Api6::parameter_exists([], ['filter']));
     }
 
     public function testParameterExistsReturnsTrueForAnEmptyParameterList(): void
     {
-        static::assertTrue(Api6::parameter_exists([], []));
+        self::assertTrue(Api6::parameter_exists([], []));
     }
 
     public function testParameterExistsReturnsTrueWhenEveryParameterIsSet(): void
     {
-        static::assertTrue(
+        self::assertTrue(
             Api6::parameter_exists(['filter' => '123', 'type' => 'song'], ['filter', 'type'])
         );
     }
@@ -101,12 +101,12 @@ class Api6Test extends TestCase
     #[DataProvider(methodName: 'emptyValueProvider')]
     public function testParameterExistsTreatsEmptyValuesAsMissing(mixed $value): void
     {
-        static::assertSame('filter', Api6::parameter_exists(['filter' => $value], ['filter']));
+        self::assertSame('filter', Api6::parameter_exists(['filter' => $value], ['filter']));
     }
 
     #[DataProvider(methodName: 'presentValueProvider')]
     public function testParameterExistsTreatsPresentValuesAsSent(mixed $value): void
     {
-        static::assertTrue(Api6::parameter_exists(['filter' => $value], ['filter']));
+        self::assertTrue(Api6::parameter_exists(['filter' => $value], ['filter']));
     }
 }

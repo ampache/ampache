@@ -88,7 +88,7 @@ final class BroadcastListRenderer extends AbstractBrowseListRenderer
 
     public function renderRow(Broadcast $broadcast): string
     {
-        return (new BroadcastRowView($broadcast, (bool) $this->configContainer->get('directplay')))->render();
+        return new BroadcastRowView($broadcast, (bool) $this->configContainer->get('directplay'))->render();
     }
 
     #[Override]

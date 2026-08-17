@@ -45,7 +45,7 @@ class LiveStreamRepositoryTest extends TestCase
             ->method('query')
             ->with('DELETE FROM `live_stream` WHERE `catalog` = ?', [7]);
 
-        static::assertTrue($this->subject->deleteByCatalog(7));
+        self::assertTrue($this->subject->deleteByCatalog(7));
     }
 
     public function testDeleteRefreshesTheCachedTotal(): void

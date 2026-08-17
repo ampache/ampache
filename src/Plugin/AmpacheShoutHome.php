@@ -62,19 +62,13 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
     private int $maxitems = 5;
     private int $order    = 0;
 
-    /**
-     * Constructor
-     */
-    private ShoutRendererInterface $shoutRenderer;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
     public function __construct(
-        ShoutRendererInterface $shoutRenderer,
-        ShoutRepositoryInterface $shoutRepository,
+        /**
+         * Constructor
+         */
+        private readonly ShoutRendererInterface $shoutRenderer,
+        private readonly ShoutRepositoryInterface $shoutRepository,
     ) {
-        $this->shoutRenderer   = $shoutRenderer;
-        $this->shoutRepository = $shoutRepository;
         $this->description     = T_('Shoutbox on homepage');
     }
 
@@ -95,7 +89,7 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
             $shoutRenderer = $this->shoutRenderer;
 
             if ($shouts !== []) {
-                echo (new ShoutboxView($this->shoutRenderer, $shouts))->render();
+                echo new ShoutboxView($this->shoutRenderer, $shouts)->render();
             }
 
             echo "</div>\n";

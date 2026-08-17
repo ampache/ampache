@@ -66,7 +66,7 @@ class ApiTest extends TestCase
 
     public function testParameterExistsReportsTheFirstMissingParameter(): void
     {
-        static::assertSame(
+        self::assertSame(
             'type',
             Api::parameter_exists(['filter' => '123', 'type' => '', 'auth' => ''], ['filter', 'type', 'auth'])
         );
@@ -74,17 +74,17 @@ class ApiTest extends TestCase
 
     public function testParameterExistsReturnsTheNameOfAnAbsentParameter(): void
     {
-        static::assertSame('filter', Api::parameter_exists([], ['filter']));
+        self::assertSame('filter', Api::parameter_exists([], ['filter']));
     }
 
     public function testParameterExistsReturnsTrueForAnEmptyParameterList(): void
     {
-        static::assertTrue(Api::parameter_exists([], []));
+        self::assertTrue(Api::parameter_exists([], []));
     }
 
     public function testParameterExistsReturnsTrueWhenEveryParameterIsSet(): void
     {
-        static::assertTrue(
+        self::assertTrue(
             Api::parameter_exists(['filter' => '123', 'type' => 'song'], ['filter', 'type'])
         );
     }
@@ -92,12 +92,12 @@ class ApiTest extends TestCase
     #[DataProvider(methodName: 'emptyValueProvider')]
     public function testParameterExistsTreatsEmptyValuesAsMissing(mixed $value): void
     {
-        static::assertSame('filter', Api::parameter_exists(['filter' => $value], ['filter']));
+        self::assertSame('filter', Api::parameter_exists(['filter' => $value], ['filter']));
     }
 
     #[DataProvider(methodName: 'presentValueProvider')]
     public function testParameterExistsTreatsPresentValuesAsSent(mixed $value): void
     {
-        static::assertTrue(Api::parameter_exists(['filter' => $value], ['filter']));
+        self::assertTrue(Api::parameter_exists(['filter' => $value], ['filter']));
     }
 }

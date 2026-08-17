@@ -76,7 +76,7 @@ final readonly class AddLabelAction implements ApplicationActionInterface
 
         $label_id = Label::create($_POST);
         if (!$label_id) {
-            echo (new AddLabelFormView(
+            echo new AddLabelFormView(
                 $this->configContainer->getWebPath('/client'),
                 $this->requestParser->getFromRequest('name'),
                 $this->requestParser->getFromRequest('mbid'),
@@ -87,7 +87,7 @@ final readonly class AddLabelAction implements ApplicationActionInterface
                 $this->requestParser->getFromRequest('website'),
                 $this->requestParser->getFromRequest('country'),
                 $this->requestParser->getFromRequest('active')
-            ))->render();
+            )->render();
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),

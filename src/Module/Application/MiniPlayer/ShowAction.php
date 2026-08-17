@@ -61,7 +61,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         // without reaching their preferences. The page ships everything each type needs: #webplayer,
         // the util_iframe for stream/democratic and the rightbar for localplay. Don't force a type
         // here or the switcher can't stick.
-        echo (new MiniPlayerView(
+        echo new MiniPlayerView(
             AmpConfig::get_web_path('/client'),
             $this->environment,
             $this->ajaxUriRetriever,
@@ -69,7 +69,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $this->libraryItemLoader,
             $this->playlistLoader,
             $this->zipHandler
-        ))->render();
+        )->render();
 
         return null;
     }

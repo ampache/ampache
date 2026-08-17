@@ -43,7 +43,7 @@ class PlayHistorySubqueryTest extends MockeryTestCase
         $this->on();
         $sql = PlayHistorySubquery::count('song', ['stream'], 5);
         $this->assertStringContainsString('UNION ALL', $sql);
-        $this->assertStringContainsString('FROM `object_count_summary` WHERE `object_count_summary`.`object_type` = \'song\'', $sql);
+        $this->assertStringContainsString("FROM `object_count_summary` WHERE `object_count_summary`.`object_type` = 'song'", $sql);
         $this->assertStringContainsString('SUM(`total`) AS `total`', $sql);
         $this->assertStringContainsString('`object_count_summary`.`user` = 5', $sql);
     }

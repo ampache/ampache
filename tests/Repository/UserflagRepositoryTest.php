@@ -91,7 +91,7 @@ class UserflagRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertNull($this->subject->getFlagDate(666, 'song', 42));
+        self::assertNull($this->subject->getFlagDate(666, 'song', 42));
     }
 
     public function testGetFlagDateReturnsTheStoredDate(): void
@@ -104,7 +104,7 @@ class UserflagRepositoryTest extends TestCase
             )
             ->willReturn('123456');
 
-        static::assertSame(123456, $this->subject->getFlagDate(666, 'song', 42));
+        self::assertSame(123456, $this->subject->getFlagDate(666, 'song', 42));
     }
 
     public function testGetFlagDatesKeysTheRowsByObjectAndCastsTheIdList(): void
@@ -124,7 +124,7 @@ class UserflagRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['object_id' => '2', 'date' => '123456'], false);
 
-        static::assertSame(
+        self::assertSame(
             [2 => 123456],
             $this->subject->getFlagDates('song', [1, '2'], 42)
         );
@@ -135,7 +135,7 @@ class UserflagRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertSame([], $this->subject->getFlagDates('song', [], 42));
+        self::assertSame([], $this->subject->getFlagDates('song', [], 42));
     }
 
     public function testMigrateMovesTheFlagsKeepingWhatTheTargetHad(): void

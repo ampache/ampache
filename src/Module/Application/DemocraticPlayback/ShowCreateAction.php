@@ -60,7 +60,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         // an empty playlist gives the create form its defaults; the manage page passes the current one
-        echo (new DemocraticFormView(new Democratic(), $this->configContainer->getWebPath('/client')))->render();
+        echo new DemocraticFormView(new Democratic(), $this->configContainer->getWebPath('/client'))->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

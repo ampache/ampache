@@ -59,7 +59,7 @@ final readonly class ShowAddLabelAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) {
-            echo (new AddLabelFormView(
+            echo new AddLabelFormView(
                 $this->configContainer->getWebPath('/client'),
                 $this->requestParser->getFromRequest('name'),
                 $this->requestParser->getFromRequest('mbid'),
@@ -70,7 +70,7 @@ final readonly class ShowAddLabelAction implements ApplicationActionInterface
                 $this->requestParser->getFromRequest('website'),
                 $this->requestParser->getFromRequest('country'),
                 $this->requestParser->getFromRequest('active')
-            ))->render();
+            )->render();
         } else {
             echo T_('The Label cannot be found');
         }

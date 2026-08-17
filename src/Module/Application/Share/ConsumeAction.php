@@ -120,11 +120,11 @@ final readonly class ConsumeAction implements ApplicationActionInterface
 
             return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
         } elseif ($action === 'stream') {
-            echo (new ShareView(
+            echo new ShareView(
                 AmpConfig::get_web_path('/client'),
                 $this->ajaxUriRetriever,
                 $share
-            ))->render();
+            )->render();
         } else {
             throw new AccessDeniedException('Access Denied: unknown action.');
         }

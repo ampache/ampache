@@ -125,7 +125,7 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $liveStreamIds));
+        $idList = implode(',', array_map(intval(...), $liveStreamIds));
 
         $result = $this->connection->query('SELECT * FROM `live_stream` WHERE `id` IN (' . $idList . ')');
 

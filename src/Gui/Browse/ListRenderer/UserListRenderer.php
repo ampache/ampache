@@ -100,7 +100,7 @@ final class UserListRenderer extends AbstractBrowseListRenderer
     {
         $viewer = Core::get_global('user');
 
-        return (new UserRowView(
+        return new UserRowView(
             $this->configContainer->getWebPath('/client'),
             $this->configContainer->getWebPath('/admin'),
             $user,
@@ -112,7 +112,7 @@ final class UserListRenderer extends AbstractBrowseListRenderer
             $this->isSociable(),
             $this->mayAdminister(),
             $this->mayAdminister()
-        ))->render();
+        )->render();
     }
 
     /**

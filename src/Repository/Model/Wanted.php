@@ -86,6 +86,29 @@ class Wanted extends database_object
     }
 
     /**
+     * Caches a set of wanted releases in one query rather than one per object
+     *
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if ($ids === []) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getWantedRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('wanted', $row['id'], $row);
+        }
+
+        return true;
+    }
+
+    /**
      * get_missing_albums
      * Get list of library's missing albums from MusicBrainz
      * @return list<Wanted>

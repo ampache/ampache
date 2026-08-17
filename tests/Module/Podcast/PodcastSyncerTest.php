@@ -202,7 +202,7 @@ class PodcastSyncerTest extends TestCase
         $this->podcastEpisodeDownloader->expects(static::exactly(2))
             ->method('fetch');
 
-        static::assertSame(3, $this->subject->syncForCatalogs([$catalog]));
+        self::assertSame(3, $this->subject->syncForCatalogs([$catalog]));
     }
 
     public function testSyncForCatalogsSkipsMissingPodcastsAndCountsPendingEpisodes(): void
@@ -229,7 +229,7 @@ class PodcastSyncerTest extends TestCase
         $this->podcastEpisodeDownloader->expects(static::never())
             ->method('fetch');
 
-        static::assertSame(3, $this->subject->syncForCatalogs([$catalog]));
+        self::assertSame(3, $this->subject->syncForCatalogs([$catalog]));
     }
 
     public function testSyncParsesFeedAndDelegatesToAddEpisodes(): void
@@ -254,7 +254,7 @@ class PodcastSyncerTest extends TestCase
         $podcast->expects(static::once())
             ->method('save');
 
-        static::assertTrue($this->subject->sync($podcast));
+        self::assertTrue($this->subject->sync($podcast));
     }
 
     public function testSyncReturnsFalseForEmptyFeedUrl(): void
@@ -267,7 +267,7 @@ class PodcastSyncerTest extends TestCase
         $this->configContainer->expects(static::never())
             ->method('get');
 
-        static::assertFalse($this->subject->sync($podcast));
+        self::assertFalse($this->subject->sync($podcast));
     }
 
     public function testSyncReturnsFalseWhenTheFeedIsRefused(): void
@@ -285,7 +285,7 @@ class PodcastSyncerTest extends TestCase
         $podcast->expects(static::never())
             ->method('save');
 
-        static::assertFalse($this->subject->sync($podcast));
+        self::assertFalse($this->subject->sync($podcast));
     }
 
     protected function setUp(): void

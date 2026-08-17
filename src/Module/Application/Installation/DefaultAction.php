@@ -66,7 +66,7 @@ final class DefaultAction implements ApplicationActionInterface
 
         // Redirect if installation is already complete.
         if (!$this->installationHelper->install_check_status($configfile)) {
-            echo (new InstallErrorView('login.php'))->render();
+            echo new InstallErrorView('login.php')->render();
 
             return null;
         }
@@ -141,7 +141,7 @@ final class DefaultAction implements ApplicationActionInterface
         AmpConfig::set('lang', $htmllang, true);
         AmpConfig::set('site_charset', $charset, true);
         if (!class_exists(Translations::class)) {
-            echo (new TestErrorPageView())->render();
+            echo new TestErrorPageView()->render();
             throw new Exception('load_gettext()');
         }
 
@@ -176,13 +176,13 @@ final class DefaultAction implements ApplicationActionInterface
 
                     if (!strlen($new_user) || !strlen($new_pass)) {
                         AmpError::add('general', T_('The Ampache database username or password is missing'));
-                        echo (new InstallStartView($web_path, (string) $charset, (string) $htmllang))->render();
+                        echo new InstallStartView($web_path, (string) $charset, (string) $htmllang)->render();
                         break;
                     }
                 }
 
                 if (!$skip_admin && !$this->installationHelper->install_insert_db($new_user, $new_pass, array_key_exists('create_db', $_REQUEST), array_key_exists('overwrite_db', $_REQUEST), array_key_exists('create_tables', $_REQUEST))) {
-                    echo (new InstallStartView($web_path, (string) $charset, (string) $htmllang))->render();
+                    echo new InstallStartView($web_path, (string) $charset, (string) $htmllang)->render();
                     break;
                 }
 
@@ -190,7 +190,7 @@ final class DefaultAction implements ApplicationActionInterface
                 Preference::update('lang', -1, AmpConfig::get('lang', 'en_US'));
                 // Intentional break fall-through
             case 'show_create_config':
-                echo (new InstallConfigView($web_path, (string) $charset, (string) $htmllang, $this->installationHelper, $htaccess_play_file, $htaccess_rest_file))->render();
+                echo new InstallConfigView($web_path, (string) $charset, (string) $htmllang, $this->installationHelper, $htaccess_play_file, $htaccess_rest_file)->render();
                 break;
             case 'create_config':
                 // Intentional break fall-through
@@ -234,13 +234,13 @@ final class DefaultAction implements ApplicationActionInterface
                     || !$created_config
                 ) {
                     AmpError::add('general', T_('Configuration files were either not found or unreadable'));
-                    echo (new InstallConfigView($web_path, (string) $charset, (string) $htmllang, $this->installationHelper, $htaccess_play_file, $htaccess_rest_file))->render();
+                    echo new InstallConfigView($web_path, (string) $charset, (string) $htmllang, $this->installationHelper, $htaccess_play_file, $htaccess_rest_file)->render();
                     break;
                 }
 
                 // Don't try to add administrator user on existing database
                 if ($this->installationHelper->install_check_status($configfile)) {
-                    echo (new InstallAccountView($web_path, (string) $charset, (string) $htmllang))->render();
+                    echo new InstallAccountView($web_path, (string) $charset, (string) $htmllang)->render();
                 } else {
                     header("Location: " . $web_path . '/login.php');
                 }
@@ -253,21 +253,21 @@ final class DefaultAction implements ApplicationActionInterface
                 $password2 = $_REQUEST['local_pass2'];
 
                 if (!$this->installationHelper->install_create_account($username, $password, $password2)) {
-                    echo (new InstallAccountView($web_path, (string) $charset, (string) $htmllang))->render();
+                    echo new InstallAccountView($web_path, (string) $charset, (string) $htmllang)->render();
                     break;
                 }
 
                 header("Location: " . $web_path . '/index.php');
                 break;
             case 'init':
-                echo (new InstallStartView($web_path, (string) $charset, (string) $htmllang))->render();
+                echo new InstallStartView($web_path, (string) $charset, (string) $htmllang)->render();
                 break;
             case 'check':
-                echo (new InstallCheckView($web_path, (string) $charset, (string) $htmllang, $this->environment))->render();
+                echo new InstallCheckView($web_path, (string) $charset, (string) $htmllang, $this->environment)->render();
                 break;
             default:
                 // Show the language options first
-                echo (new InstallLanguageView($web_path, (string) $charset, (string) $htmllang))->render();
+                echo new InstallLanguageView($web_path, (string) $charset, (string) $htmllang)->render();
                 break;
         }
 

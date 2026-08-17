@@ -72,14 +72,14 @@ class CatalogCounterTest extends TestCase
 
         $this->subject->adjust(CountableTableEnum::SONG, -1, -200, -4.0);
 
-        static::assertSame(40, $stored['song']);
-        static::assertSame(200, $stored['song_time']);
-        static::assertSame(4.5, $stored['song_size']);
+        self::assertSame(40, $stored['song']);
+        self::assertSame(200, $stored['song_time']);
+        self::assertSame(4.5, $stored['song_size']);
 
         // the totals follow from the adjusted contribution, still with no table read
-        static::assertSame(40, $stored['items']);
-        static::assertSame(200, $stored['time']);
-        static::assertSame(4.5, $stored['size']);
+        self::assertSame(40, $stored['items']);
+        self::assertSame(200, $stored['time']);
+        self::assertSame(4.5, $stored['size']);
     }
 
     public function testAdjustNeverDrivesATotalBelowZero(): void
@@ -103,9 +103,9 @@ class CatalogCounterTest extends TestCase
 
         $this->subject->adjust(CountableTableEnum::SONG, -5, -100, -3.0);
 
-        static::assertSame(0, $stored['song']);
-        static::assertSame(0, $stored['song_time']);
-        static::assertSame(0.0, $stored['song_size']);
+        self::assertSame(0, $stored['song']);
+        self::assertSame(0, $stored['song_time']);
+        self::assertSame(0.0, $stored['song_size']);
     }
 
     public function testCountCatalogReachesPodcastEpisodesThroughTheirPodcast(): void
@@ -118,7 +118,7 @@ class CatalogCounterTest extends TestCase
             )
             ->willReturn(['items' => '4', 'time' => '600', 'size' => '12.5']);
 
-        static::assertSame(
+        self::assertSame(
             ['items' => 4, 'time' => 600, 'size' => 12],
             $this->subject->countCatalog(7, 'podcast')
         );
@@ -130,7 +130,7 @@ class CatalogCounterTest extends TestCase
             ->method('fetchRow')
             ->willReturn(false);
 
-        static::assertSame(
+        self::assertSame(
             ['items' => 0, 'time' => 0, 'size' => 0],
             $this->subject->countCatalog(0, 'music')
         );
@@ -145,7 +145,7 @@ class CatalogCounterTest extends TestCase
                 continue;
             }
 
-            static::assertSame(4, $this->subject->countForCatalog($case, 7));
+            self::assertSame(4, $this->subject->countForCatalog($case, 7));
         }
     }
 
@@ -164,7 +164,7 @@ class CatalogCounterTest extends TestCase
         $this->updateInfoRepository->expects(static::never())
             ->method('setCountByKey');
 
-        static::assertSame(3, $this->subject->countForCatalog(CountableTableEnum::VIDEO, 7, 123456, 100));
+        self::assertSame(3, $this->subject->countForCatalog(CountableTableEnum::VIDEO, 7, 123456, 100));
     }
 
     public function testCountForCatalogCountsAlbumsThroughTheirSongs(): void
@@ -177,7 +177,7 @@ class CatalogCounterTest extends TestCase
             )
             ->willReturn('9');
 
-        static::assertSame(9, $this->subject->countForCatalog(CountableTableEnum::ALBUM, 7));
+        self::assertSame(9, $this->subject->countForCatalog(CountableTableEnum::ALBUM, 7));
     }
 
     public function testCountForCatalogRefusesATableWithNoCatalogOfItsOwn(): void
@@ -205,7 +205,7 @@ class CatalogCounterTest extends TestCase
             ->method('setCountByKey')
             ->with('label', 4);
 
-        static::assertSame(4, $this->subject->count(CountableTableEnum::LABEL));
+        self::assertSame(4, $this->subject->count(CountableTableEnum::LABEL));
     }
 
     public function testCountReadsOnlyItsOwnTableAndSumsTheRestFromStorage(): void
@@ -235,16 +235,16 @@ class CatalogCounterTest extends TestCase
             'podcast_episode_size' => 2.0,
         ]);
 
-        static::assertSame(42, $this->subject->count(CountableTableEnum::SONG));
+        self::assertSame(42, $this->subject->count(CountableTableEnum::SONG));
 
-        static::assertSame(42, $stored['song']);
-        static::assertSame(600, $stored['song_time']);
-        static::assertSame(12.5, $stored['song_size']);
+        self::assertSame(42, $stored['song']);
+        self::assertSame(600, $stored['song_time']);
+        self::assertSame(12.5, $stored['song_size']);
 
         // items/time/size are the three stored contributions added together
-        static::assertSame(46, $stored['items']);
-        static::assertSame(750, $stored['time']);
-        static::assertSame(22.0, $stored['size']);
+        self::assertSame(46, $stored['items']);
+        self::assertSame(750, $stored['time']);
+        self::assertSame(22.0, $stored['size']);
     }
 
     public function testCountRereadsAMediaTableThatHasNoStoredContributionYet(): void
@@ -263,7 +263,7 @@ class CatalogCounterTest extends TestCase
             'song_size' => 12.5,
         ]);
 
-        static::assertSame(42, $this->subject->count(CountableTableEnum::SONG));
+        self::assertSame(42, $this->subject->count(CountableTableEnum::SONG));
     }
 
     public function testCountVideosBindsTheCatalogId(): void
@@ -274,7 +274,7 @@ class CatalogCounterTest extends TestCase
             ->with('SELECT COUNT(`video`.`id`) FROM `video` WHERE `video`.`catalog` = ?', [7])
             ->willReturn('2');
 
-        static::assertSame(2, $this->subject->countVideos(7));
+        self::assertSame(2, $this->subject->countVideos(7));
     }
 
     public function testCountVideosDropsTheWhereClauseForTheWholeServer(): void
@@ -284,7 +284,7 @@ class CatalogCounterTest extends TestCase
             ->with('SELECT COUNT(`video`.`id`) FROM `video`')
             ->willReturn('3');
 
-        static::assertSame(3, $this->subject->countVideos());
+        self::assertSame(3, $this->subject->countVideos());
     }
 
     public function testGetStoredCountReadsTheDatabaseOnlyOncePerKey(): void
@@ -294,8 +294,8 @@ class CatalogCounterTest extends TestCase
             ->with('song')
             ->willReturn(42);
 
-        static::assertSame(42, $this->subject->getStoredCount('song', 0));
-        static::assertSame(42, $this->subject->getStoredCount('song', 0));
+        self::assertSame(42, $this->subject->getStoredCount('song', 0));
+        self::assertSame(42, $this->subject->getStoredCount('song', 0));
     }
 
     public function testGetStoredCountReadsUserDataForARealUser(): void
@@ -308,7 +308,7 @@ class CatalogCounterTest extends TestCase
             ->with(42, 'song')
             ->willReturn(['song' => '7']);
 
-        static::assertSame(7, $this->subject->getStoredCount('song', 42));
+        self::assertSame(7, $this->subject->getStoredCount('song', 42));
     }
 
     public function testGetStoredCountsCastsTheUserDataValuesOverTheFullShape(): void
@@ -320,10 +320,10 @@ class CatalogCounterTest extends TestCase
 
         $counts = $this->subject->getStoredCounts(42);
 
-        static::assertSame(7, $counts['song']);
-        static::assertSame(3, $counts['album']);
+        self::assertSame(7, $counts['song']);
+        self::assertSame(3, $counts['album']);
         // a key the user has no row for still comes back, so no caller has to check for it
-        static::assertSame(0, $counts['video']);
+        self::assertSame(0, $counts['video']);
     }
 
     public function testSetStoredCountIsWhatTheReadCacheFollows(): void
@@ -337,7 +337,7 @@ class CatalogCounterTest extends TestCase
 
         $this->subject->setStoredCount('song', 99);
 
-        static::assertSame(99, $this->subject->getStoredCount('song', 0));
+        self::assertSame(99, $this->subject->getStoredCount('song', 0));
     }
 
     protected function setUp(): void

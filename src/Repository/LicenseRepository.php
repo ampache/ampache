@@ -44,7 +44,7 @@ final readonly class LicenseRepository extends BaseRepository implements License
 {
     public function __construct(
         DatabaseConnectionInterface $connection,
-        private readonly CatalogCounterInterface $catalogCounter,
+        private CatalogCounterInterface $catalogCounter,
     ) {
         parent::__construct($connection);
     }

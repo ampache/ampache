@@ -1029,7 +1029,7 @@ class Stream
 
         if ($out_file) {
             // when running cache_catalog_proc redirect to the file path instead of piping
-            $command = str_replace("pipe:1", $out_file, (string) $command);
+            $command = str_replace("pipe:1", $out_file, $command);
             debug_event(self::class, 'Final command is ' . $command, 4);
             $process = proc_open($command, [], $pipes);
             if (is_resource($process)) {

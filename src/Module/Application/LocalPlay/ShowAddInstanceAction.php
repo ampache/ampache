@@ -67,10 +67,10 @@ final class ShowAddInstanceAction extends AbstractLocalPlayAction
         // Get the current Localplay fields
         $localplay = new LocalPlay($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_CONTROLLER));
         $fields    = $localplay->get_instance_fields();
-        echo (new LocalplayAddInstanceView(
+        echo new LocalplayAddInstanceView(
             $this->configContainer->getWebPath('/client'),
             $fields
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

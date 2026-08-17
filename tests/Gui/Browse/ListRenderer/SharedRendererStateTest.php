@@ -68,7 +68,7 @@ class SharedRendererStateTest extends MockeryTestCase
     public function testRendererKeepsNoStateOfItsOwn(string $className, string $base): void
     {
         $offenders = [];
-        foreach ((new ReflectionClass($className))->getProperties() as $property) {
+        foreach (new ReflectionClass($className)->getProperties() as $property) {
             if ($property->getDeclaringClass()->getName() === $base || $property->isReadOnly() || $property->isStatic()) {
                 continue;
             }

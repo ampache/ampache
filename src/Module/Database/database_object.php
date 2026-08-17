@@ -54,7 +54,7 @@ abstract class database_object
         }
 
         $value = false;
-        if (!empty($data)) {
+        if ($data !== []) {
             $value = $data;
         }
 
@@ -155,7 +155,7 @@ abstract class database_object
 
         if (self::is_cached($table, $object_id)) {
             $info = self::get_from_cache($table, $object_id);
-            if (!empty($info)) {
+            if ($info !== []) {
                 return $info;
             }
         }

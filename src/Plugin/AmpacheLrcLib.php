@@ -40,9 +40,9 @@ use WpOrg\Requests\Requests;
 
 class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
 {
-    private const CONNECT_TIMEOUT = 3;
+    private const int CONNECT_TIMEOUT = 3;
 
-    private const REQUEST_TIMEOUT = 7;
+    private const int REQUEST_TIMEOUT = 7;
 
     #[Override]
     public string $categories = 'lyrics';
@@ -95,7 +95,7 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
         if (is_array($response)) {
             foreach ($response as $item) {
                 $checks = [
-                    'duration matches' => !($item['duration'] && $song->time) || abs((int) $item['duration'] - $song->time) < 5,
+                    'duration matches' => !$item['duration'] || !$song->time || abs((int) $item['duration'] - $song->time) < 5,
                     'song title matches' => $collator->compare($item['trackName'], (string) $song->title) === 0,
                     'artist matches' => $collator->compare($item['artistName'], $song->get_parent_fullname()) === 0,
                     'album matches' => $collator->compare($item['albumName'], $song->get_album_fullname()) === 0,
@@ -222,8 +222,8 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
 
         try {
             $request = Requests::get($url, $headers, $options);
-        } catch (Throwable $error) {
-            debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
+        } catch (Throwable $throwable) {
+            debug_event(self::class, 'Request error: ' . $throwable->getMessage(), 1);
 
             return null;
         }

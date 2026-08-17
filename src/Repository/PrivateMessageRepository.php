@@ -29,6 +29,7 @@ use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Repository\Model\User;
+use PDO;
 
 /**
  * Manages database access related to private-message
@@ -120,6 +121,30 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
         }
 
         return $ids;
+    }
+
+    /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $privateMessageIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $privateMessageIds): array
+    {
+        if ($privateMessageIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            'SELECT * FROM `user_pvmsg` WHERE `id` IN (' . implode(',', array_map(intval(...), $privateMessageIds)) . ')'
+        );
+
+        $results = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $results[] = $row;
+        }
+
+        return $results;
     }
 
     /**

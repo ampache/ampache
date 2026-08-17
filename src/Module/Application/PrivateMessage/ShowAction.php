@@ -76,10 +76,10 @@ final readonly class ShowAction implements ApplicationActionInterface
             $this->pmRepository->setIsRead($pvmsg, 1);
         }
 
-        echo (new PrivateMessageView(
+        echo new PrivateMessageView(
             $this->configContainer->getWebPath('/client'),
             $pvmsg
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

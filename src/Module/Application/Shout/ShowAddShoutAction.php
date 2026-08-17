@@ -84,7 +84,7 @@ final readonly class ShowAddShoutAction implements ApplicationActionInterface
         $shouts = $this->shoutRepository->getBy($object_type, $object->getId());
 
         // Now go ahead and display the page where we let them add a comment etc
-        echo (new AddShoutView(
+        echo new AddShoutView(
             $object,
             $object_type,
             $data,
@@ -93,7 +93,7 @@ final readonly class ShowAddShoutAction implements ApplicationActionInterface
             AmpConfig::get_web_path('/client'),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

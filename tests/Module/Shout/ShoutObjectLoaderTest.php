@@ -44,7 +44,7 @@ class ShoutObjectLoaderTest extends TestCase
             ->with(LibraryItemEnum::SONG, 42)
             ->willReturn($song);
 
-        static::assertSame($song, $this->subject->loadByObjectType(LibraryItemEnum::SONG, 42));
+        self::assertSame($song, $this->subject->loadByObjectType(LibraryItemEnum::SONG, 42));
     }
 
     public function testLoadByObjectTypeReturnsNullForDisabledSong(): void
@@ -57,7 +57,7 @@ class ShoutObjectLoaderTest extends TestCase
             ->with(LibraryItemEnum::SONG, 42)
             ->willReturn($song);
 
-        static::assertNull($this->subject->loadByObjectType(LibraryItemEnum::SONG, 42));
+        self::assertNull($this->subject->loadByObjectType(LibraryItemEnum::SONG, 42));
     }
 
     public function testLoadByShoutDelegatesToLoadByObjectType(): void
@@ -74,7 +74,7 @@ class ShoutObjectLoaderTest extends TestCase
             ->with(LibraryItemEnum::SONG, 42)
             ->willReturn($song);
 
-        static::assertSame($song, $this->subject->loadByShout($shout));
+        self::assertSame($song, $this->subject->loadByShout($shout));
     }
 
     protected function setUp(): void

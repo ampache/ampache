@@ -91,7 +91,7 @@ final readonly class UpdateAction implements ApplicationActionInterface
 
             // the commands flush their output as they run, so a Location header would be dropped
             if (headers_sent()) {
-                echo '<script>window.location.href = ' . (string) json_encode(
+                echo '<script>window.location.href = ' . json_encode(
                     $target,
                     JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
                 ) . ';</script>';

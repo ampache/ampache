@@ -90,7 +90,7 @@ class PlaylistUrlResolverTest extends TestCase
     {
         $method = new ReflectionMethod($this->subject, 'firstStreamUrl');
 
-        static::assertSame($expected, $method->invoke($this->subject, $body));
+        self::assertSame($expected, $method->invoke($this->subject, $body));
     }
 
     /**
@@ -99,7 +99,7 @@ class PlaylistUrlResolverTest extends TestCase
     #[DataProvider('nonPlaylistUrlDataProvider')]
     public function testResolveLeavesAStreamUrlAlone(string $url): void
     {
-        static::assertSame($url, $this->subject->resolve($url));
+        self::assertSame($url, $this->subject->resolve($url));
     }
 
     protected function setUp(): void

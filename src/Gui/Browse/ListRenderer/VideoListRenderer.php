@@ -127,7 +127,7 @@ final class VideoListRenderer extends AbstractBrowseListRenderer
         $gatekeeper  = $this->gatekeeperFactory->createGuiGatekeeper();
         $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 
-        return (new VideoRowView(
+        return new VideoRowView(
             $video,
             $this->configContainer->getWebPath('/client'),
             $this->getCellClass('cel_cover', 'grid_cover'),
@@ -147,7 +147,7 @@ final class VideoListRenderer extends AbstractBrowseListRenderer
             Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
             Catalog::can_remove($video)
-        ))->render();
+        )->render();
     }
 
     #[Override]

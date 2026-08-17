@@ -144,9 +144,10 @@ class UPnPDevice
         $responseXML = simplexml_load_string((string) $response);
         $services    = $responseXML->device->serviceList->service ?? [];
         foreach ($services as $service) {
-            if (!isset($service->serviceType) || !isset($service->controlURL) || !isset($service->eventSubURL)) {
+            if (!property_exists($service, 'serviceType') || $service->serviceType === null || (!property_exists($service, 'controlURL') || $service->controlURL === null) || (!property_exists($service, 'eventSubURL') || $service->eventSubURL === null)) {
                 continue;
             }
+
             $serviceType                                      = (string) $service->serviceType;
             $serviceTypeNames                                 = explode(':', $serviceType);
             $serviceTypeName                                  = $serviceTypeNames[3];
