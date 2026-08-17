@@ -88,6 +88,27 @@ class DeletedPodcastEpisodeRepositoryTest extends TestCase
         );
     }
 
+    public function testPruneDeletedHistoryDeletesOlderRows(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `deleted_podcast_episode` WHERE `delete_time` < (UNIX_TIMESTAMP() - (? * 86400));',
+                [365]
+            );
+
+        $this->subject->pruneDeletedHistory(365);
+    }
+
+    public function testPruneDeletedHistorySkipsWhenDaysIsNotPositive(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        $this->subject->pruneDeletedHistory(0);
+        $this->subject->pruneDeletedHistory(-1);
+    }
+
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);

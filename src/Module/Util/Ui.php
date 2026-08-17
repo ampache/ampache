@@ -1562,7 +1562,15 @@ class Ui implements UiInterface
                 // construct links for granting access Ampache application to Last.fm and Libre.fm
                 $plugin_name = ucfirst(str_replace('_grant_link', '', $name));
                 $plugin      = new Plugin($plugin_name);
-                if ($plugin->_plugin instanceof Ampachelibrefm || $plugin->_plugin instanceof AmpacheLastfm) {
+                $user        = Core::get_global('user');
+                if (
+                    (
+                        $plugin->_plugin instanceof Ampachelibrefm
+                        || $plugin->_plugin instanceof AmpacheLastfm
+                    )
+                    && $user instanceof User
+                    && $plugin->load($user)
+                ) {
                     $url      = $plugin->_plugin->url;
                     $api_key  = rawurlencode((string) $plugin->_plugin->api_key);
                     $callback = rawurlencode(AmpConfig::get_web_path('/client') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);

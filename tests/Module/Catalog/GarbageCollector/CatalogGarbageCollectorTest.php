@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Catalog\GarbageCollector;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Label\LabelGarbageCollectorInterface;
@@ -31,6 +32,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\BroadcastRepositoryInterface;
+use Ampache\Repository\DeletedPodcastEpisodeRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\MoodRepositoryInterface;
@@ -62,6 +64,7 @@ class CatalogGarbageCollectorTest extends TestCase
     private BroadcastRepositoryInterface&MockObject $broadcastRepository;
     private CatalogCounterInterface&MockObject $catalogCounter;
     private ConfigContainerInterface&MockObject $configContainer;
+    private DeletedPodcastEpisodeRepositoryInterface&MockObject $deletedPodcastEpisodeRepository;
     private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LabelGarbageCollectorInterface&MockObject $labelGarbageCollector;
@@ -81,6 +84,19 @@ class CatalogGarbageCollectorTest extends TestCase
     private UserRepositoryInterface&MockObject $userRepository;
     private VideoRepositoryInterface&MockObject $videoRepository;
     private WantedRepositoryInterface&MockObject $wantedRepository;
+
+    public function testCollectPrunesDeletedHistoryWhenRetentionIsPositive(): void
+    {
+        $this->configContainer->method('getInt')
+            ->with(ConfigurationKeyEnum::DELETED_HISTORY_DAYS)
+            ->willReturn(30);
+
+        $this->songRepository->expects(static::once())->method('pruneDeletedHistory')->with(30);
+        $this->videoRepository->expects(static::once())->method('pruneDeletedHistory')->with(30);
+        $this->deletedPodcastEpisodeRepository->expects(static::once())->method('pruneDeletedHistory')->with(30);
+
+        $this->subject->collect();
+    }
 
     public function testCollectRunsGarbageCollectionOnEveryInjectedRepository(): void
     {
@@ -108,33 +124,47 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->subject->collect();
     }
 
+    public function testCollectSkipsPruningDeletedHistoryWhenRetentionIsDisabled(): void
+    {
+        $this->configContainer->method('getInt')
+            ->with(ConfigurationKeyEnum::DELETED_HISTORY_DAYS)
+            ->willReturn(0);
+
+        $this->songRepository->expects(static::never())->method('pruneDeletedHistory');
+        $this->videoRepository->expects(static::never())->method('pruneDeletedHistory');
+        $this->deletedPodcastEpisodeRepository->expects(static::never())->method('pruneDeletedHistory');
+
+        $this->subject->collect();
+    }
+
     protected function setUp(): void
     {
-        $this->albumRepository          = $this->createMock(AlbumRepositoryInterface::class);
-        $this->bookmarkRepository       = $this->createMock(BookmarkRepositoryInterface::class);
-        $this->broadcastRepository      = $this->createMock(BroadcastRepositoryInterface::class);
-        $this->shoutRepository          = $this->createMock(ShoutRepositoryInterface::class);
-        $this->userActivityRepository   = $this->createMock(UserActivityRepositoryInterface::class);
-        $this->userRepository           = $this->createMock(UserRepositoryInterface::class);
-        $this->metadataManager          = $this->createMock(MetadataManagerInterface::class);
-        $this->podcastEpisodeRepository = $this->createMock(PodcastEpisodeRepositoryInterface::class);
-        $this->wantedRepository         = $this->createMock(WantedRepositoryInterface::class);
-        $this->labelRepository          = $this->createMock(LabelRepositoryInterface::class);
-        $this->artCleanup               = $this->createMock(ArtCleanupInterface::class);
-        $this->artistRepository         = $this->createMock(ArtistRepositoryInterface::class);
-        $this->folderRepository         = $this->createMock(FolderRepositoryInterface::class);
-        $this->videoRepository          = $this->createMock(VideoRepositoryInterface::class);
-        $this->playlistRepository       = $this->createMock(PlaylistRepositoryInterface::class);
-        $this->playlistFolderRepository = $this->createMock(PlaylistFolderRepositoryInterface::class);
-        $this->searchRepository         = $this->createMock(SearchRepositoryInterface::class);
-        $this->labelGarbageCollector    = $this->createMock(LabelGarbageCollectorInterface::class);
-        $this->songRepository           = $this->createMock(SongRepositoryInterface::class);
-        $this->podcastRepository        = $this->createMock(PodcastRepositoryInterface::class);
-        $this->catalogCounter           = $this->createMock(CatalogCounterInterface::class);
-        $this->configContainer          = $this->createMock(ConfigContainerInterface::class);
-        $this->moodRepository           = $this->createMock(MoodRepositoryInterface::class);
-        $this->tagRepository            = $this->createMock(TagRepositoryInterface::class);
-        $this->dic                      = $this->createMock(ContainerInterface::class);
+        $this->albumRepository                 = $this->createMock(AlbumRepositoryInterface::class);
+        $this->bookmarkRepository              = $this->createMock(BookmarkRepositoryInterface::class);
+        $this->broadcastRepository             = $this->createMock(BroadcastRepositoryInterface::class);
+        $this->shoutRepository                 = $this->createMock(ShoutRepositoryInterface::class);
+        $this->userActivityRepository          = $this->createMock(UserActivityRepositoryInterface::class);
+        $this->userRepository                  = $this->createMock(UserRepositoryInterface::class);
+        $this->metadataManager                 = $this->createMock(MetadataManagerInterface::class);
+        $this->podcastEpisodeRepository        = $this->createMock(PodcastEpisodeRepositoryInterface::class);
+        $this->wantedRepository                = $this->createMock(WantedRepositoryInterface::class);
+        $this->labelRepository                 = $this->createMock(LabelRepositoryInterface::class);
+        $this->artCleanup                      = $this->createMock(ArtCleanupInterface::class);
+        $this->artistRepository                = $this->createMock(ArtistRepositoryInterface::class);
+        $this->folderRepository                = $this->createMock(FolderRepositoryInterface::class);
+        $this->videoRepository                 = $this->createMock(VideoRepositoryInterface::class);
+        $this->playlistRepository              = $this->createMock(PlaylistRepositoryInterface::class);
+        $this->playlistFolderRepository        = $this->createMock(PlaylistFolderRepositoryInterface::class);
+        $this->searchRepository                = $this->createMock(SearchRepositoryInterface::class);
+        $this->labelGarbageCollector           = $this->createMock(LabelGarbageCollectorInterface::class);
+        $this->songRepository                  = $this->createMock(SongRepositoryInterface::class);
+        $this->podcastRepository               = $this->createMock(PodcastRepositoryInterface::class);
+        $this->catalogCounter                  = $this->createMock(CatalogCounterInterface::class);
+        $this->configContainer                 = $this->createMock(ConfigContainerInterface::class);
+        $this->moodRepository                  = $this->createMock(MoodRepositoryInterface::class);
+        $this->tagRepository                   = $this->createMock(TagRepositoryInterface::class);
+        $this->dic                             = $this->createMock(ContainerInterface::class);
+        $this->deletedPodcastEpisodeRepository = $this->createMock(DeletedPodcastEpisodeRepositoryInterface::class);
 
         // debug_event() pulls the logger off the same container, so this cannot be a single-service stub
         $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
@@ -175,6 +205,7 @@ class CatalogGarbageCollectorTest extends TestCase
             $this->podcastRepository,
             $this->catalogCounter,
             $this->configContainer,
+            $this->deletedPodcastEpisodeRepository,
         );
     }
 }

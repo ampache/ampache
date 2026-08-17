@@ -322,6 +322,21 @@ final readonly class VideoRepository implements VideoRepositoryInterface
     }
 
     /**
+     * Removes `deleted_video` rows older than the given retention
+     */
+    public function pruneDeletedHistory(int $days): void
+    {
+        if ($days <= 0) {
+            return;
+        }
+
+        $this->connection->query(
+            'DELETE FROM `deleted_video` WHERE `delete_time` < (UNIX_TIMESTAMP() - (? * 86400));',
+            [$days]
+        );
+    }
+
+    /**
      * Stores the path or url a video is served from
      */
     public function setFile(int $videoId, string $file): void
