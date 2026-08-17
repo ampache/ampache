@@ -140,6 +140,32 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
+     * get_top_tags
+     * This gets the top tags for the specified object using limit
+     *
+     * `user` is the owner of the map: 0 for a genre read out of the file tags, otherwise whoever set it by hand.
+     *
+     * @return array<int, array{id: int, name: string, is_hidden: int, user: int, count: int}>
+     */
+    /**
+     * Warm get_top_tags() for a whole page with one read
+     *
+     * @param list<int> $object_ids
+     */
+    public static function build_object_tag_cache(string $type, array $object_ids): bool
+    {
+        if ($object_ids === [] || !database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getTagRepository()->getTopTagsBulk($type, $object_ids) as $object_id => $tags) {
+            parent::add_to_cache('object_tags_' . $type, (int) $object_id, $tags);
+        }
+
+        return true;
+    }
+
+    /**
      * clean_to_existing
      * Clean tag list to existing tag list only
      * @param string[]|string $tags
@@ -293,18 +319,18 @@ class Tag extends database_object implements library_item, displayable_item, con
         return $results;
     }
 
-    /**
-     * get_top_tags
-     * This gets the top tags for the specified object using limit
-     *
-     * `user` is the owner of the map: 0 for a genre read out of the file tags, otherwise whoever set it by hand.
-     *
-     * @return array<int, array{id: int, name: string, is_hidden: int, user: int, count: int}>
-     */
     public static function get_top_tags(string $type, int $object_id, ?int $limit = 10): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return [];
+        }
+
+        // build_cache() fills this for a whole page; the limit is applied here
+        $key = 'object_tags_' . $type;
+        if (parent::is_cached($key, $object_id)) {
+            $cached = parent::get_from_cache($key, $object_id);
+
+            return ((int) $limit > 0) ? array_slice($cached, 0, (int) $limit) : $cached;
         }
 
         return self::getTagRepository()->getTopTags($type, $object_id, (int) $limit);
