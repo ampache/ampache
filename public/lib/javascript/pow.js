@@ -328,9 +328,9 @@
         return token;
     }
 
-    function ackCookiePresent(token) {
+    function ackCookiePresent(ackName, token) {
         return document.cookie.split(';').some(function (entry) {
-            return entry.trim() === 'pow_ack=' + token;
+            return entry.trim() === ackName + '=' + token;
         });
     }
 
@@ -349,7 +349,8 @@
      */
     function replay() {
         var returnUrl = form.dataset.powReturn;
-        var acknowledges = form.dataset.powAck === '1';
+        var ackName = form.dataset.powAck;
+        var acknowledges = ackName !== '';
         var ackField = document.getElementById('pow_ack');
         var token = ackToken();
         // Ampache's own recommended configs send `Referrer-Policy: no-referrer`, so on most installs
@@ -365,8 +366,11 @@
             leaving = true;
             window.clearTimeout(timer);
             window.clearInterval(poll);
-            // Spent: a token left behind would let the next visit return before its own delivery.
-            document.cookie = 'pow_ack=; Path=/; Max-Age=0; SameSite=Lax';
+
+            if (acknowledges) {
+                // Spent: a token left behind would let the next visit return before its own delivery.
+                document.cookie = ackName + '=; Path=/; Max-Age=0; SameSite=Lax';
+            }
         }
 
         /** The endpoint answered with a page rather than a file, so show it instead of going back. */
@@ -449,7 +453,7 @@
         // enough not to strand the visitor: those endpoints stream, and their headers go out at once.
         if (acknowledges) {
             poll = window.setInterval(function () {
-                if (ackCookiePresent(token)) {
+                if (ackCookiePresent(ackName, token)) {
                     goBack();
                 }
             }, 250);

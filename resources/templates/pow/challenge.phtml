@@ -93,15 +93,17 @@ use Ampache\Gui\Asset\StylesheetsView;
         <form id="pow-form" method="get" action="<?php echo $this->e($this->getTargetPath()); ?>"
               target="pow-sink" data-pow-autosubmit="1"
               data-pow-return="<?php echo $this->e($this->getReturnUrl()); ?>"
-              data-pow-ack="<?php echo $this->confirmsDelivery() ? '1' : '0'; ?>">
+              data-pow-ack="<?php echo $this->confirmsDelivery() ? $this->e($this->getAckName()) : ''; ?>">
             <?php foreach ($this->getTargetFields() as $field) { ?>
                 <input type="hidden" name="<?php echo $this->e($field['name']); ?>" value="<?php echo $this->e($field['value']); ?>" />
             <?php } ?>
             <?php echo $this->raw($this->renderWidget()); ?>
             <!-- Filled in by the script just before submitting. The endpoint echoes it back as a
                  cookie alongside the download headers, which is how the page learns the transfer has
-                 actually begun rather than guessing on a timer. -->
-            <input type="hidden" name="pow_ack" id="pow_ack" value="" />
+                 actually begun rather than guessing on a timer. The field's name carries the
+                 session-scoped ack name so the query param the server reads back matches; the id
+                 stays fixed since only the script looks it up. -->
+            <input type="hidden" name="<?php echo $this->e($this->getAckName()); ?>" id="pow_ack" value="" />
         </form>
 
         <?php // Nothing starts on its own without a script, so the promise is withdrawn rather than left standing.?>

@@ -44,7 +44,11 @@ use Psr\Log\LoggerInterface;
 
 class PowServiceTest extends MockeryTestCase
 {
+    private const string ACK_NAME = self::SESSION_NAME . '_pow_ack';
+
     private const string SECRET = 'a-secret-long-enough-to-sign-with';
+
+    private const string SESSION_NAME = 'ampache_session';
 
     private MockInterface&ConfigContainerInterface $configContainer;
     private MockInterface&DatabaseConnectionInterface $database;
@@ -165,7 +169,7 @@ class PowServiceTest extends MockeryTestCase
     public function testConfirmDeliveryDropsATokenItDidNotIssue(string $token): void
     {
         $request = $this->mock(ServerRequestInterface::class);
-        $request->shouldReceive('getQueryParams')->andReturn(['pow_ack' => $token]);
+        $request->shouldReceive('getQueryParams')->andReturn([self::ACK_NAME => $token]);
 
         $response = $this->mock(ResponseInterface::class);
         $response->shouldNotReceive('withAddedHeader');
@@ -181,7 +185,7 @@ class PowServiceTest extends MockeryTestCase
         $uri->shouldReceive('getScheme')->andReturn('https');
 
         $request = $this->mock(ServerRequestInterface::class);
-        $request->shouldReceive('getQueryParams')->andReturn(['pow_ack' => $token]);
+        $request->shouldReceive('getQueryParams')->andReturn([self::ACK_NAME => $token]);
         $request->shouldReceive('getUri')->andReturn($uri);
 
         $decorated = $this->mock(ResponseInterface::class);
@@ -190,7 +194,7 @@ class PowServiceTest extends MockeryTestCase
             ->once()
             ->andReturnUsing(function (string $name, string $value) use ($decorated, $token): ResponseInterface {
                 self::assertSame('Set-Cookie', $name);
-                self::assertStringContainsString('pow_ack=' . $token, $value);
+                self::assertStringContainsString(self::ACK_NAME . '=' . $token, $value);
                 self::assertStringContainsString('SameSite=Lax', $value);
                 self::assertStringContainsString('Secure', $value);
                 // The page has to read it, so it deliberately is not HttpOnly.
@@ -208,7 +212,7 @@ class PowServiceTest extends MockeryTestCase
         $uri->shouldReceive('getScheme')->andReturn('http');
 
         $request = $this->mock(ServerRequestInterface::class);
-        $request->shouldReceive('getQueryParams')->andReturn(['pow_ack' => str_repeat('b', 32)]);
+        $request->shouldReceive('getQueryParams')->andReturn([self::ACK_NAME => str_repeat('b', 32)]);
         $request->shouldReceive('getUri')->andReturn($uri);
 
         $response = $this->mock(ResponseInterface::class);
@@ -263,7 +267,7 @@ class PowServiceTest extends MockeryTestCase
                 // Relative, so it can only ever resolve against this origin.
                 self::assertStringContainsString('data-pow-return="/albums.php?id=42"', $html);
                 // `batch` returns a response object, so it can echo the acknowledgement cookie.
-                self::assertStringContainsString('data-pow-ack="1"', $html);
+                self::assertStringContainsString('data-pow-ack="' . self::ACK_NAME . '"', $html);
 
                 return $body;
             });
@@ -576,6 +580,7 @@ class PowServiceTest extends MockeryTestCase
         $this->streamFactory   = $this->mock(StreamFactoryInterface::class);
 
         $this->logger->shouldIgnoreMissing();
+        $this->configContainer->shouldReceive('getSessionName')->andReturn(self::SESSION_NAME);
 
         $this->subject = new PowService(
             $this->configContainer,

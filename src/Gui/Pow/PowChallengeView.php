@@ -44,6 +44,7 @@ final class PowChallengeView extends AbstractView
         private readonly string $webPath,
         private readonly string $referer = '',
         private readonly bool $confirmsDelivery = false,
+        private readonly string $ackName = 'pow_ack',
     ) {}
 
     /**
@@ -53,6 +54,14 @@ final class PowChallengeView extends AbstractView
     public function confirmsDelivery(): bool
     {
         return $this->confirmsDelivery;
+    }
+
+    /**
+     * The query parameter and cookie name the acknowledgement token travels under.
+     */
+    public function getAckName(): string
+    {
+        return $this->ackName;
     }
 
     public function getDocumentLanguage(): string
@@ -136,7 +145,7 @@ final class PowChallengeView extends AbstractView
             $query['pow_sig'],
             $query['pow_nonce'],
             // A token from an earlier attempt would make the page return before this delivery starts.
-            $query['pow_ack']
+            $query[$this->ackName]
         );
 
         $fields = [];

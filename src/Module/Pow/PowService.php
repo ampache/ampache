@@ -103,7 +103,7 @@ final readonly class PowService implements PowServiceInterface
     #[Override]
     public function confirmDelivery(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $name  = $this->configContainer->getSessionName() . self::ACK_COOKIE;
+        $name  = $this->ackParamName();
         $token = (string) ($request->getQueryParams()[$name] ?? '');
 
         // The token comes back from the client and is about to be written into a response header, so
@@ -145,7 +145,8 @@ final readonly class PowService implements PowServiceInterface
             (string) $request->getUri(),
             AmpConfig::get_web_path(),
             $request->getHeaderLine('Referer'),
-            in_array($scope, self::ACK_SCOPES, true)
+            in_array($scope, self::ACK_SCOPES, true),
+            $this->ackParamName()
         );
 
         return $this->responseFactory
@@ -216,6 +217,17 @@ final readonly class PowService implements PowServiceInterface
         }
 
         return $this->check($scope, $answer, $user, $request->getHeaderLine('User-Agent'));
+    }
+
+    /**
+     * The query parameter and cookie name the acknowledgement token travels under.
+     *
+     * Scoped by the session name so two Ampache installs sharing a domain do not stomp on each
+     * other's acknowledgement cookie.
+     */
+    private function ackParamName(): string
+    {
+        return $this->configContainer->getSessionName() . self::ACK_COOKIE;
     }
 
     /**
