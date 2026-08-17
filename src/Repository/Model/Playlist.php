@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -98,6 +99,8 @@ class Playlist extends playlist_object
         foreach (self::getPlaylistRepository()->getRowsByIds(array_values($ids)) as $row) {
             parent::add_to_cache('playlist', $row['id'], $row);
         }
+
+        Art::build_cache($ids, 'playlist');
 
         return true;
     }

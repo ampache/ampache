@@ -89,8 +89,8 @@ class ArtistRepositoryTest extends TestCase
 
         $this->subject->collectOrphanedMaps();
 
-        static::assertStringContainsString("`artist_map`.`object_type` = 'album'", $calls[0]);
-        static::assertStringContainsString("`artist_map`.`object_type` = 'song'", $calls[1]);
+        self::assertStringContainsString("`artist_map`.`object_type` = 'album'", $calls[0]);
+        self::assertStringContainsString("`artist_map`.`object_type` = 'song'", $calls[1]);
     }
 
     public function testCreateReturnsNullWhenTheInsertFailed(): void
@@ -100,7 +100,7 @@ class ArtistRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException('some-error'));
 
-        static::assertNull($this->subject->create('some-artist', null, null, null));
+        self::assertNull($this->subject->create('some-artist', null, null, null));
     }
 
     public function testCreateReturnsTheNewId(): void
@@ -116,7 +116,7 @@ class ArtistRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(666);
 
-        static::assertSame(666, $this->subject->create('some-artist', 'The', 'some-mbid', 42));
+        self::assertSame(666, $this->subject->create('some-artist', 'The', 'some-mbid', 42));
     }
 
     public function testDeleteDeletes(): void
@@ -169,7 +169,7 @@ class ArtistRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(['mbid' => 'some-mbid', 'minid' => '4', 'maxid' => '9'], false);
 
-        static::assertSame(
+        self::assertSame(
             [['mbid' => 'some-mbid', 'minid' => 4, 'maxid' => 9]],
             $this->subject->findDuplicateMbidGroups()
         );
@@ -186,7 +186,7 @@ class ArtistRepositoryTest extends TestCase
             )
             ->willReturn('666');
 
-        static::assertSame(666, $this->subject->findIdByName('some-artist', 'some-artist feat. someone', true));
+        self::assertSame(666, $this->subject->findIdByName('some-artist', 'some-artist feat. someone', true));
     }
 
     public function testGetArrayRowsByCatalogsBindsOneCatalogIntoTheSingleCatalogShape(): void
@@ -195,7 +195,7 @@ class ArtistRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains("`catalog_map`.`catalog_id` = 7 LEFT JOIN `image`"))
+            ->with(self::stringContains("`catalog_map`.`catalog_id` = 7 LEFT JOIN `image`"))
             ->willReturn($result);
 
         $result->expects(static::exactly(2))
@@ -213,7 +213,7 @@ class ArtistRepositoryTest extends TestCase
                 false
             );
 
-        static::assertSame(
+        self::assertSame(
             [[
                 'id' => 666,
                 'f_name' => 'The Band',
@@ -233,14 +233,14 @@ class ArtistRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains('`catalog_map`.`catalog_id` IN (1,0) LEFT JOIN `image`'))
+            ->with(self::stringContains('`catalog_map`.`catalog_id` IN (1,0) LEFT JOIN `image`'))
             ->willReturn($result);
 
         $result->expects(static::once())
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getArrayRowsByCatalogs([1, 'x9']));
+        self::assertSame([], $this->subject->getArrayRowsByCatalogs([1, 'x9']));
     }
 
     public function testGetIdsByCatalogAddedSinceBindsBothTheCatalogAndTheTime(): void
@@ -259,7 +259,7 @@ class ArtistRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('42', false);
 
-        static::assertSame([42], $this->subject->getIdsByCatalogAddedSince(7, 123456));
+        self::assertSame([42], $this->subject->getIdsByCatalogAddedSince(7, 123456));
     }
 
     public function testGetIdsMissingRecommendationTakesNoCatalogParameter(): void
@@ -278,7 +278,7 @@ class ArtistRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getIdsMissingRecommendation(500));
+        self::assertSame([], $this->subject->getIdsMissingRecommendation(500));
     }
 
     public function testGetRowsByCatalogsFiltersOnTheSongCatalogWhenGivenAList(): void
@@ -287,21 +287,21 @@ class ArtistRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains(' AND `song`.`catalog` IN (4) GROUP BY '))
+            ->with(self::stringContains(' AND `song`.`catalog` IN (4) GROUP BY '))
             ->willReturn($result);
 
         $result->expects(static::once())
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getRowsByCatalogs(['4']));
+        self::assertSame([], $this->subject->getRowsByCatalogs(['4']));
     }
 
     public function testGetUploaderIdReturnsZeroWhenTheArtistWasNotUploaded(): void
     {
         $this->connection->method('fetchOne')->willReturn(false);
 
-        static::assertSame(0, $this->subject->getUploaderId(666));
+        self::assertSame(0, $this->subject->getUploaderId(666));
     }
 
     public function testMigrateClearsTheCreditWhenThereIsNoReplacement(): void
@@ -344,7 +344,7 @@ class ArtistRepositoryTest extends TestCase
             ->method('query')
             ->with('UPDATE `artist` SET `mbid` = ? WHERE `id` = ?', ['some-mbid', 666]);
 
-        static::assertTrue($this->subject->setField(666, ArtistFieldEnum::MBID, 'some-mbid'));
+        self::assertTrue($this->subject->setField(666, ArtistFieldEnum::MBID, 'some-mbid'));
     }
 
     public function testUpdateAllSkipCountsZeroesAnArtistWithNoSkipsBeforeRollingTheRestUp(): void
@@ -362,8 +362,8 @@ class ArtistRepositoryTest extends TestCase
         $this->subject->updateAllSkipCounts();
 
         // the rollup is a join, so an artist whose last skip was deleted is only reached by the first statement
-        static::assertStringContainsString('`total_skip` = 0', $calls[0]);
-        static::assertStringContainsString('`artist_map`.`artist_id` AS `artist_id`', $calls[1]);
+        self::assertStringContainsString('`total_skip` = 0', $calls[0]);
+        self::assertStringContainsString('`artist_map`.`artist_id` AS `artist_id`', $calls[1]);
     }
 
     public function testUpdateInfoStampsTheManualFlagAsAnInt(): void

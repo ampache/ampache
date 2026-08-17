@@ -43,12 +43,12 @@ final class DescriptorAction implements ApplicationActionInterface
 
         header(sprintf('Content-type: application/opensearchdescription+xml; charset=%s; filename=opensearch.xml', $charset));
 
-        echo (new OpenSearchDescriptorView(
+        echo new OpenSearchDescriptorView(
             $webPath,
             $charset,
             (string) AmpConfig::get('site_title'),
             (string) (AmpConfig::get('custom_favicon', false) ?: $webPath . '/favicon.ico')
-        ))->render();
+        )->render();
 
         return null;
     }

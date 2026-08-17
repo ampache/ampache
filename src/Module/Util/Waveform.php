@@ -420,7 +420,7 @@ class Waveform
                 $value = (int) ($data / 255 * $height);
 
                 // don't print flat values on the canvas if not necessary
-                if (!($value / $height == 0.5 && !$draw_flat)) {
+                if ($value / $height != 0.5 || $draw_flat) {
                     // draw the line on the image using the $value and centering it vertically on the canvas
                     imageline(
                         $img, // x1

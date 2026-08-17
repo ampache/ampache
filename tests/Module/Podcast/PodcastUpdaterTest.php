@@ -86,7 +86,7 @@ class PodcastUpdaterTest extends TestCase
         $podcast->expects(static::once())
             ->method('save');
 
-        static::assertTrue(
+        self::assertTrue(
             // art insertion needs the database, so it is excluded here
             $this->subject->update($podcast, false)
         );
@@ -102,7 +102,7 @@ class PodcastUpdaterTest extends TestCase
         $this->feedLoader->expects(static::never())
             ->method('load');
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->update($podcast)
         );
     }
@@ -143,7 +143,7 @@ class PodcastUpdaterTest extends TestCase
         $podcast->expects(static::once())
             ->method('save');
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->update($podcast, false)
         );
     }

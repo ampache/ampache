@@ -101,6 +101,14 @@ interface WantedRepositoryInterface
     public function getById(int $wantedId): ?array;
 
     /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $wantedIds
+     * @return list<DatabaseRow>
+     */
+    public function getRowsByIds(array $wantedIds): array;
+
+    /**
      * Migrate an object associate stats to a new object
      */
     public function migrateArtist(int $oldObjectId, int $newObjectId): void;

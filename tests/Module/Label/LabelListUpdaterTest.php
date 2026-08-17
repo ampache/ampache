@@ -27,6 +27,7 @@ namespace Ampache\Module\Label;
 
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
+use DateTime;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -61,11 +62,11 @@ class LabelListUpdaterTest extends TestCase
 
         $this->labelRepository->expects(static::once())
             ->method('addArtistAssoc')
-            ->with($labelId, $artistId, static::isInstanceOf(\DateTime::class));
+            ->with($labelId, $artistId, self::isInstanceOf(DateTime::class));
 
         $result = $this->subject->update('New Label', $artistId, false);
 
-        static::assertTrue($result);
+        self::assertTrue($result);
     }
 
     public function testUpdateDoesNotAddLabelThatCannotBeResolved(): void
@@ -87,7 +88,7 @@ class LabelListUpdaterTest extends TestCase
 
         $result = $this->subject->update('New Label', $artistId, false);
 
-        static::assertTrue($result);
+        self::assertTrue($result);
     }
 
     public function testUpdateDoesNotRemoveLabelNotInNewListWithoutOverwrite(): void
@@ -112,7 +113,7 @@ class LabelListUpdaterTest extends TestCase
 
         $result = $this->subject->update('New Label', $artistId, false);
 
-        static::assertTrue($result);
+        self::assertTrue($result);
     }
 
     public function testUpdateKeepsExistingLabelStillPresentInNewList(): void
@@ -140,7 +141,7 @@ class LabelListUpdaterTest extends TestCase
 
         $result = $this->subject->update('Existing Label', $artistId, false);
 
-        static::assertTrue($result);
+        self::assertTrue($result);
     }
 
     public function testUpdateRemovesLabelNotInNewListWhenOverwriting(): void
@@ -169,7 +170,7 @@ class LabelListUpdaterTest extends TestCase
 
         $result = $this->subject->update('New Label', $artistId, true);
 
-        static::assertTrue($result);
+        self::assertTrue($result);
     }
 
     protected function setUp(): void

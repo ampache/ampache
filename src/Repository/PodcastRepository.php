@@ -31,6 +31,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Generator;
+use PDO;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -136,6 +137,30 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
         }
 
         return $podcastIds;
+    }
+
+    /**
+     * Reads whole podcast rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $podcastIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $podcastIds): array
+    {
+        if ($podcastIds === []) {
+            return [];
+        }
+
+        $idList = implode(',', array_map(intval(...), $podcastIds));
+
+        $result = $this->connection->query('SELECT * FROM `podcast` WHERE `id` IN (' . $idList . ')');
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 
     /**

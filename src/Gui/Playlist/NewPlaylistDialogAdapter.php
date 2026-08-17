@@ -187,13 +187,7 @@ final class NewPlaylistDialogAdapter extends AbstractView implements NewPlaylist
      */
     public function getPlaylistsEnabled(): bool
     {
-        foreach ($this->requestedTypes() as $objectType) {
-            if (!in_array($objectType, self::PLAYLIST_TYPES, true)) {
-                return false;
-            }
-        }
-
-        return true;
+        return array_all($this->requestedTypes(), fn($objectType) => in_array($objectType, self::PLAYLIST_TYPES, true));
     }
 
     #[Override]

@@ -123,7 +123,7 @@ final class PlaylistMediaRowView extends AbstractView
 
     public function getTime(): string
     {
-        return (string) $this->item->get_f_time();
+        return $this->item->get_f_time();
     }
 
     public function getTimeClass(): string

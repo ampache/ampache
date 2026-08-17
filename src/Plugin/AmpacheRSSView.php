@@ -80,8 +80,8 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
         // the feed url is a per-user preference, so it is fetched like any other url a user supplies
         try {
             $xmlstr = $this->webFetcher->fetch($this->feed_url);
-        } catch (FetchFailedException $error) {
-            debug_event(self::class, 'Cannot access feed ' . $this->feed_url . ': ' . $error->getMessage(), 3);
+        } catch (FetchFailedException $fetchFailedException) {
+            debug_event(self::class, 'Cannot access feed ' . $this->feed_url . ': ' . $fetchFailedException->getMessage(), 3);
 
             return;
         }

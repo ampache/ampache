@@ -149,6 +149,8 @@ class Artist extends database_object implements
             parent::add_to_cache('artist', $row['id'], $row);
         }
 
+        Art::build_cache($ids, 'artist');
+
         // Preload full names so get_fullname_by_id() stops querying one row at a time.
         foreach ($artistRepository->getFullNamesByIds($ids) as $artist_id => $fullName) {
             parent::add_to_cache('artist_fullname_by_id', $artist_id, [$fullName]);

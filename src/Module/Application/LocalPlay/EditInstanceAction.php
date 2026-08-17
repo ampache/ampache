@@ -67,12 +67,12 @@ final class EditInstanceAction extends AbstractLocalPlayAction
         $localplay = new LocalPlay($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_CONTROLLER));
         $instance  = $localplay->get_instance($_REQUEST['instance']);
         $fields    = $localplay->get_instance_fields();
-        echo (new LocalplayEditInstanceView(
+        echo new LocalplayEditInstanceView(
             $this->configContainer->getWebPath(),
             (int) $_REQUEST['instance'],
             $instance,
             $fields
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

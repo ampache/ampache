@@ -66,7 +66,7 @@ final class PodcastEditFormRenderer extends AbstractEditFormRenderer
 
     public function getWebsite(): string
     {
-        return (string) $this->getItem()->getWebsite();
+        return $this->getItem()->getWebsite();
     }
 
     #[Override]

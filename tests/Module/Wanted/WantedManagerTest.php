@@ -78,7 +78,7 @@ class WantedManagerTest extends TestCase
 
         $this->subject->accept($wanted, $user);
 
-        static::assertSame(1, $wanted->accepted);
+        self::assertSame(1, $wanted->accepted);
     }
 
     public function testDeleteDoesNothingWhenReleaseGroupIsMissing(): void

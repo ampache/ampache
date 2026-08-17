@@ -72,25 +72,6 @@ class SongTest extends MockeryTestCase
     }
 
     /**
-     * @param list<string> $names
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
-     */
-    private static function tagRows(array $names): array
-    {
-        $rows = [];
-        foreach ($names as $index => $name) {
-            $rows[] = [
-                'id' => $index + 1,
-                'name' => $name,
-                'is_hidden' => 0,
-                'count' => 0,
-            ];
-        }
-
-        return $rows;
-    }
-
-    /**
      * @param list<string> $tags
      * @param list<string> $new_tags
      */
@@ -100,12 +81,12 @@ class SongTest extends MockeryTestCase
         $song        = new Song();
         $song->title = 'Grapevine';
         $song->time  = 195;
-        $song->tags  = self::tagRows($tags);
+        $song->tags  = $this->tagRows($tags);
 
         $new_song        = new Song();
         $new_song->title = 'Grapevine';
         $new_song->time  = 195;
-        $new_song->tags  = self::tagRows($new_tags);
+        $new_song->tags  = $this->tagRows($new_tags);
 
         $result = Song::compare_song_information($song, $new_song);
 
@@ -172,12 +153,12 @@ class SongTest extends MockeryTestCase
         $song        = new Song();
         $song->title = 'Grapevine';
         $song->time  = 195;
-        $song->tags  = self::tagRows(['EBM', 'Electro']);
+        $song->tags  = $this->tagRows(['EBM', 'Electro']);
 
         $new_song        = new Song();
         $new_song->title = 'Grapevine';
         $new_song->time  = 195;
-        $new_song->tags  = self::tagRows(['EBM', 'Electro', 'Industrial']);
+        $new_song->tags  = $this->tagRows(['EBM', 'Electro', 'Industrial']);
 
         $result = Song::compare_song_information($song, $new_song);
 
@@ -211,5 +192,24 @@ class SongTest extends MockeryTestCase
         $method = new ReflectionMethod(Song::class, '_scrub_custom_play_arg');
 
         $this->assertSame($expected, $method->invoke(null, $value));
+    }
+
+    /**
+     * @param list<string> $names
+     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     */
+    private function tagRows(array $names): array
+    {
+        $rows = [];
+        foreach ($names as $index => $name) {
+            $rows[] = [
+                'id' => $index + 1,
+                'name' => $name,
+                'is_hidden' => 0,
+                'count' => 0,
+            ];
+        }
+
+        return $rows;
     }
 }

@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\MockeryTestCase;
 use Nyholm\Psr7\Stream;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RequestParserTraitTest extends MockeryTestCase
@@ -129,6 +130,7 @@ class RequestParserTraitTest extends MockeryTestCase
         );
     }
 
+    #[Override]
     protected function setUp(): void
     {
         $this->subject = new class {

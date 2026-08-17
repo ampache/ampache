@@ -130,7 +130,7 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function countAlbumDisksForCatalogs(array $catalogIds): int
     {
-        $idList = implode(',', array_map('intval', $catalogIds));
+        $idList = implode(',', array_map(intval(...), $catalogIds));
 
         return (int) $this->connection->fetchOne(
             "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `album`.`catalog` IN (" . $idList . ')'
@@ -416,7 +416,7 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function getMediaTotals(string $table, array $catalogIds, bool $enabledOnly): array
     {
-        $idList = implode(',', array_map('intval', $catalogIds));
+        $idList = implode(',', array_map(intval(...), $catalogIds));
 
         $sql = ($enabledOnly)
             ? sprintf("SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `catalog` IN (%s) AND `%s`.`enabled`='1';", $table, $idList, $table)
@@ -574,6 +574,30 @@ final readonly class UserRepository implements UserRepositoryInterface
         return (is_array($row) && $row !== [])
             ? $row
             : null;
+    }
+
+    /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $userIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $userIds): array
+    {
+        if ($userIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            'SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `subsonic_secret`, `catalog_filter_group` FROM `user` WHERE `id` IN (' . implode(',', array_map(intval(...), $userIds)) . ');'
+        );
+
+        $results = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $results[] = $row;
+        }
+
+        return $results;
     }
 
     /**

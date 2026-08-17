@@ -57,12 +57,12 @@ final class ShowEditAction extends AbstractFilterAction
             : scrub_in(htmlspecialchars($body['filter_name'] ?? '', ENT_NOQUOTES));
 
         $this->ui->showHeader();
-        echo (new EditCatalogFilterFormView(
+        echo new EditCatalogFilterFormView(
             $this->configContainer->getWebPath('/admin'),
             $filter_id,
             $filter_name,
             (bool) AmpConfig::get('catalog_filter')
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

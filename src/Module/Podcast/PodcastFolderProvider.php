@@ -61,7 +61,7 @@ final readonly class PodcastFolderProvider implements PodcastFolderProviderInter
             throw new PodcastFolderException(sprintf('Bad catalog type: %s', $catalogType));
         }
 
-        $fullPath = $catalog->get_path() . DIRECTORY_SEPARATOR . $podcast->get_fullname();
+        $fullPath = $catalog->get_path() . DIRECTORY_SEPARATOR . $this->sanitizeFolderName((string) $podcast->get_fullname());
 
         // create path if it doesn't exist
         if (
@@ -76,5 +76,18 @@ final readonly class PodcastFolderProvider implements PodcastFolderProviderInter
         }
 
         return $fullPath;
+    }
+
+    /**
+     * The title comes from the feed's own `<title>`, so it must become one path segment, never a traversal
+     */
+    private function sanitizeFolderName(string $title): string
+    {
+        $name = str_replace(['/', '\\'], '_', trim($title));
+        if (in_array($name, ['', '.', '..'], true)) {
+            $name = '_' . $name;
+        }
+
+        return $name;
     }
 }

@@ -68,7 +68,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
     public function findById(int $metadataId): ?Metadata
     {
         $result = $this->connection->query(
-            'SELECT * FROM `metadata` WHERE `id` = ?',
+            "SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, '') AS `type` FROM `metadata` WHERE `id` = ?",
             [$metadataId],
         );
 
@@ -92,7 +92,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
         string $objectType,
     ): ?Metadata {
         $result = $this->connection->query(
-            'SELECT * FROM `metadata` WHERE `object_id` = ? AND `type` = ? AND `field` = ? LIMIT 1',
+            "SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, '') AS `type` FROM `metadata` WHERE `object_id` = ? AND `type` = ? AND `field` = ? LIMIT 1",
             [
                 $objectId,
                 ucfirst($objectType),
@@ -121,7 +121,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
         string $objectType,
     ): Generator {
         $result = $this->connection->query(
-            'SELECT * FROM `metadata` WHERE `object_id` = ? AND `type` = ?',
+            "SELECT `id`, `object_id`, `field`, `data`, IFNULL(`type`, '') AS `type` FROM `metadata` WHERE `object_id` = ? AND `type` = ?",
             [
                 $objectId,
                 ucfirst($objectType),

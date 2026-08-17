@@ -69,8 +69,8 @@ class UserActivityRendererTest extends TestCase
 
         $result = $this->subject->show($useractivity);
 
-        static::assertStringContainsString('<a>actor</a>', $result);
-        static::assertStringContainsString('<a>followed</a>', $result);
+        self::assertStringContainsString('<a>actor</a>', $result);
+        self::assertStringContainsString('<a>followed</a>', $result);
     }
 
     public function testShowReturnsEmptyStringWhenActivityHasNoId(): void
@@ -82,7 +82,7 @@ class UserActivityRendererTest extends TestCase
             ->with('ratings')
             ->willReturn(true);
 
-        static::assertSame('', $this->subject->show($useractivity));
+        self::assertSame('', $this->subject->show($useractivity));
     }
 
     public function testShowReturnsEmptyStringWhenFollowedUserIsGone(): void
@@ -104,7 +104,7 @@ class UserActivityRendererTest extends TestCase
         $this->modelFactory->method('createUser')
             ->willReturnMap([[21, $this->createMock(User::class)], [42, $followed]]);
 
-        static::assertSame('', $this->subject->show($useractivity));
+        self::assertSame('', $this->subject->show($useractivity));
     }
 
     public function testShowReturnsEmptyStringWhenLibraryItemCannotBeLoaded(): void
@@ -131,7 +131,7 @@ class UserActivityRendererTest extends TestCase
             ->with(LibraryItemEnum::SONG, 42)
             ->willReturn(null);
 
-        static::assertSame('', $this->subject->show($useractivity));
+        self::assertSame('', $this->subject->show($useractivity));
     }
 
     public function testShowReturnsEmptyStringWhenRatingsDisabled(): void
@@ -146,7 +146,7 @@ class UserActivityRendererTest extends TestCase
         $this->modelFactory->expects(static::never())
             ->method('createUser');
 
-        static::assertSame('', $this->subject->show($useractivity));
+        self::assertSame('', $this->subject->show($useractivity));
     }
 
     protected function setUp(): void

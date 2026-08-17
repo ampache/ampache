@@ -65,13 +65,13 @@ final readonly class ShowAction implements ApplicationActionInterface
             echo T_('You have requested an object that does not exist');
         } else {
             $object_ids = $playlist->get_items();
-            echo (new PlaylistPageView(
+            echo new PlaylistPageView(
                 $playlist,
                 $object_ids,
                 $this->zipHandler,
                 $this->browseFactory,
                 AmpConfig::get_web_path()
-            ))->render();
+            )->render();
         }
 
         $this->ui->showQueryStats();

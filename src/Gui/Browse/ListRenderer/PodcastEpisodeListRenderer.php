@@ -125,7 +125,7 @@ final class PodcastEpisodeListRenderer extends AbstractBrowseListRenderer
     {
         $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
 
-        return (new PodcastEpisodeRowView(
+        return new PodcastEpisodeRowView(
             $episode,
             $this->configContainer->getWebPath(),
             $this->getCellClass('cel_cover', 'grid_cover'),
@@ -142,7 +142,7 @@ final class PodcastEpisodeListRenderer extends AbstractBrowseListRenderer
             Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
             Catalog::can_remove($episode)
-        ))->render();
+        )->render();
     }
 
     #[Override]

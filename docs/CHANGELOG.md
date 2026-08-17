@@ -2,23 +2,109 @@
 
 ## Ampache 8.0.1
 
+### Added (8.0.1)
+
+* Translations 2026-08-17
+* Show Catalog name on song pages
+* Increase redirect count on Podcast Episode download from 5 to 10
+* Missing ASF/Windows Media tag for Composer
+* Podcast RSS feeds
+  * `itunes:image` (per-episode too), `itunes:author`, `itunes:explicit` and an optional Apple sub-category (`rss_subcategory`)
+  * Optional path-style feed urls (`rss_beautiful_url`)
+  * Feeds are indexable and cacheable (etag/304) by default
+
 ### Changed (8.0.1)
 
+* Lock database connection on catalog actions to avoid repeats and deadlocks
 * An unrecognised `transcode_TYPE` value (e.g. `transcode_mp3 = "falsed"`) no longer counts as enabling transcoding; only `allowed`, `required` and `false` are accepted and anything else is logged and treated as `false`
 * Invalid `transcode_TYPE` values are listed on the admin debug page
-* Database 800051
+* Database 801001
   * Dropped 24 redundant indexes across 15 tables; each repeated the leading columns of a wider key already on the same table
   * `album_map`, `artist_map`, `folder_map` and `song_map` carried the most, and grow with the catalog
+* Database 801002
+  * Convert `stream_beautiful_url` to an Admin preference
+* Garbage collection actions (`admin/catalog.php?action=garbage_collect` and `php bin/cli run:updateCatalog -t`) now run `Session::garbage_collection()`, cleaning up `tmp_playlist`/`tmp_playlist_data`, `stream_playlist`, `song_preview` and the query cache, not just library objects
+  * **Run this at least once after upgrading** On a database with cron disabled that's never had this data collected, the first run can be slow
+  * Also resets the `AUTO_INCREMENT` on `stream_playlist`, `playlist_data`, `tmp_playlist` and `tmp_playlist_data` afterwards, instead of leaving those ids climb forever
+* `php bin/cli run:cronProcess`'s garbage collection now shares the same lock as the other garbage collection triggers, so a scheduled cron run can't race a manual one
+* `run:computeCache` and `run:cronProcess`'s cache rebuild now take their own lock, so two overlapping runs can't double-count the results or publish a half-rebuilt table
+* UPnP playlist browsing counts a playlist's tracks without loading them, the same way the rest of the app already does
+* Row-prefetch caching (avoiding a query per row) is extended to more listings: Browse now also covers podcast, podcast episode, live stream, label, catalog, collection, folder, user, follower, share, broadcast, private message and wanted-album pages, and the JSON/XML API list endpoints (album, artist, catalog, playlist, podcast, podcast episode, song, tag, video, user, share) now warm the same object/rating/userflag caches before their loop instead of querying per item
+* Art existence/metadata lookups (`has_db`/`has_art`) are batch-prefetched the same way during browse and artist/playlist/tag/video listing, instead of querying disk or the database per row
+* Album/album disk/video search read the catalog id straight off the row instead of joining `catalog_map`, since it's already stored there directly
+* Config version 97
+  * New `deleted_history_days` option (default `0`, keep forever); garbage collection prunes `deleted_song`/`deleted_video`/`deleted_podcast_episode` rows older than this many days
 
 ### Fixed (8.0.1)
 
+* Many possible nullable database column issues fixed
+* Don't lock the UI on larger click operations. (e.g. Album delete)
+* Redirect to the full login page on session failure
 * Every disk section on a multi-disk album page listed the first disk's songs
 * A multi-disk album shows its `[Disk N]` label again on the album page, the disk page and in song lists
+* Install Localplay as the system user so it's applied to all users
+* Preferences page
+  * `preferences.php` no longer renders for an unregistered/guest visitor
+  * Plugin credential preferences (api keys, tokens, passwords) are write-only in the edit form; the stored value is never echoed back, only replaced
+  * The `user_preferences` API method (and REST `preferences`) returned those same plugin credential values in the response; they're blanked there too
+  * The single-preference lookups (`preference`, `user_preference`, `preference_create`, `preference_edit`, `preference_delete`) still returned the raw value for a secret-named preference; `Preference::get()` now blanks it the same way
+* The account preferences page and the admin user-edit page showed the avatar delete link even when the user had no avatar set
+* An unregistered/guest visitor could upload and import a playlist file, or export every podcast subscription in the system, neither of which checked for a real account; importing a playlist also now verifies the request came from Ampache's own form
+* A user's last-seen date/time on their profile page ignored their `allow_personal_info_time` preference, unlike the recent-activity list right next to it on the same page
+* The Last.fm/Libre.fm grant-access link on the preferences page was missing its `api_key`, so granting access failed
+* Cancel/confirmation dialogs (`show_confirmation`, `show_confirmation_with_return`, `show_continue`)
+  * A callback url that merely contained the web path as a substring, rather than actually being absolute, had the web path prepended again and was mangled
+  * `return_referer()` could return the current request's own url when client-side navigation had already rewritten the address bar, sending Cancel back to the page it was on instead of the previous one
+  * The referer had already been html-escaped once before reaching the link builder, so its `&` was escaped a second time
+* The admin debug preferences page showed several boolean preferences (`api_enable_8`, `cli_no_color`, `playlist_art_mosaic`, `public_images`, `show_collection`, `show_folder`, `user_create_apikey`) with the wrong input type, because they were missing from `Preference::is_boolean()`
+* Outbound fetches
+  * Now check every redirect hop against the same private-address rule as the initial url, not just the url as given; applies to remote/radio stream playback, art fetching, and the Lyrist and YOURLS plugins
+  * The LrcLib and AudioMuse-AI plugins didn't check the configured server url at all before fetching from it; they now do
+* A podcast feed's own `<title>` was used unsanitized as a folder name, so a hostile feed containing `../` could create directories and write episode files outside the catalog
+* Upload's target-folder check accepted any resolved path that merely started with the catalog path as a string (e.g. a sibling `music-private` folder next to `music`), rather than requiring it to actually be inside the catalog directory
+* `Core::generate_random_key()` hashed a predictable seed instead of drawing directly from a secure random source; it backs session ids, api keys and the CSRF form token, and now uses `random_bytes()` for the full 128 bits
+* Browse
+  * A handful of filters (`rating`, `folder`'s `id`, `song`'s `top50` artist match, `playlist`'s smartlist id list) built their `WHERE`/`IN` value without the surrounding quotes `Dba::escape()` expects; the value is quoted like every other escaped filter now
+* The `upload_script` post-processing hook (opt-in, off by default) substituted the uploaded file's own client-supplied name into `%FILE%` and ran the result as a shell command; a filename carrying shell metacharacters could run arbitrary commands as the web server user. The filename is shell-escaped before substitution now
+* Login compared the stored password hash to the submitted one with `==`/`in_array()` instead of a constant-time comparison; both now use `hash_equals()`
+* Logging in with a `referrer` pointing at a host that merely starts with the site's own url (e.g. `yoursite.com.attacker.net`) was honoured as a same-site redirect after a successful login; the referrer's host is now compared exactly
+* A song or video title containing a `"` broke out of the quoted `Content-Disposition` filename on download, letting extra parameters be appended; the character is stripped like the linebreak/comma/semicolon it already strips
+* The `theme_name`/`theme_color` preferences were only checked for existing on disk, not for staying inside the themes directory; both are now rejected outright if they contain a path separator
+* A profile self-update could smuggle in `catalog_filter_group` alongside the fields the form actually offers, silently reassigning the user's own catalog visibility group; it's stripped from the request like `access` already was
+* The session, `_remember` and `_user`/`_lang` cookies were missing `HttpOnly`, so any XSS could read them and steal the session directly instead of just acting within the page; it's set on every auth-bearing cookie now
+* Browse
+  * The `regex_match`/`regex_not_match` filter value reaches SQL `REGEXP` as-is with no length limit; it's now capped at 100 characters against a catastrophic-backtracking pattern
+* A share's secret was compared with `!=` instead of a constant-time comparison, so two "magic hash" values (`0e` followed only by digits) could match each other regardless of their actual digits; it now uses `hash_equals()`
+* Folders (browse, WebDAV) never honoured the opt-in `catalog_filter` restriction that every other object type already respects; a user's `catalog_filter_group` is now applied to a folder's children, media count and media list the same way it is everywhere else
+* A zip/batch download's `id` list had no length limit, so a single request could drive an unbounded number of item loads and file reads; it's now capped at 500 ids
+* Database 800038
+  * The podcast play-count backfill could loop forever, inserting duplicate rows, for a podcast episode play with no recorded streaming agent
+* Database 801003
+  * Restrict `headphones_api_url`/`headphones_api_key` to Manager level; a regular account could previously point the server at an arbitrary internal address
+* A song's disk subtitle was printed unescaped on the song details page, unlike everywhere else it appears
+* A play url read back in a later request than the one that built it (a Localplay queue, an API url-to-song lookup, a stored playlist import) could be misparsed if `stream_beautiful_url` had changed in between, breaking democratic voting, HLS playback, download links and Localplay's democratic auto-repeat
+* Album disk page
+  * Rating and flag icons acted on the whole album instead of just that disk
+  * Album art didn't display, since it was looked up against the disk instead of the album it belongs to
+  * The delete link deleted the entire album instead of the disk, so it's hidden there until deleting a single disk is supported
 * The Now Playing box no longer breaks the page when an entry has no recorded streaming agent, which is every play reported through Subsonic
 * New users are given the default `transcode_bitrate` of `128000` bps instead of `32`
+* A file tag rescan or manual edit could drop and recreate a mood whose name differs from the stored one only by non-ASCII case (e.g. accented letters), instead of leaving the existing mapping alone
+* A search, filter or page turn that matched nothing reloaded the browse's previous page instead of showing zero results
 * Search
   * A song search on album rating matched the wrong album when `album_group` is off; the `album_disk` rating is now looked up by disk instead of by album id
   * A song search on album rating no longer joins `album_disk` when `album_group` is on, which multiplied the working set by the disk count for no gain
+* PHP 8.2+ dynamic-property deprecation noise from vendor libraries (e.g. Ratchet) no longer floods the log; deprecations from Ampache's own code still show
+* The Popular/Newest/Userflag Video pages could throw a `TypeError` on `Browse::set_threshold()`
+* Recently played (activity feed and RSS)
+  * A play repeated the same MusicBrainz-derived guid on every listen of that song instead of a per-play one, so RSS clients treated repeats as a single duplicate entry
+  * An item mapped to more than one catalog could show up twice
+* Podcast RSS feed
+  * Cover art used the item's own type instead of always `album`, and art fallback urls served a 128px image instead of the full size
+  * `language` used the full locale (`fr-FR`) instead of the two-letter code iTunes expects
+  * A `bytes=0-`/`bytes=0-0` range request answered `200` instead of `206`; suffix ranges (`bytes=-500`) are now resolved against the file size too
+  * Streamed episodes were sent as attachments instead of inline, forcing a download prompt in podcast apps that just want to play them
+  * Episode urls weren't percent-encoded, breaking any filename containing a space
 
 ## Ampache 8.0.0
 
@@ -551,6 +637,41 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Browse
   * Filtering a song list from the sidebar `Filters` box dropped the track numbers and the `#` sort column and brought back the columns the page had hidden, on the album, album disk, playlist, podcast and label pages
   * The `Limit` box and the song list's `Year` sort header lost the same columns
+
+## Ampache 7.10.2
+
+### Fixed (7.10.2)
+
+* API authorization did not require the api key to identify the user; `Gatekeeper::getUser()` fell back to the `user` request parameter when the key did not match a user
+  * A request carrying an unknown key was still resolved to whoever the `user` parameter named
+* Subsonic
+  * `createPlaylist` sent with a `playlistId` rewrites that playlist, but unlike `updatePlaylist` it never checked who owned it, so any user could overwrite another user's playlist
+  * The same owner check now applies, and an id that does not exist returns a not-found error instead of creating a list
+* Transcoding
+  * The `resolution` playback option was substituted into `%RESOLUTION%` and handed to a shell unchecked; only a literal `WIDTHxHEIGHT` is accepted now and anything else falls back to the default
+  * `quality` is cast to an int before it is used in the bitrate calculation
+* Playlist, smartlist and genre names were written into the search and genre-row templates without escaping
+* Every play, skip and play-count rollback ran an update against `folder` and `folder_map`, which are Ampache8 tables, so counting a song, video or podcast episode logged an SQL error on tables that do not exist in Ampache7
+* Renaming a smart playlist from the web interface did nothing, because the edit action passed the POSTed id along as a string and `Search` takes an int (#4426)
+* Activating the 7digital plugin created none of its preferences, so it could not be configured; the check meant to skip preferences that already exist was inverted, and only ran the insert when there was nothing to insert
+* The Headphones plugin's `headphones_api_url` and `headphones_api_key` preferences were installed at User level, so any regular user could point the server at an arbitrary internal address; both are now Manager level, matching every other plugin url preference
+* `Core::generate_random_key()` hashed a predictable seed instead of drawing directly from a secure random source; it backs session ids, api keys and the CSRF form token, and now uses `random_bytes()` for the full 128 bits
+* Browse
+  * A handful of filters (`rating`, `song`'s `top50` artist match) built their `WHERE` value without the surrounding quotes `Dba::escape()` expects; the value is quoted like every other escaped filter now
+* The `upload_script` post-processing hook (opt-in, off by default) substituted the uploaded file's own client-supplied name into `%FILE%` and ran the result as a shell command; a filename carrying shell metacharacters could run arbitrary commands as the web server user. The filename is shell-escaped before substitution now
+* Login compared the stored password hash to the submitted one with `==`/`in_array()` instead of a constant-time comparison; both now use `hash_equals()`
+* Logging in with a `referrer` pointing at a host that merely starts with the site's own url (e.g. `yoursite.com.attacker.net`) was honoured as a same-site redirect after a successful login; the referrer's host is now compared exactly
+* A song or video title containing a `"` broke out of the quoted `Content-Disposition` filename on download, letting extra parameters be appended; the character is stripped like the linebreak/comma/semicolon it already strips
+* The `theme_name`/`theme_color` preferences were only checked for existing on disk, not for staying inside the themes directory; both are now rejected outright if they contain a path separator
+* A profile self-update could smuggle in `catalog_filter_group` alongside the fields the form actually offers, silently reassigning the user's own catalog visibility group; it's stripped from the request like `access` already was
+* The session, `_remember` and `_user`/`_lang` cookies were missing `HttpOnly`, so any XSS could read them and steal the session directly instead of just acting within the page; it's set on every auth-bearing cookie now
+* API and stream session keys were built from `mt_rand()`/`uniqid()` instead of a secure random source; they now use the same `Core::generate_random_key()` the login CSRF token and web session already relied on
+* Browse
+  * The `regex_match`/`regex_not_match` filter value reaches SQL `REGEXP` as-is with no length limit; it's now capped at 100 characters against a catastrophic-backtracking pattern
+* A share's secret was compared with `!=` instead of a constant-time comparison, so two "magic hash" values (`0e` followed only by digits) could match each other regardless of their actual digits; it now uses `hash_equals()`
+* Database
+  * Downgrading from Ampache8 removes the `broadcast_private`, `show_mood` and `hide_moods` preferences instead of leaving them in the preferences list
+  * `headphones_api_url`/`headphones_api_key` are raised to Manager level for existing installs
 
 ## Ampache 7.10.1
 

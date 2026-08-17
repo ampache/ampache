@@ -89,6 +89,29 @@ class Share extends database_object
         $this->description    = $info['description'] ?? null;
     }
 
+    /**
+     * Caches a set of shares in one query rather than one per object
+     *
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if ($ids === []) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getShareRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('share', (int) $row['id'], $row);
+        }
+
+        return true;
+    }
+
     public static function display_ui(string $object_type, int $object_id, bool $show_text = true): string
     {
         $result = sprintf(
@@ -135,6 +158,16 @@ class Share extends database_object
         }
 
         return $url;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 
     public function create_fake_playlist(): Stream_Playlist
@@ -303,7 +336,7 @@ class Share extends database_object
             $this->secret !== null
             && $this->secret !== ''
             && $this->secret !== '0'
-            && $secret != $this->secret
+            && !hash_equals($this->secret, $secret)
         ) {
             debug_event(self::class, 'Access Denied: secret requires to access share ' . $this->id . '.', 3);
 
@@ -372,7 +405,7 @@ class Share extends database_object
         $this->description    = $data['description'] ?? $this->description;
 
         try {
-            $this->getShareRepository()->update($this, $user);
+            self::getShareRepository()->update($this, $user);
         } catch (DatabaseException) {
             return false;
         }
@@ -403,15 +436,5 @@ class Share extends database_object
         }
 
         return $this->object ?? null;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getShareRepository(): ShareRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ShareRepositoryInterface::class);
     }
 }

@@ -131,7 +131,7 @@ final readonly class MoodRepository implements MoodRepositoryInterface
         $params     = ($moodId === 0) ? [$objectType] : [$moodId, $objectType];
 
         $sql = sprintf('SELECT DISTINCT `mood_map`.`object_id` FROM `mood_map` WHERE %s `mood_map`.`object_type` = ?', $moodClause);
-        if (AmpConfig::get('catalog_disable') && in_array($objectType, self::CATALOG_TYPES)) {
+        if (AmpConfig::get('catalog_disable') && in_array($objectType, self::CATALOG_TYPES, true)) {
             $sql .= ' AND ' . Catalog::get_enable_filter($objectType, '`mood_map`.`object_id`');
         }
 
@@ -239,7 +239,7 @@ final readonly class MoodRepository implements MoodRepositoryInterface
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $moodIds));
+        $idList = implode(',', array_map(intval(...), $moodIds));
 
         $result = $this->connection->query('SELECT * FROM `mood` WHERE `id` IN (' . $idList . ')');
 
@@ -342,22 +342,20 @@ final readonly class MoodRepository implements MoodRepositoryInterface
         );
     }
 
-    public function removeAllMaps(string $objectType, int $objectId, ?int $userId = null): void
+    public function removeAllMaps(string $objectType, int $objectId, ?int $userId = null): int
     {
         // a null user clears the lot, which is what deleting the object wants; an id keeps everybody else's, so a scan cannot drop a hand-set mood
         if ($userId === null) {
-            $this->connection->query(
+            return $this->connection->query(
                 'DELETE FROM `mood_map` WHERE `object_type` = ? AND `object_id` = ?',
                 [$objectType, $objectId]
-            );
-
-            return;
+            )->rowCount();
         }
 
-        $this->connection->query(
+        return $this->connection->query(
             'DELETE FROM `mood_map` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?',
             [$objectType, $objectId, $userId]
-        );
+        )->rowCount();
     }
 
     public function removeMap(int $moodId, string $objectType, int $objectId, ?int $userId = null): void

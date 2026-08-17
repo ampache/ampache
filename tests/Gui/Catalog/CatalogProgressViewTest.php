@@ -48,10 +48,10 @@ class CatalogProgressViewTest extends TestCase
 
     public function testGetCounterInitialValueIsOnlySetWhereNothingIsAValidResult(): void
     {
-        static::assertNotSame('', (new CatalogProgressView(CatalogProgressTypeEnum::ADD, 1))->getCounterInitialValue());
-        static::assertNotSame('', (new CatalogProgressView(CatalogProgressTypeEnum::ART, 1))->getCounterInitialValue());
-        static::assertSame('', (new CatalogProgressView(CatalogProgressTypeEnum::CLEAN, 1))->getCounterInitialValue());
-        static::assertSame('', (new CatalogProgressView(CatalogProgressTypeEnum::VERIFY, 1))->getCounterInitialValue());
+        self::assertNotSame('', new CatalogProgressView(CatalogProgressTypeEnum::ADD, 1)->getCounterInitialValue());
+        self::assertNotSame('', new CatalogProgressView(CatalogProgressTypeEnum::ART, 1)->getCounterInitialValue());
+        self::assertSame('', new CatalogProgressView(CatalogProgressTypeEnum::CLEAN, 1)->getCounterInitialValue());
+        self::assertSame('', new CatalogProgressView(CatalogProgressTypeEnum::VERIFY, 1)->getCounterInitialValue());
     }
 
     #[DataProvider('elementIdDataProvider')]
@@ -62,16 +62,16 @@ class CatalogProgressViewTest extends TestCase
     ): void {
         $subject = new CatalogProgressView($type, 666, 'some-catalog');
 
-        static::assertSame($counterId, $subject->getCounterElementId());
-        static::assertSame($readerId, $subject->getReaderElementId());
+        self::assertSame($counterId, $subject->getCounterElementId());
+        self::assertSame($readerId, $subject->getReaderElementId());
     }
 
     public function testGetHeadingEscapesTheCatalogName(): void
     {
         $subject = new CatalogProgressView(CatalogProgressTypeEnum::CLEAN, 666, 'Rock & Roll');
 
-        static::assertStringContainsString('Rock &amp; Roll', $subject->getHeading());
-        static::assertStringNotContainsString('Rock & Roll', $subject->getHeading());
+        self::assertStringContainsString('Rock &amp; Roll', $subject->getHeading());
+        self::assertStringNotContainsString('Rock & Roll', $subject->getHeading());
     }
 
     /**
@@ -81,7 +81,7 @@ class CatalogProgressViewTest extends TestCase
     {
         $subject = new CatalogProgressView(CatalogProgressTypeEnum::ART, 666, 'some-catalog');
 
-        static::assertStringNotContainsString('some-catalog', $subject->getHeading());
+        self::assertStringNotContainsString('some-catalog', $subject->getHeading());
     }
 
     /**
@@ -91,6 +91,6 @@ class CatalogProgressViewTest extends TestCase
     {
         $subject = new CatalogProgressView(CatalogProgressTypeEnum::VERIFY, 666);
 
-        static::assertStringContainsString('<strong>[  ]</strong>', $subject->getHeading());
+        self::assertStringContainsString('<strong>[  ]</strong>', $subject->getHeading());
     }
 }

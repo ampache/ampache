@@ -29,6 +29,7 @@ use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\User;
+use Override;
 
 /**
  * Manages search related database access
@@ -113,6 +114,7 @@ final readonly class SearchRepository extends AbstractPlaylistObjectRepository i
      *
      * @return array<string, mixed>
      */
+    #[Override]
     protected function editableColumns(playlist_object $item): array
     {
         if (!$item instanceof Search) {

@@ -395,6 +395,7 @@ class Catalog_local extends Catalog
      * full path in an array. Passes gather_type to determine if we need to
      * check id3 information against the db.
      * @param array<string, mixed> $options
+     * @phpstan-impure
      */
     public function add_files(string $path, array $options, ?Interactor $interactor = null): int
     {
@@ -536,7 +537,7 @@ class Catalog_local extends Catalog
         $this->videos_to_gather = [];
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            echo (new CatalogProgressView(CatalogProgressTypeEnum::ADD, $this->getId(), $this->name))->render();
+            echo new CatalogProgressView(CatalogProgressTypeEnum::ADD, $this->getId(), $this->name)->render();
             flush();
         }
 
@@ -595,11 +596,11 @@ class Catalog_local extends Catalog
                 debug_event(self::class, 'gather_art after adding', 4);
                 $catalog_id = $this->getId();
                 if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-                    echo (new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id))->render();
+                    echo new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id)->render();
                     flush();
                 }
 
-                if (!empty($this->songs_to_gather) || !empty($this->videos_to_gather)) {
+                if ($this->songs_to_gather !== [] || $this->videos_to_gather !== []) {
                     $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
                 }
             }
@@ -754,7 +755,7 @@ class Catalog_local extends Catalog
         // fetch all song paths and times in one query
         $song_rows = [];
         foreach (array_chunk($results, 500) as $chunk) {
-            $idlist     = implode(',', array_map('intval', $chunk));
+            $idlist     = implode(',', array_map(intval(...), $chunk));
             $db_results = Dba::read("SELECT `id`, `file`, `time` FROM `song` WHERE `id` IN (" . $idlist . ");");
             while ($row = Dba::fetch_assoc($db_results)) {
                 $song_rows[(int) $row['id']] = ['file' => (string) $row['file'], 'time' => (int) $row['time']];
@@ -822,6 +823,7 @@ class Catalog_local extends Catalog
                     if (is_file($tmp_file)) {
                         unlink($tmp_file);
                     }
+
                     debug_event('local.catalog', 'Transcode failed for: ' . $song_id . ' {' . $tmp_file . '}', 3);
                 }
             }
@@ -987,7 +989,7 @@ class Catalog_local extends Catalog
      */
     public function clean_file(string $file, string $media_type = 'song'): bool
     {
-        $file_info = (!is_file($file)) ? 0 : filesize(Core::conv_lc_file($file));
+        $file_info = (is_file($file)) ? filesize(Core::conv_lc_file($file)) : 0;
         if (!$file_info) {
             $object_id = Catalog::get_id_from_file($file, $media_type);
             debug_event('local.catalog', 'clean_file: {' . $object_id . '} File not found or empty ' . $file, 5);

@@ -69,7 +69,7 @@ class ShareUiLinkRendererTest extends TestCase
 
         $result = $this->subject->render(LibraryItemEnum::ALBUM, 21);
 
-        static::assertStringContainsString(
+        self::assertStringContainsString(
             'https://example.com/batch.php?action=album&id=21',
             $result,
         );
@@ -88,7 +88,7 @@ class ShareUiLinkRendererTest extends TestCase
 
         $result = $this->subject->render(LibraryItemEnum::SONG, 42);
 
-        static::assertStringContainsString(
+        self::assertStringContainsString(
             'https://example.com/play/index.php?action=download&type=song&oid=42&uid=-1',
             $result,
         );
@@ -115,7 +115,7 @@ class ShareUiLinkRendererTest extends TestCase
 
         $result = $this->subject->render(LibraryItemEnum::ALBUM, 21);
 
-        static::assertStringNotContainsString('batch.php', $result);
+        self::assertStringNotContainsString('batch.php', $result);
     }
 
     public function testRenderOmitsDownloadLinkWhenFeatureDisabled(): void
@@ -133,8 +133,8 @@ class ShareUiLinkRendererTest extends TestCase
 
         $result = $this->subject->render(LibraryItemEnum::SONG, 42);
 
-        static::assertStringNotContainsString('action=download', $result);
-        static::assertStringContainsString('action=show_create&type=song&id=42', $result);
+        self::assertStringNotContainsString('action=download', $result);
+        self::assertStringContainsString('action=show_create&type=song&id=42', $result);
     }
 
     protected function setUp(): void

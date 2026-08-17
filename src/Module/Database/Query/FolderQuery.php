@@ -112,7 +112,7 @@ final class FolderQuery implements QueryInterface
         $filter_sql = '';
         switch ($filter) {
             case 'id':
-                $filter_sql = " `folder`.`id` = " . Dba::escape($value) . " AND ";
+                $filter_sql = " `folder`.`id` = '" . Dba::escape($value) . "' AND ";
                 break;
             case 'int_id':
                 $filter_sql = ($value === -1)
@@ -156,7 +156,7 @@ final class FolderQuery implements QueryInterface
             case 'user_rating':
                 $filter_sql = ((int) $value === 0)
                     ? " `folder`.`int_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'folder' AND `user` = " . (int) $query->user_id . ") AND "
-                    : " `folder`.`int_id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'folder' AND `user` = " . (int) $query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                    : " `folder`.`int_id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'folder' AND `user` = " . (int) $query->user_id . " AND `rating` = '" . Dba::escape($value) . "') AND ";
                 break;
         }
 

@@ -98,7 +98,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->with('SELECT `id` FROM `podcast_episode` WHERE `file` = ?;', ['/podcast/ep.mp3'])
             ->willReturn('666');
 
-        static::assertSame(666, $this->subject->findIdByFile('/podcast/ep.mp3'));
+        self::assertSame(666, $this->subject->findIdByFile('/podcast/ep.mp3'));
     }
 
     public function testGetEpisodeCountReturnsValue(): void
@@ -303,7 +303,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
 
         self::assertSame(
             [$episode],
-            iterator_to_array($this->subject->getEpisodesEligibleForDownload($podcast, null))
+            iterator_to_array($this->subject->getEpisodesEligibleForDownload($podcast))
         );
     }
 
@@ -394,7 +394,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('666', false);
 
-        static::assertSame([666], $this->subject->getNewestIdsByCatalog(7, 5));
+        self::assertSame([666], $this->subject->getNewestIdsByCatalog(7, 5));
     }
 
     public function testGetNewestIdsByCatalogOmitsTheLimitForACountOfZero(): void
@@ -413,7 +413,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getNewestIdsByCatalog(7, 0));
+        self::assertSame([], $this->subject->getNewestIdsByCatalog(7, 0));
     }
 
     public function testSetFileStoresThePath(): void
@@ -458,10 +458,10 @@ class PodcastEpisodeRepositoryTest extends TestCase
         $this->subject->updateAllCounts();
 
         // an episode that was only ever skipped has no stream row, and must keep the skips it has
-        static::assertStringContainsString('`total_skip` = 0', $calls[1]);
-        static::assertStringNotContainsString("`count_type` = 'stream'", $calls[1]);
-        static::assertStringContainsString('`total_count` = 0', $calls[0]);
-        static::assertStringNotContainsString("`count_type` = 'skip'", $calls[0]);
+        self::assertStringContainsString('`total_skip` = 0', $calls[1]);
+        self::assertStringNotContainsString("`count_type` = 'stream'", $calls[1]);
+        self::assertStringContainsString('`total_count` = 0', $calls[0]);
+        self::assertStringNotContainsString("`count_type` = 'skip'", $calls[0]);
     }
 
     public function testUpdateAllCountsRunsTheSixEpisodeSweeps(): void
@@ -479,7 +479,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
         $this->subject->updateAllCounts();
 
         foreach ($calls as $sql) {
-            static::assertStringStartsWith('UPDATE `podcast_episode`', $sql);
+            self::assertStringStartsWith('UPDATE `podcast_episode`', $sql);
         }
     }
 

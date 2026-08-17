@@ -178,14 +178,13 @@ $(function() {
         };
 
         if (hasFile) {
-            // must be async: sending a file body on a synchronous XHR is deprecated and browsers
-            // refuse it for larger payloads
+            // sending a file body on a synchronous XHR is deprecated and browsers refuse it for larger payloads
             options.data        = new FormData(this);
             options.processData = false;
             options.contentType = false;
         } else {
-            options.async = false;
-            options.data  = $(this).serializeArray();
+            // async, so a slow request (e.g. deleting an album's files) doesn't freeze the tab and interrupt playback while it's in flight
+            options.data = $(this).serializeArray();
         }
 
         $.ajax(options);
@@ -331,10 +330,15 @@ export function loadContentData(data, status, jqXHR)
 {
     var $response = $(data);
 
+    // data needs a full document here (e.g. the login page after a session expired mid-navigation).
     if ($response.find("#guts").length === 0) {
+        var incomingBody = new DOMParser().parseFromString(data, "text/html").body;
+
         $("body").undelegate("a");
         $("body").undelegate("form");
-        $("body").empty().append($response);
+        document.body.id        = incomingBody.id;
+        document.body.className = incomingBody.className;
+        $("body").empty().append($(incomingBody.childNodes));
         // body was emptied, so the store went with it -- rebuild it from what just arrived
         hoistMaterialSymbols();
 

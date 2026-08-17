@@ -32,22 +32,22 @@ class SmartlistTest extends TestCase
 {
     public function testInheritsTheSearchTableThatTheSharedWritesInterpolate(): void
     {
-        static::assertSame(
+        self::assertSame(
             'search',
-            (new ReflectionClass(Smartlist::class))->getConstant('DB_TABLENAME')
+            new ReflectionClass(Smartlist::class)->getConstant('DB_TABLENAME')
         );
     }
 
     public function testIsASearchSoEveryExistingTypeCheckStillPasses(): void
     {
-        static::assertTrue(is_subclass_of(Smartlist::class, Search::class));
+        self::assertTrue(is_subclass_of(Smartlist::class, Search::class));
     }
 
     public function testTakesNoObjectTypeSoTheCallerCannotPickOne(): void
     {
-        $parameters = (new ReflectionMethod(Smartlist::class, '__construct'))->getParameters();
+        $parameters = new ReflectionMethod(Smartlist::class, '__construct')->getParameters();
 
-        static::assertSame(
+        self::assertSame(
             ['search_id', 'user'],
             array_map(static fn($parameter): string => $parameter->getName(), $parameters)
         );

@@ -67,10 +67,10 @@ final readonly class ShowEditAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Edit license'));
-        echo (new EditLicenseFormView(
+        echo new EditLicenseFormView(
             $this->configContainer->getWebPath('/admin'),
             $license
-        ))->render();
+        )->render();
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

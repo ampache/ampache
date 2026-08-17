@@ -46,7 +46,7 @@ final class TestPageView extends AbstractView
 
     public function renderChecks(): string
     {
-        return (new TestTableView($this->environment, $this->configFile))->render();
+        return new TestTableView($this->environment, $this->configFile)->render();
     }
 
     #[Override]

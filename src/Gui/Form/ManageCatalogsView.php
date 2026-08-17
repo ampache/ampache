@@ -32,12 +32,6 @@ use Override;
  */
 final class ManageCatalogsView extends AbstractFormView
 {
-    public function __construct(
-        string $webPath,
-    ) {
-        parent::__construct($webPath);
-    }
-
     #[Override]
     protected function templateFile(): string
     {

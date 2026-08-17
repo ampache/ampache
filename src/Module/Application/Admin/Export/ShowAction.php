@@ -57,14 +57,14 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        echo (new CatalogExportView(
+        echo new CatalogExportView(
             AmpConfig::get_web_path('/admin'),
             $this->catalogLoader->getCatalogs(),
             [
                 CatalogExportTypeEnum::CSV->value => T_('CSV'),
                 CatalogExportTypeEnum::ITUNES->value => T_('iTunes'),
             ]
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -79,9 +79,9 @@ final class ScriptsView extends AbstractView
         }
 
         try {
-            $entrypoint = (new Manifest($manifest, $this->webPath . '/dist/'))->getEntrypoint('src/js/main.js', false);
-        } catch (Exception $error) {
-            debug_event(self::class, 'Vite manifest error: ' . $error->getMessage(), 3);
+            $entrypoint = new Manifest($manifest, $this->webPath . '/dist/')->getEntrypoint('src/js/main.js', false);
+        } catch (Exception $exception) {
+            debug_event(self::class, 'Vite manifest error: ' . $exception->getMessage(), 3);
 
             return null;
         }

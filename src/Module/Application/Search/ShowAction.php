@@ -49,14 +49,14 @@ final readonly class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        echo (new SearchFormView(
+        echo new SearchFormView(
             null,
             null,
             null,
             $this->videoRepository,
             AmpConfig::get_web_path(),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

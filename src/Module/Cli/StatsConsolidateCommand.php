@@ -29,6 +29,7 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Statistics\Stats;
+use Override;
 
 final class StatsConsolidateCommand extends Command
 {
@@ -71,9 +72,10 @@ final class StatsConsolidateCommand extends Command
         }
     }
 
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn($exitCode = 0) => exit($exitCode));
 

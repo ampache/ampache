@@ -75,7 +75,7 @@ final class ShareListRenderer extends AbstractBrowseListRenderer
 
     public function renderRow(Share $share): string
     {
-        return (new ShareRowView($share))->render();
+        return new ShareRowView($share)->render();
     }
 
     #[Override]

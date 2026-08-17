@@ -216,8 +216,8 @@ class ShowEditActionTest extends TestCase
             $output = (string) ob_get_clean();
         }
 
-        static::assertStringContainsString('some-text', $output);
-        static::assertStringContainsString('some-object-link', $output);
+        self::assertStringContainsString('some-text', $output);
+        self::assertStringContainsString('some-object-link', $output);
     }
 
     protected function setUp(): void

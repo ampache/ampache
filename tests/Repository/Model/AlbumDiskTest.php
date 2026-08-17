@@ -41,7 +41,7 @@ class AlbumDiskTest extends TestCase
             ->with(21, 2, 7, 'some-subtitle', 42)
             ->willReturn(666);
 
-        static::assertSame(
+        self::assertSame(
             666,
             AlbumDisk::check(21, 2, 7, 'some-subtitle', 42)
         );
@@ -56,7 +56,7 @@ class AlbumDiskTest extends TestCase
             ->with($subject)
             ->willReturn(3);
 
-        static::assertSame(3, $subject->get_artist_count());
+        self::assertSame(3, $subject->get_artist_count());
     }
 
     public function testGetSongsDelegatesToTheRepository(): void
@@ -68,16 +68,16 @@ class AlbumDiskTest extends TestCase
             ->with($subject)
             ->willReturn([1, 2]);
 
-        static::assertSame([1, 2], $subject->get_songs());
+        self::assertSame([1, 2], $subject->get_songs());
     }
 
     public function testIsNewReturnsTrueForAnUnsavedItem(): void
     {
         $subject = new AlbumDisk();
 
-        static::assertTrue($subject->isNew());
-        static::assertSame(0, $subject->getId());
-        static::assertSame(LibraryItemEnum::ALBUM_DISK, $subject->getMediaType());
+        self::assertTrue($subject->isNew());
+        self::assertSame(0, $subject->getId());
+        self::assertSame(LibraryItemEnum::ALBUM_DISK, $subject->getMediaType());
     }
 
     protected function setUp(): void

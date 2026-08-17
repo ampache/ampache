@@ -67,12 +67,12 @@ final class ShowInstancesAction extends AbstractLocalPlayAction
         $localplay = new LocalPlay($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_CONTROLLER));
         $instances = $localplay->get_instances();
         $fields    = $localplay->get_instance_fields();
-        echo (new LocalplayInstancesView(
+        echo new LocalplayInstancesView(
             $this->configContainer->getWebPath(),
             $localplay,
             $instances,
             $fields
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

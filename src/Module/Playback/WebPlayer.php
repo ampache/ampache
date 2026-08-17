@@ -232,7 +232,7 @@ class WebPlayer
             : $file_type;
 
         if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
-            if ($types['real'] == "ogg" || $types['real'] == "opus" || $types['real'] == "opus_rg" || $types['real'] == "opus_car") {
+            if (in_array($types['real'], ["ogg", "opus", "opus_rg", "opus_car"], true)) {
                 $types['player'] = "oga";
             } elseif ($types['real'] == "mp4") {
                 $types['player'] = "m4a";

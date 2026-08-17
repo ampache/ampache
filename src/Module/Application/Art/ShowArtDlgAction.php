@@ -58,13 +58,13 @@ final class ShowArtDlgAction extends AbstractArtAction
 
         $this->ui->showHeader();
 
-        echo (new GetArtView(
+        echo new GetArtView(
             $item,
             $object_id,
             (string) $object_type,
             $burl,
             AmpConfig::get_web_path()
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

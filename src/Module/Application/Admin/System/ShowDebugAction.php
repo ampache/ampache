@@ -69,13 +69,13 @@ final readonly class ShowDebugAction implements ApplicationActionInterface
         $configuration  = AmpConfig::get_all();
         $latest_version = AutoUpdate::get_latest_version(($this->requestParser->getFromRequest('autoupdate') === 'force'));
 
-        echo (new DebugView(
+        echo new DebugView(
             AmpConfig::get_web_path('/admin'),
             $this->environment,
             $configuration,
             $latest_version,
             (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::CRON_DATE)
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

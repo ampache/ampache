@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Database\Query\Browse;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
 use Override;
@@ -103,7 +102,7 @@ final class LabelListRenderer extends AbstractBrowseListRenderer
         $mayInteract = $this->gatekeeperFactory->createGuiGatekeeper()
             ->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 
-        return (new LabelRowView(
+        return new LabelRowView(
             $this->configContainer->getWebPath(),
             $label,
             $this->getCoverClass(),
@@ -111,7 +110,7 @@ final class LabelListRenderer extends AbstractBrowseListRenderer
             $mayInteract,
             (bool) $this->configContainer->get('sociable'),
             Catalog::can_remove($label)
-        ))->render();
+        )->render();
     }
 
     #[Override]

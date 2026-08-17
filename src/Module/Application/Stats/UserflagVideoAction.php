@@ -70,7 +70,7 @@ final readonly class UserflagVideoAction implements ApplicationActionInterface
         ) {
             $objects = Userflag::get_latest('video', $gatekeeper->getUser(), -1, 0, 0, 0, $by_user);
             $browse  = $this->browseFactory->create();
-            $browse->set_threshold($thresh_value);
+            $browse->set_threshold((string) $thresh_value);
             $browse->set_type('video');
             $browse->set_sort('user_flag', 'DESC');
             $browse->show_objects($objects);

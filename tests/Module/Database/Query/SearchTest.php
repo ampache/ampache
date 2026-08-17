@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\MockeryTestCase;
-use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -130,6 +130,7 @@ class SearchTest extends MockeryTestCase
         }
     }
 
+    #[Override]
     protected function setUp(): void
     {
         // Search::prepare() builds a user, which reaches Catalog::get_catalogs() through the `global $dic` bridge

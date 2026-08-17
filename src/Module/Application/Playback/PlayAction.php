@@ -135,7 +135,8 @@ final readonly class PlayAction implements ApplicationActionInterface
 
             $_REQUEST     = $new_request;
             $action       = $new_request['action'] ?? '';
-            $stream_name  = $new_request['name'] ?? '';
+            // the path segments came straight off the raw query string, so 'name' is still percent-encoded
+            $stream_name  = rawurldecode($new_request['name'] ?? '');
             $object_id    = (int) scrub_in((string) ($new_request['oid'] ?? 0));
             $user_id      = (int) scrub_in((string) ($new_request['uid'] ?? 0));
             $session_id   = (string) scrub_in($new_request['ssid'] ?? '');
@@ -458,7 +459,13 @@ final readonly class PlayAction implements ApplicationActionInterface
         }
 
         // If they are using access lists let's make sure that they have enough access to play this mojo
-        if (AmpConfig::get('access_control') && (!$this->networkChecker->check(AccessTypeEnum::STREAM, Core::get_global('user')?->getId()) && !$this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')?->getId()))) {
+        if (
+            AmpConfig::get('access_control')
+            && (
+                !$this->networkChecker->check(AccessTypeEnum::STREAM, Core::get_global('user')?->getId())
+                && !$this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')?->getId())
+            )
+        ) {
             throw new AccessDeniedException(
                 sprintf('Streaming Access Denied: %s does not have stream level access', Core::get_user_ip())
             );
@@ -517,6 +524,7 @@ final readonly class PlayAction implements ApplicationActionInterface
 
                     return null;
                 }
+
                 if (!Core::is_readable(Core::conv_lc_file((string) $media->file))) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently unreadable, song skipped",
@@ -583,6 +591,7 @@ final readonly class PlayAction implements ApplicationActionInterface
 
                     return null;
                 }
+
                 if (!Core::is_readable(Core::conv_lc_file((string) $media->file))) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently unreadable, song skipped",
@@ -896,11 +905,19 @@ final readonly class PlayAction implements ApplicationActionInterface
             $start        = 0;
             $end          = 0;
             $range_values = sscanf(Core::get_server('HTTP_RANGE'), "bytes=%d-%d", $start, $end);
+            $start        = (int) $start;
+            $end          = (int) $end;
             $stream_size  = $file_size;
-            if ($range_values > 0 && ($start > 0 || $end > 0)) {
-                $end = ($range_values >= 2)
-                    ? (int) min($end, $file_size - 1)
-                    : $file_size - 1;
+            if ($range_values > 0) {
+                if ($start < 0) {
+                    // a suffix range asks for the last bytes of the file
+                    $start = max(0, $file_size + $start);
+                    $end   = $file_size - 1;
+                } else {
+                    $end = ($range_values >= 2)
+                        ? min($end, $file_size - 1)
+                        : $file_size - 1;
+                }
 
                 $stream_size = ($end - (int) $start) + 1;
                 if ($stream_size <= 0 || $start > $file_size - 1) {
@@ -943,14 +960,14 @@ final readonly class PlayAction implements ApplicationActionInterface
             // Read a fraction of the allowance at a time rather than a whole second's worth, so the client sees a
             // steady trickle instead of a burst followed by an idle second it has to buffer around.
             $read_size = ($rate_limit > 0)
-                ? (int) max(1024, intdiv($rate_limit, self::THROTTLE_SLICES_PER_SECOND))
+                ? max(1024, intdiv($rate_limit, self::THROTTLE_SLICES_PER_SECOND))
                 : self::DOWNLOAD_BUFFER_SIZE;
 
             // The range, if one was asked for, is what bounds this loop; feof alone would run past the end of it.
             $started = microtime(true);
             $sent    = 0;
             while ($sent < $stream_size && !feof($filepointer) && connection_status() === 0) {
-                $buffer = fread($filepointer, (int) max(1, min($read_size, $stream_size - $sent)));
+                $buffer = fread($filepointer, max(1, min($read_size, $stream_size - $sent)));
                 if ($buffer === false || $buffer === '') {
                     break;
                 }
@@ -1206,11 +1223,17 @@ final readonly class PlayAction implements ApplicationActionInterface
         $start        = 0;
         $end          = 0;
         $range_values = sscanf(Core::get_server('HTTP_RANGE'), "bytes=%d-%d", $start, $end);
+        $start        = (int) $start;
+        $end          = (int) $end;
 
-        if (!$transcode && $range_values > 0 && ($start > 0 || $end > 0)) {
+        if (!$transcode && $range_values > 0) {
             // Calculate stream size from byte range
-            if ($range_values >= 2) {
-                $end = (int) min($end, $streamConfiguration['file_size'] - 1);
+            if ($start < 0) {
+                // a suffix range asks for the last bytes of the file
+                $start = max(0, $streamConfiguration['file_size'] + $start);
+                $end   = $streamConfiguration['file_size'] - 1;
+            } elseif ($range_values >= 2) {
+                $end = min($end, $streamConfiguration['file_size'] - 1);
             } else {
                 $end = $streamConfiguration['file_size'] - 1;
             }
@@ -1326,7 +1349,8 @@ final readonly class PlayAction implements ApplicationActionInterface
         // Warning: Do not change any session variable after this call
         session_write_close();
 
-        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, (string) $stream_size);
+        // a stream plays in place, only an explicit download is an attachment
+        $headers = $this->browser->getDownloadHeaders($media_name, $mime, !$is_download, (string) $stream_size);
 
         foreach ($headers as $headerName => $value) {
             header(sprintf('%s: %s', $headerName, $value));

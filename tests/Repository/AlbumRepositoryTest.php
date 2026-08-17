@@ -89,7 +89,7 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->collectOrphanedAlbumMaps();
 
         foreach ($calls as $sql) {
-            static::assertStringStartsWith('DELETE FROM `album_map`', $sql);
+            self::assertStringStartsWith('DELETE FROM `album_map`', $sql);
         }
     }
 
@@ -106,7 +106,7 @@ class AlbumRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(666);
 
-        static::assertSame(666, $this->subject->create($this->createProperties(), 123456));
+        self::assertSame(666, $this->subject->create($this->createProperties(), 123456));
     }
 
     public function testCreateReturnsZeroWhenTheInsertFailed(): void
@@ -116,7 +116,7 @@ class AlbumRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException('some-error'));
 
-        static::assertSame(0, $this->subject->create($this->createProperties(), 123456));
+        self::assertSame(0, $this->subject->create($this->createProperties(), 123456));
     }
 
     public function testDeleteDeletes(): void
@@ -159,7 +159,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->subject->deleteEmpty(666);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'DELETE FROM `album` WHERE `id` = ?',
                 'DELETE FROM `album_map` WHERE `album_id` = ?',
@@ -180,14 +180,14 @@ class AlbumRepositoryTest extends TestCase
             )
             ->willReturn('666');
 
-        static::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
     }
 
     public function testFindByPropertiesReturnsNullWhenNothingMatched(): void
     {
         $this->connection->method('fetchOne')->willReturn(false);
 
-        static::assertNull($this->subject->findByProperties($this->createProperties()));
+        self::assertNull($this->subject->findByProperties($this->createProperties()));
     }
 
     public function testFindEmptyKeepsANullAlbumArtistNull(): void
@@ -207,7 +207,7 @@ class AlbumRepositoryTest extends TestCase
                 false
             );
 
-        static::assertSame(
+        self::assertSame(
             [
                 ['id' => 666, 'album_artist' => 42],
                 ['id' => 667, 'album_artist' => null],
@@ -350,7 +350,7 @@ class AlbumRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('666', false);
 
-        static::assertSame([666], $this->subject->getIdsByCatalog(7, true));
+        self::assertSame([666], $this->subject->getIdsByCatalog(7, true));
     }
 
     public function testGetIdsByCatalogsCastsEveryCatalogIdAndPages(): void
@@ -366,7 +366,7 @@ class AlbumRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getIdsByCatalogs([1, 'x9'], 10, 20));
+        self::assertSame([], $this->subject->getIdsByCatalogs([1, 'x9'], 10, 20));
     }
 
     public function testGetIdsByCatalogsOrderedByArtistGroupsBySongAlbumForACatalogList(): void
@@ -382,7 +382,7 @@ class AlbumRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getIdsByCatalogsOrderedByArtist([3]));
+        self::assertSame([], $this->subject->getIdsByCatalogsOrderedByArtist([3]));
     }
 
     public function testGetIdsByCatalogsRunsToTheEndForAnOffsetWithNoSize(): void
@@ -398,7 +398,7 @@ class AlbumRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getIdsByCatalogs(null, 0, 5));
+        self::assertSame([], $this->subject->getIdsByCatalogs(null, 0, 5));
     }
 
     public function testGetNamesReturnsArrayWithDefaultsIfEmpty(): void
@@ -458,7 +458,7 @@ class AlbumRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('42', '33', false);
 
-        static::assertSame(
+        self::assertSame(
             [42, 33],
             $this->subject->getRandomSongs(666)
         );
@@ -480,7 +480,7 @@ class AlbumRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('42', false);
 
-        static::assertSame(
+        self::assertSame(
             [42],
             $this->subject->getSongsByAlbumDisk(666)
         );
@@ -496,14 +496,14 @@ class AlbumRepositoryTest extends TestCase
             )
             ->willReturn('666');
 
-        static::assertTrue($this->subject->isOrphan(666));
+        self::assertTrue($this->subject->isOrphan(666));
     }
 
     public function testIsOrphanReturnsFalseWhenNothingMatched(): void
     {
         $this->connection->method('fetchOne')->willReturn(false);
 
-        static::assertFalse($this->subject->isOrphan(666));
+        self::assertFalse($this->subject->isOrphan(666));
     }
 
     public function testRemoveAlbumMapDeletes(): void
@@ -530,7 +530,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::never())->method('query');
 
-        static::assertFalse($this->subject->removeUnusedAlbumMap(666, 'album', 42));
+        self::assertFalse($this->subject->removeUnusedAlbumMap(666, 'album', 42));
     }
 
     public function testRemoveUnusedAlbumMapLooksThroughTheSongsForATrackArtist(): void
@@ -551,7 +551,7 @@ class AlbumRepositoryTest extends TestCase
                 [666, 'song', 42]
             );
 
-        static::assertTrue($this->subject->removeUnusedAlbumMap(666, 'song', 42));
+        self::assertTrue($this->subject->removeUnusedAlbumMap(666, 'song', 42));
     }
 
     public function testSetFieldReturnsFalseWhenTheWriteFailed(): void
@@ -560,7 +560,7 @@ class AlbumRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException('some-error'));
 
-        static::assertFalse($this->subject->setField(666, AlbumFieldEnum::NAME, 'some-name'));
+        self::assertFalse($this->subject->setField(666, AlbumFieldEnum::NAME, 'some-name'));
     }
 
     public function testSetFieldWritesNullWithoutASpecialStatement(): void
@@ -569,7 +569,7 @@ class AlbumRepositoryTest extends TestCase
             ->method('query')
             ->with('UPDATE `album` SET `original_year` = ? WHERE `id` = ?', [null, 666]);
 
-        static::assertTrue($this->subject->setField(666, AlbumFieldEnum::ORIGINAL_YEAR, null));
+        self::assertTrue($this->subject->setField(666, AlbumFieldEnum::ORIGINAL_YEAR, null));
     }
 
     public function testSetFieldWritesTheColumnFromTheEnum(): void
@@ -578,7 +578,7 @@ class AlbumRepositoryTest extends TestCase
             ->method('query')
             ->with('UPDATE `album` SET `catalog_number` = ? WHERE `id` = ?', ['some-number', 666]);
 
-        static::assertTrue($this->subject->setField(666, AlbumFieldEnum::CATALOG_NUMBER, 'some-number'));
+        self::assertTrue($this->subject->setField(666, AlbumFieldEnum::CATALOG_NUMBER, 'some-number'));
     }
 
     public function testUpdateAllCountsRunsTheWholeSweepEvenWhenOneStatementFails(): void
@@ -605,8 +605,8 @@ class AlbumRepositoryTest extends TestCase
 
         $this->subject->updateAllSkipCounts();
 
-        static::assertStringStartsWith('UPDATE `album`,', $calls[0]);
-        static::assertStringStartsWith('UPDATE `album_disk`,', $calls[1]);
+        self::assertStringStartsWith('UPDATE `album`,', $calls[0]);
+        self::assertStringStartsWith('UPDATE `album_disk`,', $calls[1]);
     }
 
     public function testUpdateAllSkipCountsSumsTheWholeAlbumButGroupsTheDisk(): void
@@ -624,8 +624,8 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->updateAllSkipCounts();
 
         // grouping the album rollup by disk would give a multi-disk album one disk's total
-        static::assertStringContainsString('GROUP BY `song`.`album`)', $calls[0]);
-        static::assertStringContainsString('GROUP BY `song`.`album`, `song`.`disk`)', $calls[1]);
+        self::assertStringContainsString('GROUP BY `song`.`album`)', $calls[0]);
+        self::assertStringContainsString('GROUP BY `song`.`album`, `song`.`disk`)', $calls[1]);
     }
 
     public function testUpdateCountsBindsTheAlbumIntoEveryStatement(): void
@@ -643,7 +643,7 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->updateCounts(666);
 
         foreach ($bound as $params) {
-            static::assertSame([666], array_unique($params));
+            self::assertSame([666], array_unique($params));
         }
     }
 

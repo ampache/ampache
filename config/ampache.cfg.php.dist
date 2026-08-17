@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 96
+config_version = 97
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -382,6 +382,12 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; WARNING: this increase sensibly sql requests and slow down Ampache a lot
 ; DEFAULT: "false"
 ;catalog_disable = "true"
+
+; Deleted item history retention (days)
+; How long to keep the deleted_song/deleted_video/deleted_podcast_episode archives
+; (used to answer the API's deleted_* methods) before garbage collection prunes them.
+; DEFAULT: 0 (keep the history forever)
+;deleted_history_days = 365
 
 ; Catalog filter
 ; This defines if catalog can be filtered per user.
@@ -982,6 +988,28 @@ show_footer_statistics = "true"
 ; use_rss = false (values true | false)
 ; DEFAULT: "false"
 ;use_rss = "true"
+
+; Set the itunes:explicit flag sent in rss feeds. Podcast directories
+; require the tag, Ampache has no per-item rating to fill it from.
+; DEFAULT: "false"
+;rss_explicit = "true"
+
+; Serve rss feeds under /rss/{object_type}/{object_id}/{slug} instead of a
+; query string. Requires the rewrite rules shipped in public/rss/.htaccess.dist
+; (apache) or docs/examples/nginx-site.conf (nginx).
+; DEFAULT: "false"
+;rss_beautiful_url = "true"
+
+; Send X-Robots-Tag: noindex with rss feeds. Feeds are meant to be found, and
+; podcast directories skip a feed marked noindex, so this is off by default.
+; Note that the shipped web server configs send X-Robots-Tag: none site wide.
+; DEFAULT: "false"
+;rss_noindex = "true"
+
+; Apple sub-category advertised by podcast feeds, on top of the "Music"
+; category. Valid values: Music Commentary, Music History, Music Interviews
+; DEFAULT: ""
+;rss_subcategory = "Music Commentary"
 
 ; This setting allows themes to overwrite PHP template files. This can be really
 ; dangerous. Do this only if you trust every theme in your themes/ directory.

@@ -64,8 +64,8 @@ final class RegistrationView extends AbstractView
 
         try {
             $builder->buildAgainstOCR(280, 128);
-        } catch (Exception $error) {
-            debug_event(self::class, 'Captcha OCR error: ' . $error->getMessage(), 3);
+        } catch (Exception $exception) {
+            debug_event(self::class, 'Captcha OCR error: ' . $exception->getMessage(), 3);
             $builder->build(280, 128);
         }
 

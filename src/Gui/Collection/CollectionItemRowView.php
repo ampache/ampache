@@ -106,7 +106,7 @@ final class CollectionItemRowView extends AbstractView
 
     public function getTime(): string
     {
-        return (string) $this->item->get_f_time();
+        return $this->item->get_f_time();
     }
 
     public function getTrack(): int

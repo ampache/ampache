@@ -84,7 +84,8 @@ final class AlbumPageView extends AbstractView
     {
         $name = '[' . $this->getParentName() . '] ' . $this->getFullname();
         ob_start();
-        Art::display($this->getObjectType(), $this->getAlbumId(), $name, ['width' => 384, 'height' => 384], null, true, false);
+        // art is stored against the album; a disk has none of its own
+        Art::display('album', $this->getUploadAlbumId(), $name, ['width' => 384, 'height' => 384], null, true, false);
 
         return (string) ob_get_clean();
     }
@@ -184,7 +185,7 @@ final class AlbumPageView extends AbstractView
 
     public function getParentName(): string
     {
-        return (string) $this->album->get_parent_fullname();
+        return $this->album->get_parent_fullname();
     }
 
     public function getPlayedTimes(): int
@@ -250,7 +251,8 @@ final class AlbumPageView extends AbstractView
 
     public function mayDelete(): bool
     {
-        return Catalog::can_remove($this->album);
+        // the delete action takes an album id; there is no action to delete a single disk
+        return !($this->album instanceof AlbumDisk) && Catalog::can_remove($this->album);
     }
 
     /**

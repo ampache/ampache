@@ -58,7 +58,7 @@ class MetadataFieldRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT * FROM `metadata_field` WHERE `id` = ?',
+                "SELECT `id`, IFNULL(`name`, '') AS `name`, `public` FROM `metadata_field` WHERE `id` = ?",
                 [
                     $id
                 ],
@@ -87,7 +87,7 @@ class MetadataFieldRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT * FROM `metadata_field` WHERE `id` = ?',
+                "SELECT `id`, IFNULL(`name`, '') AS `name`, `public` FROM `metadata_field` WHERE `id` = ?",
                 [
                     $id
                 ],
@@ -116,7 +116,7 @@ class MetadataFieldRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT * FROM `metadata_field` WHERE `name` = ? LIMIT 1',
+                "SELECT `id`, IFNULL(`name`, '') AS `name`, `public` FROM `metadata_field` WHERE `name` = ? LIMIT 1",
                 [
                     $name
                 ],
@@ -145,7 +145,7 @@ class MetadataFieldRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT * FROM `metadata_field` WHERE `name` = ? LIMIT 1',
+                "SELECT `id`, IFNULL(`name`, '') AS `name`, `public` FROM `metadata_field` WHERE `name` = ? LIMIT 1",
                 [
                     $name
                 ],

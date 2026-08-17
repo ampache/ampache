@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # These mirror docs/examples/nginx-site.conf; keep the two in sync when adding a route.
+    # The trailing slug is decorative, a feed resolves without it.
+
+    # /rss/{object_type}/{object_id}[/{slug}] | `rss.php?type=library_item&object_type={object_type}&object_id={object_id}`
+    RewriteRule ^(album|album-disk|artist|podcast|song)/([0-9]+)(/[^/]*)?/?$ /rss.php?type=library_item&object_type=$1&object_id=$2 [L,QSA]
+
+    # /rss/{feed} | `rss.php?type={feed}`
+    RewriteRule ^(latest-album|latest-artist|latest-shout|latest-song|now-playing|recently-played)/?$ /rss.php?type=$1 [L,QSA]
+</IfModule>

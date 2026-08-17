@@ -65,7 +65,7 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
     {
         $refresh_limit = $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0;
         if ($refresh_limit > 5) {
-            echo (new JavascriptRefreshView((int) $refresh_limit, '?page=localplay&action=command&command=refresh'))->render();
+            echo new JavascriptRefreshView((int) $refresh_limit, '?page=localplay&action=command&command=refresh')->render();
         }
     }
 }

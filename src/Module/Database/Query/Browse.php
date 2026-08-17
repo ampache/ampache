@@ -37,14 +37,24 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\PrivateMsg;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\Model\Wanted;
+use Override;
 
 /**
  * Browse Class
@@ -174,7 +184,7 @@ class Browse extends Query
      */
     public static function is_valid_type(string $type): bool
     {
-        return in_array($type, self::BROWSE_TYPES);
+        return in_array($type, self::BROWSE_TYPES, true);
     }
 
     /**
@@ -353,7 +363,7 @@ class Browse extends Query
      */
     public function set_grid_view(bool $grid_view, bool $savecookie = true): void
     {
-        if ($savecookie && in_array($this->get_type(), ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
+        if ($savecookie && in_array($this->get_type(), ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'], true)) {
             $this->save_cookie_params('grid_view', ($grid_view) ? 'true' : 'false');
         }
 
@@ -403,6 +413,7 @@ class Browse extends Query
     /**
      * This sets the type of object that we want to browse by
      */
+    #[Override]
     public function set_type(string $type, ?string $custom_base = '', ?array $parameters = []): void
     {
         if (empty($type)) {
@@ -440,7 +451,7 @@ class Browse extends Query
                     ",",
                     (string) AmpConfig::get('libitem_browse_alpha')
                 ) : [];
-                if (in_array($type, $default_alpha)) {
+                if (in_array($type, $default_alpha, true)) {
                     $this->set_use_alpha(true, false);
                 }
             }
@@ -505,7 +516,7 @@ class Browse extends Query
      */
     public function set_use_select(bool $use_select, bool $savecookie = true): void
     {
-        if ($savecookie && in_array($this->get_type(), self::MULTISELECT_TYPES)) {
+        if ($savecookie && in_array($this->get_type(), self::MULTISELECT_TYPES, true)) {
             $this->save_cookie_params('select', ($use_select) ? 'true' : 'false');
         }
 
@@ -531,18 +542,23 @@ class Browse extends Query
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
+     * Pass null (the default) to reload whatever this browse last saved/cached. Pass an array -- including an
+     * empty one -- to render exactly those ids; an empty array means "the caller already searched and found
+     * nothing", not "go look up something else instead."
      * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
      */
-    public function show_objects(?array $object_ids = [], bool|array|string $argument = false, ?bool $skip_cookies = false): void
+    public function show_objects(?array $object_ids = null, bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {
         $type            = $this->get_type();
         $limit_threshold = $this->get_threshold();
 
-        // a song_preview or folder browse is handed rows it built itself, so they are neither saved nor prefetched
-        $prefetchable = ($type !== 'song_preview' && $type !== 'folder');
-        if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
+        // a song_preview browse is handed rows it built itself, so it is neither saved nor prefetched
+        $prefetchable = ($type !== 'song_preview');
+        // a folder browse is handed encoded ids that don't go through the normal saved-browse-state flow
+        $persistable = ($prefetchable && $type !== 'folder');
+        if ($this->is_simple() || $object_ids === null) {
             $object_ids = $this->get_saved();
-        } elseif ($prefetchable) {
+        } elseif ($persistable) {
             /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
             $this->save_objects($object_ids);
         }
@@ -589,7 +605,7 @@ class Browse extends Query
             $this->_applyCookieState($type);
         }
 
-        if (in_array($type, self::ROW_TYPES)) {
+        if (in_array($type, self::ROW_TYPES, true)) {
             $browse->set_grid_view(false);
         }
 
@@ -660,7 +676,7 @@ class Browse extends Query
      */
     public function update_browse_from_session(): void
     {
-        if ($this->is_simple() && $this->get_start() == 0) {
+        if ($this->is_simple() && $this->get_start() === 0) {
             $name = 'browse_current_' . $this->get_type();
             if (array_key_exists($name, $_SESSION) && array_key_exists('start', $_SESSION[$name]) && $_SESSION[$name]['start'] > 0) {
                 // Checking if value is suitable
@@ -690,7 +706,7 @@ class Browse extends Query
         }
 
         $grid_view = $this->_readViewCookie($type, 'grid_view');
-        if (in_array($type, self::GRID_TYPES)) {
+        if (in_array($type, self::GRID_TYPES, true)) {
             if (!$this->is_mashup() && $grid_view !== null) {
                 $this->set_grid_view($grid_view, false);
             }
@@ -704,7 +720,7 @@ class Browse extends Query
         }
 
         $use_select = $this->_readViewCookie($type, 'select');
-        if (in_array($type, self::MULTISELECT_TYPES) && $use_select !== null) {
+        if (in_array($type, self::MULTISELECT_TYPES, true) && $use_select !== null) {
             $this->set_use_select($use_select, false);
         }
     }
@@ -810,6 +826,49 @@ class Browse extends Query
     }
 
     /**
+     * Warms the cache for a page whose rows are not a uniform list of one type's ids — a folder browse's entries
+     * are each either a bare numeric folder id or an encoded "type-id" string, and a collection_items browse's
+     * entries are each a shaped {object_type, object_id} record. Group by the embedded type, then reuse each
+     * type's own build_cache().
+     *
+     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum|string, object_id: int, track_id?: int, track?: int}> $object_ids
+     */
+    private function _prefetchMixedTypes(array $object_ids): void
+    {
+        $grouped = [];
+        foreach ($object_ids as $entry) {
+            if (is_array($entry)) {
+                $entryType = ($entry['object_type'] instanceof LibraryItemEnum)
+                    ? $entry['object_type']->value
+                    : (string) $entry['object_type'];
+                $grouped[$entryType][] = (int) $entry['object_id'];
+
+                continue;
+            }
+
+            $entry = (string) $entry;
+            if (preg_match('/^[0-9]+$/', $entry) === 1) {
+                $grouped['folder'][] = (int) $entry;
+            } elseif (preg_match('/^([a-z_]+)-([0-9]+)$/', $entry, $matches) === 1) {
+                $grouped[$matches[1]][] = (int) $matches[2];
+            }
+        }
+
+        foreach ($grouped as $entryType => $ids) {
+            match ($entryType) {
+                'folder' => Folder::build_cache($ids),
+                'song' => Song::build_cache($ids),
+                'album' => Album::build_cache($ids),
+                'artist' => Artist::build_cache($ids),
+                'video' => Video::build_cache($ids),
+                'playlist' => Playlist::build_cache($ids),
+                'podcast_episode' => Podcast_Episode::build_cache($ids),
+                default => null,
+            };
+        }
+    }
+
+    /**
      * Warm the object cache for the rows this page shows, so the row templates read them without a query each.
      *
      * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
@@ -825,6 +884,18 @@ class Browse extends Query
             'playlist' => Playlist::build_cache($this->_squashList($object_ids)),
             'genre', 'tag', 'tag_hidden' => Tag::build_cache($this->_squashList($object_ids)),
             'video' => Video::build_cache($this->_squashList($object_ids)),
+            'podcast' => Podcast::build_cache($this->_squashList($object_ids)),
+            'podcast_episode' => Podcast_Episode::build_cache($this->_squashList($object_ids)),
+            'live_stream' => Live_Stream::build_cache($this->_squashList($object_ids)),
+            'label' => Label::build_cache($this->_squashList($object_ids)),
+            'catalog' => Catalog::build_cache($this->_squashList($object_ids)),
+            'collection' => Collection::build_cache($this->_squashList($object_ids)),
+            'folder', 'collection_items' => $this->_prefetchMixedTypes($object_ids),
+            'user', 'follower' => User::build_cache($this->_squashList($object_ids)),
+            'share' => Share::build_cache($this->_squashList($object_ids)),
+            'broadcast' => Broadcast::build_cache($this->_squashList($object_ids)),
+            'pvmsg' => PrivateMsg::build_cache($this->_squashList($object_ids)),
+            'wanted' => Wanted::build_cache($this->_squashList($object_ids)),
             default => null,
         };
     }
@@ -857,6 +928,7 @@ class Browse extends Query
             if (is_int($value) || is_string($value)) {
                 $results[] = $value;
             }
+
             if (is_array($value)) {
                 $results[] = $value['object_id'];
             }
@@ -877,6 +949,7 @@ class Browse extends Query
                 'path' => (string) AmpConfig::get('cookie_path'),
                 'domain' => (string) AmpConfig::get('cookie_domain'),
                 'secure' => AmpConfig::get_bool('cookie_secure'),
+                'httponly' => true,
                 'samesite' => 'Strict',
             ];
             setcookie('browse_' . $this->get_type() . '_' . $option, $value, $cookie_options);

@@ -42,7 +42,7 @@ class UserFollowStateRendererTest extends TestCase
         $this->userFollowerRepository->expects(static::never())
             ->method('isFollowedBy');
 
-        static::assertSame('', $this->subject->render($user, $user));
+        self::assertSame('', $this->subject->render($user, $user));
     }
 
     protected function setUp(): void

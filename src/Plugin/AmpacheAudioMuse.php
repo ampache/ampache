@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Override;
@@ -53,9 +54,9 @@ use WpOrg\Requests\Requests;
  */
 class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInterface
 {
-    private const CONNECT_TIMEOUT = 3;
+    private const int CONNECT_TIMEOUT = 3;
 
-    private const REQUEST_TIMEOUT = 7;
+    private const int REQUEST_TIMEOUT = 7;
 
     #[Override]
     public string $categories = 'sonic_analysis';
@@ -85,8 +86,9 @@ class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInter
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly UrlValidatorInterface $urlValidator,
+    ) {
         $this->description = T_('Sonic similarity from an AudioMuse-AI server');
     }
 
@@ -243,6 +245,13 @@ class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInter
             ? $this->site_url . $path_str
             : $this->site_url . $path_str . '?' . $query_str;
 
+        // audiomuse_site_url is an admin-configured preference, validated like any other outbound fetch
+        if (!$this->urlValidator->isPublicHttpUrl($url)) {
+            debug_event(self::class, 'Refusing to query ' . $url, 3);
+
+            return null;
+        }
+
         $headers = [
             'Accept' => 'application/json',
             'User-Agent' => $this->user_agent,
@@ -256,8 +265,8 @@ class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInter
 
         try {
             $request = Requests::get($url, $headers, $options);
-        } catch (Throwable $error) {
-            debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
+        } catch (Throwable $throwable) {
+            debug_event(self::class, 'Request error: ' . $throwable->getMessage(), 1);
 
             return null;
         }

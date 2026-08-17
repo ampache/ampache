@@ -66,7 +66,9 @@ class PodcastFolderProviderTest extends TestCase
     {
         $catalogId    = 666;
         $catalogPath  = $this->rootFolder->url();
-        $podcastTitle = '/some/path/and/some-title';
+        $podcastTitle = 'some-title';
+
+        $this->rootFolder->chmod(0000);
 
         $podcast = $this->createMock(Podcast::class);
         $catalog = $this->createMock(Catalog::class);
@@ -188,6 +190,46 @@ class PodcastFolderProviderTest extends TestCase
             sprintf('%s%s%s', $this->rootFolder->url(), DIRECTORY_SEPARATOR, $podcastTitle),
             $this->subject->getBaseFolder($podcast)
         );
+    }
+
+    /**
+     * The title comes straight from the feed's own `<title>`, so a hostile feed must not be able to escape
+     * the catalog folder via `../` sequences in it
+     */
+    public function testGetBaseFolderSanitizesTraversalInPodcastTitle(): void
+    {
+        $catalogId    = 666;
+        $podcastTitle = '../../../etc/evil';
+
+        $podcast = $this->createMock(Podcast::class);
+        $catalog = $this->createMock(Catalog::class);
+
+        $this->catalogLoader->expects(static::once())
+            ->method('getById')
+            ->with($catalogId)
+            ->willReturn($catalog);
+
+        $catalog->expects(static::once())
+            ->method('get_type')
+            ->willReturn('local');
+        $catalog->expects(static::once())
+            ->method('get_path')
+            ->willReturn($this->rootFolder->url());
+
+        $podcast->expects(static::once())
+            ->method('get_fullname')
+            ->willReturn($podcastTitle);
+        $podcast->expects(static::once())
+            ->method('getCatalogId')
+            ->willReturn($catalogId);
+
+        $result = $this->subject->getBaseFolder($podcast);
+
+        self::assertSame(
+            sprintf('%s%s%s', $this->rootFolder->url(), DIRECTORY_SEPARATOR, '.._.._.._etc_evil'),
+            $result
+        );
+        self::assertStringStartsWith($this->rootFolder->url() . DIRECTORY_SEPARATOR, $result);
     }
 
     protected function setUp(): void

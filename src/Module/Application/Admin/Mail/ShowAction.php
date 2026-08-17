@@ -54,10 +54,10 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        echo (new MailUsersFormView(
+        echo new MailUsersFormView(
             $this->configContainer->getWebPath('/admin'),
             $this->requestParser->getFromRequest('subject')
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

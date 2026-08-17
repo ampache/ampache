@@ -63,10 +63,10 @@ final readonly class ManagePlaylistsAction implements ApplicationActionInterface
         // Get all of the non-user playlists
         $playlists = Democratic::get_playlists();
 
-        echo (new ManageDemocraticView(
+        echo new ManageDemocraticView(
             AmpConfig::get_web_path(),
             $playlists
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -42,11 +42,13 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Shoutbox;
@@ -172,7 +174,9 @@ final class Xml6_Data
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
 
+        Album::build_cache($objects);
         Rating::build_cache('album', $objects);
+        Userflag::build_cache('album', $objects);
 
         foreach ($objects as $album_id) {
             $album = new Album((int) $album_id);
@@ -235,7 +239,9 @@ final class Xml6_Data
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('artist', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
+        Artist::build_cache($objects);
         Rating::build_cache('artist', $objects);
+        Userflag::build_cache('artist', $objects);
 
         foreach ($objects as $artist_id) {
             $artist = new Artist((int) $artist_id);
@@ -356,6 +362,8 @@ final class Xml6_Data
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+
+        Catalog::build_cache($objects);
 
         foreach ($objects as $catalog_id) {
             $catalog = Catalog::create_from_id((int) $catalog_id);
@@ -484,6 +492,8 @@ final class Xml6_Data
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = "<total_count>" . Catalog::get_update_info('tag', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
+
+        Tag::build_cache($objects);
 
         foreach ($objects as $tag_id) {
             $tag = new Tag((int) $tag_id);
@@ -818,6 +828,8 @@ final class Xml6_Data
 
         $labelRepository = $this->labelRepository;
 
+        Label::build_cache($objects);
+
         foreach ($objects as $label_id) {
             $label = $labelRepository->findById((int) $label_id);
             if ($label === null) {
@@ -901,6 +913,8 @@ final class Xml6_Data
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('live_stream', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
+        Live_Stream::build_cache($objects);
+
         foreach ($objects as $live_stream_id) {
             $live_stream = new Live_Stream((int) $live_stream_id);
             if ($live_stream->isNew()) {
@@ -958,6 +972,13 @@ final class Xml6_Data
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
             : Catalog::get_update_info('playlist', $user->id);
         $string = "<total_count>" . $total_count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
+
+        // ids mix real playlists with smart-playlist ("search") ids, so warm both types against the same list
+        Playlist::build_cache($objects);
+        Rating::build_cache('playlist', $objects);
+        Rating::build_cache('search', $objects);
+        Userflag::build_cache('playlist', $objects);
+        Userflag::build_cache('search', $objects);
 
         // Foreach the playlist ids
         foreach ($objects as $playlist_id) {
@@ -1038,6 +1059,10 @@ final class Xml6_Data
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('podcast_episode', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
+        Podcast_Episode::build_cache($objects);
+        Rating::build_cache('podcast_episode', $objects);
+        Userflag::build_cache('podcast_episode', $objects);
+
         foreach ($objects as $episode_id) {
             $episode = new Podcast_Episode((int) $episode_id);
             if ($episode->isNew()) {
@@ -1071,6 +1096,10 @@ final class Xml6_Data
         $podcastRepository = $this->podcastRepository;
 
         $string = "<total_count>" . Catalog::get_update_info('podcast', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
+
+        Podcast::build_cache($objects);
+        Rating::build_cache('podcast', $objects);
+        Userflag::build_cache('podcast', $objects);
 
         foreach ($objects as $podcast_id) {
             $podcast = $podcastRepository->findById((int) $podcast_id);
@@ -1429,6 +1458,8 @@ final class Xml6_Data
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         Song::build_cache($objects);
+        Rating::build_cache('song', $objects);
+        Userflag::build_cache('song', $objects);
         Stream::set_session($auth);
 
         $playlist_track = 0;
@@ -1577,6 +1608,10 @@ final class Xml6_Data
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('video', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+
+        Video::build_cache($objects);
+        Rating::build_cache('video', $objects);
+        Userflag::build_cache('video', $objects);
 
         foreach ($objects as $video_id) {
             $video = new Video((int) $video_id);

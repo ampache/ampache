@@ -95,7 +95,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            echo (new CatalogProgressView(CatalogProgressTypeEnum::ADD, $this->getId(), $this->name))->render();
+            echo new CatalogProgressView(CatalogProgressTypeEnum::ADD, $this->getId(), $this->name)->render();
             flush();
         }
 

@@ -50,7 +50,7 @@ class PodcastRepositoryTest extends TestCase
             ->method('query')
             ->with('DELETE FROM `podcast` WHERE `catalog` = ?', [7]);
 
-        static::assertTrue($this->subject->deleteByCatalog(7));
+        self::assertTrue($this->subject->deleteByCatalog(7));
     }
 
     public function testDeleteDeletesPodcast(): void
@@ -206,7 +206,7 @@ class PodcastRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('666', false);
 
-        static::assertSame([666], $this->subject->getIdsByCatalog(7));
+        self::assertSame([666], $this->subject->getIdsByCatalog(7));
     }
 
     public function testPersistCreateItem(): void
@@ -412,8 +412,8 @@ class PodcastRepositoryTest extends TestCase
 
         $this->subject->updateAllCounts();
 
-        static::assertStringContainsString('`podcast`.`total_count`', $calls[0]);
-        static::assertStringContainsString('`podcast`.`total_skip`', $calls[1]);
+        self::assertStringContainsString('`podcast`.`total_count`', $calls[0]);
+        self::assertStringContainsString('`podcast`.`total_skip`', $calls[1]);
     }
 
     protected function setUp(): void

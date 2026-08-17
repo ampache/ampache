@@ -71,4 +71,19 @@ final readonly class DeletedPodcastEpisodeRepository implements DeletedPodcastEp
             ];
         }
     }
+
+    /**
+     * Removes `deleted_podcast_episode` rows older than the given retention
+     */
+    public function pruneDeletedHistory(int $days): void
+    {
+        if ($days <= 0) {
+            return;
+        }
+
+        $this->connection->query(
+            'DELETE FROM `deleted_podcast_episode` WHERE `delete_time` < (UNIX_TIMESTAMP() - (? * 86400));',
+            [$days]
+        );
+    }
 }

@@ -55,10 +55,10 @@ final readonly class ShowPluginsAction implements ApplicationActionInterface
 
         $this->ui->showBoxTop(T_('Manage Plugins'), 'box box_localplay_plugins');
 
-        echo (new PluginTableView(
+        echo new PluginTableView(
             AmpConfig::get_web_path('/admin'),
             $plugins
-        ))->render();
+        )->render();
 
         $this->ui->showBoxBottom();
 
