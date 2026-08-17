@@ -208,6 +208,8 @@ class Album extends database_object implements
         }
 
         // warm grouped caches the row render would otherwise hit per album
+        // (an album_disk row asks for its parent album's genres, so this covers both)
+        Tag::build_object_tag_cache('album', array_map(intval(...), $ids));
         Art::build_cache($ids, 'album');
         if ($artist_ids !== []) {
             Artist::build_cache(array_values($artist_ids));
