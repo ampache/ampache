@@ -197,6 +197,16 @@ class Album extends database_object implements
             }
         }
 
+        // one album_map read for the page instead of one per album; the mapped
+        // artists join the primary ones so the row render finds them cached too
+        global $dic;
+        foreach ($dic->get(SongRepositoryInterface::class)->getParentIdsBulk($ids, true) as $albumId => $parentIds) {
+            parent::add_to_cache('album_artists', $albumId, $parentIds);
+            foreach ($parentIds as $parentId) {
+                $artist_ids[$parentId] = $parentId;
+            }
+        }
+
         // warm grouped caches the row render would otherwise hit per album
         Art::build_cache($ids, 'album');
         if ($artist_ids !== []) {
@@ -352,7 +362,9 @@ class Album extends database_object implements
      */
     public static function get_parent_array(int $album_id, ?int $primary_id = null, string $object_type = 'album'): array
     {
-        $results = self::getAlbumRepository()->getMappedObjectIds($album_id, $object_type);
+        $results = ($object_type === 'album' && parent::is_cached('album_artists', $album_id))
+            ? parent::get_from_cache('album_artists', $album_id)
+            : self::getAlbumRepository()->getMappedObjectIds($album_id, $object_type);
         $primary = ((int) $primary_id > 0)
             ? [(int) $primary_id]
             : [];
