@@ -109,9 +109,6 @@ class DefaultActionTest extends MockeryTestCase
 
         $this->logger->shouldReceive('warning');
 
-        // The id-list cap is checked before the proof of work, so the guard stays out of the way here.
-        $this->powService->shouldReceive('isRequired')->andReturnFalse();
-
         $this->subject = new DefaultAction(
             $this->requestParser,
             $this->modelFactory,

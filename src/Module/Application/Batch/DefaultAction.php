@@ -78,17 +78,6 @@ final readonly class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        // A zip is expensive to build, so it is worth making a client prove it is a browser first.
-        // Requests carrying a stream session are exempt: Ampache has already authenticated them and
-        // they come from players that cannot run the challenge.
-        if (
-            !defined('NO_SESSION')
-            && $this->powService->isRequired('batch', $gatekeeper->getUser())
-            && !$this->powService->verifyRequest($request, 'batch', $gatekeeper->getUser())
-        ) {
-            return $this->powService->createChallengeResponse($request, 'batch');
-        }
-
         $media_ids    = [];
         $default_name = 'Unknown';
         $name         = $default_name;
@@ -120,6 +109,22 @@ final readonly class DefaultAction implements ApplicationActionInterface
             );
 
             throw new AccessDeniedException();
+        }
+
+        // A zip is expensive to build, so it is worth making a client prove it is a browser first.
+        // It comes after the cheap request checks above: a request that is going to be refused
+        // anyway should not first make a legitimate browser burn CPU on a challenge.
+        // Requests carrying a stream session are exempt: Ampache has already authenticated them and
+        // they come from players that cannot run the challenge.
+        if (!defined('NO_SESSION')) {
+            $user = $gatekeeper->getUser();
+
+            if (
+                $this->powService->isRequired('batch', $user)
+                && !$this->powService->verifyRequest($request, 'batch', $user)
+            ) {
+                return $this->powService->createChallengeResponse($request, 'batch');
+            }
         }
 
         $this->logger->debug(
