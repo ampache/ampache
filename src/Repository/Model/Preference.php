@@ -406,18 +406,19 @@ class Preference extends database_object
             ? [$value, $name]
             : [$value, $pref_id];
 
-        if ($applytoall && $access100) {
-            $user_check = "";
-        } else {
-            $user_check = "AND `user` = ?";
-            $params[]   = $user_id;
-        }
-
+        // the default carries no user, so it is written before the user filter is bound
         if ($applytodefault && $access100) {
             $sql = ($ampacheSeven)
                 ? "UPDATE `preference` SET `value` = ? WHERE `name` = ?;"
                 : "UPDATE `preference` SET `value` = ? WHERE `preference` = ?;";
             Dba::write($sql, $params);
+        }
+
+        if ($applytoall && $access100) {
+            $user_check = "";
+        } else {
+            $user_check = "AND `user` = ?";
+            $params[]   = $user_id;
         }
 
         if (self::has_access($name)) {
@@ -2211,7 +2212,11 @@ class Preference extends database_object
         }
 
         /* Set the Theme mojo */
-        if (array_key_exists('theme_name', $results) && strlen((string)$results['theme_name']) > 0) {
+        if (
+            array_key_exists('theme_name', $results)
+            && strlen((string)$results['theme_name']) > 0
+            && basename((string) $results['theme_name']) === $results['theme_name']
+        ) {
             // In case the theme was removed
             if (!Core::is_readable(__DIR__ . '/../../../public/themes/' . $results['theme_name'])) {
                 unset($results['theme_name']);
@@ -2238,7 +2243,11 @@ class Preference extends database_object
             $results['theme_color'] = 'dark';
         }
 
-        if (array_key_exists('theme_color', $results) && strlen((string)$results['theme_color']) > 0) {
+        if (
+            array_key_exists('theme_color', $results)
+            && strlen((string)$results['theme_color']) > 0
+            && basename((string) $results['theme_color']) === $results['theme_color']
+        ) {
             // In case the color was removed
             if (!Core::is_readable(__DIR__ . '/../../../public/themes/' . $results['theme_name'] . '/templates/' . $results['theme_color'] . '.css')) {
                 unset($results['theme_color']);

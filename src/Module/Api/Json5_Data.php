@@ -631,7 +631,11 @@ class Json5_Data
 
         $JSON = [];
         foreach ($objects as $tag_id) {
-            $tag    = new Tag((int) $tag_id);
+            $tag = new Tag((int) $tag_id);
+            if ($tag->isNew()) {
+                continue;
+            }
+
             $JSON[] = [
                 "id" => (string) $tag_id,
                 "name" => $tag->name,

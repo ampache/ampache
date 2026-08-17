@@ -189,6 +189,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'httponly' => true,
             'samesite' => 'Strict',
         ];
 
@@ -314,10 +315,10 @@ final class Session implements SessionInterface
                 $key  = $data['apikey'] ?? false;
                 break;
             case 'api':
-                $key = (isset($data['apikey'])) ? md5(($data['apikey'] . md5(uniqid((string) mt_rand(), true)))) : md5(uniqid((string) mt_rand(), true));
+                $key = (isset($data['apikey'])) ? md5(($data['apikey'] . Core::generate_random_key())) : Core::generate_random_key();
                 break;
             case 'stream':
-                $key = (isset($data['sid'])) ? $data['sid'] : md5(uniqid((string)mt_rand(), true));
+                $key = (isset($data['sid'])) ? $data['sid'] : Core::generate_random_key();
                 break;
             case 'mysql':
             default:
@@ -420,6 +421,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'httponly' => true,
             'samesite' => 'Lax',
         ];
 
@@ -646,6 +648,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'httponly' => true,
             'samesite' => 'Lax',
         ];
         if (isset($_SESSION)) {
@@ -654,6 +657,7 @@ final class Session implements SessionInterface
                 'path' => (string)AmpConfig::get('cookie_path'),
                 'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
+                'httponly' => true,
                 'samesite' => 'Lax'
             ];
             setcookie((string)session_name(), (string)session_id(), $cookie_options);
@@ -685,6 +689,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'httponly' => true,
             'samesite' => 'Strict',
         ];
 
@@ -706,6 +711,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'httponly' => true,
             'samesite' => 'Strict',
         ];
 
@@ -730,6 +736,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'httponly' => true,
             'samesite' => 'Strict',
         ];
 

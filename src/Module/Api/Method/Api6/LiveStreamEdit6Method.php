@@ -94,8 +94,8 @@ final class LiveStreamEdit6Method
             $url = (string) filter_var(urldecode($input['url']), FILTER_VALIDATE_URL);
         }
         $codec = $item->codec;
-        if (isset($input['codec']) && preg_replace("/[^a-z]/", "", strtolower($input['codec']))) {
-            $codec = (string) preg_replace("/[^a-z]/", "", strtolower($input['codec']));
+        if (isset($input['codec']) && preg_replace("/[^a-z0-9]/", "", strtolower($input['codec']))) {
+            $codec = (string) preg_replace("/[^a-z0-9]/", "", strtolower($input['codec']));
         }
         $site_url = $item->site_url;
         if (isset($input['site_url']) && filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL)) {

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
@@ -46,6 +47,8 @@ class PodcastSyncerTest extends TestCase
 
     private ConfigContainerInterface&MockObject $configContainer;
 
+    private MockObject $webFetcher;
+
     private PodcastSyncer $subject;
 
     protected function setUp(): void
@@ -57,13 +60,16 @@ class PodcastSyncerTest extends TestCase
         $this->podcastEpisodeRepository = $this->createMock(PodcastEpisodeRepositoryInterface::class);
         $this->configContainer          = $this->createMock(ConfigContainerInterface::class);
 
+        $this->webFetcher = $this->createMock(WebFetcherInterface::class);
+
         $this->subject = new PodcastSyncer(
             $this->podcastRepository,
             $this->modelFactory,
             $this->podcastEpisodeDownloader,
             $this->podcastDeleter,
             $this->podcastEpisodeRepository,
-            $this->configContainer
+            $this->configContainer,
+            $this->webFetcher
         );
     }
 

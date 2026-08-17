@@ -354,6 +354,10 @@ class Xml5_Data
 
         foreach ($objects as $tag_id) {
             $tag = new Tag((int) $tag_id);
+            if ($tag->isNew()) {
+                continue;
+            }
+
             $string .= "<genre id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<live_streams>0</live_streams>\n</genre>\n";
         }
 
@@ -391,13 +395,17 @@ class Xml5_Data
                     } else {
                         $artist = new Artist((int) $object_id);
                         if ($artist->isNew()) {
-                            break;
+                            continue;
                         }
                         $albums = self::getAlbumRepository()->getAlbumByArtist((int) $object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
                                 $album = new Album($album_id);
+                                if ($album->isNew()) {
+                                    continue;
+                                }
+
                                 $string .= "\t<album id=\"" . $album_id . '"><![CDATA[' . $album->get_fullname() . "]]></album>\n";
                             }
                         }
@@ -411,6 +419,10 @@ class Xml5_Data
                         $string .= self::albums([(int) $object_id], ['songs'], $user, $auth, false);
                     } else {
                         $album = new Album((int) $object_id);
+                        if ($album->isNew()) {
+                            continue;
+                        }
+
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n";
                         if ($album->get_parent_fullname() != "") {
                             $string .= "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->get_parent_fullname() . "]]></artist>\n";
@@ -422,6 +434,10 @@ class Xml5_Data
             case 'song':
                 foreach ($objects as $object_id) {
                     $song = new Song((int) $object_id);
+                    if ($song->isNew()) {
+                        continue;
+                    }
+
                     $song->fill_ext_info();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n"
                         . "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_parent_fullname() . "]]></artist>\n"
@@ -440,6 +456,10 @@ class Xml5_Data
                     } else {
                         $playlist       = new Playlist((int) $object_id);
                         $playitem_total = $playlist->get_media_count('song');
+                    }
+
+                    if ($playlist->isNew()) {
+                        continue;
                     }
                     $playlist_name = $playlist->get_fullname();
                     $playlist_user = $playlist->username;
