@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 96
+config_version = 97
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -382,6 +382,12 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; WARNING: this increase sensibly sql requests and slow down Ampache a lot
 ; DEFAULT: "false"
 ;catalog_disable = "true"
+
+; Deleted item history retention (days)
+; How long to keep the deleted_song/deleted_video/deleted_podcast_episode archives
+; (used to answer the API's deleted_* methods) before garbage collection prunes them.
+; DEFAULT: 0 (keep the history forever)
+;deleted_history_days = 365
 
 ; Catalog filter
 ; This defines if catalog can be filtered per user.

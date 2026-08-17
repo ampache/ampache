@@ -32,6 +32,8 @@
 * Row-prefetch caching (avoiding a query per row) is extended to more listings: Browse now also covers podcast, podcast episode, live stream, label, catalog, collection and folder pages, and the JSON/XML API list endpoints (album, artist, catalog, playlist, podcast, podcast episode, song, tag, video) now warm the same object/rating/userflag caches before their loop instead of querying per item
 * Art existence/metadata lookups (`has_db`/`has_art`) are batch-prefetched the same way during browse and artist/playlist/tag/video listing, instead of querying disk or the database per row
 * Album/album disk/video search read the catalog id straight off the row instead of joining `catalog_map`, since it's already stored there directly
+* Config version 97
+  * New `deleted_history_days` option (default `0`, keep forever); garbage collection prunes `deleted_song`/`deleted_video`/`deleted_podcast_episode` rows older than this many days
 
 ### Fixed (8.0.1)
 
@@ -47,6 +49,7 @@
   * The `user_preferences` API method (and REST `preferences`) returned those same plugin credential values in the response; they're blanked there too
 * An unregistered/guest visitor could upload and import a playlist file, or export every podcast subscription in the system, neither of which checked for a real account; importing a playlist also now verifies the request came from Ampache's own form
 * A user's last-seen date/time on their profile page ignored their `allow_personal_info_time` preference, unlike the recent-activity list right next to it on the same page
+* The Last.fm/Libre.fm grant-access link on the preferences page was missing its `api_key`, so granting access failed
 * Outbound fetches
   * Now check every redirect hop against the same private-address rule as the initial url, not just the url as given; applies to remote/radio stream playback, art fetching, and the Lyrist and YOURLS plugins
   * The LrcLib and AudioMuse-AI plugins didn't check the configured server url at all before fetching from it; they now do
