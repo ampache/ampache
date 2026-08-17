@@ -37,6 +37,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Label;
@@ -45,10 +46,14 @@ use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\PrivateMsg;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\Model\Wanted;
 
 /**
  * Browse Class
@@ -884,6 +889,11 @@ class Browse extends Query
             'catalog' => Catalog::build_cache($this->_squashList($object_ids)),
             'collection' => Collection::build_cache($this->_squashList($object_ids)),
             'folder', 'collection_items' => $this->_prefetchMixedTypes($object_ids),
+            'user', 'follower' => User::build_cache($this->_squashList($object_ids)),
+            'share' => Share::build_cache($this->_squashList($object_ids)),
+            'broadcast' => Broadcast::build_cache($this->_squashList($object_ids)),
+            'pvmsg' => PrivateMsg::build_cache($this->_squashList($object_ids)),
+            'wanted' => Wanted::build_cache($this->_squashList($object_ids)),
             default => null,
         };
     }

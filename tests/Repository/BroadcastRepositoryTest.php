@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -150,6 +151,31 @@ class BroadcastRepositoryTest extends TestCase
             ->willReturnOnConsecutiveCalls(1, 2, false);
 
         static::assertSame([1, 2], $this->subject->getIdsByUser(42));
+    }
+
+    public function testGetRowsByIdsCastsTheIdsIntoTheStatement(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT * FROM `broadcast` WHERE `id` IN (1,0,3)')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(['id' => '1'], false);
+
+        static::assertSame([['id' => '1']], $this->subject->getRowsByIds([1, 'x', 3]));
+    }
+
+    public function testGetRowsByIdsReturnsNothingForAnEmptyList(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        static::assertSame([], $this->subject->getRowsByIds([]));
     }
 
     public function testPersistInsertsABroadcastThatHasNoIdYet(): void

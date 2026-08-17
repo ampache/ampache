@@ -32,6 +32,7 @@ use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use DateTime;
+use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -151,6 +152,31 @@ class ShareRepositoryTest extends TestCase
             [$shareId],
             $this->subject->getIdsByUser($user)
         );
+    }
+
+    public function testGetRowsByIdsCastsTheIdsIntoTheStatement(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT * FROM `share` WHERE `id` IN (1,0,3)')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(['id' => '1'], false);
+
+        static::assertSame([['id' => '1']], $this->subject->getRowsByIds([1, 'x', 3]));
+    }
+
+    public function testGetRowsByIdsReturnsNothingForAnEmptyList(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        static::assertSame([], $this->subject->getRowsByIds([]));
     }
 
     public function testMigrateMigrates(): void

@@ -37,6 +37,26 @@ class ShareTest extends TestCase
     private ContainerInterface&MockObject $dic;
     private ShareRepositoryInterface&MockObject $shareRepository;
 
+    public function testBuildCacheSkipsAnEmptyList(): void
+    {
+        $this->shareRepository->expects(static::never())
+            ->method('getRowsByIds');
+
+        static::assertFalse(Share::build_cache([]));
+    }
+
+    public function testBuildCacheWarmsTheCacheFromTheRepository(): void
+    {
+        AmpConfig::set('memory_cache', true, true);
+
+        $this->shareRepository->expects(static::once())
+            ->method('getRowsByIds')
+            ->with([666])
+            ->willReturn([['id' => 666, 'object_type' => 'song']]);
+
+        static::assertTrue(Share::build_cache([666]));
+    }
+
     /**
      * The secret is compared with `hash_equals()`; a wrong guess must fail even when both the stored secret and
      * the guess are "magic hash" shaped (`0e` followed only by digits), which PHP's loose `!=` treats as equal

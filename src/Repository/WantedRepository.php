@@ -31,6 +31,7 @@ use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
+use PDO;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -231,6 +232,31 @@ final readonly class WantedRepository implements WantedRepositoryInterface
 
         /** @var DatabaseRow $row */
         return $row;
+    }
+
+    /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $wantedIds
+     * @return list<DatabaseRow>
+     */
+    public function getRowsByIds(array $wantedIds): array
+    {
+        if ($wantedIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            'SELECT * FROM `wanted` WHERE `id` IN (' . implode(',', array_map(intval(...), $wantedIds)) . ')'
+        );
+
+        $results = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            /** @var DatabaseRow $row */
+            $results[] = $row;
+        }
+
+        return $results;
     }
 
     /**

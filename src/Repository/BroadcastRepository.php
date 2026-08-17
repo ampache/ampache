@@ -30,6 +30,7 @@ use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use PDO;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -140,6 +141,30 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
         }
 
         return $broadcasts;
+    }
+
+    /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $broadcastIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $broadcastIds): array
+    {
+        if ($broadcastIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            'SELECT * FROM `broadcast` WHERE `id` IN (' . implode(',', array_map(intval(...), $broadcastIds)) . ')'
+        );
+
+        $results = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $results[] = $row;
+        }
+
+        return $results;
     }
 
     /**

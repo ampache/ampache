@@ -577,6 +577,30 @@ final readonly class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $userIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $userIds): array
+    {
+        if ($userIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            'SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `subsonic_secret`, `catalog_filter_group` FROM `user` WHERE `id` IN (' . implode(',', array_map(intval(...), $userIds)) . ');'
+        );
+
+        $results = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
      * Returns statistical data related to user accounts and active users
      *
      * @param int $timePeriod Time period to consider sessions `active` (in seconds)

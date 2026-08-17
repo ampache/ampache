@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\BroadcastRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -34,6 +35,26 @@ class BroadcastTest extends TestCase
 {
     private BroadcastRepositoryInterface&MockObject $broadcastRepository;
     private ContainerInterface&MockObject $dic;
+
+    public function testBuildCacheSkipsAnEmptyList(): void
+    {
+        $this->broadcastRepository->expects(static::never())
+            ->method('getRowsByIds');
+
+        static::assertFalse(Broadcast::build_cache([]));
+    }
+
+    public function testBuildCacheWarmsTheCacheFromTheRepository(): void
+    {
+        AmpConfig::set('memory_cache', true, true);
+
+        $this->broadcastRepository->expects(static::once())
+            ->method('getRowsByIds')
+            ->with([666])
+            ->willReturn([['id' => 666, 'name' => 'some-broadcast']]);
+
+        static::assertTrue(Broadcast::build_cache([666]));
+    }
 
     public function testCreateRefusesAnEmptyName(): void
     {

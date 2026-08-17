@@ -141,6 +141,34 @@ class UserRepositoryTest extends TestCase
         static::assertNull($this->subject->findByApiKey('some-api-key'));
     }
 
+    public function testGetRowsByIdsCastsTheIdsIntoTheStatement(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(static::stringContains('WHERE `id` IN (1,0,3)'))
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(['id' => '1', 'username' => 'foo'], false);
+
+        static::assertSame(
+            [['id' => '1', 'username' => 'foo']],
+            $this->subject->getRowsByIds([1, 'x', 3])
+        );
+    }
+
+    public function testGetRowsByIdsReturnsNothingForAnEmptyList(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        static::assertSame([], $this->subject->getRowsByIds([]));
+    }
+
     public function testGetValidationByUsernameReturnsNullForAClearedValidation(): void
     {
         $this->connection->expects(static::once())

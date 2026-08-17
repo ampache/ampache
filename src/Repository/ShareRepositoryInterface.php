@@ -60,6 +60,14 @@ interface ShareRepositoryInterface
     public function getIdsByUser(User $user): array;
 
     /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $shareIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $shareIds): array;
+
+    /**
      * Migrate a share associate stats to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
