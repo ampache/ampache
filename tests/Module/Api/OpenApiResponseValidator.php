@@ -40,16 +40,10 @@ use JsonSchema\Validator;
  */
 final class OpenApiResponseValidator
 {
-    /** @var array<string, mixed> */
-    private array $spec;
-
     /**
      * @param array<string, mixed> $spec the decoded OpenAPI document
      */
-    public function __construct(array $spec)
-    {
-        $this->spec = $spec;
-    }
+    public function __construct(private array $spec) {}
 
     /**
      * Validate a raw JSON response body against a named component schema.
@@ -123,6 +117,7 @@ final class OpenApiResponseValidator
             if ($errors === []) {
                 return [];
             }
+
             if ($best === null || count($errors) < count($best)) {
                 $best = $errors;
             }
@@ -173,6 +168,7 @@ final class OpenApiResponseValidator
                 $errors[] = sprintf('%s.%s: property is not declared in the specification', $path, $key);
                 continue;
             }
+
             $errors = [...$errors, ...$this->findUndeclaredProperties($value, $properties[$key], $path . '.' . $key)];
         }
 
@@ -204,6 +200,7 @@ final class OpenApiResponseValidator
                 $properties = array_merge($properties, $resolved['properties'] ?? []);
                 $required   = array_merge($required, $resolved['required'] ?? []);
             }
+
             unset($schema['allOf']);
 
             return array_merge($schema, ['type' => 'object', 'properties' => $properties, 'required' => $required]);

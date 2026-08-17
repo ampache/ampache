@@ -135,8 +135,8 @@ class Upload
 
             Album::update_table_counts();
             Artist::update_table_counts();
-        } catch (Throwable $error) {
-            debug_event(self::class, 'Upload failed: ' . $error->getMessage(), 1);
+        } catch (Throwable $throwable) {
+            debug_event(self::class, 'Upload failed: ' . $throwable->getMessage(), 1);
 
             return false;
         }

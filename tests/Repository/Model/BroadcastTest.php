@@ -41,7 +41,7 @@ class BroadcastTest extends TestCase
         $this->broadcastRepository->expects(static::never())
             ->method('getRowsByIds');
 
-        static::assertFalse(Broadcast::build_cache([]));
+        self::assertFalse(Broadcast::build_cache([]));
     }
 
     public function testBuildCacheWarmsTheCacheFromTheRepository(): void
@@ -53,7 +53,7 @@ class BroadcastTest extends TestCase
             ->with([666])
             ->willReturn([['id' => 666, 'name' => 'some-broadcast']]);
 
-        static::assertTrue(Broadcast::build_cache([666]));
+        self::assertTrue(Broadcast::build_cache([666]));
     }
 
     public function testCreateRefusesAnEmptyName(): void
@@ -61,7 +61,7 @@ class BroadcastTest extends TestCase
         $this->broadcastRepository->expects(static::never())
             ->method('create');
 
-        static::assertSame(0, Broadcast::create(''));
+        self::assertSame(0, Broadcast::create(''));
     }
 
     public function testDeleteDelegatesToTheRepository(): void
@@ -74,7 +74,7 @@ class BroadcastTest extends TestCase
             ->method('delete')
             ->with($subject);
 
-        static::assertTrue($subject->delete());
+        self::assertTrue($subject->delete());
     }
 
     public function testDeleteReturnsFalseIfTheWriteFailed(): void
@@ -87,7 +87,7 @@ class BroadcastTest extends TestCase
             ->method('delete')
             ->willThrowException(new QueryFailedException('some-error'));
 
-        static::assertFalse($subject->delete());
+        self::assertFalse($subject->delete());
     }
 
     public function testGetBroadcastsDelegatesToTheRepository(): void
@@ -97,7 +97,7 @@ class BroadcastTest extends TestCase
             ->with(42)
             ->willReturn([1, 2]);
 
-        static::assertSame([1, 2], Broadcast::get_broadcasts(42));
+        self::assertSame([1, 2], Broadcast::get_broadcasts(42));
     }
 
     public function testUpdateAppliesTheDataAndPersists(): void
@@ -110,7 +110,7 @@ class BroadcastTest extends TestCase
             ->method('update')
             ->with($subject);
 
-        static::assertSame(
+        self::assertSame(
             666,
             $subject->update([
                 'name' => 'some-name',
@@ -119,9 +119,9 @@ class BroadcastTest extends TestCase
             ])
         );
 
-        static::assertSame('some-name', $subject->name);
-        static::assertSame('some-description', $subject->description);
-        static::assertTrue($subject->is_private);
+        self::assertSame('some-name', $subject->name);
+        self::assertSame('some-description', $subject->description);
+        self::assertTrue($subject->is_private);
     }
 
     public function testUpdateClearsTheDescriptionAndPrivacyWhenNotSupplied(): void
@@ -137,8 +137,8 @@ class BroadcastTest extends TestCase
 
         $subject->update(['name' => 'some-name']);
 
-        static::assertSame('', $subject->description);
-        static::assertFalse($subject->is_private);
+        self::assertSame('', $subject->description);
+        self::assertFalse($subject->is_private);
     }
 
     public function testUpdateKeepsTheCurrentNameWhenNoneIsSupplied(): void
@@ -153,7 +153,7 @@ class BroadcastTest extends TestCase
 
         $subject->update(['description' => 'some-description']);
 
-        static::assertSame('old-name', $subject->name);
+        self::assertSame('old-name', $subject->name);
     }
 
     public function testUpdateListenersStoresTheCountOnTheObject(): void
@@ -168,7 +168,7 @@ class BroadcastTest extends TestCase
 
         $subject->update_listeners(12);
 
-        static::assertSame(12, $subject->listeners);
+        self::assertSame(12, $subject->listeners);
     }
 
     public function testUpdateSongResetsThePosition(): void
@@ -184,8 +184,8 @@ class BroadcastTest extends TestCase
 
         $subject->update_song(33);
 
-        static::assertSame(33, $subject->song);
-        static::assertSame(0, $subject->song_position);
+        self::assertSame(33, $subject->song);
+        self::assertSame(0, $subject->song_position);
     }
 
     public function testUpdateStateStoresTheStartTime(): void
@@ -200,7 +200,7 @@ class BroadcastTest extends TestCase
 
         $subject->update_state(1234, 'some-key');
 
-        static::assertSame(1234, $subject->started);
+        self::assertSame(1234, $subject->started);
     }
 
     protected function setUp(): void

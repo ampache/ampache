@@ -84,9 +84,9 @@ final readonly class OidcAction implements ApplicationActionInterface
             $this->oidcAuthenticationService->redirectToProvider(
                 (string) ($request->getQueryParams()['referrer'] ?? Core::get_server('HTTP_REFERER'))
             );
-        } catch (OidcException $error) {
+        } catch (OidcException $oidcException) {
             $this->logger->error(
-                $error->getMessage(),
+                $oidcException->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             AmpError::add('general', T_('OpenID Connect is not configured correctly'));

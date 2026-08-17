@@ -52,8 +52,8 @@ class SongTagWriterTest extends TestCase
 
         $result = $this->subject->check_for_duplicate($apics, $newPic, $ndata, 'picturetypeid');
 
-        static::assertSame(0, $result);
-        static::assertSame(
+        self::assertSame(0, $result);
+        self::assertSame(
             [
                 'data' => 'new-data',
                 'description' => 'cover',
@@ -74,8 +74,8 @@ class SongTagWriterTest extends TestCase
 
         $result = $this->subject->check_for_duplicate($apics, $newPic, $ndata, 'picturetypeid');
 
-        static::assertNull($result);
-        static::assertArrayNotHasKey('attached_picture', $ndata);
+        self::assertNull($result);
+        self::assertArrayNotHasKey('attached_picture', $ndata);
     }
 
     public function testWriteDoesNothingForANewSong(): void

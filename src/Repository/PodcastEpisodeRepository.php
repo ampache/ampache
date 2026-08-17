@@ -405,7 +405,7 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $episodeIds));
+        $idList = implode(',', array_map(intval(...), $episodeIds));
 
         $result = $this->connection->query('SELECT * FROM `podcast_episode` WHERE `id` IN (' . $idList . ')');
 

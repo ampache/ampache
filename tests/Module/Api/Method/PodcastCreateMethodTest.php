@@ -36,7 +36,6 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;

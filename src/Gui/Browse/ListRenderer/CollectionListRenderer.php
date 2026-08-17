@@ -109,13 +109,13 @@ final class CollectionListRenderer extends AbstractBrowseListRenderer
 
     public function renderRow(Collection $collection): string
     {
-        return (new CollectionRowView(
+        return new CollectionRowView(
             $this->configContainer->getWebPath(),
             $collection,
             $this->getCoverClass(),
             (bool) $this->configContainer->get('directplay'),
             $this->showRatings()
-        ))->render();
+        )->render();
     }
 
     public function showRatings(): bool

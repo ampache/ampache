@@ -177,14 +177,14 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
      */
     private function findId(int $albumId, int $disk, int $catalogId, ?string $disksubtitle): ?int
     {
-        $objectId = (!empty($disksubtitle))
+        $objectId = (empty($disksubtitle))
             ? $this->connection->fetchOne(
-                'SELECT `album_disk`.`id` FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND album_disk.`disksubtitle` = ?;',
-                [$albumId, $disk, $catalogId, $disksubtitle]
-            )
-            : $this->connection->fetchOne(
                 "SELECT `album_disk`.`id` FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND (`album_disk`.`disksubtitle` = '' OR `album_disk`.`disksubtitle` IS NULL);",
                 [$albumId, $disk, $catalogId]
+            )
+            : $this->connection->fetchOne(
+                'SELECT `album_disk`.`id` FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND album_disk.`disksubtitle` = ?;',
+                [$albumId, $disk, $catalogId, $disksubtitle]
             );
 
         return ($objectId === false)

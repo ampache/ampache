@@ -42,7 +42,7 @@ class UserTest extends TestCase
         $this->userRepository->expects(static::never())
             ->method('getRowsByIds');
 
-        static::assertFalse(User::build_cache([]));
+        self::assertFalse(User::build_cache([]));
     }
 
     public function testBuildCacheWarmsTheCacheFromTheRepository(): void
@@ -59,7 +59,7 @@ class UserTest extends TestCase
             ->with([666], 'user')
             ->willReturn([]);
 
-        static::assertTrue(User::build_cache([666]));
+        self::assertTrue(User::build_cache([666]));
     }
 
     protected function setUp(): void

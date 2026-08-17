@@ -54,6 +54,7 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\Model\Wanted;
+use Override;
 
 /**
  * Browse Class
@@ -183,7 +184,7 @@ class Browse extends Query
      */
     public static function is_valid_type(string $type): bool
     {
-        return in_array($type, self::BROWSE_TYPES);
+        return in_array($type, self::BROWSE_TYPES, true);
     }
 
     /**
@@ -362,7 +363,7 @@ class Browse extends Query
      */
     public function set_grid_view(bool $grid_view, bool $savecookie = true): void
     {
-        if ($savecookie && in_array($this->get_type(), ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
+        if ($savecookie && in_array($this->get_type(), ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'], true)) {
             $this->save_cookie_params('grid_view', ($grid_view) ? 'true' : 'false');
         }
 
@@ -412,6 +413,7 @@ class Browse extends Query
     /**
      * This sets the type of object that we want to browse by
      */
+    #[Override]
     public function set_type(string $type, ?string $custom_base = '', ?array $parameters = []): void
     {
         if (empty($type)) {
@@ -449,7 +451,7 @@ class Browse extends Query
                     ",",
                     (string) AmpConfig::get('libitem_browse_alpha')
                 ) : [];
-                if (in_array($type, $default_alpha)) {
+                if (in_array($type, $default_alpha, true)) {
                     $this->set_use_alpha(true, false);
                 }
             }
@@ -514,7 +516,7 @@ class Browse extends Query
      */
     public function set_use_select(bool $use_select, bool $savecookie = true): void
     {
-        if ($savecookie && in_array($this->get_type(), self::MULTISELECT_TYPES)) {
+        if ($savecookie && in_array($this->get_type(), self::MULTISELECT_TYPES, true)) {
             $this->save_cookie_params('select', ($use_select) ? 'true' : 'false');
         }
 
@@ -603,7 +605,7 @@ class Browse extends Query
             $this->_applyCookieState($type);
         }
 
-        if (in_array($type, self::ROW_TYPES)) {
+        if (in_array($type, self::ROW_TYPES, true)) {
             $browse->set_grid_view(false);
         }
 
@@ -674,7 +676,7 @@ class Browse extends Query
      */
     public function update_browse_from_session(): void
     {
-        if ($this->is_simple() && $this->get_start() == 0) {
+        if ($this->is_simple() && $this->get_start() === 0) {
             $name = 'browse_current_' . $this->get_type();
             if (array_key_exists($name, $_SESSION) && array_key_exists('start', $_SESSION[$name]) && $_SESSION[$name]['start'] > 0) {
                 // Checking if value is suitable
@@ -704,7 +706,7 @@ class Browse extends Query
         }
 
         $grid_view = $this->_readViewCookie($type, 'grid_view');
-        if (in_array($type, self::GRID_TYPES)) {
+        if (in_array($type, self::GRID_TYPES, true)) {
             if (!$this->is_mashup() && $grid_view !== null) {
                 $this->set_grid_view($grid_view, false);
             }
@@ -718,7 +720,7 @@ class Browse extends Query
         }
 
         $use_select = $this->_readViewCookie($type, 'select');
-        if (in_array($type, self::MULTISELECT_TYPES) && $use_select !== null) {
+        if (in_array($type, self::MULTISELECT_TYPES, true) && $use_select !== null) {
             $this->set_use_select($use_select, false);
         }
     }
@@ -926,6 +928,7 @@ class Browse extends Query
             if (is_int($value) || is_string($value)) {
                 $results[] = $value;
             }
+
             if (is_array($value)) {
                 $results[] = $value['object_id'];
             }

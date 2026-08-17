@@ -77,7 +77,10 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
 
         $params = [];
         foreach ($rows as $row) {
-            array_push($params, $playlist->getId(), $row[0], $row[1], $row[2]);
+            $params[] = $playlist->getId();
+            $params[] = $row[0];
+            $params[] = $row[1];
+            $params[] = $row[2];
         }
 
         $this->connection->query(
@@ -623,7 +626,8 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
 
         $params = [];
         foreach ($tracksById as $trackId => $track) {
-            array_push($params, $trackId, $track);
+            $params[] = $trackId;
+            $params[] = $track;
         }
 
         $this->connection->query(

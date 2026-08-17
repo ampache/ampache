@@ -101,7 +101,7 @@ final class MiniPlayerView extends AbstractView
 
     public function getSessionId(): string
     {
-        return (string) Session::get();
+        return Session::get();
     }
 
     public function getSiteCharset(): string
@@ -136,7 +136,7 @@ final class MiniPlayerView extends AbstractView
 
     public function renderPlayerHeaders(): string
     {
-        return (new WebPlayerHeadersView($this->webPath, $this->ajaxUriRetriever, true))->render();
+        return new WebPlayerHeadersView($this->webPath, $this->ajaxUriRetriever, true)->render();
     }
 
     #[Override]

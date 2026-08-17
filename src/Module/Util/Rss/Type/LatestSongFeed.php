@@ -71,7 +71,7 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
                     ? 'true'
                     : 'false',
                 'image' => (string) Art::url($song->id, 'song', null, 2),
-                'duration' => (string) $song->get_f_time(),
+                'duration' => $song->get_f_time(),
                 'season' => ($song->album > 0) ? (string) $song->album : null,
                 'season_name' => ($song->album > 0) ? $song->get_album_fullname() : null,
                 'episode' => (($song->track ?? 0) > 0) ? (string) $song->track : null,

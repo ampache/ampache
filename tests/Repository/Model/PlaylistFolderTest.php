@@ -69,23 +69,23 @@ class PlaylistFolderTest extends TestCase
             'last_update' => '1700000001',
         ]);
 
-        static::assertSame(7, $folder->getId());
-        static::assertSame(42, $folder->getUserId());
-        static::assertSame(3, $folder->getParentId());
-        static::assertSame('Live', $folder->getName());
-        static::assertSame(5, $folder->getSortOrder());
-        static::assertFalse($folder->isNew());
+        self::assertSame(7, $folder->getId());
+        self::assertSame(42, $folder->getUserId());
+        self::assertSame(3, $folder->getParentId());
+        self::assertSame('Live', $folder->getName());
+        self::assertSame(5, $folder->getSortOrder());
+        self::assertFalse($folder->isNew());
     }
 
     public function testIsValidTypeAcceptsOnlyTheStoredSpellings(): void
     {
-        static::assertTrue(PlaylistFolder::isValidType('playlist'));
-        static::assertTrue(PlaylistFolder::isValidType('search'));
-        static::assertTrue(PlaylistFolder::isValidType('collection'));
+        self::assertTrue(PlaylistFolder::isValidType('playlist'));
+        self::assertTrue(PlaylistFolder::isValidType('search'));
+        self::assertTrue(PlaylistFolder::isValidType('collection'));
 
         // the API spelling has to be normalised first, so it is not valid on its own
-        static::assertFalse(PlaylistFolder::isValidType('smartlist'));
-        static::assertFalse(PlaylistFolder::isValidType('song'));
+        self::assertFalse(PlaylistFolder::isValidType('smartlist'));
+        self::assertFalse(PlaylistFolder::isValidType('song'));
     }
 
     public function testIsVisibleOnlyToTheOwner(): void
@@ -100,19 +100,19 @@ class PlaylistFolderTest extends TestCase
 
         $folder = PlaylistFolder::fromRow(['id' => '7', 'user' => '42', 'name' => 'Rock']);
 
-        static::assertTrue($folder->isVisible($owner));
-        static::assertFalse($folder->isVisible($other));
-        static::assertFalse($folder->isVisible(null));
-        static::assertFalse((new PlaylistFolder())->isVisible($owner));
+        self::assertTrue($folder->isVisible($owner));
+        self::assertFalse($folder->isVisible($other));
+        self::assertFalse($folder->isVisible(null));
+        self::assertFalse(new PlaylistFolder()->isVisible($owner));
     }
 
     public function testNewFolderIsNewAndSitsAtTheRoot(): void
     {
         $folder = new PlaylistFolder();
 
-        static::assertTrue($folder->isNew());
-        static::assertSame(0, $folder->getId());
-        static::assertSame(PlaylistFolder::ROOT, $folder->getParentId());
+        self::assertTrue($folder->isNew());
+        self::assertSame(0, $folder->getId());
+        self::assertSame(PlaylistFolder::ROOT, $folder->getParentId());
     }
 
     /**
@@ -126,8 +126,8 @@ class PlaylistFolderTest extends TestCase
 
         $folder->setName($name);
 
-        static::assertSame('Rock', $folder->getName());
-        static::assertFalse(PlaylistFolder::isValidName($name));
+        self::assertSame('Rock', $folder->getName());
+        self::assertFalse(PlaylistFolder::isValidName($name));
     }
 
     #[DataProvider('acceptedNameDataProvider')]
@@ -137,7 +137,7 @@ class PlaylistFolderTest extends TestCase
 
         $folder->setName($name);
 
-        static::assertSame(trim($name), $folder->getName());
+        self::assertSame(trim($name), $folder->getName());
     }
 
     public function testSetParentIdClampsANegativeParentToTheRoot(): void
@@ -146,14 +146,14 @@ class PlaylistFolderTest extends TestCase
 
         $folder->setParentId(-5);
 
-        static::assertSame(PlaylistFolder::ROOT, $folder->getParentId());
+        self::assertSame(PlaylistFolder::ROOT, $folder->getParentId());
     }
 
     public function testTypeSpellingsRoundTripBetweenTableAndApi(): void
     {
-        static::assertSame('search', PlaylistFolder::normalizeType('smartlist'));
-        static::assertSame('smartlist', PlaylistFolder::denormalizeType('search'));
-        static::assertSame('playlist', PlaylistFolder::normalizeType('playlist'));
-        static::assertSame('collection', PlaylistFolder::denormalizeType('collection'));
+        self::assertSame('search', PlaylistFolder::normalizeType('smartlist'));
+        self::assertSame('smartlist', PlaylistFolder::denormalizeType('search'));
+        self::assertSame('playlist', PlaylistFolder::normalizeType('playlist'));
+        self::assertSame('collection', PlaylistFolder::denormalizeType('collection'));
     }
 }

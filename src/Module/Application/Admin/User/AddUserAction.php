@@ -115,7 +115,7 @@ final class AddUserAction extends AbstractUserAction
             AmpError::occurred()
             || $user_id < 1
         ) {
-            echo (new AddUserFormView(
+            echo new AddUserFormView(
                 $this->configContainer->getWebPath('/admin'),
                 $this->requestParser->getFromRequest('username'),
                 $this->requestParser->getFromRequest('fullname'),
@@ -123,7 +123,7 @@ final class AddUserAction extends AbstractUserAction
                 $this->requestParser->getFromRequest('website'),
                 AmpConfig::get_int('max_upload_size'),
                 (bool) AmpConfig::get('catalog_filter')
-            ))->render();
+            )->render();
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

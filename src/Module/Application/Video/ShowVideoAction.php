@@ -55,7 +55,7 @@ final readonly class ShowVideoAction implements ApplicationActionInterface
 
         $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 
-        echo (new VideoView(
+        echo new VideoView(
             AmpConfig::get_web_path(),
             $video,
             ($video->file) ? $video->get_subtitles() : [],
@@ -74,7 +74,7 @@ final readonly class ShowVideoAction implements ApplicationActionInterface
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER),
             Catalog::can_remove($video),
             (bool) AmpConfig::get('statistical_graphs')
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

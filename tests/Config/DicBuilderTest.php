@@ -42,7 +42,7 @@ class DicBuilderTest extends TestCase
     {
         $sourcePath = realpath(__DIR__ . '/../../src');
 
-        static::assertIsString($sourcePath);
+        self::assertIsString($sourcePath);
 
         $builder = (string) file_get_contents($sourcePath . '/Config/DicBuilder.php');
 
@@ -73,7 +73,7 @@ class DicBuilderTest extends TestCase
             }
         }
 
-        static::assertSame([], $missing, 'service_definition.php files missing from DicBuilder.php');
+        self::assertSame([], $missing, 'service_definition.php files missing from DicBuilder.php');
     }
 
     /**
@@ -98,7 +98,7 @@ class DicBuilderTest extends TestCase
             }
         }
 
-        static::assertSame([], $circular);
+        self::assertSame([], $circular);
     }
 
     /**
@@ -108,7 +108,7 @@ class DicBuilderTest extends TestCase
     {
         $sourcePath = realpath(__DIR__ . '/../../src');
 
-        static::assertIsString($sourcePath);
+        self::assertIsString($sourcePath);
 
         $keys     = [];
         $iterator = new RecursiveIteratorIterator(

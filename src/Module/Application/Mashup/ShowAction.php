@@ -60,14 +60,14 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        echo (new MashupView(
+        echo new MashupView(
             $object_type,
             $gatekeeper->getUser() ?? new User(-1),
             $this->browseFactory,
             $this->videoRepository,
             AmpConfig::get_web_path(),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

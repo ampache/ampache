@@ -185,7 +185,7 @@ final class AlbumPageView extends AbstractView
 
     public function getParentName(): string
     {
-        return (string) $this->album->get_parent_fullname();
+        return $this->album->get_parent_fullname();
     }
 
     public function getPlayedTimes(): int

@@ -68,7 +68,7 @@ class PlaylistFolderRepositoryTest extends TestCase
 
         $this->subject->collectGarbage();
 
-        static::assertGreaterThan(1, $calls);
+        self::assertGreaterThan(1, $calls);
     }
 
     public function testCreateAppendsAfterTheLastSiblingAcrossBothTables(): void
@@ -85,7 +85,7 @@ class PlaylistFolderRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'INSERT INTO `playlist_folder` (`user`, `parent`, `name`, `sort_order`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?);',
-                static::callback(
+                self::callback(
                     static fn(array $params): bool => $params[0] === self::USER_ID
                         && $params[1] === PlaylistFolder::ROOT
                         && $params[2] === 'Rock'
@@ -97,7 +97,7 @@ class PlaylistFolderRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(7);
 
-        static::assertSame(7, $this->subject->create($this->user, 'Rock'));
+        self::assertSame(7, $this->subject->create($this->user, 'Rock'));
     }
 
     public function testCreateRefusesANameThatCannotBeAddressedByPath(): void
@@ -105,7 +105,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertNull($this->subject->create($this->user, 'Rock/Live'));
+        self::assertNull($this->subject->create($this->user, 'Rock/Live'));
     }
 
     public function testCreateRefusesAParentBelongingToAnotherUser(): void
@@ -121,7 +121,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertNull($this->subject->create($this->user, 'Live', 9));
+        self::assertNull($this->subject->create($this->user, 'Live', 9));
     }
 
     /**
@@ -136,7 +136,7 @@ class PlaylistFolderRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException());
 
-        static::assertNull($this->subject->create($this->user, 'rock'));
+        self::assertNull($this->subject->create($this->user, 'rock'));
     }
 
     public function testDeleteRefusesAFolderThatStillHoldsAChildFolder(): void
@@ -149,7 +149,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertFalse($this->subject->delete(7));
+        self::assertFalse($this->subject->delete(7));
     }
 
     public function testDeleteRefusesAFolderThatStillHoldsAPlacement(): void
@@ -167,7 +167,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertFalse($this->subject->delete(7));
+        self::assertFalse($this->subject->delete(7));
     }
 
     public function testDeleteRemovesAnEmptyFolder(): void
@@ -179,7 +179,7 @@ class PlaylistFolderRepositoryTest extends TestCase
             ->method('query')
             ->with('DELETE FROM `playlist_folder` WHERE `id` = ?;', [7]);
 
-        static::assertTrue($this->subject->delete(7));
+        self::assertTrue($this->subject->delete(7));
     }
 
     public function testFindByPathRefusesAnEmptyOrOverDeepPath(): void
@@ -187,9 +187,9 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('fetchOne');
 
-        static::assertNull($this->subject->findByPath($this->user, '/'));
-        static::assertNull($this->subject->findByPath($this->user, ''));
-        static::assertNull($this->subject->findByPath($this->user, str_repeat('/a', 33)));
+        self::assertNull($this->subject->findByPath($this->user, '/'));
+        self::assertNull($this->subject->findByPath($this->user, ''));
+        self::assertNull($this->subject->findByPath($this->user, str_repeat('/a', 33)));
     }
 
     public function testFindByPathStopsAtTheFirstMissingSegment(): void
@@ -201,7 +201,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertNull($this->subject->findByPath($this->user, '/Rock/Live'));
+        self::assertNull($this->subject->findByPath($this->user, '/Rock/Live'));
     }
 
     public function testFindByPathWalksOneSegmentAtATime(): void
@@ -229,8 +229,8 @@ class PlaylistFolderRepositoryTest extends TestCase
 
         $folder = $this->subject->findByPath($this->user, '/Rock/Live');
 
-        static::assertNotNull($folder);
-        static::assertSame(7, $folder->getId());
+        self::assertNotNull($folder);
+        self::assertSame(7, $folder->getId());
     }
 
     public function testGetChildrenHydratesFromTheRowsInOneQuery(): void
@@ -250,8 +250,8 @@ class PlaylistFolderRepositoryTest extends TestCase
 
         $children = $this->subject->getChildren($this->user);
 
-        static::assertCount(2, $children);
-        static::assertSame(['Rock', 'Jazz'], array_map(static fn(PlaylistFolder $folder): string => $folder->getName(), $children));
+        self::assertCount(2, $children);
+        self::assertSame(['Rock', 'Jazz'], array_map(static fn(PlaylistFolder $folder): string => $folder->getName(), $children));
     }
 
     public function testGetPlacedObjectIdsSkipsTheRoot(): void
@@ -269,7 +269,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $result->method('fetchColumn')
             ->willReturn('12', '13', false);
 
-        static::assertSame([12, 13], $this->subject->getPlacedObjectIds($this->user, 'playlist'));
+        self::assertSame([12, 13], $this->subject->getPlacedObjectIds($this->user, 'playlist'));
     }
 
     public function testGetPlacementNormalisesTheApiSpellingOfASmartlist(): void
@@ -282,7 +282,7 @@ class PlaylistFolderRepositoryTest extends TestCase
             )
             ->willReturn($this->rowStatement(['folder' => '3', 'sort_order' => '2']));
 
-        static::assertSame(
+        self::assertSame(
             ['folder' => 3, 'sort_order' => 2],
             $this->subject->getPlacement($this->user, 12, 'smartlist')
         );
@@ -294,7 +294,7 @@ class PlaylistFolderRepositoryTest extends TestCase
             ->method('query')
             ->willReturn($this->rowStatement());
 
-        static::assertNull($this->subject->getPlacement($this->user, 12, 'playlist'));
+        self::assertNull($this->subject->getPlacement($this->user, 12, 'playlist'));
     }
 
     /**
@@ -309,7 +309,7 @@ class PlaylistFolderRepositoryTest extends TestCase
                 [self::USER_ID, 'playlist', 12]
             );
 
-        static::assertTrue($this->subject->place($this->user, 12, 'playlist', null));
+        self::assertTrue($this->subject->place($this->user, 12, 'playlist', null));
     }
 
     public function testPlaceRefusesAFolderBelongingToAnotherUser(): void
@@ -321,7 +321,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertFalse($this->subject->place($this->user, 12, 'playlist', 3));
+        self::assertFalse($this->subject->place($this->user, 12, 'playlist', 3));
     }
 
     public function testPlaceRefusesATypeAFolderCannotHold(): void
@@ -329,7 +329,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertFalse($this->subject->place($this->user, 12, 'song', 3));
+        self::assertFalse($this->subject->place($this->user, 12, 'song', 3));
     }
 
     public function testPlaceUpsertsSoASecondFilingMovesRatherThanDuplicates(): void
@@ -349,7 +349,7 @@ class PlaylistFolderRepositoryTest extends TestCase
                 [self::USER_ID, 3, 12, 'search', 5]
             );
 
-        static::assertTrue($this->subject->place($this->user, 12, 'smartlist', 3, 5));
+        self::assertTrue($this->subject->place($this->user, 12, 'smartlist', 3, 5));
     }
 
     public function testUpdateRefusesAMoveIntoItsOwnDescendant(): void
@@ -369,7 +369,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertFalse($this->subject->update(3, null, 9));
+        self::assertFalse($this->subject->update(3, null, 9));
     }
 
     public function testUpdateRefusesMakingAFolderItsOwnParent(): void
@@ -382,7 +382,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertFalse($this->subject->update(3, null, 3));
+        self::assertFalse($this->subject->update(3, null, 3));
     }
 
     public function testUpdateWithNothingToChangeWritesNothing(): void
@@ -393,7 +393,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertFalse($this->subject->update(3));
+        self::assertFalse($this->subject->update(3));
     }
 
     public function testUpdateWritesOnlyTheFieldsSupplied(): void
@@ -407,12 +407,12 @@ class PlaylistFolderRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'UPDATE `playlist_folder` SET `name` = ?, `last_update` = ? WHERE `id` = ?;',
-                static::callback(
+                self::callback(
                     static fn(array $params): bool => $params[0] === 'Rock' && $params[2] === 3
                 )
             );
 
-        static::assertTrue($this->subject->update(3, 'Rock'));
+        self::assertTrue($this->subject->update(3, 'Rock'));
     }
 
     public function testWouldCycleAcceptsAnUnrelatedParent(): void
@@ -427,7 +427,7 @@ class PlaylistFolderRepositoryTest extends TestCase
             )
             ->willReturn('8', '0');
 
-        static::assertFalse($this->subject->wouldCycle(3, 9));
+        self::assertFalse($this->subject->wouldCycle(3, 9));
     }
 
     public function testWouldCycleSurvivesAnAlreadyCyclicTree(): void
@@ -436,7 +436,7 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->method('fetchOne')
             ->willReturn('9', '8', '9', '8');
 
-        static::assertFalse($this->subject->wouldCycle(3, 8));
+        self::assertFalse($this->subject->wouldCycle(3, 8));
     }
 
     protected function setUp(): void

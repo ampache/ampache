@@ -131,7 +131,7 @@ final readonly class MoodRepository implements MoodRepositoryInterface
         $params     = ($moodId === 0) ? [$objectType] : [$moodId, $objectType];
 
         $sql = sprintf('SELECT DISTINCT `mood_map`.`object_id` FROM `mood_map` WHERE %s `mood_map`.`object_type` = ?', $moodClause);
-        if (AmpConfig::get('catalog_disable') && in_array($objectType, self::CATALOG_TYPES)) {
+        if (AmpConfig::get('catalog_disable') && in_array($objectType, self::CATALOG_TYPES, true)) {
             $sql .= ' AND ' . Catalog::get_enable_filter($objectType, '`mood_map`.`object_id`');
         }
 
@@ -239,7 +239,7 @@ final readonly class MoodRepository implements MoodRepositoryInterface
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $moodIds));
+        $idList = implode(',', array_map(intval(...), $moodIds));
 
         $result = $this->connection->query('SELECT * FROM `mood` WHERE `id` IN (' . $idList . ')');
 

@@ -55,14 +55,14 @@ final readonly class ShowAddAdvancedAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        echo (new AddAccessFormView(
+        echo new AddAccessFormView(
             $this->configContainer->getWebPath('/admin'),
             'show_add_advanced',
             $this->requestParser->getFromRequest('name'),
             $this->requestParser->getFromRequest('start'),
             $this->requestParser->getFromRequest('end'),
             ''
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

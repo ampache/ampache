@@ -84,7 +84,7 @@ class UserTrackerTest extends TestCase
 
         $this->logger->expects(static::once())
             ->method('warning')
-            ->with(static::stringContains('Login from IP address:'));
+            ->with(self::stringContains('Login from IP address:'));
 
         $this->ipHistoryRepository->expects(static::once())
             ->method('create')
@@ -92,7 +92,7 @@ class UserTrackerTest extends TestCase
                 $user,
                 '',
                 'SomeTestAgent/1.0',
-                static::isInstanceOf(DateTimeImmutable::class),
+                self::isInstanceOf(DateTimeImmutable::class),
                 'login',
             );
 

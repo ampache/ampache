@@ -60,7 +60,7 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     {
         try {
             $this->connection->query(
-                'UPDATE `broadcast` SET `started` = 0, `song` = 0, `listeners` = 0 WHERE `started` = 1 AND (`key` IS NULL OR `key` = \'\')'
+                "UPDATE `broadcast` SET `started` = 0, `song` = 0, `listeners` = 0 WHERE `started` = 1 AND (`key` IS NULL OR `key` = '')"
             );
         } catch (DatabaseException) {
             $this->logger->debug('collectGarbage error', [LegacyLogger::CONTEXT_TYPE => self::class]);
@@ -196,7 +196,7 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     public function resetStartedState(): int
     {
         $result = $this->connection->query(
-            'UPDATE `broadcast` SET `started` = 0, `key` = \'\', `song` = 0, `listeners` = 0 WHERE `started` = 1'
+            "UPDATE `broadcast` SET `started` = 0, `key` = '', `song` = 0, `listeners` = 0 WHERE `started` = 1"
         );
 
         return $result->rowCount();
@@ -240,7 +240,7 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     public function updateState(Broadcast $broadcast, int $started, string $key): void
     {
         $this->connection->query(
-            'UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = \'0\', `listeners` = \'0\' WHERE `id` = ?',
+            "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?",
             [$started, $key, $broadcast->getId()]
         );
     }

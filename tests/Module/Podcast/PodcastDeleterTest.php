@@ -24,7 +24,6 @@ namespace Ampache\Module\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;

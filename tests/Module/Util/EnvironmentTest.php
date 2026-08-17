@@ -33,52 +33,52 @@ class EnvironmentTest extends TestCase
 
     public function testCheckDependenciesFolderFindsVendorDirectory(): void
     {
-        static::assertTrue($this->subject->check_dependencies_folder());
+        self::assertTrue($this->subject->check_dependencies_folder());
     }
 
     public function testCheckPhpHashAlgoSupportsSha256(): void
     {
-        static::assertTrue($this->subject->check_php_hash_algo());
+        self::assertTrue($this->subject->check_php_hash_algo());
     }
 
     public function testCheckPhpHashIsAvailable(): void
     {
-        static::assertTrue($this->subject->check_php_hash());
+        self::assertTrue($this->subject->check_php_hash());
     }
 
     public function testCheckPhpIntlIsAvailable(): void
     {
-        static::assertTrue($this->subject->check_php_intl());
+        self::assertTrue($this->subject->check_php_intl());
     }
 
     public function testCheckPhpIntSizeIs64Bit(): void
     {
-        static::assertTrue($this->subject->check_php_int_size());
+        self::assertTrue($this->subject->check_php_int_size());
     }
 
     public function testCheckPhpJsonIsAvailable(): void
     {
-        static::assertTrue($this->subject->check_php_json());
+        self::assertTrue($this->subject->check_php_json());
     }
 
     public function testCheckPhpPdoIsAvailable(): void
     {
-        static::assertTrue($this->subject->check_php_pdo());
+        self::assertTrue($this->subject->check_php_pdo());
     }
 
     public function testCheckPhpPdoMysqlReturnsABooleanBasedOnLoadedDrivers(): void
     {
-        static::assertIsBool($this->subject->check_php_pdo_mysql());
+        self::assertIsBool($this->subject->check_php_pdo_mysql());
     }
 
     public function testCheckPhpSimplexmlIsAvailable(): void
     {
-        static::assertTrue($this->subject->check_php_simplexml());
+        self::assertTrue($this->subject->check_php_simplexml());
     }
 
     public function testCheckPhpVersionPassesOnTheRequiredVersion(): void
     {
-        static::assertTrue($this->subject->check_php_version());
+        self::assertTrue($this->subject->check_php_version());
     }
 
     public function testExtensionListsMatchComposerJson(): void
@@ -103,15 +103,15 @@ class EnvironmentTest extends TestCase
         $required = $extensions($composer['require']);
         $optional = array_values(array_diff($extensions($composer['suggest']), $required));
 
-        static::assertSame($required, Environment::REQUIRED_EXTENSIONS);
-        static::assertSame($optional, array_keys(Environment::OPTIONAL_EXTENSIONS));
+        self::assertSame($required, Environment::REQUIRED_EXTENSIONS);
+        self::assertSame($optional, array_keys(Environment::OPTIONAL_EXTENSIONS));
     }
 
     public function testGetExtensionStatusReportsEveryDeclaredExtension(): void
     {
         $status = $this->subject->getExtensionStatus();
 
-        static::assertCount(
+        self::assertCount(
             count(Environment::REQUIRED_EXTENSIONS)
             + count(Environment::ADDITIONAL_EXTENSIONS)
             + count(Environment::OPTIONAL_EXTENSIONS),
@@ -120,13 +120,13 @@ class EnvironmentTest extends TestCase
 
         $curl = $status[array_search('curl', array_column($status, 'name'), true)];
 
-        static::assertTrue($curl['required']);
-        static::assertTrue($curl['loaded']);
+        self::assertTrue($curl['required']);
+        self::assertTrue($curl['loaded']);
     }
 
     public function testIsCliReturnsTrueUnderThePhpunitCliRunner(): void
     {
-        static::assertTrue($this->subject->isCli());
+        self::assertTrue($this->subject->isCli());
     }
 
     protected function setUp(): void

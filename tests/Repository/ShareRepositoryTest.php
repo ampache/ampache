@@ -168,7 +168,7 @@ class ShareRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => '1'], false);
 
-        static::assertSame([['id' => '1']], $this->subject->getRowsByIds([1, 'x', 3]));
+        self::assertSame([['id' => '1']], $this->subject->getRowsByIds([1, 'x', 3]));
     }
 
     public function testGetRowsByIdsReturnsNothingForAnEmptyList(): void
@@ -176,7 +176,7 @@ class ShareRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertSame([], $this->subject->getRowsByIds([]));
+        self::assertSame([], $this->subject->getRowsByIds([]));
     }
 
     public function testMigrateMigrates(): void

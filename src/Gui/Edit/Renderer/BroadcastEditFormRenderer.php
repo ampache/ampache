@@ -52,7 +52,7 @@ final class BroadcastEditFormRenderer extends AbstractEditFormRenderer
 
     public function isPrivate(): bool
     {
-        return (bool) $this->getItem()->is_private;
+        return $this->getItem()->is_private;
     }
 
     #[Override]

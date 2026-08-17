@@ -58,7 +58,7 @@ class AlbumDiskRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException());
 
-        static::assertSame($collidedId, $this->subject->check(21, 2, 7, null, $currentId));
+        self::assertSame($collidedId, $this->subject->check(21, 2, 7, null, $currentId));
     }
 
     public function testCheckCreatesTheDiskAndSeedsItsSongCount(): void
@@ -75,9 +75,9 @@ class AlbumDiskRepositoryTest extends TestCase
             ->method('query')
             ->willReturnCallback(function (string $sql) use ($matcher): PDOStatement {
                 if ($matcher->numberOfInvocations() === 1) {
-                    static::assertStringContainsString('REPLACE INTO `album_disk`', $sql);
+                    self::assertStringContainsString('REPLACE INTO `album_disk`', $sql);
                 } else {
-                    static::assertStringContainsString('`song_count` = `song_count` + 1', $sql);
+                    self::assertStringContainsString('`song_count` = `song_count` + 1', $sql);
                 }
 
                 return $this->createMock(PDOStatement::class);
@@ -87,7 +87,7 @@ class AlbumDiskRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn($albumDiskId);
 
-        static::assertSame($albumDiskId, $this->subject->check(21, 2, 7));
+        self::assertSame($albumDiskId, $this->subject->check(21, 2, 7));
     }
 
     public function testCheckMatchesOnTheSubtitleWhenOneIsGiven(): void
@@ -95,12 +95,12 @@ class AlbumDiskRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
-                static::stringContains('album_disk.`disksubtitle` = ?'),
+                self::stringContains('album_disk.`disksubtitle` = ?'),
                 [21, 2, 7, 'some-subtitle']
             )
             ->willReturn('666');
 
-        static::assertSame(666, $this->subject->check(21, 2, 7, 'some-subtitle'));
+        self::assertSame(666, $this->subject->check(21, 2, 7, 'some-subtitle'));
     }
 
     public function testCheckMovesTheCurrentDiskAndRenumbersItsSongs(): void
@@ -122,17 +122,17 @@ class AlbumDiskRepositoryTest extends TestCase
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use ($matcher): PDOStatement {
                 if ($matcher->numberOfInvocations() === 1) {
-                    static::assertStringContainsString('UPDATE `album_disk` SET `album_id` = ?', $sql);
+                    self::assertStringContainsString('UPDATE `album_disk` SET `album_id` = ?', $sql);
                 } else {
                     // the songs follow the disk they were sitting on, keyed by the pre-move number
-                    static::assertStringContainsString('UPDATE `song` SET `disk` = ?', $sql);
-                    static::assertSame([2, 21, 1], $params);
+                    self::assertStringContainsString('UPDATE `song` SET `disk` = ?', $sql);
+                    self::assertSame([2, 21, 1], $params);
                 }
 
                 return $this->createMock(PDOStatement::class);
             });
 
-        static::assertSame($currentId, $this->subject->check(21, 2, 7, null, $currentId));
+        self::assertSame($currentId, $this->subject->check(21, 2, 7, null, $currentId));
     }
 
     public function testCheckReturnsTheIdOfAnExistingDisk(): void
@@ -140,7 +140,7 @@ class AlbumDiskRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
-                static::stringContains('OR `album_disk`.`disksubtitle` IS NULL'),
+                self::stringContains('OR `album_disk`.`disksubtitle` IS NULL'),
                 [21, 2, 7]
             )
             ->willReturn('666');
@@ -148,7 +148,7 @@ class AlbumDiskRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertSame(666, $this->subject->check(21, 2, 7));
+        self::assertSame(666, $this->subject->check(21, 2, 7));
     }
 
     public function testCheckReturnsZeroWhenTheInsertFailed(): void
@@ -161,7 +161,7 @@ class AlbumDiskRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException());
 
-        static::assertSame(0, $this->subject->check(21, 2, 7));
+        self::assertSame(0, $this->subject->check(21, 2, 7));
     }
 
     public function testFindByIdReturnsNullWhenTheDiskDoesNotExist(): void
@@ -171,7 +171,7 @@ class AlbumDiskRepositoryTest extends TestCase
 
         $this->modelFactory->method('createAlbumDisk')->willReturn($albumDisk);
 
-        static::assertNull($this->subject->findById(666));
+        self::assertNull($this->subject->findById(666));
     }
 
     public function testFindByIdReturnsTheLoadedDisk(): void
@@ -184,7 +184,7 @@ class AlbumDiskRepositoryTest extends TestCase
             ->with(666)
             ->willReturn($albumDisk);
 
-        static::assertSame($albumDisk, $this->subject->findById(666));
+        self::assertSame($albumDisk, $this->subject->findById(666));
     }
 
     public function testGetArtistCountReturnsTheMappedArtistCount(): void
@@ -202,7 +202,7 @@ class AlbumDiskRepositoryTest extends TestCase
             )
             ->willReturn('3');
 
-        static::assertSame(3, $this->subject->getArtistCount($albumDisk));
+        self::assertSame(3, $this->subject->getArtistCount($albumDisk));
     }
 
     public function testGetByAlbumReturnsAlbumDisksForEachRow(): void
@@ -228,7 +228,7 @@ class AlbumDiskRepositoryTest extends TestCase
 
         $albumDisks = $this->subject->getByAlbum($album);
 
-        static::assertCount(2, $albumDisks);
+        self::assertCount(2, $albumDisks);
     }
 
     public function testGetByAlbumReturnsEmptyListWhenNoDisksExist(): void
@@ -252,7 +252,7 @@ class AlbumDiskRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getByAlbum($album));
+        self::assertSame([], $this->subject->getByAlbum($album));
     }
 
     public function testGetSongsFiltersDisabledCatalogsWhenConfigured(): void
@@ -271,14 +271,14 @@ class AlbumDiskRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains('`catalog`.`enabled`'), [21, 2])
+            ->with(self::stringContains('`catalog`.`enabled`'), [21, 2])
             ->willReturn($result);
 
         $result->expects(static::exactly(3))
             ->method('fetchColumn')
             ->willReturnOnConsecutiveCalls(1, 2, false);
 
-        static::assertSame([1, 2], $this->subject->getSongs($albumDisk));
+        self::assertSame([1, 2], $this->subject->getSongs($albumDisk));
     }
 
     public function testGetSongsSkipsTheCatalogJoinWhenNotConfigured(): void
@@ -307,7 +307,7 @@ class AlbumDiskRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getSongs($albumDisk));
+        self::assertSame([], $this->subject->getSongs($albumDisk));
     }
 
     protected function setUp(): void

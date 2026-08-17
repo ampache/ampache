@@ -176,7 +176,7 @@ final readonly class StreamProxy implements StreamProxyInterface
             return $location;
         }
 
-        $base = parse_url((string) curl_getinfo($curl, CURLINFO_EFFECTIVE_URL));
+        $base = parse_url(curl_getinfo($curl, CURLINFO_EFFECTIVE_URL));
 
         return sprintf(
             '%s://%s%s%s',

@@ -56,8 +56,8 @@ class VideoRepositoryTest extends TestCase
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params = []) use ($matcher): PDOStatement {
                 if ($matcher->numberOfInvocations() === 1) {
-                    static::assertStringContainsString('`file` REGEXP ?', $sql);
-                    static::assertSame(['some-pattern'], $params);
+                    self::assertStringContainsString('`file` REGEXP ?', $sql);
+                    self::assertSame(['some-pattern'], $params);
                 }
 
                 return $this->createMock(PDOStatement::class);
@@ -75,7 +75,7 @@ class VideoRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains('NOT IN (SELECT `id` FROM `catalog`)'));
+            ->with(self::stringContains('NOT IN (SELECT `id` FROM `catalog`)'));
 
         $this->subject->collectGarbage();
     }
@@ -86,7 +86,7 @@ class VideoRepositoryTest extends TestCase
             ->method('query')
             ->with('DELETE FROM `video` WHERE `catalog` = ?', [7]);
 
-        static::assertTrue($this->subject->deleteByCatalog(7));
+        self::assertTrue($this->subject->deleteByCatalog(7));
     }
 
     public function testDeleteRecordsThenRemovesTheRow(): void
@@ -101,17 +101,17 @@ class VideoRepositoryTest extends TestCase
         $this->connection->expects($matcher)
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use ($matcher): PDOStatement {
-                static::assertSame([666], $params);
+                self::assertSame([666], $params);
                 if ($matcher->numberOfInvocations() === 1) {
-                    static::assertStringContainsString('REPLACE INTO `deleted_video`', $sql);
+                    self::assertStringContainsString('REPLACE INTO `deleted_video`', $sql);
                 } else {
-                    static::assertStringContainsString('DELETE FROM `video`', $sql);
+                    self::assertStringContainsString('DELETE FROM `video`', $sql);
                 }
 
                 return $this->createMock(PDOStatement::class);
             });
 
-        static::assertTrue($this->subject->delete($video));
+        self::assertTrue($this->subject->delete($video));
     }
 
     public function testDeleteReturnsFalseWhenTheWriteFailed(): void
@@ -125,7 +125,7 @@ class VideoRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException('some-error'));
 
-        static::assertFalse($this->subject->delete($video));
+        self::assertFalse($this->subject->delete($video));
     }
 
     public function testFindByIdReturnsNullWhenTheVideoDoesNotExist(): void
@@ -135,7 +135,7 @@ class VideoRepositoryTest extends TestCase
 
         $this->modelFactory->method('createVideo')->willReturn($video);
 
-        static::assertNull($this->subject->findById(666));
+        self::assertNull($this->subject->findById(666));
     }
 
     public function testFindByIdReturnsTheLoadedVideo(): void
@@ -148,7 +148,7 @@ class VideoRepositoryTest extends TestCase
             ->with(666)
             ->willReturn($video);
 
-        static::assertSame($video, $this->subject->findById(666));
+        self::assertSame($video, $this->subject->findById(666));
     }
 
     public function testFindIdByFileReturnsNullWhenNoVideoHoldsIt(): void
@@ -158,7 +158,7 @@ class VideoRepositoryTest extends TestCase
             ->with('SELECT `id` FROM `video` WHERE `file` = ?;', ['/media/none.mkv'])
             ->willReturn(false);
 
-        static::assertNull($this->subject->findIdByFile('/media/none.mkv'));
+        self::assertNull($this->subject->findIdByFile('/media/none.mkv'));
     }
 
     public function testGetFilesByCatalogKeysTheFilesByVideoId(): void
@@ -177,7 +177,7 @@ class VideoRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(['id' => '3', 'file' => '/media/clip.mkv'], false);
 
-        static::assertSame([3 => '/media/clip.mkv'], $this->subject->getFilesByCatalog(7));
+        self::assertSame([3 => '/media/clip.mkv'], $this->subject->getFilesByCatalog(7));
     }
 
     public function testGetIdsByCatalogReadsTheCatalogsVideos(): void
@@ -196,7 +196,7 @@ class VideoRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('666', false);
 
-        static::assertSame([666], $this->subject->getIdsByCatalog(7));
+        self::assertSame([666], $this->subject->getIdsByCatalog(7));
     }
 
     public function testGetIdsByFilePrefixBindsTheWildcard(): void
@@ -215,7 +215,7 @@ class VideoRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getIdsByFilePrefix('/media/'));
+        self::assertSame([], $this->subject->getIdsByFilePrefix('/media/'));
     }
 
     public function testGetItemCountReturnsTheCount(): void
@@ -225,7 +225,7 @@ class VideoRepositoryTest extends TestCase
             ->with('SELECT COUNT(*) AS `count` FROM `video`;')
             ->willReturn('42');
 
-        static::assertSame(42, $this->subject->getItemCount());
+        self::assertSame(42, $this->subject->getItemCount());
     }
 
     public function testGetRowsByIdsCastsTheIdsIntoTheStatement(): void
@@ -242,7 +242,7 @@ class VideoRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getRowsByIds(['1', '2abc']));
+        self::assertSame([], $this->subject->getRowsByIds(['1', '2abc']));
     }
 
     public function testGetRowsByIdsReturnsNothingForAnEmptyList(): void
@@ -250,7 +250,7 @@ class VideoRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertSame([], $this->subject->getRowsByIds([]));
+        self::assertSame([], $this->subject->getRowsByIds([]));
     }
 
     public function testInsertReturnsTheNewId(): void
@@ -259,13 +259,13 @@ class VideoRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains('INSERT INTO `video`'), $params);
+            ->with(self::stringContains('INSERT INTO `video`'), $params);
 
         $this->connection->expects(static::once())
             ->method('getLastInsertedId')
             ->willReturn(666);
 
-        static::assertSame(666, $this->subject->insert($params));
+        self::assertSame(666, $this->subject->insert($params));
     }
 
     public function testPruneDeletedHistoryDeletesOlderRows(): void
@@ -355,7 +355,7 @@ class VideoRepositoryTest extends TestCase
         $this->subject->updateAllCounts();
 
         foreach ($calls as $sql) {
-            static::assertStringStartsWith('UPDATE `video`', $sql);
+            self::assertStringStartsWith('UPDATE `video`', $sql);
         }
     }
 
@@ -363,7 +363,7 @@ class VideoRepositoryTest extends TestCase
     {
         $this->connection->expects(static::exactly(4))
             ->method('query')
-            ->with(static::anything(), [666, 666]);
+            ->with(self::anything(), [666, 666]);
 
         $this->subject->updateCounts(666);
     }

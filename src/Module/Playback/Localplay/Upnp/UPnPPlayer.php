@@ -42,7 +42,7 @@ class UPnPPlayer
 {
     private readonly string $_description_url;
     private ?UPnPDevice $_device = null;
-    private int $_intState       = 0;
+    private int $_intState;
 
     // 0 - stopped, 1 - playing
     private ?UPnPPlaylist $_playlist = null;

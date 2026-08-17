@@ -80,7 +80,7 @@ final readonly class SongRepository implements SongRepositoryInterface
             return;
         }
 
-        $idList = implode(',', array_map('intval', $songIds));
+        $idList = implode(',', array_map(intval(...), $songIds));
 
         try {
             $this->connection->query("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` IN ($idList);");

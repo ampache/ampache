@@ -459,6 +459,7 @@ class Ui implements UiInterface
         if (!empty($id_attrib)) {
             $tag .= ' id="' . scrub_out($id_attrib) . '"';
         }
+
         $tag .= ' class="material-symbol material-symbol-' . scrub_out($name) . ' ' . scrub_out((string) $class_attrib) . '">';
         $tag .= '<title>' . scrub_out($title) . '</title>';
         $tag .= '<desc>' . scrub_out($title) . '</desc>';
@@ -598,6 +599,7 @@ class Ui implements UiInterface
             if ($symbol === null) {
                 continue;
             }
+
             // The viewBox of the source file is carried by the <symbol>
             // (see _load_symbol_parts for why it must not stay on the
             // per-icon <svg> tag).
@@ -630,7 +632,7 @@ class Ui implements UiInterface
      */
     public static function show_box_bottom(): void
     {
-        echo (new BoxBottomView())->render();
+        echo new BoxBottomView()->render();
     }
 
     /**
@@ -640,7 +642,7 @@ class Ui implements UiInterface
      */
     public static function show_box_top(string $title = '', string $class = ''): void
     {
-        echo (new BoxTopView($title, $class))->render();
+        echo new BoxTopView($title, $class)->render();
     }
 
     public static function show_custom_style(): void
@@ -679,7 +681,7 @@ class Ui implements UiInterface
             }
         }
 
-        echo (new FooterView())->render();
+        echo new FooterView()->render();
         if (Core::get_request('profiling') !== '') {
             Dba::show_profile();
         }
@@ -752,29 +754,6 @@ class Ui implements UiInterface
         ob_flush();
         flush();
         $update_id++;
-    }
-
-    /**
-     * Displays the default error page
-     */
-    /**
-     * The three standalone error pages carry their own chrome, so each needs the logo and title the
-     * normal header would otherwise have supplied.
-     */
-    private static function _createStandaloneErrorView(
-        StandaloneErrorTypeEnum $type,
-        string $detail = '',
-    ): StandaloneErrorView {
-        $logoUrl = (string) AmpConfig::get('custom_login_logo', '');
-
-        return new StandaloneErrorView(
-            $type,
-            AmpConfig::get_web_path(),
-            ($logoUrl === '') ? self::get_logo_url('dark') : $logoUrl,
-            (string) AmpConfig::get('site_title'),
-            (bool) AmpConfig::get('demo_mode'),
-            $detail
-        );
     }
 
     /**
@@ -924,15 +903,6 @@ class Ui implements UiInterface
         return self::$_symbol_cache[$symbol_key];
     }
 
-    /**
-     * callers pass both absolute urls (which may target a plain web-root page with no `/client` segment on
-     * the client structure) and bare page paths; only the latter need the web path prefixed.
-     */
-    private static function isAbsoluteUrl(string $url): bool
-    {
-        return str_starts_with($url, 'http://') || str_starts_with($url, 'https://');
-    }
-
     public function accessDenied(string $error = 'Access Denied'): void
     {
         // Clear any buffered crap
@@ -945,7 +915,8 @@ class Ui implements UiInterface
         if (!headers_sent()) {
             header('HTTP/1.1 403 ' . $error);
         }
-        echo self::_createStandaloneErrorView(StandaloneErrorTypeEnum::ACCESS_DENIED)->render();
+
+        echo $this->_createStandaloneErrorView(StandaloneErrorTypeEnum::ACCESS_DENIED)->render();
     }
 
     /**
@@ -990,6 +961,7 @@ class Ui implements UiInterface
                 $is_selected = ((string) $value === $format) ? ' selected="selected"' : '';
                 echo '<option value="' . $format . '"' . $is_selected . '>' . $format . "</option>\n";
             }
+
             echo "</select>\n";
 
             return;
@@ -1530,7 +1502,7 @@ class Ui implements UiInterface
                 break;
             case 'disabled_custom_metadata_fields':
                 // array keys are cast to int by php so the stored comma separated string ids need the same treatment
-                $ids     = array_map('intval', array_filter(explode(',', (string) $value), 'is_numeric'));
+                $ids     = array_map(intval(...), array_filter(explode(',', (string) $value), is_numeric(...)));
                 $options = [];
                 foreach ($this->metadataFieldRepository->getPropertyList() as $propertyId => $propertyName) {
                     $selected  = (in_array((int) $propertyId, $ids, true)) ? ' selected="selected"' : '';
@@ -1542,7 +1514,7 @@ class Ui implements UiInterface
             case 'personalfav_playlist':
             case 'personalfav_smartlist':
                 // array keys are cast to int by php so the stored comma separated string ids need the same treatment
-                $ids       = array_map('intval', array_filter(explode(',', (string) $value), 'is_numeric'));
+                $ids       = array_map(intval(...), array_filter(explode(',', (string) $value), is_numeric(...)));
                 $options   = [];
                 $playlists = ($name === 'personalfav_smartlist')
                     ? Search::get_search_array()
@@ -1631,7 +1603,7 @@ class Ui implements UiInterface
         // Clear any buffered crap
         ob_end_clean();
         header("HTTP/1.1 403 Permission Denied");
-        echo self::_createStandaloneErrorView(StandaloneErrorTypeEnum::PERMISSION_DENIED, $fileName)->render();
+        echo $this->_createStandaloneErrorView(StandaloneErrorTypeEnum::PERMISSION_DENIED, $fileName)->render();
     }
 
     /**
@@ -1680,7 +1652,7 @@ class Ui implements UiInterface
         ?bool $visible = true,
     ): void {
         $webPath   = $this->configContainer->getWebPath();
-        $path      = self::isAbsoluteUrl($next_url) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+        $path      = $this->isAbsoluteUrl($next_url) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
         $cancelUrl = null;
         if ($cancel) {
             // return_referer() already went through scrub_in(), so its & is html-escaped; decode before use or e() escapes it twice.
@@ -1690,14 +1662,14 @@ class Ui implements UiInterface
             $cancelUrl   = sprintf('%s/%s', $refererBase, $referer);
         }
 
-        echo (new ConfirmationView(
+        echo new ConfirmationView(
             $webPath,
             $title,
             $text,
             $path,
             (string) $form_name,
             $cancelUrl
-        ))->render();
+        )->render();
     }
 
     /**
@@ -1712,17 +1684,17 @@ class Ui implements UiInterface
         ?bool $visible = true,
     ): void {
         $webPath = $this->configContainer->getWebPath();
-        $return  = self::isAbsoluteUrl($return_url) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
-        $cancel  = self::isAbsoluteUrl($cancel_url) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
+        $return  = $this->isAbsoluteUrl($return_url) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
+        $cancel  = $this->isAbsoluteUrl($cancel_url) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
 
-        echo (new ConfirmationWithReturnView(
+        echo new ConfirmationWithReturnView(
             $webPath,
             $title,
             $text,
             $return,
             (string) $form_name,
             $cancel
-        ))->render();
+        )->render();
     }
 
     /**
@@ -1734,14 +1706,14 @@ class Ui implements UiInterface
         string $next_url,
     ): void {
         $webPath = $this->configContainer->getWebPath();
-        $path    = self::isAbsoluteUrl($next_url) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+        $path    = $this->isAbsoluteUrl($next_url) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 
-        echo (new ContinueView(
+        echo new ContinueView(
             $webPath,
             $title,
             $text,
             $path
-        ))->render();
+        )->render();
     }
 
     public function showErrorPage(): void
@@ -1755,7 +1727,7 @@ class Ui implements UiInterface
             header('HTTP/1.1 500 Internal Server Error');
         }
 
-        echo self::_createStandaloneErrorView(StandaloneErrorTypeEnum::ERROR)->render();
+        echo $this->_createStandaloneErrorView(StandaloneErrorTypeEnum::ERROR)->render();
     }
 
     public function showFooter(): void
@@ -1788,7 +1760,7 @@ class Ui implements UiInterface
             $_SESSION['state']['sidebar_tab'] = 'home';
         }
 
-        echo (new HeaderView(
+        echo new HeaderView(
             AmpConfig::get_web_path(),
             AmpConfig::get_web_path('/admin'),
             $this->environment,
@@ -1805,7 +1777,7 @@ class Ui implements UiInterface
             $isAdmin || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
             Upload::can_upload($user),
             User::is_registered() && ($user?->getId() ?? 0) > 0
-        ))->render();
+        )->render();
     }
 
     public function showObjectNotFound(): void
@@ -1823,7 +1795,7 @@ class Ui implements UiInterface
      */
     public function showPreferenceBox(array $preferences): void
     {
-        echo (new PreferenceBoxView($preferences, $this))->render();
+        echo new PreferenceBoxView($preferences, $this)->render();
     }
 
     /**
@@ -1835,22 +1807,54 @@ class Ui implements UiInterface
             return;
         }
 
-        echo (new QueryStatsView(
+        echo new QueryStatsView(
             Dba::$stats['query'],
             database_object::$cache_hit,
             (float) AmpConfig::get('load_time_begin'),
             memory_get_peak_usage(true)
-        ))->render();
+        )->render();
     }
 
     public function showRightbar(): string
     {
-        return (new RightbarView(
+        return new RightbarView(
             $this->collectionRepository,
             $this->libraryItemLoader,
             $this->playlistLoader,
             $this->zipHandler,
             AmpConfig::get_web_path()
-        ))->render();
+        )->render();
+    }
+
+    /**
+     * Displays the default error page
+     */
+    /**
+     * The three standalone error pages carry their own chrome, so each needs the logo and title the
+     * normal header would otherwise have supplied.
+     */
+    private function _createStandaloneErrorView(
+        StandaloneErrorTypeEnum $type,
+        string $detail = '',
+    ): StandaloneErrorView {
+        $logoUrl = (string) AmpConfig::get('custom_login_logo', '');
+
+        return new StandaloneErrorView(
+            $type,
+            AmpConfig::get_web_path(),
+            ($logoUrl === '') ? self::get_logo_url('dark') : $logoUrl,
+            (string) AmpConfig::get('site_title'),
+            (bool) AmpConfig::get('demo_mode'),
+            $detail
+        );
+    }
+
+    /**
+     * callers pass both absolute urls (which may target a plain web-root page with no `/client` segment on
+     * the client structure) and bare page paths; only the latter need the web path prefixed.
+     */
+    private function isAbsoluteUrl(string $url): bool
+    {
+        return str_starts_with($url, 'http://') || str_starts_with($url, 'https://');
     }
 }

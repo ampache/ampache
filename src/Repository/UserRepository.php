@@ -130,7 +130,7 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function countAlbumDisksForCatalogs(array $catalogIds): int
     {
-        $idList = implode(',', array_map('intval', $catalogIds));
+        $idList = implode(',', array_map(intval(...), $catalogIds));
 
         return (int) $this->connection->fetchOne(
             "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `album`.`catalog` IN (" . $idList . ')'
@@ -416,7 +416,7 @@ final readonly class UserRepository implements UserRepositoryInterface
      */
     public function getMediaTotals(string $table, array $catalogIds, bool $enabledOnly): array
     {
-        $idList = implode(',', array_map('intval', $catalogIds));
+        $idList = implode(',', array_map(intval(...), $catalogIds));
 
         $sql = ($enabledOnly)
             ? sprintf("SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `catalog` IN (%s) AND `%s`.`enabled`='1';", $table, $idList, $table)

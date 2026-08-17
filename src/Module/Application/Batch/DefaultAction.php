@@ -97,7 +97,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         // Each item contributes its own medias, which is what already made an album zip work, just repeated per id.
         $object_ids = array_values(
             array_filter(
-                array_map('intval', explode(',', $this->requestParser->getFromRequest('id')))
+                array_map(intval(...), explode(',', $this->requestParser->getFromRequest('id')))
             )
         );
         if (count($object_ids) > self::MAX_IDS) {

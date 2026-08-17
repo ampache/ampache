@@ -66,15 +66,15 @@ class WantedRepositoryTest extends TestCase
 
         $this->subject->collectGarbage();
 
-        static::assertSame(
+        self::assertSame(
             'DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)',
             $queries[0]
         );
-        static::assertSame(
+        self::assertSame(
             'DELETE FROM `wanted` WHERE `wanted`.`mbid` IS NOT NULL AND EXISTS (SELECT 1 FROM `album` WHERE `album`.`mbid_group` = `wanted`.`mbid`)',
             $queries[1]
         );
-        static::assertSame(
+        self::assertSame(
             "DELETE FROM `wanted` WHERE `wanted`.`artist` IS NOT NULL AND `wanted`.`name` IS NOT NULL AND EXISTS (SELECT 1 FROM `album` WHERE `album`.`album_artist` = `wanted`.`artist` AND (`album`.`name` = `wanted`.`name` OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = `wanted`.`name`))",
             $queries[2]
         );
@@ -282,7 +282,7 @@ class WantedRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => 1], false);
 
-        static::assertSame([['id' => 1]], $this->subject->getRowsByIds([1, 'x', 3]));
+        self::assertSame([['id' => 1]], $this->subject->getRowsByIds([1, 'x', 3]));
     }
 
     public function testGetRowsByIdsReturnsNothingForAnEmptyList(): void
@@ -290,7 +290,7 @@ class WantedRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertSame([], $this->subject->getRowsByIds([]));
+        self::assertSame([], $this->subject->getRowsByIds([]));
     }
 
     public function testMigrateArtistMigrates(): void

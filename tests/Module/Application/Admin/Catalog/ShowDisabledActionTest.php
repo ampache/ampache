@@ -90,8 +90,8 @@ class ShowDisabledActionTest extends TestCase
             $output = (string) ob_get_clean();
         }
 
-        static::assertStringContainsString('value="enable_disabled"', $output);
-        static::assertStringContainsString('Rock &amp; Roll', $output);
+        self::assertStringContainsString('value="enable_disabled"', $output);
+        self::assertStringContainsString('Rock &amp; Roll', $output);
     }
 
     public function testRunShowsEmptyContentOnDemoMode(): void

@@ -40,7 +40,7 @@ class WantedTest extends TestCase
         $this->wantedRepository->expects(static::never())
             ->method('getRowsByIds');
 
-        static::assertFalse(Wanted::build_cache([]));
+        self::assertFalse(Wanted::build_cache([]));
     }
 
     public function testBuildCacheWarmsTheCacheFromTheRepository(): void
@@ -52,7 +52,7 @@ class WantedTest extends TestCase
             ->with([666])
             ->willReturn([['id' => 666, 'name' => 'some-album']]);
 
-        static::assertTrue(Wanted::build_cache([666]));
+        self::assertTrue(Wanted::build_cache([666]));
     }
 
     protected function setUp(): void

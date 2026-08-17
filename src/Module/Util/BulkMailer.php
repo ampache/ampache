@@ -29,10 +29,10 @@ namespace Ampache\Module\Util;
  * Thin headless wrapper over the injectable Mailer that sends a subject/message to a named user group,
  * dropping the request and UI coupling of the web admin mail handler.
  */
-final class BulkMailer implements BulkMailerInterface
+final readonly class BulkMailer implements BulkMailerInterface
 {
     public function __construct(
-        private readonly MailerInterface $mailer,
+        private MailerInterface $mailer,
     ) {}
 
     public function isEnabled(): bool

@@ -41,6 +41,7 @@ use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -150,11 +151,11 @@ final class RightbarView extends AbstractView
 
     public function getLocalplayControl(): string
     {
-        return (new LocalplayControlView())->render();
+        return new LocalplayControlView()->render();
     }
 
     /**
-     * @return array<\Ampache\Repository\Model\Playlist>
+     * @return array<Playlist>
      */
     public function getPlaylists(): iterable
     {

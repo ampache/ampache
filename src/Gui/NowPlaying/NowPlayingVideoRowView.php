@@ -57,11 +57,11 @@ final class NowPlayingVideoRowView extends AbstractView
         ob_start();
         $shown = false;
         if ($this->media->get_default_art_kind() === 'preview') {
-            $shown = Art::display('video', $this->media->getId(), (string) $this->media->getFileName(), ['width' => 150, 'height' => 84], $this->media->get_link(), false, true, 'preview');
+            $shown = Art::display('video', $this->media->getId(), $this->media->getFileName(), ['width' => 150, 'height' => 84], $this->media->get_link(), false, true, 'preview');
         }
 
         if (!$shown) {
-            Art::display('video', $this->media->getId(), (string) $this->media->getFileName(), ['width' => 100, 'height' => 150], $this->media->get_link());
+            Art::display('video', $this->media->getId(), $this->media->getFileName(), ['width' => 100, 'height' => 150], $this->media->get_link());
         }
 
         return (string) ob_get_clean();

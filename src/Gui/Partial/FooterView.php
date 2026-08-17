@@ -59,7 +59,7 @@ final class FooterView extends AbstractView
 
     public function getVisualizer(): string
     {
-        return (new VisualizerView())->render();
+        return new VisualizerView()->render();
     }
 
     /**

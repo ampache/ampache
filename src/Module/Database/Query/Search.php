@@ -46,19 +46,15 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\playlist_object;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Video;
 use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use JsonException;
+use Override;
 
 /**
  * Search-related voodoo.  Beware tentacles.
@@ -177,7 +173,10 @@ class Search extends playlist_object
     public array $rules = []; // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
 
     public User $search_user; // user running the search
+
+    #[Override]
     public ?string $type = 'public'; // override playlist_object
+
     private string $order_by;
 
     /** @var null|array<string, string> $rule_type_map */
@@ -186,7 +185,7 @@ class Search extends playlist_object
     private SearchInterface $searchType;
 
     /** @var string[] $stars */
-    private array $stars; // generate sql for the object type (Ampache\Module\Database\Search\*)
+    private readonly array $stars; // generate sql for the object type (Ampache\Module\Database\Search\*)
 
     /**
      * constructor
@@ -202,7 +201,7 @@ class Search extends playlist_object
             ? $user
             : User::get_from_global() ?? new User(-1);
 
-        $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES))
+        $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES, true))
             ? strtolower($object_type)
             : 'song';
         $this->user = $this->search_user->id ?: -1; // define a user for live searches (overwriten if saved before)
@@ -212,6 +211,7 @@ class Search extends playlist_object
                 if ($key == 'basetypes' || $key == 'types') {
                     continue;
                 }
+
                 if ($key == 'rules') {
                     try {
                         $this->rules = json_decode((string) $value, true, 512, JSON_THROW_ON_ERROR);
@@ -357,7 +357,7 @@ class Search extends playlist_object
             return parent::get_from_cache($key, $user_id);
         }
 
-        $is_admin = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1);
+        $is_admin = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id === -1);
         $sql      = "SELECT `id`, IF(`user` = ?, `name`, CONCAT(`name`, ' (', `username`, ')')) AS `name` FROM `search` ";
         $params   = [$user_id];
 
@@ -397,7 +397,7 @@ class Search extends playlist_object
             return parent::get_from_cache($key, $user_id);
         }
 
-        $is_admin = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1);
+        $is_admin = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id === -1);
         $sql      = "SELECT `id`, `name` FROM `search` ";
         $params   = [];
 
@@ -429,7 +429,7 @@ class Search extends playlist_object
      */
     public static function get_total_duration(array $songs): int
     {
-        if (empty($songs)) {
+        if ($songs === []) {
             return 0;
         }
 
@@ -441,7 +441,7 @@ class Search extends playlist_object
         }
 
         $idlist = '(' . implode(',', $song_ids) . ')';
-        if ($idlist == '()') {
+        if ($idlist === '()') {
             return 0;
         }
 
@@ -474,6 +474,7 @@ class Search extends playlist_object
         if ($data['weight'] ?? false) {
             $search->set_order_by('weight');
         }
+
         $search->set_rules($data);
 
         // Generate BASE SQL
@@ -596,16 +597,6 @@ class Search extends playlist_object
     }
 
     /**
-     * @deprecated inject dependency
-     */
-    private static function getSearchRepository(): SearchRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SearchRepositoryInterface::class);
-    }
-
-    /**
      * create
      *
      * Save this search to the database for use as a smart playlist
@@ -619,15 +610,13 @@ class Search extends playlist_object
 
         // Make sure we have a unique name
         if (
-            $this->name === null
-            || $this->name === ''
-            || $this->name === '0'
+            in_array($this->name, [null, '', '0'], true)
         ) {
             $this->name = $user->username . ' - ' . get_datetime(time());
         }
 
-        $repository = self::getSearchRepository();
-        if ($repository->nameExists((string) $this->name, $user->getId(), $this->type)) {
+        $repository = $this->getSearchRepository();
+        if ($repository->nameExists($this->name, $user->getId(), $this->type)) {
             $this->name .= uniqid('', true);
         }
 
@@ -652,7 +641,7 @@ class Search extends playlist_object
      */
     public function delete(): bool
     {
-        self::getSearchRepository()->delete($this);
+        $this->getSearchRepository()->delete($this);
 
         $this->getPlaylistObjectRepository()->deleteCollaborators($this);
 
@@ -682,11 +671,11 @@ class Search extends playlist_object
             $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);
         }
 
-        if ($type == 'numeric' || $type == 'days' || $type == 'user_numeric') {
+        if (in_array($type, ['numeric', 'days', 'user_numeric'], true)) {
             return (int) ($data);
         }
 
-        if ($type == 'boolean') {
+        if ($type === 'boolean') {
             return make_bool($data);
         }
 
@@ -804,7 +793,7 @@ class Search extends playlist_object
             $sql .= (empty($sqltbl['where_sql']))
                 ? " WHERE "
                 : " AND ";
-            $sql .= "`" . $this->objectType . "`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $this->objectType . sprintf('\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
+            $sql .= "`" . $this->objectType . "`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $this->objectType . sprintf("' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)", $rating_filter, $user_id);
         }
 
         if (!empty($sqltbl['group_sql'])) {
@@ -892,44 +881,20 @@ class Search extends playlist_object
     public function get_rule_types(): array
     {
         $ruleTypes = [];
-        switch ($this->objectType) {
-            case 'album':
-            case 'album_disk':
-                $ruleTypes = $this->_get_types_album();
-                break;
-            case 'artist':
-            case 'album_artist':
-            case 'song_artist':
-                $ruleTypes = $this->_get_types_artist();
-                break;
-            case 'label':
-                $ruleTypes = $this->_get_types_label();
-                break;
-            case 'playlist':
-                $ruleTypes = $this->_get_types_playlist();
-                break;
-            case 'podcast':
-                $ruleTypes = $this->_get_types_podcast();
-                break;
-            case 'podcast_episode':
-                $ruleTypes = $this->_get_types_podcast_episode();
-                break;
-            case 'song':
-                $ruleTypes = $this->_get_types_song();
-                break;
-            case 'tag':
-            case 'genre':
-                $ruleTypes = $this->_get_types_tag();
-                break;
-            case 'user':
-                $ruleTypes = $this->_get_types_user();
-                break;
-            case 'video':
-                $ruleTypes = $this->_get_types_video();
-                break;
-        }
 
-        return $ruleTypes;
+        return match ($this->objectType) {
+            'album', 'album_disk' => $this->_get_types_album(),
+            'artist', 'album_artist', 'song_artist' => $this->_get_types_artist(),
+            'label' => $this->_get_types_label(),
+            'playlist' => $this->_get_types_playlist(),
+            'podcast' => $this->_get_types_podcast(),
+            'podcast_episode' => $this->_get_types_podcast_episode(),
+            'song' => $this->_get_types_song(),
+            'tag', 'genre' => $this->_get_types_tag(),
+            'user' => $this->_get_types_user(),
+            'video' => $this->_get_types_video(),
+            default => $ruleTypes,
+        };
     }
 
     /**
@@ -1025,11 +990,13 @@ class Search extends playlist_object
                 if ($sort === 'weight') {
                     $this->order_by = '`album`.`weight` DESC, `album`.`name`';
                 }
+
                 break;
             case 'album_disk':
                 if ($sort === 'weight') {
                     $this->order_by = '`album_disk`.`weight` DESC, `album`.`name`';
                 }
+
                 break;
             case 'artist':
             case 'album_artist':
@@ -1037,26 +1004,31 @@ class Search extends playlist_object
                 if ($sort === 'weight') {
                     $this->order_by = '`artist`.`weight` DESC, `artist`.`name`';
                 }
+
                 break;
             case 'podcast':
                 if ($sort === 'weight') {
                     $this->order_by = '`podcast`.`weight` DESC, `podcast`.`title`';
                 }
+
                 break;
             case 'podcast_episode':
                 if ($sort === 'weight') {
                     $this->order_by = '`podcast_episode`.`weight` DESC, `podcast_episode`.`pubdate` DESC';
                 }
+
                 break;
             case 'song':
                 if ($sort === 'weight') {
                     $this->order_by = '`song`.`weight` DESC, `song`.`file`';
                 }
+
                 break;
             case 'video':
                 if ($sort === 'weight') {
                     $this->order_by = '`video`.`weight` DESC, `video`.`file`';
                 }
+
                 break;
         }
     }
@@ -1181,7 +1153,7 @@ class Search extends playlist_object
             $prefix = substr($key, 0, 4);
             $value  = (string) $value;
 
-            if ($prefix == 'rule' && strlen($value)) {
+            if ($prefix === 'rule' && strlen($value)) {
                 $request[$key] = Dba::escape($value);
             }
         }
@@ -1227,7 +1199,7 @@ class Search extends playlist_object
                 $request['type'] = 'tag';
                 break;
             default:
-                debug_event(self::class, sprintf('_filter_request: search_type \'%s\' reset to: song', $search_type), 5);
+                debug_event(self::class, sprintf("_filter_request: search_type '%s' reset to: song", $search_type), 5);
                 $request['type'] = 'song';
                 break;
         }
@@ -2063,14 +2035,12 @@ class Search extends playlist_object
      */
     private function _get_types_user(): array
     {
-        $rule_type = [];
-
-        $rule_type[] = $this->_get_rule_text('name', T_('Name'));
-        $rule_type[] = $this->_get_rule_text('username', T_('Username'));
-        $rule_type[] = $this->_get_rule_text('fullname', T_('Full Name'));
-        $rule_type[] = $this->_get_rule_text('email', T_('E-mail'));
-
-        return $rule_type;
+        return [
+            $this->_get_rule_text('name', T_('Name')),
+            $this->_get_rule_text('username', T_('Username')),
+            $this->_get_rule_text('fullname', T_('Full Name')),
+            $this->_get_rule_text('email', T_('E-mail'))
+        ];
     }
 
     /**
@@ -2087,11 +2057,7 @@ class Search extends playlist_object
      */
     private function _get_types_video(): array
     {
-        $rule_type = [];
-
-        $rule_type[] = $this->_get_rule_text('file', T_('Filename'));
-
-        return $rule_type;
+        return [$this->_get_rule_text('file', T_('Filename'))];
     }
 
     /**
@@ -2315,6 +2281,16 @@ class Search extends playlist_object
         global $dic;
 
         return $dic->get(MetadataFieldRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getSearchRepository(): SearchRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SearchRepositoryInterface::class);
     }
 
     /**

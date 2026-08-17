@@ -46,7 +46,7 @@ class PrivilegeCheckerTest extends TestCase
         $this->modelFactory->expects(static::never())
             ->method('createUser');
 
-        static::assertTrue($this->subject->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN));
+        self::assertTrue($this->subject->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN));
     }
 
     public function testCheckInterfaceComparesUserAccessToRequiredLevel(): void
@@ -62,7 +62,7 @@ class PrivilegeCheckerTest extends TestCase
             ->with(21)
             ->willReturn($user);
 
-        static::assertTrue($this->subject->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER, 21));
+        self::assertTrue($this->subject->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER, 21));
     }
 
     public function testCheckReturnsFalseForUnsupportedType(): void
@@ -77,7 +77,7 @@ class PrivilegeCheckerTest extends TestCase
         $this->modelFactory->method('createUser')
             ->willReturn($user);
 
-        static::assertFalse($this->subject->check(AccessTypeEnum::API, AccessLevelEnum::USER, 21));
+        self::assertFalse($this->subject->check(AccessTypeEnum::API, AccessLevelEnum::USER, 21));
     }
 
     public function testCheckReturnsFalseWhenUserIdResolvesToNoOne(): void
@@ -93,7 +93,7 @@ class PrivilegeCheckerTest extends TestCase
             ->with(21)
             ->willReturn($user);
 
-        static::assertFalse($this->subject->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER, 21));
+        self::assertFalse($this->subject->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER, 21));
     }
 
     protected function setUp(): void

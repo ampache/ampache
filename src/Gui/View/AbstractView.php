@@ -65,10 +65,10 @@ abstract class AbstractView implements TemplateInterface
 
         try {
             require $this->templateFile();
-        } catch (Throwable $error) {
+        } catch (Throwable $throwable) {
             ob_end_clean();
 
-            throw $error;
+            throw $throwable;
         }
 
         return (string) ob_get_clean();

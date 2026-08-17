@@ -50,7 +50,9 @@ final class VideoEditFormRenderer extends AbstractEditFormRenderer
     {
         $released = $this->getItem()->release_date;
 
-        return ($released) ? get_datetime((int) $released, 'short', 'none') : '';
+        return ($released)
+            ? get_datetime((int) $released, 'short', 'none')
+            : '';
     }
 
     public function getTitle(): string

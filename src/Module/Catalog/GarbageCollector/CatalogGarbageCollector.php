@@ -146,14 +146,17 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         // a rebuild is a join, so rows that lost their last play are zeroed first or they keep the old total
         $this->songRepository->resetCountsWithoutHistory();
         $this->songRepository->updateAllCounts();
+
         $this->videoRepository->updateAllCounts();
         $this->podcastEpisodeRepository->updateAllCounts();
         $this->podcastRepository->updateAllCounts();
 
         $this->albumRepository->updateAllCounts();
         $this->albumRepository->updateAllSkipCounts();
+
         $this->artistRepository->updateAllCounts();
         $this->artistRepository->updateAllSkipCounts();
+
         $this->folderRepository->update_folder_counts();
 
         $this->catalogCounter->refreshServerCounts(

@@ -52,12 +52,12 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
 
         $wartist = $musicBrainzId === null ? [] : $this->missingArtistRetriever->retrieve($musicBrainzId);
 
-        echo (new MissingArtistView(
+        echo new MissingArtistView(
             (string) ($wartist['name'] ?? ''),
             (string) ($wartist['mbid'] ?? ''),
             (bool) AmpConfig::get('lastfm_api_key'),
             (bool) AmpConfig::get('wanted')
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

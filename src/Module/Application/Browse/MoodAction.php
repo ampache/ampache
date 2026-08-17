@@ -93,7 +93,7 @@ final readonly class MoodAction implements ApplicationActionInterface
         $browse->set_type($browse_type);
 
         $showMood = $this->requestParser->getFromRequest('show_mood');
-        echo (new MoodCloudView(
+        echo new MoodCloudView(
             new MoodFormView(
                 AmpConfig::get_web_path(),
                 $browse_type,
@@ -104,10 +104,10 @@ final readonly class MoodAction implements ApplicationActionInterface
             $browse->getId(),
             $moods,
             ($showMood !== '') ? (int) $showMood : null
-        ))->render();
+        )->render();
 
         $this->ui->showBoxBottom();
-        echo (new BrowseContentView($browse->get_content_div()))->render();
+        echo new BrowseContentView($browse->get_content_div())->render();
 
         $browse->store();
 

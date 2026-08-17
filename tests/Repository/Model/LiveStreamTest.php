@@ -120,7 +120,7 @@ class LiveStreamTest extends TestCase
 
         // AmpError keeps its state in private statics with no public reset, so a validation failure
         // in one test would otherwise make every later assertion see an error that already occurred
-        (new ReflectionProperty(AmpError::class, 'errors'))->setValue(null, []);
-        (new ReflectionProperty(AmpError::class, 'state'))->setValue(null, false);
+        new ReflectionProperty(AmpError::class, 'errors')->setValue(null, []);
+        new ReflectionProperty(AmpError::class, 'state')->setValue(null, false);
     }
 }

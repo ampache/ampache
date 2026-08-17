@@ -75,11 +75,11 @@ final class AddFilterAction extends AbstractFilterAction
 
         // If we've got an error then show add form!
         if (AmpError::occurred()) {
-            echo (new AddCatalogFilterFormView(
+            echo new AddCatalogFilterFormView(
                 $this->configContainer->getWebPath('/admin'),
                 $filter_name,
                 (bool) AmpConfig::get('catalog_filter')
-            ))->render();
+            )->render();
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

@@ -91,9 +91,6 @@ final class ObjectTypeToClassNameMapper
         ObjectTypeEnum::WANTED->value => Wanted::class,
     ];
 
-    /**
-     * @return class-string<database_object>|string
-     */
     public static function map(string $object_type): string
     {
         return self::OBJECT_TYPE_MAPPING[strtolower($object_type)] ?? $object_type;

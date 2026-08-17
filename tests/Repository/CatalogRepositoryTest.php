@@ -76,7 +76,7 @@ class CatalogRepositoryTest extends TestCase
             ->method('query')
             ->with('DELETE FROM `catalog_seafile` WHERE `catalog_id` = ?', [7]);
 
-        static::assertTrue($this->subject->deleteSubTypeRow(CatalogTypeEnum::SEAFILE, 7));
+        self::assertTrue($this->subject->deleteSubTypeRow(CatalogTypeEnum::SEAFILE, 7));
     }
 
     public function testDeleteSubTypeRowReportsAFailure(): void
@@ -85,7 +85,7 @@ class CatalogRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException('nope'));
 
-        static::assertFalse($this->subject->deleteSubTypeRow(CatalogTypeEnum::LOCAL, 7));
+        self::assertFalse($this->subject->deleteSubTypeRow(CatalogTypeEnum::LOCAL, 7));
     }
 
     public function testDropSubTypeTableToleratesATableThatIsAlreadyGone(): void
@@ -105,8 +105,8 @@ class CatalogRepositoryTest extends TestCase
             ->with('SELECT `enabled` FROM `catalog` WHERE `id` = ?', [7])
             ->willReturn('0', false);
 
-        static::assertFalse($this->subject->findEnabled(7));
-        static::assertNull($this->subject->findEnabled(7));
+        self::assertFalse($this->subject->findEnabled(7));
+        self::assertNull($this->subject->findEnabled(7));
     }
 
     public function testFindNameFallsBackToAnEmptyString(): void
@@ -116,7 +116,7 @@ class CatalogRepositoryTest extends TestCase
             ->with('SELECT `name` FROM `catalog` WHERE `id` = ?', [666])
             ->willReturn(false);
 
-        static::assertSame('', $this->subject->findName(666));
+        self::assertSame('', $this->subject->findName(666));
     }
 
     public function testFindSubTypeIdReturnsNullWhenTheBackendsTableIsGone(): void
@@ -126,7 +126,7 @@ class CatalogRepositoryTest extends TestCase
             ->method('fetchOne')
             ->willThrowException(new QueryFailedException('no such table'));
 
-        static::assertNull($this->subject->findSubTypeId(CatalogTypeEnum::SUBSONIC, 7));
+        self::assertNull($this->subject->findSubTypeId(CatalogTypeEnum::SUBSONIC, 7));
     }
 
     public function testFindTypeReturnsNullForAMissingCatalog(): void
@@ -136,7 +136,7 @@ class CatalogRepositoryTest extends TestCase
             ->with('SELECT `catalog_type` FROM `catalog` WHERE `id` = ?', [666])
             ->willReturn(false);
 
-        static::assertNull($this->subject->findType(666));
+        self::assertNull($this->subject->findType(666));
     }
 
     public function testGetIdsAppliesNoWhereClauseWithoutNarrowing(): void
@@ -152,7 +152,7 @@ class CatalogRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('3', false);
 
-        static::assertSame([3], $this->subject->getIds());
+        self::assertSame([3], $this->subject->getIds());
     }
 
     public function testGetIdsHoldsTheSystemUserToTheDefaultFilterGroup(): void
@@ -162,7 +162,7 @@ class CatalogRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::stringContains('`catalog_filter_group_map`.`group_id` = 0'),
+                self::stringContains('`catalog_filter_group_map`.`group_id` = 0'),
                 []
             )
             ->willReturn($result);
@@ -171,7 +171,7 @@ class CatalogRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getIds(null, false, -1));
+        self::assertSame([], $this->subject->getIds(null, false, -1));
     }
 
     public function testGetIdsIgnoresTheFilterForUserZero(): void
@@ -188,7 +188,7 @@ class CatalogRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getIds(null, false, 0));
+        self::assertSame([], $this->subject->getIds(null, false, 0));
     }
 
     public function testGetIdsJoinsTheUsersOwnFilterGroup(): void
@@ -198,7 +198,7 @@ class CatalogRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::stringContains('INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id`'),
+                self::stringContains('INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id`'),
                 [42]
             )
             ->willReturn($result);
@@ -207,7 +207,7 @@ class CatalogRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getIds(null, false, 42));
+        self::assertSame([], $this->subject->getIds(null, false, 42));
     }
 
     public function testGetIdsStacksTheGatherTypeAndEnabledNarrowing(): void
@@ -226,7 +226,7 @@ class CatalogRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getIds('music', true));
+        self::assertSame([], $this->subject->getIds('music', true));
     }
 
     public function testInsertReturnsZeroWhenTheRowProducedNoId(): void
@@ -238,7 +238,7 @@ class CatalogRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willThrowException(new InsertIdInvalidException());
 
-        static::assertSame(0, $this->subject->insert('some-catalog', 'local', '', '', 'music'));
+        self::assertSame(0, $this->subject->insert('some-catalog', 'local', '', '', 'music'));
     }
 
     public function testInsertSubTypeAppendsTheCatalogIdAndBindsEveryValue(): void
@@ -250,7 +250,7 @@ class CatalogRepositoryTest extends TestCase
                 ['http://host', 'user', 'pass', 7]
             );
 
-        static::assertTrue($this->subject->insertSubType(
+        self::assertTrue($this->subject->insertSubType(
             CatalogTypeEnum::REMOTE,
             ['uri' => 'http://host', 'username' => 'user', 'password' => 'pass'],
             7
@@ -270,7 +270,7 @@ class CatalogRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(4);
 
-        static::assertSame(4, $this->subject->insert('some-catalog', 'local', '%T', '%a', 'music'));
+        self::assertSame(4, $this->subject->insert('some-catalog', 'local', '%T', '%a', 'music'));
     }
 
     public function testIsActionProcessingReflectsWhetherAnyConnectionHoldsTheLock(): void
@@ -280,8 +280,8 @@ class CatalogRepositoryTest extends TestCase
             ->with('SELECT IS_USED_LOCK(?)', ['ampache_sse_action_some-key'])
             ->willReturn('42', null);
 
-        static::assertTrue($this->subject->isActionProcessing('some-key'));
-        static::assertFalse($this->subject->isActionProcessing('some-key'));
+        self::assertTrue($this->subject->isActionProcessing('some-key'));
+        self::assertFalse($this->subject->isActionProcessing('some-key'));
     }
 
     public function testReleaseActionLockCallsReleaseLockWithTheNamespacedName(): void
@@ -308,7 +308,7 @@ class CatalogRepositoryTest extends TestCase
             ->method('query')
             ->with('UPDATE `catalog` SET `last_update` = ? WHERE `id` = ?', [123456, 7]);
 
-        static::assertTrue($this->subject->setField(7, CatalogFieldEnum::LAST_UPDATE, 123456));
+        self::assertTrue($this->subject->setField(7, CatalogFieldEnum::LAST_UPDATE, 123456));
     }
 
     public function testSubTypeTableExistsAsksForTheBackendsOwnTable(): void
@@ -318,7 +318,7 @@ class CatalogRepositoryTest extends TestCase
             ->with("SHOW TABLES LIKE 'catalog_beetsremote'")
             ->willReturn(false);
 
-        static::assertFalse($this->subject->subTypeTableExists(CatalogTypeEnum::BEETSREMOTE));
+        self::assertFalse($this->subject->subTypeTableExists(CatalogTypeEnum::BEETSREMOTE));
     }
 
     public function testSubTypeValueExistsChecksTheBackendsOwnTable(): void
@@ -329,7 +329,7 @@ class CatalogRepositoryTest extends TestCase
             ->with('SELECT `id` FROM `catalog_beetsremote` WHERE `uri` = ?', ['http://host'])
             ->willReturn('1');
 
-        static::assertTrue($this->subject->subTypeValueExists(CatalogTypeEnum::BEETSREMOTE, 'uri', 'http://host'));
+        self::assertTrue($this->subject->subTypeValueExists(CatalogTypeEnum::BEETSREMOTE, 'uri', 'http://host'));
     }
 
     public function testTryAcquireActionLockReflectsWhoWonTheLock(): void
@@ -339,8 +339,8 @@ class CatalogRepositoryTest extends TestCase
             ->with('SELECT GET_LOCK(?, 0)', ['ampache_sse_action_some-key'])
             ->willReturn('1', '0');
 
-        static::assertTrue($this->subject->tryAcquireActionLock('some-key'));
-        static::assertFalse($this->subject->tryAcquireActionLock('some-key'));
+        self::assertTrue($this->subject->tryAcquireActionLock('some-key'));
+        self::assertFalse($this->subject->tryAcquireActionLock('some-key'));
     }
 
     public function testTryAcquireProcessingLockReflectsWhoWonTheLock(): void
@@ -350,8 +350,8 @@ class CatalogRepositoryTest extends TestCase
             ->with('SELECT GET_LOCK(?, 0)', ['ampache_catalog_7'])
             ->willReturn('1', '0');
 
-        static::assertTrue($this->subject->tryAcquireProcessingLock(7));
-        static::assertFalse($this->subject->tryAcquireProcessingLock(7));
+        self::assertTrue($this->subject->tryAcquireProcessingLock(7));
+        self::assertFalse($this->subject->tryAcquireProcessingLock(7));
     }
 
     public function testUpdateSettingsWritesTheThreeFormFields(): void

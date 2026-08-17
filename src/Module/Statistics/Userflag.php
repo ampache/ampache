@@ -61,8 +61,7 @@ class Userflag extends database_object
     ];
 
     // Public variables
-    public int $id; // The object_id of the object flagged
-    public string $type; // The object_type of object we want
+    public int $id; // The object_type of object we want
 
     /**
      * Constructor
@@ -71,10 +70,9 @@ class Userflag extends database_object
      */
     public function __construct(
         ?int $object_id,
-        string $type,
+        public string $type,
     ) {
         $this->id   = (int) ($object_id);
-        $this->type = $type;
     }
 
     /**
@@ -85,7 +83,7 @@ class Userflag extends database_object
      */
     public static function build_cache(string $type, array $ids, ?int $user_id = null): bool
     {
-        if (empty($ids)) {
+        if ($ids === []) {
             return false;
         }
 
@@ -159,7 +157,7 @@ class Userflag extends database_object
 
     public static function is_valid(string $type): bool
     {
-        return in_array($type, self::FLAG_TYPES);
+        return in_array($type, self::FLAG_TYPES, true);
     }
 
     /**
@@ -251,7 +249,7 @@ class Userflag extends database_object
         $key = 'userflag_' . $this->type . '_user' . $user_id;
         if (parent::is_cached($key, $this->id)) {
             $object = parent::get_from_cache($key, $this->id);
-            if (empty($object) || !$object[0]) {
+            if ($object === [] || !$object[0]) {
                 return false;
             }
 
@@ -329,7 +327,7 @@ class Userflag extends database_object
             $repository->setFlag($this->id, $this->type, $user_id, $date);
         }
 
-        if ($this->type == 'song') {
+        if ($this->type === 'song') {
             $user = new User($user_id);
             $song = new Song($this->id);
             if ($song->isNew() === false) {

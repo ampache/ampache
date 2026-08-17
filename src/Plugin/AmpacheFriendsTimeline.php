@@ -64,19 +64,13 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
     private int $maxitems = 10;
     private int $order    = 0;
 
-    /**
-     * Constructor
-     */
-    private UserActivityRendererInterface $userActivityRenderer;
-
-    private UserActivityRepositoryInterface $userActivityRepository;
-
     public function __construct(
-        UserActivityRendererInterface $userActivityRenderer,
-        UserActivityRepositoryInterface $userActivityRepository,
+        /**
+         * Constructor
+         */
+        private readonly UserActivityRendererInterface $userActivityRenderer,
+        private readonly UserActivityRepositoryInterface $userActivityRepository,
     ) {
-        $this->userActivityRenderer   = $userActivityRenderer;
-        $this->userActivityRepository = $userActivityRepository;
         $this->description            = T_("Friend's Timeline on homepage");
     }
 

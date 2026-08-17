@@ -63,17 +63,17 @@ class CoreTest extends MockeryTestCase
 
     public function testImageMimeDetectsGif(): void
     {
-        $this->assertSame('image/gif', Core::image_mime((string) base64_decode(self::GIF)));
+        $this->assertSame('image/gif', Core::image_mime(base64_decode(self::GIF)));
     }
 
     public function testImageMimeDetectsJpeg(): void
     {
-        $this->assertSame('image/jpeg', Core::image_mime((string) base64_decode(self::JPEG)));
+        $this->assertSame('image/jpeg', Core::image_mime(base64_decode(self::JPEG)));
     }
 
     public function testImageMimeDetectsPng(): void
     {
-        $this->assertSame('image/png', Core::image_mime((string) base64_decode(self::PNG)));
+        $this->assertSame('image/png', Core::image_mime(base64_decode(self::PNG)));
     }
 
     /**
@@ -82,8 +82,8 @@ class CoreTest extends MockeryTestCase
      */
     public function testImageMimeIgnoresAMisleadingFilename(): void
     {
-        $this->assertSame('image/png', Core::image_mime((string) base64_decode(self::PNG)));
-        $this->assertNotSame('image/jpg', Core::image_mime((string) base64_decode(self::PNG)));
+        $this->assertSame('image/png', Core::image_mime(base64_decode(self::PNG)));
+        $this->assertNotSame('image/jpg', Core::image_mime(base64_decode(self::PNG)));
     }
 
     public function testImageMimeReturnsNullForEmptyData(): void

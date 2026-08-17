@@ -68,7 +68,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            echo (new SmartPlaylistPageView(
+            echo new SmartPlaylistPageView(
                 $playlist,
                 $playlist->get_items(),
                 $this->zipHandler,
@@ -76,7 +76,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 AmpConfig::get_web_path(),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                 $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
-            ))->render();
+            )->render();
         }
 
         $this->ui->showQueryStats();

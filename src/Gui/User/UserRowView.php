@@ -120,7 +120,7 @@ final class UserRowView extends AbstractView
 
     public function isDisabled(): bool
     {
-        return (bool) $this->user->disabled;
+        return $this->user->disabled;
     }
 
     public function mayAdminister(): bool

@@ -42,7 +42,7 @@ class ShareTest extends TestCase
         $this->shareRepository->expects(static::never())
             ->method('getRowsByIds');
 
-        static::assertFalse(Share::build_cache([]));
+        self::assertFalse(Share::build_cache([]));
     }
 
     public function testBuildCacheWarmsTheCacheFromTheRepository(): void
@@ -54,7 +54,7 @@ class ShareTest extends TestCase
             ->with([666])
             ->willReturn([['id' => 666, 'object_type' => 'song']]);
 
-        static::assertTrue(Share::build_cache([666]));
+        self::assertTrue(Share::build_cache([666]));
     }
 
     /**

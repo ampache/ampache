@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CatalogFilterRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use ArrayIterator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -47,7 +48,7 @@ class ShowActionTest extends TestCase
 
     public function testRunRenders(): void
     {
-        $this->catalogFilterRepository->method('findGroups')->willReturn(new \ArrayIterator([]));
+        $this->catalogFilterRepository->method('findGroups')->willReturn(new ArrayIterator([]));
 
         $request    = $this->createMock(ServerRequestInterface::class);
         $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);

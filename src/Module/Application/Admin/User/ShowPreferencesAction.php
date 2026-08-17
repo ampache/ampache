@@ -57,12 +57,12 @@ final class ShowPreferencesAction extends AbstractUserAction
         }
 
         $this->ui->showHeader();
-        echo (new UserPreferencesView(
+        echo new UserPreferencesView(
             $this->ui,
             AmpConfig::get_web_path(),
             $user,
             $this->preferenceRepository->getAll($user)
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

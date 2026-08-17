@@ -62,11 +62,11 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
         $data = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
-        echo (new AddPodcastFormView(
+        echo new AddPodcastFormView(
             $this->configContainer->getWebPath(),
             ($data['feed'] ?? ''),
             (int) ($data['catalog'] ?? 0)
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

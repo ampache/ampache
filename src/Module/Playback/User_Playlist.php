@@ -65,22 +65,12 @@ class User_Playlist extends database_object
     }
 
     /**
-     * @deprecated inject dependency
-     */
-    private static function getUserPlaylistRepository(): UserPlaylistRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserPlaylistRepositoryInterface::class);
-    }
-
-    /**
      * add_items
      * Add an array of songs to the playlist
      */
     public function add_items(array $data, int $time): void
     {
-        self::getUserPlaylistRepository()->addItems($this->user, $this->client, $time, array_values($data));
+        $this->getUserPlaylistRepository()->addItems($this->user, $this->client, $time, array_values($data));
     }
 
     /**
@@ -89,7 +79,7 @@ class User_Playlist extends database_object
      */
     public function clear(): void
     {
-        self::getUserPlaylistRepository()->clear($this->user, $this->client);
+        $this->getUserPlaylistRepository()->clear($this->user, $this->client);
     }
 
     /**
@@ -98,7 +88,7 @@ class User_Playlist extends database_object
      */
     public function get_count(): int
     {
-        $results = ['count' => self::getUserPlaylistRepository()->getCount($this->user, $this->client)];
+        $results = ['count' => $this->getUserPlaylistRepository()->getCount($this->user, $this->client)];
 
         return (int) $results['count'];
     }
@@ -118,7 +108,7 @@ class User_Playlist extends database_object
     public function get_current_object(): array
     {
         $items   = [];
-        $results = self::getUserPlaylistRepository()->getCurrentRow($this->user);
+        $results = $this->getUserPlaylistRepository()->getCurrentRow($this->user);
         if ($results !== []) {
             $items = [
                 'object_type' => $results['object_type'],
@@ -148,7 +138,7 @@ class User_Playlist extends database_object
     public function get_items(): array
     {
         $items = [];
-        foreach (self::getUserPlaylistRepository()->getItems($this->user, $this->client) as $results) {
+        foreach ($this->getUserPlaylistRepository()->getItems($this->user, $this->client) as $results) {
             $items[] = [
                 'object_type' => $results['object_type'],
                 'object_id' => $results['object_id'],
@@ -168,7 +158,7 @@ class User_Playlist extends database_object
      */
     public function get_latest(): string
     {
-        return self::getUserPlaylistRepository()->getLatestClient($this->user);
+        return $this->getUserPlaylistRepository()->getLatestClient($this->user);
     }
 
     /**
@@ -177,7 +167,7 @@ class User_Playlist extends database_object
      */
     public function get_time(): int
     {
-        return self::getUserPlaylistRepository()->getTime($this->user, $this->client) ?? time();
+        return $this->getUserPlaylistRepository()->getTime($this->user, $this->client) ?? time();
     }
 
     /**
@@ -186,7 +176,7 @@ class User_Playlist extends database_object
      */
     public function set_current_id(string $object_type, int $track, int $position): void
     {
-        self::getUserPlaylistRepository()->setCurrentByTrack($this->user, $object_type, $track, $position);
+        $this->getUserPlaylistRepository()->setCurrentByTrack($this->user, $object_type, $track, $position);
     }
 
     /**
@@ -195,6 +185,16 @@ class User_Playlist extends database_object
      */
     public function set_current_object(string $object_type, int $object_id, int $position): void
     {
-        self::getUserPlaylistRepository()->setCurrentByObject($this->user, $object_type, $object_id, $position);
+        $this->getUserPlaylistRepository()->setCurrentByObject($this->user, $object_type, $object_id, $position);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getUserPlaylistRepository(): UserPlaylistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserPlaylistRepositoryInterface::class);
     }
 }

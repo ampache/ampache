@@ -50,22 +50,22 @@ class CollectionTest extends TestCase
 
         $subject->object_type = 'folder';
 
-        static::assertTrue($subject->acceptsType('folder'));
-        static::assertFalse($subject->acceptsType('song'));
+        self::assertTrue($subject->acceptsType('folder'));
+        self::assertFalse($subject->acceptsType('song'));
     }
 
     public function testAcceptsTypeTakesAnythingValidWhenMixed(): void
     {
         $subject = new Collection();
 
-        static::assertTrue($subject->acceptsType('folder'));
-        static::assertTrue($subject->acceptsType('song'));
-        static::assertFalse($subject->acceptsType('search'));
+        self::assertTrue($subject->acceptsType('folder'));
+        self::assertTrue($subject->acceptsType('song'));
+        self::assertFalse($subject->acceptsType('search'));
     }
 
     #[DataProvider('validTypeDataProvider')]
     public function testIsValidTypeAnswersForTheType(string $objectType, bool $expected): void
     {
-        static::assertSame($expected, Collection::isValidType($objectType));
+        self::assertSame($expected, Collection::isValidType($objectType));
     }
 }

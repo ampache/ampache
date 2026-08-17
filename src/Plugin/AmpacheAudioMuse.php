@@ -54,9 +54,9 @@ use WpOrg\Requests\Requests;
  */
 class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInterface
 {
-    private const CONNECT_TIMEOUT = 3;
+    private const int CONNECT_TIMEOUT = 3;
 
-    private const REQUEST_TIMEOUT = 7;
+    private const int REQUEST_TIMEOUT = 7;
 
     #[Override]
     public string $categories = 'sonic_analysis';
@@ -265,8 +265,8 @@ class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInter
 
         try {
             $request = Requests::get($url, $headers, $options);
-        } catch (Throwable $error) {
-            debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
+        } catch (Throwable $throwable) {
+            debug_event(self::class, 'Request error: ' . $throwable->getMessage(), 1);
 
             return null;
         }

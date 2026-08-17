@@ -44,7 +44,7 @@ class PrivateMsgTest extends TestCase
         $this->privateMessageRepository->expects(static::never())
             ->method('getRowsByIds');
 
-        static::assertFalse(PrivateMsg::build_cache([]));
+        self::assertFalse(PrivateMsg::build_cache([]));
     }
 
     public function testBuildCacheWarmsTheMessagesAndTheirSenderRecipientUsers(): void
@@ -64,7 +64,7 @@ class PrivateMsgTest extends TestCase
         $this->imageRepository->method('getRowsByObjectIds')
             ->willReturn([]);
 
-        static::assertTrue(PrivateMsg::build_cache([666]));
+        self::assertTrue(PrivateMsg::build_cache([666]));
     }
 
     protected function setUp(): void

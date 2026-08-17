@@ -178,7 +178,7 @@ class ApiHandlerTest extends TestCase
     #[DataProvider(methodName: 'dashedActionProvider')]
     public function testNormalizeActionFoldsTheDashedRestSpelling(string $action, string $expected): void
     {
-        static::assertSame(
+        self::assertSame(
             $expected,
             $this->subject->normalizeAction($action, null, false)
         );
@@ -187,7 +187,7 @@ class ApiHandlerTest extends TestCase
     public function testNormalizeActionFoldsTheSingularFolderAlias(): void
     {
         // an `rest/.htaccess` from before 8.0.0 rewrites `folders/{folder_id}` to `action=folder`
-        static::assertSame(
+        self::assertSame(
             'folders',
             $this->subject->normalizeAction('folder', null, true)
         );
@@ -196,7 +196,7 @@ class ApiHandlerTest extends TestCase
     public function testNormalizeActionKeepsAnEmptyActionEmpty(): void
     {
         // the rest applications rely on this to skip the http-verb suffix so the handler can fall back to a ping
-        static::assertSame(
+        self::assertSame(
             '',
             $this->subject->normalizeAction('', 'song', true)
         );
@@ -204,7 +204,7 @@ class ApiHandlerTest extends TestCase
 
     public function testNormalizeActionKeepsCatalogFolderOutOfTheFolderAlias(): void
     {
-        static::assertSame(
+        self::assertSame(
             'catalog_folder',
             $this->subject->normalizeAction('folder', 'catalog', true)
         );
@@ -212,7 +212,7 @@ class ApiHandlerTest extends TestCase
 
     public function testNormalizeActionLeavesShareUnchangedForNonShareableTypes(): void
     {
-        static::assertSame(
+        self::assertSame(
             'share',
             $this->subject->normalizeAction('share', 'label', true)
         );
@@ -220,7 +220,7 @@ class ApiHandlerTest extends TestCase
 
     public function testNormalizeActionLeavesShareUnchangedWithoutType(): void
     {
-        static::assertSame(
+        self::assertSame(
             'share',
             $this->subject->normalizeAction('share', null, true)
         );
@@ -229,7 +229,7 @@ class ApiHandlerTest extends TestCase
     public function testNormalizeActionLeavesUpdateUnchangedWithoutType(): void
     {
         // plain `update` (no type) is the system_update alias and must not be remapped
-        static::assertSame(
+        self::assertSame(
             'update',
             $this->subject->normalizeAction('update', null, false)
         );
@@ -242,7 +242,7 @@ class ApiHandlerTest extends TestCase
         bool $hasFilter,
         string $expected,
     ): void {
-        static::assertSame(
+        self::assertSame(
             $expected,
             $this->subject->normalizeAction($action, $type, $hasFilter)
         );
@@ -251,7 +251,7 @@ class ApiHandlerTest extends TestCase
     #[DataProvider(methodName: 'catalogTaskProvider')]
     public function testNormalizeActionRoutesCatalogTaskShortcutsToCatalogAction(string $action): void
     {
-        static::assertSame(
+        self::assertSame(
             'catalog_action',
             $this->subject->normalizeAction($action, 'catalog', true)
         );
@@ -264,7 +264,7 @@ class ApiHandlerTest extends TestCase
     #[DataProvider(methodName: 'deletedAliasProvider')]
     public function testNormalizeActionRoutesHyphenatedDeletedAliases(string $action, string $expected): void
     {
-        static::assertSame(
+        self::assertSame(
             $expected,
             $this->subject->normalizeAction($action, null, false)
         );
@@ -273,7 +273,7 @@ class ApiHandlerTest extends TestCase
     #[DataProvider(methodName: 'shareableTypeProvider')]
     public function testNormalizeActionRoutesRestShareToShareCreate(string $type): void
     {
-        static::assertSame(
+        self::assertSame(
             'share_create',
             $this->subject->normalizeAction('share', $type, true)
         );
@@ -281,7 +281,7 @@ class ApiHandlerTest extends TestCase
 
     public function testNormalizeActionStillRoutesCatalogAddWithoutFilterToCatalogCreate(): void
     {
-        static::assertSame(
+        self::assertSame(
             'catalog_create',
             $this->subject->normalizeAction('add', 'catalog', false)
         );
@@ -289,7 +289,7 @@ class ApiHandlerTest extends TestCase
 
     public function testNormalizeActionStillRoutesCatalogCreateToCatalogCreate(): void
     {
-        static::assertSame(
+        self::assertSame(
             'catalog_create',
             $this->subject->normalizeAction('create', 'catalog', true)
         );
@@ -298,7 +298,7 @@ class ApiHandlerTest extends TestCase
     public function testNormalizeActionStillRoutesLegacyCreateToShareCreate(): void
     {
         // preserved in case anything still relies on the literal 'create' segment
-        static::assertSame(
+        self::assertSame(
             'share_create',
             $this->subject->normalizeAction('create', 'album', true)
         );
@@ -307,7 +307,7 @@ class ApiHandlerTest extends TestCase
     #[DataProvider(methodName: 'dashedTypeProvider')]
     public function testNormalizeTypeFoldsTheDashedRestSpelling(string $type, string $expected): void
     {
-        static::assertSame(
+        self::assertSame(
             $expected,
             $this->subject->normalizeType($type)
         );
@@ -316,7 +316,7 @@ class ApiHandlerTest extends TestCase
     #[DataProvider(methodName: 'albumDiskTypeAliasProvider')]
     public function testNormalizeTypeResolvesAlbumDiskAliases(string $type): void
     {
-        static::assertSame(
+        self::assertSame(
             'album_disk',
             $this->subject->normalizeType($type)
         );

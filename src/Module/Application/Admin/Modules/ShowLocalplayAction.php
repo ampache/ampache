@@ -55,10 +55,10 @@ final readonly class ShowLocalplayAction implements ApplicationActionInterface
 
         $this->ui->showBoxTop(T_('Localplay Controllers'), 'box box_localplay_controllers');
 
-        echo (new LocalplayControllerTableView(
+        echo new LocalplayControllerTableView(
             AmpConfig::get_web_path('/admin'),
             $controllers
-        ))->render();
+        )->render();
 
         $this->ui->showBoxBottom();
 
