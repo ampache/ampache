@@ -62,7 +62,7 @@ final readonly class PopularAlbumArtistAction implements ApplicationActionInterf
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $objects = Stats::get_top('album_artist', -1, $thresh_value, 0, $gatekeeper->getUser(), false, 0, 0, $by_user);
+        $objects = Stats::get_top('album_artist', -1, $thresh_value, 0, ($by_user) ? $gatekeeper->getUser() : null, false, 0, 0, $by_user);
         $browse  = $this->browseFactory->create();
         $browse->set_use_filters(false);
         $browse->set_type('album_artist');

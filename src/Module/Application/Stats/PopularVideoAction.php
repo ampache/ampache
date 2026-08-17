@@ -68,7 +68,7 @@ final readonly class PopularVideoAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO)
             && $this->videoRepository->getItemCount()
         ) {
-            $objects = Stats::get_top('video', -1, $thresh_value, 0, $gatekeeper->getUser(), false, 0, 0, $by_user);
+            $objects = Stats::get_top('video', -1, $thresh_value, 0, ($by_user) ? $gatekeeper->getUser() : null, false, 0, 0, $by_user);
             $browse  = $this->browseFactory->create();
             $browse->set_threshold((string) $thresh_value);
             $browse->set_type('video');
