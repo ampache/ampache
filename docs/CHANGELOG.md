@@ -47,9 +47,16 @@
   * `preferences.php` no longer renders for an unregistered/guest visitor
   * Plugin credential preferences (api keys, tokens, passwords) are write-only in the edit form; the stored value is never echoed back, only replaced
   * The `user_preferences` API method (and REST `preferences`) returned those same plugin credential values in the response; they're blanked there too
+  * The single-preference lookups (`preference`, `user_preference`, `preference_create`, `preference_edit`, `preference_delete`) still returned the raw value for a secret-named preference; `Preference::get()` now blanks it the same way
+* The account preferences page and the admin user-edit page showed the avatar delete link even when the user had no avatar set
 * An unregistered/guest visitor could upload and import a playlist file, or export every podcast subscription in the system, neither of which checked for a real account; importing a playlist also now verifies the request came from Ampache's own form
 * A user's last-seen date/time on their profile page ignored their `allow_personal_info_time` preference, unlike the recent-activity list right next to it on the same page
 * The Last.fm/Libre.fm grant-access link on the preferences page was missing its `api_key`, so granting access failed
+* Cancel/confirmation dialogs (`show_confirmation`, `show_confirmation_with_return`, `show_continue`)
+  * A callback url that merely contained the web path as a substring, rather than actually being absolute, had the web path prepended again and was mangled
+  * `return_referer()` could return the current request's own url when client-side navigation had already rewritten the address bar, sending Cancel back to the page it was on instead of the previous one
+  * The referer had already been html-escaped once before reaching the link builder, so its `&` was escaped a second time
+* The admin debug preferences page showed several boolean preferences (`api_enable_8`, `cli_no_color`, `playlist_art_mosaic`, `public_images`, `show_collection`, `show_folder`, `user_create_apikey`) with the wrong input type, because they were missing from `Preference::is_boolean()`
 * Outbound fetches
   * Now check every redirect hop against the same private-address rule as the initial url, not just the url as given; applies to remote/radio stream playback, art fetching, and the Lyrist and YOURLS plugins
   * The LrcLib and AudioMuse-AI plugins didn't check the configured server url at all before fetching from it; they now do
