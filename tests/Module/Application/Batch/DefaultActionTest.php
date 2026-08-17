@@ -30,8 +30,8 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Pow\PowServiceInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Pow\PowServiceInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -50,12 +50,12 @@ class DefaultActionTest extends MockeryTestCase
     private MockInterface|LibraryItemLoaderInterface $libraryItemLoader;
     private MockInterface|LoggerInterface $logger;
     private MockInterface|ModelFactoryInterface $modelFactory;
+    private MockInterface|PowServiceInterface $powService;
     private MockInterface|RequestParserInterface $requestParser;
     private MockInterface|ResponseFactoryInterface $responseFactory;
     private MockInterface|SongRepositoryInterface $songRepository;
     private DefaultAction $subject;
     private MockInterface|ZipHandlerInterface $zipHandler;
-    private MockInterface|PowServiceInterface $powService;
 
     /**
      * Every id fans out to a full item load plus its own medias, so an unbounded request-supplied
