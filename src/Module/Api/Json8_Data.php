@@ -2923,6 +2923,7 @@ final class Json8_Data
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
+        Share::build_cache($objects);
         $JSON = [];
         foreach ($objects as $share_id) {
             $share = new Share((int) $share_id);
@@ -3645,6 +3646,7 @@ final class Json8_Data
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $encode);
 
+        User::build_cache($objects);
         $JSON = [];
         foreach ($objects as $user_id) {
             $user = new User((int) $user_id);

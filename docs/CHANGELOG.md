@@ -29,7 +29,7 @@
 * `php bin/cli run:cronProcess`'s garbage collection now shares the same lock as the other garbage collection triggers, so a scheduled cron run can't race a manual one
 * `run:computeCache` and `run:cronProcess`'s cache rebuild now take their own lock, so two overlapping runs can't double-count the results or publish a half-rebuilt table
 * UPnP playlist browsing counts a playlist's tracks without loading them, the same way the rest of the app already does
-* Row-prefetch caching (avoiding a query per row) is extended to more listings: Browse now also covers podcast, podcast episode, live stream, label, catalog, collection and folder pages, and the JSON/XML API list endpoints (album, artist, catalog, playlist, podcast, podcast episode, song, tag, video) now warm the same object/rating/userflag caches before their loop instead of querying per item
+* Row-prefetch caching (avoiding a query per row) is extended to more listings: Browse now also covers podcast, podcast episode, live stream, label, catalog, collection, folder, user, follower, share, broadcast, private message and wanted-album pages, and the JSON/XML API list endpoints (album, artist, catalog, playlist, podcast, podcast episode, song, tag, video, user, share) now warm the same object/rating/userflag caches before their loop instead of querying per item
 * Art existence/metadata lookups (`has_db`/`has_art`) are batch-prefetched the same way during browse and artist/playlist/tag/video listing, instead of querying disk or the database per row
 * Album/album disk/video search read the catalog id straight off the row instead of joining `catalog_map`, since it's already stored there directly
 * Config version 97
