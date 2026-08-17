@@ -50,7 +50,6 @@ final readonly class HighestAlbumDiskAction implements ApplicationActionInterfac
 
         $this->ui->showHeader();
         echo $this->statsFormViewFactory->createHighest($by_user)->render();
-        $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);
 

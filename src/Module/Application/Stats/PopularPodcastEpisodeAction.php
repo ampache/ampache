@@ -55,7 +55,6 @@ final readonly class PopularPodcastEpisodeAction implements ApplicationActionInt
 
         $this->ui->showHeader();
         echo $this->statsFormViewFactory->createPopular($by_user)->render();
-        $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);
 
