@@ -1204,6 +1204,7 @@ class Preference extends database_object
             'catalog_verify_by_time',
             'catalogfav_compact',
             'catalogfav_gridview',
+            'cli_no_color',
             'composer_no_dev',
             'condPL',
             'cookie_disclaimer',
