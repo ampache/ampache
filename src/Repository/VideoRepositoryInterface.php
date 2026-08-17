@@ -127,6 +127,11 @@ interface VideoRepositoryInterface
     public function insert(array $params): int;
 
     /**
+     * Removes `deleted_video` rows older than the given retention
+     */
+    public function pruneDeletedHistory(int $days): void;
+
+    /**
      * Stores the path or url a video is served from
      */
     public function setFile(int $videoId, string $file): void;

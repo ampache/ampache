@@ -268,6 +268,27 @@ class VideoRepositoryTest extends TestCase
         static::assertSame(666, $this->subject->insert($params));
     }
 
+    public function testPruneDeletedHistoryDeletesOlderRows(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `deleted_video` WHERE `delete_time` < (UNIX_TIMESTAMP() - (? * 86400));',
+                [365]
+            );
+
+        $this->subject->pruneDeletedHistory(365);
+    }
+
+    public function testPruneDeletedHistorySkipsWhenDaysIsNotPositive(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        $this->subject->pruneDeletedHistory(0);
+        $this->subject->pruneDeletedHistory(-1);
+    }
+
     public function testSetFileStoresThePathTheVideoIsServedFrom(): void
     {
         $this->connection->expects(static::once())

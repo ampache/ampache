@@ -49,4 +49,9 @@ interface DeletedPodcastEpisodeRepositoryInterface
      * }>
      */
     public function findAll(): Traversable;
+
+    /**
+     * Removes `deleted_podcast_episode` rows older than the given retention
+     */
+    public function pruneDeletedHistory(int $days): void;
 }
