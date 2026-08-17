@@ -1276,56 +1276,6 @@ site_charset = "UTF-8"
 ;oidc_disable_ssl_verify = "true"
 
 ;#########################################################
-; Public Registration settings, defaults to disabled     #
-;#########################################################
-
-; This setting will silently create an Ampache account
-; for anyone who can login using LDAP (or any other login
-; extension). The default is to create new users as guests
-; see auto_user config option if you would like to change this
-; DEFAULT: "false"
-;auto_create = "true"
-
-; This setting will silently update an Ampache account's
-; information for anyone who can login using LDAP
-; (or any other login extension).
-; DEFAULT: "false"
-;external_auto_update = "true"
-
-; This setting turns on/off public registration. It is
-; recommended you leave this off, as it will allow anyone to
-; sign up for an account on your server.
-; REMEMBER: don't forget to set the mail from address further down in the config.
-; If you don't have an email server, make sure to enable user_no_email_confirm below
-; DEFAULT: "false"
-;allow_public_registration = "true"
-
-; Allow users to reset a forgotten password by email.
-; Turning this off hides the "Lost Password" link AND rejects lostpassword.php,
-; so a stranger can't trigger reset mail to your users by posting to it directly.
-; Only relevant on a server with mail enabled; without mail the feature is already off.
-; DEFAULT: "true"
-;allow_lost_password = "false"
-
-; Show the "Mini player" button on the login form, which sends you to the
-; cut down player at /m/ after logging in instead of the full interface.
-; This only hides the button; /m/ stays reachable by url either way.
-; DEFAULT: "true"
-;show_mini_player = "false"
-
-; Require Captcha Text on Image confirmation
-; Turning this on requires the user to correctly
-; type in the letters in the image created by Captcha
-; Default is off because its very hard to detect if it failed
-; to draw, or they failed to enter it.
-; DEFAULT: "false"
-;captcha_public_reg = "true"
-
-; This setting turns on/off admin notification of registration.
-; DEFAULT: "false"
-;admin_notify_reg = "true"
-
-;#########################################################
 ; Proof of work                                          #
 ;#########################################################
 
@@ -1395,6 +1345,56 @@ site_charset = "UTF-8"
 ; who is getting caught, rather than leaving it running.
 ; DEFAULT: "false"
 ;pow_log_failures = "true"
+
+;#########################################################
+; Public Registration settings, defaults to disabled     #
+;#########################################################
+
+; This setting will silently create an Ampache account
+; for anyone who can login using LDAP (or any other login
+; extension). The default is to create new users as guests
+; see auto_user config option if you would like to change this
+; DEFAULT: "false"
+;auto_create = "true"
+
+; This setting will silently update an Ampache account's
+; information for anyone who can login using LDAP
+; (or any other login extension).
+; DEFAULT: "false"
+;external_auto_update = "true"
+
+; This setting turns on/off public registration. It is
+; recommended you leave this off, as it will allow anyone to
+; sign up for an account on your server.
+; REMEMBER: don't forget to set the mail from address further down in the config.
+; If you don't have an email server, make sure to enable user_no_email_confirm below
+; DEFAULT: "false"
+;allow_public_registration = "true"
+
+; Allow users to reset a forgotten password by email.
+; Turning this off hides the "Lost Password" link AND rejects lostpassword.php,
+; so a stranger can't trigger reset mail to your users by posting to it directly.
+; Only relevant on a server with mail enabled; without mail the feature is already off.
+; DEFAULT: "true"
+;allow_lost_password = "false"
+
+; Show the "Mini player" button on the login form, which sends you to the
+; cut down player at /m/ after logging in instead of the full interface.
+; This only hides the button; /m/ stays reachable by url either way.
+; DEFAULT: "true"
+;show_mini_player = "false"
+
+; Require Captcha Text on Image confirmation
+; Turning this on requires the user to correctly
+; type in the letters in the image created by Captcha
+; Default is off because its very hard to detect if it failed
+; to draw, or they failed to enter it.
+; DEFAULT: "false"
+;captcha_public_reg = "true"
+
+; This setting turns on/off admin notification of registration.
+; DEFAULT: "false"
+;admin_notify_reg = "true"
 
 ; This setting determines whether the user will be created as a disabled user.
 ; If this is on, an administrator will need to manually enable the account
