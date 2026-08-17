@@ -167,6 +167,11 @@ final class UserEditView extends AbstractView
         return (string) $this->client->website;
     }
 
+    public function hasAvatar(): bool
+    {
+        return $this->client->has_art();
+    }
+
     public function hasSubsonicSecret(): bool
     {
         return (bool) $this->client->subsonic_secret;
