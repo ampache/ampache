@@ -349,6 +349,9 @@ final readonly class TagRepository implements TagRepositoryInterface
         return $tags;
     }
 
+    /**
+     * @return list<array{id: int, name: string, is_hidden: int, user: int, count: int}>
+     */
     public function getTopTags(string $objectType, int $objectId, int $limit): array
     {
         $limitClause = ($limit === 0)

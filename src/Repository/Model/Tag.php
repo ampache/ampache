@@ -140,14 +140,6 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * get_top_tags
-     * This gets the top tags for the specified object using limit
-     *
-     * `user` is the owner of the map: 0 for a genre read out of the file tags, otherwise whoever set it by hand.
-     *
-     * @return array<int, array{id: int, name: string, is_hidden: int, user: int, count: int}>
-     */
-    /**
      * Warm get_top_tags() for a whole page with one read
      *
      * @param list<int> $object_ids
@@ -319,6 +311,9 @@ class Tag extends database_object implements library_item, displayable_item, con
         return $results;
     }
 
+    /**
+     * @return list<array{id: int, name: string, is_hidden: int, user: int, count: int}>
+     */
     public static function get_top_tags(string $type, int $object_id, ?int $limit = 10): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
@@ -328,7 +323,7 @@ class Tag extends database_object implements library_item, displayable_item, con
         // build_cache() fills this for a whole page; the limit is applied here
         $key = 'object_tags_' . $type;
         if (parent::is_cached($key, $object_id)) {
-            $cached = parent::get_from_cache($key, $object_id);
+            $cached = array_values(parent::get_from_cache($key, $object_id));
 
             return ((int) $limit > 0) ? array_slice($cached, 0, (int) $limit) : $cached;
         }
