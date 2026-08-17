@@ -77,12 +77,12 @@ class FeedTextTest extends TestCase
     #[DataProvider('cleanLineDataProvider')]
     public function testCleanLineKeepsTheValueOnOneLine(string $input, string $expected): void
     {
-        static::assertSame($expected, FeedText::cleanLine($input));
+        self::assertSame($expected, FeedText::cleanLine($input));
     }
 
     #[DataProvider('cleanDataProvider')]
     public function testCleanReturnsPlainText(string $input, string $expected): void
     {
-        static::assertSame($expected, FeedText::clean($input));
+        self::assertSame($expected, FeedText::clean($input));
     }
 }

@@ -177,6 +177,7 @@ class Catalog_dropbox extends Catalog
 
             return false;
         }
+
         $filesize = $file->getDataProperty('size');
         if ($filesize > 0) {
             $is_audio_file = Catalog::is_audio_file($path);
@@ -716,6 +717,7 @@ class Catalog_dropbox extends Catalog
         if (!$dropbox) {
             return 0;
         }
+
         try {
             $songRepository = self::getSongRepository();
             foreach ($songRepository->getFileRowsByCatalog($this->getId()) as $row) {

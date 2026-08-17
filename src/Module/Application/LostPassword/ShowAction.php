@@ -62,7 +62,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $userAgent         = Core::get_server('HTTP_USER_AGENT');
         $logoUrl           = (string) AmpConfig::get('custom_login_logo');
 
-        echo (new LostPasswordFormView(
+        echo new LostPasswordFormView(
             AmpConfig::get_web_path(),
             str_replace('_', '-', $language),
             is_rtl($language) ? 'rtl' : 'ltr',
@@ -70,7 +70,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             (string) AmpConfig::get('site_title'),
             ($logoUrl !== '') ? $logoUrl : Ui::get_logo_url(),
             str_contains($userAgent, 'Mobile') && (str_contains($userAgent, 'Android') || str_contains($userAgent, 'iPhone') || str_contains($userAgent, 'iPad'))
-        ))->render();
+        )->render();
 
         return null;
     }

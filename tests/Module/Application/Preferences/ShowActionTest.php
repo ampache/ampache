@@ -28,6 +28,9 @@ namespace Ampache\Module\Application\Preferences;
 use Ampache\Gui\Preferences\PreferencesView;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
@@ -53,6 +56,10 @@ class ShowActionTest extends MockeryTestCase
 
         $user->fullname = $fullname;
 
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
         $gatekeeper->shouldReceive('getUser')
             ->withNoArgs()
             ->once()
@@ -93,6 +100,21 @@ class ShowActionTest extends MockeryTestCase
 
         $this->assertNull($result);
         $this->assertSame('', $output);
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->expectException(AccessDeniedException::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
     }
 
     #[Override]

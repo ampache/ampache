@@ -66,7 +66,7 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
     public function findById(int $fieldId): ?MetadataField
     {
         $result = $this->connection->query(
-            'SELECT * FROM `metadata_field` WHERE `id` = ?',
+            "SELECT `id`, IFNULL(`name`, '') AS `name`, `public` FROM `metadata_field` WHERE `id` = ?",
             [$fieldId],
         );
 
@@ -87,7 +87,7 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
     public function findByName(string $name): ?MetadataField
     {
         $result = $this->connection->query(
-            'SELECT * FROM `metadata_field` WHERE `name` = ? LIMIT 1',
+            "SELECT `id`, IFNULL(`name`, '') AS `name`, `public` FROM `metadata_field` WHERE `name` = ? LIMIT 1",
             [$name],
         );
 
@@ -114,7 +114,7 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
         $result = $this->connection->query('SELECT `id`, `name` FROM `metadata_field`');
 
         while ($data = $result->fetch(PDO::FETCH_ASSOC)) {
-            yield (int) $data['id'] => $data['name'];
+            yield (int) $data['id'] => (string) ($data['name'] ?? '');
         }
     }
 

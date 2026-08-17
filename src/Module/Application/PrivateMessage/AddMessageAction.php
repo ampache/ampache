@@ -90,12 +90,12 @@ final readonly class AddMessageAction implements ApplicationActionInterface
         }
 
         if (AmpError::occurred()) {
-            echo (new AddPrivateMessageFormView(
+            echo new AddPrivateMessageFormView(
                 $this->configContainer->getWebPath(),
                 $this->requestParser->getFromRequest('to_user'),
                 $this->requestParser->getFromRequest('subject'),
                 $this->requestParser->getFromRequest('message')
-            ))->render();
+            )->render();
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
@@ -119,12 +119,12 @@ final readonly class AddMessageAction implements ApplicationActionInterface
                 )
             );
         } catch (PrivateMessageCreationException|Exception) {
-            echo (new AddPrivateMessageFormView(
+            echo new AddPrivateMessageFormView(
                 $this->configContainer->getWebPath(),
                 $this->requestParser->getFromRequest('to_user'),
                 $this->requestParser->getFromRequest('subject'),
                 $this->requestParser->getFromRequest('message')
-            ))->render();
+            )->render();
         }
 
         $this->ui->showQueryStats();

@@ -69,24 +69,11 @@ class OpenSubsonicSpecVersionTest extends TestCase
     private const string SPEC_SHA256 = '67c7d915b69868a873ac6ab7cc3d0cf180e6200d9eccc0711ee8fd3c3724714c';
 
     /**
-     * @return array<string, mixed>
-     */
-    private static function spec(): array
-    {
-        return (array) json_decode((string) file_get_contents(self::specPath()), true);
-    }
-
-    private static function specPath(): string
-    {
-        return __DIR__ . '/../../../docs/openapi-opensubsonic.json';
-    }
-
-    /**
      * An advertised extension that no longer exists upstream is a lie to every client that checks.
      */
     public function testAdvertisedExtensionsAreNamedInTheSpec(): void
     {
-        $spec = (string) file_get_contents(self::specPath());
+        $spec = (string) file_get_contents($this->specPath());
 
         foreach (self::SPEC_NAMED_EXTENSIONS as $extension) {
             // str_contains rather than assertStringContainsString: a failure would otherwise dump 450KB of spec.
@@ -101,7 +88,7 @@ class OpenSubsonicSpecVersionTest extends TestCase
     {
         // the spec is `text=auto`, so a windows checkout holds CRLF while the commit holds LF; hash the
         // normalised content or the guard fires on the line endings rather than on a changed spec
-        $spec = str_replace("\r\n", "\n", (string) file_get_contents(self::specPath()));
+        $spec = str_replace("\r\n", "\n", (string) file_get_contents($this->specPath()));
 
         self::assertSame(
             self::SPEC_SHA256,
@@ -118,10 +105,10 @@ class OpenSubsonicSpecVersionTest extends TestCase
      */
     public function testEveryDocumentedEndpointHasAHandler(): void
     {
-        $handlers = array_map('strtolower', get_class_methods(OpenSubsonic_Api::class));
+        $handlers = array_map(strtolower(...), get_class_methods(OpenSubsonic_Api::class));
 
         $missing = [];
-        foreach (array_keys(self::spec()['paths']) as $path) {
+        foreach (array_keys($this->spec()['paths']) as $path) {
             $action = strtolower(str_replace(['/rest/', '.view'], '', (string) $path));
             // hls.m3u8 is served by hls(); the suffix only exists so clients see a playlist file name.
             $action = ($action === 'hls.m3u8') ? 'hls' : $action;
@@ -136,6 +123,19 @@ class OpenSubsonicSpecVersionTest extends TestCase
 
     public function testSpecStillDescribesTheSameEndpointCount(): void
     {
-        self::assertCount(self::SPEC_PATH_COUNT, self::spec()['paths']);
+        self::assertCount(self::SPEC_PATH_COUNT, $this->spec()['paths']);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function spec(): array
+    {
+        return (array) json_decode((string) file_get_contents($this->specPath()), true);
+    }
+
+    private function specPath(): string
+    {
+        return __DIR__ . '/../../../docs/openapi-opensubsonic.json';
     }
 }

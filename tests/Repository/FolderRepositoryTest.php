@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\Folder;
@@ -74,7 +75,7 @@ class FolderRepositoryTest extends TestCase
                 false,
             );
 
-        static::assertSame(
+        self::assertSame(
             [1 => 'Music', 2 => 'Podcasts'],
             $this->subject->getAll(),
         );
@@ -96,10 +97,38 @@ class FolderRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(['id' => '4', 'path_name' => '/Music/Some Artist'], false);
 
-        static::assertSame(
+        self::assertSame(
             ['/music/some artist' => 4],
             $this->subject->getByCatalogKeyedByPathName(7)
         );
+    }
+
+    /**
+     * folder_map rows carry their own `catalog` column, so a folder listing must honour the opt-in
+     * `catalog_filter` feature the same way every other browse type does -- folders were the one type
+     * this filter never reached
+     */
+    public function testGetChildrenAppliesTheCatalogFilterWhenEnabled(): void
+    {
+        AmpConfig::set('catalog_filter', true, true);
+
+        try {
+            $result = $this->createMock(PDOStatement::class);
+
+            $this->connection->expects(static::once())
+                ->method('query')
+                ->with(
+                    self::stringContains('`folder_map`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map`'),
+                    [666]
+                )
+                ->willReturn($result);
+
+            $result->method('fetch')->willReturn(false);
+
+            $this->subject->getChildren(666, 5);
+        } finally {
+            AmpConfig::set('catalog_filter', false, true);
+        }
     }
 
     public function testGetChildrenDropsRowsWithAnUnknownObjectType(): void
@@ -108,7 +137,7 @@ class FolderRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains('`folder_id` = ?'), [666])
+            ->with(self::stringContains('`folder_id` = ?'), [666])
             ->willReturn($result);
 
         $result->expects(static::exactly(3))
@@ -119,7 +148,7 @@ class FolderRepositoryTest extends TestCase
                 false
             );
 
-        static::assertSame(
+        self::assertSame(
             [['object_type' => LibraryItemEnum::SONG, 'object_id' => 21]],
             $this->subject->getChildren(666)
         );
@@ -131,14 +160,28 @@ class FolderRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains('`folder_id` IS NULL'))
+            ->with(self::stringContains('`folder_id` IS NULL'))
             ->willReturn($result);
 
         $result->expects(static::once())
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getChildren(null));
+        self::assertSame([], $this->subject->getChildren(null));
+    }
+
+    public function testGetChildrenSkipsTheCatalogFilterByDefault(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::logicalNot(self::stringContains('catalog_filter_group_map')), [666])
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getChildren(666, 5);
     }
 
     public function testGetItemCountReturnsCount(): void
@@ -155,7 +198,7 @@ class FolderRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['count' => '5']);
 
-        static::assertSame(5, $this->subject->getItemCount());
+        self::assertSame(5, $this->subject->getItemCount());
     }
 
     public function testGetItemCountReturnsZeroWhenNoRowFound(): void
@@ -168,7 +211,7 @@ class FolderRepositoryTest extends TestCase
         $result->method('fetch')
             ->willReturn(false);
 
-        static::assertSame(0, $this->subject->getItemCount());
+        self::assertSame(0, $this->subject->getItemCount());
     }
 
     public function testGetMediaCountCountsEverythingBelowTheFolder(): void
@@ -181,12 +224,12 @@ class FolderRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
-                static::stringContains('`folder_map`.`path_name` LIKE ?'),
+                self::stringContains('`folder_map`.`path_name` LIKE ?'),
                 [666, '/some/path/%']
             )
             ->willReturn('42');
 
-        static::assertSame(42, $this->subject->getMediaCount($folder));
+        self::assertSame(42, $this->subject->getMediaCount($folder));
     }
 
     public function testGetMediaCountReturnsZeroWhenNothingIsFound(): void
@@ -195,7 +238,7 @@ class FolderRepositoryTest extends TestCase
             ->method('fetchOne')
             ->willReturn(false);
 
-        static::assertSame(0, $this->subject->getMediaCount(new Folder()));
+        self::assertSame(0, $this->subject->getMediaCount(new Folder()));
     }
 
     public function testGetMediasNarrowsToASingleTypeWhenAsked(): void
@@ -210,7 +253,7 @@ class FolderRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::stringContains('`folder_map`.`object_type` = ?'),
+                self::stringContains('`folder_map`.`object_type` = ?'),
                 ['song', 666, '/some/path/%']
             )
             ->willReturn($result);
@@ -219,7 +262,7 @@ class FolderRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getMedias($folder, 'song'));
+        self::assertSame([], $this->subject->getMedias($folder, 'song'));
     }
 
     public function testGetNameByIdReturnsNullWhenThereIsNoSuchFolder(): void
@@ -228,7 +271,7 @@ class FolderRepositoryTest extends TestCase
             ->method('fetchOne')
             ->willReturn(false);
 
-        static::assertNull($this->subject->getNameById(666));
+        self::assertNull($this->subject->getNameById(666));
     }
 
     public function testGetNameByIdReturnsTheName(): void
@@ -238,7 +281,27 @@ class FolderRepositoryTest extends TestCase
             ->with('SELECT `folder`.`name` AS `f_name` FROM `folder` WHERE `id` = ?;', [666])
             ->willReturn('some-name');
 
-        static::assertSame('some-name', $this->subject->getNameById(666));
+        self::assertSame('some-name', $this->subject->getNameById(666));
+    }
+
+    public function testGetObjectsAppliesTheCatalogFilterToTheRootListingWhenEnabled(): void
+    {
+        AmpConfig::set('catalog_filter', true, true);
+
+        try {
+            $result = $this->createMock(PDOStatement::class);
+
+            $this->connection->expects(static::once())
+                ->method('query')
+                ->with(self::stringContains('`folder`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map`'))
+                ->willReturn($result);
+
+            $result->method('fetch')->willReturn(false);
+
+            $this->subject->getObjects(null, 5);
+        } finally {
+            AmpConfig::set('catalog_filter', false, true);
+        }
     }
 
     public function testGetObjectsListsTopLevelFoldersForTheRoot(): void
@@ -247,7 +310,7 @@ class FolderRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains('`parent` IS NULL'))
+            ->with(self::stringContains('`parent` IS NULL'))
             ->willReturn($result);
 
         $result->expects(static::exactly(2))
@@ -257,7 +320,7 @@ class FolderRepositoryTest extends TestCase
                 false
             );
 
-        static::assertSame(
+        self::assertSame(
             [['object_type' => LibraryItemEnum::FOLDER, 'object_id' => 21]],
             $this->subject->getObjects(null)
         );
@@ -276,7 +339,7 @@ class FolderRepositoryTest extends TestCase
             ->method('rowCount')
             ->willReturn(2);
 
-        static::assertTrue($this->subject->hasChildren(666));
+        self::assertTrue($this->subject->hasChildren(666));
     }
 
     public function testLookupByPathNameReturnsIdWhenFound(): void
@@ -289,7 +352,7 @@ class FolderRepositoryTest extends TestCase
             )
             ->willReturn('21');
 
-        static::assertSame(21, $this->subject->lookupByPathName('/music', 3));
+        self::assertSame(21, $this->subject->lookupByPathName('/music', 3));
     }
 
     public function testLookupByPathNameReturnsMinusOneForBlankPath(): void
@@ -297,7 +360,7 @@ class FolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('fetchOne');
 
-        static::assertSame(-1, $this->subject->lookupByPathName(''));
+        self::assertSame(-1, $this->subject->lookupByPathName(''));
     }
 
     public function testLookupReturnsIdWhenFound(): void
@@ -310,7 +373,7 @@ class FolderRepositoryTest extends TestCase
             )
             ->willReturn('21');
 
-        static::assertSame(21, $this->subject->lookup('Music', 3, 7));
+        self::assertSame(21, $this->subject->lookup('Music', 3, 7));
     }
 
     public function testLookupReturnsMinusOneForBlankName(): void
@@ -318,7 +381,7 @@ class FolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('fetchOne');
 
-        static::assertSame(-1, $this->subject->lookup(''));
+        self::assertSame(-1, $this->subject->lookup(''));
     }
 
     public function testLookupReturnsZeroWhenNotFound(): void
@@ -331,7 +394,7 @@ class FolderRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertSame(0, $this->subject->lookup('Music', 3));
+        self::assertSame(0, $this->subject->lookup('Music', 3));
     }
 
     public function testMigrateObjectMovesTheMapRows(): void
@@ -361,7 +424,7 @@ class FolderRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::stringContains('INSERT INTO `folder`'),
+                self::stringContains('INSERT INTO `folder`'),
                 ['some-name', 2, null, 42, 1000, 1234, '1,2', '/some/path']
             );
 
@@ -369,7 +432,7 @@ class FolderRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(666);
 
-        static::assertSame(666, $this->subject->persist($folder));
+        self::assertSame(666, $this->subject->persist($folder));
     }
 
     public function testPersistUpdatesAnExistingFolderAndReturnsNull(): void
@@ -392,7 +455,7 @@ class FolderRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('getLastInsertedId');
 
-        static::assertNull($this->subject->persist($folder));
+        self::assertNull($this->subject->persist($folder));
     }
 
     public function testUpdateFolderCountsGivesEveryAncestorTheTotalOfItsSubtree(): void
@@ -438,11 +501,11 @@ class FolderRepositoryTest extends TestCase
         $this->subject->update_folder_counts();
 
         // Stats::count() increments every ancestor as a track plays, so the rebuild has to match that
-        static::assertSame([2, 1], $writes[4]);
-        static::assertSame([3, 0], $writes[5]);
-        static::assertSame([5, 1], $writes[2]);
-        static::assertSame([5, 1], $writes[1]);
-        static::assertArrayNotHasKey(3, $writes);
+        self::assertSame([2, 1], $writes[4]);
+        self::assertSame([3, 0], $writes[5]);
+        self::assertSame([5, 1], $writes[2]);
+        self::assertSame([5, 1], $writes[1]);
+        self::assertArrayNotHasKey(3, $writes);
     }
 
     public function testUpdateUtimeUsesProvidedTime(): void

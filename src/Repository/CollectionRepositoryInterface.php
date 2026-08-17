@@ -85,6 +85,14 @@ interface CollectionRepositoryInterface
     public function getLastTrackNumber(int $collectionId): int;
 
     /**
+     * Reads whole collection rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $collectionIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $collectionIds): array;
+
+    /**
      * Entry ids in their stored order, for renumbering
      *
      * @return list<int>

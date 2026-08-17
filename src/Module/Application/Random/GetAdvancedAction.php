@@ -74,12 +74,12 @@ final readonly class GetAdvancedAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        echo (new RandomFormView(
+        echo new RandomFormView(
             $objectIds,
             $this->browseFactory,
             $this->videoRepository,
             AmpConfig::get_web_path()
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

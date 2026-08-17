@@ -43,8 +43,6 @@ use Override;
  */
 final class DemocraticListRenderer extends AbstractBrowseListRenderer
 {
-    private ?Democratic $democratic = null;
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
@@ -73,12 +71,13 @@ final class DemocraticListRenderer extends AbstractBrowseListRenderer
 
     public function getDemocratic(): Democratic
     {
-        if ($this->democratic === null) {
-            $this->democratic = Democratic::get_current_playlist();
-            $this->democratic->set_parent();
-        }
+        /** @var Democratic */
+        return $this->cachePerRender('democratic', static function (): Democratic {
+            $democratic = Democratic::get_current_playlist();
+            $democratic->set_parent();
 
-        return $this->democratic;
+            return $democratic;
+        });
     }
 
     /**

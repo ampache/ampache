@@ -76,7 +76,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             echo T_('You have requested an object that does not exist');
         } elseif ($album->getDiskCount() > 1) {
             // Multi disk albums
-            echo (new AlbumPageView(
+            echo new AlbumPageView(
                 $album,
                 $this->browseFactory,
                 $gatekeeper->getUser(),
@@ -86,10 +86,10 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
                 true
-            ))->render();
+            )->render();
         } else {
             // Single disk albums
-            echo (new AlbumPageView(
+            echo new AlbumPageView(
                 $album,
                 $this->browseFactory,
                 $gatekeeper->getUser(),
@@ -98,7 +98,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('album'),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ))->render();
+            )->render();
         }
 
         // Show the Footer

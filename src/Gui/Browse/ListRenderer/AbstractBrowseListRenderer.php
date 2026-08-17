@@ -44,6 +44,9 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
 {
     private ?BrowseListContext $context = null;
 
+    /** @var array<string, mixed> Values a subclass builds once per render, dropped when that render ends */
+    private array $renderCache = [];
+
     /**
      * The list header appends this to its paging and alpha links, so a filtered browse keeps its filter.
      */
@@ -107,14 +110,31 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
     #[Override]
     final public function renderList(BrowseListContext $context): string
     {
-        $previous      = $this->context;
-        $this->context = $context;
+        $previous          = $this->context;
+        $previousCache     = $this->renderCache;
+        $this->context     = $context;
+        $this->renderCache = [];
 
         try {
             return $this->render();
         } finally {
-            $this->context = $previous;
+            $this->context     = $previous;
+            $this->renderCache = $previousCache;
         }
+    }
+
+    /**
+     * Build a value once for the current render only, so a second browse of the same type rebuilds its own.
+     *
+     * @param callable(): mixed $builder
+     */
+    final protected function cachePerRender(string $key, callable $builder): mixed
+    {
+        if (!array_key_exists($key, $this->renderCache)) {
+            $this->renderCache[$key] = $builder();
+        }
+
+        return $this->renderCache[$key];
     }
 
     final protected function getContext(): BrowseListContext

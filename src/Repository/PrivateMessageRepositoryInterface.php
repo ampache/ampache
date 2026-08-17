@@ -59,6 +59,14 @@ interface PrivateMessageRepositoryInterface
     public function getChatMessages(int $since = 0): array;
 
     /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $privateMessageIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $privateMessageIds): array;
+
+    /**
      * Get the user received private messages.
      */
     public function getUnreadCount(

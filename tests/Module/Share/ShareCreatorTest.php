@@ -61,7 +61,7 @@ class ShareCreatorTest extends TestCase
             'Some description',
         );
 
-        static::assertSame(0, $result);
+        self::assertSame(0, $result);
     }
 
     public function testCreateReturnsNullForInvalidObjectType(): void
@@ -76,7 +76,7 @@ class ShareCreatorTest extends TestCase
 
         $result = $this->subject->create($user, LibraryItemEnum::LABEL, 42);
 
-        static::assertNull($result);
+        self::assertNull($result);
     }
 
     public function testCreateReturnsNullWhenNeitherStreamNorDownloadAllowed(): void
@@ -91,7 +91,7 @@ class ShareCreatorTest extends TestCase
 
         $result = $this->subject->create($user, LibraryItemEnum::SONG, 42, false, false);
 
-        static::assertNull($result);
+        self::assertNull($result);
     }
 
     protected function setUp(): void

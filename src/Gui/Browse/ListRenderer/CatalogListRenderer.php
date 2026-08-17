@@ -72,11 +72,11 @@ final class CatalogListRenderer extends AbstractBrowseListRenderer
 
     public function renderRow(Catalog $catalog): string
     {
-        return (new CatalogRowView(
+        return new CatalogRowView(
             $this->configContainer->getWebPath('/admin'),
             $catalog,
             (bool) $this->configContainer->get('catalog_disable')
-        ))->render();
+        )->render();
     }
 
     #[Override]

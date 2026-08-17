@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\database_object;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
 
 /**
  * This is the class responsible for handling the PrivateMsg object
@@ -58,6 +59,45 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
         $this->message       = $info['message'] ?? null;
         $this->subject       = $info['subject'] ?? null;
         $this->to_user       = (int) ($info['to_user'] ?? 0);
+    }
+
+    /**
+     * Caches a set of private messages in one query rather than one per object, plus the sender/recipient
+     * users their row templates link to
+     *
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if ($ids === []) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        $userIds = [];
+        foreach (self::getPrivateMessageRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('user_pvmsg', (int) $row['id'], $row);
+            $userIds[] = (int) $row['from_user'];
+            $userIds[] = (int) $row['to_user'];
+        }
+
+        User::build_cache(array_unique($userIds));
+
+        return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPrivateMessageRepository(): PrivateMessageRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PrivateMessageRepositoryInterface::class);
     }
 
     public function getCreationDate(): int

@@ -69,7 +69,7 @@ class SongDeleterTest extends TestCase
 
         $result = $this->subject->delete($song);
 
-        static::assertFalse($result);
+        self::assertFalse($result);
     }
 
     public function testDeleteRemovesFileAndCascadesGarbageCollectionWhenNotAParent(): void
@@ -80,6 +80,7 @@ class SongDeleterTest extends TestCase
 
         $song       = $this->createMock(Song::class);
         $song->file = $root->url() . '/song.mp3';
+
         $songId     = 42;
 
         $song->method('getId')
@@ -111,8 +112,8 @@ class SongDeleterTest extends TestCase
 
         $result = $this->subject->delete($song);
 
-        static::assertTrue($result);
-        static::assertFalse($root->hasChild('song.mp3'));
+        self::assertTrue($result);
+        self::assertFalse($root->hasChild('song.mp3'));
     }
 
     public function testDeleteReturnsFalseWhenRepositoryDeleteFails(): void
@@ -123,6 +124,7 @@ class SongDeleterTest extends TestCase
 
         $song       = $this->createMock(Song::class);
         $song->file = $root->url() . '/song.mp3';
+
         $songId     = 42;
 
         $song->method('getId')
@@ -138,8 +140,8 @@ class SongDeleterTest extends TestCase
 
         $result = $this->subject->delete($song);
 
-        static::assertFalse($result);
-        static::assertFalse($root->hasChild('song.mp3'));
+        self::assertFalse($result);
+        self::assertFalse($root->hasChild('song.mp3'));
     }
 
     public function testDeleteSkipsGarbageCollectionCascadeWhenAParent(): void
@@ -150,6 +152,7 @@ class SongDeleterTest extends TestCase
 
         $song       = $this->createMock(Song::class);
         $song->file = $root->url() . '/song.mp3';
+
         $songId     = 42;
 
         $song->method('getId')
@@ -178,13 +181,14 @@ class SongDeleterTest extends TestCase
 
         $result = $this->subject->delete($song, true);
 
-        static::assertTrue($result);
+        self::assertTrue($result);
     }
 
     public function testDeleteSkipsUnlinkWhenSongHasNoFile(): void
     {
         $song       = $this->createMock(Song::class);
         $song->file = null;
+
         $songId     = 42;
 
         $song->method('getId')
@@ -197,7 +201,7 @@ class SongDeleterTest extends TestCase
 
         $result = $this->subject->delete($song, true);
 
-        static::assertTrue($result);
+        self::assertTrue($result);
     }
 
     protected function setUp(): void

@@ -141,6 +141,7 @@ final readonly class TagRepository implements TagRepositoryInterface
         $this->connection->query('DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?', [$tagId]);
         $this->connection->query('DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?', [$tagId]);
         $this->connection->query('DELETE FROM `tag` WHERE `tag`.`id` = ? ', [$tagId]);
+
         $this->catalogCounter->count(CountableTableEnum::TAG);
     }
 
@@ -231,7 +232,7 @@ final readonly class TagRepository implements TagRepositoryInterface
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $tagIds));
+        $idList = implode(',', array_map(intval(...), $tagIds));
 
         $result = $this->connection->query('SELECT * FROM `tag` WHERE `id` IN (' . $idList . ')');
 
@@ -275,7 +276,7 @@ final readonly class TagRepository implements TagRepositoryInterface
         $params    = ($tagId === 0) ? [$objectType] : [$tagId, $objectType];
 
         $sql = sprintf('SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` WHERE %s `tag_map`.`object_type` = ?', $tagClause);
-        if (AmpConfig::get('catalog_disable') && in_array($objectType, self::CATALOG_TYPES)) {
+        if (AmpConfig::get('catalog_disable') && in_array($objectType, self::CATALOG_TYPES, true)) {
             $sql .= 'AND ' . Catalog::get_enable_filter($objectType, '`tag_map`.`object_id`');
         }
 

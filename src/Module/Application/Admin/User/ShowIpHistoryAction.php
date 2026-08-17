@@ -72,12 +72,12 @@ final class ShowIpHistoryAction extends AbstractUserAction
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(sprintf(T_('%s IP History'), $user->get_fullname()));
-        echo (new IpHistoryView(
+        echo new IpHistoryView(
             $this->configContainer->getWebPath('/admin'),
             $user->getId(),
             $history,
             $showAll
-        ))->render();
+        )->render();
         $this->ui->showBoxBottom();
 
         $this->ui->showQueryStats();

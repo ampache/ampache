@@ -82,12 +82,12 @@ final readonly class ShowEditAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        echo (new EditShoutView(
+        echo new EditShoutView(
             $this->configContainer->getWebPath('/admin'),
             $shout,
             $object,
             $user
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

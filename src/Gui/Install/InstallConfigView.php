@@ -115,7 +115,7 @@ final class InstallConfigView extends AbstractInstallStepView
 
     public function isApache(): bool
     {
-        return (bool) $this->installationHelper->install_check_server_apache();
+        return $this->installationHelper->install_check_server_apache();
     }
 
     /**

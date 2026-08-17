@@ -140,6 +140,9 @@ class Stream_Playlist
     {
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` WHERE `session`.`id` IS NULL';
         Dba::write($sql);
+
+        // clamp the max id
+        Dba::write('ALTER TABLE `stream_playlist` AUTO_INCREMENT = 1');
     }
 
     /**
@@ -635,7 +638,7 @@ class Stream_Playlist
      */
     public function create_web_player(): void
     {
-        echo (new WebPlayerFrameView(AmpConfig::get_web_path(), $this))->render();
+        echo new WebPlayerFrameView(AmpConfig::get_web_path(), $this)->render();
     }
 
     public function create_xspf(): void

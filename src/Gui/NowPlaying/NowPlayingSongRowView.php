@@ -56,7 +56,7 @@ final class NowPlayingSongRowView extends AbstractView
 
     public function getAlbumId(): int
     {
-        return (int) $this->media->album;
+        return $this->media->album;
     }
 
     public function getAlbumLink(): string
@@ -73,7 +73,7 @@ final class NowPlayingSongRowView extends AbstractView
     {
         $playing = (AmpConfig::get('show_song_art') && Art::has_db($this->media->getId(), 'song'))
             ? $this->media
-            : (($this->isAlbumGrouped()) ? new Album($this->getAlbumId()) : new AlbumDisk((int) $this->media->album_disk));
+            : (($this->isAlbumGrouped()) ? new Album($this->getAlbumId()) : new AlbumDisk($this->media->album_disk));
         if ($playing->isNew()) {
             return '';
         }
@@ -109,7 +109,7 @@ final class NowPlayingSongRowView extends AbstractView
 
     public function getGenres(): string
     {
-        return (string) $this->media->get_f_tags();
+        return $this->media->get_f_tags();
     }
 
     public function getSimilarAction(): string
@@ -129,7 +129,7 @@ final class NowPlayingSongRowView extends AbstractView
 
     public function getYear(): int
     {
-        return (int) $this->media->year;
+        return $this->media->year;
     }
 
     public function getYearUrl(): string

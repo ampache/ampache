@@ -59,9 +59,9 @@ final class LocalplaySidebarView extends AbstractSidebarView
             return T_('Allow Localplay Set to False');
         }
 
-        return (!AmpConfig::get('localplay_controller'))
-            ? T_('Localplay Controller Not Defined')
-            : T_('Access Denied');
+        return (AmpConfig::get('localplay_controller'))
+            ? T_('Access Denied')
+            : T_('Localplay Controller Not Defined');
     }
 
     /**

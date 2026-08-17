@@ -80,7 +80,7 @@ final readonly class SongRepository implements SongRepositoryInterface
             return;
         }
 
-        $idList = implode(',', array_map('intval', $songIds));
+        $idList = implode(',', array_map(intval(...), $songIds));
 
         try {
             $this->connection->query("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` IN ($idList);");
@@ -1124,6 +1124,21 @@ final readonly class SongRepository implements SongRepositoryInterface
         $this->connection->query('DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?', ['artist', $oldArtistId]);
 
         return true;
+    }
+
+    /**
+     * Removes `deleted_song` rows older than the given retention
+     */
+    public function pruneDeletedHistory(int $days): void
+    {
+        if ($days <= 0) {
+            return;
+        }
+
+        $this->connection->query(
+            'DELETE FROM `deleted_song` WHERE `delete_time` < (UNIX_TIMESTAMP() - (? * 86400));',
+            [$days]
+        );
     }
 
     /**

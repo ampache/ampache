@@ -70,6 +70,14 @@ interface BroadcastRepositoryInterface
     public function getIdsByUser(int $userId): array;
 
     /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $broadcastIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $broadcastIds): array;
+
+    /**
      * Writes the editable properties of an existing broadcast
      */
     /**

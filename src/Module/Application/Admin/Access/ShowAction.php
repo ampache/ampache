@@ -67,10 +67,10 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        echo (new AccessListView(
+        echo new AccessListView(
             $this->configContainer->getWebPath('/admin'),
             $items
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

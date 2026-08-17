@@ -58,6 +58,6 @@ class FeedDurationTest extends TestCase
     #[DataProvider('durationDataProvider')]
     public function testToSecondsReadsTheDocumentedForms(string $input, int $expected): void
     {
-        static::assertSame($expected, FeedDuration::toSeconds($input));
+        self::assertSame($expected, FeedDuration::toSeconds($input));
     }
 }

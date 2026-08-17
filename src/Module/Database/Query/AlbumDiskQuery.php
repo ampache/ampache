@@ -254,7 +254,7 @@ final class AlbumDiskQuery implements QueryInterface
             case 'user_rating':
                 $filter_sql = ((int) $value === 0)
                     ? " `album_disk`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album_disk' AND `user` = " . (int) $query->user_id . ") AND "
-                    : " `album_disk`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album_disk' AND `user` = " . (int) $query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                    : " `album_disk`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album_disk' AND `user` = " . (int) $query->user_id . " AND `rating` = '" . Dba::escape($value) . "') AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album_disk`.`catalog`', 100);

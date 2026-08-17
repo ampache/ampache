@@ -394,6 +394,30 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     }
 
     /**
+     * Reads whole podcast_episode rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $episodeIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $episodeIds): array
+    {
+        if ($episodeIds === []) {
+            return [];
+        }
+
+        $idList = implode(',', array_map(intval(...), $episodeIds));
+
+        $result = $this->connection->query('SELECT * FROM `podcast_episode` WHERE `id` IN (' . $idList . ')');
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
      * Reads a page of the podcast_episodes a verify pass walks, newest path first
      *
      * @return list<array{id: int, file: string, min_update_time: int}>

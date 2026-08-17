@@ -632,8 +632,7 @@ final class AlbumDiskSearch implements SearchInterface
         }
 
         if ($join['catalog']) {
-            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`object_id` = `album`.`id`";
-            $table['3_catalog']     = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `catalog_map_album`.`catalog_id`";
+            $table['3_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `album_disk`.`catalog`";
             if ($where_sql !== '' && $where_sql !== '0') {
                 $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
             } else {

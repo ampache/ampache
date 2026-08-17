@@ -67,7 +67,7 @@ interface FolderRepositoryInterface
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function getChildren(?int $folderId): array;
+    public function getChildren(?int $folderId, int $userId = -1): array;
 
     /**
      * Return the number of entries in the database...
@@ -77,14 +77,14 @@ interface FolderRepositoryInterface
     /**
      * Counts everything playable below a folder, without hydrating the rows
      */
-    public function getMediaCount(Folder $folder): int;
+    public function getMediaCount(Folder $folder, int $userId = -1): int;
 
     /**
      * Returns everything below a folder, optionally narrowed to a single type
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function getMedias(Folder $folder, ?string $filterType = null): array;
+    public function getMedias(Folder $folder, ?string $filterType = null, int $userId = -1): array;
 
     /**
      * Returns a folder's own name, null when there is no such folder
@@ -96,12 +96,20 @@ interface FolderRepositoryInterface
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function getObjects(?int $folderId): array;
+    public function getObjects(?int $folderId, int $userId = -1): array;
+
+    /**
+     * Reads whole folder rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $folderIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $folderIds): array;
 
     /**
      * Whether the folder has any mapped children
      */
-    public function hasChildren(int $folderId): bool;
+    public function hasChildren(int $folderId, int $userId = -1): bool;
 
     public function lookup(string $folderName, int $catalogId = 0, ?int $parent_id = null): int;
 

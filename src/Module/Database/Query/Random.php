@@ -68,8 +68,8 @@ class Random
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id) {
             $sql .= ($catalog_filter)
-                ? sprintf('AND `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id)
-                : sprintf('WHERE `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
+                ? sprintf("AND `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ", $rating_filter, $user_id)
+                : sprintf("WHERE `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ", $rating_filter, $user_id);
         }
 
         $sql .= "ORDER BY RAND() LIMIT 1;";
@@ -107,9 +107,9 @@ class Random
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
-            $where_sql .= ($where_sql == "")
-                ? sprintf('WHERE `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id)
-                : sprintf('AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
+            $where_sql .= ($where_sql === "")
+                ? sprintf("WHERE `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ", $rating_filter, $user_id)
+                : sprintf("AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ", $rating_filter, $user_id);
         }
 
         // a filter narrows the pick to that one album, or to a single disk of it when `$disk` is set
@@ -157,9 +157,9 @@ class Random
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
-            $where_sql .= ($where_sql == "")
-                ? sprintf('WHERE `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id)
-                : sprintf('AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
+            $where_sql .= ($where_sql === "")
+                ? sprintf("WHERE `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ", $rating_filter, $user_id)
+                : sprintf("AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ", $rating_filter, $user_id);
         }
 
         // a filter narrows the pick to that one artist. artist_map splits the credit: an `object_type` of `song`
@@ -220,10 +220,10 @@ class Random
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-            $where_sql .= ($where_sql == "")
-                ? sprintf('WHERE `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id)
-                : sprintf('AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
-            $where_sql .= sprintf('AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
+            $where_sql .= ($where_sql === "")
+                ? sprintf("WHERE `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)", $rating_filter, $user_id)
+                : sprintf("AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)", $rating_filter, $user_id);
+            $where_sql .= sprintf("AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)", $rating_filter, $user_id);
         }
 
         $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
@@ -435,13 +435,116 @@ class Random
     }
 
     /**
+     * Picks random songs subject to the catalog and rating rules every random query honours, plus one extra clause.
+     *
+     * @return int[]
+     */
+    private static function _get_filtered(int $limit, ?User $user, string $filter_sql): array
+    {
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+
+        if (!$user instanceof User) {
+            return [];
+        }
+
+        $user_id   = $user->getId();
+        $where_sql = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? "WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") AND "
+            : "WHERE ";
+
+        $rating_filter = AmpConfig::get_rating_filter();
+        if ($rating_filter > 0 && $rating_filter <= 5) {
+            $where_sql .= sprintf(
+                "`song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) AND ",
+                $rating_filter,
+                $user_id
+            );
+        }
+
+        $results    = [];
+        $db_results = Dba::read(sprintf('SELECT `song`.`id` FROM `song` %s%s ORDER BY RAND() LIMIT %d', $where_sql, $filter_sql, $limit));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * advanced
+     * This processes the results of a post from a form and returns an
+     * array of song items that were returned from said randomness
+     * @param array<string, mixed> $data
+     * @return int[]
+     */
+    public function advanced(string $type, array $data): array
+    {
+        /* Figure out our object limit */
+        $limit     = (int) ($data['limit'] ?? -1);
+        $limit_sql = "LIMIT " . $limit;
+
+        /* If they've passed -1 as limit then get everything */
+        if ($limit === -1) {
+            if (array_key_exists('limit', $data)) {
+                unset($data['limit']);
+            }
+
+            $limit_sql = "";
+        }
+
+        $search  = $this->_advanced_sql($data, $type, $limit_sql);
+        $results = $this->_advanced_results($search['sql'], $search['parameters'], $data);
+        //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
+
+        return $this->get_songs($type, $results);
+    }
+
+    /**
+     * get_songs
+     * This processes the results of a post from a form and returns an
+     * array of song items that were returned from said randomness
+     * @param int[] $results
+     * @return int[]
+     */
+    public function get_songs(string $type, array $results): array
+    {
+        switch ($type) {
+            case 'song':
+            case 'video':
+                return $results;
+            case 'album':
+                $songs = [];
+                foreach ($results as $object_id) {
+                    foreach ($this->songRepository->getByAlbum($object_id) as $song_id) {
+                        $songs[] = $song_id;
+                    }
+                }
+
+                return $songs;
+            case 'artist':
+                $songs = [];
+                foreach ($results as $object_id) {
+                    foreach ($this->songRepository->getByArtist($object_id) as $song_id) {
+                        $songs[] = $song_id;
+                    }
+                }
+
+                return $songs;
+            default:
+                return [];
+        }
+    }
+
+    /**
      * advanced_results
      * Run the query generated above by self::advanced so we can while it
      * @param array<int, mixed> $sql_params
      * @param array<string, mixed> $data
      * @return int[]
      */
-    private static function _advanced_results(string $sql_query, array $sql_params, array $data): array
+    private function _advanced_results(string $sql_query, array $sql_params, array $data): array
     {
         // Run the query generated above so we can while it
         $db_results = Dba::read($sql_query, $sql_params);
@@ -520,7 +623,7 @@ class Random
      *     parameters: array<int, mixed>
      * }
      */
-    private static function _advanced_sql(array $data, string $type, string $limit_sql): array
+    private function _advanced_sql(array $data, string $type, string $limit_sql): array
     {
         $search = new Search(0, $type);
         $search->set_rules($data);
@@ -548,6 +651,7 @@ class Random
                         ? " AND " . $search_info['where_sql']
                         : " WHERE " . $search_info['where_sql'];
                 }
+
                 break;
             case 'album':
             case 'artist':
@@ -577,108 +681,5 @@ class Random
             'sql' => $sql,
             'parameters' => $search_info['parameters'],
         ];
-    }
-
-    /**
-     * Picks random songs subject to the catalog and rating rules every random query honours, plus one extra clause.
-     *
-     * @return int[]
-     */
-    private static function _get_filtered(int $limit, ?User $user, string $filter_sql): array
-    {
-        if (empty($user)) {
-            $user = Core::get_global('user');
-        }
-
-        if (!$user instanceof User) {
-            return [];
-        }
-
-        $user_id   = $user->getId();
-        $where_sql = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
-            ? "WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") AND "
-            : "WHERE ";
-
-        $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5) {
-            $where_sql .= sprintf(
-                '`song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) AND ',
-                $rating_filter,
-                $user_id
-            );
-        }
-
-        $results    = [];
-        $db_results = Dba::read(sprintf('SELECT `song`.`id` FROM `song` %s%s ORDER BY RAND() LIMIT %d', $where_sql, $filter_sql, $limit));
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * advanced
-     * This processes the results of a post from a form and returns an
-     * array of song items that were returned from said randomness
-     * @param array<string, mixed> $data
-     * @return int[]
-     */
-    public function advanced(string $type, array $data): array
-    {
-        /* Figure out our object limit */
-        $limit     = (int) ($data['limit'] ?? -1);
-        $limit_sql = "LIMIT " . Dba::escape($limit);
-
-        /* If they've passed -1 as limit then get everything */
-        if ($limit == -1) {
-            if (array_key_exists('limit', $data)) {
-                unset($data['limit']);
-            }
-
-            $limit_sql = "";
-        }
-
-        $search  = self::_advanced_sql($data, $type, $limit_sql);
-        $results = self::_advanced_results($search['sql'], $search['parameters'], $data);
-        //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
-
-        return $this->get_songs($type, $results);
-    }
-
-    /**
-     * get_songs
-     * This processes the results of a post from a form and returns an
-     * array of song items that were returned from said randomness
-     * @param int[] $results
-     * @return int[]
-     */
-    public function get_songs(string $type, array $results): array
-    {
-        switch ($type) {
-            case 'song':
-            case 'video':
-                return $results;
-            case 'album':
-                $songs = [];
-                foreach ($results as $object_id) {
-                    foreach ($this->songRepository->getByAlbum($object_id) as $song_id) {
-                        $songs[] = $song_id;
-                    }
-                }
-
-                return $songs;
-            case 'artist':
-                $songs = [];
-                foreach ($results as $object_id) {
-                    foreach ($this->songRepository->getByArtist($object_id) as $song_id) {
-                        $songs[] = $song_id;
-                    }
-                }
-
-                return $songs;
-            default:
-                return [];
-        }
     }
 }

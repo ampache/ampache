@@ -96,10 +96,10 @@ final readonly class ImportPodcastsAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         if (AmpError::occurred()) {
-            echo (new ImportPodcastsFormView(
+            echo new ImportPodcastsFormView(
                 $this->configContainer->getWebPath(),
                 (int) ($data['catalog'] ?? 0)
-            ))->render();
+            )->render();
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),

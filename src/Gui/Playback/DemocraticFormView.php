@@ -58,7 +58,7 @@ final class DemocraticFormView extends AbstractView
 
     public function getLevel(): int
     {
-        return (int) $this->democratic->level;
+        return $this->democratic->level;
     }
 
     /**
@@ -81,7 +81,7 @@ final class DemocraticFormView extends AbstractView
 
     public function isPrimary(): bool
     {
-        return (bool) $this->democratic->primary;
+        return $this->democratic->primary;
     }
 
     #[Override]

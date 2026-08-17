@@ -80,15 +80,15 @@ final class Stats
     public int $user;
 
     public function __construct(
-        private AlbumRepositoryInterface $albumRepository,
-        private ArtistRepositoryInterface $artistRepository,
-        private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        private PodcastRepositoryInterface $podcastRepository,
-        private SongRepositoryInterface $songRepository,
-        private UserActivityPosterInterface $userActivityPoster,
-        private UserActivityRepositoryInterface $userActivityRepository,
-        private VideoRepositoryInterface $videoRepository,
-        private LoggerInterface $logger,
+        private readonly AlbumRepositoryInterface $albumRepository,
+        private readonly ArtistRepositoryInterface $artistRepository,
+        private readonly PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        private readonly PodcastRepositoryInterface $podcastRepository,
+        private readonly SongRepositoryInterface $songRepository,
+        private readonly UserActivityPosterInterface $userActivityPoster,
+        private readonly UserActivityRepositoryInterface $userActivityRepository,
+        private readonly VideoRepositoryInterface $videoRepository,
+        private readonly LoggerInterface $logger,
     ) {}
 
     /**
@@ -509,11 +509,9 @@ final class Stats
             $where[] = $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
         }
 
-        $sql .= 'WHERE ' . implode(' AND ', $where) . ' ' . $group_by . 'ORDER BY `real_atime` DESC ';
-
         //debug_event(self::class, 'get_newest_sql ' . $sql, 5);
 
-        return $sql;
+        return $sql . ('WHERE ' . implode(' AND ', $where) . ' ' . $group_by . 'ORDER BY `real_atime` DESC ');
     }
 
     /**
@@ -768,10 +766,12 @@ final class Stats
             : sprintf("'%s'", $object_type);
 
         $results = [];
-        $sql     = sprintf("SELECT `object_count`.`object_id`, `catalog_map`.`catalog_id`, `object_count`.`user`, `object_count`.`object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`name`='allow_personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` AND `pref_recent`.`value`='1' LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`name`='allow_personal_info_time' AND `pref_time`.`user` = `object_count`.`user` AND `pref_time`.`value`='1' LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`name`='allow_personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` AND `pref_agent`.`value`='1' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `object_count`.`object_type` AND `catalog_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` IN (%s) AND `object_count`.`count_type` = '%s' ", $object_string, $count_type);
+        // catalog_id is resolved via a scalar subquery (not a JOIN) so a single play can't multiply into several
+        // result rows just because its object is mapped to more than one catalog; this keeps the query limit-friendly
+        $sql = sprintf("SELECT `object_count`.`object_id`, (SELECT MIN(`catalog_map`.`catalog_id`) FROM `catalog_map` WHERE `catalog_map`.`object_type` = `object_count`.`object_type` AND `catalog_map`.`object_id` = `object_count`.`object_id`) AS `catalog_id`, `object_count`.`user`, `object_count`.`object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`name`='allow_personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` AND `pref_recent`.`value`='1' LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`name`='allow_personal_info_time' AND `pref_time`.`user` = `object_count`.`user` AND `pref_time`.`value`='1' LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`name`='allow_personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` AND `pref_agent`.`value`='1' WHERE `object_count`.`object_type` IN (%s) AND `object_count`.`count_type` = '%s' ", $object_string, $count_type);
         // check for valid catalogs
         $sql .= (AmpConfig::get('catalog_filter'))
-            ? "AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
+            ? "AND EXISTS (SELECT 1 FROM `catalog_map` WHERE `catalog_map`.`object_type` = `object_count`.`object_type` AND `catalog_map`.`object_id` = `object_count`.`object_id` AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")) "
             : "";
 
         if ((int) $user_id > 0 || !$access100) {
@@ -1096,7 +1096,7 @@ final class Stats
 
         Dba::write($sql, $params);
 
-        if ((int) $child_id === 0) {
+        if ($child_id === 0) {
             // move consolidated history as well (merge counts on conflict)
             Dba::write("INSERT INTO `object_count_summary` (`object_type`, `object_id`, `user`, `count_type`, `count`, `date_from`, `date_to`) SELECT `old_summary`.`object_type`, ?, `old_summary`.`user`, `old_summary`.`count_type`, `old_summary`.`count`, `old_summary`.`date_from`, `old_summary`.`date_to` FROM `object_count_summary` AS `old_summary` WHERE `old_summary`.`object_type` = ? AND `old_summary`.`object_id` = ? ON DUPLICATE KEY UPDATE `count` = `object_count_summary`.`count` + VALUES(`count`), `date_from` = LEAST(`object_count_summary`.`date_from`, VALUES(`date_from`)), `date_to` = GREATEST(`object_count_summary`.`date_to`, VALUES(`date_to`));", [$new_object_id, $object_type, $old_object_id]);
             Dba::write("DELETE FROM `object_count_summary` WHERE `object_type` = ? AND `object_id` = ?;", [$object_type, $old_object_id]);
@@ -1407,6 +1407,7 @@ final class Stats
         // album, album_disk and artist roll up from the songs, so they follow once those are right
         $this->albumRepository->updateAllCounts();
         $this->albumRepository->updateAllSkipCounts();
+
         $this->artistRepository->updateAllCounts();
         $this->artistRepository->updateAllSkipCounts();
     }

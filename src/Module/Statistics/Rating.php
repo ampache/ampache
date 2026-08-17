@@ -60,8 +60,7 @@ class Rating extends database_object
     ];
 
     // Public variables
-    public int $id; // The object_id of the object rated
-    public string $type; // The object_type of object we want
+    public int $id; // The object_type of object we want
 
     /**
      * Constructor
@@ -70,10 +69,9 @@ class Rating extends database_object
      */
     public function __construct(
         ?int $rating_id,
-        string $type,
+        public string $type,
     ) {
         $this->id   = (int) $rating_id;
-        $this->type = $type;
     }
 
     /**
@@ -84,7 +82,7 @@ class Rating extends database_object
      */
     public static function build_cache(string $type, array $ids, ?int $user_id = null): bool
     {
-        if (empty($ids)) {
+        if ($ids === []) {
             return false;
         }
 
@@ -177,7 +175,7 @@ class Rating extends database_object
 
     public static function is_valid(string $type): bool
     {
-        return in_array($type, self::RATING_TYPES);
+        return in_array($type, self::RATING_TYPES, true);
     }
 
     /**
@@ -219,7 +217,7 @@ class Rating extends database_object
     public static function show(int $object_id, string $type, bool $show_global_rating = false): string
     {
         // If ratings aren't enabled don't do anything
-        if (!AmpConfig::get('ratings') || !in_array($type, self::RATING_TYPES)) {
+        if (!AmpConfig::get('ratings') || !in_array($type, self::RATING_TYPES, true)) {
             return '';
         }
 

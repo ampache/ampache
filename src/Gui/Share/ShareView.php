@@ -53,7 +53,7 @@ final class ShareView extends AbstractView
 
     public function allowsDownload(): bool
     {
-        return (bool) $this->share->allow_download;
+        return $this->share->allow_download;
     }
 
     /**
@@ -75,7 +75,7 @@ final class ShareView extends AbstractView
         }
 
         $url = (Art::isPublic() && Art::has_db($id, $type))
-            ? (Art::url($id, $type, null) ?? '')
+            ? (Art::url($id, $type) ?? '')
             : '';
 
         return ($url === '') ? Ui::get_logo_url() : $url;
@@ -136,7 +136,7 @@ final class ShareView extends AbstractView
     {
         $playlist = $this->playlist ??= $this->share->create_fake_playlist();
 
-        return (new WebPlayerView(
+        return new WebPlayerView(
             $this->webPath,
             $this->ajaxUriRetriever,
             $playlist,
@@ -148,12 +148,12 @@ final class ShareView extends AbstractView
             false,
             false,
             true
-        ))->render();
+        )->render();
     }
 
     public function renderPlayerHeaders(): string
     {
-        return (new WebPlayerHeadersView($this->webPath, $this->ajaxUriRetriever, false, true))->render();
+        return new WebPlayerHeadersView($this->webPath, $this->ajaxUriRetriever, false, true)->render();
     }
 
     #[Override]

@@ -56,8 +56,8 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
     ];
 
     public function __construct(
-        private readonly DatabaseConnectionInterface $connection,
-        private readonly LoggerInterface $logger,
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
     ) {}
 
     /**
@@ -304,8 +304,8 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
                 'id' => (int) $row['id'],
                 'name' => $row['name'],
                 'level' => (int) $row['level'],
-                'description' => T_($row['description']),
-                'value' => $row['value'],
+                'description' => T_((string) ($row['description'] ?? '')),
+                'value' => (Preference::isSecretName($row['name'])) ? '' : $row['value'],
                 'type' => $row['type'],
                 'category' => $row['category'],
                 'subcategory' => $row['subcategory']

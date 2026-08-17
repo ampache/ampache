@@ -55,6 +55,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\System\Preference;
+use Ampache\Module\Util\Rss\RssUrl;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Plugin\AmpacheLastfm;
 use Ampache\Plugin\Ampachelibrefm;
@@ -458,6 +459,7 @@ class Ui implements UiInterface
         if (!empty($id_attrib)) {
             $tag .= ' id="' . scrub_out($id_attrib) . '"';
         }
+
         $tag .= ' class="material-symbol material-symbol-' . scrub_out($name) . ' ' . scrub_out((string) $class_attrib) . '">';
         $tag .= '<title>' . scrub_out($title) . '</title>';
         $tag .= '<desc>' . scrub_out($title) . '</desc>';
@@ -476,25 +478,24 @@ class Ui implements UiInterface
         ?User $user = null,
         string $title = '',
         ?array $params = null,
+        string $slug = '',
     ): string {
-        $strparams = "";
-        if (is_array($params)) {
-            foreach ($params as $key => $value) {
-                $strparams .= "&" . scrub_out($key) . "=" . scrub_out($value);
-            }
-        }
-
-        $rsstoken = '';
+        $query = ['type' => $type->value];
         if ($user !== null && AmpConfig::get('use_auth')) {
             // On an open instance (use_auth false) every visitor shares the same default user,
             // so a token adds nothing and would leak into publicly served pages
-            $rsstoken = "&rsstoken=" . $user->getRssToken();
+            $query['rsstoken'] = $user->getRssToken();
+        }
+
+        if (is_array($params)) {
+            foreach ($params as $key => $value) {
+                $query[$key] = $value;
+            }
         }
 
         $string = (
-            '<a class="nohtml" href="' . AmpConfig::get_web_path()
-            . '/rss.php?type=' . $type->value
-            . $rsstoken . $strparams . '" target="_blank">'
+            '<a class="nohtml" href="' . scrub_out(RssUrl::published($query, $slug))
+            . '" target="_blank" rel="nofollow noopener">'
             . self::get_material_symbol(
                 'rss_feed',
                 T_('RSS Feed')
@@ -598,6 +599,7 @@ class Ui implements UiInterface
             if ($symbol === null) {
                 continue;
             }
+
             // The viewBox of the source file is carried by the <symbol>
             // (see _load_symbol_parts for why it must not stay on the
             // per-icon <svg> tag).
@@ -630,7 +632,7 @@ class Ui implements UiInterface
      */
     public static function show_box_bottom(): void
     {
-        echo (new BoxBottomView())->render();
+        echo new BoxBottomView()->render();
     }
 
     /**
@@ -640,7 +642,7 @@ class Ui implements UiInterface
      */
     public static function show_box_top(string $title = '', string $class = ''): void
     {
-        echo (new BoxTopView($title, $class))->render();
+        echo new BoxTopView($title, $class)->render();
     }
 
     public static function show_custom_style(): void
@@ -679,7 +681,7 @@ class Ui implements UiInterface
             }
         }
 
-        echo (new FooterView())->render();
+        echo new FooterView()->render();
         if (Core::get_request('profiling') !== '') {
             Dba::show_profile();
         }
@@ -752,29 +754,6 @@ class Ui implements UiInterface
         ob_flush();
         flush();
         $update_id++;
-    }
-
-    /**
-     * Displays the default error page
-     */
-    /**
-     * The three standalone error pages carry their own chrome, so each needs the logo and title the
-     * normal header would otherwise have supplied.
-     */
-    private static function _createStandaloneErrorView(
-        StandaloneErrorTypeEnum $type,
-        string $detail = '',
-    ): StandaloneErrorView {
-        $logoUrl = (string) AmpConfig::get('custom_login_logo', '');
-
-        return new StandaloneErrorView(
-            $type,
-            AmpConfig::get_web_path(),
-            ($logoUrl === '') ? self::get_logo_url('dark') : $logoUrl,
-            (string) AmpConfig::get('site_title'),
-            (bool) AmpConfig::get('demo_mode'),
-            $detail
-        );
     }
 
     /**
@@ -936,7 +915,8 @@ class Ui implements UiInterface
         if (!headers_sent()) {
             header('HTTP/1.1 403 ' . $error);
         }
-        echo self::_createStandaloneErrorView(StandaloneErrorTypeEnum::ACCESS_DENIED)->render();
+
+        echo $this->_createStandaloneErrorView(StandaloneErrorTypeEnum::ACCESS_DENIED)->render();
     }
 
     /**
@@ -948,18 +928,26 @@ class Ui implements UiInterface
         ?string $type = null,
     ): void {
         if (!Preference::has_access($name)) {
-            if ($value == '1') {
+            if (Preference::isSecretName($name)) {
+                echo "******";
+            } elseif ($value == '1') {
                 echo T_("Enabled");
             } elseif ($value == '0') {
                 echo T_("Disabled");
-            } elseif (str_ends_with($name, '_pass') || str_ends_with($name, '_api_key')) {
-                echo "******";
             } else {
                 echo $value;
             }
 
             return;
         } // if we don't have access to it
+
+        // A secret is write-only: the stored value never comes back out, so a blank submit keeps it as-is.
+        if (Preference::isSecretName($name)) {
+            $placeholder = ($value !== null && $value !== '') ? '******' : '';
+            echo '<input type="password" name="' . $name . '" value="" placeholder="' . $placeholder . '" autocomplete="new-password" />';
+
+            return;
+        }
 
         // Transcoding-format preferences render as a capability-driven output-format picker.
         // The available formats come from the configured `encode_args_<format>` keys.
@@ -973,6 +961,7 @@ class Ui implements UiInterface
                 $is_selected = ((string) $value === $format) ? ' selected="selected"' : '';
                 echo '<option value="' . $format . '"' . $is_selected . '>' . $format . "</option>\n";
             }
+
             echo "</select>\n";
 
             return;
@@ -1513,7 +1502,7 @@ class Ui implements UiInterface
                 break;
             case 'disabled_custom_metadata_fields':
                 // array keys are cast to int by php so the stored comma separated string ids need the same treatment
-                $ids     = array_map('intval', array_filter(explode(',', (string) $value), 'is_numeric'));
+                $ids     = array_map(intval(...), array_filter(explode(',', (string) $value), is_numeric(...)));
                 $options = [];
                 foreach ($this->metadataFieldRepository->getPropertyList() as $propertyId => $propertyName) {
                     $selected  = (in_array((int) $propertyId, $ids, true)) ? ' selected="selected"' : '';
@@ -1525,7 +1514,7 @@ class Ui implements UiInterface
             case 'personalfav_playlist':
             case 'personalfav_smartlist':
                 // array keys are cast to int by php so the stored comma separated string ids need the same treatment
-                $ids       = array_map('intval', array_filter(explode(',', (string) $value), 'is_numeric'));
+                $ids       = array_map(intval(...), array_filter(explode(',', (string) $value), is_numeric(...)));
                 $options   = [];
                 $playlists = ($name === 'personalfav_smartlist')
                     ? Search::get_search_array()
@@ -1545,7 +1534,15 @@ class Ui implements UiInterface
                 // construct links for granting access Ampache application to Last.fm and Libre.fm
                 $plugin_name = ucfirst(str_replace('_grant_link', '', $name));
                 $plugin      = new Plugin($plugin_name);
-                if ($plugin->_plugin instanceof Ampachelibrefm || $plugin->_plugin instanceof AmpacheLastfm) {
+                $user        = Core::get_global('user');
+                if (
+                    (
+                        $plugin->_plugin instanceof Ampachelibrefm
+                        || $plugin->_plugin instanceof AmpacheLastfm
+                    )
+                    && $user instanceof User
+                    && $plugin->load($user)
+                ) {
                     $url      = $plugin->_plugin->url;
                     $api_key  = rawurlencode((string) $plugin->_plugin->api_key);
                     $callback = rawurlencode(AmpConfig::get_web_path() . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
@@ -1592,11 +1589,7 @@ class Ui implements UiInterface
                 echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" />';
                 break;
             default:
-                if (str_ends_with($name, '_pass')) {
-                    echo '<input type="password" name="' . $name . '" value="******" />';
-                } else {
-                    echo '<input type="text" name="' . $name . '" value="' . strip_tags((string) $value) . '" />';
-                }
+                echo '<input type="text" name="' . $name . '" value="' . strip_tags((string) $value) . '" />';
 
                 break;
         }
@@ -1610,7 +1603,7 @@ class Ui implements UiInterface
         // Clear any buffered crap
         ob_end_clean();
         header("HTTP/1.1 403 Permission Denied");
-        echo self::_createStandaloneErrorView(StandaloneErrorTypeEnum::PERMISSION_DENIED, $fileName)->render();
+        echo $this->_createStandaloneErrorView(StandaloneErrorTypeEnum::PERMISSION_DENIED, $fileName)->render();
     }
 
     /**
@@ -1658,17 +1651,25 @@ class Ui implements UiInterface
         ?string $form_name = 'confirmation',
         ?bool $visible = true,
     ): void {
-        $webPath = $this->configContainer->getWebPath();
-        $path    = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+        $webPath   = $this->configContainer->getWebPath();
+        $path      = $this->isAbsoluteUrl($next_url) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+        $cancelUrl = null;
+        if ($cancel) {
+            // return_referer() already went through scrub_in(), so its & is html-escaped; decode before use or e() escapes it twice.
+            $referer = htmlspecialchars_decode(return_referer(), ENT_NOQUOTES);
+            // explicit '' survives the client-structure build unchanged, unlike $webPath; the referer already has its own "admin/" prefix when needed.
+            $refererBase = str_starts_with($referer, 'admin/') ? $this->configContainer->getWebPath('') : $webPath;
+            $cancelUrl   = sprintf('%s/%s', $refererBase, $referer);
+        }
 
-        echo (new ConfirmationView(
+        echo new ConfirmationView(
             $webPath,
             $title,
             $text,
             $path,
             (string) $form_name,
-            ($cancel) ? $webPath . '/' . return_referer() : null
-        ))->render();
+            $cancelUrl
+        )->render();
     }
 
     /**
@@ -1683,17 +1684,17 @@ class Ui implements UiInterface
         ?bool $visible = true,
     ): void {
         $webPath = $this->configContainer->getWebPath();
-        $return  = (substr_count($return_url, $webPath) !== 0) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
-        $cancel  = (substr_count($cancel_url, $webPath) !== 0) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
+        $return  = $this->isAbsoluteUrl($return_url) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
+        $cancel  = $this->isAbsoluteUrl($cancel_url) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
 
-        echo (new ConfirmationWithReturnView(
+        echo new ConfirmationWithReturnView(
             $webPath,
             $title,
             $text,
             $return,
             (string) $form_name,
             $cancel
-        ))->render();
+        )->render();
     }
 
     /**
@@ -1705,16 +1706,14 @@ class Ui implements UiInterface
         string $next_url,
     ): void {
         $webPath = $this->configContainer->getWebPath();
+        $path    = $this->isAbsoluteUrl($next_url) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 
-        // callers pass both absolute urls and bare page paths; only prefix the relative ones
-        $path = str_starts_with($next_url, $webPath) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
-
-        echo (new ContinueView(
+        echo new ContinueView(
             $webPath,
             $title,
             $text,
             $path
-        ))->render();
+        )->render();
     }
 
     public function showErrorPage(): void
@@ -1728,7 +1727,7 @@ class Ui implements UiInterface
             header('HTTP/1.1 500 Internal Server Error');
         }
 
-        echo self::_createStandaloneErrorView(StandaloneErrorTypeEnum::ERROR)->render();
+        echo $this->_createStandaloneErrorView(StandaloneErrorTypeEnum::ERROR)->render();
     }
 
     public function showFooter(): void
@@ -1761,7 +1760,7 @@ class Ui implements UiInterface
             $_SESSION['state']['sidebar_tab'] = 'home';
         }
 
-        echo (new HeaderView(
+        echo new HeaderView(
             AmpConfig::get_web_path(),
             AmpConfig::get_web_path('/admin'),
             $this->environment,
@@ -1778,7 +1777,7 @@ class Ui implements UiInterface
             $isAdmin || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
             Upload::can_upload($user),
             User::is_registered() && ($user?->getId() ?? 0) > 0
-        ))->render();
+        )->render();
     }
 
     public function showObjectNotFound(): void
@@ -1796,7 +1795,7 @@ class Ui implements UiInterface
      */
     public function showPreferenceBox(array $preferences): void
     {
-        echo (new PreferenceBoxView($preferences, $this))->render();
+        echo new PreferenceBoxView($preferences, $this)->render();
     }
 
     /**
@@ -1808,22 +1807,54 @@ class Ui implements UiInterface
             return;
         }
 
-        echo (new QueryStatsView(
+        echo new QueryStatsView(
             Dba::$stats['query'],
             database_object::$cache_hit,
             (float) AmpConfig::get('load_time_begin'),
             memory_get_peak_usage(true)
-        ))->render();
+        )->render();
     }
 
     public function showRightbar(): string
     {
-        return (new RightbarView(
+        return new RightbarView(
             $this->collectionRepository,
             $this->libraryItemLoader,
             $this->playlistLoader,
             $this->zipHandler,
             AmpConfig::get_web_path()
-        ))->render();
+        )->render();
+    }
+
+    /**
+     * Displays the default error page
+     */
+    /**
+     * The three standalone error pages carry their own chrome, so each needs the logo and title the
+     * normal header would otherwise have supplied.
+     */
+    private function _createStandaloneErrorView(
+        StandaloneErrorTypeEnum $type,
+        string $detail = '',
+    ): StandaloneErrorView {
+        $logoUrl = (string) AmpConfig::get('custom_login_logo', '');
+
+        return new StandaloneErrorView(
+            $type,
+            AmpConfig::get_web_path(),
+            ($logoUrl === '') ? self::get_logo_url('dark') : $logoUrl,
+            (string) AmpConfig::get('site_title'),
+            (bool) AmpConfig::get('demo_mode'),
+            $detail
+        );
+    }
+
+    /**
+     * callers pass both absolute urls (which may target a plain web-root page with no `/client` segment on
+     * the client structure) and bare page paths; only the latter need the web path prefixed.
+     */
+    private function isAbsoluteUrl(string $url): bool
+    {
+        return str_starts_with($url, 'http://') || str_starts_with($url, 'https://');
     }
 }

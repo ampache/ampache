@@ -71,7 +71,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $input = $request->getQueryParams();
 
         // lookup by ID
-        $user      = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
+        $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $folder_id = (isset($input['folder'])) ? (int) $input['folder'] : -1;
         $folder    = ($folder_id > 0)
             ? $this->folderRepository->findById($folder_id)
@@ -99,7 +99,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
                 || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 
-            echo (new FolderView(
+            echo new FolderView(
                 $folder,
                 $browse,
                 $this->statsFormViewFactory->createBrowse()->render(),
@@ -109,7 +109,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $mayInteract,
                 Stream_Playlist::check_autoplay_next(),
                 Stream_Playlist::check_autoplay_append()
-            ))->render();
+            )->render();
 
             $this->ui->showFooter();
 

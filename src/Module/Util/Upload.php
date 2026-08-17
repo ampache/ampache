@@ -135,8 +135,8 @@ class Upload
 
             Album::update_table_counts();
             Artist::update_table_counts();
-        } catch (Throwable $error) {
-            debug_event(self::class, 'Upload failed: ' . $error->getMessage(), 1);
+        } catch (Throwable $throwable) {
+            debug_event(self::class, 'Upload failed: ' . $throwable->getMessage(), 1);
 
             return false;
         }
@@ -260,9 +260,14 @@ class Upload
             $targetdir .= DIRECTORY_SEPARATOR . $folder;
         }
 
-        $targetdir = realpath($targetdir);
+        $targetdir      = realpath($targetdir);
+        $catalogRealDir = realpath($catalog_dir);
         debug_event(self::class, 'Target Directory `' . $targetdir, 4);
-        if ($targetdir === false || !str_contains($targetdir, $catalog_dir)) {
+        if (
+            $targetdir === false
+            || $catalogRealDir === false
+            || ($targetdir !== $catalogRealDir && !str_starts_with($targetdir, $catalogRealDir . DIRECTORY_SEPARATOR))
+        ) {
             debug_event(self::class, 'Something wrong with final upload path.', 1);
 
             return null;
@@ -446,7 +451,7 @@ class Upload
         $script = AmpConfig::get('upload_script');
         if (AmpConfig::get('allow_upload_scripts') && $script) {
             chdir($targetdir);
-            $script = str_replace('%FILE%', $targetfile, $script);
+            $script = str_replace('%FILE%', escapeshellarg($targetfile), $script);
             exec($script);
         }
     }

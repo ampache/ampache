@@ -146,7 +146,7 @@ final class AlbumEditFormRenderer extends AbstractEditFormRenderer
 
     public function getParentName(): string
     {
-        return (string) $this->getItem()->get_parent_fullname();
+        return $this->getItem()->get_parent_fullname();
     }
 
     public function getReleaseStatus(): string

@@ -104,7 +104,7 @@ final class AccountView extends AbstractView
 
     public function getTab(): string
     {
-        return (string) Core::get_request('tab');
+        return Core::get_request('tab');
     }
 
     public function getUserId(): int
@@ -115,6 +115,11 @@ final class AccountView extends AbstractView
     public function getWebsite(): string
     {
         return (string) $this->client->website;
+    }
+
+    public function hasAvatar(): bool
+    {
+        return $this->client->has_art();
     }
 
     public function hasSubsonicSecret(): bool

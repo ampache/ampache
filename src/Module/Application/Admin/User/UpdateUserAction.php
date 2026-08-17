@@ -127,7 +127,7 @@ final class UpdateUserAction extends AbstractUserAction
 
         /* If we've got an error then show edit form! */
         if (AmpError::occurred()) {
-            echo (new UserEditView($client, $this->configContainer->getWebPath('/admin'), true))->render();
+            echo new UserEditView($client, $this->configContainer->getWebPath('/admin'), true)->render();
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

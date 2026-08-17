@@ -167,6 +167,6 @@ final class StylesheetsView extends AbstractView
 
     private function getThemePath(): string
     {
-        return (string) AmpConfig::get('theme_path', '/themes/reborn') . '/templates';
+        return AmpConfig::get('theme_path', '/themes/reborn') . '/templates';
     }
 }

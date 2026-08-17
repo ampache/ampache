@@ -148,13 +148,13 @@ final class AddCatalogAction extends AbstractCatalogAction
             $catalog_id = Catalog::create($data);
 
             if ($catalog_id === 0) {
-                echo (new AddCatalogFormView(
+                echo new AddCatalogFormView(
                     $this->configContainer->getWebPath('/admin'),
                     $this->requestParser->getFromRequest('name'),
                     (bool) AmpConfig::get('allow_video'),
                     (bool) AmpConfig::get('catalog_filter'),
                     (bool) AmpConfig::get('podcast')
-                ))->render();
+                )->render();
 
                 return null;
             }
@@ -177,13 +177,13 @@ final class AddCatalogAction extends AbstractCatalogAction
                 false
             );
         } else {
-            echo (new AddCatalogFormView(
+            echo new AddCatalogFormView(
                 $this->configContainer->getWebPath('/admin'),
                 $this->requestParser->getFromRequest('name'),
                 (bool) AmpConfig::get('allow_video'),
                 (bool) AmpConfig::get('catalog_filter'),
                 (bool) AmpConfig::get('podcast')
-            ))->render();
+            )->render();
         }
 
         return null;

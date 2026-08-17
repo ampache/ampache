@@ -74,10 +74,10 @@ class PlaylistRepositoryTest extends TestCase
         $map = array_values(array_filter($statements, static fn(string $sql): bool => str_contains($sql, 'user_playlist_map')));
 
         // the smartlist rows are SearchRepository's to clean, so this sweep has to skip them
-        static::assertCount(1, $map);
-        static::assertStringContainsString("NOT LIKE 'smart\_%'", $map[0]);
-        static::assertStringContainsString('NOT IN (SELECT `id` FROM `playlist`)', $map[0]);
-        static::assertNotEmpty(array_filter($statements, static fn(string $sql): bool => str_contains($sql, 'playlist_data')));
+        self::assertCount(1, $map);
+        self::assertStringContainsString("NOT LIKE 'smart\_%'", $map[0]);
+        self::assertStringContainsString('NOT IN (SELECT `id` FROM `playlist`)', $map[0]);
+        self::assertNotEmpty(array_filter($statements, static fn(string $sql): bool => str_contains($sql, 'playlist_data')));
     }
 
     public function testDeleteAllTracksEmptiesTheList(): void
@@ -112,7 +112,7 @@ class PlaylistRepositoryTest extends TestCase
         // playlist_data, playlist, then the three object_count tables
         $this->connection->expects(static::exactly(5))
             ->method('query')
-            ->with(static::anything(), [666]);
+            ->with(self::anything(), [666]);
 
         $this->subject->delete($this->playlist(666));
     }
@@ -121,7 +121,7 @@ class PlaylistRepositoryTest extends TestCase
     {
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains('`playlist_data`.`track` = ? LIMIT 1'), [666, 3]);
+            ->with(self::stringContains('`playlist_data`.`track` = ? LIMIT 1'), [666, 3]);
 
         $this->subject->deleteTrackByNumber($this->playlist(666), 3);
     }
@@ -133,7 +133,7 @@ class PlaylistRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::stringContains('WHERE `song`.`catalog` = ? OR `live_stream`.`catalog` = ? OR `podcast_episode`.`catalog` = ? OR `video`.`catalog` = ?;'),
+                self::stringContains('WHERE `song`.`catalog` = ? OR `live_stream`.`catalog` = ? OR `podcast_episode`.`catalog` = ? OR `video`.`catalog` = ?;'),
                 [7, 7, 7, 7]
             )
             ->willReturn($result);
@@ -142,14 +142,14 @@ class PlaylistRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('666', false);
 
-        static::assertSame([666], $this->subject->getIdsByCatalog(7));
+        self::assertSame([666], $this->subject->getIdsByCatalog(7));
     }
 
     public function testGetItemsOfTypeReadsTheDurationColumnForATimedType(): void
     {
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains('`song`.`time` FROM `playlist_data`'))
+            ->with(self::stringContains('`song`.`time` FROM `playlist_data`'))
             ->willReturn($this->createMock(PDOStatement::class));
 
         $this->subject->getItemsOfType(666, 'song', 42, false, true, false);
@@ -159,9 +159,9 @@ class PlaylistRepositoryTest extends TestCase
     {
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::logicalAnd(
-                static::stringContains('0 AS `time` FROM `playlist_data`'),
-                static::logicalNot(static::stringContains('`live_stream`.`time`'))
+            ->with(self::logicalAnd(
+                self::stringContains('0 AS `time` FROM `playlist_data`'),
+                self::logicalNot(self::stringContains('`live_stream`.`time`'))
             ))
             ->willReturn($this->createMock(PDOStatement::class));
 
@@ -175,7 +175,7 @@ class PlaylistRepositoryTest extends TestCase
             ->with('SELECT MAX(`track`) AS `track` FROM `playlist_data` WHERE `playlist` = ?', [666])
             ->willReturn('4');
 
-        static::assertSame(4, $this->subject->getLastTrackNumber($this->playlist(666)));
+        self::assertSame(4, $this->subject->getLastTrackNumber($this->playlist(666)));
     }
 
     public function testPersistWritesTheSharedColumnsInOneStatement(): void
@@ -204,9 +204,9 @@ class PlaylistRepositoryTest extends TestCase
             ->method('query')
             ->willReturnCallback(function (string $sql) use ($matcher): PDOStatement {
                 if ($matcher->numberOfInvocations() === 1) {
-                    static::assertStringContainsString('DELETE FROM `playlist_data`', $sql);
+                    self::assertStringContainsString('DELETE FROM `playlist_data`', $sql);
                 } else {
-                    static::assertStringContainsString('INSERT INTO `playlist_data`', $sql);
+                    self::assertStringContainsString('INSERT INTO `playlist_data`', $sql);
                 }
 
                 return $this->createMock(PDOStatement::class);
@@ -286,11 +286,11 @@ class PlaylistRepositoryTest extends TestCase
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use ($matcher): PDOStatement {
                 match ($matcher->numberOfInvocations()) {
-                    1 => static::assertSame(
+                    1 => self::assertSame(
                         ['UPDATE `playlist` SET `collaborate` = ? WHERE `id` = ?', ['', 666]],
                         [$sql, $params]
                     ),
-                    default => static::assertSame(
+                    default => self::assertSame(
                         ['DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;', [666]],
                         [$sql, $params]
                     ),
@@ -311,19 +311,19 @@ class PlaylistRepositoryTest extends TestCase
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use ($matcher): PDOStatement {
                 match ($matcher->numberOfInvocations()) {
-                    1 => static::assertSame(
+                    1 => self::assertSame(
                         ['UPDATE `playlist` SET `collaborate` = ? WHERE `id` = ?', ['2,3', 666]],
                         [$sql, $params]
                     ),
-                    2 => static::assertSame(
+                    2 => self::assertSame(
                         ['DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (2,3);', [666]],
                         [$sql, $params]
                     ),
-                    3 => static::assertSame(
+                    3 => self::assertSame(
                         ['INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);', [666, 2]],
                         [$sql, $params]
                     ),
-                    default => static::assertSame([666, 3], $params),
+                    default => self::assertSame([666, 3], $params),
                 };
 
                 return $this->createMock(PDOStatement::class);

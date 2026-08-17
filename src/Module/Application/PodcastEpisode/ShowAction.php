@@ -80,7 +80,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         } else {
             $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 
-            echo (new PodcastEpisodeView(
+            echo new PodcastEpisodeView(
                 AmpConfig::get_web_path(),
                 $episode,
                 (bool) AmpConfig::get('directplay'),
@@ -95,7 +95,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
                 Catalog::can_remove($episode),
                 (bool) AmpConfig::get('statistical_graphs')
-            ))->render();
+            )->render();
         }
 
         $this->ui->showQueryStats();

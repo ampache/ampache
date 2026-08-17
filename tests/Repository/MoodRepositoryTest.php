@@ -49,7 +49,7 @@ class MoodRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(7);
 
-        static::assertSame(7, $this->subject->addMap(666, 'song', 42, 0));
+        self::assertSame(7, $this->subject->addMap(666, 'song', 42, 0));
     }
 
     public function testCollectGarbageSweepsEveryMappableTypeAndDropsTheEmptyMoods(): void
@@ -66,7 +66,7 @@ class MoodRepositoryTest extends TestCase
 
         // a map is orphaned by whichever object it names, and a type with no sweep keeps the mood alive for ever
         foreach (Mood::OBJECT_TYPES as $objectType) {
-            static::assertNotEmpty(
+            self::assertNotEmpty(
                 array_filter(
                     $statements,
                     static fn(string $sql): bool => str_starts_with($sql, 'DELETE FROM `mood_map`') && str_contains($sql, sprintf("`mood_map`.`object_type`='%s'", $objectType))
@@ -76,17 +76,17 @@ class MoodRepositoryTest extends TestCase
         }
 
         // a mood nothing points at any more goes, whoever created it
-        static::assertNotEmpty(
+        self::assertNotEmpty(
             array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'DELETE FROM `mood` USING `mood`'))
         );
 
         // a write for a type the enum does not hold is truncated to the error value, and no other sweep can resolve it
-        static::assertNotEmpty(
+        self::assertNotEmpty(
             array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'DELETE FROM `mood_map`') && str_contains($sql, "`object_type` = ''"))
         );
 
         // the owner is part of `unique_mood_map`, so the duplicate sweep must not take the map a user set beside the one from the file
-        static::assertNotEmpty(
+        self::assertNotEmpty(
             array_filter(
                 $statements,
                 static fn(string $sql): bool => str_starts_with($sql, 'DELETE `b` FROM `mood_map`') && str_contains($sql, '`a`.`user` <=> `b`.`user`')
@@ -101,7 +101,7 @@ class MoodRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::callback(
+                self::callback(
                     static fn(string $sql): bool => str_contains($sql, 'MAX(`mood_map`.`user`) AS `user`') && str_contains($sql, 'GROUP BY `mood`.`id`')
                 ),
                 ['song', 42]
@@ -110,7 +110,7 @@ class MoodRepositoryTest extends TestCase
 
         $result->method('fetch')->willReturn(false);
 
-        static::assertSame([], $this->subject->getTopMoods('song', 42, 0));
+        self::assertSame([], $this->subject->getTopMoods('song', 42, 0));
     }
 
     protected function setUp(): void

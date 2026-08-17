@@ -77,14 +77,14 @@ final readonly class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            echo (new LiveStreamView(
+            echo new LiveStreamView(
                 $radio,
                 Ui::is_grid_view('live_stream'),
                 (bool) AmpConfig::get('directplay'),
                 Stream_Playlist::check_autoplay_next(),
                 Stream_Playlist::check_autoplay_append(),
                 Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            ))->render();
+            )->render();
         }
 
         $this->ui->showQueryStats();

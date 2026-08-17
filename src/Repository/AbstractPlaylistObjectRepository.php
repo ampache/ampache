@@ -121,7 +121,7 @@ abstract readonly class AbstractPlaylistObjectRepository implements PlaylistObje
         $mapKey = $this->collaborateKey($item);
 
         // force int: $userIds lands unquoted in NOT IN () below
-        $collaborate = implode(',', array_map('intval', $userIds));
+        $collaborate = implode(',', array_map(intval(...), $userIds));
 
         // the column and the map are the same fact stored twice, so they are written together
         $this->connection->query(

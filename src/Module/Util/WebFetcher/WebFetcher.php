@@ -41,7 +41,7 @@ use Psr\Log\LoggerInterface;
 final readonly class WebFetcher implements WebFetcherInterface
 {
     /** @var int How many redirects a fetch will follow, each one checked before it is followed */
-    private const int MAX_REDIRECTS = 5;
+    private const int MAX_REDIRECTS = 10;
     /** @var int Curl operation timeout in seconds */
     private const int TIMEOUT = 300;
 

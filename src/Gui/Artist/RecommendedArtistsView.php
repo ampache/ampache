@@ -159,7 +159,7 @@ final class RecommendedArtistsView extends AbstractView
             ? $this->mayInteract
             : $artist->song_count <= $this->directPlayLimit;
 
-        return (new ArtistRowView(
+        return new ArtistRowView(
             $artist,
             $this->webPath,
             'cel_cover',
@@ -179,7 +179,7 @@ final class RecommendedArtistsView extends AbstractView
             $this->mayInteract && $this->sociable,
             $this->mayInteract && $this->mayEdit && canEditArtist($artist, $this->gatekeeper->getUserId()),
             $this->mayInteract && Catalog::can_remove($artist)
-        ))->render();
+        )->render();
     }
 
     #[Override]

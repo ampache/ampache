@@ -102,7 +102,7 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
             [$name, $user->getId(), $user->username, $type, $objectType, time(), time()]
         );
 
-        $collectionId = (int) $this->connection->getLastInsertedId();
+        $collectionId = $this->connection->getLastInsertedId();
 
         return ($collectionId > 0) ? $collectionId : null;
     }
@@ -208,6 +208,30 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
             'SELECT MAX(`track`) FROM `collection_map` WHERE `collection` = ?;',
             [$collectionId]
         );
+    }
+
+    /**
+     * Reads whole collection rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $collectionIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $collectionIds): array
+    {
+        if ($collectionIds === []) {
+            return [];
+        }
+
+        $idList = implode(',', array_map(intval(...), $collectionIds));
+
+        $result = $this->connection->query('SELECT * FROM `collection` WHERE `id` IN (' . $idList . ')');
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 
     /**

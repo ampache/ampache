@@ -68,6 +68,7 @@ class ArtistDeleterTest extends TestCase
     {
         $artist     = $this->createMock(Artist::class);
         $artist->id = 21;
+
         $album      = $this->createMock(Album::class);
         $albumId    = 42;
         $artistId   = 21;
@@ -138,11 +139,11 @@ class ArtistDeleterTest extends TestCase
 
         $this->subject->remove($artist);
 
-        static::assertSame(
+        self::assertSame(
             [['album', null], ['artist', $artistId]],
             $shoutGarbageCalls,
         );
-        static::assertSame(
+        self::assertSame(
             [['album', null], ['artist', $artistId]],
             $userActivityGarbageCalls,
         );
@@ -152,6 +153,7 @@ class ArtistDeleterTest extends TestCase
     {
         $artist     = $this->createMock(Artist::class);
         $artist->id = 21;
+
         $album      = $this->createMock(Album::class);
         $albumId    = 42;
 

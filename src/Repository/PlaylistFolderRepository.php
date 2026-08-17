@@ -513,7 +513,7 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
             return null;
         }
 
-        $folderId = (int) $this->connection->getLastInsertedId();
+        $folderId = $this->connection->getLastInsertedId();
 
         return ($folderId > 0) ? $folderId : null;
     }

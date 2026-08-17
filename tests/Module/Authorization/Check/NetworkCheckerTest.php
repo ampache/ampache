@@ -45,9 +45,9 @@ class NetworkCheckerTest extends TestCase
         $this->accessRepository->expects(static::never())
             ->method('findByIp');
 
-        static::assertTrue($this->subject->check(AccessTypeEnum::INTERFACE));
-        static::assertTrue($this->subject->check(AccessTypeEnum::STREAM));
-        static::assertFalse($this->subject->check(AccessTypeEnum::API));
+        self::assertTrue($this->subject->check(AccessTypeEnum::INTERFACE));
+        self::assertTrue($this->subject->check(AccessTypeEnum::STREAM));
+        self::assertFalse($this->subject->check(AccessTypeEnum::API));
     }
 
     public function testCheckDelegatesToAccessRepositoryWhenAccessControlEnabled(): void
@@ -59,14 +59,14 @@ class NetworkCheckerTest extends TestCase
         $this->accessRepository->expects(static::once())
             ->method('findByIp')
             ->with(
-                static::isType('string'),
+                self::isType('string'),
                 AccessLevelEnum::USER,
                 AccessTypeEnum::INTERFACE,
                 21,
             )
             ->willReturn(true);
 
-        static::assertTrue($this->subject->check(AccessTypeEnum::INTERFACE, 21));
+        self::assertTrue($this->subject->check(AccessTypeEnum::INTERFACE, 21));
     }
 
     public function testCheckReturnsFalseForUnsupportedTypeWhenAccessControlEnabled(): void
@@ -78,7 +78,7 @@ class NetworkCheckerTest extends TestCase
         $this->accessRepository->expects(static::never())
             ->method('findByIp');
 
-        static::assertFalse($this->subject->check(AccessTypeEnum::LOCALPLAY));
+        self::assertFalse($this->subject->check(AccessTypeEnum::LOCALPLAY));
     }
 
     protected function setUp(): void

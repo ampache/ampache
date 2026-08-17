@@ -30,7 +30,6 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\System\Preference;
-use Ampache\Repository\Model\User;
 
 /**
  * Wraps the static plugin/catalog-type/localplay model methods behind plain parameters, carrying the
@@ -121,10 +120,15 @@ final class PluginManager implements PluginManagerInterface
 
         $localplay->install();
 
-        // Mirror the web admin: enable playback globally, then set this user's localplay level and controller
-        Preference::update('allow_localplay_playback', -1, '1');
-        Preference::update('localplay_level', $userId, AccessLevelEnum::ADMIN->value);
-        Preference::update('localplay_controller', $userId, $localplay->type);
+        // Enable playback globally, then set the localplay level and controller for the given user (-1 = every user)
+        Preference::update_all('allow_localplay_playback', '1');
+        if ($userId === -1) {
+            Preference::update_all('localplay_level', AccessLevelEnum::ADMIN->value);
+            Preference::update_all('localplay_controller', $localplay->type);
+        } else {
+            Preference::update('localplay_level', $userId, AccessLevelEnum::ADMIN->value);
+            Preference::update('localplay_controller', $userId, $localplay->type);
+        }
 
         return true;
     }
@@ -161,7 +165,7 @@ final class PluginManager implements PluginManagerInterface
 
     public function uninstallLocalplay(string $type): bool
     {
-        (new LocalPlay($type))->uninstall();
+        new LocalPlay($type)->uninstall();
 
         return true;
     }
@@ -172,7 +176,7 @@ final class PluginManager implements PluginManagerInterface
             return false;
         }
 
-        $result = (new Plugin($name))->uninstall();
+        $result = new Plugin($name)->uninstall();
         Preference::rebuild_all_preferences();
 
         return $result;
@@ -184,7 +188,7 @@ final class PluginManager implements PluginManagerInterface
             return false;
         }
 
-        $result = (new Plugin($name))->upgrade();
+        $result = new Plugin($name)->upgrade();
         Preference::rebuild_all_preferences();
 
         return $result;

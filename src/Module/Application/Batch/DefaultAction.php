@@ -53,6 +53,8 @@ final readonly class DefaultAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'default';
 
+    private const int MAX_IDS = 500;
+
     public function __construct(
         private RequestParserInterface $requestParser,
         private ModelFactoryInterface $modelFactory,
@@ -95,9 +97,18 @@ final readonly class DefaultAction implements ApplicationActionInterface
         // Each item contributes its own medias, which is what already made an album zip work, just repeated per id.
         $object_ids = array_values(
             array_filter(
-                array_map('intval', explode(',', $this->requestParser->getFromRequest('id')))
+                array_map(intval(...), explode(',', $this->requestParser->getFromRequest('id')))
             )
         );
+        if (count($object_ids) > self::MAX_IDS) {
+            $this->logger->warning(
+                sprintf('Refused: %d requested ids exceeds the %d batch download limit', count($object_ids), self::MAX_IDS),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            throw new AccessDeniedException();
+        }
+
         $this->logger->debug(
             'Requested item ' . implode(', ', $object_ids),
             [LegacyLogger::CONTEXT_TYPE => self::class]

@@ -30,22 +30,27 @@ declare(strict_types=1);
 $item = $this->getItem();
 
 echo '<?xml version="1.0" encoding="utf-8"?>', "\n"; ?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://podcastindex.org/namespace/1.0" version="2.0">
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://podcastindex.org/namespace/1.0" version="2.0">
     <channel>
         <title><?php echo $this->e($item->getTitle()); ?></title>
         <link><?php echo $this->e($item->getLink()); ?></link>
         <atom:link href="<?php echo $this->e($item->getRssLink()); ?>" rel="self" type="application/rss+xml"/>
-<?php if ($item->hasImage()) { ?>
         <itunes:image href="<?php echo $this->e($item->getImageUrl()); ?>"/>
-<?php }
-if ($item->hasSummary()) { ?>
         <description><![CDATA[<?php echo nl2br(str_replace(']]>', ']]]]><![CDATA[>', $item->getSummary())); ?>]]></description>
+        <content:encoded><![CDATA[<?php echo nl2br(str_replace(']]>', ']]]]><![CDATA[>', $item->getSummary())); ?>]]></content:encoded>
         <itunes:summary><?php echo $this->e($item->getSummary()); ?></itunes:summary>
-<?php } ?>
         <language><?php echo $this->e($item->getLanguage()); ?></language>
         <generator>ampache</generator>
         <podcast:guid><?php echo $this->e($item->getPodcastGuid()); ?></podcast:guid>
+        <itunes:author><?php echo $this->e($item->getAuthor()); ?></itunes:author>
+        <itunes:explicit><?php echo $this->e($item->getExplicit()); ?></itunes:explicit>
+<?php if ($item->getSubCategory() !== '') { ?>
+        <itunes:category text="<?php echo $this->e($item->getCategory()); ?>">
+            <itunes:category text="<?php echo $this->e($item->getSubCategory()); ?>"/>
+        </itunes:category>
+<?php } else { ?>
         <itunes:category text="<?php echo $this->e($item->getCategory()); ?>"/>
+<?php } ?>
 <?php if ($item->hasOwner()) { ?>
         <itunes:owner>
             <itunes:name><?php echo $this->e($item->getOwnerName()); ?></itunes:name>
@@ -73,6 +78,12 @@ foreach ($item->getMedias() as $media) { ?>
 <?php   }
     if (!empty($media['episode'])) { ?>
             <podcast:episode><?php echo $this->e($media['episode']); ?></podcast:episode>
+<?php   }
+    if (!empty($media['image'])) { ?>
+            <itunes:image href="<?php echo $this->e($media['image']); ?>"/>
+<?php   }
+    if (!empty($media['explicit'])) { ?>
+            <itunes:explicit><?php echo $this->e($media['explicit']); ?></itunes:explicit>
 <?php   }
     if (!empty($media['url'])) { ?>
             <enclosure type="<?php echo $this->e($media['type']); ?>" length="<?php echo $this->e($media['size']); ?>" url="<?php echo $this->e($media['url']); ?>"/>

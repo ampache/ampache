@@ -39,7 +39,7 @@ use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Exception;
 use PDOStatement;
 
-final class InstallationHelper implements InstallationHelperInterface
+final readonly class InstallationHelper implements InstallationHelperInterface
 {
     /**
      * Plugins installed on a new install so the home page isn't empty out of the box.
@@ -52,8 +52,8 @@ final class InstallationHelper implements InstallationHelperInterface
     ];
 
     public function __construct(
-        private readonly UpdaterInterface $updater,
-        private readonly UpdateInfoRepositoryInterface $updateInfoRepository,
+        private UpdaterInterface $updater,
+        private UpdateInfoRepositoryInterface $updateInfoRepository,
     ) {}
 
     /**
@@ -324,9 +324,10 @@ final class InstallationHelper implements InstallationHelperInterface
                 ];
 
                 // Default local UI preferences to have a better 'minimalist first look'.
+                // sidebar_state is also rewritten client-side by sidebar.js, so it must stay readable/writable there.
                 setcookie('sidebar_state', 'collapsed', $cookie_options);
-                setcookie('browse_album_grid_view', 'false', $cookie_options);
-                setcookie('browse_artist_grid_view', 'false', $cookie_options);
+                setcookie('browse_album_grid_view', 'false', $cookie_options + ['httponly' => true]);
+                setcookie('browse_artist_grid_view', 'false', $cookie_options + ['httponly' => true]);
                 break;
             case 'community':
                 $trconfig['use_auth']                  = 'false';
@@ -737,13 +738,8 @@ final class InstallationHelper implements InstallationHelperInterface
         }
 
         $current = $this->_rewriteRulePatterns($htaccess);
-        foreach ($this->_rewriteRulePatterns((string) file_get_contents($dist)) as $pattern) {
-            if (!in_array($pattern, $current, true)) {
-                return false;
-            }
-        }
 
-        return true;
+        return array_all($this->_rewriteRulePatterns((string) file_get_contents($dist)), fn($pattern) => in_array($pattern, $current, true));
     }
 
     private function command_exists(string $command): bool

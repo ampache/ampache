@@ -46,6 +46,8 @@ class Query
     /** @var string[] The name matches the filter box offers, in the order it lists them */
     public const array MATCH_MODES = ['starts_with', 'like'];
 
+    private const int MAX_REGEX_FILTER_LENGTH = 100;
+
     private const array SORT_ORDER = [
         'active' => 'ASC',
         'last_count' => 'ASC',
@@ -169,73 +171,39 @@ class Query
      */
     public static function get_allowed_filters(string $type): array
     {
-        switch ($type) {
-            case 'album':
-                return AlbumQuery::FILTERS;
-            case 'album_disk':
-                return AlbumDiskQuery::FILTERS;
-            case 'artist':
-                return ArtistQuery::FILTERS;
-            case 'broadcast':
-                return BroadcastQuery::FILTERS;
-            case 'catalog':
-                return CatalogQuery::FILTERS;
-            case 'collection':
-                return CollectionQuery::FILTERS;
-            case 'collection_items':
-                return CollectionItemsQuery::FILTERS;
-            case 'democratic':
-                return DemocraticQuery::FILTERS;
-            case 'folder':
-                return FolderQuery::FILTERS;
-            case 'follower':
-                return FollowerQuery::FILTERS;
-            case 'label':
-                return LabelQuery::FILTERS;
-            case 'license':
-            case 'license_hidden':
-                return LicenseQuery::FILTERS;
-            case 'live_stream':
-                return LiveStreamQuery::FILTERS;
-            case 'playlist_localplay':
-                return PlaylistLocalplayQuery::FILTERS;
-            case 'playlist_media':
-                return PlaylistMediaQuery::FILTERS;
-            case 'playlist_search':
-                return PlaylistSearchQuery::FILTERS;
-            case 'playlist':
-                return PlaylistQuery::FILTERS;
-            case 'podcast_episode':
-                return PodcastEpisodeQuery::FILTERS;
-            case 'podcast':
-                return PodcastQuery::FILTERS;
-            case 'pvmsg':
-                return PvmsgQuery::FILTERS;
-            case 'share':
-                return ShareQuery::FILTERS;
-            case 'shoutbox':
-                return ShoutboxQuery::FILTERS;
-            case 'smartplaylist':
-                return SmartplaylistQuery::FILTERS;
-            case 'song_preview':
-                return SongPreviewQuery::FILTERS;
-            case 'song':
-                return SongQuery::FILTERS;
-            case 'genre':
-            case 'tag_hidden':
-            case 'tag':
-                return TagQuery::FILTERS;
-            case 'mood':
-                return MoodQuery::FILTERS;
-            case 'user':
-                return UserQuery::FILTERS;
-            case 'video':
-                return VideoQuery::FILTERS;
-            case 'wanted':
-                return WantedQuery::FILTERS;
-        }
-
-        return [];
+        return match ($type) {
+            'album' => AlbumQuery::FILTERS,
+            'album_disk' => AlbumDiskQuery::FILTERS,
+            'artist' => ArtistQuery::FILTERS,
+            'broadcast' => BroadcastQuery::FILTERS,
+            'catalog' => CatalogQuery::FILTERS,
+            'collection' => CollectionQuery::FILTERS,
+            'collection_items' => CollectionItemsQuery::FILTERS,
+            'democratic' => DemocraticQuery::FILTERS,
+            'folder' => FolderQuery::FILTERS,
+            'follower' => FollowerQuery::FILTERS,
+            'label' => LabelQuery::FILTERS,
+            'license', 'license_hidden' => LicenseQuery::FILTERS,
+            'live_stream' => LiveStreamQuery::FILTERS,
+            'playlist_localplay' => PlaylistLocalplayQuery::FILTERS,
+            'playlist_media' => PlaylistMediaQuery::FILTERS,
+            'playlist_search' => PlaylistSearchQuery::FILTERS,
+            'playlist' => PlaylistQuery::FILTERS,
+            'podcast_episode' => PodcastEpisodeQuery::FILTERS,
+            'podcast' => PodcastQuery::FILTERS,
+            'pvmsg' => PvmsgQuery::FILTERS,
+            'share' => ShareQuery::FILTERS,
+            'shoutbox' => ShoutboxQuery::FILTERS,
+            'smartplaylist' => SmartplaylistQuery::FILTERS,
+            'song_preview' => SongPreviewQuery::FILTERS,
+            'song' => SongQuery::FILTERS,
+            'genre', 'tag_hidden', 'tag' => TagQuery::FILTERS,
+            'mood' => MoodQuery::FILTERS,
+            'user' => UserQuery::FILTERS,
+            'video' => VideoQuery::FILTERS,
+            'wanted' => WantedQuery::FILTERS,
+            default => [],
+        };
     }
 
     /**
@@ -335,7 +303,7 @@ class Query
     public function get_saved(): array
     {
         // See if we have it in the local cache first
-        if (!empty($this->_cache)) {
+        if ($this->_cache !== []) {
             return $this->_cache;
         }
 
@@ -399,7 +367,7 @@ class Query
             return $this->_state['total'];
         }
 
-        if (!empty($this->_cache)) {
+        if ($this->_cache !== []) {
             return count($this->_cache);
         }
 
@@ -513,6 +481,7 @@ class Query
                 } else {
                     $this->set_filter('add_gt', strtotime((string) $value));
                 }
+
                 break;
             case 'update':
                 // Check for a range, if no range default to gt
@@ -523,6 +492,7 @@ class Query
                 } else {
                     $this->set_filter('update_gt', strtotime((string) $value));
                 }
+
                 break;
             case 'alpha_match':
                 $this->set_filter('alpha_match', $value);
@@ -607,26 +577,33 @@ class Query
             case 'year_lt':
                 $this->_state['filter'][$key] = (int) ($value);
                 break;
+            case 'regex_match':
+            case 'regex_not_match':
+                if ($this->is_static_content() || strlen((string) $value) > self::MAX_REGEX_FILTER_LENGTH) {
+                    return false;
+                }
+
+                $this->_state['filter'][$key] = $value;
+                if ($key === 'regex_match') {
+                    unset($this->_state['filter']['regex_not_match']);
+                }
+
+                if ($key === 'regex_not_match') {
+                    unset($this->_state['filter']['regex_match']);
+                }
+
+                break;
             case 'alpha_match':
             case 'equal':
             case 'exact_match':
             case 'like':
             case 'not_starts_with':
-            case 'regex_match':
-            case 'regex_not_match':
             case 'starts_with':
                 if ($this->is_static_content()) {
                     return false;
                 }
 
                 $this->_state['filter'][$key] = $value;
-                if ($key == 'regex_match') {
-                    unset($this->_state['filter']['regex_not_match']);
-                }
-
-                if ($key == 'regex_not_match') {
-                    unset($this->_state['filter']['regex_match']);
-                }
                 break;
             case 'playlist_type':
                 // 0 = your user only, 1 = public or your user (User is found using GLOBAL)
@@ -635,6 +612,7 @@ class Query
                 } else {
                     $this->_state['filter'][$key] = 1;
                 }
+
                 break;
             case 'no_genre':
                 $this->_state['filter'][$key] = 1;
@@ -651,6 +629,7 @@ class Query
                 } else {
                     $this->_state['filter'][$key] = [];
                 }
+
                 // remove any existing no_genre filter
                 unset($this->_state['filter']['no_genre']);
                 break;
@@ -663,12 +642,13 @@ class Query
                 } else {
                     $this->_state['filter'][$key] = [];
                 }
+
                 break;
             default:
                 // you might be trying to set an invalid filter that doesn't exist
-                $type = (!empty($this->get_type()))
-                    ? $this->get_type()
-                    : 'NO_TYPE';
+                $type = (empty($this->get_type()))
+                    ? 'NO_TYPE'
+                    : $this->get_type();
 
                 // warn about weird filters
                 if (!in_array($key, self::get_allowed_filters($type))) {
@@ -831,7 +811,7 @@ class Query
         }
 
         if (!empty($order)) {
-            $order = ($order == 'DESC')
+            $order = ($order === 'DESC')
                 ? 'DESC'
                 : 'ASC';
         } else {
@@ -851,7 +831,7 @@ class Query
 
         $this->_rebuild_joins();
 
-        if ($resort === true) {
+        if ($resort) {
             $this->_resort_objects();
         }
     }
@@ -864,7 +844,7 @@ class Query
      */
     public function set_sort_order(string $sort, array $default): void
     {
-        $sort      = array_map('trim', explode(',', $sort));
+        $sort      = array_map(trim(...), explode(',', $sort));
         $sort_name = $sort[0] ?: $default[0];
         $sort_type = $sort[1] ?? $default[1];
         if (empty($sort_name) || empty($sort_type)) {
@@ -1090,9 +1070,9 @@ class Query
             $sql .= $this->_sql_filter($key, $value);
         }
 
-        if (!$this->is_skip_catalog_check() && AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
+        if (!$this->is_skip_catalog_check() && AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'], true)) {
             // Add catalog enabled filter. ($this->_sql_filter( will add ' AND ' to the end of filters)
-            $sql .= ($sql == "WHERE")
+            $sql .= ($sql === "WHERE")
                 ? ' ' . Catalog::get_enable_filter($type, '`' . $type . '`.`id`') . ' AND '
                 : Catalog::get_enable_filter($type, '`' . $type . '`.`id`') . ' AND ';
         }
@@ -1118,7 +1098,7 @@ class Query
                 case 'video':
                     // `genre` is the row-list view of the `tag` table, so it takes the same filter
                     $filter_type = ($type === 'genre') ? 'tag' : $type;
-                    $sql .= ($sql == "WHERE")
+                    $sql .= ($sql === "WHERE")
                         ? ' ' . Catalog::get_user_filter($filter_type, $this->user_id ?? -1)
                         : Catalog::get_user_filter($filter_type, $this->user_id ?? -1);
                     break;
@@ -1183,6 +1163,7 @@ class Query
             if (!$joins) {
                 continue;
             }
+
             foreach ($joins as $join) {
                 $sql .= $join . ' ';
             }
@@ -1208,7 +1189,7 @@ class Query
         }
 
         $start = $this->get_start();
-        if (!$this->is_simple() || $start < 0 || ($start == 0 && $offset == 0)) {
+        if (!$this->is_simple() || $start < 0 || ($start === 0 && $offset === 0)) {
             return '';
         }
 
@@ -1266,7 +1247,7 @@ class Query
             // allow forcing a group by
             if (!empty($this->_get_group_sql())) {
                 $final_sql .= " GROUP BY " . $this->_get_group_sql() . " ";
-            } elseif ($this->get_type() == 'artist' || $this->get_type() == 'album') {
+            } elseif ($this->get_type() === 'artist' || $this->get_type() === 'album') {
                 $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
             }
 
@@ -1278,11 +1259,9 @@ class Query
 
         // apply a limit/offset limit (if set)
         $limit_sql = ($limit) ? $this->_get_limit_sql() : '';
-
-        $final_sql .= $limit_sql;
         //debug_event(self::class, "get_sql: " . $final_sql, 5);
 
-        return $final_sql;
+        return $final_sql . $limit_sql;
     }
 
     /**
@@ -1363,7 +1342,7 @@ class Query
                 }
 
                 $object_id = Dba::escape($object_id);
-                $where_sql .= sprintf('\'%s\',', $object_id);
+                $where_sql .= sprintf("'%s',", $object_id);
             }
 
             $where_sql = rtrim($where_sql, ', ');
@@ -1434,10 +1413,11 @@ class Query
             $this->set_select($this->queryType->get_select());
 
             // tag state should be set as they aren't really separate objects
-            if (in_array($this->get_type(), ['license_hidden', 'tag_hidden'])) {
+            if (in_array($this->get_type(), ['license_hidden', 'tag_hidden'], true)) {
                 $this->set_filter('hidden', 1);
             }
-            if (in_array($this->get_type(), ['genre', 'license', 'tag'])) {
+
+            if (in_array($this->get_type(), ['genre', 'license', 'tag'], true)) {
                 $this->set_filter('hidden', 0);
             }
 
@@ -1456,6 +1436,7 @@ class Query
         if ($this->queryType === null) {
             $this->set_type($this->_state['type']);
         }
+
         if ($this->queryType === null) {
             return '';
         }
@@ -1484,6 +1465,7 @@ class Query
         if ($this->queryType === null) {
             $this->set_type($this->_state['type']);
         }
+
         if ($this->queryType === null) {
             return '';
         }

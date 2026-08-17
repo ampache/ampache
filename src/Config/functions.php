@@ -493,6 +493,11 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
         case E_COMPILE_ERROR:
             $error_name = 'Zend run-time Error';
             break;
+        case E_DEPRECATED:
+        case E_USER_DEPRECATED:
+            $error_name = 'Deprecated';
+            $level      = 6;
+            break;
         case E_ALL:
             $error_name = "Strict Error";
             break;
@@ -520,6 +525,16 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
             $error_name = 'Ignored ' . $error_name;
             $level      = 7;
         }
+    }
+
+    // Deprecation notices coming from third-party code in vendor/ are noise we can't fix; bury them
+    // unless the firehose is on, but still surface deprecations from our own code.
+    if (
+        ($errno === E_DEPRECATED || $errno === E_USER_DEPRECATED)
+        && str_contains(str_replace('\\', '/', $errfile), '/vendor/')
+    ) {
+        $error_name = 'Ignored ' . $error_name;
+        $level      = 7;
     }
 
     if (!(error_reporting() & $errno)) {
@@ -599,6 +614,14 @@ function catalog_worker(string $action, ?array $catalogs = null, ?array $options
 function return_referer(): string
 {
     $referer = Core::get_server('HTTP_REFERER');
+
+    // client-side navigation rewrites the address bar before its fetch goes out, so the referer can equal this exact request.
+    $refererParts = parse_url($referer) ?: [];
+    $refererUri   = ($refererParts['path'] ?? '') . (isset($refererParts['query']) ? '?' . $refererParts['query'] : '');
+    if ($refererUri !== '' && $refererUri === Core::get_server('REQUEST_URI')) {
+        return 'index.php';
+    }
+
     if (str_ends_with($referer, '/')) {
         $file = 'index.php';
     } else {

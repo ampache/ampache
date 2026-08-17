@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\User;
 use DateTime;
+use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -146,7 +147,7 @@ class IpHistoryRepositoryTest extends TestCase
             ->with('user_ip_cardinality', 42)
             ->willReturn(42);
 
-        $statement = $this->createMock(\PDOStatement::class);
+        $statement = $this->createMock(PDOStatement::class);
         $statement->expects(static::exactly(2))
             ->method('fetch')
             ->willReturnOnConsecutiveCalls(

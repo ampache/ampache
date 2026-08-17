@@ -50,6 +50,7 @@ Ui::show_box_top(T_('Importing a Playlist from a File'), 'box box_import_playlis
     </table>
     <div class="formValidation">
         <input type="hidden" name="action" value="import_playlist" />
+        <?php echo $this->raw($this->getFormToken('import_playlist')); ?>
         <input type="submit" value="<?php echo T_('Import Playlist'); ?>" />
     </div>
 </form>

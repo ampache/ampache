@@ -36,11 +36,11 @@ final readonly class InitializationHandlerConfig implements InitializationHandle
 {
     public const string CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
-    private const string CONFIG_VERSION = '95';
+    private const string CONFIG_VERSION = '97'; // AMPACHE_CONFIG_VERSION
 
     private const string STRUCTURE = 'public';
 
-    private const string VERSION = '8.0.0'; // AMPACHE_VERSION
+    private const string VERSION = '8.0.1'; // AMPACHE_VERSION
 
     public function __construct(private EnvironmentInterface $environment) {}
 

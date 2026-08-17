@@ -55,13 +55,13 @@ final readonly class ShowAddCatalogAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        echo (new AddCatalogFormView(
+        echo new AddCatalogFormView(
             $this->configContainer->getWebPath('/admin'),
             $this->requestParser->getFromRequest('name'),
             (bool) AmpConfig::get('allow_video'),
             (bool) AmpConfig::get('catalog_filter'),
             (bool) AmpConfig::get('podcast')
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

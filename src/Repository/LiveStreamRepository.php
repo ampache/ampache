@@ -33,6 +33,7 @@ use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use PDO;
 
 /**
  * Manages database access related to Live-Streams (Radiostations)
@@ -110,6 +111,30 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
         }
 
         return $result;
+    }
+
+    /**
+     * Reads whole live_stream rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $liveStreamIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $liveStreamIds): array
+    {
+        if ($liveStreamIds === []) {
+            return [];
+        }
+
+        $idList = implode(',', array_map(intval(...), $liveStreamIds));
+
+        $result = $this->connection->query('SELECT * FROM `live_stream` WHERE `id` IN (' . $idList . ')');
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 
     /**

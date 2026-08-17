@@ -74,7 +74,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            echo (new AlbumPageView(
+            echo new AlbumPageView(
                 $albumDisk,
                 $this->browseFactory,
                 $gatekeeper->getUser(),
@@ -83,7 +83,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
                 $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('album_disk'),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ))->render();
+            )->render();
         }
 
         // Show the Footer

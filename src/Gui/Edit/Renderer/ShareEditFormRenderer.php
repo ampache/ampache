@@ -42,12 +42,12 @@ final class ShareEditFormRenderer extends AbstractEditFormRenderer
 
     public function allowDownload(): bool
     {
-        return (bool) $this->getItem()->allow_download;
+        return $this->getItem()->allow_download;
     }
 
     public function allowStream(): bool
     {
-        return (bool) $this->getItem()->allow_stream;
+        return $this->getItem()->allow_stream;
     }
 
     public function getExpireDays(): string

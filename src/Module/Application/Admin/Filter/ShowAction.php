@@ -60,6 +60,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         $this->ui->showBoxTop('Show Catalog Filters', 'box box_manage_filter');
+
         $filters = [];
         foreach ($this->catalogFilterRepository->findGroups() as $filter) {
             $filterId  = (int) $filter['id'];
@@ -71,11 +72,11 @@ final readonly class ShowAction implements ApplicationActionInterface
             ];
         }
 
-        echo (new ManageFiltersView(
+        echo new ManageFiltersView(
             $this->configContainer->getWebPath('/admin'),
             $filters,
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-        ))->render();
+        )->render();
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

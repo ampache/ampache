@@ -46,7 +46,29 @@ class FolderTest extends TestCase
             ->with(null)
             ->willReturn([]);
 
-        static::assertSame([], $subject->get_children('some-name'));
+        self::assertSame([], $subject->get_children('some-name'));
+    }
+
+    /**
+     * folder_map rows carry their own `catalog` column, so a folder listing needs the requesting user's
+     * id to honour the opt-in `catalog_filter` feature the same way every other browse type does
+     */
+    public function testGetChildrenPassesTheCurrentUserId(): void
+    {
+        $subject = new Folder();
+
+        $subject->id = 666;
+
+        $user = $this->createMock(User::class);
+        $user->method('getId')->willReturn(42);
+        $GLOBALS['user'] = $user;
+
+        $this->folderRepository->expects(static::once())
+            ->method('getChildren')
+            ->with(666, 42)
+            ->willReturn([]);
+
+        self::assertSame([], $subject->get_children('some-name'));
     }
 
     public function testGetChildrenPassesTheIdForARealFolder(): void
@@ -60,7 +82,7 @@ class FolderTest extends TestCase
             ->with(666)
             ->willReturn([]);
 
-        static::assertSame([], $subject->get_children('some-name'));
+        self::assertSame([], $subject->get_children('some-name'));
     }
 
     public function testGetFLinkClosesTheAnchor(): void
@@ -71,7 +93,7 @@ class FolderTest extends TestCase
         $subject->link = 'some-link';
         $subject->name = 'some-name';
 
-        static::assertSame(
+        self::assertSame(
             '<a href="some-link" title="some-name">some-name</a>',
             $subject->get_f_link()
         );
@@ -88,7 +110,7 @@ class FolderTest extends TestCase
             ->with($subject, 'song')
             ->willReturn([]);
 
-        static::assertSame([], $subject->get_medias('song'));
+        self::assertSame([], $subject->get_medias('song'));
     }
 
     public function testGetNameByIdReturnsAnEmptyStringWhenUnknown(): void
@@ -98,7 +120,7 @@ class FolderTest extends TestCase
             ->with(666)
             ->willReturn(null);
 
-        static::assertSame('', Folder::get_name_by_id(666));
+        self::assertSame('', Folder::get_name_by_id(666));
     }
 
     public function testGetNameByIdSkipsTheLookupForAnEmptyId(): void
@@ -106,7 +128,7 @@ class FolderTest extends TestCase
         $this->folderRepository->expects(static::never())
             ->method('getNameById');
 
-        static::assertSame('', Folder::get_name_by_id(0));
+        self::assertSame('', Folder::get_name_by_id(0));
     }
 
     public function testHasChildrenDelegatesToTheRepository(): void
@@ -120,7 +142,7 @@ class FolderTest extends TestCase
             ->with(666)
             ->willReturn(true);
 
-        static::assertTrue($subject->has_children('some-name'));
+        self::assertTrue($subject->has_children('some-name'));
     }
 
     public function testMigrateMovesTheMapRows(): void

@@ -434,6 +434,7 @@ class Stream
      */
     public static function get_now_playing(int $user_id = 0): array
     {
+        // `session`.`agent` is nullable and the join misses entirely for subsonic rows keyed by username, so the agent is defaulted below
         $sql    = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
         $params = [];
 
@@ -473,7 +474,7 @@ class Stream
                 $results[] = [
                     'media' => $media,
                     'client' => $client,
-                    'agent' => $row['agent'],
+                    'agent' => (string) ($row['agent'] ?? ''),
                     'expire' => (int) $row['expire'],
                     'position_ms' => (isset($row['position_ms'])) ? (int) $row['position_ms'] : null,
                     'playback_rate' => (isset($row['playback_rate'])) ? (float) $row['playback_rate'] : null,
@@ -565,26 +566,26 @@ class Stream
     public static function get_stream_types_for_type(string $type, ?string $player = 'webplayer'): array
     {
         $types     = [];
-        $transcode = AmpConfig::get('transcode_' . $type);
+        $transcode = self::_transcode_mode('transcode_' . $type, AmpConfig::get('transcode_' . $type));
         if ($player !== '') {
-            $player_transcode = AmpConfig::get('transcode_player_' . $player . '_' . $type);
+            $player_setting   = 'transcode_player_' . $player . '_' . $type;
+            $player_transcode = AmpConfig::get($player_setting);
             $player_encode    = AmpConfig::get('encode_player_' . $player . '_target');
             if ($player_transcode) {
                 // Override the default TYPE transcoding behavior on a per-player basis
                 // (e.g. transcode_player_webplayer_flac = "required")
-                $transcode = $player_transcode;
+                $transcode = self::_transcode_mode($player_setting, $player_transcode);
             } elseif ($player_encode) {
-                // Override the default PLAYER output format.
-                // (e.g. encode_player_webplayer_target = "ogg")
-                $transcode = $player_encode;
+                // an output format named for this player (e.g. encode_player_webplayer_target = "ogg") means transcoding to it is available
+                $transcode = 'allowed';
             }
         }
 
-        if ($transcode != 'required') {
+        if ($transcode !== 'required') {
             $types[] = 'native';
         }
 
-        if (make_bool($transcode)) {
+        if ($transcode !== 'false') {
             $types[] = 'transcode';
         }
 
@@ -814,6 +815,25 @@ class Stream
     }
 
     /**
+     * Reduce a `transcode_TYPE` setting to `required`, `allowed` or `false`, or null when it says none of them.
+     *
+     * A value is never read as a boolean here, because that turns a typo like "falsed" into transcoding enabled.
+     */
+    public static function normalize_transcode_mode(mixed $value): ?string
+    {
+        $mode = (is_bool($value))
+            ? (($value) ? 'true' : 'false')
+            : ((is_scalar($value)) ? strtolower(trim((string) $value)) : '');
+
+        return match ($mode) {
+            'required' => 'required',
+            'allowed', 'true', 'yes', 'on', '1' => 'allowed',
+            'false', 'no', 'off', '0', '' => 'false',
+            default => null,
+        };
+    }
+
+    /**
      * run_playlist_method
      *
      * This takes care of the different types of 'playlist methods'. The
@@ -1009,7 +1029,7 @@ class Stream
 
         if ($out_file) {
             // when running cache_catalog_proc redirect to the file path instead of piping
-            $command = str_replace("pipe:1", $out_file, (string) $command);
+            $command = str_replace("pipe:1", $out_file, $command);
             debug_event(self::class, 'Final command is ' . $command, 4);
             $process = proc_open($command, [], $pipes);
             if (is_resource($process)) {
@@ -1105,5 +1125,20 @@ class Stream
         }
 
         return array_merge($parray, $settings);
+    }
+
+    /**
+     * The transcoding mode a setting asks for, falling back to the documented default when it asks for nothing valid.
+     */
+    private static function _transcode_mode(string $setting, mixed $value): string
+    {
+        $mode = self::normalize_transcode_mode($value);
+        if ($mode === null) {
+            debug_event(self::class, 'Invalid ' . $setting . ' value "' . ((is_scalar($value)) ? (string) $value : gettype($value)) . '"; expected allowed, required or false', 2);
+
+            return 'false';
+        }
+
+        return $mode;
     }
 }

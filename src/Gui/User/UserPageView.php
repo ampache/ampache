@@ -147,6 +147,10 @@ final class UserPageView extends AbstractView
 
     public function getLastSeen(): string
     {
+        if (!Preference::get_by_user($this->getClientId(), 'allow_personal_info_time')) {
+            return T_('Never');
+        }
+
         return ($this->client->last_seen) ? get_datetime((int) $this->client->last_seen) : T_('Never');
     }
 
@@ -209,7 +213,7 @@ final class UserPageView extends AbstractView
         }
 
         /** @var array<int, array{object_type: mixed, object_id: int}> $items */
-        $items = (new Tmp_Playlist($listId))->get_items();
+        $items = new Tmp_Playlist($listId)->get_items();
 
         return $items;
     }

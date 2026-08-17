@@ -83,6 +83,28 @@ if ($this->showCron()) {
     <?php Ui::show_box_bottom();
 }
 
+$invalidSettings = $this->getInvalidSettings();
+if ($invalidSettings !== []) {
+    Ui::show_box_top(T_('Invalid configuration settings'), 'box box_debug_invalid'); ?>
+    <table class="tabledata striped-rows">
+        <thead>
+        <tr class="th-top">
+            <th class="cel_php_setting"><?php echo $this->e(T_('Setting')); ?></th>
+            <th class="cel_php_value"><?php echo $this->e(T_('Value')); ?></th>
+        </tr>
+        </thead>
+        <tbody>
+    <?php foreach ($invalidSettings as $setting) { ?>
+        <tr>
+            <td><?php echo $this->e($setting['key']); ?></td>
+            <td><?php echo $this->e($setting['value']); ?></td>
+        </tr>
+    <?php } ?>
+        </tbody>
+    </table>
+    <?php Ui::show_box_bottom();
+}
+
 Ui::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
     <table class="tabledata striped-rows">
         <colgroup>

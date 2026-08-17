@@ -31,7 +31,28 @@ use Ampache\Module\System\Dba;
 
 final class ObjectCache implements ObjectCacheInterface
 {
+    // `run:computeCache` and `run:cronProcess` both call compute() independently; the rebuild ends in a
+    // table RENAME-swap, so an overlapping run would double-count into the summary merge and could publish
+    // a half-built table out from under the other run.
+    private const string LOCK_NAME = 'ampache_object_cache_compute';
+
     public function compute(): void
+    {
+        $lock = Dba::fetch_assoc(Dba::read('SELECT GET_LOCK(?, 0) AS locked', [self::LOCK_NAME]));
+        if ((int) ($lock['locked'] ?? 0) !== 1) {
+            debug_event(self::class, 'compute() is already running elsewhere, skipping', 3);
+
+            return;
+        }
+
+        try {
+            $this->doCompute();
+        } finally {
+            Dba::write('SELECT RELEASE_LOCK(?)', [self::LOCK_NAME]);
+        }
+    }
+
+    private function doCompute(): void
     {
         $count_types = [
             'stream',
@@ -45,6 +66,7 @@ final class ObjectCache implements ObjectCacheInterface
             // get individual user thresholds if not the default
             $thresholds[] = (int) $row['value'];
         }
+
         // Drop duplicate thresholds: same value = identical INSERT...SELECT run per type.
         $thresholds = array_unique($thresholds);
 
@@ -91,6 +113,7 @@ final class ObjectCache implements ObjectCacheInterface
                 $sql = "INSERT INTO `cache_object_count_run` (`object_id`, `count`, `object_type`, `count_type`, `threshold`) SELECT `object_id`, SUM(`count`), `object_type`, `count_type`, 0 FROM `object_count_summary` WHERE `object_type` = '" . $object_type . "' AND `count_type` = '" . $count_type . "' GROUP BY `object_id`, `object_type`, `count_type` ON DUPLICATE KEY UPDATE `count` = `cache_object_count_run`.`count` + VALUES(`count`);";
                 Dba::write($sql);
             }
+
             $sql = "INSERT INTO `cache_object_count_run` (`object_id`, `count`, `object_type`, `count_type`, `threshold`) SELECT `album_disk`.`id`, SUM(`object_count_summary`.`count`), 'album_disk', `object_count_summary`.`count_type`, 0 FROM `object_count_summary` LEFT JOIN `song` ON `song`.`id` = `object_count_summary`.`object_id` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `object_count_summary`.`object_type` = 'song' AND `object_count_summary`.`count_type` = '" . $count_type . "' AND `album_disk`.`id` IS NOT NULL GROUP BY `album_disk`.`id`, `object_count_summary`.`count_type` ON DUPLICATE KEY UPDATE `count` = `cache_object_count_run`.`count` + VALUES(`count`);";
             Dba::write($sql);
             $sql = "INSERT INTO `cache_object_count_run` (`object_id`, `count`, `object_type`, `count_type`, `threshold`) SELECT `podcast_episode`.`podcast`, SUM(`object_count_summary`.`count`), 'podcast', `object_count_summary`.`count_type`, 0 FROM `object_count_summary` LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'podcast_episode' AND `object_count_summary`.`count_type` = '" . $count_type . "' AND `podcast_episode`.`podcast` IS NOT NULL GROUP BY `podcast_episode`.`podcast`, `object_count_summary`.`count_type` ON DUPLICATE KEY UPDATE `count` = `cache_object_count_run`.`count` + VALUES(`count`);";
