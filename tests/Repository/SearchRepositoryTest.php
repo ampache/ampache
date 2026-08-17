@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
@@ -48,8 +47,8 @@ class SearchRepositoryTest extends TestCase
             ->method('query')
             ->willReturnCallback(function (string $sql): PDOStatement {
                 // it must leave the playlist rows for PlaylistRepository, and drop only orphans
-                static::assertStringContainsString("LIKE 'smart\_%'", $sql);
-                static::assertStringContainsString("NOT IN (SELECT CONCAT('smart_', `id`) FROM `search`)", $sql);
+                self::assertStringContainsString("LIKE 'smart\_%'", $sql);
+                self::assertStringContainsString("NOT IN (SELECT CONCAT('smart_', `id`) FROM `search`)", $sql);
 
                 return $this->createMock(PDOStatement::class);
             });
@@ -100,15 +99,15 @@ class SearchRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::stringContains('INSERT INTO `search`'),
-                static::callback(static fn(array $params): bool => $params[5] === 'and' && $params[6] === 1)
+                self::stringContains('INSERT INTO `search`'),
+                self::callback(static fn(array $params): bool => $params[5] === 'and' && $params[6] === 1)
             );
 
         $this->connection->expects(static::once())
             ->method('getLastInsertedId')
             ->willReturn(666);
 
-        static::assertSame(666, $this->subject->insert($smartlist, $user, 1234));
+        self::assertSame(666, $this->subject->insert($smartlist, $user, 1234));
     }
 
     public function testInsertReturnsNullWhenNoIdCameBack(): void
@@ -122,17 +121,17 @@ class SearchRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(0);
 
-        static::assertNull($this->subject->insert($this->smartlist(0), $user, 1234));
+        self::assertNull($this->subject->insert($this->smartlist(0), $user, 1234));
     }
 
     public function testNameExistsReportsAMatch(): void
     {
         $this->connection->expects(static::once())
             ->method('fetchOne')
-            ->with(static::stringContains('WHERE `name` = ? AND `user` = ? AND `type` = ?'), ['some-name', 1, 'public'])
+            ->with(self::stringContains('WHERE `name` = ? AND `user` = ? AND `type` = ?'), ['some-name', 1, 'public'])
             ->willReturn('5');
 
-        static::assertTrue($this->subject->nameExists('some-name', 1, 'public'));
+        self::assertTrue($this->subject->nameExists('some-name', 1, 'public'));
     }
 
     public function testNameExistsReportsNoMatch(): void
@@ -141,7 +140,7 @@ class SearchRepositoryTest extends TestCase
             ->method('fetchOne')
             ->willReturn(false);
 
-        static::assertFalse($this->subject->nameExists('some-name', 1, 'public'));
+        self::assertFalse($this->subject->nameExists('some-name', 1, 'public'));
     }
 
     public function testPersistBindsRandomAsAnIntForTheTinyintColumn(): void
@@ -152,7 +151,7 @@ class SearchRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params): PDOStatement {
-                static::assertSame(0, $params[4]);
+                self::assertSame(0, $params[4]);
 
                 return $this->createMock(PDOStatement::class);
             });
@@ -225,11 +224,11 @@ class SearchRepositoryTest extends TestCase
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use ($matcher): PDOStatement {
                 match ($matcher->numberOfInvocations()) {
-                    1 => static::assertSame(
+                    1 => self::assertSame(
                         ['UPDATE `search` SET `collaborate` = ? WHERE `id` = ?', ['', 666]],
                         [$sql, $params]
                     ),
-                    default => static::assertSame(
+                    default => self::assertSame(
                         ['DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;', ['smart_666']],
                         [$sql, $params]
                     ),
@@ -250,12 +249,12 @@ class SearchRepositoryTest extends TestCase
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use ($matcher): PDOStatement {
                 match ($matcher->numberOfInvocations()) {
-                    1 => static::assertSame(
+                    1 => self::assertSame(
                         ['UPDATE `search` SET `collaborate` = ? WHERE `id` = ?', ['2', 666]],
                         [$sql, $params]
                     ),
-                    2 => static::assertSame(['smart_666'], $params),
-                    default => static::assertSame(['smart_666', 2], $params),
+                    2 => self::assertSame(['smart_666'], $params),
+                    default => self::assertSame(['smart_666', 2], $params),
                 };
 
                 return $this->createMock(PDOStatement::class);

@@ -78,7 +78,7 @@ class UserActivityRepositoryTest extends TestCase
 
         $this->subject->collectGarbage();
 
-        static::assertSame(13, $calls);
+        self::assertSame(13, $calls);
     }
 
     public function testDeleteByDateDeletesTheEntry(): void
@@ -110,7 +110,7 @@ class UserActivityRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => '666'], false);
 
-        static::assertSame(
+        self::assertSame(
             [666],
             $this->subject->getActivities(42, 5, 123456)
         );

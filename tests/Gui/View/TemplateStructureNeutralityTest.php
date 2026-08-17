@@ -66,7 +66,7 @@ class TemplateStructureNeutralityTest extends TestCase
             }
         }
 
-        static::assertSame([], $violations, 'templates hard-coding a `public/` path');
+        self::assertSame([], $violations, 'templates hard-coding a `public/` path');
     }
 
     public function testNoTemplateResolvesTheWebPathItself(): void
@@ -81,7 +81,7 @@ class TemplateStructureNeutralityTest extends TestCase
             }
         }
 
-        static::assertSame([], array_values(array_unique($violations)));
+        self::assertSame([], array_values(array_unique($violations)));
     }
 
     private function getRelativePath(SplFileInfo $file): string

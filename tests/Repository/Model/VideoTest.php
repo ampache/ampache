@@ -46,7 +46,7 @@ class VideoTest extends TestCase
 
         $subject->update([]);
 
-        static::assertSame('old-title', $subject->title);
+        self::assertSame('old-title', $subject->title);
     }
 
     public function testUpdateNullsAnUnparseableReleaseDate(): void
@@ -62,7 +62,7 @@ class VideoTest extends TestCase
 
         $subject->update(['title' => 'some-title', 'release_date' => 'not-a-date']);
 
-        static::assertNull($subject->release_date);
+        self::assertNull($subject->release_date);
     }
 
     public function testUpdateParsesTheReleaseDateIntoATimestamp(): void
@@ -77,7 +77,7 @@ class VideoTest extends TestCase
 
         $subject->update(['title' => 'some-title', 'release_date' => '2015-01-01']);
 
-        static::assertSame(strtotime('2015-01-01'), $subject->release_date);
+        self::assertSame(strtotime('2015-01-01'), $subject->release_date);
     }
 
     public function testUpdateUtimeStampsTheVideo(): void
@@ -117,9 +117,9 @@ class VideoTest extends TestCase
             ->method('update')
             ->with($subject, false);
 
-        static::assertSame(666, $subject->update(['title' => 'some-title']));
+        self::assertSame(666, $subject->update(['title' => 'some-title']));
 
-        static::assertSame('some-title', $subject->title);
+        self::assertSame('some-title', $subject->title);
     }
 
     protected function setUp(): void

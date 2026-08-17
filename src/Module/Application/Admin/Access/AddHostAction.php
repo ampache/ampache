@@ -109,14 +109,14 @@ final readonly class AddHostAction implements ApplicationActionInterface
                 )
             );
         } else {
-            echo (new AddAccessFormView(
+            echo new AddAccessFormView(
                 $this->configContainer->getWebPath('/admin'),
                 'add_host',
                 $this->requestParser->getFromRequest('name'),
                 $this->requestParser->getFromRequest('start'),
                 $this->requestParser->getFromRequest('end'),
                 ''
-            ))->render();
+            )->render();
         }
 
         $this->ui->showQueryStats();

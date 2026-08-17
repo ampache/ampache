@@ -114,11 +114,11 @@ class AlbumDeleterTest extends TestCase
 
         $this->subject->delete($album);
 
-        static::assertSame(
+        self::assertSame(
             [['song', null], ['album', $albumId]],
             $shoutGarbageCalls,
         );
-        static::assertSame(
+        self::assertSame(
             [['song', null], ['album', $albumId]],
             $useractivityGarbageCalls,
         );

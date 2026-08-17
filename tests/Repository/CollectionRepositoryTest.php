@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Repository\Model\User;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -64,12 +65,12 @@ class CollectionRepositoryTest extends TestCase
                     ],
                     [
                         'UPDATE `collection` SET `last_update` = ?, `last_count` = (SELECT COUNT(*) FROM `collection_map` WHERE `collection` = ?) WHERE `id` = ?;',
-                        static::isType('array'),
+                        self::isType('array'),
                     ]
                 )
             );
 
-        static::assertTrue($this->subject->addItem($collectionId, 42, 'song'));
+        self::assertTrue($this->subject->addItem($collectionId, 42, 'song'));
     }
 
     public function testAddItemRefusesADuplicateWhenUniquenessIsAsked(): void
@@ -85,7 +86,7 @@ class CollectionRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertFalse($this->subject->addItem(666, 42, 'song', true));
+        self::assertFalse($this->subject->addItem(666, 42, 'song', true));
     }
 
     public function testCollectGarbageRunsTheRestOfTheSweepAfterAFailedStatement(): void
@@ -109,12 +110,12 @@ class CollectionRepositoryTest extends TestCase
 
         $this->subject->collectGarbage();
 
-        static::assertGreaterThan(1, $calls);
+        self::assertGreaterThan(1, $calls);
     }
 
     public function testCreateReturnsNullWhenNothingWasInserted(): void
     {
-        $user = $this->createMock(Model\User::class);
+        $user = $this->createMock(User::class);
 
         $user->method('getId')
             ->willReturn(42);
@@ -125,7 +126,7 @@ class CollectionRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(0);
 
-        static::assertNull($this->subject->create('some-collection', $user));
+        self::assertNull($this->subject->create('some-collection', $user));
     }
 
     public function testDeleteDropsTheMembersBeforeTheCollection(): void
@@ -164,7 +165,7 @@ class CollectionRepositoryTest extends TestCase
                 false
             );
 
-        static::assertSame(
+        self::assertSame(
             [
                 [
                     'id' => 7,
@@ -182,7 +183,7 @@ class CollectionRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('fetchOne');
 
-        static::assertFalse($this->subject->objectExists('some-type', 42));
+        self::assertFalse($this->subject->objectExists('some-type', 42));
     }
 
     public function testRegenerateTrackNumbersRenumbersFromOne(): void
@@ -202,7 +203,7 @@ class CollectionRepositoryTest extends TestCase
                     ['UPDATE `collection_map` SET `track` = ? WHERE `id` = ?;', [2, 4]],
                     [
                         'UPDATE `collection` SET `last_update` = ?, `last_count` = (SELECT COUNT(*) FROM `collection_map` WHERE `collection` = ?) WHERE `id` = ?;',
-                        static::isType('array'),
+                        self::isType('array'),
                     ]
                 )
             )

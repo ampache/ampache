@@ -34,7 +34,7 @@ class BulkMailerTest extends TestCase
     {
         $this->mailer->method('isMailEnabled')->willReturn(true);
 
-        static::assertTrue($this->subject->isEnabled());
+        self::assertTrue($this->subject->isEnabled());
     }
 
     public function testSendToGroupReturnsFalseWhenMailDisabled(): void
@@ -42,7 +42,7 @@ class BulkMailerTest extends TestCase
         $this->mailer->method('isMailEnabled')->willReturn(false);
         $this->mailer->expects(static::never())->method('send_to_group');
 
-        static::assertFalse($this->subject->sendToGroup('all', 'subject', 'message'));
+        self::assertFalse($this->subject->sendToGroup('all', 'subject', 'message'));
     }
 
     public function testSendToGroupSendsWhenEnabled(): void
@@ -56,7 +56,7 @@ class BulkMailerTest extends TestCase
             ->with('users')
             ->willReturn(true);
 
-        static::assertTrue($this->subject->sendToGroup('users', 'subject', 'message'));
+        self::assertTrue($this->subject->sendToGroup('users', 'subject', 'message'));
     }
 
     protected function setUp(): void

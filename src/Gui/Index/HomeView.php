@@ -61,14 +61,14 @@ final class HomeView extends AbstractView
             return $this->browseForm;
         }
 
-        return (new DashboardFormView(
+        return new DashboardFormView(
             $this->webPath,
             (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS),
             (bool) AmpConfig::get('album_group'),
             $this->mayUse,
             (bool) AmpConfig::get('podcast'),
             (bool) AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0
-        ))->render();
+        )->render();
     }
 
     /**
@@ -114,14 +114,14 @@ final class HomeView extends AbstractView
             Song::build_cache(array_keys($data));
         }
 
-        return (new RecentlyPlayedView(
+        return new RecentlyPlayedView(
             ($allTypes) ? RecentlyPlayedMode::ALL_TYPES : RecentlyPlayedMode::SONGS,
             $data,
             $this->user,
             $userId,
             false,
             $this->webPath
-        ))->render();
+        )->render();
     }
 
     public function showMomentAlbums(): bool

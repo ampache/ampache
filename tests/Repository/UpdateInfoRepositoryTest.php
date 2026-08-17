@@ -52,7 +52,7 @@ class UpdateInfoRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(['key' => 'song', 'value' => '42'], false);
 
-        static::assertSame(['song' => 42], $this->subject->getAllCounts());
+        self::assertSame(['song' => 42], $this->subject->getAllCounts());
     }
 
     public function testGetAllFloatCountsKeepsTheFraction(): void
@@ -69,7 +69,7 @@ class UpdateInfoRepositoryTest extends TestCase
             ->willReturn(['key' => 'song_size', 'value' => '988.59661198'], false);
 
         // the integer read would round every stored megabyte contribution towards zero
-        static::assertSame(['song_size' => 988.59661198], $this->subject->getAllFloatCounts());
+        self::assertSame(['song_size' => 988.59661198], $this->subject->getAllFloatCounts());
     }
 
     public function testGetCountByKeyFallsBackToZero(): void
@@ -79,7 +79,7 @@ class UpdateInfoRepositoryTest extends TestCase
             ->with('SELECT `value` FROM `update_info` WHERE `key` = ?', ['song'])
             ->willReturn(false);
 
-        static::assertSame(0, $this->subject->getCountByKey('song'));
+        self::assertSame(0, $this->subject->getCountByKey('song'));
     }
 
     public function testGetValeByKeyReturnsNullIfNothingWasFound(): void

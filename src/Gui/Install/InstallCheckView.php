@@ -79,7 +79,7 @@ final class InstallCheckView extends AbstractInstallStepView
      */
     public function renderChecks(): string
     {
-        return (new TestTableView($this->environment, $this->getConfigPath(), false))->render();
+        return new TestTableView($this->environment, $this->getConfigPath(), false)->render();
     }
 
     #[Override]

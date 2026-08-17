@@ -73,6 +73,7 @@ final class EnclosureResolver
         if ($user !== null) {
             return $media->play_url($params, 'api', false, $user->getId(), $user->streamtoken);
         }
+
         if (!AmpConfig::get('use_auth') || !AmpConfig::get('require_session')) {
             return $media->play_url($params, 'api');
         }

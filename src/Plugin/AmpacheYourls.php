@@ -153,8 +153,8 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
                     $shorturl     = http_build_url($purl);
                 }
             }
-        } catch (FetchFailedException $exception) {
-            debug_event('yourls.plugin', 'YOURLS api http exception: ' . $exception->getMessage(), 1);
+        } catch (FetchFailedException $fetchFailedException) {
+            debug_event('yourls.plugin', 'YOURLS api http exception: ' . $fetchFailedException->getMessage(), 1);
 
             return null;
         }

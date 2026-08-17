@@ -74,7 +74,7 @@ class SongSearchTest extends MockeryTestCase
         // set_rules() reaches an access check, so the rules are given in the shape it would have produced
         $search->rules = [['albumrating', 'gte', 4]];
 
-        $result = (new SongSearch())->getSql($search);
+        $result = new SongSearch()->getSql($search);
 
         return [
             'table_sql' => $result['table_sql'],

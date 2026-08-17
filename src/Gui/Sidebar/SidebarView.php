@@ -120,9 +120,9 @@ final class SidebarView extends AbstractSidebarView
     public function renderTab(string $tabId): string
     {
         return match ($tabId) {
-            'admin' => (new AdminSidebarView($this->webPath, $this->adminPath, $this->mayAdmin))->render(),
-            'localplay' => (new LocalplaySidebarView($this->webPath))->render(),
-            'preferences' => (new PreferencesSidebarView($this->webPath, $this->mayManage, $this->allowUpload))->render(),
+            'admin' => new AdminSidebarView($this->webPath, $this->adminPath, $this->mayAdmin)->render(),
+            'localplay' => new LocalplaySidebarView($this->webPath)->render(),
+            'preferences' => new PreferencesSidebarView($this->webPath, $this->mayManage, $this->allowUpload)->render(),
             default => $this->renderHome(),
         };
     }
@@ -148,7 +148,7 @@ final class SidebarView extends AbstractSidebarView
 
     private function renderHome(): string
     {
-        return (new HomeSidebarView(
+        return new HomeSidebarView(
             $this->webPath,
             $this->albumType,
             $this->videoRepository,
@@ -157,6 +157,6 @@ final class SidebarView extends AbstractSidebarView
             $this->mayUse,
             $this->mayManage,
             $this->allowUpload
-        ))->render();
+        )->render();
     }
 }

@@ -48,7 +48,7 @@ final class UserEditView extends AbstractView
 
     public function getAccessLevel(): int
     {
-        return (int) $this->client->access;
+        return $this->client->access;
     }
 
     /**
@@ -82,7 +82,7 @@ final class UserEditView extends AbstractView
 
     public function getCatalogFilterGroup(): int
     {
-        return (int) $this->client->catalog_filter_group;
+        return $this->client->catalog_filter_group;
     }
 
     /**
@@ -187,7 +187,7 @@ final class UserEditView extends AbstractView
 
     public function isFullnamePublic(): bool
     {
-        return (bool) $this->client->fullname_public;
+        return $this->client->fullname_public;
     }
 
     public function showCatalogFilter(): bool

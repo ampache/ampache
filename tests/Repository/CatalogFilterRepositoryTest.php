@@ -62,7 +62,7 @@ class CatalogFilterRepositoryTest extends TestCase
 
         $this->subject->addCatalogToGroups(7);
 
-        static::assertSame([[], [0, 7, 1], [3, 7, 0]], $calls);
+        self::assertSame([[], [0, 7, 1], [3, 7, 0]], $calls);
     }
 
     public function testCollectGarbageCarriesOnAfterAFailedStatement(): void
@@ -85,7 +85,7 @@ class CatalogFilterRepositoryTest extends TestCase
 
         $this->subject->collectGarbage();
 
-        static::assertStringContainsString("SET `id` = 0 WHERE `name` = 'DEFAULT'", $calls[2]);
+        self::assertStringContainsString("SET `id` = 0 WHERE `name` = 'DEFAULT'", $calls[2]);
     }
 
     public function testCreateGroupReturnsTheNewId(): void
@@ -98,7 +98,7 @@ class CatalogFilterRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(4);
 
-        static::assertSame(4, $this->subject->createGroup('some-filter'));
+        self::assertSame(4, $this->subject->createGroup('some-filter'));
     }
 
     public function testDeleteGroupRefusesTheDefaultGroup(): void
@@ -106,7 +106,7 @@ class CatalogFilterRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertFalse($this->subject->deleteGroup(0));
+        self::assertFalse($this->subject->deleteGroup(0));
     }
 
     public function testDeleteGroupReportsAFailedDelete(): void
@@ -115,7 +115,7 @@ class CatalogFilterRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException('nope'));
 
-        static::assertFalse($this->subject->deleteGroup(4));
+        self::assertFalse($this->subject->deleteGroup(4));
     }
 
     public function testFindGroupsYieldsTheDefaultGroupAtIdZero(): void
@@ -131,7 +131,7 @@ class CatalogFilterRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => '0', 'name' => 'DEFAULT'], false);
 
-        static::assertSame(
+        self::assertSame(
             [['id' => 0, 'name' => 'DEFAULT']],
             iterator_to_array($this->subject->findGroups())
         );
@@ -144,7 +144,7 @@ class CatalogFilterRepositoryTest extends TestCase
             ->with('SELECT `id` FROM `catalog_filter_group` WHERE `name` = ?', ['DEFAULT'])
             ->willReturn('0');
 
-        static::assertTrue($this->subject->groupNameExists('DEFAULT', -1));
+        self::assertTrue($this->subject->groupNameExists('DEFAULT', -1));
     }
 
     public function testGroupNameExistsTreatsTheDefaultGroupAsFound(): void
@@ -155,7 +155,7 @@ class CatalogFilterRepositoryTest extends TestCase
             ->with('SELECT `id` FROM `catalog_filter_group` WHERE `name` = ? AND `id` != ?', ['DEFAULT', 4])
             ->willReturn('0');
 
-        static::assertTrue($this->subject->groupNameExists('DEFAULT', 4));
+        self::assertTrue($this->subject->groupNameExists('DEFAULT', 4));
     }
 
     public function testHasAccessAsksTheDefaultGroupForTheSystemUser(): void
@@ -168,7 +168,7 @@ class CatalogFilterRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertFalse($this->subject->hasAccess(7, -1));
+        self::assertFalse($this->subject->hasAccess(7, -1));
     }
 
     public function testHasAccessJoinsTheUsersGroupOtherwise(): void
@@ -181,7 +181,7 @@ class CatalogFilterRepositoryTest extends TestCase
             )
             ->willReturn('7');
 
-        static::assertTrue($this->subject->hasAccess(7, 42));
+        self::assertTrue($this->subject->hasAccess(7, 42));
     }
 
     public function testInsertCatalogsForGroupBindsEveryRow(): void
@@ -193,7 +193,7 @@ class CatalogFilterRepositoryTest extends TestCase
                 [4, 1, 1, 4, 3, 0]
             );
 
-        static::assertTrue($this->subject->insertCatalogsForGroup(4, [1 => 1, 3 => 0]));
+        self::assertTrue($this->subject->insertCatalogsForGroup(4, [1 => 1, 3 => 0]));
     }
 
     public function testInsertCatalogsForGroupSkipsTheStatementForAnEmptySet(): void
@@ -201,7 +201,7 @@ class CatalogFilterRepositoryTest extends TestCase
         $this->connection->expects(static::never())
             ->method('query');
 
-        static::assertTrue($this->subject->insertCatalogsForGroup(4, []));
+        self::assertTrue($this->subject->insertCatalogsForGroup(4, []));
     }
 
     public function testRepairDefaultGroupDoesNothingWhenItAlreadySitsAtZero(): void
@@ -212,7 +212,7 @@ class CatalogFilterRepositoryTest extends TestCase
 
         $this->connection->expects(static::never())->method('query');
 
-        static::assertFalse($this->subject->repairDefaultGroup());
+        self::assertFalse($this->subject->repairDefaultGroup());
     }
 
     public function testRepairDefaultGroupReseatsItAndBumpsTheAutoIncrement(): void
@@ -231,7 +231,7 @@ class CatalogFilterRepositoryTest extends TestCase
                 )
             );
 
-        static::assertTrue($this->subject->repairDefaultGroup());
+        self::assertTrue($this->subject->repairDefaultGroup());
     }
 
     public function testSetCatalogEnabledInsertsWhenTheMappingIsMissing(): void
@@ -251,7 +251,7 @@ class CatalogFilterRepositoryTest extends TestCase
                 [1, 4, 7]
             );
 
-        static::assertTrue($this->subject->setCatalogEnabled(4, 7, 1));
+        self::assertTrue($this->subject->setCatalogEnabled(4, 7, 1));
     }
 
     public function testSetCatalogEnabledUpdatesTheExistingMappingOfCatalogZero(): void
@@ -268,7 +268,7 @@ class CatalogFilterRepositoryTest extends TestCase
                 [0, 4, 0]
             );
 
-        static::assertTrue($this->subject->setCatalogEnabled(4, 0, 0));
+        self::assertTrue($this->subject->setCatalogEnabled(4, 0, 0));
     }
 
     protected function setUp(): void

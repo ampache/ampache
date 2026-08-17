@@ -59,14 +59,14 @@ final class RegistrationConfirmationView extends AbstractRegisterPageView
             $text = T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information');
         }
 
-        return (new ConfirmationView(
+        return new ConfirmationView(
             $this->getWebPath(),
             T_('Your account has been created'),
             $text,
             $this->getWebPath() . '/login.php',
             'confirmation',
             null
-        ))->render();
+        )->render();
     }
 
     #[Override]

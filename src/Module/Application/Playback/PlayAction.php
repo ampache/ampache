@@ -524,6 +524,7 @@ final readonly class PlayAction implements ApplicationActionInterface
 
                     return null;
                 }
+
                 if (!Core::is_readable(Core::conv_lc_file((string) $media->file))) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently unreadable, song skipped",
@@ -590,6 +591,7 @@ final readonly class PlayAction implements ApplicationActionInterface
 
                     return null;
                 }
+
                 if (!Core::is_readable(Core::conv_lc_file((string) $media->file))) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently unreadable, song skipped",
@@ -913,7 +915,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                     $end   = $file_size - 1;
                 } else {
                     $end = ($range_values >= 2)
-                        ? (int) min($end, $file_size - 1)
+                        ? min($end, $file_size - 1)
                         : $file_size - 1;
                 }
 
@@ -958,14 +960,14 @@ final readonly class PlayAction implements ApplicationActionInterface
             // Read a fraction of the allowance at a time rather than a whole second's worth, so the client sees a
             // steady trickle instead of a burst followed by an idle second it has to buffer around.
             $read_size = ($rate_limit > 0)
-                ? (int) max(1024, intdiv($rate_limit, self::THROTTLE_SLICES_PER_SECOND))
+                ? max(1024, intdiv($rate_limit, self::THROTTLE_SLICES_PER_SECOND))
                 : self::DOWNLOAD_BUFFER_SIZE;
 
             // The range, if one was asked for, is what bounds this loop; feof alone would run past the end of it.
             $started = microtime(true);
             $sent    = 0;
             while ($sent < $stream_size && !feof($filepointer) && connection_status() === 0) {
-                $buffer = fread($filepointer, (int) max(1, min($read_size, $stream_size - $sent)));
+                $buffer = fread($filepointer, max(1, min($read_size, $stream_size - $sent)));
                 if ($buffer === false || $buffer === '') {
                     break;
                 }
@@ -1231,7 +1233,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                 $start = max(0, $streamConfiguration['file_size'] + $start);
                 $end   = $streamConfiguration['file_size'] - 1;
             } elseif ($range_values >= 2) {
-                $end = (int) min($end, $streamConfiguration['file_size'] - 1);
+                $end = min($end, $streamConfiguration['file_size'] - 1);
             } else {
                 $end = $streamConfiguration['file_size'] - 1;
             }

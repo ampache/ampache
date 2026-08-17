@@ -85,7 +85,7 @@ final class AddShoutView extends AbstractView
 
     public function getShoutbox(): string
     {
-        return ($this->shouts === []) ? '' : (new ShoutboxView($this->shoutRenderer, $this->shouts))->render();
+        return ($this->shouts === []) ? '' : new ShoutboxView($this->shoutRenderer, $this->shouts)->render();
     }
 
     public function getShoutboxTitle(): string

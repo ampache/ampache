@@ -56,9 +56,9 @@ final readonly class ShowCatalogsAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Show Catalogs'), 'box box_manage_catalogs');
-        echo (new ManageCatalogsView(
+        echo new ManageCatalogsView(
             $this->configContainer->getWebPath('/admin')
-        ))->render();
+        )->render();
 
         $catalogs = Catalog::get_all_catalogs();
         $browse   = $this->browseFactory->create();

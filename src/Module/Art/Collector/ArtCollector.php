@@ -97,7 +97,7 @@ final readonly class ArtCollector implements ArtCollectorInterface
         $artOrder = $this->configContainer->getArray('art_order');
 
         /* If it's not set */
-        if (empty($artOrder)) {
+        if ($artOrder === []) {
             // They don't want art!
             $this->logger->warning(
                 'art_order is empty, skipping art gathering',

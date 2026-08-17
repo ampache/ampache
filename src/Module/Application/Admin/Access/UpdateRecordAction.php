@@ -89,13 +89,13 @@ final readonly class UpdateRecordAction implements ApplicationActionInterface
         }
 
         if (AmpError::occurred()) {
-            echo (new EditAccessFormView(
+            echo new EditAccessFormView(
                 $this->configContainer->getWebPath('/admin'),
                 new AccessListItem(
                     $this->modelFactory,
                     $this->modelFactory->createAccess($accessId)
                 )
-            ))->render();
+            )->render();
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),

@@ -103,12 +103,12 @@ class Recommendation
         }
 
         // Read before the wiki check: an album with no description still has a last.fm page to link to
-        if (isset($xml->album->url)) {
+        if (property_exists($xml->album, 'url') && $xml->album->url !== null) {
             $results['lastfm_url'] = (string) $xml->album->url;
         }
 
         // last.fm omits the wiki element entirely for albums without a description
-        if (!isset($xml->album->wiki)) {
+        if (!property_exists($xml->album, 'wiki') || $xml->album->wiki === null) {
             return $results;
         }
 
@@ -182,11 +182,11 @@ class Recommendation
         }
 
         // Read before the bio check: an artist with no biography still has a last.fm page to link to
-        if (isset($xml->artist->url)) {
+        if (property_exists($xml->artist, 'url') && $xml->artist->url !== null) {
             $results['lastfm_url'] = (string) $xml->artist->url;
         }
 
-        if (!isset($xml->artist->bio)) {
+        if (!property_exists($xml->artist, 'bio') || $xml->artist->bio === null) {
             return $results;
         }
 
@@ -242,7 +242,7 @@ class Recommendation
             return $results;
         }
 
-        if (!isset($xml->artist->bio)) {
+        if (!property_exists($xml->artist, 'bio') || $xml->artist->bio === null) {
             return $results;
         }
 

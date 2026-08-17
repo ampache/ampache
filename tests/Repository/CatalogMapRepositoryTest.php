@@ -56,7 +56,7 @@ class CatalogMapRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::stringContains('INSERT IGNORE INTO `catalog_map`'),
+                self::stringContains('INSERT IGNORE INTO `catalog_map`'),
                 [42, 42, 42, 42]
             );
 
@@ -92,8 +92,8 @@ class CatalogMapRepositoryTest extends TestCase
 
         $this->subject->collectGarbage([CatalogMapTableEnum::VIDEO]);
 
-        static::assertCount(2, $calls);
-        static::assertSame('DELETE FROM `catalog_map` WHERE `catalog_id` = 0', $calls[1]);
+        self::assertCount(2, $calls);
+        self::assertSame('DELETE FROM `catalog_map` WHERE `catalog_id` = 0', $calls[1]);
     }
 
     public function testCollectGarbageSweepsTheThreeArtistRolesBeforeCatalogZero(): void
@@ -110,10 +110,10 @@ class CatalogMapRepositoryTest extends TestCase
 
         $this->subject->collectGarbage([CatalogMapTableEnum::ARTIST]);
 
-        static::assertStringContainsString("`object_type` = 'album_artist'", $calls[0]);
-        static::assertStringContainsString("`object_type` = 'song_artist'", $calls[1]);
-        static::assertStringContainsString("`object_type` = 'artist'", $calls[2]);
-        static::assertSame('DELETE FROM `catalog_map` WHERE `catalog_id` = 0', $calls[3]);
+        self::assertStringContainsString("`object_type` = 'album_artist'", $calls[0]);
+        self::assertStringContainsString("`object_type` = 'song_artist'", $calls[1]);
+        self::assertStringContainsString("`object_type` = 'artist'", $calls[2]);
+        self::assertSame('DELETE FROM `catalog_map` WHERE `catalog_id` = 0', $calls[3]);
     }
 
     public function testCollectGarbageUsesTheTableNameOfANonArtistType(): void
@@ -130,8 +130,8 @@ class CatalogMapRepositoryTest extends TestCase
 
         $this->subject->collectGarbage([CatalogMapTableEnum::PODCAST_EPISODE]);
 
-        static::assertSame(
-            'DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `podcast_episode`.`catalog` AS `catalog_id`, `podcast_episode`.`id` AS `object_id` FROM `podcast_episode`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = \'podcast_episode\' AND `valid_maps`.`object_id` IS NULL;',
+        self::assertSame(
+            "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `podcast_episode`.`catalog` AS `catalog_id`, `podcast_episode`.`id` AS `object_id` FROM `podcast_episode`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = 'podcast_episode' AND `valid_maps`.`object_id` IS NULL;",
             $calls[0]
         );
     }
@@ -157,7 +157,7 @@ class CatalogMapRepositoryTest extends TestCase
                 [42, 'artist', 666]
             );
 
-        static::assertTrue($this->subject->migrate('artist', 666, 42));
+        self::assertTrue($this->subject->migrate('artist', 666, 42));
     }
 
     public function testMigrateReportsAFailedUpdate(): void
@@ -166,14 +166,14 @@ class CatalogMapRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException('nope'));
 
-        static::assertFalse($this->subject->migrate('artist', 666, 42));
+        self::assertFalse($this->subject->migrate('artist', 666, 42));
     }
 
     public function testRebuildDerivesThePlaylistCatalogFromItsSongs(): void
     {
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(static::stringContains("SELECT `song`.`catalog`, 'playlist', `playlist`.`id` FROM `playlist`"));
+            ->with(self::stringContains("SELECT `song`.`catalog`, 'playlist', `playlist`.`id` FROM `playlist`"));
 
         $this->subject->rebuild(CatalogMapTableEnum::PLAYLIST);
     }
@@ -182,7 +182,7 @@ class CatalogMapRepositoryTest extends TestCase
     {
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album_disk`.`catalog`, \'album_disk\', `album_disk`.`id` FROM `album_disk` GROUP BY `album_disk`.`catalog`, \'album_disk\', `album_disk`.`id`;');
+            ->with("INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album_disk`.`catalog`, 'album_disk', `album_disk`.`id` FROM `album_disk` GROUP BY `album_disk`.`catalog`, 'album_disk', `album_disk`.`id`;");
 
         $this->subject->rebuild(CatalogMapTableEnum::ALBUM_DISK);
     }

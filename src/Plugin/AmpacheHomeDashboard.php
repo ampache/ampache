@@ -60,13 +60,6 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
     #[Override]
     public string $version = '000002';
 
-    private AlbumRepositoryInterface $albumRepository;
-
-    /**
-     * Constructor
-     */
-    private BrowseFactoryInterface $browseFactory;
-
     private int $maxitems;
     private bool $newest;
     private int $order = 0;
@@ -79,11 +72,12 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
     private User $user;
 
     public function __construct(
-        BrowseFactoryInterface $browseFactory,
-        AlbumRepositoryInterface $albumRepository,
+        /**
+         * Constructor
+         */
+        private readonly BrowseFactoryInterface $browseFactory,
+        private readonly AlbumRepositoryInterface $albumRepository,
     ) {
-        $this->browseFactory   = $browseFactory;
-        $this->albumRepository = $albumRepository;
         $this->description     = T_('Show Album dashboard sections on the homepage');
     }
 

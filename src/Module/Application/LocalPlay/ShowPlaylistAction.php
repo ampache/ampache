@@ -47,7 +47,7 @@ final class ShowPlaylistAction extends AbstractLocalPlayAction
     public function __construct(
         ConfigContainerInterface $configContainer,
         private readonly UiInterface $ui,
-        private BrowseFactoryInterface $browseFactory,
+        private readonly BrowseFactoryInterface $browseFactory,
     ) {
         parent::__construct($configContainer);
         $this->configContainer = $configContainer;
@@ -71,11 +71,11 @@ final class ShowPlaylistAction extends AbstractLocalPlayAction
 
         // Pull the current playlist and require the template
         $objects = $localplay->get();
-        echo (new LocalplayStatusView(
+        echo new LocalplayStatusView(
             $localplay,
             $this->browseFactory,
             $objects
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

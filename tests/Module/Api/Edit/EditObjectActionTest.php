@@ -91,7 +91,7 @@ class EditObjectActionTest extends TestCase
         // the whole point of the action: whatever the form posted has to reach the model's update() untouched
         $libitem->expects(static::once())
             ->method('update')
-            ->with(static::callback(static fn(array $data): bool => $data['title'] === 'some-title'))
+            ->with(self::callback(static fn(array $data): bool => $data['title'] === 'some-title'))
             ->willReturn(666);
 
         $response = $this->subject->run(
@@ -99,7 +99,7 @@ class EditObjectActionTest extends TestCase
             $gatekeeper
         );
 
-        static::assertInstanceOf(ResponseInterface::class, $response);
+        self::assertInstanceOf(ResponseInterface::class, $response);
     }
 
     public function testRunResolvesShareThroughItsOwnRepository(): void
@@ -116,7 +116,7 @@ class EditObjectActionTest extends TestCase
 
         $share->expects(static::once())
             ->method('update')
-            ->with(static::isType('array'), $user)
+            ->with(self::isType('array'), $user)
             ->willReturn(true);
 
         $this->subject->run(
@@ -136,7 +136,7 @@ class EditObjectActionTest extends TestCase
             ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->willReturn(true);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run(
                 $this->createRequest(['type' => 'song_row', 'id' => '666'], ['id' => '666']),
                 $this->createGatekeeper()
@@ -151,7 +151,7 @@ class EditObjectActionTest extends TestCase
         $this->libraryItemLoader->method('load')->willReturn($libitem);
         $libitem->expects(static::never())->method('update');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run(
                 $this->createRequest(['type' => 'song_row', 'id' => '666'], ['title' => 'some-title']),
                 $this->createGatekeeper()
@@ -163,7 +163,7 @@ class EditObjectActionTest extends TestCase
     {
         $this->libraryItemLoader->method('load')->willReturn(null);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run(
                 $this->createRequest(['type' => 'song_row', 'id' => '666'], ['id' => '666']),
                 $this->createGatekeeper()
@@ -182,7 +182,7 @@ class EditObjectActionTest extends TestCase
         $gatekeeper->method('getUser')->willReturn(null);
         $gatekeeper->method('mayAccess')->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run(
                 $this->createRequest(['type' => 'song_row', 'id' => '666'], ['id' => '666']),
                 $gatekeeper
@@ -195,7 +195,7 @@ class EditObjectActionTest extends TestCase
         $this->libraryItemLoader->expects(static::never())->method('load');
         $this->shareRepository->expects(static::never())->method('findById');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run(
                 $this->createRequest(['type' => 'catalog_row', 'id' => '666'], ['id' => '666']),
                 $this->createGatekeeper()
@@ -212,7 +212,7 @@ class EditObjectActionTest extends TestCase
         $captured = null;
         $libitem->expects(static::once())
             ->method('update')
-            ->with(static::callback(static function (array $data) use (&$captured): bool {
+            ->with(self::callback(static function (array $data) use (&$captured): bool {
                 $captured = $data;
 
                 return true;
@@ -227,8 +227,8 @@ class EditObjectActionTest extends TestCase
             $this->createGatekeeper()
         );
 
-        static::assertIsArray($captured);
-        static::assertStringNotContainsString('<script>', (string) $captured['title']);
+        self::assertIsArray($captured);
+        self::assertStringNotContainsString('<script>', (string) $captured['title']);
     }
 
     protected function setUp(): void
@@ -265,7 +265,7 @@ class EditObjectActionTest extends TestCase
         $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
         $gatekeeper->method('getUser')->willReturn($user);
         $gatekeeper->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, static::isInstanceOf(AccessLevelEnum::class))
+            ->with(AccessTypeEnum::INTERFACE, self::isInstanceOf(AccessLevelEnum::class))
             ->willReturn(true);
 
         return $gatekeeper;

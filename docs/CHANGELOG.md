@@ -29,7 +29,7 @@
 * `php bin/cli run:cronProcess`'s garbage collection now shares the same lock as the other garbage collection triggers, so a scheduled cron run can't race a manual one
 * `run:computeCache` and `run:cronProcess`'s cache rebuild now take their own lock, so two overlapping runs can't double-count the results or publish a half-rebuilt table
 * UPnP playlist browsing counts a playlist's tracks without loading them, the same way the rest of the app already does
-* Row-prefetch caching (avoiding a query per row) is extended to more listings: Browse now also covers podcast, podcast episode, live stream, label, catalog, collection and folder pages, and the JSON/XML API list endpoints (album, artist, catalog, playlist, podcast, podcast episode, song, tag, video) now warm the same object/rating/userflag caches before their loop instead of querying per item
+* Row-prefetch caching (avoiding a query per row) is extended to more listings: Browse now also covers podcast, podcast episode, live stream, label, catalog, collection, folder, user, follower, share, broadcast, private message and wanted-album pages, and the JSON/XML API list endpoints (album, artist, catalog, playlist, podcast, podcast episode, song, tag, video, user, share) now warm the same object/rating/userflag caches before their loop instead of querying per item
 * Art existence/metadata lookups (`has_db`/`has_art`) are batch-prefetched the same way during browse and artist/playlist/tag/video listing, instead of querying disk or the database per row
 * Album/album disk/video search read the catalog id straight off the row instead of joining `catalog_map`, since it's already stored there directly
 * Config version 97
@@ -47,9 +47,16 @@
   * `preferences.php` no longer renders for an unregistered/guest visitor
   * Plugin credential preferences (api keys, tokens, passwords) are write-only in the edit form; the stored value is never echoed back, only replaced
   * The `user_preferences` API method (and REST `preferences`) returned those same plugin credential values in the response; they're blanked there too
+  * The single-preference lookups (`preference`, `user_preference`, `preference_create`, `preference_edit`, `preference_delete`) still returned the raw value for a secret-named preference; `Preference::get()` now blanks it the same way
+* The account preferences page and the admin user-edit page showed the avatar delete link even when the user had no avatar set
 * An unregistered/guest visitor could upload and import a playlist file, or export every podcast subscription in the system, neither of which checked for a real account; importing a playlist also now verifies the request came from Ampache's own form
 * A user's last-seen date/time on their profile page ignored their `allow_personal_info_time` preference, unlike the recent-activity list right next to it on the same page
 * The Last.fm/Libre.fm grant-access link on the preferences page was missing its `api_key`, so granting access failed
+* Cancel/confirmation dialogs (`show_confirmation`, `show_confirmation_with_return`, `show_continue`)
+  * A callback url that merely contained the web path as a substring, rather than actually being absolute, had the web path prepended again and was mangled
+  * `return_referer()` could return the current request's own url when client-side navigation had already rewritten the address bar, sending Cancel back to the page it was on instead of the previous one
+  * The referer had already been html-escaped once before reaching the link builder, so its `&` was escaped a second time
+* The admin debug preferences page showed several boolean preferences (`api_enable_8`, `cli_no_color`, `playlist_art_mosaic`, `public_images`, `show_collection`, `show_folder`, `user_create_apikey`) with the wrong input type, because they were missing from `Preference::is_boolean()`
 * Outbound fetches
   * Now check every redirect hop against the same private-address rule as the initial url, not just the url as given; applies to remote/radio stream playback, art fetching, and the Lyrist and YOURLS plugins
   * The LrcLib and AudioMuse-AI plugins didn't check the configured server url at all before fetching from it; they now do

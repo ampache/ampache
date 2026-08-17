@@ -61,7 +61,7 @@ final class ShowEditAction extends AbstractUserAction
         }
 
         $this->ui->showHeader();
-        echo (new UserEditView($user, $this->configContainer->getWebPath('/admin'), true))->render();
+        echo new UserEditView($user, $this->configContainer->getWebPath('/admin'), true)->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

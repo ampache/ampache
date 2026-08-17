@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -43,7 +44,7 @@ class BroadcastRepositoryTest extends TestCase
         // a live broadcast also has started = 1, so only the ones with no key may be touched here
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('UPDATE `broadcast` SET `started` = 0, `song` = 0, `listeners` = 0 WHERE `started` = 1 AND (`key` IS NULL OR `key` = \'\')');
+            ->with("UPDATE `broadcast` SET `started` = 0, `song` = 0, `listeners` = 0 WHERE `started` = 1 AND (`key` IS NULL OR `key` = '')");
 
         $this->subject->collectGarbage();
     }
@@ -61,7 +62,7 @@ class BroadcastRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(666);
 
-        static::assertSame(
+        self::assertSame(
             666,
             $this->subject->create(42, 'some-name', 'some-description')
         );
@@ -88,7 +89,7 @@ class BroadcastRepositoryTest extends TestCase
 
         $this->modelFactory->method('createBroadcast')->willReturn($broadcast);
 
-        static::assertNull($this->subject->findById(666));
+        self::assertNull($this->subject->findById(666));
     }
 
     public function testFindByIdReturnsTheLoadedBroadcast(): void
@@ -101,7 +102,7 @@ class BroadcastRepositoryTest extends TestCase
             ->with(666)
             ->willReturn($broadcast);
 
-        static::assertSame($broadcast, $this->subject->findById(666));
+        self::assertSame($broadcast, $this->subject->findById(666));
     }
 
     public function testFindByKeyReturnsNullIfTheKeyIsUnknown(): void
@@ -113,7 +114,7 @@ class BroadcastRepositoryTest extends TestCase
         $this->modelFactory->expects(static::never())
             ->method('createBroadcast');
 
-        static::assertNull($this->subject->findByKey('some-key'));
+        self::assertNull($this->subject->findByKey('some-key'));
     }
 
     public function testFindByKeyReturnsTheBroadcast(): void
@@ -130,7 +131,7 @@ class BroadcastRepositoryTest extends TestCase
             ->with(666)
             ->willReturn($broadcast);
 
-        static::assertSame(
+        self::assertSame(
             $broadcast,
             $this->subject->findByKey('some-key')
         );
@@ -149,7 +150,32 @@ class BroadcastRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturnOnConsecutiveCalls(1, 2, false);
 
-        static::assertSame([1, 2], $this->subject->getIdsByUser(42));
+        self::assertSame([1, 2], $this->subject->getIdsByUser(42));
+    }
+
+    public function testGetRowsByIdsCastsTheIdsIntoTheStatement(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT * FROM `broadcast` WHERE `id` IN (1,0,3)')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(['id' => '1'], false);
+
+        self::assertSame([['id' => '1']], $this->subject->getRowsByIds([1, 'x', 3]));
+    }
+
+    public function testGetRowsByIdsReturnsNothingForAnEmptyList(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->getRowsByIds([]));
     }
 
     public function testPersistInsertsABroadcastThatHasNoIdYet(): void
@@ -170,7 +196,7 @@ class BroadcastRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(666);
 
-        static::assertSame(666, $this->subject->persist($broadcast));
+        self::assertSame(666, $this->subject->persist($broadcast));
     }
 
     public function testResetStartedStateClearsEveryRunningRow(): void
@@ -181,10 +207,10 @@ class BroadcastRepositoryTest extends TestCase
         // nothing can still be running once the server holding those connections has gone
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('UPDATE `broadcast` SET `started` = 0, `key` = \'\', `song` = 0, `listeners` = 0 WHERE `started` = 1')
+            ->with("UPDATE `broadcast` SET `started` = 0, `key` = '', `song` = 0, `listeners` = 0 WHERE `started` = 1")
             ->willReturn($result);
 
-        static::assertSame(2, $this->subject->resetStartedState());
+        self::assertSame(2, $this->subject->resetStartedState());
     }
 
     public function testUpdateListenersWritesTheCount(): void
@@ -225,7 +251,7 @@ class BroadcastRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = \'0\', `listeners` = \'0\' WHERE `id` = ?',
+                "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?",
                 [1234, 'some-key', 666]
             );
 

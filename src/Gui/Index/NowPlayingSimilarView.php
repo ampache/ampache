@@ -57,7 +57,7 @@ final class NowPlayingSimilarView extends AbstractView
         $links = [];
         foreach ($this->artists as $artist) {
             if ($artist['id'] !== null) {
-                $links[] = (new Artist($artist['id']))->get_f_link();
+                $links[] = new Artist($artist['id'])->get_f_link();
 
                 continue;
             }
@@ -88,7 +88,7 @@ final class NowPlayingSimilarView extends AbstractView
                 continue;
             }
 
-            $links[] = (new Song($song['id']))->get_f_link();
+            $links[] = new Song($song['id'])->get_f_link();
         }
 
         return $links;

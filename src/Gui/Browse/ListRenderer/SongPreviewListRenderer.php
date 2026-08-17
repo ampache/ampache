@@ -75,12 +75,12 @@ final class SongPreviewListRenderer extends AbstractBrowseListRenderer
 
     public function renderRow(Song_Preview $preview): string
     {
-        return (new SongPreviewRowView(
+        return new SongPreviewRowView(
             $preview,
             (bool) $this->configContainer->get('directplay'),
             Stream_Playlist::check_autoplay_next(),
             Stream_Playlist::check_autoplay_append()
-        ))->render();
+        )->render();
     }
 
     #[Override]

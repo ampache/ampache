@@ -1729,6 +1729,7 @@ final class Xml8_Data
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
+        Share::build_cache($objects);
         foreach ($objects as $share_id) {
             $share = new Share((int) $share_id);
             if ($share->isNew() || !$share->isAccessible($user)) {
@@ -2046,6 +2047,7 @@ final class Xml8_Data
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
+        User::build_cache($objects);
         $string = "";
         foreach ($objects as $user_id) {
             $user = new User((int) $user_id);

@@ -81,9 +81,9 @@ final class GetArtView extends AbstractView
             . '&object_type=' . $this->objectType
             . '&object_id=' . $this->objectId
             . '&burl=' . base64_encode($this->returnUrl)
-            . '&artist_name=' . urlencode((string) Core::get_request('artist_name'))
-            . '&album_name=' . urlencode((string) Core::get_request('album_name'))
-            . '&cover=' . urlencode((string) Core::get_request('cover'));
+            . '&artist_name=' . urlencode(Core::get_request('artist_name'))
+            . '&album_name=' . urlencode(Core::get_request('album_name'))
+            . '&cover=' . urlencode(Core::get_request('cover'));
     }
 
     public function getMaxUploadSize(): int

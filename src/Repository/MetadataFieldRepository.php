@@ -66,7 +66,7 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
     public function findById(int $fieldId): ?MetadataField
     {
         $result = $this->connection->query(
-            'SELECT `id`, IFNULL(`name`, \'\') AS `name`, `public` FROM `metadata_field` WHERE `id` = ?',
+            "SELECT `id`, IFNULL(`name`, '') AS `name`, `public` FROM `metadata_field` WHERE `id` = ?",
             [$fieldId],
         );
 
@@ -87,7 +87,7 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
     public function findByName(string $name): ?MetadataField
     {
         $result = $this->connection->query(
-            'SELECT `id`, IFNULL(`name`, \'\') AS `name`, `public` FROM `metadata_field` WHERE `name` = ? LIMIT 1',
+            "SELECT `id`, IFNULL(`name`, '') AS `name`, `public` FROM `metadata_field` WHERE `name` = ? LIMIT 1",
             [$name],
         );
 

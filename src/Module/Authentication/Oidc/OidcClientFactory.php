@@ -86,7 +86,7 @@ final readonly class OidcClientFactory implements OidcClientFactoryInterface
             array_values(
                 array_unique(
                     array_filter(
-                        array_map('trim', explode(',', ($scopes === '') ? self::DEFAULT_SCOPES : $scopes)),
+                        array_map(trim(...), explode(',', ($scopes === '') ? self::DEFAULT_SCOPES : $scopes)),
                         static fn(string $scope): bool => $scope !== '' && $scope !== 'openid'
                     )
                 )

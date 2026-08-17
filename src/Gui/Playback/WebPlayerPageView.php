@@ -66,7 +66,7 @@ final class WebPlayerPageView extends AbstractView
     {
         $playlist = $this->getPlaylist();
 
-        return (new WebPlayerView(
+        return new WebPlayerView(
             $this->webPath,
             $this->ajaxUriRetriever,
             $playlist,
@@ -77,7 +77,7 @@ final class WebPlayerPageView extends AbstractView
             $this->iframed,
             $this->mayUse,
             $this->embed
-        ))->render();
+        )->render();
     }
 
     #[Override]

@@ -116,6 +116,31 @@ class User extends database_object
     }
 
     /**
+     * Caches a set of users in one query rather than one per object
+     *
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if ($ids === []) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getUserRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('user', (int) $row['id'], $row);
+        }
+
+        Art::build_cache($ids, 'user');
+
+        return true;
+    }
+
+    /**
      * create
      * inserts a new user into Ampache
      */

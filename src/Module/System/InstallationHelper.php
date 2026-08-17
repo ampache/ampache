@@ -39,7 +39,7 @@ use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Exception;
 use PDOStatement;
 
-final class InstallationHelper implements InstallationHelperInterface
+final readonly class InstallationHelper implements InstallationHelperInterface
 {
     /**
      * Plugins installed on a new install so the home page isn't empty out of the box.
@@ -52,8 +52,8 @@ final class InstallationHelper implements InstallationHelperInterface
     ];
 
     public function __construct(
-        private readonly UpdaterInterface $updater,
-        private readonly UpdateInfoRepositoryInterface $updateInfoRepository,
+        private UpdaterInterface $updater,
+        private UpdateInfoRepositoryInterface $updateInfoRepository,
     ) {}
 
     /**
@@ -738,13 +738,8 @@ final class InstallationHelper implements InstallationHelperInterface
         }
 
         $current = $this->_rewriteRulePatterns($htaccess);
-        foreach ($this->_rewriteRulePatterns((string) file_get_contents($dist)) as $pattern) {
-            if (!in_array($pattern, $current, true)) {
-                return false;
-            }
-        }
 
-        return true;
+        return array_all($this->_rewriteRulePatterns((string) file_get_contents($dist)), fn($pattern) => in_array($pattern, $current, true));
     }
 
     private function command_exists(string $command): bool

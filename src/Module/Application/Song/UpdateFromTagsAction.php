@@ -67,7 +67,7 @@ final readonly class UpdateFromTagsAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        echo (new UpdateItemsView(
+        echo new UpdateItemsView(
             $this->singleItemUpdater->update(
                 'song',
                 $songId,
@@ -78,7 +78,7 @@ final readonly class UpdateFromTagsAction implements ApplicationActionInterface
                     $songId
                 )
             )
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

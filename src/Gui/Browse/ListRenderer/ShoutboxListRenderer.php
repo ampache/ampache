@@ -30,6 +30,7 @@ use Ampache\Gui\Shout\ShoutRowView;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Override;
 
@@ -70,7 +71,7 @@ final class ShoutboxListRenderer extends AbstractBrowseListRenderer
     /**
      * A shout whose target no longer loads, or whose author has gone, is skipped rather than half-rendered.
      *
-     * @return list<array{shout: Shoutbox, objectLink: string, client: \Ampache\Repository\Model\User}>
+     * @return list<array{shout: Shoutbox, objectLink: string, client: User}>
      */
     public function getRows(): array
     {
@@ -94,16 +95,16 @@ final class ShoutboxListRenderer extends AbstractBrowseListRenderer
     }
 
     /**
-     * @param array{shout: Shoutbox, objectLink: string, client: \Ampache\Repository\Model\User} $row
+     * @param array{shout: Shoutbox, objectLink: string, client: User} $row
      */
     public function renderRow(array $row): string
     {
-        return (new ShoutRowView(
+        return new ShoutRowView(
             $this->getAdminPath(),
             $row['shout'],
             $row['objectLink'],
             $row['client']
-        ))->render();
+        )->render();
     }
 
     #[Override]

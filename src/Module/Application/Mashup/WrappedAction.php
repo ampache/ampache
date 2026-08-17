@@ -102,13 +102,13 @@ final readonly class WrappedAction implements ApplicationActionInterface
                 'objectIds' => Rating::get_latest('song', $user, -1, 0, $startTime, $endTime)],
         ];
 
-        echo (new WrappedView(
+        echo new WrappedView(
             $this->browseFactory,
             date($year),
             (int) Stats::get_object_data('song_count', $startTime, $endTime, $user),
-            (string) Stats::get_object_data('song_minutes', $startTime, $endTime, $user),
+            Stats::get_object_data('song_minutes', $startTime, $endTime, $user),
             $sections
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

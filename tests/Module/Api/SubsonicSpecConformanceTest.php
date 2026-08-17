@@ -109,6 +109,72 @@ class SubsonicSpecConformanceTest extends TestCase
     }
 
     /**
+     * Every OpenSubsonic JSON response must satisfy the schema the spec declares for that endpoint.
+     */
+    #[DataProvider('openSubsonicJsonProvider')]
+    public function testOpenSubsonicJsonMatchesOpenApiSchema(string $action, string $path): void
+    {
+        $spec = json_decode((string) file_get_contents($this->specPath('openapi-opensubsonic.json')), true);
+        $body = (string) file_get_contents($path);
+
+        self::assertIsArray(json_decode($body, true), sprintf('%s is not valid JSON', basename($path)));
+
+        $schemaName = $this->resolveSchemaName($spec, $action);
+        if ($schemaName === null) {
+            self::markTestSkipped(sprintf('the OpenSubsonic spec declares no schema for %s', $action));
+        }
+
+        $errors = new OpenApiResponseValidator($spec)->validate($body, $schemaName);
+        $this->assertConformance('json:' . $action, $errors);
+    }
+
+    /**
+     * Every pure Subsonic XML response must validate against the official 1.16.1 XSD.
+     */
+    #[DataProvider('subsonicXmlProvider')]
+    public function testSubsonicXmlValidatesAgainstSchema(string $action, string $path): void
+    {
+        $previous = libxml_use_internal_errors(true);
+        libxml_clear_errors();
+
+        $document = new DOMDocument();
+        self::assertTrue($document->loadXML((string) file_get_contents($path)), sprintf('%s is not well-formed XML', basename($path)));
+
+        $errors = [];
+        if (!$document->schemaValidate($this->specPath('subsonic-rest-api-1.16.1.xsd.xml'))) {
+            foreach (libxml_get_errors() as $error) {
+                $errors[] = trim($error->message);
+            }
+        }
+
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        $this->assertConformance('xml:' . $action, array_values(array_unique($errors)));
+    }
+
+    /**
+     * Assert a fixture conforms, honouring the documented deviation list in both directions.
+     *
+     * @param string[] $errors
+     */
+    private function assertConformance(string $key, array $errors): void
+    {
+        $reason = self::KNOWN_DEVIATIONS[$key] ?? null;
+        if ($reason !== null) {
+            self::assertNotSame(
+                [],
+                $errors,
+                sprintf('%s is listed as a known deviation (%s) but now conforms - remove it from KNOWN_DEVIATIONS', $key, $reason)
+            );
+
+            return;
+        }
+
+        self::assertSame([], $errors, sprintf("%s does not conform to the specification:\n  - %s", $key, implode("\n  - ", $errors)));
+    }
+
+    /**
      * Find the response schema the spec actually declares for an endpoint.
      *
      * The name cannot be derived from the action: 38 of the 87 documented endpoints have no `<Action>Response`
@@ -118,7 +184,7 @@ class SubsonicSpecConformanceTest extends TestCase
      *
      * @param array<string, mixed> $spec
      */
-    private static function resolveSchemaName(array $spec, string $action): ?string
+    private function resolveSchemaName(array $spec, string $action): ?string
     {
         foreach ($spec['paths'] ?? [] as $path => $operations) {
             if (strcasecmp(str_replace(['/rest/', '.view'], '', (string) $path), $action) !== 0) {
@@ -152,74 +218,8 @@ class SubsonicSpecConformanceTest extends TestCase
         return isset($spec['components']['schemas'][$name]) ? $name : null;
     }
 
-    private static function specPath(string $file): string
+    private function specPath(string $file): string
     {
         return __DIR__ . '/../../../docs/' . $file;
-    }
-
-    /**
-     * Every OpenSubsonic JSON response must satisfy the schema the spec declares for that endpoint.
-     */
-    #[DataProvider('openSubsonicJsonProvider')]
-    public function testOpenSubsonicJsonMatchesOpenApiSchema(string $action, string $path): void
-    {
-        $spec = json_decode((string) file_get_contents(self::specPath('openapi-opensubsonic.json')), true);
-        $body = (string) file_get_contents($path);
-
-        self::assertIsArray(json_decode($body, true), sprintf('%s is not valid JSON', basename($path)));
-
-        $schemaName = self::resolveSchemaName($spec, $action);
-        if ($schemaName === null) {
-            self::markTestSkipped(sprintf('the OpenSubsonic spec declares no schema for %s', $action));
-        }
-
-        $errors = (new OpenApiResponseValidator($spec))->validate($body, $schemaName);
-        $this->assertConformance('json:' . $action, $errors);
-    }
-
-    /**
-     * Every pure Subsonic XML response must validate against the official 1.16.1 XSD.
-     */
-    #[DataProvider('subsonicXmlProvider')]
-    public function testSubsonicXmlValidatesAgainstSchema(string $action, string $path): void
-    {
-        $previous = libxml_use_internal_errors(true);
-        libxml_clear_errors();
-
-        $document = new DOMDocument();
-        self::assertTrue($document->loadXML((string) file_get_contents($path)), sprintf('%s is not well-formed XML', basename($path)));
-
-        $errors = [];
-        if (!$document->schemaValidate(self::specPath('subsonic-rest-api-1.16.1.xsd.xml'))) {
-            foreach (libxml_get_errors() as $error) {
-                $errors[] = trim($error->message);
-            }
-        }
-
-        libxml_clear_errors();
-        libxml_use_internal_errors($previous);
-
-        $this->assertConformance('xml:' . $action, array_values(array_unique($errors)));
-    }
-
-    /**
-     * Assert a fixture conforms, honouring the documented deviation list in both directions.
-     *
-     * @param string[] $errors
-     */
-    private function assertConformance(string $key, array $errors): void
-    {
-        $reason = self::KNOWN_DEVIATIONS[$key] ?? null;
-        if ($reason !== null) {
-            self::assertNotSame(
-                [],
-                $errors,
-                sprintf('%s is listed as a known deviation (%s) but now conforms - remove it from KNOWN_DEVIATIONS', $key, $reason)
-            );
-
-            return;
-        }
-
-        self::assertSame([], $errors, sprintf("%s does not conform to the specification:\n  - %s", $key, implode("\n  - ", $errors)));
     }
 }

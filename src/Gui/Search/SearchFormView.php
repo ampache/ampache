@@ -92,7 +92,7 @@ final class SearchFormView extends AbstractView
 
     public function getCurrentType(): ?string
     {
-        $type = $this->searchType ?? (string) Core::get_request('type');
+        $type = $this->searchType ?? Core::get_request('type');
 
         return (in_array($type, Search::VALID_TYPES, true)) ? $type : null;
     }
@@ -104,7 +104,7 @@ final class SearchFormView extends AbstractView
      */
     public function getData(): array
     {
-        $data = (!empty($_POST)) ? $_POST : $_REQUEST;
+        $data = (empty($_POST)) ? $_REQUEST : $_POST;
 
         return array_merge(['type' => $this->getCurrentType()], $data);
     }

@@ -30,11 +30,11 @@ use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\User;
 
-final class DatabaseAuthenticator implements AuthenticatorInterface
+final readonly class DatabaseAuthenticator implements AuthenticatorInterface
 {
     public function __construct(
-        private readonly SymmetricEncrypterInterface $symmetricEncrypter,
-        private readonly DatabaseConnectionInterface $databaseConnection,
+        private SymmetricEncrypterInterface $symmetricEncrypter,
+        private DatabaseConnectionInterface $databaseConnection,
     ) {}
 
     /**

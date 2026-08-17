@@ -44,7 +44,7 @@ class PodcastEpisodeTest extends TestCase
             ->method('update')
             ->with($subject);
 
-        static::assertSame(
+        self::assertSame(
             666,
             $subject->update([
                 'title' => 'some-title',
@@ -55,11 +55,11 @@ class PodcastEpisodeTest extends TestCase
             ])
         );
 
-        static::assertSame('some-title', $subject->title);
-        static::assertSame('https://some-site', $subject->website);
-        static::assertSame('some-description', $subject->description);
-        static::assertSame('some-author', $subject->author);
-        static::assertSame('some-category', $subject->category);
+        self::assertSame('some-title', $subject->title);
+        self::assertSame('https://some-site', $subject->website);
+        self::assertSame('some-description', $subject->description);
+        self::assertSame('some-author', $subject->author);
+        self::assertSame('some-category', $subject->category);
     }
 
     public function testUpdateDiscardsAnInvalidWebsiteAndKeepsTheCurrentTitle(): void
@@ -74,8 +74,8 @@ class PodcastEpisodeTest extends TestCase
 
         $subject->update(['website' => 'not-a-url']);
 
-        static::assertSame('old-title', $subject->title);
-        static::assertNull($subject->website);
+        self::assertSame('old-title', $subject->title);
+        self::assertNull($subject->website);
     }
 
     public function testUpdateTruncatesTheOverlongDescriptionAndAuthor(): void
@@ -92,8 +92,8 @@ class PodcastEpisodeTest extends TestCase
             'author' => str_repeat('b', 100),
         ]);
 
-        static::assertSame(4096, strlen((string) $subject->description));
-        static::assertSame(64, strlen((string) $subject->author));
+        self::assertSame(4096, strlen((string) $subject->description));
+        self::assertSame(64, strlen((string) $subject->author));
     }
 
     public function testUpdateUtimeStampsTheEpisode(): void

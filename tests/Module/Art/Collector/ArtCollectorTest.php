@@ -69,7 +69,7 @@ class ArtCollectorTest extends TestCase
 
         $result = $this->subject->collect($art, ['type' => 'song']);
 
-        static::assertSame([['db' => 1]], $result);
+        self::assertSame([['db' => 1]], $result);
     }
 
     public function testCollectReturnsEmptyArrayWhenArtOrderIsEmpty(): void
@@ -83,7 +83,7 @@ class ArtCollectorTest extends TestCase
         $this->dic->expects(static::never())
             ->method('get');
 
-        static::assertSame([], $this->subject->collect($art, ['type' => 'song']));
+        self::assertSame([], $this->subject->collect($art, ['type' => 'song']));
     }
 
     public function testCollectReturnsEmptyArrayWhenNoOptionsGiven(): void
@@ -93,7 +93,7 @@ class ArtCollectorTest extends TestCase
         $this->configContainer->expects(static::never())
             ->method('get');
 
-        static::assertSame([], $this->subject->collect($art));
+        self::assertSame([], $this->subject->collect($art));
     }
 
     protected function setUp(): void

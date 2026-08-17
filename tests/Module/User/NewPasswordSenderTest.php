@@ -51,7 +51,7 @@ class NewPasswordSenderTest extends TestCase
         $this->passwordGenerator->expects(static::never())
             ->method('generate');
 
-        static::assertFalse($this->subject->send('admin@example.com', '127.0.0.1'));
+        self::assertFalse($this->subject->send('admin@example.com', '127.0.0.1'));
     }
 
     public function testSendReturnsFalseWhenUserNotFound(): void
@@ -64,7 +64,7 @@ class NewPasswordSenderTest extends TestCase
         $this->passwordGenerator->expects(static::never())
             ->method('generate');
 
-        static::assertFalse($this->subject->send('nobody@example.com', '127.0.0.1'));
+        self::assertFalse($this->subject->send('nobody@example.com', '127.0.0.1'));
     }
 
     protected function setUp(): void
