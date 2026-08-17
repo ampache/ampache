@@ -4,9 +4,14 @@
 
 ### Added (8.0.1)
 
+* Translations 2026-08-17
 * Show Catalog name on song pages
 * Increase redirect count on Podcast Episode download from 5 to 10
 * Missing ASF/Windows Media tag for Composer
+* Podcast RSS feeds
+  * `itunes:image` (per-episode too), `itunes:author`, `itunes:explicit` and an optional Apple sub-category (`rss_subcategory`)
+  * Optional path-style feed urls (`rss_beautiful_url`)
+  * Feeds are indexable and cacheable (etag/304) by default
 
 ### Changed (8.0.1)
 
@@ -20,9 +25,13 @@
   * Convert `stream_beautiful_url` to an Admin preference
 * Garbage collection actions (`admin/catalog.php?action=garbage_collect` and `php bin/cli run:updateCatalog -t`) now run `Session::garbage_collection()`, cleaning up `tmp_playlist`/`tmp_playlist_data`, `stream_playlist`, `song_preview` and the query cache, not just library objects
   * **Run this at least once after upgrading** On a database with cron disabled that's never had this data collected, the first run can be slow
+  * Also resets the `AUTO_INCREMENT` on `stream_playlist`, `playlist_data`, `tmp_playlist` and `tmp_playlist_data` afterwards, instead of leaving those ids climb forever
 * `php bin/cli run:cronProcess`'s garbage collection now shares the same lock as the other garbage collection triggers, so a scheduled cron run can't race a manual one
 * `run:computeCache` and `run:cronProcess`'s cache rebuild now take their own lock, so two overlapping runs can't double-count the results or publish a half-rebuilt table
 * UPnP playlist browsing counts a playlist's tracks without loading them, the same way the rest of the app already does
+* Row-prefetch caching (avoiding a query per row) is extended to more listings: Browse now also covers podcast, podcast episode, live stream, label, catalog, collection and folder pages, and the JSON/XML API list endpoints (album, artist, catalog, playlist, podcast, podcast episode, song, tag, video) now warm the same object/rating/userflag caches before their loop instead of querying per item
+* Art existence/metadata lookups (`has_db`/`has_art`) are batch-prefetched the same way during browse and artist/playlist/tag/video listing, instead of querying disk or the database per row
+* Album/album disk/video search read the catalog id straight off the row instead of joining `catalog_map`, since it's already stored there directly
 
 ### Fixed (8.0.1)
 
@@ -75,6 +84,17 @@
 * Search
   * A song search on album rating matched the wrong album when `album_group` is off; the `album_disk` rating is now looked up by disk instead of by album id
   * A song search on album rating no longer joins `album_disk` when `album_group` is on, which multiplied the working set by the disk count for no gain
+* PHP 8.2+ dynamic-property deprecation noise from vendor libraries (e.g. Ratchet) no longer floods the log; deprecations from Ampache's own code still show
+* The Popular/Newest/Userflag Video pages could throw a `TypeError` on `Browse::set_threshold()`
+* Recently played (activity feed and RSS)
+  * A play repeated the same MusicBrainz-derived guid on every listen of that song instead of a per-play one, so RSS clients treated repeats as a single duplicate entry
+  * An item mapped to more than one catalog could show up twice
+* Podcast RSS feed
+  * Cover art used the item's own type instead of always `album`, and art fallback urls served a 128px image instead of the full size
+  * `language` used the full locale (`fr-FR`) instead of the two-letter code iTunes expects
+  * A `bytes=0-`/`bytes=0-0` range request answered `200` instead of `206`; suffix ranges (`bytes=-500`) are now resolved against the file size too
+  * Streamed episodes were sent as attachments instead of inline, forcing a download prompt in podcast apps that just want to play them
+  * Episode urls weren't percent-encoded, breaking any filename containing a space
 
 ## Ampache 8.0.0
 

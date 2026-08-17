@@ -530,8 +530,8 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
     // Deprecation notices coming from third-party code in vendor/ are noise we can't fix; bury them
     // unless the firehose is on, but still surface deprecations from our own code.
     if (
-        ($errno === E_DEPRECATED || $errno === E_USER_DEPRECATED) &&
-        str_contains(str_replace('\\', '/', $errfile), '/vendor/')
+        ($errno === E_DEPRECATED || $errno === E_USER_DEPRECATED)
+        && str_contains(str_replace('\\', '/', $errfile), '/vendor/')
     ) {
         $error_name = 'Ignored ' . $error_name;
         $level      = 7;
